@@ -8,7 +8,6 @@ import pandas as pd
 import os
 import time
 
-# --- Setup ---
 options = Options()
 # options.add_argument("--headless")  # Uncomment this to run without opening a window
 driver = webdriver.Firefox(options=options)
@@ -21,11 +20,11 @@ try:
     print("Navigating to page...")
     driver.get(url)
     
-    # --- Wait for table to fully load ---
+    # Wait for table to fully load
     print("Waiting for table to load...")
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table tbody tr")))
     
-    # --- Scraping loop ---
+    # Scraping loop
     all_data = []
     page_num = 1
     max_pages = 116  # Based on "Showing 1 to 10 of 1,153 entries"
@@ -84,14 +83,14 @@ try:
                 
         except Exception as e:
             print(f"Error navigating to next page: {e}")
-            # If we've already scraped at least one page, we should save what we have
+            # save what we have
             if page_num > 1:
                 print("Saving data that was successfully scraped before error...")
                 break
             else:
                 raise  # Re-raise the exception if we couldn't even scrape the first page
 
-    # --- Save the data ---
+    # Save the data 
     print(f"\nTotal rows scraped: {len(all_data)}")
     
     # Determine number of columns and set headers accordingly
