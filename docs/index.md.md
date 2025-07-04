@@ -1,3 +1,8 @@
+---
+title: Digital Economy Act Analysis
+layout: default
+---
+
 # Digitial Economy Act accredited projects analysis 2019-2025
 
 ## Executive summary
