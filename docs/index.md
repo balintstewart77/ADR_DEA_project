@@ -112,33 +112,33 @@ Note that 2019 data only includes Q4, and 2025 data is only Q1 and partial Q2 (t
 
 
 ### Figure 2: Top 25 datasets accessed under the DEA between end 2019 - mid May 2025
-| Rank | Dataset                                                          | # Count |
-|------|------------------------------------------------------------------|---------|
-| 1    | Business Structure Database                                      |     220 |
-| 2    | Annual Business Survey                                           |     191 |
-| 3    | Annual Survey of Hours and Earnings                              |     158 |
-| 4    | Labour Force Survey                                              |     151 |
-| 5    | Annual Population Survey                                         |     132 |
-| 6    | Annual Respondents Database                                      |      98 |
-| 7    | Longitudinal Education Outcomes                                  |      82 |
-| 8    | UK Innovation Survey                                             |      67 |
-| 9    | Business Enterprise Research and Development                     |      54 |
-| 10   | Understanding Society                                            |      54 |
-| 11   | Labour Force Survey Longitudinal                                 |      37 |
-| 12   | Business Register Employment Survey                              |      33 |
-| 13   | Crime Survey for England and Wales                               |      31 |
-| 14   | International Trade in Services                                  |      29 |
-| 15   | Labour Force Survey Household                                    |      29 |
-| 16   | Annual Survey of Hours and Earnings Longitudinal                 |      29 |
-| 17   | Longitudinal Small Business Survey                               |      28 |
-| 18   | ONS Longitudinal Study                                           |      27 |
-| 19   | Living Costs and Food Survey                                     |      27 |
-| 20   | Education and Child Health Insights from Linked Data             |      25 |
-| 21   | Growing Up in England                                            |      23 |
-| 22   | Wealth and Assets Survey                                         |      21 |
-| 23   | Data First: Crown Court Dataset                                  |      20 |
-| 24   | Longitudinal Study of England and Wales                          |      19 |
-| 25   | Business Insights and Conditions Survey                          |      19 |
+| Rank | Dataset | # Count |
+|------|---------|---------|
+| 1 | Business Structure Database | 220 |
+| 2 | Annual Business Survey | 191 |
+| 3 | Annual Survey of Hours and Earnings | 158 |
+| 4 | Labour Force Survey | 151 |
+| 5 | Annual Population Survey | 132 |
+| 6 | Annual Respondents Database | 98 |
+| 7 | Longitudinal Education Outcomes | 82 |
+| 8 | UK Innovation Survey | 67 |
+| 9 | Business Enterprise Research and Development | 54 |
+| 10 | Understanding Society | 54 |
+| 11 | Labour Force Survey Longitudinal | 37 |
+| 12 | Business Register Employment Survey | 33 |
+| 13 | Crime Survey for England and Wales | 31 |
+| 14 | International Trade in Services | 29 |
+| 15 | Labour Force Survey Household | 29 |
+| 16 | Annual Survey of Hours and Earnings Longitudinal | 29 |
+| 17 | Longitudinal Small Business Survey | 28 |
+| 18 | ONS Longitudinal Study | 27 |
+| 19 | Living Costs and Food Survey | 27 |
+| 20 | Education and Child Health Insights from Linked Data | 25 |
+| 21 | Growing Up in England | 23 |
+| 22 | Wealth and Assets Survey | 21 |
+| 23 | Data First: Crown Court Dataset | 20 |
+| 24 | Longitudinal Study of England and Wales | 19 |
+| 25 | Business Insights and Conditions Survey | 19 |
 
 ## Analysis of ADR UK flagship dataset demand
 
