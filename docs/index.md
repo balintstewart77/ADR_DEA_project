@@ -112,6 +112,7 @@ Note that 2019 data only includes Q4, and 2025 data is only Q1 and partial Q2 (t
 
 
 ### Figure 2: Top 25 datasets accessed under the DEA between end 2019 - mid May 2025
+
 | Rank | Dataset | # Count |
 |------|---------|---------|
 | 1 | Business Structure Database | 220 |
