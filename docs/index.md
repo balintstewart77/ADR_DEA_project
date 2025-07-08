@@ -1,8 +1,3 @@
----
-title: Digital Economy Act Analysis
-layout: default
----
-
 # Digitial Economy Act accredited projects analysis 2019-2025
 
 ## Executive summary
@@ -12,7 +7,7 @@ Key findings:
 - Over 1000 projects have been approved under the DEA between 2019 and 14 May 2025
 - Usage of ADR England flagship datasets grew by 345% (2021-2024) - effectively doubling every 1.4 years - with a log-linear model confirming an exponential growth trend (R² = 0.65, p = < 0.0001). Current growth trajectories suggest annual requests for ADR England flagship datasets could reach over 1,000 requests in 2029, with a 95% confidence interval ranging from 700 to ~3,000.
 - The Longitudinal Education Outcomes (LEO) and Data First criminal justice collections drive 59% of flagship dataset demand, with Education and Child Health Insights from Linked Data (ECHILD) showing the fastest recent growth in demand (23 access requests since it was made available in Q3 2024). 
-- Terms relating to health and education in project titles have quadrupled in prevalence, reflecting shifting societal priorities.
+- Terms relating to health and education in project titles have more than tripled in prevalence, reflecting shifting research priorities.
 - COVID-19 research terms surged to 13.5% of projects during the pandemic before declining to 2.7%, demonstrating system agility to evolving priorities.
 
 This analysis provides evidence for funders on investment impact, offers early intelligence on emerging research themes, and enhances public transparency about how administrative data is being used in research for the public good.
@@ -112,13 +107,13 @@ Note that 2019 data only includes Q4, and 2025 data is only Q1 and partial Q2 (t
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_10_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_10_0.png)
     
 
 
 ### Figure 2: Top 25 datasets accessed under the DEA between end 2019 - mid May 2025
-| Rank | Dataset                                                         | # Count |
-|------|------------------------------------------------------------------|--------:|
+| Rank | Dataset                                                          | # Count |
+|------|------------------------------------------------------------------|---------|
 | 1    | Business Structure Database                                      |     220 |
 | 2    | Annual Business Survey                                           |     191 |
 | 3    | Annual Survey of Hours and Earnings                              |     158 |
@@ -155,7 +150,7 @@ This figure shows the number of research projects accessing ADR UK flagship data
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_15_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_15_0.png)
     
 
 
@@ -210,7 +205,7 @@ The line marked with circles shows observed quarterly access request counts from
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_23_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_23_0.png)
     
 
 
@@ -260,7 +255,7 @@ The right panel presents average requests per quarter, a measure of sustained de
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_28_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_28_0.png)
     
 
 
@@ -273,7 +268,7 @@ This faceted line plot shows quarterly access patterns for each of the ADR Engla
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_30_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_30_0.png)
     
 
 
@@ -286,25 +281,25 @@ This figure presents word clouds for four thematic clusters (Title clusters 1-4)
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_34_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_34_0.png)
     
 
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_34_1.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_34_1.png)
     
 
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_34_2.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_34_2.png)
     
 
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_34_3.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_34_3.png)
     
 
 
@@ -319,7 +314,7 @@ Graphs track annual TF-IDF scores for ten most prominent research terms: labour,
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_37_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_37_0.png)
     
 
 
@@ -328,7 +323,7 @@ This figure shows the proportion of DEA-accredited research projects each year (
 
 
     
-![png](DEA_projects_analysis_web_20250704_files/DEA_projects_analysis_web_20250704_39_0.png)
+![png](DEA_projects_analysis_web_20250708_files/DEA_projects_analysis_web_20250708_39_0.png)
     
 
 
