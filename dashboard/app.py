@@ -31,6 +31,10 @@ CANDIDATE_FILES = [
     "dea_accredited_projects.csv",
 ]
 
+SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
+    ("2023/113", "The Influence of Early Life Health and Nutritional Environment on Later Life Health and Morbidity"),
+}
+
 
 def load_raw(data_dir=DATA_DIR):
     for fname in CANDIDATE_FILES:
@@ -40,6 +44,39 @@ def load_raw(data_dir=DATA_DIR):
             print(f"[data] Loaded {len(df)} rows from {fname}")
             return df, fname
     raise FileNotFoundError("No DEA projects CSV found in data/")
+
+
+def apply_duplicate_policy(df: pd.DataFrame, stats: dict | None = None) -> pd.DataFrame:
+    """Remove exact duplicates and same-ID/same-title duplicates, keep conflicting titles."""
+    out = df.copy()
+
+    n_before = len(out)
+    out = out.drop_duplicates().reset_index(drop=True)
+    exact_removed = n_before - len(out)
+
+    special_removed = 0
+    same_title_removed = 0
+    if "Project ID" in out.columns and "Title" in out.columns:
+        out["_title_key"] = out["Title"].fillna("").astype(str).str.strip()
+        special_mask = out.apply(
+            lambda row: (str(row["Project ID"]), row["_title_key"]) in SPECIAL_DROP_PROJECT_TITLE_PAIRS,
+            axis=1,
+        )
+        n_before = len(out)
+        out = out.loc[~special_mask].copy()
+        special_removed = n_before - len(out)
+
+        n_before = len(out)
+        out = out.drop_duplicates(subset=["Project ID", "_title_key"], keep="first").reset_index(drop=True)
+        same_title_removed = n_before - len(out)
+        out = out.drop(columns="_title_key")
+
+    if stats is not None:
+        stats["dropped_exact_duplicates"] = exact_removed
+        stats["dropped_special_duplicate_rows"] = special_removed
+        stats["dropped_same_id_same_title"] = same_title_removed
+
+    return out
 
 
 FLAGSHIP_COLLECTIONS = {
@@ -130,6 +167,28 @@ COLLECTION_COLOURS = {
 PRIMARY_BAR = "#2a9d8f"
 SECONDARY_BAR = "#e76f51"
 
+DATASET_PROVIDER_RE = re.compile(
+    r"(?=(?:Office for National Statistics|Department for [^:\n]{1,120}|"
+    r"Ministry of Justice|Home Office(?:; NHS)?|NHS(?:; DfE)?|"
+    r"Understanding Society|Institute for [^:\n]{1,120}|"
+    r"SAIL Databank(?: Databank)?|UCAS|Northern Ireland [^:\n]{1,120}|"
+    r"Intellectual Property Office|IPO|Department for Transport|"
+    r"HM Revenue and Customs|HMRC|Data First|MoJ Data First)"
+    r"[^:\n]{0,120}:)"
+)
+ALLOWED_SHORT_DATASET_NAMES = {
+    "ASHE", "BHPS", "EOL", "LEO", "NN4B", "Patents", "Prisons",
+}
+INVALID_DATASET_FRAGMENTS = {
+    "_x000D_", "amp", "and 2021", "britain", "britain,", "census", "data",
+    "d wales", "database", "dwp and", "england", "index", "index,", "ireland", "ireland,",
+    "level", "panel", "person", "person,", "scotland", "survey", "visa,",
+    "wales",
+}
+GEOGRAPHY_SUFFIX_FALLBACK_NAMES = {
+    "benefits", "earnings", "income", "services", "trace",
+}
+
 
 def classify_collection(datasets_str: str) -> list[str]:
     """Return list of matching collection names for a datasets string."""
@@ -153,20 +212,11 @@ def count_collection_usages(datasets_str: str) -> list[str]:
     if not isinstance(datasets_str, str):
         return []
     # Split into individual dataset entries (same logic as parse_datasets)
-    entries = []
-    for line in datasets_str.strip().split("\n"):
-        line = line.strip()
-        if not line:
-            continue
-        if ":" in line:
-            _, rest = line.split(":", 1)
-            parts = re.split(r"[,&]", rest)
-        else:
-            parts = [line]
-        for p in parts:
-            p = p.strip().lower()
-            if p:
-                entries.append(p)
+    entries = [
+        part.lower()
+        for _, _, part in iter_dataset_entries(datasets_str)
+        if part
+    ]
 
     usages = []
     for entry in entries:
@@ -180,8 +230,8 @@ def count_collection_usages(datasets_str: str) -> list[str]:
 def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
     """
     Returns:
-        df_all      -- full cleaned dataset (one row per project)
-        df_flagship -- exploded dataset (one row per project x collection)
+        df_all      -- full cleaned dataset (one row per retained project record)
+        df_flagship -- exploded dataset (one row per dataset request x collection)
         stats       -- dict of row counts at each processing step
     """
     stats = {}
@@ -210,12 +260,14 @@ def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict
     else:
         stats["dropped_non_dea"] = 0
 
+    df = apply_duplicate_policy(df, stats)
     stats["after_filters"] = len(df)
 
     df["Year"] = df["Accreditation Date"].dt.year
     df["Quarter"] = df["Accreditation Date"].dt.to_period("Q")
     df["Quarter Label"] = df["Quarter"].dt.strftime("Q%q %Y")
     df["quarter_date"] = df["Quarter"].dt.to_timestamp()
+    df["Project Row ID"] = [f"proj-{i:04d}" for i in range(len(df))]
 
     df["collections"] = df["Datasets Used"].apply(classify_collection)
     df["is_flagship"] = df["collections"].apply(lambda x: len(x) > 0)
@@ -242,16 +294,70 @@ DATASET_ALIASES = [
 
 def _normalise_dataset_name(name: str) -> str:
     """Strip geographic suffixes, then apply alias rules."""
+    original = name.strip()
     # Strip trailing geographic qualifiers
     name = re.sub(
         r"\s*-\s*(UK|GB|Great Britain|England|England and Wales|Wales|Scotland|Northern Ireland)\s*$",
         "", name, flags=re.IGNORECASE,
     ).strip()
+    if name.lower() in GEOGRAPHY_SUFFIX_FALLBACK_NAMES:
+        name = original
     # Apply alias patterns
     for pattern, canonical in DATASET_ALIASES:
         if pattern.match(name):
             return canonical
     return name
+
+
+def _clean_datasets_text(raw: str) -> str:
+    text = re.sub(r"_x000D_", " ", raw)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = text.replace("\r", "\n")
+    text = re.sub(r"\s{2,}", " ", text)
+    text = re.sub(r"\s*\n\s*", "\n", text)
+    # Recover provider boundaries when the source omits newlines between provider blocks.
+    text = DATASET_PROVIDER_RE.sub(lambda m: ("\n" if m.start() > 0 else "") + m.group(0), text)
+    return text.strip()
+
+
+def _split_dataset_parts(rest: str) -> list[str]:
+    parts = re.split(r"\s*,\s*|\s+&\s+|\sand\s+(?=[A-Z0-9])", rest.strip())
+    return [part.strip(" ,;") for part in parts if part.strip(" ,;")]
+
+
+def _is_valid_dataset_fragment(name: str) -> bool:
+    cleaned = name.strip()
+    if not cleaned:
+        return False
+    lowered = cleaned.lower()
+    bare = re.sub(r"[^A-Za-z0-9]+", "", cleaned)
+    if lowered in INVALID_DATASET_FRAGMENTS:
+        return False
+    if re.fullmatch(r"(19|20)\d{2}", cleaned):
+        return False
+    if len(cleaned.split()) == 1 and len(bare) <= 8 and cleaned not in ALLOWED_SHORT_DATASET_NAMES:
+        return False
+    return True
+
+
+def iter_dataset_entries(raw: str):
+    if not isinstance(raw, str) or not raw.strip():
+        return
+    cleaned = _clean_datasets_text(raw)
+    for line in cleaned.split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        if ":" in line:
+            provider, rest = line.split(":", 1)
+            provider = provider.strip()
+            parts = _split_dataset_parts(rest)
+        else:
+            provider = ""
+            parts = _split_dataset_parts(line)
+        for part in parts:
+            if _is_valid_dataset_fragment(part):
+                yield line, provider, part
 
 
 def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
@@ -267,56 +373,51 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
         pid = proj["Project ID"]
         year = proj["Year"]
         qd = proj["quarter_date"]
-        for line in raw.strip().split("\n"):
-            line = line.strip()
-            if not line:
-                continue
-            if ":" in line:
-                provider, rest = line.split(":", 1)
-                provider = provider.strip()
-                parts = re.split(r"[,&]", rest)
-            else:
-                provider = ""
-                parts = [line]
-            for p in parts:
-                p = p.strip()
-                if not p:
-                    continue
-                name_norm = _normalise_dataset_name(p)
-                rows.append({
-                    "Project ID": pid,
-                    "Year": year,
-                    "quarter_date": qd,
-                    "provider": provider,
-                    "dataset": name_norm,
-                    "dataset_full": f"{provider}: {p}" if provider else p,
-                })
+        for _, provider, part in iter_dataset_entries(raw):
+            name_norm = _normalise_dataset_name(part)
+            rows.append({
+                "Project ID": pid,
+                "Year": year,
+                "quarter_date": qd,
+                "provider": provider,
+                "dataset": name_norm,
+                "dataset_full": f"{provider}: {part}" if provider else part,
+            })
     return pd.DataFrame(rows)
 
 
 # Load data once at startup
 df_raw, source_file = load_raw()
-df_all, df_flagship, PROCESSING_STATS = process_data(df_raw)
-
-# Deduplicate by Project ID (raw data contains duplicates)
-_n_before = len(df_all)
-df_all = df_all.drop_duplicates(subset=["Project ID"], keep="first").reset_index(drop=True)
-PROCESSING_STATS["dropped_duplicates"] = _n_before - len(df_all)
+df_all, df_flagship_requests, PROCESSING_STATS = process_data(df_raw)
 PROCESSING_STATS["final_rows"] = len(df_all)
-if PROCESSING_STATS["dropped_duplicates"] > 0:
-    print(f"[data] Dropped {PROCESSING_STATS['dropped_duplicates']} duplicate Project IDs "
-          f"({_n_before} -> {len(df_all)})")
-df_flagship = df_flagship.drop_duplicates(subset=["Project ID", "collection"], keep="first").reset_index(drop=True)
+PROCESSING_STATS["retained_conflicting_duplicate_rows"] = int(
+    df_all["Project ID"].duplicated(keep=False).sum()
+)
+df_flagship_projects = (
+    df_flagship_requests
+    .drop_duplicates(subset=["Project Row ID", "collection"], keep="first")
+    .reset_index(drop=True)
+)
 
 # Parse individual dataset usage
 df_datasets = parse_datasets(df_all)
 
-COLLECTIONS = sorted(df_flagship["collection"].unique()) if len(df_flagship) else list(FLAGSHIP_COLLECTIONS.keys())
+COLLECTIONS = (
+    sorted(df_flagship_projects["collection"].unique())
+    if len(df_flagship_projects)
+    else list(FLAGSHIP_COLLECTIONS.keys())
+)
 DATA_DATE = df_all["Accreditation Date"].max().strftime("%d %B %Y") if len(df_all) else "unknown"
 TOTAL_PROJECTS = len(df_all)
-TOTAL_FLAGSHIP = df_flagship["Project ID"].nunique() if len(df_flagship) else 0
-TOTAL_FLAGSHIP_REQUESTS = len(df_flagship) if len(df_flagship) else 0
+TOTAL_FLAGSHIP = df_flagship_projects["Project Row ID"].nunique() if len(df_flagship_projects) else 0
+TOTAL_FLAGSHIP_REQUESTS = len(df_flagship_requests) if len(df_flagship_requests) else 0
 YEAR_RANGE = f"{int(df_all['Year'].min())}--{int(df_all['Year'].max())}" if len(df_all) else ""
+RETAINED_CONFLICTING_DUPLICATE_IDS = sorted(
+    df_all.loc[df_all["Project ID"].duplicated(keep=False), "Project ID"].unique().tolist()
+)
+RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT = (
+    ", ".join(RETAINED_CONFLICTING_DUPLICATE_IDS) if RETAINED_CONFLICTING_DUPLICATE_IDS else "None"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -458,62 +559,75 @@ def make_srs_chart(df: pd.DataFrame) -> go.Figure:
     return _apply_common(fig)
 
 
-def make_collection_line_chart(df_flag: pd.DataFrame) -> go.Figure:
+def _metric_labels(metric_mode: str) -> tuple[str, str]:
+    if metric_mode == "requests":
+        return "Dataset access requests", "requests"
+    return "Distinct projects", "projects"
+
+
+def make_collection_line_chart(df_flag: pd.DataFrame, metric_mode: str) -> go.Figure:
+    metric_label, title_noun = _metric_labels(metric_mode)
     counts = (
-        df_flag.groupby(["quarter_date", "collection"])["Project ID"]
-        .nunique()
+        df_flag.groupby(["quarter_date", "collection"])
+        .size()
         .reset_index()
-        .rename(columns={"Project ID": "Projects"})
+        .rename(columns={0: "Value"})
     )
     fig = px.line(
-        counts, x="quarter_date", y="Projects", color="collection",
-        title="ADR England Flagship Dataset Requests by Quarter",
-        labels={"quarter_date": "Quarter", "Projects": "New projects", "collection": "Collection"},
+        counts, x="quarter_date", y="Value", color="collection",
+        title=f"ADR England Flagship {metric_label} by Quarter",
+        labels={"quarter_date": "Quarter", "Value": metric_label, "collection": "Collection"},
         color_discrete_map=COLLECTION_COLOURS,
         markers=True,
     )
     fig.update_layout(xaxis_tickformat="%b %Y")
-    fig.update_traces(line_width=2.5, marker_size=6)
+    fig.update_traces(
+        line_width=2.5,
+        marker_size=6,
+        hovertemplate=f"<b>%{{fullData.name}}</b><br>%{{x|%b %Y}}<br>%{{y}} {title_noun}<extra></extra>",
+    )
     return _apply_common(fig, height=CHART_HEIGHT + 20)
 
 
-def make_collection_totals_chart(df_flag: pd.DataFrame) -> go.Figure:
+def make_collection_totals_chart(df_flag: pd.DataFrame, metric_mode: str) -> go.Figure:
+    metric_label, title_noun = _metric_labels(metric_mode)
     totals = (
-        df_flag.groupby("collection")["Project ID"]
-        .nunique()
+        df_flag.groupby("collection")
+        .size()
         .reset_index()
-        .rename(columns={"Project ID": "Total Projects"})
-        .sort_values("Total Projects", ascending=True)
+        .rename(columns={0: "Value"})
+        .sort_values("Value", ascending=True)
     )
     fig = px.bar(
-        totals, x="Total Projects", y="collection", orientation="h",
-        title="Total Dataset Access Requests per Collection",
-        labels={"collection": "", "Total Projects": "Access requests"},
+        totals, x="Value", y="collection", orientation="h",
+        title=f"Total ADR England Flagship {metric_label} per Collection",
+        labels={"collection": "", "Value": metric_label},
         color="collection",
         color_discrete_map=COLLECTION_COLOURS,
     )
     fig.update_layout(showlegend=False, yaxis_tickfont_size=12, margin=dict(l=220))
     fig.update_traces(
         marker_line_width=0,
-        hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
+        hovertemplate=f"<b>%{{y}}</b><br>%{{x}} {title_noun}<extra></extra>",
     )
     return _apply_common(fig)
 
 
-def make_cumulative_chart(df_flag: pd.DataFrame, selected_collections: list) -> go.Figure:
+def make_cumulative_chart(df_flag: pd.DataFrame, selected_collections: list, metric_mode: str) -> go.Figure:
+    metric_label, title_noun = _metric_labels(metric_mode)
     sub = df_flag if not selected_collections else df_flag[df_flag["collection"].isin(selected_collections)]
     counts = (
-        sub.groupby(["quarter_date", "collection"])["Project ID"]
-        .nunique()
+        sub.groupby(["quarter_date", "collection"])
+        .size()
         .reset_index()
-        .rename(columns={"Project ID": "New"})
+        .rename(columns={0: "New"})
     )
     counts = counts.sort_values("quarter_date")
     counts["Cumulative"] = counts.groupby("collection")["New"].cumsum()
     fig = px.area(
         counts, x="quarter_date", y="Cumulative", color="collection",
-        title="Cumulative Access Requests (ADR England Flagship Datasets)",
-        labels={"quarter_date": "Quarter", "Cumulative": "Cumulative requests", "collection": "Collection"},
+        title=f"Cumulative ADR England Flagship {metric_label}",
+        labels={"quarter_date": "Quarter", "Cumulative": f"Cumulative {title_noun}", "collection": "Collection"},
         color_discrete_map=COLLECTION_COLOURS,
     )
     fig.update_layout(
@@ -526,7 +640,10 @@ def make_cumulative_chart(df_flag: pd.DataFrame, selected_collections: list) -> 
         ),
         margin=dict(r=160),
     )
-    fig.update_traces(line_width=2)
+    fig.update_traces(
+        line_width=2,
+        hovertemplate=f"<b>%{{fullData.name}}</b><br>%{{x|%b %Y}}<br>%{{y}} cumulative {title_noun}<extra></extra>",
+    )
     return _apply_common(fig)
 
 
@@ -718,14 +835,15 @@ def _stat_card(value, label, accent):
             className="stat-card",
             style={"--accent-color": accent},
         ),
-        xs=6, md=3,
+        xs=6, md=4, xl=2,
     )
 
 
 STAT_CARDS = dbc.Row([
     _stat_card(f"{TOTAL_PROJECTS:,}", "Total DEA Projects", "#3366cc"),
-    _stat_card(f"{TOTAL_FLAGSHIP:,}", "Projects Using ADR England Flagship Linked Datasets", "#109618"),
-    _stat_card(str(len(COLLECTIONS)), "ADR Collections", "#ff9900"),
+    _stat_card(f"{TOTAL_FLAGSHIP:,}", "Flagship Projects", "#109618"),
+    _stat_card(f"{TOTAL_FLAGSHIP_REQUESTS:,}", "Flagship Dataset Requests", "#ff9900"),
+    _stat_card(str(len(COLLECTIONS)), "ADR Collections", "#0099c6"),
     _stat_card(YEAR_RANGE, "Year Range", "#0099c6"),
 ], className="mb-4 g-3")
 
@@ -758,7 +876,7 @@ OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
 FLAGSHIP_TAB = dbc.Tab(label="ADR England Flagship Datasets", tab_id="tab-flagship", children=[
     html.P(
         "Trends for the seven ADR England flagship data collections. "
-        "Use the filter below to focus on specific collections.",
+        "Use the controls below to switch between distinct-project and dataset-request views.",
         className="section-desc",
     ),
     dbc.Row([
@@ -772,7 +890,24 @@ FLAGSHIP_TAB = dbc.Tab(label="ADR England Flagship Datasets", tab_id="tab-flagsh
                 clearable=True,
             ),
         ], md=6),
-    ], className="mb-3"),
+        dbc.Col([
+            html.Label("Metric", className="filter-label"),
+            dcc.Dropdown(
+                id="flagship-metric-mode",
+                options=[
+                    {"label": "Distinct projects", "value": "projects"},
+                    {"label": "Dataset access requests", "value": "requests"},
+                ],
+                value="projects",
+                clearable=False,
+            ),
+        ], md=3),
+    ], className="mb-2 g-2"),
+    html.P(
+        "Distinct projects count each retained project once per collection. "
+        "Dataset access requests count every matched dataset request, so one project can contribute multiple requests within the same collection.",
+        className="section-desc",
+    ),
     dbc.Row([
         dbc.Col(
             html.Div(dcc.Graph(id="flagship-pooled-quarterly", config=CHART_CONFIG), className="chart-wrapper"),
@@ -961,14 +1096,26 @@ Row counts at each stage:
 
 | Step | Rows | Dropped |
 |------|-----:|--------:|
-| Loaded from CSV | {PROCESSING_STATS['raw_loaded']:,} | — |
+| Loaded from CSV | {PROCESSING_STATS['raw_loaded']:,} | - |
 | Rows with missing accreditation date removed | {PROCESSING_STATS['raw_loaded'] - PROCESSING_STATS['dropped_no_date']:,} | {PROCESSING_STATS['dropped_no_date']:,} |
-| Filtered to DEA projects only (non-DEA/SRSA rows removed) | {PROCESSING_STATS['after_filters']:,} | {PROCESSING_STATS['dropped_non_dea']:,} |
-| Duplicate Project IDs removed (keep first occurrence) | {PROCESSING_STATS['final_rows']:,} | {PROCESSING_STATS['dropped_duplicates']:,} |
+| Filtered to DEA projects only (non-DEA/SRSA rows removed) | {PROCESSING_STATS['after_filters'] + PROCESSING_STATS['dropped_exact_duplicates'] + PROCESSING_STATS['dropped_special_duplicate_rows'] + PROCESSING_STATS['dropped_same_id_same_title']:,} | {PROCESSING_STATS['dropped_non_dea']:,} |
+| Exact duplicate rows removed | {PROCESSING_STATS['after_filters'] + PROCESSING_STATS['dropped_special_duplicate_rows'] + PROCESSING_STATS['dropped_same_id_same_title']:,} | {PROCESSING_STATS['dropped_exact_duplicates']:,} |
+| Same Project ID + Title duplicates removed | {PROCESSING_STATS['after_filters'] + PROCESSING_STATS['dropped_special_duplicate_rows']:,} | {PROCESSING_STATS['dropped_same_id_same_title']:,} |
+| Manual duplicate cleanup for 2023/113 | {PROCESSING_STATS['after_filters']:,} | {PROCESSING_STATS['dropped_special_duplicate_rows']:,} |
 | **Final dataset** | **{PROCESSING_STATS['final_rows']:,}** | |
 
 Additional processing: column names are standardised, accreditation dates are
 parsed, and year/quarter fields are derived for time-series analysis.
+
+Duplicate policy:
+
+- Exact duplicate rows are removed.
+- Duplicate rows sharing the same **Project ID** and **Title** are collapsed to one row.
+- Duplicate **Project ID** values with different titles are retained as separate projects for manual review.
+- Project `2023/113` is collapsed because both rows share the same project title.
+
+Retained conflicting duplicate IDs:
+`{RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT}`
 
 ---
 
@@ -990,17 +1137,15 @@ match multiple collections if it uses datasets from more than one.
 
 #### Counting methodology
 
-The ADR England Flagship Datasets tab counts **individual dataset access
-requests**, not unique projects. If a single project accesses three Data First
-datasets (e.g. Crown Court, Magistrates Court, and Prisoner), this counts as
-**three** Data First access requests. This approach reflects the demand placed
-on each dataset and is consistent with the methodology used in the accompanying
-analysis notebook.
+The ADR England Flagship Datasets tab supports two views:
 
-The stat card ("Projects Using ADR England Flagship Linked Datasets") counts
-**unique projects** — i.e. how many distinct projects use at least one flagship
-dataset. These two numbers will always differ because a single project often
-requests multiple datasets from the same collection.
+- **Distinct projects** - each retained project counts once per collection.
+- **Dataset access requests** - every matched dataset request counts, so one
+  project can contribute multiple requests to the same collection.
+
+If a single project accesses three Data First datasets (e.g. Crown Court,
+Magistrates Court, and Prisoner), that contributes **one** Data First project
+in the first view and **three** Data First access requests in the second.
 
 ---
 
@@ -1008,27 +1153,27 @@ requests multiple datasets from the same collection.
 
 The "Datasets Used" free-text field is parsed into individual dataset entries:
 
-1. **Split by newline** — each line typically represents one data provider
-2. **Split by colon** — separates the provider name from the dataset list
-3. **Split by comma and ampersand** — separates individual datasets within a provider
-4. **Geographic suffixes stripped** — e.g. "- UK", "- England and Wales" are removed for grouping
-5. **Name aliases applied** — variant names are mapped to canonical labels
-   (e.g. "LEO via SRS Iteration 1 Standard Extract" → "Longitudinal Education Outcomes")
+1. **Split by newline** - each line typically represents one data provider
+2. **Split by colon** - separates the provider name from the dataset list
+3. **Split by comma and ampersand** - separates individual datasets within a provider
+4. **Geographic suffixes stripped** - e.g. "- UK", "- England and Wales" are removed for grouping
+5. **Name aliases applied** - variant names are mapped to canonical labels
+   (e.g. "LEO via SRS Iteration 1 Standard Extract" -> "Longitudinal Education Outcomes")
 
 ---
 
 ### Definitions
 
-- **DEA (Digital Economy Act 2017)** — UK legislation that provides a legal
+- **DEA (Digital Economy Act 2017)** - UK legislation that provides a legal
   framework for accredited researchers to access de-identified government
   administrative data for research purposes.
 
-- **Trusted Research Environment (TRE)** — Accredited secure computing
+- **Trusted Research Environment (TRE)** - Accredited secure computing
   environments where researchers can access protected data without it leaving
   the secure setting. Examples include the ONS Secure Research Service (SRS)
   and the SAIL Databank.
 
-- **ADR England Flagship Datasets** — Seven linked administrative data
+- **ADR England Flagship Datasets** - Seven linked administrative data
   collections curated by ADR England for cross-domain research, spanning
   justice, education, health, employment, and agriculture.
 
@@ -1041,8 +1186,11 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 - **Dataset parsing** splits on commas and ampersands, which can incorrectly
   break provider names that contain these characters
   (e.g. "Department for Business, Energy & Industrial Strategy").
-- **Duplicate handling** uses Project ID only; genuine re-accreditations
-  sharing the same ID are collapsed to a single entry.
+- **Duplicate handling** removes exact duplicates and same-ID/same-title
+  duplicates, but retains duplicate IDs where the titles differ.
+- **Dataset parsing** includes a cleanup pass for malformed provider breaks and
+  drops obvious parser artefacts, but free-text source formatting can still
+  produce imperfect splits.
 - **Small TRE provider categories** (under 3% of total projects) are grouped
   as "Other" in the pie chart for readability.
 - **Project titles** alone may not fully describe the scope of a research project.
@@ -1054,18 +1202,18 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 A separate analysis script (`llm_theme_analysis_v3.py`) classifies project
 titles using a three-layer framework:
 
-- **Layer A — Substantive Domain** (1 or more from 14 themes, e.g. "Education &
+- **Layer A - Substantive Domain** (1 or more from 14 themes, e.g. "Education &
   Skills", "Health & Social Care", "Crime & Justice")
-- **Layer B — Linkage Mode** (exactly 1: Single-Dataset, Within-Domain,
+- **Layer B - Linkage Mode** (exactly 1: Single-Dataset, Within-Domain,
   Cross-Domain, or Multi-Domain Linkage)
-- **Layer C — Analytical Purpose** (1 or 2, e.g. "Policy Evaluation",
+- **Layer C - Analytical Purpose** (1 or 2, e.g. "Policy Evaluation",
   "Descriptive Monitoring", "Life-Course Analysis")
 
 Classification is performed by Claude (claude-opus-4-6) using structured output
 via the Anthropic API. Results are cached locally to avoid re-classification.
 A narrative summary is auto-generated from the aggregate statistics.
 
-**Note:** Classification is based on project titles only, which limits accuracy —
+**Note:** Classification is based on project titles only, which limits accuracy -
 titles may not fully convey the research methodology or all datasets used.
 """
 
@@ -1130,8 +1278,12 @@ def update_overview(_tab):
     Output("flagship-totals-chart", "figure"),
     Output("flagship-cumulative-chart", "figure"),
     Input("collection-filter", "value"),
+    Input("flagship-metric-mode", "value"),
 )
-def update_flagship(selected_collections):
+def update_flagship(selected_collections, metric_mode):
+    df_flagship = df_flagship_projects if metric_mode == "projects" else df_flagship_requests
+    metric_label, title_noun = _metric_labels(metric_mode)
+
     if not len(df_flagship):
         empty = go.Figure().update_layout(title="No ADR England flagship data available")
         return empty, empty, empty, empty
@@ -1140,31 +1292,39 @@ def update_flagship(selected_collections):
     if selected_collections:
         sub = df_flagship[df_flagship["collection"].isin(selected_collections)]
 
-    # Pooled quarterly: count unique projects per quarter across all (filtered) collections
-    pooled = (
-        sub.groupby("quarter_date")["Project ID"]
-        .nunique()
-        .reset_index()
-        .rename(columns={"Project ID": "Projects"})
-    )
+    # Pooled quarterly across all filtered collections
+    if metric_mode == "projects":
+        pooled = (
+            sub.groupby("quarter_date")["Project Row ID"]
+            .nunique()
+            .reset_index()
+            .rename(columns={"Project Row ID": "Value"})
+        )
+    else:
+        pooled = (
+            sub.groupby("quarter_date")
+            .size()
+            .reset_index()
+            .rename(columns={0: "Value"})
+        )
     fig_pooled = px.bar(
-        pooled, x="quarter_date", y="Projects",
-        title="All ADR England Flagship Requests by Quarter (Pooled)",
-        labels={"quarter_date": "Quarter", "Projects": "Distinct projects"},
+        pooled, x="quarter_date", y="Value",
+        title=f"All ADR England Flagship {metric_label} by Quarter (Pooled)",
+        labels={"quarter_date": "Quarter", "Value": metric_label},
         color_discrete_sequence=[PRIMARY_BAR],
     )
     fig_pooled.update_layout(xaxis_tickformat="%b %Y", bargap=0.15)
     fig_pooled.update_traces(
         marker_line_width=0,
-        hovertemplate="<b>%{x|%b %Y}</b><br>%{y} projects<extra></extra>",
+        hovertemplate=f"<b>%{{x|%b %Y}}</b><br>%{{y}} {title_noun}<extra></extra>",
     )
     _apply_common(fig_pooled)
 
     return (
         fig_pooled,
-        make_collection_line_chart(sub),
-        make_collection_totals_chart(sub),
-        make_cumulative_chart(df_flagship, selected_collections or []),
+        make_collection_line_chart(sub, metric_mode),
+        make_collection_totals_chart(sub, metric_mode),
+        make_cumulative_chart(df_flagship, selected_collections or [], metric_mode),
     )
 
 
@@ -1177,15 +1337,15 @@ def update_flagship(selected_collections):
     Input("browse-scope", "value"),
 )
 def update_browse_table(collection, search, scope):
-    if scope == "flagship" and len(df_flagship):
+    if scope == "flagship" and len(df_flagship_projects):
         # One row per unique project; join collection names for multi-collection projects
         coll_labels = (
-            df_flagship.groupby("Project ID")["collection"]
+            df_flagship_projects.groupby("Project Row ID")["collection"]
             .apply(lambda x: ", ".join(sorted(x.unique())))
             .rename("collection")
         )
-        base = df_all[df_all["is_flagship"]].drop_duplicates(subset=["Project ID"]).copy()
-        base["collection"] = base["Project ID"].map(coll_labels)
+        base = df_all[df_all["is_flagship"]].copy()
+        base["collection"] = base["Project Row ID"].map(coll_labels)
     else:
         base = df_all.copy()
         base["collection"] = base["collections"].apply(
@@ -1193,7 +1353,15 @@ def update_browse_table(collection, search, scope):
         )
 
     if collection and collection != "ALL":
-        base = base[base["collection"] == collection]
+        if scope == "flagship":
+            matching_ids = set(
+                df_flagship_projects.loc[
+                    df_flagship_projects["collection"] == collection, "Project Row ID"
+                ]
+            )
+            base = base[base["Project Row ID"].isin(matching_ids)]
+        else:
+            base = base[base["collections"].apply(lambda x: collection in x)]
 
     if search:
         mask = (

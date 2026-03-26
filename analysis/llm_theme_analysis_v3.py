@@ -64,7 +64,12 @@ CANDIDATE_FILES = [
     "dea_accredited_projects.csv",
 ]
 
+SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
+    ("2023/113", "The Influence of Early Life Health and Nutritional Environment on Later Life Health and Morbidity"),
+}
+
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
+CACHE_SCHEMA_VERSION = 2
 
 MODEL      = "claude-opus-4-6"
 BATCH_SIZE = 30          # conservative to stay within output token budget
@@ -238,6 +243,17 @@ class BatchLayerResult(BaseModel):
 # Data loading
 # ---------------------------------------------------------------------------
 
+def apply_duplicate_policy(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy().drop_duplicates().reset_index(drop=True)
+    out["_title_key"] = out["Title"].fillna("").astype(str).str.strip()
+    special_mask = out.apply(
+        lambda row: (str(row["Project ID"]), row["_title_key"]) in SPECIAL_DROP_PROJECT_TITLE_PAIRS,
+        axis=1,
+    )
+    out = out.loc[~special_mask].copy()
+    out = out.drop_duplicates(subset=["Project ID", "_title_key"], keep="first").reset_index(drop=True)
+    return out.drop(columns="_title_key")
+
 def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
     for fname in CANDIDATE_FILES:
         path = os.path.join(data_dir, fname)
@@ -263,6 +279,15 @@ def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
     if "Legal Basis" in df.columns:
         df = df[df["Legal Basis"].str.contains("Digital Economy Act", na=False, case=False)]
 
+    df = apply_duplicate_policy(df)
+    title_key = df["Title"].fillna("").astype(str).str.strip()
+    duplicated_ids = df["Project ID"].duplicated(keep=False)
+    df["Record ID"] = df["Project ID"].astype(str)
+    df.loc[duplicated_ids, "Record ID"] = (
+        df.loc[duplicated_ids, "Project ID"].astype(str)
+        + " :: "
+        + title_key.loc[duplicated_ids]
+    )
     df["Year"]         = df["Accreditation Date"].dt.year
     df["Quarter"]      = df["Accreditation Date"].dt.to_period("Q")
     df["Quarter Label"] = df["Quarter"].dt.strftime("Q%q %Y")
@@ -277,14 +302,33 @@ def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
 def load_cache(cache_path: str) -> dict:
     if os.path.exists(cache_path):
         with open(cache_path, encoding="utf-8") as f:
-            return json.load(f)
+            raw = json.load(f)
+        if isinstance(raw, dict) and "entries" in raw:
+            meta = raw.get("__meta__", {})
+            if meta.get("cache_schema_version") == CACHE_SCHEMA_VERSION:
+                return raw.get("entries", {})
+            return {}
+        if isinstance(raw, dict):
+            # Legacy cache format keyed directly by record/project ID.
+            return raw
     return {}
 
 
 def save_cache(cache: dict, cache_path: str):
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
     with open(cache_path, "w", encoding="utf-8") as f:
-        json.dump(cache, f, indent=2, ensure_ascii=False)
+        json.dump(
+            {
+                "__meta__": {
+                    "cache_schema_version": CACHE_SCHEMA_VERSION,
+                    "model": MODEL,
+                },
+                "entries": cache,
+            },
+            f,
+            indent=2,
+            ensure_ascii=False,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -444,11 +488,13 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
 def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     """Classify all projects, using cache to skip already-classified ones."""
     cache = load_cache(CACHE_FILE)
+    valid_ids = set(df["Record ID"].astype(str))
+    cache = {k: v for k, v in cache.items() if k in valid_ids}
 
     to_classify = [
-        {"id": str(row["Project ID"]), "title": row["Title"]}
+        {"id": str(row["Record ID"]), "title": row["Title"]}
         for _, row in df.iterrows()
-        if str(row["Project ID"]) not in cache
+        if str(row["Record ID"]) not in cache
     ]
 
     print(f"[llm] {len(cache):,} projects cached; {len(to_classify):,} to classify")
@@ -481,20 +527,20 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     # Attach to DataFrame
     df = df.copy()
 
-    def _get(pid, key, default):
-        entry = cache.get(str(pid))
+    def _get(record_id, key, default):
+        entry = cache.get(str(record_id))
         if isinstance(entry, dict):
             return entry.get(key, default)
         return default
 
-    df["substantive_domains"] = df["Project ID"].apply(
-        lambda pid: _get(pid, "substantive_domains", ["Other"])
+    df["substantive_domains"] = df["Record ID"].apply(
+        lambda record_id: _get(record_id, "substantive_domains", ["Other"])
     )
-    df["linkage_mode"] = df["Project ID"].apply(
-        lambda pid: _get(pid, "linkage_mode", "Unclear from Title")
+    df["linkage_mode"] = df["Record ID"].apply(
+        lambda record_id: _get(record_id, "linkage_mode", "Unclear from Title")
     )
-    df["analytical_purpose"] = df["Project ID"].apply(
-        lambda pid: _get(pid, "analytical_purpose", ["Unclear from Title"])
+    df["analytical_purpose"] = df["Record ID"].apply(
+        lambda record_id: _get(record_id, "analytical_purpose", ["Unclear from Title"])
     )
     df["primary_domain"] = df["substantive_domains"].apply(lambda x: x[0] if x else "Other")
 
