@@ -67,7 +67,9 @@ CANDIDATE_FILES = [
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
 
 MODEL      = "claude-opus-4-6"
-BATCH_SIZE = 40   # slightly smaller to stay within token budget per call
+BATCH_SIZE = 30          # conservative to stay within output token budget
+MAX_TOKENS = 8192        # generous ceiling -- 30 projects x ~120 tokens/entry
+MAX_RETRIES = 3          # retry transient API failures before giving up
 
 # ---------------------------------------------------------------------------
 # Layer A — Substantive Domains
@@ -388,7 +390,7 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
     try:
         response = client.messages.parse(
             model=MODEL,
-            max_tokens=4000,
+            max_tokens=MAX_TOKENS,
             messages=[{"role": "user", "content": prompt}],
             output_format=BatchLayerResult,
         )
@@ -396,10 +398,9 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
         classifications = result_obj.classifications
     except Exception as e:
         print(f"  [warning] Structured parse failed ({e}); falling back to raw JSON")
-        # Fallback: raw API call with manual JSON parse
         raw_response = client.messages.create(
             model=MODEL,
-            max_tokens=4000,
+            max_tokens=MAX_TOKENS,
             messages=[{"role": "user", "content": prompt}],
         )
         raw_text = raw_response.content[0].text
@@ -458,13 +459,23 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
             batch = to_classify[i: i + BATCH_SIZE]
             batch_num = i // BATCH_SIZE + 1
             print(f"  Batch {batch_num}/{n_batches} ({len(batch)} projects)...")
-            try:
-                results = classify_batch(client, batch)
-                cache.update(results)
-                save_cache(cache, CACHE_FILE)
-            except Exception as e:
-                print(f"  [error] Batch failed: {e}")
-                time.sleep(2)
+
+            for attempt in range(1, MAX_RETRIES + 1):
+                try:
+                    results = classify_batch(client, batch)
+                    cache.update(results)
+                    save_cache(cache, CACHE_FILE)
+                    break
+                except Exception as e:
+                    if attempt < MAX_RETRIES:
+                        wait = 2 ** attempt
+                        print(f"  [retry] Attempt {attempt}/{MAX_RETRIES} failed ({e}); "
+                              f"retrying in {wait}s...")
+                        time.sleep(wait)
+                    else:
+                        print(f"  [error] Batch {batch_num} failed after {MAX_RETRIES} "
+                              f"attempts: {e}")
+
             time.sleep(0.5)
 
     # Attach to DataFrame
