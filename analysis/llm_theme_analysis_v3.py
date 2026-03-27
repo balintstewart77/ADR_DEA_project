@@ -70,11 +70,11 @@ SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
 }
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
-CACHE_SCHEMA_VERSION = 2
+CACHE_SCHEMA_VERSION = 3
 
 MODEL      = "claude-opus-4-6"
-BATCH_SIZE = 30          # conservative to stay within output token budget
-MAX_TOKENS = 8192        # generous ceiling -- 30 projects x ~120 tokens/entry
+BATCH_SIZE = 20          # reduced from 30 to accommodate dataset info in prompt
+MAX_TOKENS = 8192        # generous ceiling -- 20 projects x ~180 tokens/entry
 MAX_RETRIES = 3          # retry transient API failures before giving up
 
 # ---------------------------------------------------------------------------
@@ -109,10 +109,11 @@ DOMAIN_GUIDANCE = textwrap.dedent("""
   8.  Migration & Demographics      — migration flows, ethnicity, population, fertility, mortality
   9.  Environment & Agriculture     — pollution, land use, farming, energy, climate adaptation
   10. Public Finance & Taxation     — tax compliance, public spending, fiscal policy
-  11. Gender, Race & Ethnicity      — gender gaps, racial disparities as primary focus (not incidental)
+  11. Gender, Race & Ethnicity      — gender gaps, racial disparities as the *primary research question*
+                                      (not when demographic variables appear as controls or covariates)
   12. COVID-19 & Pandemic           — COVID-19 transmission, vaccination, lockdown impacts
   13. Data Infrastructure & Methodology — record linkage methods, data quality, survey methodology
-  14. Other                         — genuinely uncategorisable; use sparingly
+  14. Other                         — genuinely uncategorisable; assign when no other domain fits
 """).strip()
 
 # ---------------------------------------------------------------------------
@@ -129,17 +130,20 @@ LINKAGE_MODES = [
 
 LINKAGE_GUIDANCE = textwrap.dedent("""
   Single-Dataset        — project uses only one administrative dataset; no record linkage implied
-  Within-Domain Linkage — links 2+ datasets from the same domain (e.g. two education datasets,
-                          or two health registries)
-  Cross-Domain Linkage  — links datasets from exactly two distinct domains (e.g. education ↔ employment,
-                          or health ↔ crime)
-  Multi-Domain Linkage  — links datasets spanning three or more distinct domains
-  Unclear from Title    — the title does not give enough information to judge linkage
+  Within-Domain Linkage — links 2+ datasets from the same provider or same policy domain
+                          (e.g. two ONS surveys, or two health registries)
+  Cross-Domain Linkage  — links datasets from exactly two distinct policy domains or providers
+                          (e.g. education data ↔ employment data, or DfE ↔ DWP)
+  Multi-Domain Linkage  — links datasets spanning three or more distinct domains or providers
+  Unclear from Title    — ONLY when both the title and datasets field are too vague to judge
 
-  Classify what the project *does*, not what data *exist*.  If the title mentions only one
-  outcome and one exposure from the same sector, choose Within-Domain Linkage.
-  If the title clearly bridges two sectors (e.g. "school attainment and labour market outcomes"),
-  choose Cross-Domain Linkage.
+  Use the datasets listed alongside each title to determine linkage mode:
+  • If exactly 1 dataset from 1 provider is listed → Single-Dataset.
+  • If 2+ datasets from the same provider covering the same policy area → Within-Domain Linkage.
+  • If datasets from 2 distinct providers or policy areas → Cross-Domain Linkage.
+  • If datasets from 3+ distinct providers or policy areas → Multi-Domain Linkage.
+  • Only use "Unclear from Title" when the datasets field is empty or genuinely ambiguous.
+  The title provides additional context for interpreting what the datasets are being used for.
 """).strip()
 
 # ---------------------------------------------------------------------------
@@ -264,6 +268,84 @@ class BatchClassificationError(RuntimeError):
 
 
 # ---------------------------------------------------------------------------
+# Label normalisation (for raw JSON fallback)
+# ---------------------------------------------------------------------------
+
+# Build lookup tables: lowercase → canonical label
+_DOMAIN_LOOKUP = {d.lower(): d for d in DOMAINS}
+_LINKAGE_LOOKUP = {m.lower(): m for m in LINKAGE_MODES}
+_PURPOSE_LOOKUP = {p.lower(): p for p in PURPOSES}
+
+# Common cross-layer mistakes the model makes
+_LABEL_CORRECTIONS = {
+    # Purposes that appear in domains slot
+    "descriptive monitoring": None,
+    "outcome linkage": None,
+    "policy evaluation / impact analysis": None,
+    "policy evaluation": "Policy Evaluation / Impact Analysis",
+    "inequality / disparities analysis": None,
+    # Domains that appear in purpose slot
+    "other": None,
+}
+
+
+def _normalise_label(value: str, lookup: dict) -> str | None:
+    """Try to match a label to a canonical form. Returns None if no match."""
+    v = value.strip()
+    # Exact match
+    if v in lookup.values():
+        return v
+    # Case-insensitive match
+    low = v.lower()
+    if low in lookup:
+        return lookup[low]
+    # Strip trailing/leading whitespace variants and common punctuation
+    cleaned = low.strip(" .,;")
+    if cleaned in lookup:
+        return lookup[cleaned]
+    return None
+
+
+def _normalise_classification_dict(raw_dict: dict) -> dict:
+    """
+    Normalise label strings in a raw classification dict before Pydantic validation.
+    Fixes case mismatches, cross-layer label swaps, and minor spelling variants.
+    """
+    if "classifications" not in raw_dict:
+        return raw_dict
+
+    for entry in raw_dict["classifications"]:
+        # Normalise domains
+        if "substantive_domains" in entry and isinstance(entry["substantive_domains"], list):
+            normalised = []
+            for d in entry["substantive_domains"]:
+                canon = _normalise_label(d, _DOMAIN_LOOKUP)
+                if canon:
+                    normalised.append(canon)
+                # else: drop unrecognised labels rather than failing
+            entry["substantive_domains"] = normalised if normalised else ["Other"]
+
+        # Normalise linkage mode
+        if "linkage_mode" in entry and isinstance(entry["linkage_mode"], str):
+            canon = _normalise_label(entry["linkage_mode"], _LINKAGE_LOOKUP)
+            if canon:
+                entry["linkage_mode"] = canon
+            else:
+                entry["linkage_mode"] = "Unclear from Title"
+
+        # Normalise purposes
+        if "analytical_purpose" in entry and isinstance(entry["analytical_purpose"], list):
+            normalised = []
+            for p in entry["analytical_purpose"]:
+                canon = _normalise_label(p, _PURPOSE_LOOKUP)
+                if canon:
+                    normalised.append(canon)
+            entry["analytical_purpose"] = normalised if normalised else ["Unclear from Title"]
+
+    return raw_dict
+
+
+# ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
 
@@ -384,14 +466,77 @@ def _sanitise_prompt_text(value: str) -> str:
     return text.strip()
 
 
+def _summarise_datasets(raw: str, max_chars: int = 300) -> str:
+    """Produce a concise, prompt-safe summary of the 'Datasets Used' field."""
+    if not isinstance(raw, str) or not raw.strip():
+        return "(no datasets listed)"
+    # Clean control characters
+    text = re.sub(r"_x000D_", " ", raw)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = text.replace("\r", "\n")
+    text = re.sub(r"\s{2,}", " ", text)
+    text = " ".join(text.split())
+    if len(text) > max_chars:
+        text = text[:max_chars] + "..."
+    # Apply the same sanitisation as titles to prevent prompt injection
+    text = _sanitise_prompt_text(text)
+    return text
+
+
+CLASSIFICATION_EXAMPLES = textwrap.dedent("""
+  Example 1 — Single-Dataset (1 dataset, 1 provider):
+    Title: "Analysis of victimisation data from the Crime Survey for England and Wales"
+    Datasets: Office for National Statistics: Crime Survey for England and Wales
+    → domains: ["Crime & Justice"]
+    → linkage_mode: "Single-Dataset"
+    → purpose: ["Descriptive Monitoring"]
+
+  Example 2 — Within-Domain Linkage (2+ datasets, 1 provider, same policy area):
+    Title: "ESCoE: Using Firm-Level Surveys to Understand Industrial Capacity and Productivity"
+    Datasets: Office for National Statistics: Annual Business Survey, Business Structure Database, Monthly Business Survey
+    → domains: ["Business & Productivity"]
+    → linkage_mode: "Within-Domain Linkage"  (3 ONS business surveys, all same domain)
+    → purpose: ["Descriptive Monitoring"]
+
+  Example 3 — Cross-Domain Linkage (2 distinct providers or policy domains):
+    Title: "Impact of Universal Credit on employment outcomes"
+    Datasets: Department for Work and Pensions: Universal Credit Dataset; Office for National Statistics: Annual Population Survey
+    → domains: ["Labour Market & Employment", "Poverty, Inequality & Living Standards"]
+    → linkage_mode: "Cross-Domain Linkage"  (DWP + ONS = 2 distinct providers)
+    → purpose: ["Policy Evaluation / Impact Analysis"]
+
+  Example 4 — Multi-Domain Linkage (3+ providers or policy domains):
+    Title: "Pathways from education through employment to health outcomes"
+    Datasets: Department for Education: National Pupil Database; Office for National Statistics: ASHE; NHS Digital: Hospital Episode Statistics
+    → domains: ["Education & Skills", "Labour Market & Employment", "Health & Social Care"]
+    → linkage_mode: "Multi-Domain Linkage"  (DfE + ONS + NHS = 3 providers)
+    → purpose: ["Life-Course / Trajectory Analysis"]
+
+  Example 5 — Opaque title, datasets disambiguate:
+    Title: "AMPHoRA"
+    Datasets: Office for National Statistics: Census 2011, Death Registrations
+    → domains: ["Health & Social Care"]  (inferred from death registrations)
+    → linkage_mode: "Within-Domain Linkage"  (2 ONS datasets, health domain)
+    → purpose: ["Unclear from Title"]  (acronym gives no analytical clue)
+
+  Example 6 — Gender/Race domain, non-Inequality purpose:
+    Title: "Shaping and demonstrating the value of the Growing up in England dataset: Roma, Gypsy and Traveller children case study"
+    Datasets: Office for National Statistics: Growing Up in England Wave 1
+    → domains: ["Education & Skills", "Gender, Race & Ethnicity"]
+    → linkage_mode: "Single-Dataset"
+    → purpose: ["Methodological / Infrastructure Research"]  (NOT Inequality — data validation study)
+""").strip()
+
+
 def _build_prompt(projects: list[dict]) -> str:
     numbered = "\n".join(
-        f'{i + 1}. [{p["prompt_id"]}] {p["prompt_title"]}'
+        f'{i + 1}. [{p["prompt_id"]}] Title: {p["prompt_title"]} | Datasets: {p["prompt_datasets"]}'
         for i, p in enumerate(projects)
     )
     return textwrap.dedent(f"""
         You are a research classification expert specialising in UK administrative data research.
-        Classify each project title below using three independent layers.
+        Classify each project below using three independent layers.
+        Each project shows a title and the datasets it accesses.
 
         ══════════════════════════════════════════════════════════════
         LAYER A — SUBSTANTIVE DOMAIN  (assign 1 or more)
@@ -411,16 +556,26 @@ def _build_prompt(projects: list[dict]) -> str:
         ══════════════════════════════════════════════════════════════
         CLASSIFICATION RULES
         ══════════════════════════════════════════════════════════════
-        • Be conservative — prefer "Unclear from Title" over guessing.
         • Keep the three layers independent; do not let your domain choice
           bias your linkage or purpose choice.
-        • Most projects: 1 domain + "Unclear from Title" linkage + 1 purpose.
-        • Only expand domain list if genuinely multi-topic.
+        • For Layer B, use the datasets listed — do not guess from the title alone.
+        • For Layers A and C, prefer a specific classification if the title gives
+          reasonable evidence — only use "Unclear from Title" or "Other" when the
+          title is genuinely opaque (e.g. an acronym with no descriptive words).
+        • Avoid treating domain and purpose as synonymous — a Gender, Race &
+          Ethnicity project is NOT automatically "Inequality / Disparities
+          Analysis"; it could be Descriptive Monitoring, Outcome Linkage, or
+          Policy Evaluation depending on the research design.
         • When assigning multiple domains, list the most relevant domain first.
         • Never assign more than 2 purposes.
 
         ══════════════════════════════════════════════════════════════
-        PROJECT TITLES TO CLASSIFY
+        WORKED EXAMPLES  (for guidance only — do not include in output)
+        ══════════════════════════════════════════════════════════════
+        {CLASSIFICATION_EXAMPLES}
+
+        ══════════════════════════════════════════════════════════════
+        PROJECTS TO CLASSIFY
         ══════════════════════════════════════════════════════════════
         {numbered}
 
@@ -529,6 +684,7 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             raise RuntimeError("API returned empty or non-text response content")
         raw_text = raw_response.content[0].text
         raw_dict = _parse_raw_json(raw_text, projects)
+        raw_dict = _normalise_classification_dict(raw_dict)
 
         try:
             result_obj = BatchLayerResult(**raw_dict)
@@ -562,8 +718,8 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
         {
             "id": str(row["Record ID"]),
             "title": row["Title"],
-            "prompt_id": _sanitise_prompt_text(str(row["Record ID"])),
             "prompt_title": _sanitise_prompt_text(row["Title"]),
+            "prompt_datasets": _summarise_datasets(row.get("Datasets Used", "")),
         }
         for _, row in df.iterrows()
         if str(row["Record ID"]) not in cache
@@ -815,8 +971,12 @@ def generate_narrative(
         6. Gaps or emerging areas to watch
 
         Write in a professional policy-briefing style, suitable for a senior civil servant audience.
-        Be specific: cite numbers and trends rather than vague generalisations.
-        Only comment on patterns that are directly supported by the data provided above.
+        STRICT RULES:
+        • Cite exact numbers from the tables above — do not round, smooth, or invent ranges.
+        • Do not speculate about causes or motivations (e.g. "reflecting the post-pandemic
+          equity agenda"). Only describe what the data shows, not why.
+        • Every claim must be directly verifiable from the tables provided. If a pattern
+          is not visible in the data, do not mention it.
     """).strip()
 
     response = client.messages.create(
@@ -833,6 +993,32 @@ def generate_narrative(
 # Save outputs
 # ---------------------------------------------------------------------------
 
+def _build_inspection_csv(df: pd.DataFrame) -> pd.DataFrame:
+    """Build a spreadsheet-friendly CSV with one boolean column per domain/purpose."""
+    out = df[["Project ID", "Record ID", "Title", "Datasets Used",
+              "Accreditation Date", "Year"]].copy()
+
+    # Layer A — one boolean column per domain
+    for domain in DOMAINS:
+        col = f"domain: {domain}"
+        out[col] = df["substantive_domains"].apply(
+            lambda x: 1 if isinstance(x, list) and domain in x else 0
+        )
+    out["primary_domain"] = df["primary_domain"]
+
+    # Layer B — single column
+    out["linkage_mode"] = df["linkage_mode"]
+
+    # Layer C — one boolean column per purpose
+    for purpose in PURPOSES:
+        col = f"purpose: {purpose}"
+        out[col] = df["analytical_purpose"].apply(
+            lambda x: 1 if isinstance(x, list) and purpose in x else 0
+        )
+
+    return out
+
+
 def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str):
     os.makedirs(output_dir, exist_ok=True)
 
@@ -846,6 +1032,13 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
     )
     df_out.to_csv(
         os.path.join(output_dir, "layer_classifications.csv"),
+        index=False, encoding="utf-8-sig",
+    )
+
+    # Inspection-friendly CSV with boolean columns
+    df_inspect = _build_inspection_csv(df)
+    df_inspect.to_csv(
+        os.path.join(output_dir, "all_projects_classified.csv"),
         index=False, encoding="utf-8-sig",
     )
 
@@ -879,6 +1072,7 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
 
     print(f"\n[output] Files saved to {output_dir}/")
     for name in [
+        "all_projects_classified.csv",
         "layer_classifications.csv",
         "layer_a_by_year.csv", "layer_b_by_year.csv", "layer_c_by_year.csv",
         "layer_a_totals.csv", "layer_b_totals.csv", "layer_c_totals.csv",

@@ -386,6 +386,96 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+# ---------------------------------------------------------------------------
+# Institution parsing
+# ---------------------------------------------------------------------------
+
+# Common aliases to normalise institution names
+INSTITUTION_ALIASES = {
+    "ONS": "Office for National Statistics",
+    "DfE": "Department for Education",
+    "DWP": "Department for Work and Pensions",
+    "HMRC": "HM Revenue and Customs",
+    "MoJ": "Ministry of Justice",
+    "UCL": "University College London",
+    "LSE": "London School of Economics",
+    "KCL": "King's College London",
+    "LSHTM": "London School of Hygiene and Tropical Medicine",
+    "London School of Economics and Political Science": "London School of Economics",
+    "London School of Economics & Political Science": "London School of Economics",
+    "The University of Manchester": "University of Manchester",
+    "The University of Sheffield": "University of Sheffield",
+    "The University of Edinburgh": "University of Edinburgh",
+    "The University of Warwick": "University of Warwick",
+    "The University of York": "University of York",
+    "The University of Nottingham": "University of Nottingham",
+    "The Alan Turing Institute": "Alan Turing Institute",
+    "King's College London": "King's College London",
+    "Kings College London": "King's College London",
+}
+
+# Patterns that indicate a non-institution fragment
+_NOT_INSTITUTION_RE = re.compile(
+    r"^\s*$|^\d+$|^(and|the|of|for|in|at|to)\s*$",
+    re.IGNORECASE,
+)
+
+
+def _normalise_institution(name: str) -> str:
+    """Clean and normalise an institution name."""
+    name = name.strip().rstrip(".")
+    # Apply known aliases
+    if name in INSTITUTION_ALIASES:
+        return INSTITUTION_ALIASES[name]
+    # Normalise "University of X" / "X University" variants
+    name = re.sub(r"\s+", " ", name)
+    # Strip leading/trailing whitespace and common artefacts
+    name = re.sub(r"_x000D_", "", name)
+    name = name.strip(" \t\r\n,;")
+    return name
+
+
+def parse_institutions(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Parse the 'Researchers' column to extract institutions.
+    Returns DataFrame with columns: Project ID, Year, institution.
+    """
+    rows = []
+    for _, proj in df.iterrows():
+        raw = proj.get("Researchers", "")
+        if not isinstance(raw, str) or not raw.strip():
+            continue
+        pid = proj["Project ID"]
+        year = proj["Year"]
+
+        # Clean control characters
+        text = raw.replace("\r", "\n").replace("\t", " ")
+        text = re.sub(r"_x000D_", " ", text)
+
+        # Re-join lines where institution is split: "Name,\nInstitution"
+        text = re.sub(r",\s*\n\s*", ", ", text)
+
+        institutions_seen = set()
+        for line in text.split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            # Format: "Name, Institution" — take everything after the first comma
+            if "," in line:
+                _, institution = line.split(",", 1)
+                institution = _normalise_institution(institution)
+                if institution and not _NOT_INSTITUTION_RE.match(institution) and len(institution) > 2:
+                    if institution not in institutions_seen:
+                        institutions_seen.add(institution)
+                        rows.append({
+                            "Project ID": pid,
+                            "Year": year,
+                            "institution": institution,
+                        })
+
+    return pd.DataFrame(rows)
+
+
 # Load data once at startup
 df_raw, source_file = load_raw()
 df_all, df_flagship_requests, PROCESSING_STATS = process_data(df_raw)
@@ -402,12 +492,23 @@ df_flagship_projects = (
 # Parse individual dataset usage
 df_datasets = parse_datasets(df_all)
 
+# Parse institution affiliations
+df_institutions = parse_institutions(df_all)
+
 COLLECTIONS = (
     sorted(df_flagship_projects["collection"].unique())
     if len(df_flagship_projects)
     else list(FLAGSHIP_COLLECTIONS.keys())
 )
-DATA_DATE = df_all["Accreditation Date"].max().strftime("%d %B %Y") if len(df_all) else "unknown"
+_max_date = df_all["Accreditation Date"].max() if len(df_all) else None
+DATA_DATE = _max_date.strftime("%d %B %Y") if _max_date is not None else "unknown"
+# Detect whether the latest year is incomplete (data doesn't cover the full year)
+PARTIAL_YEAR = int(_max_date.year) if (_max_date is not None and _max_date.month < 12) else None
+PARTIAL_YEAR_LABEL = f"{PARTIAL_YEAR}*" if PARTIAL_YEAR else None
+PARTIAL_YEAR_NOTE = (
+    f"* {PARTIAL_YEAR} data covers Jan–{_max_date.strftime('%b')} only"
+    if PARTIAL_YEAR else ""
+)
 TOTAL_PROJECTS = len(df_all)
 TOTAL_FLAGSHIP = df_flagship_projects["Project Row ID"].nunique() if len(df_flagship_projects) else 0
 TOTAL_FLAGSHIP_REQUESTS = len(df_flagship_requests) if len(df_flagship_requests) else 0
@@ -484,6 +585,24 @@ def _apply_common(fig: go.Figure, height: int = CHART_HEIGHT) -> go.Figure:
     return fig
 
 
+def _annotate_partial_year(fig: go.Figure, years=None) -> go.Figure:
+    """Add a footnote and asterisked x-tick for the partial final year."""
+    if not PARTIAL_YEAR:
+        return fig
+    if years is not None:
+        tickvals = sorted(years)
+        ticktext = [f"{yr}*" if yr == PARTIAL_YEAR else str(yr) for yr in tickvals]
+        fig.update_xaxes(tickvals=tickvals, ticktext=ticktext)
+    fig.add_annotation(
+        text=PARTIAL_YEAR_NOTE,
+        xref="paper", yref="paper",
+        x=1, y=-0.12, showarrow=False,
+        font=dict(size=10, color="#7f8c8d"),
+        xanchor="right",
+    )
+    return fig
+
+
 def make_quarterly_chart(df: pd.DataFrame) -> go.Figure:
     counts = (
         df.groupby("quarter_date")["Project ID"]
@@ -508,16 +627,23 @@ def make_quarterly_chart(df: pd.DataFrame) -> go.Figure:
 def make_yearly_chart(df: pd.DataFrame) -> go.Figure:
     yearly = df.groupby("Year")["Project ID"].count().reset_index()
     yearly.columns = ["Year", "Projects"]
-    fig = px.bar(
-        yearly, x="Year", y="Projects",
-        title="New DEA Projects by Year",
-        color_discrete_sequence=[SECONDARY_BAR],
-    )
-    fig.update_layout(bargap=0.25, xaxis_dtick=1)
-    fig.update_traces(
+    # Use a lighter colour for the partial final year
+    colours = [
+        SECONDARY_BAR if yr != PARTIAL_YEAR else "#f4a582"
+        for yr in yearly["Year"]
+    ]
+    fig = go.Figure(go.Bar(
+        x=yearly["Year"], y=yearly["Projects"],
+        marker_color=colours,
         marker_line_width=0,
         hovertemplate="<b>%{x}</b><br>%{y} projects<extra></extra>",
+    ))
+    fig.update_layout(
+        title="New DEA Projects by Year",
+        xaxis_title="Year", yaxis_title="Projects",
+        bargap=0.25, xaxis_dtick=1,
     )
+    _annotate_partial_year(fig, years=yearly["Year"])
     return _apply_common(fig)
 
 
@@ -644,6 +770,69 @@ def make_cumulative_chart(df_flag: pd.DataFrame, selected_collections: list, met
         line_width=2,
         hovertemplate=f"<b>%{{fullData.name}}</b><br>%{{x|%b %Y}}<br>%{{y}} cumulative {title_noun}<extra></extra>",
     )
+    return _apply_common(fig)
+
+
+def make_institution_bar(df_inst: pd.DataFrame, top_n: int = 20) -> go.Figure:
+    """Horizontal bar chart of top institutions by project count."""
+    counts = (
+        df_inst.groupby("institution")["Project ID"]
+        .nunique()
+        .reset_index()
+        .rename(columns={"Project ID": "Projects"})
+        .sort_values("Projects", ascending=True)
+        .tail(top_n)
+    )
+    fig = px.bar(
+        counts, x="Projects", y="institution", orientation="h",
+        title=f"Top {top_n} Institutions by Number of DEA Projects",
+        labels={"institution": "", "Projects": "Number of projects"},
+        color_discrete_sequence=[PRIMARY_BAR],
+    )
+    fig.update_traces(
+        hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
+    )
+    fig.update_layout(
+        margin=dict(l=280),
+        height=max(400, top_n * 24),
+        yaxis_tickfont=dict(size=11),
+    )
+    return _apply_common(fig, height=max(400, top_n * 24))
+
+
+def make_institution_trend(df_inst: pd.DataFrame, top_n: int = 8) -> go.Figure:
+    """Line chart of projects per year for the top institutions."""
+    top_insts = (
+        df_inst.groupby("institution")["Project ID"]
+        .nunique()
+        .nlargest(top_n)
+        .index.tolist()
+    )
+    sub = df_inst[df_inst["institution"].isin(top_insts)]
+    yearly = (
+        sub.groupby(["Year", "institution"])["Project ID"]
+        .nunique()
+        .reset_index()
+        .rename(columns={"Project ID": "Projects"})
+    )
+    fig = px.line(
+        yearly, x="Year", y="Projects", color="institution",
+        title=f"Projects per Year — Top {top_n} Institutions",
+        labels={"institution": "Institution", "Projects": "Projects"},
+        markers=True,
+    )
+    fig.update_layout(
+        xaxis_dtick=1,
+        legend=dict(
+            orientation="v",
+            yanchor="top", y=1,
+            xanchor="left", x=1.02,
+            font=dict(size=10),
+        ),
+        margin=dict(r=200),
+    )
+    fig.update_traces(line_width=2.5)
+    _annotate_partial_year(fig, years=yearly["Year"].unique())
     return _apply_common(fig)
 
 
@@ -1217,6 +1406,37 @@ A narrative summary is auto-generated from the aggregate statistics.
 titles may not fully convey the research methodology or all datasets used.
 """
 
+INSTITUTIONS_TAB = dbc.Tab(label="Institutions", tab_id="tab-institutions", children=[
+    html.P(
+        "Analysis of researcher institutions involved in DEA-accredited projects. "
+        "Institutions are extracted from the Accredited Researchers field.",
+        className="section-desc",
+    ),
+    dbc.Row([
+        dbc.Col([
+            html.Label("Show top N institutions", className="filter-label"),
+            dcc.Dropdown(
+                id="institutions-topn",
+                options=[{"label": str(n), "value": n} for n in [10, 20, 30, 50]],
+                value=20,
+                clearable=False,
+            ),
+        ], md=2),
+    ]),
+    dbc.Row([
+        dbc.Col(
+            html.Div(dcc.Graph(id="institutions-bar-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            width=12,
+        ),
+    ]),
+    dbc.Row([
+        dbc.Col(
+            html.Div(dcc.Graph(id="institutions-trend-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            width=12,
+        ),
+    ]),
+])
+
 ABOUT_TAB = dbc.Tab(label="About", tab_id="tab-about", children=[
     dbc.Row([
         dbc.Col([
@@ -1240,7 +1460,7 @@ app.layout = html.Div([
         html.Div(style={"height": "1.25rem"}),  # spacer below navbar
         STAT_CARDS,
         dbc.Tabs(
-            [OVERVIEW_TAB, DATASETS_TAB, FLAGSHIP_TAB, BROWSE_TAB, ABOUT_TAB],
+            [OVERVIEW_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, BROWSE_TAB, ABOUT_TAB],
             id="main-tabs",
             active_tab="tab-overview",
             className="dea-tabs",
@@ -1472,6 +1692,7 @@ def update_datasets_tab(top_n, provider, exclude_flagship):
         margin=dict(r=200),
     )
     fig_trend.update_traces(line_width=2.5, marker_size=6)
+    _annotate_partial_year(fig_trend, years=trend_data["Year"].unique())
     _apply_common(fig_trend)
 
     # -- Provider breakdown pie --
@@ -1510,6 +1731,18 @@ def update_datasets_tab(top_n, provider, exclude_flagship):
     _apply_common(fig_prov)
 
     return fig_top, fig_trend, fig_prov
+
+
+@app.callback(
+    Output("institutions-bar-chart", "figure"),
+    Output("institutions-trend-chart", "figure"),
+    Input("institutions-topn", "value"),
+)
+def update_institutions_tab(top_n):
+    return (
+        make_institution_bar(df_institutions, top_n=top_n),
+        make_institution_trend(df_institutions, top_n=8),
+    )
 
 
 # ---------------------------------------------------------------------------
