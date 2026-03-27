@@ -44,6 +44,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import tempfile
 import textwrap
 import time
 from typing import Literal
@@ -222,21 +223,44 @@ class ProjectLayers(BaseModel):
 
     @field_validator("substantive_domains")
     @classmethod
-    def at_least_one_domain(cls, v):
+    def clean_domains(cls, v):
         if not v:
             return ["Other"]
-        return v
+        # Deduplicate while preserving order
+        seen, deduped = set(), []
+        for d in v:
+            if d not in seen:
+                seen.add(d)
+                deduped.append(d)
+        # Drop "Other" if a real domain is present
+        if len(deduped) > 1:
+            deduped = [d for d in deduped if d != "Other"] or ["Other"]
+        return deduped
 
     @field_validator("analytical_purpose")
     @classmethod
-    def one_or_two_purposes(cls, v):
+    def clean_purposes(cls, v):
         if not v:
             return ["Unclear from Title"]
-        return v[:2]  # cap at 2
+        # Deduplicate while preserving order, cap at 2
+        seen, deduped = set(), []
+        for p in v:
+            if p not in seen:
+                seen.add(p)
+                deduped.append(p)
+        deduped = deduped[:2]
+        # Drop "Unclear from Title" if a real purpose is present
+        if len(deduped) > 1:
+            deduped = [p for p in deduped if p != "Unclear from Title"] or ["Unclear from Title"]
+        return deduped
 
 
 class BatchLayerResult(BaseModel):
     classifications: list[ProjectLayers]
+
+
+class BatchClassificationError(RuntimeError):
+    """Raised when a batch response cannot be safely accepted."""
 
 
 # ---------------------------------------------------------------------------
@@ -301,43 +325,69 @@ def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
 
 def load_cache(cache_path: str) -> dict:
     if os.path.exists(cache_path):
-        with open(cache_path, encoding="utf-8") as f:
-            raw = json.load(f)
-        if isinstance(raw, dict) and "entries" in raw:
-            meta = raw.get("__meta__", {})
-            if meta.get("cache_schema_version") == CACHE_SCHEMA_VERSION:
-                return raw.get("entries", {})
+        try:
+            with open(cache_path, encoding="utf-8") as f:
+                raw = json.load(f)
+        except (json.JSONDecodeError, ValueError) as e:
+            print(f"[cache] Corrupt cache file ({e}) — starting fresh")
             return {}
-        if isinstance(raw, dict):
-            # Legacy cache format keyed directly by record/project ID.
-            return raw
+        if not isinstance(raw, dict) or "entries" not in raw:
+            print("[cache] Unrecognised cache format — invalidating cache")
+            return {}
+        meta = raw.get("__meta__", {})
+        if meta.get("cache_schema_version") != CACHE_SCHEMA_VERSION:
+            print("[cache] Schema version mismatch — invalidating cache")
+            return {}
+        if meta.get("model") != MODEL:
+            print(f"[cache] Model changed ({meta.get('model')} → {MODEL}) "
+                  f"— invalidating cache")
+            return {}
+        return raw.get("entries", {})
     return {}
 
 
 def save_cache(cache: dict, cache_path: str):
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
-    with open(cache_path, "w", encoding="utf-8") as f:
-        json.dump(
-            {
-                "__meta__": {
-                    "cache_schema_version": CACHE_SCHEMA_VERSION,
-                    "model": MODEL,
-                },
-                "entries": cache,
-            },
-            f,
-            indent=2,
-            ensure_ascii=False,
-        )
+    payload = {
+        "__meta__": {
+            "cache_schema_version": CACHE_SCHEMA_VERSION,
+            "model": MODEL,
+        },
+        "entries": cache,
+    }
+    cache_dir = os.path.dirname(cache_path)
+    fd, tmp_path = tempfile.mkstemp(prefix="llm_layer_cache_", suffix=".json", dir=cache_dir)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, cache_path)
+    except Exception:
+        try:
+            os.unlink(tmp_path)
+        except FileNotFoundError:
+            pass
+        raise
 
 
 # ---------------------------------------------------------------------------
 # LLM classification
 # ---------------------------------------------------------------------------
 
+def _sanitise_prompt_text(value: str) -> str:
+    """Normalise text before inserting it into the prompt."""
+    text = " ".join(str(value).split())
+    text = text.replace("```", "'''")
+    text = text.replace("{", "(").replace("}", ")")
+    text = text.replace("[", "(").replace("]", ")")
+    return text.strip()
+
+
 def _build_prompt(projects: list[dict]) -> str:
     numbered = "\n".join(
-        f'{i + 1}. [{p["id"]}] {p["title"]}' for i, p in enumerate(projects)
+        f'{i + 1}. [{p["prompt_id"]}] {p["prompt_title"]}'
+        for i, p in enumerate(projects)
     )
     return textwrap.dedent(f"""
         You are a research classification expert specialising in UK administrative data research.
@@ -366,6 +416,7 @@ def _build_prompt(projects: list[dict]) -> str:
           bias your linkage or purpose choice.
         • Most projects: 1 domain + "Unclear from Title" linkage + 1 purpose.
         • Only expand domain list if genuinely multi-topic.
+        • When assigning multiple domains, list the most relevant domain first.
         • Never assign more than 2 purposes.
 
         ══════════════════════════════════════════════════════════════
@@ -411,18 +462,35 @@ def _parse_raw_json(raw: str, projects: list[dict]) -> dict:
             except json.JSONDecodeError:
                 pass
 
-    print("  [warning] Could not parse JSON from response; assigning defaults")
-    return {
-        "classifications": [
-            {
-                "project_id": p["id"],
-                "substantive_domains": ["Other"],
-                "linkage_mode": "Unclear from Title",
-                "analytical_purpose": ["Unclear from Title"],
-            }
-            for p in projects
-        ]
-    }
+    raise BatchClassificationError("Could not parse JSON from LLM response")
+
+
+def _validate_batch_integrity(classifications: list[ProjectLayers], projects: list[dict]) -> None:
+    requested_ids = [p["id"] for p in projects]
+    requested_set = set(requested_ids)
+    seen = set()
+    duplicate_ids = set()
+    unexpected_ids = set()
+
+    for cls in classifications:
+        if cls.project_id not in requested_set:
+            unexpected_ids.add(cls.project_id)
+            continue
+        if cls.project_id in seen:
+            duplicate_ids.add(cls.project_id)
+            continue
+        seen.add(cls.project_id)
+
+    missing_ids = [project_id for project_id in requested_ids if project_id not in seen]
+    problems = []
+    if unexpected_ids:
+        problems.append(f"unexpected IDs: {sorted(unexpected_ids)}")
+    if duplicate_ids:
+        problems.append(f"duplicate IDs: {sorted(duplicate_ids)}")
+    if missing_ids:
+        problems.append(f"missing IDs: {missing_ids}")
+    if problems:
+        raise BatchClassificationError("; ".join(problems))
 
 
 def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
@@ -447,6 +515,8 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             max_tokens=MAX_TOKENS,
             messages=[{"role": "user", "content": prompt}],
         )
+        if not raw_response.content or not hasattr(raw_response.content[0], "text"):
+            raise RuntimeError("API returned empty or non-text response content")
         raw_text = raw_response.content[0].text
         raw_dict = _parse_raw_json(raw_text, projects)
 
@@ -454,15 +524,9 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             result_obj = BatchLayerResult(**raw_dict)
             classifications = result_obj.classifications
         except Exception as e2:
-            print(f"  [warning] Pydantic validation failed ({e2}); using defaults")
-            return {
-                p["id"]: {
-                    "substantive_domains": ["Other"],
-                    "linkage_mode": "Unclear from Title",
-                    "analytical_purpose": ["Unclear from Title"],
-                }
-                for p in projects
-            }
+            raise BatchClassificationError(f"Pydantic validation failed: {e2}") from e2
+
+    _validate_batch_integrity(classifications, projects)
 
     # Build output dict
     out = {}
@@ -472,15 +536,6 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             "linkage_mode":        cls.linkage_mode,
             "analytical_purpose":  cls.analytical_purpose,
         }
-
-    # Fill any missing projects with defaults
-    for p in projects:
-        if p["id"] not in out:
-            out[p["id"]] = {
-                "substantive_domains": ["Other"],
-                "linkage_mode":        "Unclear from Title",
-                "analytical_purpose":  ["Unclear from Title"],
-            }
 
     return out
 
@@ -492,7 +547,12 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     cache = {k: v for k, v in cache.items() if k in valid_ids}
 
     to_classify = [
-        {"id": str(row["Record ID"]), "title": row["Title"]}
+        {
+            "id": str(row["Record ID"]),
+            "title": row["Title"],
+            "prompt_id": _sanitise_prompt_text(str(row["Record ID"])),
+            "prompt_title": _sanitise_prompt_text(row["Title"]),
+        }
         for _, row in df.iterrows()
         if str(row["Record ID"]) not in cache
     ]
@@ -500,6 +560,7 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     print(f"[llm] {len(cache):,} projects cached; {len(to_classify):,} to classify")
 
     if to_classify:
+        failed_batches = []
         n_batches = (len(to_classify) - 1) // BATCH_SIZE + 1
         for i in range(0, len(to_classify), BATCH_SIZE):
             batch = to_classify[i: i + BATCH_SIZE]
@@ -521,8 +582,17 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
                     else:
                         print(f"  [error] Batch {batch_num} failed after {MAX_RETRIES} "
                               f"attempts: {e}")
+                        failed_batches.append(batch_num)
 
             time.sleep(0.5)
+
+        if failed_batches:
+            n_failed = len(failed_batches)
+            raise RuntimeError(
+                f"{n_failed} batch(es) failed after {MAX_RETRIES} retries each "
+                f"(batches: {failed_batches}). Successfully classified batches "
+                f"have been cached — re-run to retry only the failed ones."
+            )
 
     # Attach to DataFrame
     df = df.copy()
@@ -542,7 +612,10 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     df["analytical_purpose"] = df["Record ID"].apply(
         lambda record_id: _get(record_id, "analytical_purpose", ["Unclear from Title"])
     )
-    df["primary_domain"] = df["substantive_domains"].apply(lambda x: x[0] if x else "Other")
+    # First-listed domain is the most relevant (prompt instructs this ordering)
+    df["primary_domain"] = df["substantive_domains"].apply(
+        lambda x: x[0] if x else "Other"
+    )
 
     return df
 
@@ -553,66 +626,79 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
 
 def analyse_layers(df: pd.DataFrame) -> dict:
     """Compute frequency tables for all three layers."""
+    # Use Record ID as the unique identifier (handles duplicate Project IDs
+    # that were disambiguated by title in load_data).
+    rid = "Record ID"
 
     # ---- Layer A: domains (exploded, multiple per project) ----
     df_a = df.explode("substantive_domains").rename(columns={"substantive_domains": "domain"})
     by_year_a = (
-        df_a.groupby(["Year", "domain"])["Project ID"].count()
-        .reset_index().rename(columns={"Project ID": "count"})
+        df_a.groupby(["Year", "domain"])[rid].count()
+        .reset_index().rename(columns={rid: "count"})
     )
-    total_a = df.groupby("Year")["Project ID"].count().rename("total")
+    total_a = df.groupby("Year")[rid].count().rename("total")
     by_year_a = by_year_a.merge(total_a, on="Year")
-    by_year_a["pct"] = (by_year_a["count"] / by_year_a["total"] * 100).round(1)
+    # NB: multi-label — percentages can sum above 100% across domains in a year
+    by_year_a["pct_of_projects"] = (by_year_a["count"] / by_year_a["total"] * 100).round(1)
 
     totals_a = (
-        df_a.groupby("domain")["Project ID"].count()
-        .reset_index().rename(columns={"Project ID": "count"})
+        df_a.groupby("domain")[rid].count()
+        .reset_index().rename(columns={rid: "count"})
         .sort_values("count", ascending=False)
     )
 
     # ---- Layer B: linkage mode (one per project) ----
     by_year_b = (
-        df.groupby(["Year", "linkage_mode"])["Project ID"].count()
-        .reset_index().rename(columns={"Project ID": "count"})
+        df.groupby(["Year", "linkage_mode"])[rid].count()
+        .reset_index().rename(columns={rid: "count"})
     )
     by_year_b = by_year_b.merge(total_a, on="Year")
-    by_year_b["pct"] = (by_year_b["count"] / by_year_b["total"] * 100).round(1)
+    by_year_b["pct_of_projects"] = (by_year_b["count"] / by_year_b["total"] * 100).round(1)
 
     totals_b = (
-        df.groupby("linkage_mode")["Project ID"].count()
-        .reset_index().rename(columns={"Project ID": "count"})
+        df.groupby("linkage_mode")[rid].count()
+        .reset_index().rename(columns={rid: "count"})
         .sort_values("count", ascending=False)
     )
 
     # ---- Layer C: purpose (exploded, 1-2 per project) ----
     df_c = df.explode("analytical_purpose").rename(columns={"analytical_purpose": "purpose"})
     by_year_c = (
-        df_c.groupby(["Year", "purpose"])["Project ID"].count()
-        .reset_index().rename(columns={"Project ID": "count"})
+        df_c.groupby(["Year", "purpose"])[rid].count()
+        .reset_index().rename(columns={rid: "count"})
     )
     by_year_c = by_year_c.merge(total_a, on="Year")
-    by_year_c["pct"] = (by_year_c["count"] / by_year_c["total"] * 100).round(1)
+    # NB: multi-label — percentages can sum above 100% across purposes in a year
+    by_year_c["pct_of_projects"] = (by_year_c["count"] / by_year_c["total"] * 100).round(1)
 
     totals_c = (
-        df_c.groupby("purpose")["Project ID"].count()
-        .reset_index().rename(columns={"Project ID": "count"})
+        df_c.groupby("purpose")[rid].count()
+        .reset_index().rename(columns={rid: "count"})
         .sort_values("count", ascending=False)
     )
 
     # ---- Cross-tabulations ----
-    # Linkage mode × primary domain (top 6 domains)
     top_domains = totals_a.head(6)["domain"].tolist()
     df_cross = df[df["primary_domain"].isin(top_domains)]
+
+    # Linkage mode × primary domain
     cross_mode_domain = pd.crosstab(df_cross["primary_domain"], df_cross["linkage_mode"])
 
+    # Primary domain × analytical purpose (exploded)
+    df_dp = df_cross.explode("analytical_purpose").rename(
+        columns={"analytical_purpose": "purpose"}
+    )
+    cross_domain_purpose = pd.crosstab(df_dp["primary_domain"], df_dp["purpose"])
+
     return {
-        "by_year_a":         by_year_a,
-        "totals_a":          totals_a,
-        "by_year_b":         by_year_b,
-        "totals_b":          totals_b,
-        "by_year_c":         by_year_c,
-        "totals_c":          totals_c,
-        "cross_mode_domain": cross_mode_domain,
+        "by_year_a":            by_year_a,
+        "totals_a":             totals_a,
+        "by_year_b":            by_year_b,
+        "totals_b":             totals_b,
+        "by_year_c":            by_year_c,
+        "totals_c":             totals_c,
+        "cross_mode_domain":    cross_mode_domain,
+        "cross_domain_purpose": cross_domain_purpose,
     }
 
 
@@ -633,6 +719,9 @@ def print_quick_stats(trends: dict):
     print("\n=== Cross-tab: Linkage Mode × Primary Domain ===")
     print(trends["cross_mode_domain"].to_string())
 
+    print("\n=== Cross-tab: Primary Domain × Analytical Purpose ===")
+    print(trends["cross_domain_purpose"].to_string())
+
 
 # ---------------------------------------------------------------------------
 # Narrative summary
@@ -646,17 +735,24 @@ def generate_narrative(
     a_str = trends["totals_a"].to_string(index=False)
     b_str = trends["totals_b"].to_string(index=False)
     c_str = trends["totals_c"].to_string(index=False)
-    cross_str = trends["cross_mode_domain"].to_string()
+    cross_mode_str = trends["cross_mode_domain"].to_string()
+    cross_purpose_str = trends["cross_domain_purpose"].to_string()
 
     year_a_pivot = (
         trends["by_year_a"]
-        .pivot(index="Year", columns="domain", values="pct")
+        .pivot(index="Year", columns="domain", values="pct_of_projects")
         .fillna(0).round(1)
     ).to_string()
 
     year_b_pivot = (
         trends["by_year_b"]
-        .pivot(index="Year", columns="linkage_mode", values="pct")
+        .pivot(index="Year", columns="linkage_mode", values="pct_of_projects")
+        .fillna(0).round(1)
+    ).to_string()
+
+    year_c_pivot = (
+        trends["by_year_c"]
+        .pivot(index="Year", columns="purpose", values="pct_of_projects")
         .fillna(0).round(1)
     ).to_string()
 
@@ -667,31 +763,41 @@ def generate_narrative(
         LAYER A — SUBSTANTIVE DOMAIN TOTALS:
         {a_str}
 
-        LAYER A — DOMAIN % BY YEAR:
+        LAYER A — DOMAIN % BY YEAR (% of projects mentioning each domain; multi-domain
+        projects are counted once per domain, so columns may sum above 100%):
         {year_a_pivot}
 
         LAYER B — LINKAGE MODE TOTALS:
         {b_str}
 
-        LAYER B — LINKAGE MODE % BY YEAR:
+        LAYER B — LINKAGE MODE % BY YEAR (mutually exclusive; columns sum to 100%):
         {year_b_pivot}
 
         LAYER C — ANALYTICAL PURPOSE TOTALS:
         {c_str}
 
+        LAYER C — PURPOSE % BY YEAR (projects may have 1–2 purposes, so columns
+        may sum above 100%):
+        {year_c_pivot}
+
         LINKAGE MODE × PRIMARY DOMAIN CROSS-TAB:
-        {cross_str}
+        {cross_mode_str}
+
+        PRIMARY DOMAIN × ANALYTICAL PURPOSE CROSS-TAB:
+        {cross_purpose_str}
 
         Write a concise analytical summary (5–7 paragraphs) covering:
         1. The dominant substantive domains and how the research landscape has evolved
         2. Trends in data linkage complexity — are projects becoming more cross-domain over time?
         3. The main analytical purposes and which are growing or declining
-        4. Interesting combinations across the three layers (e.g. which domains favour policy evaluation?)
+        4. Interesting combinations revealed by the cross-tabs (e.g. which domains favour
+           policy evaluation, or which domains rely most on cross-domain linkage?)
         5. What this tells us about how UK researchers are exploiting administrative data
         6. Gaps or emerging areas to watch
 
         Write in a professional policy-briefing style, suitable for a senior civil servant audience.
         Be specific: cite numbers and trends rather than vague generalisations.
+        Only comment on patterns that are directly supported by the data provided above.
     """).strip()
 
     response = client.messages.create(
@@ -699,6 +805,8 @@ def generate_narrative(
         max_tokens=2000,
         messages=[{"role": "user", "content": prompt}],
     )
+    if not response.content or not hasattr(response.content[0], "text"):
+        raise RuntimeError("Narrative generation failed: API returned empty or non-text response")
     return response.content[0].text.strip()
 
 
@@ -743,6 +851,9 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
     trends["cross_mode_domain"].to_csv(
         os.path.join(output_dir, "cross_mode_domain.csv"), encoding="utf-8-sig"
     )
+    trends["cross_domain_purpose"].to_csv(
+        os.path.join(output_dir, "cross_domain_purpose.csv"), encoding="utf-8-sig"
+    )
 
     with open(os.path.join(output_dir, "layer_summary.txt"), "w", encoding="utf-8") as f:
         f.write(narrative)
@@ -752,7 +863,7 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
         "layer_classifications.csv",
         "layer_a_by_year.csv", "layer_b_by_year.csv", "layer_c_by_year.csv",
         "layer_a_totals.csv", "layer_b_totals.csv", "layer_c_totals.csv",
-        "cross_mode_domain.csv", "layer_summary.txt",
+        "cross_mode_domain.csv", "cross_domain_purpose.csv", "layer_summary.txt",
     ]:
         print(f"  - {name}")
 
