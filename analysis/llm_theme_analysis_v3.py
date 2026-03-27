@@ -428,7 +428,7 @@ def _build_prompt(projects: list[dict]) -> str:
         {{
           "classifications": [
             {{
-              "project_id": "<Project ID string>",
+              "project_id": "<short batch ID such as P01>",
               "substantive_domains": ["<domain>", ...],
               "linkage_mode": "<exactly one linkage mode>",
               "analytical_purpose": ["<purpose>"]
@@ -437,6 +437,8 @@ def _build_prompt(projects: list[dict]) -> str:
           ]
         }}
 
+        The "project_id" field must repeat the exact short batch ID shown in brackets
+        for each project, such as "P01" or "P17".
         Use only the labels defined above, spelled exactly as shown.
         Produce one entry per project in the same order as listed.
     """).strip()
@@ -465,15 +467,23 @@ def _parse_raw_json(raw: str, projects: list[dict]) -> dict:
     raise BatchClassificationError("Could not parse JSON from LLM response")
 
 
-def _validate_batch_integrity(classifications: list[ProjectLayers], projects: list[dict]) -> None:
-    requested_ids = [p["id"] for p in projects]
-    requested_set = set(requested_ids)
+def _validate_batch_integrity(
+    classifications: list[ProjectLayers],
+    projects: list[dict],
+) -> None:
+    """Check that the LLM returned exactly the IDs we asked for.
+
+    The prompt shows sanitised ``prompt_id`` values to the LLM, so the
+    returned ``project_id`` fields are compared against those.
+    """
+    expected_ids = [p["prompt_id"] for p in projects]
+    expected_set = set(expected_ids)
     seen = set()
     duplicate_ids = set()
     unexpected_ids = set()
 
     for cls in classifications:
-        if cls.project_id not in requested_set:
+        if cls.project_id not in expected_set:
             unexpected_ids.add(cls.project_id)
             continue
         if cls.project_id in seen:
@@ -481,7 +491,7 @@ def _validate_batch_integrity(classifications: list[ProjectLayers], projects: li
             continue
         seen.add(cls.project_id)
 
-    missing_ids = [project_id for project_id in requested_ids if project_id not in seen]
+    missing_ids = [pid for pid in expected_ids if pid not in seen]
     problems = []
     if unexpected_ids:
         problems.append(f"unexpected IDs: {sorted(unexpected_ids)}")
@@ -527,11 +537,13 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             raise BatchClassificationError(f"Pydantic validation failed: {e2}") from e2
 
     _validate_batch_integrity(classifications, projects)
+    prompt_to_actual = {p["prompt_id"]: p["id"] for p in projects}
 
     # Build output dict
     out = {}
     for cls in classifications:
-        out[cls.project_id] = {
+        actual_id = prompt_to_actual[cls.project_id]
+        out[actual_id] = {
             "substantive_domains": cls.substantive_domains,
             "linkage_mode":        cls.linkage_mode,
             "analytical_purpose":  cls.analytical_purpose,
@@ -564,6 +576,13 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
         n_batches = (len(to_classify) - 1) // BATCH_SIZE + 1
         for i in range(0, len(to_classify), BATCH_SIZE):
             batch = to_classify[i: i + BATCH_SIZE]
+            batch = [
+                {
+                    **project,
+                    "prompt_id": f"P{offset:02d}",
+                }
+                for offset, project in enumerate(batch, start=1)
+            ]
             batch_num = i // BATCH_SIZE + 1
             print(f"  Batch {batch_num}/{n_batches} ({len(batch)} projects)...")
 
