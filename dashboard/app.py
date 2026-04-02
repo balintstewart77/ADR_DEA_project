@@ -1004,6 +1004,10 @@ _ALL_DATASET_OPTIONS = (
     [{"label": "All datasets", "value": "ALL"}]
     + [{"label": d, "value": d} for d in sorted(df_datasets["dataset"].unique()) if d]
 )
+_ALL_INSTITUTION_OPTIONS = (
+    [{"label": "All institutions", "value": "ALL"}]
+    + [{"label": i, "value": i} for i in sorted(df_institutions["institution"].unique()) if i]
+)
 
 BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
     html.P(
@@ -1033,11 +1037,22 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
                 searchable=True,
                 placeholder="Search datasets\u2026",
             ),
-        ], md=4),
+        ], md=3),
+        dbc.Col([
+            html.Label("Filter by institution", className="filter-label"),
+            dcc.Dropdown(
+                id="browse-institution-filter",
+                options=_ALL_INSTITUTION_OPTIONS,
+                value="ALL",
+                clearable=False,
+                searchable=True,
+                placeholder="Search institutions\u2026",
+            ),
+        ], md=3),
         dbc.Col([
             html.Label("Search title / researcher", className="filter-label"),
             dbc.Input(id="browse-search", placeholder="Type to filter\u2026", type="text"),
-        ], md=3),
+        ], md=2),
         dbc.Col([
             html.Label("Results per page", className="filter-label"),
             dcc.Dropdown(
@@ -1480,10 +1495,11 @@ def update_flagship(selected_collections, metric_mode):
     Output("browse-count", "children"),
     Input("browse-scope", "value"),
     Input("browse-dataset-filter", "value"),
+    Input("browse-institution-filter", "value"),
     Input("browse-search", "value"),
     Input("browse-page-size", "value"),
 )
-def update_browse_table(scope, dataset_filter, search, page_size):
+def update_browse_table(scope, dataset_filter, institution_filter, search, page_size):
     if scope == "flagship" and len(df_flagship_projects):
         coll_labels = (
             df_flagship_projects.groupby("Project Row ID")["collection"]
@@ -1501,6 +1517,12 @@ def update_browse_table(scope, dataset_filter, search, page_size):
     if dataset_filter and dataset_filter != "ALL":
         matching_pids = set(
             df_datasets.loc[df_datasets["dataset"] == dataset_filter, "Project ID"]
+        )
+        base = base[base["Project ID"].isin(matching_pids)]
+
+    if institution_filter and institution_filter != "ALL":
+        matching_pids = set(
+            df_institutions.loc[df_institutions["institution"] == institution_filter, "Project ID"]
         )
         base = base[base["Project ID"].isin(matching_pids)]
 
