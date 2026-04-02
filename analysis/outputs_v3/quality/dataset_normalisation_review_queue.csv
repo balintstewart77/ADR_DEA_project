@@ -1,0 +1,6 @@
+﻿raw_dataset,canonical_dataset_name,dataset_family,match_type,needs_review,count,example_project_id
+Bespoke Equalities Data Asset: Companies House - Census 2011 - England and Wales,Bespoke Equalities Data Asset: Companies House - Census 2011,,compound_or_multi_dataset,1,1,2023/135
+Business Structure Database - UK DBT: Longitudinal Small Business Survey - UK,Business Structure Database - UK DBT: Longitudinal Small Business Survey,,compound_or_multi_dataset,1,1,2025/082
+DBT: Longitudinal Small Business Survey,DBT: Longitudinal Small Business Survey,,compound_or_multi_dataset,1,1,2024/051
+E-commerce and Digital Economy Survey - UK Department For Education: Employer Skills Survey and Investment in Training - UK,E-Commerce and Digital Economy Survey - UK Department For Education: Employer Skills Survey and Investment in Training,,compound_or_multi_dataset,1,1,2025/100
+Quarterly Labour Force Survey Economic and Social Research Council: Integrated Census Microdata,Quarterly Labour Force Survey Economic and Social Research Council: Integrated Census Microdata,Labour Force Survey,compound_or_multi_dataset,1,1,2025/192

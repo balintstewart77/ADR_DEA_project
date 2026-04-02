@@ -14,7 +14,7 @@ DATASET_PROVIDER_RE = re.compile(
 )
 
 ALLOWED_SHORT_DATASET_NAMES = {
-    "ASHE", "BHPS", "EOL", "LEO", "NN4B", "Patents", "Prisons",
+    "ASHE", "BHPS", "EOL", "LEO", "NN4B",
 }
 
 INVALID_DATASET_FRAGMENTS = {
@@ -28,6 +28,69 @@ INVALID_DATASET_FRAGMENTS = {
     "office for national statistics /", "office for national statistics &",
     "office for national statistics/", "office for national",
     "census 2021 attributes - england and wales with geography",
+    # Broken dataset fragments / geography-only leftovers / provider bleed-through
+    "england and wales",
+    "great britain",
+    "wales and scotland",
+    "wales and northern ireland",
+    "home office",
+    "food and rural affairs",
+    "university of oxford",
+    "business structure",
+    "business register",
+    "business impact of",
+    "research and",
+    "development",
+    "economy survey",
+    "employment survey",
+    "food survey",
+    "death",
+    "labour force",
+    "trace",
+    "occurrences",
+    "and earnings",
+    "household",
+    "households",
+    "structure for",
+    "udinal busin ess database",
+    "ed criminal courts",
+    "low carbon and",
+    "annual survey of hours and earnings annual",
+    "producer price index (ppi",
+    "annual population survey &amp",
+    "ofqual/dfe/",
+    "patents",
+    "children looked after",
+    "waves 1-18",
+    "waves 1-5",
+    "data given for all available years unless otherwise stated",
+    "designs and trade marks",
+    "prisons",
+    "prisons and probation",
+    "and harmonised bhps",
+    "and probation",
+    "waves 1-10 and harmonised bhps: waves 1-18",
+    "waves 1-13",
+    "waves 1-14",
+    "waves 1-27",
+    "waves 1-9",
+    "all future releases",
+    "impacts on great britain",
+    "pension funds and trusts",
+    "household sample",
+    "infection survey",
+    "living costs and food",
+    "consumer prices",
+    "offending",
+    "department for environment",
+    "rounds 5-7",
+    "wales: household sample",
+    "pay as you earn real time information in the",
+    "business structure database in the",
+    "offending data",
+    "prisons and probation - england and wales",
+    "pay as you earn real time information in the uk",
+    "business structure database in the uk",
 }
 
 GEOGRAPHY_SUFFIX_FALLBACK_NAMES = {
@@ -45,6 +108,7 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^census 2021 welsh(?: records)?$"), "Census Wales 2021"),
     (re.compile(r"(?i)^census \(2021\)$"), "Census 2021"),
     (re.compile(r"(?i)^2021 census$"), "Census 2021"),
+    (re.compile(r"(?i)^2022 census$"), "Census 2022"),
     (re.compile(r"(?i)^2001 census$"), "Census 2001"),
     (re.compile(r"(?i)^2001 census: household sample of anonymised(?: records)?$"), "Census 2001 Household"),
     (re.compile(r"(?i)^census 2001 household(?: for the)?$"), "Census 2001 Household"),
@@ -99,8 +163,8 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^census data 1981$"), "Census 1981"),
     (re.compile(r"(?i)^census microdata 9% sample$"), "Census Microdata 9% Sample"),
     (re.compile(r"(?i)^census 2001$"), "Census 2001"),
-    (re.compile(r"(?i)^ashe$"), "Annual Survey of Hours and Earnings"),
-    (re.compile(r"(?i)^annual survey of hours$"), "Annual Survey of Hours and Earnings"),
+    (re.compile(r"(?i)^ashe$"), "Annual Survey of Hours and Earnings (ASHE)"),
+    (re.compile(r"(?i)^annual survey of hours$"), "Annual Survey of Hours and Earnings (ASHE)"),
     (re.compile(r"(?i)^annual survey of hours and earnings longitudinal(?: and linked to hmrc)?$"), "ASHE Longitudinal"),
     (re.compile(r"(?i)^ashe longitudinal(?: data(?: england(?: and wales)?| great britain england)?)?$"), "ASHE Longitudinal"),
     (
@@ -114,27 +178,67 @@ DATASET_ALIASES = [
         re.compile(r"(?i)^ad\|arc phase 2 - census 21 unlinked$"),
         "Administrative Data | Agricultural Research Collection (AD|ARC)",
     ),
+    (
+        re.compile(r"(?i)^education and child health insights from linked(?: data)?$"),
+        "Education and Child Health Insights from Linked Data (ECHILD)",
+    ),
+    (
+        re.compile(r"(?i)^education and child health insights from linked data research database$"),
+        "Education and Child Health Insights from Linked Data Research Data",
+    ),
+    (re.compile(r"(?i)^annual business survey$"), "Annual Business Survey (ABS)"),
+    (re.compile(r"(?i)^annual population survey$"), "Annual Population Survey (APS)"),
+    (re.compile(r'(?i)^annual population survey\s*"*\s*aps persons$'), "Annual Population Survey Persons"),
+    (re.compile(r"(?i)^annual survey of hours and earnings$"), "Annual Survey of Hours and Earnings (ASHE)"),
+    (re.compile(r"(?i)^business enterprise research and development$"), "Business Enterprise Research and Development (BERD)"),
+    (re.compile(r"(?i)^business insights and conditions survey$"), "Business Insights and Conditions Survey (BICS)"),
+    (re.compile(r"(?i)^business structure database$"), "Business Structure Database (BSD)"),
+    (re.compile(r"(?i)^business register and employment survey$"), "Business Register and Employment Survey (BRES)"),
+    (re.compile(r"(?i)^crime survey for england and wales$"), "Crime Survey for England and Wales (CSEW)"),
+    (re.compile(r"(?i)^covid-19 infection survey$"), "COVID-19 Infection Survey (CIS)"),
+    (re.compile(r"(?i)^covid-19 schools infection survey linked to test and trace$"), "COVID-19 Infection Survey linked to NHS Test and Trace"),
+    (re.compile(r"(?i)^inter-departmental business register$"), "Inter-Departmental Business Register (IDBR)"),
+    (re.compile(r"(?i)^labour force survey$"), "Labour Force Survey (LFS)"),
+    (re.compile(r"(?i)^living costs and food survey$"), "Living Costs and Food Survey (LCF)"),
+    (re.compile(r"(?i)^longitudinal education outcomes$"), "Longitudinal Education Outcomes (LEO)"),
+    (re.compile(r"(?i)^longitudinal education$"), "Longitudinal Education Outcomes (LEO)"),
+    (re.compile(r"(?i)^longitudinal small business survey$"), "Longitudinal Small Business Survey (LSBS)"),
+    (re.compile(r"(?i)^management and expectations survey$"), "Management and Expectations Survey (MES)"),
+    (re.compile(r"(?i)^new earnings survey$"), "New Earnings Survey (NES)"),
+    (re.compile(r"(?i)^ons longitudinal study$"), "ONS Longitudinal Study (LS)"),
+    (re.compile(r"(?i)^longitudinal study$"), "ONS Longitudinal Study (LS)"),
+    (re.compile(r"(?i)^longitudinal study of england and wales$"), "ONS Longitudinal Study (LS)"),
+    (re.compile(r"(?i)^longitudinal study 1971$"), "ONS Longitudinal Study 1971"),
+    (re.compile(r"(?i)^opinions and lifestyle survey$"), "Opinions and Lifestyle Survey (OPN)"),
+    (re.compile(r"(?i)^uk innovation survey$"), "UK Innovation Survey (UKIS)"),
+    (re.compile(r"(?i)^universities and colleges admissions service(?: \(UCAS\))?$"), "Universities and Colleges Admissions Service (UCAS)"),
+    (re.compile(r"(?i)^wealth and assets survey$"), "Wealth and Assets Survey (WAS)"),
+    (re.compile(r"(?i)^workplace employment relations study$"), "Workplace Employment Relations Study (WERS)"),
+    (re.compile(r"(?i)^interdepartmental business register$"), "Inter-Departmental Business Register (IDBR)"),
+    (re.compile(r"(?i)^registered deaths$"), "Death Registrations"),
+    (re.compile(r'(?i)^community innovation survey\s*"\s*united kingdom innovation survey$'), "Community Innovation Survey"),
     # -- LEO --
-    (re.compile(r"(?i)^longitudinal education outcomes.*"), "Longitudinal Education Outcomes"),
-    (re.compile(r"(?i)^leo\b.*"), "Longitudinal Education Outcomes"),
+    (re.compile(r"(?i)^longitudinal education outcomes.*"), "Longitudinal Education Outcomes (LEO)"),
+    (re.compile(r"(?i)^leo\b.*"), "Longitudinal Education Outcomes (LEO)"),
     # -- ASHE --
-    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings$"), "Annual Survey of Hours and Earnings"),
-    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings \(ASHE\)$"), "Annual Survey of Hours and Earnings"),
+    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings$"), "Annual Survey of Hours and Earnings (ASHE)"),
+    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings \(ASHE\)$"), "Annual Survey of Hours and Earnings (ASHE)"),
     # -- BRES --
-    (re.compile(r"(?i)^business register (?:and )?employment surveys?(?:\s*\(BRES\))?$"), "Business Register and Employment Survey"),
+    (re.compile(r"(?i)^business register (?:and )?employment surveys?(?:\s*\(BRES\))?$"), "Business Register and Employment Survey (BRES)"),
     # -- Monthly wages survey --
     (re.compile(r"(?i)^monthly wages? and salari?(?:y|es) surveys?$"), "Monthly Wages and Salary Survey"),
     # -- Employer skills survey --
     (re.compile(r"(?i)^employer skills? surveys?$"), "Employer Skills Survey"),
     (re.compile(r"(?i)^national employers? skills? survey.*"), "National Employer Skills Survey"),
     # -- Wealth and Assets Survey --
-    (re.compile(r"(?i)^wealth and assets? survey$"), "Wealth and Assets Survey"),
+    (re.compile(r"(?i)^wealth and assets? survey$"), "Wealth and Assets Survey (WAS)"),
     # -- Living Costs and Food Survey --
-    (re.compile(r"(?i)^living costs? and food surveys?$"), "Living Costs and Food Survey"),
+    (re.compile(r"(?i)^living costs? and food surveys?$"), "Living Costs and Food Survey (LCF)"),
     (re.compile(r"(?i)^safeguarded living costs? and food surveys?$"), "Safeguarded Living Costs and Food Survey"),
     # -- UK Manufacturers Sales (apostrophe, special char, and spacing variants) --
     (re.compile(r"(?i)^uk manufacturers['\u2019\u00e8\u00b4]?\s*(?:['\u2019]?\s*)sales by products? survey"), "UK Manufacturers' Sales by Product Survey"),
     # -- Death registrations base forms --
+    (re.compile(r"(?i)^births? registrations?$"), "Birth Registrations in England and Wales"),
     (re.compile(r"(?i)^deaths? registrations?$"), "Death Registrations"),
     (re.compile(r"(?i)^deaths? registrations? in england and wales$"), "Death Registrations in England and Wales"),
     (re.compile(r"(?i)^deaths? registrations? finalised$"), "Death Registrations Finalised"),
@@ -144,9 +248,9 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^international trade in services(?:\s+survey)?$"), "International Trade in Services"),
     (re.compile(r"(?i)^annual international trade in services(?:\s+survey)?$"), "Annual International Trade in Services"),
     # -- Capital Stock --
-    (re.compile(r"(?i)^capital stocks?$"), "Capital Stock"),
+    (re.compile(r"(?i)^capital stocks?$"), "Capital Stock Dataset"),
     # -- Opinions and Lifestyle Survey --
-    (re.compile(r"(?i)^(?:ONS )?opinions and lifestyle survey$"), "Opinions and Lifestyle Survey"),
+    (re.compile(r"(?i)^(?:ONS )?opinions and lifestyle survey$"), "Opinions and Lifestyle Survey (OPN)"),
     # -- Coronavirus social impacts --
     (re.compile(r"(?i)^coronavirus and the social impacts? on (?:Great Britain|GB)$"), "Coronavirus and the Social Impacts on Great Britain"),
     (re.compile(r"(?i)^coronavirus and the social$"), "Coronavirus and the Social Impacts on Great Britain"),
@@ -155,6 +259,7 @@ DATASET_ALIASES = [
     # -- Inter-Departmental Business Register --
     (re.compile(r"(?i)^longitudinal inter[- ]?departmental business register"), "Longitudinal Inter-Departmental Business Register"),
     (re.compile(r"(?i)^linked trade-in-goods/inter[- ]?departmental business register$"), "Linked Trade-in-Goods/Inter-Departmental Business Register"),
+    (re.compile(r"(?i)^linked trade-in-goods/idbr dataset$"), "Linked Trade-in-Goods/IDBR"),
     # -- Annual Respondents Database --
     (re.compile(r"(?i)^annual respondents? database\s*(?:\(ARD\s*[X2x]\))?$"), "Annual Respondents Database"),
     (re.compile(r"(?i)^annual respondents? database\s*[Xx]$"), "Annual Respondents Database X"),
@@ -171,28 +276,32 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^E-Commerce surveys?$"), "E-Commerce Survey"),
     (re.compile(r"(?i)^E-Commerce and digital economy survey$"), "E-Commerce and Digital Economy Survey"),
     # -- GRADE --
-    (re.compile(r"(?i)^GRading and Admissions Data England"), "GRading and Admissions Data England"),
+    (re.compile(r"(?i)^GRading and Admissions Data England"), "GRading and Admissions Data England (GRADE)"),
     # -- Prices survey Microdata --
     (re.compile(r"(?i)^prices survey microdata"), "Prices Survey Microdata"),
     # -- Death registration data provisional monthly extracts (various dash/space styles) --
     (re.compile(r"(?i)^death registration\s*(?:data)?\s*[-\s]*provisional monthly extracts"), "Death Registration Data - Provisional Monthly Extracts"),
     # -- Business Structure Database Longitudinal --
-    (re.compile(r"(?i)^business structure database \(BSD\)$"), "Business Structure Database"),
+    (re.compile(r"(?i)^business structure database \(BSD\)$"), "Business Structure Database (BSD)"),
     (re.compile(r"(?i)^business structure database[\s:/-]+longitudinal$"), "Business Structure Database Longitudinal"),
     # -- Business Enterprise Research (and)? Development --
-    (re.compile(r"(?i)^business enterprise research (?:and )?development$"), "Business Enterprise Research and Development"),
+    (re.compile(r"(?i)^business enterprise research (?:and )?development$"), "Business Enterprise Research and Development (BERD)"),
     # -- DBT prefix leaking into dataset name --
     (re.compile(r"(?i)^DBT:\s*"), None),
     # -- Annual gas and electricity consumption --
     (re.compile(r"(?i)^annual gas and electricity consumption at (?:the )?meter level$"), "Annual Gas and Electricity Consumption at Meter Level"),
     # -- Growing Up in England dash variants --
-    (re.compile(r"^Growing Up in England Wave 2\s*[-\s]+Exclusions$"), "Growing Up in England Wave 2 - Exclusions"),
-    (re.compile(r"^Growing Up in England Wave 2\s*[-\s]+Children in Need$"), "Growing Up in England Wave 2 - Children in Need"),
-    # -- Death Registrations in/England and Wales --
-    (re.compile(r"(?i)^deaths? registrations?\s+(?:in\s+)?England and Wales$"), "Death Registrations in England and Wales"),
+    (re.compile(r"(?i)^growing up in england wave 1$"), "Growing Up in England Wave 1 (GUIE)"),
+    (re.compile(r"(?i)^growing up in england wave 2$"), "Growing Up in England Wave 2 (GUIE)"),
+    (re.compile(r"(?i)^growing up in england wave 2\s*[-\s]+exclusions$"), "Growing Up in England Wave 2 - Exclusions"),
+    (re.compile(r"(?i)^growing up in england wave 2\s*[-\s]+children in need$"), "Growing Up in England Wave 2 (GUIE)"),
     # -- Linked Census and death (truncated) --
     (re.compile(r"(?i)^linked census and death$"), "Linked Census and Death Occurrences"),
     (re.compile(r"(?i)^linked census and death occurrences$"), "Linked Census and Death Occurrences"),
+    (re.compile(r"(?i)^moj data first cross-justice system linking dataset england and wales$"), "MoJ Data First Cross-Justice System Linking Dataset"),
+    (re.compile(r"(?i)^moj data first cross-justice system linking$"), "MoJ Data First Cross-Justice System Linking Dataset"),
+    (re.compile(r"(?i)^administrative data \| agriculture research collection$"), "Administrative Data | Agricultural Research Collection (AD|ARC)"),
+    (re.compile(r"(?i)^annual survey of hours and earnings linked to paye and self-assessment(?: data)?(?: great britain)?$"), "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"),
     # -- ONS COVID-19 Weekly Opinions Survey --
     (re.compile(r"(?i)^(?:ONS )?COVID-19 Weekly Opinions Survey$"), "COVID-19 Weekly Opinions Survey"),
 ]
@@ -206,11 +315,19 @@ TRUNCATION_HINTS = (
 REVIEW_CLEARED_ALIASES = {
     "annual survey for hours and earnings / census 2011 linked datase",
     "census 2011 100% household and individual - england an",
+    "2022 census",
 }
 
 MULTI_DATASET_PATTERNS = (
     re.compile(r";"),
     re.compile(r"\b[A-Z]{3,}\);"),
+)
+
+ESCAPED_PROVIDER_COMPOUND_PATTERNS = (
+    re.compile(r"\bEconomic and Social Research Council\s*:", re.IGNORECASE),
+    re.compile(r"\bDBT\s*:", re.IGNORECASE),
+    re.compile(r"\bDepartment For Education\s*:", re.IGNORECASE),
+    re.compile(r"\bCompanies House\s*-\s*Census\s+\d{4}\b", re.IGNORECASE),
 )
 
 UNUSUAL_PUNCTUATION_RE = re.compile(r"[:;/]{2,}|[()]{2,}")
@@ -227,7 +344,7 @@ def _clean_datasets_text(raw: str) -> str:
 
 
 def _split_dataset_parts(rest: str) -> list[str]:
-    parts = re.split(r"\s*,\s*|\s+&\s+", rest.strip())
+    parts = re.split(r"\s*,\s*|\s*;\s*|\s+&\s+", rest.strip())
     return [part.strip(" ,;:") for part in parts if part.strip(" ,;:")]
 
 
@@ -353,8 +470,9 @@ def _apply_systematic_normalisation(name: str) -> str:
 
 
 def _looks_compound_or_linked(name: str) -> bool:
-    lowered = name.lower()
     if any(pattern.search(name) for pattern in MULTI_DATASET_PATTERNS):
+        return True
+    if any(pattern.search(name) for pattern in ESCAPED_PROVIDER_COMPOUND_PATTERNS):
         return True
     return False
 
@@ -428,9 +546,6 @@ def describe_dataset_normalisation(raw_name: str) -> dict[str, object]:
     if system_normalised != raw:
         match_type = "normalised_format"
         final_name = system_normalised
-    elif _looks_compound_or_linked(raw):
-        match_type = "compound_or_linked_preserved"
-        final_name = raw
     elif _looks_unresolved(raw, raw, "identity"):
         match_type = "unresolved"
         final_name = raw
@@ -473,13 +588,48 @@ def dataset_family_for(canonical_name: str) -> str | None:
     ):
         return "Census"
 
+    if lowered == "linked census and death occurrences":
+        return "Census"
+
+    if lowered in {
+        "death registrations",
+        "death registrations in england and wales",
+        "death registrations in england and wales indexed",
+        "death registrations finalised",
+        "ons death registrations",
+    }:
+        return "Death Registrations"
+
     if "school census" in lowered:
         return "School Census"
+
+    if lowered.startswith("annual business survey"):
+        return "ABS"
+
+    if lowered.startswith("annual population survey"):
+        return "APS"
+
+    if lowered.startswith("covid-19 infection survey linked to"):
+        return "COVID-19 Infection Survey linked products"
+
+    if "labour force survey" in lowered or lowered.startswith("quarterly labour force survey") or lowered.startswith("longitudinal labour force survey"):
+        return "Labour Force Survey"
+
+    if lowered.startswith("growing up in england wave"):
+        return "GUIE"
+
+    if lowered.startswith("annual survey of hours and earnings linked to paye and self-assessment"):
+        return "WED"
 
     if lowered.startswith("annual survey of hours and earnings linked to census"):
         return "ASHE-linked"
 
-    if lowered == "annual survey of hours and earnings" or lowered.startswith("ashe longitudinal"):
+    if (
+        lowered == "annual survey of hours and earnings (ashe)"
+        or lowered.startswith("ashe longitudinal")
+        or lowered.startswith("annual survey of hours and earnings")
+        or lowered.startswith("annual survey for hours and earnings")
+    ):
         return "ASHE"
 
     if lowered.startswith("longitudinal education outcomes"):
@@ -487,6 +637,16 @@ def dataset_family_for(canonical_name: str) -> str | None:
 
     if lowered.startswith("moj data first"):
         return "Data First"
+
+    if lowered.startswith("retired moj data first"):
+        return "Data First"
+
+    if (
+        lowered.startswith("administrative data | agricultural research collection")
+        or lowered.startswith("bespoke admin data - agricultural research collection")
+        or lowered.startswith("bespoke admin data: agricultural research collection")
+    ):
+        return "AD|ARC"
 
     return None
 

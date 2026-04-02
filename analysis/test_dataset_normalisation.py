@@ -62,11 +62,47 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Census 2001 Household for the": "Census 2001 Household",
             "Access Microdata Samples": "Census 2001 Individual",
             "Census 2001 Controlled": "Census 2001 Individual",
+            "Births registrations": "Birth Registrations in England and Wales",
+            "2022 Census": "Census 2022",
             "Absences and English School Census": "English School Census Absences",
             "Northern Ireland School Census": "Northern Ireland School Census",
-            "Business Structure Database (BSD)": "Business Structure Database",
-            "ASHE": "Annual Survey of Hours and Earnings",
-            "Annual Survey of Hours": "Annual Survey of Hours and Earnings",
+            "Business Structure Database": "Business Structure Database (BSD)",
+            "Business Structure Database (BSD)": "Business Structure Database (BSD)",
+            "ASHE": "Annual Survey of Hours and Earnings (ASHE)",
+            "Annual Survey of Hours": "Annual Survey of Hours and Earnings (ASHE)",
+            "Annual Business Survey": "Annual Business Survey (ABS)",
+            "Annual Population Survey": "Annual Population Survey (APS)",
+            'Annual Population Survey " APS Persons': "Annual Population Survey Persons",
+            "Business Enterprise Research and Development": "Business Enterprise Research and Development (BERD)",
+            "Business Insights and Conditions Survey": "Business Insights and Conditions Survey (BICS)",
+            "Business Register and Employment Survey": "Business Register and Employment Survey (BRES)",
+            "Crime Survey for England and Wales": "Crime Survey for England and Wales (CSEW)",
+            "COVID-19 Infection Survey": "COVID-19 Infection Survey (CIS)",
+            "COVID-19 Schools Infection Survey linked to Test and Trace": "COVID-19 Infection Survey linked to NHS Test and Trace",
+            "Inter-Departmental Business Register": "Inter-Departmental Business Register (IDBR)",
+            "Labour Force Survey": "Labour Force Survey (LFS)",
+            "Living Costs and Food Survey": "Living Costs and Food Survey (LCF)",
+            "Longitudinal Education Outcomes": "Longitudinal Education Outcomes (LEO)",
+            "Longitudinal Education": "Longitudinal Education Outcomes (LEO)",
+            "Longitudinal Small Business Survey": "Longitudinal Small Business Survey (LSBS)",
+            "Management and Expectations Survey": "Management and Expectations Survey (MES)",
+            "New Earnings Survey": "New Earnings Survey (NES)",
+            "ONS Longitudinal Study": "ONS Longitudinal Study (LS)",
+            "Longitudinal Study": "ONS Longitudinal Study (LS)",
+            "Longitudinal Study of England and Wales": "ONS Longitudinal Study (LS)",
+            "Longitudinal Study 1971": "ONS Longitudinal Study 1971",
+            "Opinions and Lifestyle Survey": "Opinions and Lifestyle Survey (OPN)",
+            "UK Innovation Survey": "UK Innovation Survey (UKIS)",
+            "Universities and Colleges Admissions Service": "Universities and Colleges Admissions Service (UCAS)",
+            "Wealth and Assets Survey": "Wealth and Assets Survey (WAS)",
+            "Workplace Employment Relations Study": "Workplace Employment Relations Study (WERS)",
+            "GRading and Admissions Data England": "GRading and Admissions Data England (GRADE)",
+            "Interdepartmental Business Register": "Inter-Departmental Business Register (IDBR)",
+            "Registered Deaths": "Death Registrations",
+            'Community Innovation Survey " United Kingdom Innovation Survey': "Community Innovation Survey",
+            "Growing Up in England Wave 1": "Growing Up in England Wave 1 (GUIE)",
+            "Growing Up in England Wave 2": "Growing Up in England Wave 2 (GUIE)",
+            "Growing Up in England Wave 2 - Children in Need": "Growing Up in England Wave 2 (GUIE)",
             "ASHE Longitudinal": "ASHE Longitudinal",
             "ASHE Longitudinal Data England": "ASHE Longitudinal",
             "ASHE Longitudinal Data England and Wales": "ASHE Longitudinal",
@@ -76,6 +112,7 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Annual Survey of Hours and Earnings Census 2011 Linked": "Annual Survey of Hours and Earnings linked to Census 2011",
             "Annual Survey of Hours and Earnings linked to 2011 Census England and Wales": "Annual Survey of Hours and Earnings linked to Census 2011 England and Wales",
             "Annual Survey for Hours and Earnings / Census 2011 Linked Datase": "Annual Survey of Hours and Earnings linked to Census 2011",
+            "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment": "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment",
             "2011 Census linked to Benefits and Income": "Census 2011 linked to Benefits and Income",
             "Linked NI Census-ASHE": "Northern Ireland Census linked to ASHE",
             "Nursing and Midwifery Council Register - UK linked to Census 2021": "Nursing and Midwifery Council Register linked to Census 2021",
@@ -84,9 +121,17 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Integrated Census Microdata University of Leicester: Digital library of historical directories datasets World Bank open data: Urban Population Database": "Integrated Census Microdata",
             "Census data 1981": "Census 1981",
             "Census microdata 9% sample": "Census Microdata 9% Sample",
+            "Education and Child Health Insights from Linked": "Education and Child Health Insights from Linked Data (ECHILD)",
+            "Education and Child Health Insights from Linked Data": "Education and Child Health Insights from Linked Data (ECHILD)",
+            "Education and Child Health Insights from Linked Data Research Database": "Education and Child Health Insights from Linked Data Research Data",
             "Agricultural Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
             "Administrative Data | Agricultural Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
+            "Administrative Data | Agriculture Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
             "AD|ARC Phase 2 - Census 21 unlinked": "Administrative Data | Agricultural Research Collection (AD|ARC)",
+            "MoJ Data First Cross-Justice System Linking Dataset England And Wales": "MoJ Data First Cross-Justice System Linking Dataset",
+            "MoJ Data First Cross-Justice System Linking": "MoJ Data First Cross-Justice System Linking Dataset",
+            "Capital Stock": "Capital Stock Dataset",
+            "Linked Trade-in-Goods/IDBR dataset": "Linked Trade-in-Goods/IDBR",
         }
         for raw, expected in cases.items():
             with self.subTest(raw=raw):
@@ -102,12 +147,40 @@ class DatasetNormalisationTest(unittest.TestCase):
         self.assertNotIn("Census 2021 attributes - England and Wales with Geography", parts)
         self.assertEqual(parts, ["Indexed Census 2021"])
 
+    def test_semicolon_compound_is_split(self):
+        raw = (
+            "MoJ Data First: "
+            "Crown Court Defendant Case Level Dataset; "
+            "Magistrates' Court Defendant Case Level"
+        )
+        parts = [part for _, _, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            parts,
+            [
+                "Crown Court Defendant Case Level Dataset",
+                "Magistrates' Court Defendant Case Level",
+            ],
+        )
+
+    def test_junk_fragments_are_suppressed(self):
+        raw = (
+            "Office for National Statistics: Office for National, England and Wales, Great Britain, "
+            "Household, Trace, Death, Labour Force, Business Structure, Business Register, Research and, Development, "
+            "Economy Survey, Employment Survey, Food Survey, occurrences, and Earnings, structure for, "
+            "Producer Price Index (PPI, Annual Population Survey &amp, Ofqual/DfE/, University of Oxford, "
+            "Patents, Children Looked After, Waves 1-18, Waves 1-5, Data given for all available years unless otherwise stated, Designs and Trade Marks, Prisons, and Harmonised BHPS, and Probation, "
+            "Waves 1-10 and Harmonised BHPS: Waves 1-18, Waves 1-13, Waves 1-14, Waves 1-27, Waves 1-9, all future releases, impacts on Great Britain, pension funds and trusts, udinal Busin ess Database, "
+            "Household Sample, Infection Survey, Prisons and Probation, Prisons and Probation - England and Wales, Living Costs and Food, Consumer Prices, Offending, Offending data, Department for Environment, Rounds 5-7, Wales: Household Sample, Pay As You Earn Real Time Information in the, Pay As You Earn Real Time Information in the UK, Business Structure Database in the, Business Structure Database in the UK"
+        )
+        parts = [part for _, _, part in iter_dataset_entries(raw)]
+        self.assertEqual(parts, [])
+
     def test_ambiguous_cases_remain_distinct(self):
         cases = {
             "Infant Mortality linkage of 2011 Census": "Infant Mortality linkage of 2011 Census",
             "Census 2011 (CENW); Census 2021 (CENS) Ministry of Justice; Family Court (FACO); Magistrates Court (MACO); Crown Court (CRCO); Prisoner Custodial Journey Dataset (PRIS); MOJDF cross justice linking (Cross-Justice System Linking dataset) and MAGS CROWN JOURNEY": "Census 2011 (CENW); Census 2021 (CENS) Ministry of Justice; Family Court (FACO); Magistrates Court (MACO); Crown Court (CRCO); Prisoner Custodial Journey Dataset (PRIS); MOJDF cross justice linking (Cross-Justice System Linking dataset) and MAGS CROWN JOURNEY",
             "Annual Survey for Hours and Earnings / Census linked": "Annual Survey for Hours and Earnings / Census linked",
-            "2022 Census": "2022 Census",
+            "2022 Census": "Census 2022",
         }
         for raw, expected in cases.items():
             with self.subTest(raw=raw):
@@ -115,13 +188,13 @@ class DatasetNormalisationTest(unittest.TestCase):
 
     def test_normalisation_metadata(self):
         alias_meta = describe_dataset_normalisation("ASHE")
-        self.assertEqual(alias_meta["canonical_dataset_name"], "Annual Survey of Hours and Earnings")
+        self.assertEqual(alias_meta["canonical_dataset_name"], "Annual Survey of Hours and Earnings (ASHE)")
         self.assertEqual(alias_meta["match_type"], "alias")
         self.assertEqual(alias_meta["needs_review"], 0)
 
-        unresolved_meta = describe_dataset_normalisation("2022 Census")
-        self.assertEqual(unresolved_meta["canonical_dataset_name"], "2022 Census")
-        self.assertEqual(unresolved_meta["needs_review"], 1)
+        renamed_meta = describe_dataset_normalisation("2022 Census")
+        self.assertEqual(renamed_meta["canonical_dataset_name"], "Census 2022")
+        self.assertEqual(renamed_meta["needs_review"], 0)
 
         compound_census = "Census 2011 (CENW); Census 2021 (CENS) Ministry of Justice; Family Court (FACO); Magistrates Court (MACO); Crown Court (CRCO); Prisoner Custodial Journey Dataset (PRIS); MOJDF cross justice linking (Cross-Justice System Linking dataset) and MAGS CROWN JOURNEY"
         compound_meta = describe_dataset_normalisation(compound_census)
@@ -134,13 +207,66 @@ class DatasetNormalisationTest(unittest.TestCase):
         self.assertEqual(compound_df_meta["match_type"], "compound_or_multi_dataset")
         self.assertEqual(compound_df_meta["needs_review"], 1)
 
+        escaped_compounds = [
+            "Quarterly Labour Force Survey Economic and Social Research Council: Integrated Census Microdata",
+            "Business Structure Database - UK DBT: Longitudinal Small Business Survey",
+            "E-Commerce and Digital Economy Survey - UK Department For Education: Employer Skills Survey and Investment in Training",
+            "Bespoke Equalities Data Asset: Companies House - Census 2011",
+        ]
+        for raw in escaped_compounds:
+            meta = describe_dataset_normalisation(raw)
+            self.assertEqual(meta["match_type"], "compound_or_multi_dataset")
+            self.assertEqual(meta["needs_review"], 1)
+
     def test_dataset_family_mapping(self):
         self.assertEqual(dataset_family_for("Census 2021"), "Census")
         self.assertEqual(dataset_family_for("Census 2021 Household Secure Microdata Sample England and Wales"), "Census")
         self.assertEqual(dataset_family_for("English School Census Absences"), "School Census")
+        self.assertEqual(dataset_family_for("Annual Business Survey (ABS)"), "ABS")
+        self.assertEqual(dataset_family_for("Annual Business Survey - UK 2008 - 2021"), "ABS")
+        self.assertEqual(dataset_family_for("Annual Business Survey 1973 onwards)"), "ABS")
+        self.assertEqual(dataset_family_for("Annual Business Survey 2005-2022"), "ABS")
+        self.assertEqual(dataset_family_for("Annual Business Survey Household"), "ABS")
+        self.assertEqual(dataset_family_for("Annual Business Survey in Great Britain"), "ABS")
+        self.assertEqual(dataset_family_for("Annual Population Survey (APS)"), "APS")
+        self.assertEqual(dataset_family_for("Annual Population Survey Household"), "APS")
+        self.assertEqual(dataset_family_for("Annual Population Survey Longitudinal"), "APS")
+        self.assertEqual(dataset_family_for("Annual Population Survey Person"), "APS")
+        self.assertEqual(dataset_family_for("Annual Population Survey: Well-Being"), "APS")
+        self.assertEqual(dataset_family_for("Annual Population Survey 2004-2022"), "APS")
+        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to NHS Test and Trace"), "COVID-19 Infection Survey linked products")
+        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to Combined Vaccination"), "COVID-19 Infection Survey linked products")
+        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to VOA and EPC"), "COVID-19 Infection Survey linked products")
+        self.assertEqual(dataset_family_for("Labour Force Survey"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Labour Force Survey Person"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Labour Force Survey Household"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Labour Force Survey Longitudinal"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Labour Force Survey Five-Quarter Longitudinal"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Labour Force Survey Two-Quarter Longitudinal"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Quarterly Labour Force Survey"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Quarterly Labour Force Survey Household"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Longitudinal Labour Force Survey"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Labour Force Survey Indexed"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("2020 Wave 1 Labour Force Survey"), "Labour Force Survey")
+        self.assertEqual(dataset_family_for("Linked Census and Death Occurrences"), "Census")
+        self.assertEqual(dataset_family_for("Growing Up in England Wave 1 (GUIE)"), "GUIE")
+        self.assertEqual(dataset_family_for("Growing Up in England Wave 2 (GUIE)"), "GUIE")
+        self.assertEqual(dataset_family_for("Growing Up in England Wave 2 - Exclusions"), "GUIE")
+        self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"), "WED")
+        self.assertEqual(dataset_family_for("Administrative Data | Agricultural Research Collection (AD|ARC)"), "AD|ARC")
+        self.assertEqual(dataset_family_for("Bespoke Admin Data - Agricultural Research Collection Phase 1"), "AD|ARC")
+        self.assertEqual(dataset_family_for("Bespoke Admin Data: Agricultural Research Collection"), "AD|ARC")
+        self.assertEqual(dataset_family_for("RETIRED MoJ Data First Magistrates Court Defendant"), "Data First")
+        self.assertEqual(dataset_family_for("Annual Survey for Hours and Earnings / Census linked"), "ASHE")
+        self.assertEqual(dataset_family_for("Annual Survey for Hours and Earnings Longitudinal"), "ASHE")
+        self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings (1997-2024)"), "ASHE")
+        self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings 1997-2023"), "ASHE")
+        self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings 1997-2024"), "ASHE")
+        self.assertEqual(dataset_family_for("Death Registrations in England and Wales"), "Death Registrations")
+        self.assertEqual(dataset_family_for("Death registrations in England and Wales indexed"), "Death Registrations")
+        self.assertEqual(dataset_family_for("ONS Death Registrations"), "Death Registrations")
         self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings linked to Census 2011"), "ASHE-linked")
-        self.assertEqual(dataset_family_for("ASHE Longitudinal"), "ASHE")
-        self.assertIsNone(dataset_family_for("Linked Census and Death Occurrences"))
+        self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings (ASHE)"), "ASHE")
         self.assertIsNone(dataset_family_for("Census 2011 (CENW); Census 2021 (CENS) Ministry of Justice; Family Court (FACO)"))
         self.assertEqual(dataset_family_for("MoJ Data First Crown Court Defendant Case Level Dataset; Moj Data First Magistrates' Court Defendant Case Level Dataset"), "Data First")
 

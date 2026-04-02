@@ -1,0 +1,695 @@
+﻿raw_dataset,canonical_dataset_name,dataset_family,match_type,needs_review,count,example_project_id
+Business Structure Database,Business Structure Database (BSD),,alias,0,170,2019/009
+Annual Business Survey,Annual Business Survey (ABS),ABS,alias,0,137,2019/011
+Annual Population Survey,Annual Population Survey (APS),APS,alias,0,124,2019/004
+Annual Survey of Hours and Earnings,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,117,2019/015
+Business Structure Database - UK,Business Structure Database (BSD),,alias,0,86,2023/016
+UK Innovation Survey,UK Innovation Survey (UKIS),,alias,0,74,2019/011
+Labour Force Survey,Labour Force Survey (LFS),Labour Force Survey,alias,0,70,2019/007
+Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England,Longitudinal Education Outcomes (LEO),LEO,alias,0,57,2023/232
+Quarterly Labour Force Survey,Quarterly Labour Force Survey,Labour Force Survey,identity,0,46,2020/010
+Annual Business Survey - GB,Annual Business Survey (ABS),ABS,alias,0,43,2023/172
+Annual Population Survey - UK,Annual Population Survey (APS),APS,alias,0,43,2023/001
+Annual Respondents Database,Annual Respondents Database,,alias,0,43,2019/003
+Annual Survey of Hours and Earnings - UK,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,43,2023/021
+Labour Force Survey Person - UK,Labour Force Survey Person,Labour Force Survey,normalised_format,0,41,2023/001
+Crime Survey for England and Wales,Crime Survey for England and Wales (CSEW),,alias,0,39,2019/006
+Annual Business Survey - UK,Annual Business Survey (ABS),ABS,alias,0,31,2023/042
+Business Enterprise Research and Development - Great Britain,Business Enterprise Research and Development (BERD),,alias,0,30,2023/042
+Understanding Society - UK,Understanding Society,,normalised_format,0,30,2023/010
+Business Enterprise Research and Development,Business Enterprise Research and Development (BERD),,alias,0,29,2019/011
+Annual Survey of Hours and Earnings Longitudinal - UK,ASHE Longitudinal,ASHE,alias,0,28,2023/028
+Living Costs and Food Survey,Living Costs and Food Survey (LCF),,alias,0,27,2019/014
+Business Register Employment Survey - UK,Business Register and Employment Survey (BRES),,alias,0,26,2023/009
+Longitudinal Education Outcomes SRS Iteration 1 Standard Extract - England,Longitudinal Education Outcomes (LEO),LEO,alias,0,26,2023/011
+Understanding Society,Understanding Society,,identity,0,26,2019/008
+Annual Survey of Hours and Earnings - GB,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,25,2024/132
+Census 2011,Census 2011,Census,identity,0,25,2019/021
+Annual Respondents Database x - UK,Annual Respondents Database X,,alias,0,23,2022/128
+Labour Force Survey Longitudinal - UK,Labour Force Survey Longitudinal,Labour Force Survey,normalised_format,0,23,2023/001
+Longitudinal Small Business Survey,Longitudinal Small Business Survey (LSBS),,alias,0,23,2020/001
+Labour Force Survey Household - UK,Labour Force Survey Household,Labour Force Survey,normalised_format,0,22,2022/045
+Education and Child Health Insights from Linked Data - England,Education and Child Health Insights from Linked Data (ECHILD),,alias,0,20,2024/197
+Longitudinal Study of England and Wales,ONS Longitudinal Study (LS),,alias,0,20,2020/050
+ONS Longitudinal Study - England and Wales,ONS Longitudinal Study (LS),,alias,0,20,2023/015
+Business Register and Employment Survey,Business Register and Employment Survey (BRES),,alias,0,19,2019/011
+Annual Survey of Hours and Earnings linked to 2011 Census - England and Wales,Annual Survey of Hours and Earnings linked to Census 2011,ASHE-linked,alias,0,18,2023/058
+Coronavirus and the social impacts on Great Britain,Coronavirus and the Social Impacts on Great Britain,,alias,0,18,2020/066
+2011 Census Data Welsh residents,Census Wales 2011,Census,alias,0,17,2020/047
+Annual Respondents Database X,Annual Respondents Database X,,alias,0,17,2020/014
+Business Register Employment Survey,Business Register and Employment Survey (BRES),,alias,0,17,2020/012
+Census 2021,Census 2021,Census,identity,0,17,2024/019
+Death Registrations,Death Registrations,Death Registrations,alias,0,17,2019/020
+International Trade in Services,International Trade in Services,,alias,0,17,2019/014
+LEO via SRS Iteration 1 Standard Extract,Longitudinal Education Outcomes (LEO),LEO,alias,0,17,2021/074
+Labour Force Survey Person,Labour Force Survey Person,Labour Force Survey,identity,0,16,2020/011
+Wealth and Assets Survey,Wealth and Assets Survey (WAS),,alias,0,16,2019/015
+Business Expenditure on Research and Development,Business Expenditure on Research and Development,,identity,0,14,2019/014
+Business Impact of COVID-19 Survey,Business Impact of COVID-19 Survey,,identity,0,14,2020/003
+International Trade in Services - UK,International Trade in Services,,alias,0,14,2023/050
+Linked Trade-in-Goods/Inter-Departmental Business Register - UK,Linked Trade-in-Goods/Inter-Departmental Business Register,,alias,0,14,2023/050
+Employer Skills Survey and Investment in Training - UK,Employer Skills Survey and Investment in Training,,normalised_format,0,13,2023/065
+Business Insights and Conditions Survey - UK,Business Insights and Conditions Survey (BICS),,alias,0,12,2023/042
+Business Structure Database UK,Business Structure Database (BSD),,alias,0,12,2022/081
+Education and Child Health Insights from Linked Data,Education and Child Health Insights from Linked Data (ECHILD),,alias,0,12,2025/006
+Growing Up in England Wave 1,Growing Up in England Wave 1 (GUIE),GUIE,alias,0,12,2021/035
+Management and Expectations Survey,Management and Expectations Survey (MES),,alias,0,12,2020/054
+Opinions and Lifestyle Survey - Great Britain,Opinions and Lifestyle Survey (OPN),,alias,0,12,2023/002
+Quarterly Acquisitions and Disposals of Capital Assets Survey,Quarterly Acquisitions and Disposals of Capital Assets Survey,,identity,0,11,2019/014
+Annual Respondents Database 2 - UK,Annual Respondents Database 2,,alias,0,10,2022/128
+Community Innovation Survey,Community Innovation Survey,,identity,0,10,2020/011
+Labour Force Survey Household,Labour Force Survey Household,Labour Force Survey,identity,0,10,2020/067
+Living Costs and Food Survey - UK,Living Costs and Food Survey (LCF),,alias,0,10,2023/087
+Quarterly Capital Expenditure Survey,Quarterly Capital Expenditure Survey,,identity,0,10,2020/012
+Wealth and Assets Survey - Great Britain,Wealth and Assets Survey (WAS),,alias,0,10,2023/087
+Annual Purchases Survey,Annual Purchases Survey,,identity,0,9,2021/014
+Decision Maker Panel - UK,Decision Maker Panel,,normalised_format,0,9,2023/009
+Labour Force Survey Longitudinal,Labour Force Survey Longitudinal,Labour Force Survey,identity,0,9,2020/067
+Labour Force Survey UK,Labour Force Survey (LFS),Labour Force Survey,alias,0,9,2022/081
+Workplace Employment Relations Survey,Workplace Employment Relations Survey,,identity,0,9,2020/012
+Annual Business Inquiry,Annual Business Inquiry,,identity,0,8,2020/012
+Annual Foreign Direct Investment Survey,Annual Foreign Direct Investment Survey,,identity,0,8,2020/053
+Annual Foreign Direct Investment Survey - UK,Annual Foreign Direct Investment Survey,,normalised_format,0,8,2023/050
+Annual Purchases Survey - UK,Annual Purchases Survey,,normalised_format,0,8,2023/051
+COVID-19 Infection Survey,COVID-19 Infection Survey (CIS),,alias,0,8,2020/063
+Covid-19 Infection Survey,COVID-19 Infection Survey (CIS),,alias,0,8,2021/026
+Education and Child Health Insights from Linked Data Research Database - England,Education and Child Health Insights from Linked Data Research Data,,alias,0,8,2024/163
+MoJ Data First Crown court defendant case level dataset,MoJ Data First Crown Court Defendant Case Level,Data First,normalised_format,0,8,2021/038
+New Earnings Survey,New Earnings Survey (NES),,alias,0,8,2020/012
+Universities and Colleges Admissions Service data,Universities and Colleges Admissions Service (UCAS),,alias,0,8,2020/076
+Annual International Trade in Services - UK,Annual International Trade in Services,,alias,0,7,2025/022
+Annual Survey of Hours and Earnings UK,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,7,2022/081
+Business Insights and Conditions Survey,Business Insights and Conditions Survey (BICS),,alias,0,7,"2021/161
+"
+Business Structure Database: Longitudinal,Business Structure Database Longitudinal,,alias,0,7,2020/053
+Census Wales 2011,Census Wales 2011,Census,identity,0,7,2025/029
+E-Commerce Survey,E-Commerce Survey,,alias,0,7,2019/014
+GRading and Admissions Data England-Ofqual-DfE-UCAS,GRading and Admissions Data England (GRADE),,alias,0,7,2024/168
+Labour Force Survey Five-Quarter Longitudinal Dataset,Labour Force Survey Five-Quarter Longitudinal,Labour Force Survey,normalised_format,0,7,2020/037
+Longitudinal Small Business Survey - UK,Longitudinal Small Business Survey (LSBS),,alias,0,7,2023/022
+Longitudinal Study,ONS Longitudinal Study (LS),,alias,0,7,2019/024
+Management and Expectations Survey - Great Britain,Management and Expectations Survey (MES),,alias,0,7,2023/042
+Monthly Business Survey,Monthly Business Survey,,identity,0,7,2020/048
+New Earnings Survey Panel Dataset,New Earnings Survey Panel,,normalised_format,0,7,2020/102 CLOSED
+Public Health Research Database,Public Health Research Database,,identity,0,7,2021/037
+Quarterly Fuels Inquiry,Quarterly Fuels Inquiry,,identity,0,7,2020/043
+Universities and Colleges Admissions Service - UK,Universities and Colleges Admissions Service (UCAS),,alias,0,7,2022/157
+Vacancy Survey,Vacancy Survey,,identity,0,7,2020/012
+2021 Census,Census 2021,Census,alias,0,6,2024/208
+Absences and English School Census,English School Census Absences,School Census,alias,0,6,2023/043
+Annual Population Survey Household,Annual Population Survey Household,APS,identity,0,6,2020/067
+Annual Respondents Database x,Annual Respondents Database X,,alias,0,6,2022/136
+Business Structure Database Longitudinal,Business Structure Database Longitudinal,,alias,0,6,2019/017
+Consumer and Retail Price Index - UK,Consumer Prices Index,,alias,0,6,2023/095
+Death Registrations Finalised - England and Wales,Death Registrations Finalised,Death Registrations,alias,0,6,2023/178
+E-commerce Survey,E-Commerce Survey,,alias,0,6,2020/060
+Labour Force Survey Household Datasets,Labour Force Survey Household,Labour Force Survey,normalised_format,0,6,"2021/158
+"
+Longitudinal Business Database - UK,Longitudinal Business Database,,normalised_format,0,6,2024/030
+Longitudinal Inter-Departmental Business Register,Longitudinal Inter-Departmental Business Register,,alias,0,6,2020/025
+Management Practices Survey,Management Practices Survey,,identity,0,6,2021/052
+MoJ Data First magistrates' court defendant case level dataset,MoJ Data First Magistrates' Court Defendant Case Level,Data First,normalised_format,0,6,2021/038
+Northern Ireland Annual Business Inquiry,Northern Ireland Annual Business Inquiry,,identity,0,6,2022/096
+Vacancy Survey - UK,Vacancy Survey,,normalised_format,0,6,2023/003
+Broad Economy Sales and Exports Statistics,Broad Economy Sales and Exports,,normalised_format,0,5,2022/096
+Business Enterprise Research and Development - GB,Business Enterprise Research and Development (BERD),,alias,0,5,2024/193
+Business Enterprise Research and Development England,Business Enterprise Research and Development England,,identity,0,5,2022/016
+Death registration data Provisional Monthly Extracts,Death Registration Data - Provisional Monthly Extracts,,alias,0,5,2020/081
+E-commerce and Digital Economy Survey - UK,E-Commerce and Digital Economy Survey,,alias,0,5,2023/172
+Family Resources Survey - UK,Family Resources Survey,,normalised_format,0,5,2023/261
+Growing Up in England Wave 2 - Exclusions,Growing Up in England Wave 2 - Exclusions,GUIE,alias,0,5,2023/043
+Labour Force Survey Two-Quarter Longitudinal Dataset,Labour Force Survey Two-Quarter Longitudinal,Labour Force Survey,normalised_format,0,5,2023/059
+Low Carbon and Renewable Energy Economy Survey,Low Carbon and Renewable Energy Economy Survey,,identity,0,5,2020/055
+Low Carbon and Renewable Energy Economy Survey - UK,Low Carbon and Renewable Energy Economy Survey,,normalised_format,0,5,2023/051
+MoJ Data First Linked Criminal Courts defendant case level dataset,MoJ Data First Linked Criminal Courts Defendant Case Level,Data First,normalised_format,0,5,2021/038
+National Employers Skill Survey,National Employer Skills Survey,,alias,0,5,2020/069
+New Earnings Survey - Great Britain,New Earnings Survey (NES),,alias,0,5,2023/038
+Producer Price Index,Producer Price Index,,identity,0,5,2020/014
+UK Manufacturers Sales by Product Survey,UK Manufacturers' Sales by Product Survey,,alias,0,5,2023/009
+Universities and Colleges Admissions Service,Universities and Colleges Admissions Service (UCAS),,alias,0,5,2020/008
+Workplace Employment Relations Survey - Great Britain,Workplace Employment Relations Survey,,normalised_format,0,5,2023/065
+Annual Business Survey GB,Annual Business Survey (ABS),ABS,alias,0,4,2022/095
+Annual Business Survey UK,Annual Business Survey (ABS),ABS,alias,0,4,2022/098
+Annual Inquiry into Foreign Direct Investment,Annual Inquiry into Foreign Direct Investment,,identity,0,4,2020/012
+Annual Population Survey Longitudinal - UK,Annual Population Survey Longitudinal,APS,normalised_format,0,4,2023/125
+Annual Population Survey UK,Annual Population Survey (APS),APS,alias,0,4,2022/081
+COVID-19 Infection Survey - UK,COVID-19 Infection Survey (CIS),,alias,0,4,2023/066
+Consumer Prices Indices,Consumer Prices Index,,alias,0,4,2021/060
+Employer Skill Survey,Employer Skills Survey,,alias,0,4,2021/147
+Employer Skills Survey,Employer Skills Survey,,alias,0,4,2020/012
+Investment in Intangible Assets Survey - UK,Investment in Intangible Assets Survey,,normalised_format,0,4,2023/061
+Labour Force Survey - Household,Labour Force Survey Household,Labour Force Survey,normalised_format,0,4,2021/060
+Labour Force Survey - Person,Labour Force Survey Person,Labour Force Survey,normalised_format,0,4,2021/018
+Linked Census and death occurrences,Linked Census and Death Occurrences,Census,alias,0,4,2021/013
+Longitudinal Education,Longitudinal Education Outcomes (LEO),LEO,alias,0,4,2025/119
+Ministry of Justice Data First Crown Court Iteration 2 - England and Wales,MoJ Data First Crown Court Iteration 2,Data First,normalised_format,0,4,2025/005
+MoJ Data First Probation,MoJ Data First Probation,Data First,identity,0,4,2021/039
+MoJ Data First cross-justice system linking dataset England and Wales,MoJ Data First Cross-Justice System Linking Dataset,Data First,alias,0,4,2024/098
+Monthly Wages and Salary Survey - Great Britain,Monthly Wages and Salary Survey,,alias,0,4,2023/279
+National Travel Survey,National Travel Survey,,identity,0,4,2023/170
+Opinions and Lifestyle Survey,Opinions and Lifestyle Survey (OPN),,alias,0,4,2022/041
+Products of the European Community,Products of the European Community,,identity,0,4,2019/014
+Small Business Survey,Small Business Survey,,identity,0,4,2020/001
+UK Manufacturers' Sales by Product Survey,UK Manufacturers' Sales by Product Survey,,alias,0,4,2021/129
+2011 Census linked to Benefits and Income - England and Wales,Census 2011 linked to Benefits and Income,Census,alias,0,3,2023/078
+Annual Population Survey: Well-Being,Annual Population Survey: Well-Being,APS,identity,0,3,2020/037
+Annual Respondents Database 2,Annual Respondents Database 2,,alias,0,3,2022/169
+Annual Respondents Database x UK,Annual Respondents Database X,,alias,0,3,2022/098
+Annual Survey of Goods and Services,Annual Survey of Goods and Services,,identity,0,3,2019/014
+Annual Survey of Goods and Services - UK,Annual Survey of Goods and Services,,normalised_format,0,3,2023/061
+Annual Survey of Hours and Earnings Longitudinal,ASHE Longitudinal,ASHE,alias,0,3,2022/194
+Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment data - GB,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,WED,alias,0,3,2025/157
+Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment data Great Britain,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,WED,alias,0,3,2025/028
+Bespoke Management and Expectations Survey,Bespoke Management and Expectations Survey,,identity,0,3,2023/172
+Births Registrations in England and Wales,Birth Registrations in England and Wales,,alias,0,3,2023/063
+Births registrations,Birth Registrations in England and Wales,,alias,0,3,2021/070
+British Household Panel Survey,British Household Panel Survey,,identity,0,3,2023/170
+Business Structure Database Longitudinal - UK,Business Structure Database Longitudinal,,alias,0,3,2023/064
+COVID-19 Infection Survey linked to Combined Vaccination - UK,COVID-19 Infection Survey linked to Combined Vaccination,COVID-19 Infection Survey linked products,normalised_format,0,3,2023/066
+Capital Stock,Capital Stock Dataset,,alias,0,3,2021/060
+Census Wales 2021,Census Wales 2021,Census,identity,0,3,2025/104
+Consumer and Retail Price Index,Consumer Prices Index,,alias,0,3,2024/070
+Data First Magistrates Court Iteration 2 - England and Wales,MoJ Data First Magistrates Court Iteration 2,Data First,normalised_format,0,3,2025/254
+Earnings and Employees Study,Earnings and Employees Study,,identity,0,3,2022/096
+Employment Creation and Survival,Employment Creation and Survival,,identity,0,3,2022/176
+Family Resources Survey,Family Resources Survey,,identity,0,3,2023/170
+Firm Productivity,Firm Productivity,,identity,0,3,2022/176
+Further Education Workforce Data Collection - England,Further Education Workforce Data Collection,,normalised_format,0,3,2024/011
+Growing Up in England Wave 2,Growing Up in England Wave 2 (GUIE),GUIE,alias,0,3,2025/009
+Growing Up in England Wave 2 - Children in Need,Growing Up in England Wave 2 (GUIE),GUIE,alias,0,3,2023/043
+HES and Mortality Data,HES and Mortality,,normalised_format,0,3,2021/037
+Investment in Intangible Assets Survey,Investment in Intangible Assets Survey,,identity,0,3,2021/052
+Labour Force Survey - Longitudinal,Labour Force Survey Longitudinal,Labour Force Survey,normalised_format,0,3,2021/053
+Linked Census,Linked Census,,identity,0,3,2021/037
+Linked Trade-in-Goods/IDBR dataset,Linked Trade-in-Goods/IDBR,,normalised_format,0,3,2020/095
+Linked Trade-in-Goods/Inter-Departmental Business Register,Linked Trade-in-Goods/Inter-Departmental Business Register,,alias,0,3,2022/170
+Longitudinal Business Database,Longitudinal Business Database,,identity,0,3,2025/040
+Longitudinal Labour Force Survey,Longitudinal Labour Force Survey,Labour Force Survey,identity,0,3,2020/018
+Management Practices Survey - Great Britain,Management Practices Survey,,normalised_format,0,3,2023/061
+MoJ Data First Crown Court Defendant Case Level Dataset,MoJ Data First Crown Court Defendant Case Level,Data First,normalised_format,0,3,2022/085
+MoJ Data First Linked Criminal Courts,MoJ Data First Linked Criminal Courts,Data First,identity,0,3,2022/023
+MoJ Data First Magistrates' Court Defendant Case Level Dataset - England and Wales,MoJ Data First Magistrates' Court Defendant Case Level,Data First,normalised_format,0,3,2022/085
+MoJ Data First Prisoner Custodial Journey,MoJ Data First Prisoner Custodial Journey,Data First,identity,0,3,2021/039
+Monthly Wage and Salary Survey,Monthly Wages and Salary Survey,,alias,0,3,2020/012
+National Employer Skills Survey,National Employer Skills Survey,,alias,0,3,2020/016
+New Earnings Survey - GB,New Earnings Survey (NES),,alias,0,3,2025/255
+Nursing and Midwifery Council Register - UK,Nursing and Midwifery Council Register,,normalised_format,0,3,2024/008
+Nursing and Midwifery Council Register - UK Linked to Census 2021,Nursing and Midwifery Council Register linked to Census 2021,,alias,0,3,2024/191
+ONS Longitudinal Study,ONS Longitudinal Study (LS),,alias,0,3,2022/159 
+Office for National Statistics,Office for National,,normalised_format,0,3,2023/066
+Producer Price Index - UK,Producer Price Index,,normalised_format,0,3,2024/003
+Quarterly Capital Expenditure Survey - UK,Quarterly Capital Expenditure Survey,,normalised_format,0,3,2023/030
+Research and Development Expenditures and Subsidies,Research and Development Expenditures and Subsidies,,identity,0,3,2022/176
+Working Lives of Teachers and Leaders - England,Working Lives of Teachers and Leaders,,normalised_format,0,3,2024/141
+2011 Census,Census 2011,Census,alias,0,2,2023/056
+2011 Census Data,Census 2011,Census,alias,0,2,2023/007
+AD|ARC Phase 2 - Census 21 unlinked,Administrative Data | Agricultural Research Collection (AD|ARC),AD|ARC,alias,0,2,2025/139
+ASHE Longitudinal Data England,ASHE Longitudinal,ASHE,alias,0,2,2021/080
+ASHE Longitudinal Data England and Wales,ASHE Longitudinal,ASHE,alias,0,2,2022/062
+Administrative Data | Agriculture Research Collection - England,Administrative Data | Agricultural Research Collection (AD|ARC),AD|ARC,alias,0,2,2024/224
+Annual Business Inquiry - GB,Annual Business Inquiry,,normalised_format,0,2,2024/044
+Annual Outward Foreign Direct Investment Survey,Annual Outward Foreign Direct Investment Survey,,identity,0,2,2019/017
+Annual Population Survey Person,Annual Population Survey Person,APS,identity,0,2,2020/067
+Annual Purchases Survey UK,Annual Purchases Survey,,normalised_format,0,2,2022/099
+Annual Respondents Database 2 UK,Annual Respondents Database 2,,alias,0,2,2022/103
+Annual Respondents Database X - UK,Annual Respondents Database X,,alias,0,2,2024/193
+Annual Respondents Database x ­ UK,Annual Respondents Database X,,alias,0,2,2025/033
+Annual Survey of Hours,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,2,2020/061
+Annual Survey of Hours and Earnings Census 2011 Linked - England and Wales,Annual Survey of Hours and Earnings linked to Census 2011,ASHE-linked,alias,0,2,2025/160
+Annual Survey of Hours and Earnings Longitudinal UK,ASHE Longitudinal,ASHE,alias,0,2,2025/033
+Annual gas and electricity consumption at the meter level,Annual Gas and Electricity Consumption at Meter Level,,alias,0,2,2020/058
+BHPS,BHPS,,identity,0,2,2021/102
+Bespoke Admin Data - Agricultural Research Collection Phase 2 - England,Bespoke Admin Data - Agricultural Research Collection Phase 2,AD|ARC,normalised_format,0,2,2025/139
+Business Enterprise Research and Development - England,Business Enterprise Research and Development (BERD),,alias,0,2,2022/045
+Business Enterprise Research and Development - Northern Ireland,Business Enterprise Research and Development (BERD),,alias,0,2,2023/202
+Business Impact of COVID19 Survey,Business Impact of COVID-19 Survey,,normalised_format,0,2,2020/103
+COVID-19 Infection Survey linked to NHS Test and Trace - England,COVID-19 Infection Survey linked to NHS Test and Trace,COVID-19 Infection Survey linked products,normalised_format,0,2,2023/066
+COVID-19 Schools Infection Survey - England,COVID-19 Schools Infection Survey,,normalised_format,0,2,2023/066
+COVID-19 Study,COVID-19 Study,,identity,0,2,2023/170
+COVID-19 Vaccine Opinions Survey - England,COVID-19 Vaccine Opinions Survey,,normalised_format,0,2,2023/066
+Census 1961,Census 1961,Census,identity,0,2,2020/061
+Census 1971,Census 1971,Census,identity,0,2,2020/061
+Census 1991,Census 1991,Census,identity,0,2,2021/005
+Census 2011 Household - England and Wales,Census 2011 Household,Census,alias,0,2,2023/253
+Census 2011 Welsh Records,Census Wales 2011,Census,alias,0,2,2025/237
+Census 2011 and 2021 England and Wales,Census 2011 and Census 2021 England and Wales,Census,alias,0,2,2025/188
+Census 2021 England and Wales,Census 2021 England and Wales,Census,alias,0,2,2025/027
+Census 2021 Welsh Records,Census Wales 2021,Census,alias,0,2,2025/237
+Children of the 2020s Longitudinal Study - England,Children of the 2020s Longitudinal Study,,normalised_format,0,2,2025/211
+Community Innovation Survey “ United Kingdom Innovation Survey,Community Innovation Survey,,alias,0,2,2019/017
+Covid-19 Infection Survey linked with Combined Vaccination Dataset,COVID-19 Infection Survey linked to Combined Vaccination,COVID-19 Infection Survey linked products,normalised_format,0,2,2021/029
+Covid-19 Infection Survey linked with VOA and EPC data,COVID-19 Infection Survey linked to VOA and EPC,COVID-19 Infection Survey linked products,normalised_format,0,2,2020/027
+Data First Crown Court Iteration 2 - England and Wales,MoJ Data First Crown Court Iteration 2,Data First,normalised_format,0,2,2025/254
+Data given for all available years unless otherwise stated.,Data given for all available years unless otherwise stated,,normalised_format,0,2,2019/017
+Death Registrations England and Wales,Death Registrations England and Wales,,identity,0,2,2020/081
+Death registration data - Provisional Monthly Extracts,Death Registration Data - Provisional Monthly Extracts,,alias,0,2,2020/087
+E-commerce Survey - UK,E-Commerce Survey,,alias,0,2,2023/061
+English Housing Survey,English Housing Survey,,identity,0,2,2025/207
+Expenditure and Food Survey,Expenditure and Food Survey,,identity,0,2,2023/170
+GRading and Admissions Data England­,GRading and Admissions Data England (GRADE),,alias,0,2,2025/150
+Grading and admissions Data England - Ofqual - DfE,GRading and Admissions Data England (GRADE),,alias,0,2,2025/212
+Innovation Panel,Innovation Panel,,identity,0,2,2023/170
+International Passenger Survey,International Passenger Survey,,identity,0,2,2023/170
+International Trade in Services Survey,International Trade in Services,,alias,0,2,2019/017
+LEO via SRS Iteration 2 Standard Extract,Longitudinal Education Outcomes (LEO),LEO,alias,0,2,2024/155
+Labour Force Survey - Person UK,Labour Force Survey Person,Labour Force Survey,normalised_format,0,2,2025/088
+Linked Census and death,Linked Census and Death Occurrences,Census,alias,0,2,2021/015
+Linked Trade-in-Goods/IDBR Dataset,Linked Trade-in-Goods/IDBR,,normalised_format,0,2,2021/132
+Linked Trade-in-Goods/IDBR dataset UK,Linked Trade-in-Goods/IDBR,,alias,0,2,2021/067
+Longitudinal Business Database UK,Longitudinal Business Database,,normalised_format,0,2,2025/202
+Longitudinal Business Structure Database,Longitudinal Business Structure Database,,identity,0,2,2020/011
+Longitudinal Education Outcomes SRS Iteration 2 standard extract - England,Longitudinal Education Outcomes (LEO),LEO,alias,0,2,2025/026
+Longitudinal Inter ­Departmental Business Register,Longitudinal Inter-Departmental Business Register,,alias,0,2,2021/052
+Longitudinal Inter-Departmental Business Register - UK,Longitudinal Inter-Departmental Business Register,,alias,0,2,2024/003
+Longitudinal Inter­-Departmental Business Register,Longitudinal Inter-Departmental Business Register,,alias,0,2,2021/092
+Mergers and Acquisitions,Mergers and Acquisitions Survey,,alias,0,2,2019/017
+Ministry of Justice Data First Crown Court Defendant - England and Wales,MoJ Data First Crown Court Defendant,Data First,normalised_format,0,2,2024/098
+Ministry of Justice Data First Magistrates Court Iteration 2 - England and Wales,MoJ Data First Magistrates Court Iteration 2,Data First,normalised_format,0,2,2024/218
+Ministry of Justice Data First Prisoner Custodial Journey - England and Wales,MoJ Data First Prisoner Custodial Journey,Data First,normalised_format,0,2,2024/005
+MoJ Data First Crown court defendant,MoJ Data First Crown Court Defendant,Data First,normalised_format,0,2,2022/193
+MoJ Data First Magistrates' Court Defendant,MoJ Data First Magistrates' Court Defendant,Data First,identity,0,2,2022/193
+MoJ Data First cross justice system linking dataset - England and Wales,MoJ Data First Cross-Justice System Linking Dataset,Data First,alias,0,2,2025/254
+New Earnings Survey GB,New Earnings Survey (NES),,alias,0,2,2022/081
+Northern Ireland Exams Database,Northern Ireland Exams Database,,identity,0,2,2022/019
+Northern Ireland School Census,Northern Ireland School Census,School Census,alias,0,2,2022/019
+Northern Ireland School Leavers Survey,Northern Ireland School Leavers Survey,,identity,0,2,2022/019
+ONS Death Registrations Data,ONS Death Registrations,Death Registrations,normalised_format,0,2,2020/027
+Ofqual/­DfE­/,Ofqual/DfE/,,normalised_format,0,2,2025/150
+Online Time Use Survey - Great Britain,Online Time Use Survey,,normalised_format,0,2,2024/131
+Over 50s Lifestyle Study,Over 50s Lifestyle Study,,identity,0,2,2024/012
+Prices Survey Microdata,Prices Survey Microdata,,alias,0,2,2021/110
+Quarterly Acquisitions and Disposals of Capital Assets Survey - UK,Quarterly Acquisitions and Disposals of Capital Assets Survey,,normalised_format,0,2,2023/030
+Quarterly Fuels Inquiry UK,Quarterly Fuels Inquiry,,normalised_format,0,2,2022/103
+RETIRED Ministry of Justice Data First Magistrates Court Defendant - England and Wales,RETIRED MoJ Data First Magistrates Court Defendant,Data First,normalised_format,0,2,2024/098
+Racial Disparity Audit Data,Racial Disparity Audit,,normalised_format,0,2,2022/071
+Small Business Survey - UK,Small Business Survey,,normalised_format,0,2,2024/021
+Statutory Homelessness Flows England,Statutory Homelessness Flows England,,identity,0,2,2022/185
+Survey of Innovation and Patent Use,Survey of Innovation and Patent Use,,identity,0,2,2020/011
+Telephone-Operated Crime Survey for England and Wales,Telephone-Operated Crime Survey for England and Wales,,identity,0,2,2025/093
+The Second Longitudinal Study of Young People in England,The Second Longitudinal Study of Young People in England,,identity,0,2,2024/227
+UCAS Grading and Admissions Data,UCAS Grading and Admissions,,normalised_format,0,2,2024/144
+UK Gross Value Added,UK Gross Value Added,,identity,0,2,"2021/151
+"
+Understanding Society UKHLS,Understanding Society UKHLS,,identity,0,2,2021/061
+Universities and Colleges Admissions Service (UCAS) Data,Universities and Colleges Admissions Service (UCAS),,alias,0,2,2023/268
+Universities and Colleges Admissions Service Data,Universities and Colleges Admissions Service (UCAS),,alias,0,2,2020/063
+Waves 1-10 and Harmonised BHPS Geography files,Waves 1-10 and Harmonised BHPS Geography files,,identity,0,2,2022/026
+Welsh Census 2011,Census Wales 2011,Census,alias,0,2,2023/162
+2001 Census: Household Sample of Anonymised Records,Census 2001 Household,Census,alias,0,1,2021/120
+2011 Census Data Welsh,Census Wales 2011,Census,alias,0,1,2022/191
+2011 Census Ethnicity Data,Census 2011 Ethnicity,Census,alias,0,1,2020/120
+2011 Census: Aggregate Data,Census 2011 Aggregate,Census,alias,0,1,2021/111
+2020 Wave 1 Labour Force Survey,2020 Wave 1 Labour Force Survey,Labour Force Survey,identity,0,1,2020/063
+2021 (Welsh residents),Census Wales 2021,Census,alias,0,1,2025/025
+2021 Census Data Welsh Household,Census Wales 2021 Household,Census,alias,0,1,2024/089
+2021 Census Data Welsh residents,Census Wales 2021,Census,alias,0,1,2024/089
+2022 Census,Census 2022,Census,alias,0,1,2025/264
+ASHE,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,1,2020/012
+ASHE Longitudinal,ASHE Longitudinal,ASHE,alias,0,1,2021/094
+ASHE Longitudinal Data Great Britain England,ASHE Longitudinal,ASHE,alias,0,1,2022/062
+ASHE Longitudinal Data ­ England,ASHE Longitudinal,ASHE,alias,0,1,2022/069
+Access Microdata Samples,Census 2001 Individual,Census,alias,0,1,2020/094
+Agricultural Research Collection,Administrative Data | Agricultural Research Collection (AD|ARC),AD|ARC,alias,0,1,2022/129
+Annual Acquisition and Disposals of Capital Assets Survey,Annual Acquisition and Disposals of Capital Assets Survey,,identity,0,1,"2021/155
+"
+Annual Business Survey - UK 2008 - 2021,Annual Business Survey - UK 2008 - 2021,ABS,identity,0,1,2025/196
+Annual Business Survey 1973 onwards),Annual Business Survey 1973 onwards),ABS,identity,0,1,2020/069
+Annual Business Survey 2005-2022,Annual Business Survey 2005-2022,ABS,identity,0,1,2025/173
+Annual Business Survey Household Datasets,Annual Business Survey Household,ABS,normalised_format,0,1,2025/024
+Annual Business Survey in Great Britain,Annual Business Survey in Great Britain,ABS,identity,0,1,2024/189
+Annual Foreign Direct Investment Survey UK,Annual Foreign Direct Investment Survey,,normalised_format,0,1,2022/099
+Annual Foreign Direct Investment Survey ­,Annual Foreign Direct Investment Survey,,normalised_format,0,1,2022/146
+Annual Gas and Electricity Consumption at Meter Level,Annual Gas and Electricity Consumption at Meter Level,,alias,0,1,2025/207
+Annual International Trade in Services,Annual International Trade in Services,,alias,0,1,2025/261
+Annual International Trade in Services UK,Annual International Trade in Services,,alias,0,1,2026/036
+Annual Population Survey (2004-2022 secure access),Annual Population Survey (2004-2022 secure access),APS,identity,0,1,2025/229
+Annual Population Survey (2004-2023 secure access),Annual Population Survey (2004-2023 secure access),APS,identity,0,1,2025/193
+Annual Population Survey - Person,Annual Population Survey Person,APS,normalised_format,0,1,2021/008
+Annual Population Survey 2004-2022,Annual Population Survey 2004-2022,APS,identity,0,1,2025/173
+Annual Population Survey Longitudinal,Annual Population Survey Longitudinal,APS,identity,0,1,2025/113
+Annual Population Survey Longitudinal Data,Annual Population Survey Longitudinal,APS,normalised_format,0,1,2022/125
+Annual Population Survey “ APS Persons,Annual Population Survey Persons,APS,alias,0,1,2020/114
+Annual Population Survey: Wellbeing,Annual Population Survey: Well-Being,APS,normalised_format,0,1,2020/052
+Annual Population Surveys - Wales,Annual Population Survey (APS),APS,alias,0,1,2021/090
+Annual Purchases survey,Annual Purchases Survey,,normalised_format,0,1,2025/251
+Annual Respondent Database 2,Annual Respondents Database 2,,alias,0,1,2020/013
+Annual Respondent Database X,Annual Respondents Database X,,alias,0,1,2020/043
+Annual Respondents Database (ARD2),Annual Respondents Database,,alias,0,1,2023/243
+Annual Respondents Database ARD2 UK,Annual Respondents Database ARD2,,normalised_format,0,1,2022/095
+Annual Respondents Database ARDx UK,Annual Respondents Database ARDx,,normalised_format,0,1,2022/095
+Annual Respondents Database UK,Annual Respondents Database,,alias,0,1,2022/089
+Annual Respondents Database X (ARDX),Annual Respondents Database X,,alias,0,1,2023/243
+Annual Respondents Database X (ARDx),Annual Respondents Database X,,alias,0,1,2026/006
+Annual Respondents DatabaseX,Annual Respondents Database X,,alias,0,1,2020/012
+Annual Survey for Hours and Earnings,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,1,2020/046
+Annual Survey for Hours and Earnings / Census 2011 Linked Datase,Annual Survey of Hours and Earnings linked to Census 2011,ASHE-linked,alias,0,1,2021/147
+Annual Survey for Hours and Earnings / Census linked dataset,Annual Survey for Hours and Earnings / Census linked,ASHE,normalised_format,0,1,2020/046
+Annual Survey for Hours and Earnings Longitudinal,Annual Survey for Hours and Earnings Longitudinal,ASHE,identity,0,1,2021/147
+Annual Survey of Hours and Earnings (1997-2024),Annual Survey of Hours and Earnings (1997-2024),ASHE,identity,0,1,2025/229
+Annual Survey of Hours and Earnings (ASHE),Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,1,2023/243
+Annual Survey of Hours and Earnings 1997-2023,Annual Survey of Hours and Earnings 1997-2023,ASHE,identity,0,1,2025/173
+Annual Survey of Hours and Earnings 1997-2024,Annual Survey of Hours and Earnings 1997-2024,ASHE,identity,0,1,2025/215
+Annual Survey of Hours and Earnings Linked to PAYE and self-assessment data,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,WED,alias,0,1,2026/013
+Annual Survey of Hours and Earnings Longitudinal - GB,ASHE Longitudinal,ASHE,alias,0,1,2025/255
+Annual Survey of Hours and Earnings Longitudinal and linked to HMRC,ASHE Longitudinal,ASHE,alias,0,1,2025/245
+Annual Survey of Hours and Earnings linked to 2011 Census,Annual Survey of Hours and Earnings linked to Census 2011,ASHE-linked,alias,0,1,2022/187
+Annual Survey of Hours and Earnings linked to 2011 Census England and Wales,Annual Survey of Hours and Earnings linked to Census 2011 England and Wales,ASHE-linked,alias,0,1,2025/136
+Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment data - Great Britain,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,WED,alias,0,1,2024/239
+Annual Survey of Hours and Earnings ­ GB,Annual Survey of Hours and Earnings (ASHE),ASHE,alias,0,1,2025/118
+Annual population survey - UK,Annual Population Survey (APS),APS,alias,0,1,2025/217
+Annual Business Survey,Annual Business Survey (ABS),ABS,alias,0,1,2022/059
+Annual Purchases Survey,Annual Purchases Survey,,normalised_format,0,1,2022/059
+Bespoke - National Council for Voluntary Organisations,Bespoke - National Council for Voluntary Organisations,,identity,0,1,2022/153
+Bespoke Admin Data - Agricultural Research Collection Phase 1 - England,Bespoke Admin Data - Agricultural Research Collection Phase 1,AD|ARC,normalised_format,0,1,2025/144
+Bespoke Admin Data: Agricultural Research Collection - England,Bespoke Admin Data: Agricultural Research Collection,AD|ARC,normalised_format,0,1,2023/076
+Bespoke Data Tables for Project,Bespoke Data Tables for Project,,identity,0,1,2023/243
+Bespoke Equalities Data Asset: Companies House - Census 2011 - England and Wales,Bespoke Equalities Data Asset: Companies House - Census 2011,,compound_or_multi_dataset,1,1,2023/135
+Bespoke National Council for Voluntary Organisation - UK,Bespoke National Council for Voluntary Organisation,,normalised_format,0,1,2024/076
+Bespoke National Pupil Database extract,Bespoke National Pupil Database extract,,identity,0,1,2024/014
+Bespoke Refugee Integration Outcomes Cohort Study England,Bespoke Refugee Integration Outcomes Cohort Study England,,identity,0,1,2023/057
+Births and Deaths,Births and Deaths,,identity,0,1,2022/024
+Board Economy Sales and Exports Statistics,Broad Economy Sales and Exports,,alias,0,1,2022/155
+British Election Panel Study,British Election Panel Study,,identity,0,1,2023/170
+British Local Election Database,British Local Election Database,,identity,0,1,2023/170
+Business Enterprise,Business Enterprise,,identity,0,1,2021/017
+Business Enterprise Research Development - GB,Business Enterprise Research and Development (BERD),,alias,0,1,2026/029
+Business Enterprise Research and Developement,Business Enterprise Research and Development (BERD),,alias,0,1,2022/197
+Business Enterprise Research and Development Great Britain,Business Enterprise Research and Development Great Britain,,identity,0,1,2024/070
+Business Enterprise Research and Development ­ Northern Ireland,Business Enterprise Research and Development Northern Ireland,,normalised_format,0,1,2024/070
+Business Expenditure on Research and Development - England,Business Expenditure on Research and Development,,normalised_format,0,1,2020/013
+Business Expenditure on Research and Development 1995-2023,Business Expenditure on Research and Development 1995-2023,,identity,0,1,2025/173
+Business Impact of COVID- ­19 Survey,Business Impact of COVID-19 Survey,,normalised_format,0,1,2021/067
+Business Impact of COVID­-19 Survey,Business Impact of COVID-19 Survey,,normalised_format,0,1,2021/062
+Business Insights and Conditions Survey UK,Business Insights and Conditions Survey (BICS),,alias,0,1,2022/102
+Business Register Employment Survey (BRES),Business Register and Employment Survey (BRES),,alias,0,1,2023/243
+Business Register Employment survey - UK,Business Register and Employment Survey (BRES),,alias,0,1,2025/086
+Business Structure Database (1997-2023),Business Structure Database (1997-2023),,identity,0,1,2025/229
+Business Structure Database (BSD),Business Structure Database (BSD),,alias,0,1,2023/243
+Business Structure Database - Longitudinal,Business Structure Database Longitudinal,,alias,0,1,2021/052
+Business Structure Database - UK DBT: Longitudinal Small Business Survey - UK,Business Structure Database - UK DBT: Longitudinal Small Business Survey,,compound_or_multi_dataset,1,1,2025/082
+Business Structure Database Scottish Government: Valuation data of Scottish properties,Business Structure Database Scottish Government: Valuation data of Scottish properties,,identity,0,1,2020/038
+Business Structure Database ­ UK,Business Structure Database (BSD),,alias,0,1,2025/056
+Business Structure Database: Longitudinal UK,Business Structure Database Longitudinal,,alias,0,1,2022/105
+Business enterprise research and development,Business Enterprise Research and Development (BERD),,alias,0,1,2025/219
+Business structure Database - UK,Business Structure Database (BSD),,alias,0,1,2025/228
+Business structure database,Business Structure Database (BSD),,alias,0,1,2025/194
+Business Register,Business Register,,normalised_format,0,1,2022/059
+Business Structure Database UK,Business Structure Database (BSD),,alias,0,1,2025/148
+CGIAD 2019-2020,CGIAD 2019-2020,,identity,0,1,2025/014
+COVID-19 Infection Survey linked to Mortality - England and Wales,COVID-19 Infection Survey linked to Mortality,COVID-19 Infection Survey linked products,normalised_format,0,1,2023/228
+COVID-19 Infection Survey linked to VOA and EPC - England and Wales,COVID-19 Infection Survey linked to VOA and EPC,COVID-19 Infection Survey linked products,normalised_format,0,1,2023/228
+COVID-19 Infection Survey linked with Public Health Research Database,COVID-19 Infection Survey linked to Public Health Research Database,COVID-19 Infection Survey linked products,normalised_format,0,1,2020/027
+COVID-19 Schools Infection Survey,COVID-19 Schools Infection Survey,,identity,0,1,2020/104
+COVID-19 Schools Infection Survey linked with Test and Trace - England,COVID-19 Infection Survey linked to NHS Test and Trace,COVID-19 Infection Survey linked products,alias,0,1,2023/066
+COVID-19 Weekly Opinions Survey,COVID-19 Weekly Opinions Survey,,alias,0,1,2020/063
+Capital Stock 2014,Capital Stock 2014,,identity,0,1,2021/052
+Capital Stock Dataset,Capital Stock Dataset,,alias,0,1,2023/132
+Capital Stocks,Capital Stock Dataset,,alias,0,1,2020/012
+Census (2021),Census 2021,Census,alias,0,1,2024/095
+Census 1961 - Great Britain,Census 1961,Census,normalised_format,0,1,2023/253
+Census 1971 - Great Britain,Census 1971,Census,normalised_format,0,1,2023/253
+Census 1981,Census 1981,Census,identity,0,1,2021/005
+Census 1981 - Great Britain,Census 1981,Census,normalised_format,0,1,2023/253
+Census 2001,Census 2001,Census,alias,0,1,2021/005
+Census 2001 Controlled,Census 2001 Individual,Census,alias,0,1,2020/094
+Census 2001 Controlled Access Microdata Samples,Census 2001 Individual,Census,alias,0,1,2020/086
+Census 2001 Household - UK,Census 2001 Household,Census,alias,0,1,2023/253
+Census 2001 Household for the UK,Census 2001 Household,Census,alias,0,1,2024/247
+Census 2001 Individual - UK,Census 2001 Individual,Census,alias,0,1,2023/253
+Census 2011 (CENW),Census 2011 (CENW),Census,identity,0,1,2026/037
+Census 2011 100% Household and Individual - England an,Census 2011 Household and Individual England and Wales,Census,alias,0,1,2025/172
+Census 2011 E&W Household structure for COVID-19 models,Census 2011 England and Wales Household Structure for COVID-19 Models,Census,alias,0,1,2021/046
+Census 2011 E&W Household structure for COVID19 models,Census 2011 England and Wales Household Structure for COVID-19 Models,Census,alias,0,1,2020/103
+Census 2011 England,Census 2011 England,Census,alias,0,1,2021/024
+Census 2011 England and Wales Household structure for COVID-19 models,Census 2011 England and Wales Household Structure for COVID-19 Models,Census,alias,0,1,2020/087
+Census 2011 England and Wales: Individual Sample,Census 2011 Individual Sample England and Wales,Census,alias,0,1,2020/003
+Census 2011 Household - Northern Ireland,Census 2011 Household,Census,alias,0,1,2023/253
+Census 2011 Household - Scotland,Census 2011 Household,Census,alias,0,1,2023/253
+Census 2011 Individual Secure Sample in England and Wales,Census 2011 Individual Secure Sample England and Wales,Census,alias,0,1,2025/177
+Census 2011 Individual ­ England and Wales,Census 2011 Individual England and Wales,Census,alias,0,1,2024/070
+Census 2011 Individual ­ Northern Ireland,Census 2011 Individual Northern Ireland,Census,alias,0,1,2024/070
+Census 2011 Individual ­ Scotland,Census 2011 Individual Scotland,Census,alias,0,1,2024/070
+Census 2011 NI,Census 2011 Northern Ireland,Census,alias,0,1,2022/007
+Census 2011 Origin / Destination - England and Wales,Census 2011 Origin-Destination,Census,alias,0,1,2025/177
+Census 2011 Origin-Destination,Census 2011 Origin-Destination,Census,alias,0,1,2020/105
+Census 2011 Origin/Destination: Flow data,Census 2011 Origin-Destination Flow,Census,alias,0,1,2020/003
+Census 2011 Welsh Residents,Census Wales 2011,Census,alias,0,1,2022/167
+Census 2011: Household,Census 2011 Household,Census,alias,0,1,2022/055
+Census 2011: Household Sample,Census 2011 Household Sample,Census,alias,0,1,2019/020
+Census 2021 (CENS) Ministry of Justice,Census 2021 (CENS) Ministry of Justice,Census,identity,0,1,2026/037
+Census 2021 10% sample,Census 2021 10% Sample,Census,alias,0,1,2025/236
+Census 2021 Comprehensive Microdata (C21CM),Census 2021 Comprehensive Microdata,Census,alias,0,1,2025/129
+Census 2021 Household Secure Microdata Sample - England and Wales,Census 2021 Household Secure Microdata Sample,Census,alias,0,1,2026/047
+Census 2021 Household Secure Microdata Sample in England and Wales,Census 2021 Household Secure Microdata Sample England and Wales,Census,alias,0,1,2024/247
+Census 21 Comprehensive Microdata,Census 2021 Comprehensive Microdata,Census,alias,0,1,2026/038
+Census Non Response Link Study 2021 England and Wales,Census 2021 Non-Response Link Study England and Wales,Census,alias,0,1,2024/246
+Census data 1981,Census 1981,Census,alias,0,1,2020/061
+Census 2021 Secure Origin Destination Tables for England and Wales,Census 2021 Origin-Destination Tables England and Wales,Census,alias,0,1,2025/066
+Census Non Response Link Study 2021 England and Wales indexed,Census 2021 Non-Response Link Study England and Wales Indexed,Census,alias,0,1,2025/077
+Childcare and Early Years Provision: Providers' Survey,Childcare and Early Years Provision: Providers' Survey,,identity,0,1,2023/170
+Childcare and Early Years Survey of Parents,Childcare and Early Years Survey of Parents,,identity,0,1,2025/113
+Childcare and Early Years Survey of Parents - England,Childcare and Early Years Survey of Parents,,normalised_format,0,1,2024/109
+Children and Family Court Advisory and Support Service (CAFCASS England),Children and Family Court Advisory and Support Service (CAFCASS England),,identity,0,1,2023/072
+Civil Society Organisations UK,Civil Society Organisations,,normalised_format,0,1,2025/148
+Consumer Price Indicies,Consumer Prices Index,,alias,0,1,2022/171
+Consumer Prices Index,Consumer Prices Index,,alias,0,1,2022/115
+Coronavirus and the social,Coronavirus and the Social Impacts on Great Britain,,alias,0,1,2021/015
+Coronavirus and the social impacts on GB,Coronavirus and the social impacts on,,normalised_format,0,1,2021/018
+Council Tax Property Attributes Data - England and Wales,Council Tax Property Attributes,,normalised_format,0,1,2025/146
+Covid 19 School Infection Survey linked to NHS Test,COVID-19 School Infection Survey linked to NHS Test,,normalised_format,0,1,2020/104
+Covid ­-19 Infection Survey,COVID-19 Infection Survey (CIS),,alias,0,1,2022/039
+Covid-19 Infection Survey UK,COVID-19 Infection Survey (CIS),,alias,0,1,2022/114
+Covid-19 Infection Survey linked to NHS Test and Trace,COVID-19 Infection Survey linked to NHS Test and Trace,COVID-19 Infection Survey linked products,normalised_format,0,1,2022/204
+Covid-19 Infection Survey linked with Death Occurrences England and Wales,COVID-19 Infection Survey linked to Death Occurrences England and Wales,COVID-19 Infection Survey linked products,normalised_format,0,1,2020/027
+Covid-19 Infection Survey linked with UK Innovation Survey,COVID-19 Infection Survey linked to UK Innovation Survey,COVID-19 Infection Survey linked products,normalised_format,0,1,2020/013
+Covid-19 Infection Survey with Combined Vaccination Dataset,COVID-19 Infection Survey with Combined Vaccination,,normalised_format,0,1,2022/114
+Covid-19 Infection Survey with National Immunisation Management Service,COVID-19 Infection Survey with National Immunisation Management Service,,normalised_format,0,1,2020/027
+Covid-19 Schools Infection Survey,COVID-19 Schools Infection Survey,,normalised_format,0,1,2022/204
+Covid-19 Schools Infection Survey linked with National Immunisation Management Service,COVID-19 Schools Infection Survey linked to National Immunisation Management Service,,normalised_format,0,1,2020/104
+Covid-19 Schools Infection Survey linked with Test and Trace,COVID-19 Infection Survey linked to NHS Test and Trace,COVID-19 Infection Survey linked products,alias,0,1,2022/204
+Covid­-19 Infection Survey with Combined Vaccination Dataset,COVID-19 Infection Survey with Combined Vaccination,,normalised_format,0,1,2022/039
+Crime Survey for England and Wales 1996 - 2011,Crime Survey for England and Wales 1996 - 2011,,identity,0,1,2025/093
+Crown Court (CRCO),Crown Court (CRCO),,identity,0,1,2026/037
+DBT: Longitudinal Small Business Survey,DBT: Longitudinal Small Business Survey,,compound_or_multi_dataset,1,1,2024/051
+DEA Research Project Accreditation,DEA Research Project Accreditation,,identity,0,1,2025/207
+Data First Family Court,MoJ Data First Family Court,Data First,normalised_format,0,1,2025/131
+Data First Family Court - England and Wales,MoJ Data First Family Court,Data First,normalised_format,0,1,2025/055
+Data First FamilyMan Family Court data,MoJ Data First Familyman Family Court,Data First,normalised_format,0,1,2023/073
+Data First Magistrates Court Defendant Iteration 2 - England and Wales,MoJ Data First Magistrates Court Defendant Iteration 2,Data First,normalised_format,0,1,2025/209
+Data First Prison Iteration 2 - England and Wales,MoJ Data First Prison Iteration 2,Data First,normalised_format,0,1,2024/213
+Death Registration Data,Death Registrations,Death Registrations,alias,0,1,2025/242
+Death Registrations in England and Wales,Death Registrations in England and Wales,Death Registrations,alias,0,1,2022/020
+Death data,Death,,normalised_format,0,1,2020/044
+Death registration data,Death Registrations,Death Registrations,alias,0,1,2021/141
+Death registration data -Provisional Monthly Extracts,Death Registration Data - Provisional Monthly Extracts,,alias,0,1,2020/106
+Death registration data-Provisional Monthly Extracts,Death Registration Data - Provisional Monthly Extracts,,alias,0,1,2021/023
+Death registration data­ Provisional Monthly Extracts­ England and Wales,Death Registration Data - Provisional Monthly Extracts,,alias,0,1,2021/179
+Death registrations in England and Wales indexed,Death registrations in England and Wales indexed,Death Registrations,identity,0,1,2025/071
+Deaths Registrations in England and Wales,Death Registrations in England and Wales,Death Registrations,alias,0,1,2023/063
+Department for Education Longistudinal Study of young people in England,Department for Education Longistudinal Study of young people in England,,identity,0,1,2025/222
+Designs and Trade Marks from,Designs and Trade Marks from,,identity,0,1,2025/083
+Designs and Trade Marks from Intellectual Property Office - UK,Designs and Trade Marks from Intellectual Property Office,,normalised_format,0,1,2025/022
+DfT: National Travel Survey - England,DfT: National Travel Survey,,normalised_format,0,1,2025/177
+Digital Economy Survey,Digital Economy Survey,,identity,0,1,2024/214
+E ­-commerce Survey,E-Commerce Survey,,alias,0,1,2021/067
+E ­commerce Survey,E-Commerce Survey,,alias,0,1,2021/052
+E-Commerce and Digital Economy Survey,E-Commerce and Digital Economy Survey,,alias,0,1,2025/090
+E-Commerce and Digital Economy Survey - UK,E-Commerce and Digital Economy Survey,,alias,0,1,2025/261
+E-commerce and Digital Economy Survey - UK Department For Education: Employer Skills Survey and Investment in Training - UK,E-Commerce and Digital Economy Survey - UK Department For Education: Employer Skills Survey and Investment in Training,,compound_or_multi_dataset,1,1,2025/100
+EOL,EOL,,identity,0,1,2023/110
+EOL Dataset (2015-2022),EOL Dataset (2015-2022),,identity,0,1,2024/138
+Economy Survey,Economy Survey,,normalised_format,0,1,2022/059
+Effects of Tax and Benefits,Effects of Tax and Benefits,,identity,0,1,2021/015
+Effects of Tax and Benefits - UK,Effects of Tax and Benefits,,normalised_format,0,1,2023/062
+Emergency Care Data Set monthly in England indexed,Emergency Care Data Set monthly in England indexed,,identity,0,1,2025/071
+Employer Skills Survey 2011-2019,Employer Skills Survey 2011-2019,,identity,0,1,2025/173
+Employer Skills Surveys,Employer Skills Survey,,alias,0,1,2020/059
+Employment Survey,Employment Survey,,normalised_format,0,1,2022/059
+Energy Performance Certification data,Energy Performance Certification,,normalised_format,0,1,2025/146
+English Longitudinal Study of Ageing,English Longitudinal Study of Ageing,,identity,0,1,2023/170
+Enhanced Linked Trade-in-Goods/Inter-Departmental Business Register,Enhanced Linked Trade-in-Goods/Inter-Departmental Business Register,,identity,0,1,2025/015
+Family Court (FACO),Family Court (FACO),,identity,0,1,2026/037
+Family Expenditure Survey,Family Expenditure Survey,,identity,0,1,2023/170
+Family Man,Family Man,,identity,0,1,2023/072
+Financial Assets and Liabilities Survey,Financial Assets and Liabilities Survey,,identity,0,1,2020/012
+Food Survey - UK,Food Survey,,normalised_format,0,1,2025/166
+Foreign Direct Investment Index - UK,Foreign Direct Investment Index,,normalised_format,0,1,2023/009
+Foreign Direct Investment,Foreign Direct Investment,,normalised_format,0,1,2022/059
+GRading and Admissions Data England - Ofqual - DfE,GRading and Admissions Data England (GRADE),,alias,0,1,2025/181
+General Household Survey,General Household Survey,,identity,0,1,2023/170
+General Lifestyle Survey to 2010,General Lifestyle Survey to 2010,,identity,0,1,2021/088
+Growing Up in England Wave 2 Vulnerability Measures,Growing Up in England Wave 2 Vulnerability Measures,GUIE,identity,0,1,2022/073
+Growing Up in England Wave 2 ­ Children in Need,Growing Up in England Wave 2 (GUIE),GUIE,alias,0,1,2025/118
+Growing Up in England Wave 2 ­ Exclusions,Growing Up in England Wave 2 - Exclusions,GUIE,alias,0,1,2025/118
+Harmonised BHPS Waves 1-18,Harmonised BHPS Waves 1-18,,identity,0,1,2020/105
+Health Survey for England,Health Survey for England,,identity,0,1,2023/170
+Health and Lifestyle Survey,Health and Lifestyle Survey,,identity,0,1,2023/170
+Household Sample Scottish Government: Secure Census 2011 Scotland,Census 2011 Household Sample Scotland,Census,alias,0,1,2022/007
+Households Below Average Income,Households Below Average Income,,identity,0,1,2023/170
+Indexed Census 2021,Census 2021 Indexed,Census,alias,0,1,2025/071
+Infant Mortality linkage of 2011 Census,Infant Mortality linkage of 2011 Census,,identity,0,1,2022/024
+Integrated Data Asset Hospital Episode Statistics,Integrated Data Asset Hospital Episode,,normalised_format,0,1,2025/071
+Interdepartmental Business Register,Inter-Departmental Business Register (IDBR),,alias,0,1,2020/012
+International Trade in Services .,International Trade in Services,,alias,0,1,2020/109
+International Trade in Services UK,International Trade in Services,,alias,0,1,2022/112
+International trade in services,International Trade in Services,,alias,0,1,2025/180
+Investment by insurance companies,Investment by insurance companies,,identity,0,1,2023/156
+Investment in Intangible Assets,Investment in Intangible Assets,,identity,0,1,2020/012
+KIntegrated Data Service Environment Health Cohort Spine,KIntegrated Data Service Environment Health Cohort Spine,,identity,0,1,2025/067
+LEO,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2025/064
+LEO Scotland,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2025/197
+LEO via SRS Iteration 1 Standard Extract OFSTED: State-­funded schools inspections and outcomes - England,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2021/075
+Labour Force Surv ey Person - UK,Labour Force Survey Person,Labour Force Survey,normalised_format,0,1,2025/255
+Labour Force Survey (Household),Labour Force Survey Household,Labour Force Survey,normalised_format,0,1,2023/243
+Labour Force Survey (Longitudinal),Labour Force Survey Longitudinal,Labour Force Survey,normalised_format,0,1,2023/243
+Labour Force Survey (Person),Labour Force Survey Person,Labour Force Survey,normalised_format,0,1,2023/243
+Labour Force Survey - Household ­ UK,Labour Force Survey Household,Labour Force Survey,normalised_format,0,1,2025/088
+Labour Force Survey - Longitudinal UK,Labour Force Survey Longitudinal,Labour Force Survey,normalised_format,0,1,2025/088
+Labour Force Survey - UK,Labour Force Survey (LFS),Labour Force Survey,alias,0,1,2026/018
+Labour Force Survey Household ­ UK,Labour Force Survey Household,Labour Force Survey,normalised_format,0,1,2025/118
+Labour Force Survey Households Dataset,Labour Force Survey Household,Labour Force Survey,normalised_format,0,1,2023/217
+Labour Force Survey Indexed,Labour Force Survey Indexed,Labour Force Survey,identity,0,1,2024/128
+Labour Force Survey Person UK,Labour Force Survey Person,Labour Force Survey,normalised_format,0,1,2025/136
+Labour Force Survey Person ­ UK,Labour Force Survey Person,Labour Force Survey,normalised_format,0,1,2025/118
+Linked Census and death occurrences - England and Wales,Linked Census and Death Occurrences,Census,alias,0,1,2021/141
+Linked Credit Reference Agency (CRA) Dataset,Linked Credit Reference Agency (CRA),,normalised_format,0,1,2025/247
+Linked Director's mortality,Linked Director's mortality,,identity,0,1,2020/100
+Linked Inter-Departmental Business Register and Valuation Office Agency,Linked Inter-Departmental Business Register and Valuation Office Agency,,identity,0,1,2020/051
+Linked NI Census-ASHE,Northern Ireland Census linked to ASHE,Census,alias,0,1,2021/107
+Linked Trade-in-Goods/IDBR,Linked Trade-in-Goods/IDBR,,identity,0,1,2026/036
+Linked Trade-in-Goods/IDBR - UK,Linked Trade-in-Goods/IDBR,,normalised_format,0,1,2026/048
+Linked Trade-in-Goods/Inter Departmental Business Register,Linked Trade-in-Goods/Inter-Departmental Business Register,,alias,0,1,2025/180
+Linked Trade-in-Goods/Inter-Departmental-Business-Register,Linked Trade-in-Goods/Inter-Departmental Business Register,,alias,0,1,2023/243
+Linked census and death occurrences,Linked Census and Death Occurrences,Census,alias,0,1,2021/045
+Living Cost and Food Survey,Living Costs and Food Survey (LCF),,alias,0,1,2019/019
+Living Costs and Food Surveys,Living Costs and Food Survey (LCF),,alias,0,1,2026/020
+Longitudinal Business Register,Longitudinal Business Register,,identity,0,1,2026/042
+Longitudinal Education Outcomes - ­ England,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2025/037
+Longitudinal Education Outcomes SRS Iteration 1 Standard Extract - EnglandDfE,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2023/011
+Longitudinal Education Outcomes SRS Iteration 1 standard extract - England,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2025/167
+Longitudinal Education Outcomes SRS Iteration 2,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2025/135
+Longitudinal Education Outcomes SRS Iteration 2 - England,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2025/127
+Longitudinal Education Outcomes SRS Iteration 2,Longitudinal Education Outcomes (LEO),LEO,alias,0,1,2025/122
+Longitudinal Inter-Departmental Business Register UK,Longitudinal Inter-Departmental Business Register,,alias,0,1,2022/113
+Longitudinal Inter-­Departmental Business Register,Longitudinal Inter-Departmental Business Register,,alias,0,1,2021/081
+Longitudinal Small Business Survey UK,Longitudinal Small Business Survey (LSBS),,alias,0,1,2025/096
+Longitudinal Study 1971,ONS Longitudinal Study 1971,,alias,0,1,2025/121
+Longitudinal InterDepartmental Business,Longitudinal InterDepartmental Business,,normalised_format,0,1,2022/059
+Longitudinal Study of England and Wales,ONS Longitudinal Study (LS),,alias,0,1,2022/101
+Longitudunal Inter-Departmental Business Register - UK,Longitudinal Inter-Departmental Business Register,,alias,0,1,2024/193
+Low Carbon and Renewable Energy Economy Survey UK,Low Carbon and Renewable Energy Economy Survey,,normalised_format,0,1,2022/107
+Low carbon and Renewable Energy Economy Survey - UK,Low Carbon and Renewable Energy Economy Survey,,normalised_format,0,1,2025/210
+Low Carbon and,Low Carbon and,,normalised_format,0,1,2022/059
+MOJ Data First Crown Court Defendant,MoJ Data First Crown Court Defendant,Data First,normalised_format,0,1,2024/256
+MOJ Data First Family Court,MoJ Data First Family Court,Data First,normalised_format,0,1,2024/256
+MOJ Data First Linked Criminal Courts,MoJ Data First Linked Criminal Courts,Data First,normalised_format,0,1,2024/256
+MOJ Data First Magistrates' Court Defendant,MoJ Data First Magistrates' Court Defendant,Data First,normalised_format,0,1,2024/256
+MOJ Data First Prisoner Custodial Journey,MoJ Data First Prisoner Custodial Journey,Data First,normalised_format,0,1,2024/256
+MOJ Data First Probabation,MoJ Data First Probation,Data First,normalised_format,0,1,2024/256
+MOJDF cross justice linking (Cross-justice system linking dataset) and MAGS CROWN JOURNEY,MOJDF cross justice linking (Cross-Justice System Linking dataset) and MAGS CROWN JOURNEY,,normalised_format,0,1,2026/037
+Magistrates Court (MACO),Magistrates Court (MACO),,identity,0,1,2026/037
+Maternal Deaths Data,Maternal Deaths,,normalised_format,0,1,2023/293
+Mergers and Acquisitions Survey - UK,Mergers and Acquisitions Survey,,alias,0,1,2024/151
+Ministry of Justice Data First Family Court - England and Wales,MoJ Data First Family Court,Data First,normalised_format,0,1,2024/092
+Ministry of Justice Data First Probation - England and Wales,MoJ Data First Probation,Data First,normalised_format,0,1,2024/005
+Ministry of Justice Data First Probation Iteration 2 - England and Wales,MoJ Data First Probation Iteration 2,Data First,normalised_format,0,1,2024/213
+MoJ Data First Cross-Justice system linking dataset - England and Wales,MoJ Data First Cross-Justice System Linking Dataset,Data First,alias,0,1,2026/051
+MoJ Data First Crown Court Defendant,MoJ Data First Crown Court Defendant,Data First,identity,0,1,2022/023
+MoJ Data First Link,MoJ Data First Link,Data First,identity,0,1,2025/209
+MoJ Data First Linked Criminal Courts and Prisons defendant,MoJ Data First Linked Criminal Courts And Prisons Defendant,Data First,normalised_format,0,1,2022/198
+MoJ Data First Offender Assessment dataset - England and Wales,MoJ Data First Offender Assessment,Data First,normalised_format,0,1,2026/051
+MoJ Data First Probation Iteration 2 - England and Wales,MoJ Data First Probation Iteration 2,Data First,normalised_format,0,1,2026/051
+MoJ Data First Probation dataset,MoJ Data First Probation,Data First,normalised_format,0,1,2024/089
+MoJ Data First family court data extract,MoJ Data First Family Court Data Extract,Data First,normalised_format,0,1,2022/111
+MoJ Data First magistrates’ court defendant case level dataset,MoJ Data First Magistrates' Court Defendant Case Level,Data First,normalised_format,0,1,2022/075
+MoJ Data First prisoner custodial journey dataset - Wales,MoJ Data First Prisoner Custodial Journey,Data First,normalised_format,0,1,2024/089
+MoJ Data First prisoner custodial journey level dataset - England and Wales,MoJ Data First Prisoner Custodial Journey Level,Data First,normalised_format,0,1,2021/040
+Monthly Business Survey - UK,Monthly Business Survey,,normalised_format,0,1,2023/061
+Monthly Business Survey UK,Monthly Business Survey,,normalised_format,0,1,2022/102
+Monthly Business Survey for Construction and Allied Trades - Great Britain,Monthly Business Survey for Construction and Allied Trades,,normalised_format,0,1,2023/061
+Monthly Inquiry into the Distributive and Services Sector,Monthly Inquiry into the Distributive and Services Sector,,identity,0,1,2020/048
+Monthly Inquiry into the Distributive and Services Sector - UK,Monthly Inquiry into the Distributive and Services Sector,,normalised_format,0,1,2023/061
+Monthly Production Inquiry,Monthly Production Inquiry,,identity,0,1,2020/048
+Monthly Production Inquiry - UK,Monthly Production Inquiry,,normalised_format,0,1,2023/061
+Monthly Wage and Salary Survey - Great Britain,Monthly Wages and Salary Survey,,alias,0,1,2023/061
+Monthly Wages and Salaries Survey,Monthly Wages and Salary Survey,,alias,0,1,2020/116
+Monthly Wages and Salary Survey,Monthly Wages and Salary Survey,,alias,0,1,2024/007
+NHS Test and Trace - England and Wales,NHS Test and Trace,,normalised_format,0,1,2023/066
+NI Annual Business Inquiry,NI Annual Business Inquiry,,identity,0,1,2022/155
+NN4B,NN4B,,identity,0,1,2023/293
+National Employer Skills Survey 1999-2009,National Employer Skills Survey,,alias,0,1,2025/173
+National Energy Efficiency data,National Energy Efficiency,,normalised_format,0,1,2020/099
+National Travel Survey - England,National Travel Survey,,normalised_format,0,1,2024/231
+National Travel Survey ­England,National Travel Survey England,,normalised_format,0,1,2022/083
+New Earnings Survey 1986-2202,New Earnings Survey 1986-2202,,identity,0,1,2025/173
+Northern Ireland Census 2021 Census Microdata,Northern Ireland Census 2021 Microdata,Census,alias,0,1,2025/168
+Northern Ireland Economic Trade Statistics,Northern Ireland Economic Trade,,normalised_format,0,1,2025/251
+O2 mobile network operator travel and location data UK,O2 mobile network operator travel and location data,,normalised_format,0,1,2024/189
+ONS COVID-19 Weekly Opinions Survey,COVID-19 Weekly Opinions Survey,,alias,0,1,2020/027
+ONS Longitudinal Study of England and Wales,ONS Longitudinal Study (LS),,alias,0,1,2020/092
+ONS Omnibus Survey,ONS Omnibus Survey,,identity,0,1,2023/170
+ONS Opinions and Lifestyle Survey,Opinions and Lifestyle Survey (OPN),,alias,0,1,2024/066
+Occupational differences in mortality from COVID-19,Occupational differences in mortality from COVID-19,,identity,0,1,2020/067
+Online Time Use Survey,Online Time Use Survey,,identity,0,1,2025/207
+Opinions and Lifestyle Survey .,Opinions and Lifestyle Survey (OPN),,alias,0,1,2020/103
+Over 50s Lifestyle Study - Great Britain,Over 50s Lifestyle Study,,normalised_format,0,1,2023/311
+Prices survey Microdata,Prices Survey Microdata,,alias,0,1,2025/095
+Prisoner Custodial Journey Dataset (PRIS),Prisoner Custodial Journey Dataset (PRIS),,identity,0,1,2026/037
+Producer Price Index UK,Producer Price Index,,normalised_format,0,1,2022/105
+Provisional Monthly Extracts ­ England and Wales,Provisional Monthly Extracts England and Wales,,normalised_format,0,1,2021/141
+Public Attitudes Tracker,Public Attitudes Tracker,,identity,0,1,2024/103
+Quarterly Aquisitions and Disposals of Capital Assets Survey - UK,Quarterly Acquisitions and Disposals of Capital Assets Survey,,normalised_format,0,1,2024/193
+Quarterly Capital Expenditure Survey UK,Quarterly Capital Expenditure Survey,,normalised_format,0,1,2022/089
+Quarterly Fuels Inquiry - UK,Quarterly Fuels Inquiry,,normalised_format,0,1,2023/051
+Quarterly Labour Force Survey Economic and Social Research Council: Integrated Census Microdata,Quarterly Labour Force Survey Economic and Social Research Council: Integrated Census Microdata,Labour Force Survey,compound_or_multi_dataset,1,1,2025/192
+Quarterly Labour Force Survey Household Dataset,Quarterly Labour Force Survey Household,Labour Force Survey,normalised_format,0,1,2023/170
+Quarterly Survey of Financial Assets and Liabilities,Quarterly Survey of Financial Assets and Liabilities,,identity,0,1,2020/071
+RETIRED MOJ Data First Magistrates Court Defendant - England and Wales,RETIRED MoJ Data First Magistrates Court Defendant,Data First,normalised_format,0,1,2024/102
+RETIRED Mergers and Acquisitions Survey - UK,Mergers and Acquisitions Survey,,alias,0,1,2023/061
+RETIRED Ministry of Justice Data First Crown Court Defendant - England and Wales,RETIRED MoJ Data First Crown Court Defendant,Data First,normalised_format,0,1,2024/218
+Registered Deaths,Death Registrations,Death Registrations,alias,0,1,2019/025
+Renewable Energy,Renewable Energy,,normalised_format,0,1,2022/059
+Retail Price Index,Retail Price Index,,identity,0,1,2019/016
+Retired Ministry of Justice Data First Probation - England and Wales,Retired Ministry of Justice Data First Probation,,normalised_format,0,1,2024/092
+Safeguarded Living Costs and Food Survey,Safeguarded Living Costs and Food Survey,,alias,0,1,2026/020
+Schools Daily Contact Testing - England,Schools Daily Contact Testing,,normalised_format,0,1,2023/066
+Secure Access version of Understanding Society Data and Harmonised BHPS Geography files,Secure Access version of Understanding Society Data and Harmonised BHPS Geography files,,identity,0,1,"2021/151
+"
+Secure Census 2011 England,Census 2011 England,Census,alias,0,1,2022/007
+Secure Census 2011 England and Wales: Household Sample,Census 2011 Household Sample England and Wales,Census,alias,0,1,2020/094
+Secure Census 2011 Origin / Destination,Census 2011 Origin-Destination,Census,alias,0,1,2020/107
+Short Term Employment Survey - Great Britain,Short Term Employment Survey,,normalised_format,0,1,2023/061
+Skills and Employment Surveys Series Dataset,Skills and Employment Surveys Series,,normalised_format,0,1,2022/116
+Small Business Survey Longitudinal,Small Business Survey Longitudinal,,identity,0,1,2020/012
+Smart Energy Research Lab Observatory Data,Smart Energy Research Lab Observatory,,normalised_format,0,1,2025/207
+Standard Extract ­ England,Standard Extract England,,normalised_format,0,1,2025/135
+Standard Industrial Classification and Occupational lookup,Standard Industrial Classification and Occupational lookup,,identity,0,1,2024/189
+Standard Extract ­ England,Standard Extract England,,normalised_format,0,1,2025/122
+Statutory Homelessness Flows - England,Statutory Homelessness Flows,,normalised_format,0,1,2023/036
+Street Level Crime for England,Street Level Crime for England,,identity,0,1,2024/206
+Structure Database - UK,Structure Database,,normalised_format,0,1,2026/014
+Survey of Personal Incomes,Survey of Personal Incomes,,identity,0,1,2023/170
+Trace data,Trace,,normalised_format,0,1,2020/104
+Trade in Services,Trade in Services,,identity,0,1,2021/067
+UK Gross Value Added for lower layer super output areas,UK Gross Value Added for lower layer super output areas,,identity,0,1,2022/107
+UK Household Electricity and Activity Survey,UK Household Electricity and Activity Survey,,identity,0,1,2025/207
+UK Household Longitudinal Study Mainstage Survey Wave 6,UK Household Longitudinal Study Mainstage Survey Wave 6,,identity,0,1,2020/005
+UK Household Longitudinal Study Mainstage Survey Wave 9 &,UK Household Longitudinal Study Mainstage Survey Wave 9 &,,identity,0,1,2020/005
+UK Innovation Survey 1994-2023,UK Innovation Survey 1994-2023,,identity,0,1,2025/173
+UK InnovationSurvey,UK Innovation Survey (UKIS),,alias,0,1,2026/012
+UK Manufacturers ™ Sales by Product Survey,UK Manufacturers' Sales by Product Survey,,alias,0,1,2022/059
+UK Manufacturers' Sales by Products Survey,UK Manufacturers' Sales by Product Survey,,alias,0,1,2025/248
+UK Manufacturers’ Sales by Product Survey,UK Manufacturers' Sales by Product Survey,,alias,0,1,2025/180
+UK small area gross value added estimates,UK small area gross value added estimates,,identity,0,1,2024/189
+Understanding Society - BHPS,Understanding Society BHPS,,normalised_format,0,1,2021/024
+Understanding Society - UKHLS,Understanding Society UKHLS,,normalised_format,0,1,2021/024
+Understanding Society BHPS,Understanding Society BHPS,,identity,0,1,2022/153
+Understanding Society UK,Understanding Society,,normalised_format,0,1,2022/103
+Understanding Society Waves 1-9,Understanding Society Waves 1-9,,identity,0,1,2020/105
+Understanding Society and Harmonised BHPS,Understanding Society and Harmonised BHPS,,identity,0,1,2021/137
+Universities and Colleges Admissions Service UK,Universities and Colleges Admissions Service (UCAS),,alias,0,1,2025/195
+Wealth and Asset Survey,Wealth and Assets Survey (WAS),,alias,0,1,2023/237
+Wealth and Assets Survey - GB,Wealth and Assets Survey (WAS),,alias,0,1,2026/001
+Wealth and Assets Survey Great Britain,Wealth and Assets Survey Great Britain,,identity,0,1,2021/050
+pension funds and trusts - UK,pension funds and trusts,,normalised_format,0,1,2023/156
+udinal Busin ess Database - UK,udinal Busin ess Database,,normalised_format,0,1,2026/014
