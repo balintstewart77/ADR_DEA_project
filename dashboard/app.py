@@ -20,6 +20,8 @@ import plotly.io as pio
 from dash import Dash, dcc, html, Input, Output, State, dash_table
 import dash_bootstrap_components as dbc
 
+from dataset_normalisation import iter_dataset_entries, parse_datasets
+
 # ---------------------------------------------------------------------------
 # 1. Data loading & processing
 # ---------------------------------------------------------------------------
@@ -167,29 +169,6 @@ COLLECTION_COLOURS = {
 PRIMARY_BAR = "#2a9d8f"
 SECONDARY_BAR = "#e76f51"
 
-DATASET_PROVIDER_RE = re.compile(
-    r"(?=(?:Office for National Statistics|Department for [^:\n]{1,120}|"
-    r"Ministry of Justice|Home Office(?:; NHS)?|NHS(?:; DfE)?|"
-    r"Understanding Society|Institute for [^:\n]{1,120}|"
-    r"SAIL Databank(?: Databank)?|UCAS|Northern Ireland [^:\n]{1,120}|"
-    r"Intellectual Property Office|IPO|Department for Transport|"
-    r"HM Revenue and Customs|HMRC|Data First|MoJ Data First)"
-    r"[^:\n]{0,120}:)"
-)
-ALLOWED_SHORT_DATASET_NAMES = {
-    "ASHE", "BHPS", "EOL", "LEO", "NN4B", "Patents", "Prisons",
-}
-INVALID_DATASET_FRAGMENTS = {
-    "_x000D_", "amp", "and 2021", "britain", "britain,", "census", "data",
-    "d wales", "database", "dwp and", "england", "index", "index,", "ireland", "ireland,",
-    "level", "panel", "person", "person,", "scotland", "survey", "visa,",
-    "wales",
-}
-GEOGRAPHY_SUFFIX_FALLBACK_NAMES = {
-    "benefits", "earnings", "income", "services", "trace",
-}
-
-
 def classify_collection(datasets_str: str) -> list[str]:
     """Return list of matching collection names for a datasets string."""
     if not isinstance(datasets_str, str):
@@ -282,108 +261,6 @@ def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict
     df_flagship = pd.DataFrame(flagship_rows)
 
     return df, df_flagship, stats
-
-
-# Regex patterns mapping dataset name variants to a canonical name.
-# Each entry: (compiled regex matched against the normalised name, canonical label).
-DATASET_ALIASES = [
-    (re.compile(r"(?i)^longitudinal education outcomes.*"), "Longitudinal Education Outcomes"),
-    (re.compile(r"(?i)^leo\b.*"), "Longitudinal Education Outcomes"),
-]
-
-
-def _normalise_dataset_name(name: str) -> str:
-    """Strip geographic suffixes, then apply alias rules."""
-    original = name.strip()
-    # Strip trailing geographic qualifiers
-    name = re.sub(
-        r"\s*-\s*(UK|GB|Great Britain|England|England and Wales|Wales|Scotland|Northern Ireland)\s*$",
-        "", name, flags=re.IGNORECASE,
-    ).strip()
-    if name.lower() in GEOGRAPHY_SUFFIX_FALLBACK_NAMES:
-        name = original
-    # Apply alias patterns
-    for pattern, canonical in DATASET_ALIASES:
-        if pattern.match(name):
-            return canonical
-    return name
-
-
-def _clean_datasets_text(raw: str) -> str:
-    text = re.sub(r"_x000D_", " ", raw)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = text.replace("\r", "\n")
-    text = re.sub(r"\s{2,}", " ", text)
-    text = re.sub(r"\s*\n\s*", "\n", text)
-    # Recover provider boundaries when the source omits newlines between provider blocks.
-    text = DATASET_PROVIDER_RE.sub(lambda m: ("\n" if m.start() > 0 else "") + m.group(0), text)
-    return text.strip()
-
-
-def _split_dataset_parts(rest: str) -> list[str]:
-    parts = re.split(r"\s*,\s*|\s+&\s+|\sand\s+(?=[A-Z0-9])", rest.strip())
-    return [part.strip(" ,;") for part in parts if part.strip(" ,;")]
-
-
-def _is_valid_dataset_fragment(name: str) -> bool:
-    cleaned = name.strip()
-    if not cleaned:
-        return False
-    lowered = cleaned.lower()
-    bare = re.sub(r"[^A-Za-z0-9]+", "", cleaned)
-    if lowered in INVALID_DATASET_FRAGMENTS:
-        return False
-    if re.fullmatch(r"(19|20)\d{2}", cleaned):
-        return False
-    if len(cleaned.split()) == 1 and len(bare) <= 8 and cleaned not in ALLOWED_SHORT_DATASET_NAMES:
-        return False
-    return True
-
-
-def iter_dataset_entries(raw: str):
-    if not isinstance(raw, str) or not raw.strip():
-        return
-    cleaned = _clean_datasets_text(raw)
-    for line in cleaned.split("\n"):
-        line = line.strip()
-        if not line:
-            continue
-        if ":" in line:
-            provider, rest = line.split(":", 1)
-            provider = provider.strip()
-            parts = _split_dataset_parts(rest)
-        else:
-            provider = ""
-            parts = _split_dataset_parts(line)
-        for part in parts:
-            if _is_valid_dataset_fragment(part):
-                yield line, provider, part
-
-
-def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Parse the 'Datasets Used' column into one row per project x dataset.
-    Returns DataFrame with columns: Project ID, Year, quarter_date, provider, dataset, dataset_full.
-    """
-    rows = []
-    for _, proj in df.iterrows():
-        raw = proj.get("Datasets Used", "")
-        if not isinstance(raw, str) or not raw.strip():
-            continue
-        pid = proj["Project ID"]
-        year = proj["Year"]
-        qd = proj["quarter_date"]
-        for _, provider, part in iter_dataset_entries(raw):
-            name_norm = _normalise_dataset_name(part)
-            rows.append({
-                "Project ID": pid,
-                "Year": year,
-                "quarter_date": qd,
-                "provider": provider,
-                "dataset": name_norm,
-                "dataset_full": f"{provider}: {part}" if provider else part,
-            })
-    return pd.DataFrame(rows)
 
 
 # ---------------------------------------------------------------------------
@@ -510,9 +387,10 @@ PARTIAL_YEAR_NOTE = (
     if PARTIAL_YEAR else ""
 )
 TOTAL_PROJECTS = len(df_all)
+TOTAL_DATASET_REQUESTS = len(df_datasets)
 TOTAL_FLAGSHIP = df_flagship_projects["Project Row ID"].nunique() if len(df_flagship_projects) else 0
 TOTAL_FLAGSHIP_REQUESTS = len(df_flagship_requests) if len(df_flagship_requests) else 0
-YEAR_RANGE = f"{int(df_all['Year'].min())}--{int(df_all['Year'].max())}" if len(df_all) else ""
+YEAR_RANGE = f"{int(df_all['Year'].min())}–{int(df_all['Year'].max())}" if len(df_all) else ""
 RETAINED_CONFLICTING_DUPLICATE_IDS = sorted(
     df_all.loc[df_all["Project ID"].duplicated(keep=False), "Project ID"].unique().tolist()
 )
@@ -889,6 +767,7 @@ CUSTOM_CSS = """
     text-transform: uppercase;
     letter-spacing: 0.04em;
     margin: 0;
+    white-space: nowrap;
 }
 
 /* Tabs */
@@ -1024,15 +903,15 @@ def _stat_card(value, label, accent):
             className="stat-card",
             style={"--accent-color": accent},
         ),
-        xs=6, md=4, xl=2,
+        className="col-auto",
     )
 
 
 STAT_CARDS = dbc.Row([
     _stat_card(f"{TOTAL_PROJECTS:,}", "Total DEA Projects", "#3366cc"),
-    _stat_card(f"{TOTAL_FLAGSHIP:,}", "Flagship Projects", "#109618"),
-    _stat_card(f"{TOTAL_FLAGSHIP_REQUESTS:,}", "Flagship Dataset Requests", "#ff9900"),
-    _stat_card(str(len(COLLECTIONS)), "ADR Collections", "#0099c6"),
+    _stat_card(f"{TOTAL_DATASET_REQUESTS:,}", "DEA Dataset Requests", "#6633cc"),
+    _stat_card(f"{TOTAL_FLAGSHIP:,}", "Projects Using ADR England Linked Datasets", "#109618"),
+    _stat_card(f"{TOTAL_FLAGSHIP_REQUESTS:,}", "ADR England Flagship Dataset Requests", "#ff9900"),
     _stat_card(YEAR_RANGE, "Year Range", "#0099c6"),
 ], className="mb-4 g-3")
 
@@ -1046,13 +925,13 @@ OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
     ),
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="overview-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(dcc.Graph(id="overview-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
             width=12,
         ),
     ]),
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="overview-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(dcc.Graph(id="overview-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
             md=6,
         ),
         dbc.Col(
@@ -1121,26 +1000,17 @@ FLAGSHIP_TAB = dbc.Tab(label="ADR England Flagship Datasets", tab_id="tab-flagsh
     ]),
 ])
 
+_ALL_DATASET_OPTIONS = (
+    [{"label": "All datasets", "value": "ALL"}]
+    + [{"label": d, "value": d} for d in sorted(df_datasets["dataset"].unique()) if d]
+)
+
 BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
     html.P(
         "Search and filter individual projects. Hover over truncated cells to see full text.",
         className="section-desc",
     ),
     dbc.Row([
-        dbc.Col([
-            html.Label("Collection", className="filter-label"),
-            dcc.Dropdown(
-                id="browse-collection-filter",
-                options=[{"label": "All collections", "value": "ALL"}]
-                        + [{"label": c, "value": c} for c in COLLECTIONS],
-                value="ALL",
-                clearable=False,
-            ),
-        ], md=3),
-        dbc.Col([
-            html.Label("Search title / researcher", className="filter-label"),
-            dbc.Input(id="browse-search", placeholder="Type to filter\u2026", type="text"),
-        ], md=5),
         dbc.Col([
             html.Label("Scope", className="filter-label"),
             dcc.Dropdown(
@@ -1149,10 +1019,35 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
                     {"label": "All DEA projects", "value": "all"},
                     {"label": "ADR England Flagship only", "value": "flagship"},
                 ],
-                value="flagship",
+                value="all",
                 clearable=False,
             ),
         ], md=2),
+        dbc.Col([
+            html.Label("Filter by dataset", className="filter-label"),
+            dcc.Dropdown(
+                id="browse-dataset-filter",
+                options=_ALL_DATASET_OPTIONS,
+                value="ALL",
+                clearable=False,
+                searchable=True,
+                placeholder="Search datasets\u2026",
+            ),
+        ], md=4),
+        dbc.Col([
+            html.Label("Search title / researcher", className="filter-label"),
+            dbc.Input(id="browse-search", placeholder="Type to filter\u2026", type="text"),
+        ], md=3),
+        dbc.Col([
+            html.Label("Results per page", className="filter-label"),
+            dcc.Dropdown(
+                id="browse-page-size",
+                options=[{"label": str(n), "value": n} for n in [10, 20, 50, 100]],
+                value=20,
+                clearable=False,
+                searchable=False,
+            ),
+        ], md=1),
         dbc.Col([
             html.Label("\u00a0", className="filter-label"),  # spacer for alignment
             html.Div(id="browse-count", className="text-muted small pt-2"),
@@ -1214,13 +1109,28 @@ DATASETS_TAB = dbc.Tab(label="All Datasets", tab_id="tab-datasets", children=[
     dbc.Row([
         dbc.Col([
             html.Label("Show top N datasets", className="filter-label"),
-            dcc.Dropdown(
-                id="datasets-topn",
-                options=[{"label": str(n), "value": n} for n in [10, 20, 30, 50]],
-                value=20,
-                clearable=False,
-            ),
-        ], md=2),
+            html.Div([
+                dcc.Dropdown(
+                    id="datasets-topn-preset",
+                    options=[
+                        {"label": "5", "value": 5},
+                        {"label": "10", "value": 10},
+                        {"label": "25", "value": 25},
+                        {"label": "50", "value": 50},
+                        {"label": "Custom", "value": -1},
+                    ],
+                    value=10,
+                    clearable=False,
+                    searchable=False,
+                    style={"width": "110px", "display": "inline-block", "verticalAlign": "middle"},
+                ),
+                dbc.Input(
+                    id="datasets-topn-custom", type="number",
+                    min=1, max=500, step=1, placeholder="N",
+                    style={"width": "80px", "display": "none", "verticalAlign": "middle", "marginLeft": "8px"},
+                ),
+            ], style={"display": "flex", "alignItems": "center"}),
+        ], md=3),
         dbc.Col([
             html.Label("Provider filter", className="filter-label"),
             dcc.Dropdown(
@@ -1415,13 +1325,28 @@ INSTITUTIONS_TAB = dbc.Tab(label="Institutions", tab_id="tab-institutions", chil
     dbc.Row([
         dbc.Col([
             html.Label("Show top N institutions", className="filter-label"),
-            dcc.Dropdown(
-                id="institutions-topn",
-                options=[{"label": str(n), "value": n} for n in [10, 20, 30, 50]],
-                value=20,
-                clearable=False,
-            ),
-        ], md=2),
+            html.Div([
+                dcc.Dropdown(
+                    id="institutions-topn-preset",
+                    options=[
+                        {"label": "5", "value": 5},
+                        {"label": "10", "value": 10},
+                        {"label": "25", "value": 25},
+                        {"label": "50", "value": 50},
+                        {"label": "Custom", "value": -1},
+                    ],
+                    value=10,
+                    clearable=False,
+                    searchable=False,
+                    style={"width": "110px", "display": "inline-block", "verticalAlign": "middle"},
+                ),
+                dbc.Input(
+                    id="institutions-topn-custom", type="number",
+                    min=1, max=500, step=1, placeholder="N",
+                    style={"width": "80px", "display": "none", "verticalAlign": "middle", "marginLeft": "8px"},
+                ),
+            ], style={"display": "flex", "alignItems": "center"}),
+        ], md=3),
     ]),
     dbc.Row([
         dbc.Col(
@@ -1551,14 +1476,15 @@ def update_flagship(selected_collections, metric_mode):
 @app.callback(
     Output("browse-table", "data"),
     Output("browse-table", "tooltip_data"),
+    Output("browse-table", "page_size"),
     Output("browse-count", "children"),
-    Input("browse-collection-filter", "value"),
-    Input("browse-search", "value"),
     Input("browse-scope", "value"),
+    Input("browse-dataset-filter", "value"),
+    Input("browse-search", "value"),
+    Input("browse-page-size", "value"),
 )
-def update_browse_table(collection, search, scope):
+def update_browse_table(scope, dataset_filter, search, page_size):
     if scope == "flagship" and len(df_flagship_projects):
-        # One row per unique project; join collection names for multi-collection projects
         coll_labels = (
             df_flagship_projects.groupby("Project Row ID")["collection"]
             .apply(lambda x: ", ".join(sorted(x.unique())))
@@ -1572,16 +1498,11 @@ def update_browse_table(collection, search, scope):
             lambda x: ", ".join(x) if x else ""
         )
 
-    if collection and collection != "ALL":
-        if scope == "flagship":
-            matching_ids = set(
-                df_flagship_projects.loc[
-                    df_flagship_projects["collection"] == collection, "Project Row ID"
-                ]
-            )
-            base = base[base["Project Row ID"].isin(matching_ids)]
-        else:
-            base = base[base["collections"].apply(lambda x: collection in x)]
+    if dataset_filter and dataset_filter != "ALL":
+        matching_pids = set(
+            df_datasets.loc[df_datasets["dataset"] == dataset_filter, "Project ID"]
+        )
+        base = base[base["Project ID"].isin(matching_pids)]
 
     if search:
         mask = (
@@ -1604,7 +1525,7 @@ def update_browse_table(collection, search, scope):
     ]
 
     count_text = f"Showing {len(table_data):,} project{'s' if len(table_data) != 1 else ''}"
-    return table_data, tooltip_data, count_text
+    return table_data, tooltip_data, page_size or 20, count_text
 
 
 # Build a set of flagship dataset names (normalised) for optional exclusion
@@ -1619,14 +1540,28 @@ def _is_flagship_dataset(name: str) -> bool:
 
 
 @app.callback(
+    Output("datasets-topn-custom", "style"),
+    Input("datasets-topn-preset", "value"),
+)
+def toggle_datasets_custom(preset):
+    base = {"width": "80px", "verticalAlign": "middle", "marginLeft": "8px"}
+    if preset == -1:
+        return {**base, "display": "inline-block"}
+    return {**base, "display": "none"}
+
+
+@app.callback(
     Output("datasets-topn-chart", "figure"),
     Output("datasets-trend-chart", "figure"),
     Output("datasets-provider-chart", "figure"),
-    Input("datasets-topn", "value"),
+    Input("datasets-topn-preset", "value"),
+    Input("datasets-topn-custom", "value"),
     Input("datasets-provider-filter", "value"),
     Input("datasets-exclude-flagship", "value"),
 )
-def update_datasets_tab(top_n, provider, exclude_flagship):
+def update_datasets_tab(preset, custom, provider, exclude_flagship):
+    top_n = int(custom) if preset == -1 and custom else (preset if preset != -1 else 10)
+    top_n = max(1, int(top_n))
     sub = df_datasets.copy()
 
     if exclude_flagship and "yes" in exclude_flagship:
@@ -1661,15 +1596,16 @@ def update_datasets_tab(top_n, provider, exclude_flagship):
     )
     _apply_common(fig_top, height=max(400, top_n * 22))
 
-    # -- Trend: top 5 datasets over time --
-    top5 = (
+    # -- Trend: top N datasets over time --
+    trend_n = min(top_n, 15)  # cap legend at 15 for readability
+    top_trend = (
         sub.groupby("dataset")["Project ID"]
         .nunique()
-        .nlargest(5)
+        .nlargest(trend_n)
         .index.tolist()
     )
     trend_data = (
-        sub[sub["dataset"].isin(top5)]
+        sub[sub["dataset"].isin(top_trend)]
         .groupby(["Year", "dataset"])["Project ID"]
         .nunique()
         .reset_index()
@@ -1677,7 +1613,7 @@ def update_datasets_tab(top_n, provider, exclude_flagship):
     )
     fig_trend = px.line(
         trend_data, x="Year", y="Projects", color="dataset",
-        title="Top 5 Datasets — Usage by Year",
+        title=f"Top {trend_n} Datasets — Usage by Year",
         labels={"dataset": "Dataset"},
         markers=True,
     )
@@ -1734,11 +1670,25 @@ def update_datasets_tab(top_n, provider, exclude_flagship):
 
 
 @app.callback(
+    Output("institutions-topn-custom", "style"),
+    Input("institutions-topn-preset", "value"),
+)
+def toggle_institutions_custom(preset):
+    base = {"width": "80px", "verticalAlign": "middle", "marginLeft": "8px"}
+    if preset == -1:
+        return {**base, "display": "inline-block"}
+    return {**base, "display": "none"}
+
+
+@app.callback(
     Output("institutions-bar-chart", "figure"),
     Output("institutions-trend-chart", "figure"),
-    Input("institutions-topn", "value"),
+    Input("institutions-topn-preset", "value"),
+    Input("institutions-topn-custom", "value"),
 )
-def update_institutions_tab(top_n):
+def update_institutions_tab(preset, custom):
+    top_n = int(custom) if preset == -1 and custom else (preset if preset != -1 else 10)
+    top_n = max(1, int(top_n))
     return (
         make_institution_bar(df_institutions, top_n=top_n),
         make_institution_trend(df_institutions, top_n=8),

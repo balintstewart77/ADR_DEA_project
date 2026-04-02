@@ -1,0 +1,533 @@
+import re
+
+import pandas as pd
+
+
+DATASET_PROVIDER_RE = re.compile(
+    r"(?=(?:Office for National Statistics|Department for [^:\n]{1,120}|"
+    r"Ministry of Justice|Home Office(?:; NHS)?|NHS(?:; DfE)?|"
+    r"Understanding Society|Institute for [^:\n]{1,120}|"
+    r"SAIL Databank(?: Databank)?|UCAS|Northern Ireland [^:\n]{1,120}|"
+    r"Intellectual Property Office|IPO|Department for Transport|"
+    r"HM Revenue and Customs|HMRC|Data First|MoJ Data First)"
+    r"[^:\n]{0,120}:)"
+)
+
+ALLOWED_SHORT_DATASET_NAMES = {
+    "ASHE", "BHPS", "EOL", "LEO", "NN4B", "Patents", "Prisons",
+}
+
+INVALID_DATASET_FRAGMENTS = {
+    "_x000D_", "amp", "and 2021", "britain", "britain,", "census", "data",
+    "d wales", "database", "dwp and", "england", "index", "index,", "ireland", "ireland,",
+    "level", "panel", "person", "person,", "scotland", "survey", "visa,",
+    "wales",
+    "standard extract england", "standard extract - england",
+    "wales indexed", "wales with geography",
+    "longitudinal and person",
+    "office for national statistics /", "office for national statistics &",
+    "office for national statistics/", "office for national",
+    "census 2021 attributes - england and wales with geography",
+}
+
+GEOGRAPHY_SUFFIX_FALLBACK_NAMES = {
+    "benefits", "earnings", "income", "services", "trace",
+}
+
+DATASET_ALIASES = [
+    # -- Explicit manual aliases for reviewed problem cases --
+    (re.compile(r"(?i)^2011 census data welsh(?: residents)?$"), "Census Wales 2011"),
+    (re.compile(r"(?i)^welsh census 2011$"), "Census Wales 2011"),
+    (re.compile(r"(?i)^census 2011 welsh(?: records| residents)?$"), "Census Wales 2011"),
+    (re.compile(r"(?i)^2011 census(?: data)?$"), "Census 2011"),
+    (re.compile(r"(?i)^2021 \(welsh residents\)$"), "Census Wales 2021"),
+    (re.compile(r"(?i)^2021 census data welsh(?: residents)?$"), "Census Wales 2021"),
+    (re.compile(r"(?i)^census 2021 welsh(?: records)?$"), "Census Wales 2021"),
+    (re.compile(r"(?i)^census \(2021\)$"), "Census 2021"),
+    (re.compile(r"(?i)^2021 census$"), "Census 2021"),
+    (re.compile(r"(?i)^2001 census$"), "Census 2001"),
+    (re.compile(r"(?i)^2001 census: household sample of anonymised(?: records)?$"), "Census 2001 Household"),
+    (re.compile(r"(?i)^census 2001 household(?: for the)?$"), "Census 2001 Household"),
+    (re.compile(r"(?i)^(?:census )?2001 controlled(?: access microdata samples)?$"), "Census 2001 Individual"),
+    (re.compile(r"(?i)^access microdata samples$"), "Census 2001 Individual"),
+    (re.compile(r"(?i)^census 2001 individual$"), "Census 2001 Individual"),
+    (re.compile(r"(?i)^census 2011 household$"), "Census 2011 Household"),
+    (re.compile(r"(?i)^census 2011:\s*household$"), "Census 2011 Household"),
+    (re.compile(r"(?i)^census 2011:\s*household sample$"), "Census 2011 Household Sample"),
+    (re.compile(r"(?i)^secure census 2011 england and wales:\s*household sample$"), "Census 2011 Household Sample England and Wales"),
+    (re.compile(r"(?i)^household sample scottish government:\s*secure census 2011 scotland$"), "Census 2011 Household Sample Scotland"),
+    (re.compile(r"(?i)^census 2011 individual england and wales$"), "Census 2011 Individual England and Wales"),
+    (re.compile(r"(?i)^census 2011 individual northern ireland$"), "Census 2011 Individual Northern Ireland"),
+    (re.compile(r"(?i)^census 2011 individual scotland$"), "Census 2011 Individual Scotland"),
+    (re.compile(r"(?i)^census 2011 individual secure sample in england and wales$"), "Census 2011 Individual Secure Sample England and Wales"),
+    (re.compile(r"(?i)^census 2011 england and wales:\s*individual sample$"), "Census 2011 Individual Sample England and Wales"),
+    (re.compile(r"(?i)^secure census 2011 origin\s*/\s*destination$"), "Census 2011 Origin-Destination"),
+    (re.compile(r"(?i)^census 2011 origin\s*/\s*destination$"), "Census 2011 Origin-Destination"),
+    (re.compile(r"(?i)^census 2011 origin-destination$"), "Census 2011 Origin-Destination"),
+    (re.compile(r"(?i)^census 2011 origin/destination:\s*flow$"), "Census 2011 Origin-Destination Flow"),
+    (re.compile(r"(?i)^2011 census:\s*aggregate$"), "Census 2011 Aggregate"),
+    (re.compile(r"(?i)^2011 census ethnicity$"), "Census 2011 Ethnicity"),
+    (re.compile(r"(?i)^census 2011 england$"), "Census 2011 England"),
+    (re.compile(r"(?i)^census 2011 ni$"), "Census 2011 Northern Ireland"),
+    (re.compile(r"(?i)^secure census 2011 england$"), "Census 2011 England"),
+    (re.compile(r"(?i)^census 2011 e&w household structure for covid-19 models$"), "Census 2011 England and Wales Household Structure for COVID-19 Models"),
+    (re.compile(r"(?i)^census 2011 england and wales household structure for covid-19 models$"), "Census 2011 England and Wales Household Structure for COVID-19 Models"),
+    (re.compile(r"(?i)^census 2021 england and wales$"), "Census 2021 England and Wales"),
+    (re.compile(r"(?i)^2021 census data welsh household$"), "Census Wales 2021 Household"),
+    (re.compile(r"(?i)^indexed census 2021$"), "Census 2021 Indexed"),
+    (re.compile(r"(?i)^census 2021 10% sample$"), "Census 2021 10% Sample"),
+    (re.compile(r"(?i)^census 2021 comprehensive microdata \(c21cm\)$"), "Census 2021 Comprehensive Microdata"),
+    (re.compile(r"(?i)^census 21 comprehensive microdata$"), "Census 2021 Comprehensive Microdata"),
+    (re.compile(r"(?i)^census 2021 household secure microdata sample$"), "Census 2021 Household Secure Microdata Sample"),
+    (re.compile(r"(?i)^census 2021 household secure microdata sample in england and wales$"), "Census 2021 Household Secure Microdata Sample England and Wales"),
+    (re.compile(r"(?i)^census 2021 secure origin destination tables for england and wales$"), "Census 2021 Origin-Destination Tables England and Wales"),
+    (re.compile(r"(?i)^census non response link study 2021 england and wales$"), "Census 2021 Non-Response Link Study England and Wales"),
+    (re.compile(r"(?i)^census non response link study 2021 england and wales indexed$"), "Census 2021 Non-Response Link Study England and Wales Indexed"),
+    (re.compile(r"(?i)^northern ireland census 2021 census microdata$"), "Northern Ireland Census 2021 Microdata"),
+    (re.compile(r"(?i)^absences and english school census$"), "English School Census Absences"),
+    (re.compile(r"(?i)^northern ireland school census$"), "Northern Ireland School Census"),
+    (re.compile(r"(?i)^annual survey of hours and earnings linked to 2011 census$"), "Annual Survey of Hours and Earnings linked to Census 2011"),
+    (re.compile(r"(?i)^annual survey of hours and earnings census 2011 linked$"), "Annual Survey of Hours and Earnings linked to Census 2011"),
+    (re.compile(r"(?i)^annual survey of hours and earnings linked to 2011 census england and wales$"), "Annual Survey of Hours and Earnings linked to Census 2011 England and Wales"),
+    (re.compile(r"(?i)^annual survey for hours and earnings / census 2011 linked datase$"), "Annual Survey of Hours and Earnings linked to Census 2011"),
+    (re.compile(r"(?i)^2011 census linked to benefits and income$"), "Census 2011 linked to Benefits and Income"),
+    (re.compile(r"(?i)^linked ni census-ashe$"), "Northern Ireland Census linked to ASHE"),
+    (re.compile(r"(?i)^nursing and midwifery council register - uk linked to census 2021$"), "Nursing and Midwifery Council Register linked to Census 2021"),
+    (re.compile(r"(?i)^census 2011 and 2021 england and wales$"), "Census 2011 and Census 2021 England and Wales"),
+    (re.compile(r"(?i)^census 2011 100% household and individual - england an$"), "Census 2011 Household and Individual England and Wales"),
+    (re.compile(r"(?i)^integrated census microdata(?: .*)?$"), "Integrated Census Microdata"),
+    (re.compile(r"(?i)^census data 1981$"), "Census 1981"),
+    (re.compile(r"(?i)^census microdata 9% sample$"), "Census Microdata 9% Sample"),
+    (re.compile(r"(?i)^census 2001$"), "Census 2001"),
+    (re.compile(r"(?i)^ashe$"), "Annual Survey of Hours and Earnings"),
+    (re.compile(r"(?i)^annual survey of hours$"), "Annual Survey of Hours and Earnings"),
+    (re.compile(r"(?i)^annual survey of hours and earnings longitudinal(?: and linked to hmrc)?$"), "ASHE Longitudinal"),
+    (re.compile(r"(?i)^ashe longitudinal(?: data(?: england(?: and wales)?| great britain england)?)?$"), "ASHE Longitudinal"),
+    (
+        re.compile(
+            r"(?i)^(?:administrative data \| )?agricultural research collection"
+            r"(?: \(ad\|arc\))?$"
+        ),
+        "Administrative Data | Agricultural Research Collection (AD|ARC)",
+    ),
+    (
+        re.compile(r"(?i)^ad\|arc phase 2 - census 21 unlinked$"),
+        "Administrative Data | Agricultural Research Collection (AD|ARC)",
+    ),
+    # -- LEO --
+    (re.compile(r"(?i)^longitudinal education outcomes.*"), "Longitudinal Education Outcomes"),
+    (re.compile(r"(?i)^leo\b.*"), "Longitudinal Education Outcomes"),
+    # -- ASHE --
+    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings$"), "Annual Survey of Hours and Earnings"),
+    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings \(ASHE\)$"), "Annual Survey of Hours and Earnings"),
+    # -- BRES --
+    (re.compile(r"(?i)^business register (?:and )?employment surveys?(?:\s*\(BRES\))?$"), "Business Register and Employment Survey"),
+    # -- Monthly wages survey --
+    (re.compile(r"(?i)^monthly wages? and salari?(?:y|es) surveys?$"), "Monthly Wages and Salary Survey"),
+    # -- Employer skills survey --
+    (re.compile(r"(?i)^employer skills? surveys?$"), "Employer Skills Survey"),
+    (re.compile(r"(?i)^national employers? skills? survey.*"), "National Employer Skills Survey"),
+    # -- Wealth and Assets Survey --
+    (re.compile(r"(?i)^wealth and assets? survey$"), "Wealth and Assets Survey"),
+    # -- Living Costs and Food Survey --
+    (re.compile(r"(?i)^living costs? and food surveys?$"), "Living Costs and Food Survey"),
+    (re.compile(r"(?i)^safeguarded living costs? and food surveys?$"), "Safeguarded Living Costs and Food Survey"),
+    # -- UK Manufacturers Sales (apostrophe, special char, and spacing variants) --
+    (re.compile(r"(?i)^uk manufacturers['\u2019\u00e8\u00b4]?\s*(?:['\u2019]?\s*)sales by products? survey"), "UK Manufacturers' Sales by Product Survey"),
+    # -- Death registrations base forms --
+    (re.compile(r"(?i)^deaths? registrations?$"), "Death Registrations"),
+    (re.compile(r"(?i)^deaths? registrations? in england and wales$"), "Death Registrations in England and Wales"),
+    (re.compile(r"(?i)^deaths? registrations? finalised$"), "Death Registrations Finalised"),
+    (re.compile(r"(?i)^births? registrations? in england and wales$"), "Birth Registrations in England and Wales"),
+    # (Death registration data provisional monthly extracts — handled below at line ~179)
+    # -- International Trade in Services --
+    (re.compile(r"(?i)^international trade in services(?:\s+survey)?$"), "International Trade in Services"),
+    (re.compile(r"(?i)^annual international trade in services(?:\s+survey)?$"), "Annual International Trade in Services"),
+    # -- Capital Stock --
+    (re.compile(r"(?i)^capital stocks?$"), "Capital Stock"),
+    # -- Opinions and Lifestyle Survey --
+    (re.compile(r"(?i)^(?:ONS )?opinions and lifestyle survey$"), "Opinions and Lifestyle Survey"),
+    # -- Coronavirus social impacts --
+    (re.compile(r"(?i)^coronavirus and the social impacts? on (?:Great Britain|GB)$"), "Coronavirus and the Social Impacts on Great Britain"),
+    (re.compile(r"(?i)^coronavirus and the social$"), "Coronavirus and the Social Impacts on Great Britain"),
+    # -- Quarterly Acquisitions survey --
+    (re.compile(r"(?i)^quarterly a[cq]uisitions and disposals of capital assets survey"), "Quarterly Acquisitions and Disposals of Capital Assets Survey"),
+    # -- Inter-Departmental Business Register --
+    (re.compile(r"(?i)^longitudinal inter[- ]?departmental business register"), "Longitudinal Inter-Departmental Business Register"),
+    (re.compile(r"(?i)^linked trade-in-goods/inter[- ]?departmental business register$"), "Linked Trade-in-Goods/Inter-Departmental Business Register"),
+    # -- Annual Respondents Database --
+    (re.compile(r"(?i)^annual respondents? database\s*(?:\(ARD\s*[X2x]\))?$"), "Annual Respondents Database"),
+    (re.compile(r"(?i)^annual respondents? database\s*[Xx]$"), "Annual Respondents Database X"),
+    (re.compile(r"(?i)^annual respondents? database\s*[Xx]\s*\(ARD\s*[Xx]\)$"), "Annual Respondents Database X"),
+    (re.compile(r"(?i)^annual respondents? database\s*2$"), "Annual Respondents Database 2"),
+    (re.compile(r"(?i)^annual respondents? database\s*(?:\(ARD\s*2\))$"), "Annual Respondents Database 2"),
+    # -- Broad Economy Sales --
+    (re.compile(r"(?i)^bo?ard economy sales and exports"), "Broad Economy Sales and Exports"),
+    # -- Mergers and Acquisitions --
+    (re.compile(r"(?i)^(?:RETIRED )?mergers and acquisitions(?:\s+survey)?$"), "Mergers and Acquisitions Survey"),
+    # -- Consumer Prices --
+    (re.compile(r"(?i)^consumer (?:and retail )?prices? (?:indices|indicies|index)$"), "Consumer Prices Index"),
+    # -- E-Commerce Survey --
+    (re.compile(r"(?i)^E-Commerce surveys?$"), "E-Commerce Survey"),
+    (re.compile(r"(?i)^E-Commerce and digital economy survey$"), "E-Commerce and Digital Economy Survey"),
+    # -- GRADE --
+    (re.compile(r"(?i)^GRading and Admissions Data England"), "GRading and Admissions Data England"),
+    # -- Prices survey Microdata --
+    (re.compile(r"(?i)^prices survey microdata"), "Prices Survey Microdata"),
+    # -- Death registration data provisional monthly extracts (various dash/space styles) --
+    (re.compile(r"(?i)^death registration\s*(?:data)?\s*[-\s]*provisional monthly extracts"), "Death Registration Data - Provisional Monthly Extracts"),
+    # -- Business Structure Database Longitudinal --
+    (re.compile(r"(?i)^business structure database \(BSD\)$"), "Business Structure Database"),
+    (re.compile(r"(?i)^business structure database[\s:/-]+longitudinal$"), "Business Structure Database Longitudinal"),
+    # -- Business Enterprise Research (and)? Development --
+    (re.compile(r"(?i)^business enterprise research (?:and )?development$"), "Business Enterprise Research and Development"),
+    # -- DBT prefix leaking into dataset name --
+    (re.compile(r"(?i)^DBT:\s*"), None),
+    # -- Annual gas and electricity consumption --
+    (re.compile(r"(?i)^annual gas and electricity consumption at (?:the )?meter level$"), "Annual Gas and Electricity Consumption at Meter Level"),
+    # -- Growing Up in England dash variants --
+    (re.compile(r"^Growing Up in England Wave 2\s*[-\s]+Exclusions$"), "Growing Up in England Wave 2 - Exclusions"),
+    (re.compile(r"^Growing Up in England Wave 2\s*[-\s]+Children in Need$"), "Growing Up in England Wave 2 - Children in Need"),
+    # -- Death Registrations in/England and Wales --
+    (re.compile(r"(?i)^deaths? registrations?\s+(?:in\s+)?England and Wales$"), "Death Registrations in England and Wales"),
+    # -- Linked Census and death (truncated) --
+    (re.compile(r"(?i)^linked census and death$"), "Linked Census and Death Occurrences"),
+    (re.compile(r"(?i)^linked census and death occurrences$"), "Linked Census and Death Occurrences"),
+    # -- ONS COVID-19 Weekly Opinions Survey --
+    (re.compile(r"(?i)^(?:ONS )?COVID-19 Weekly Opinions Survey$"), "COVID-19 Weekly Opinions Survey"),
+]
+
+TRUNCATION_HINTS = (
+    "datase",
+    "england an",
+    "for the",
+)
+
+REVIEW_CLEARED_ALIASES = {
+    "annual survey for hours and earnings / census 2011 linked datase",
+    "census 2011 100% household and individual - england an",
+}
+
+MULTI_DATASET_PATTERNS = (
+    re.compile(r";"),
+    re.compile(r"\b[A-Z]{3,}\);"),
+)
+
+UNUSUAL_PUNCTUATION_RE = re.compile(r"[:;/]{2,}|[()]{2,}")
+
+
+def _clean_datasets_text(raw: str) -> str:
+    text = re.sub(r"_x000D_", " ", raw)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = text.replace("\r", "\n")
+    text = re.sub(r"\s{2,}", " ", text)
+    text = re.sub(r"\s*\n\s*", "\n", text)
+    text = DATASET_PROVIDER_RE.sub(lambda m: ("\n" if m.start() > 0 else "") + m.group(0), text)
+    return text.strip()
+
+
+def _split_dataset_parts(rest: str) -> list[str]:
+    parts = re.split(r"\s*,\s*|\s+&\s+", rest.strip())
+    return [part.strip(" ,;:") for part in parts if part.strip(" ,;:")]
+
+
+def _is_valid_dataset_fragment(name: str) -> bool:
+    cleaned = name.strip()
+    if not cleaned:
+        return False
+    lowered = cleaned.lower()
+    bare = re.sub(r"[^A-Za-z0-9]+", "", cleaned)
+    if lowered in INVALID_DATASET_FRAGMENTS:
+        return False
+    if re.fullmatch(r"(19|20)\d{2}", cleaned):
+        return False
+    if len(cleaned.split()) == 1 and len(bare) <= 8 and cleaned not in ALLOWED_SHORT_DATASET_NAMES:
+        return False
+    return True
+
+
+def _basic_cleanup(name: str) -> str:
+    name = name.strip()
+    if not name:
+        return name
+
+    name = (
+        name
+        .replace("\u2013", "-")
+        .replace("\u2014", "-")
+        .replace("\u2018", "'")
+        .replace("\u2019", "'")
+        .replace("\u201c", '"')
+        .replace("\u201d", '"')
+        .replace("\u00a0", " ")
+        .replace("\u00ad", "")
+        .replace("\u2122", "'")
+    )
+    name = re.sub(r"\s+", " ", name).strip()
+    name = name.rstrip(".,;:'\"")
+    return name
+
+
+def _apply_systematic_normalisation(name: str) -> str:
+    original = name
+    name = re.sub(
+        r"\s*-\s*(UK|GB|Great Britain|England|England and Wales|Wales|Scotland|Northern Ireland)\s*$",
+        "",
+        name,
+        flags=re.IGNORECASE,
+    ).strip()
+    if name.lower() in GEOGRAPHY_SUFFIX_FALLBACK_NAMES:
+        name = original
+
+    noise_re = re.compile(r"\s+(?:data|dataset|datasets|statistics|records?)\s*$", re.IGNORECASE)
+    prev = None
+    while name != prev:
+        prev = name
+        name = noise_re.sub("", name).strip()
+
+    geo_nodash = re.sub(r"\s+(UK|GB)\s*$", "", name).strip()
+    if geo_nodash and geo_nodash.lower() not in GEOGRAPHY_SUFFIX_FALLBACK_NAMES and len(geo_nodash) > 5:
+        name = geo_nodash
+
+    name = re.sub(r"^MOJ\b", "MoJ", name)
+    name = re.sub(r"^RETIRED MOJ\b", "RETIRED MoJ", name)
+    name = re.sub(
+        r"^(RETIRED )?Ministry of Justice Data First\b",
+        lambda m: (m.group(1) or "") + "MoJ Data First",
+        name,
+    )
+    name = re.sub(r"^(RETIRED )?Data First\b", lambda m: (m.group(1) or "") + "MoJ Data First", name)
+
+    moj_match = re.match(r"^((?:RETIRED )?MoJ Data First )(.*)", name)
+    if moj_match:
+        name = moj_match.group(1) + moj_match.group(2).title()
+
+    name = re.sub(r"(?i)\bCovid[\s-]*19\b", "COVID-19", name)
+    name = re.sub(r"(?i)\bE[\s-]+[Cc]ommerce\b", "E-Commerce", name)
+    name = name.replace("Developement", "Development")
+    name = name.replace("Probabation", "Probation")
+    name = re.sub(r"\bAquisitions\b", "Acquisitions", name)
+    name = re.sub(r"\bLongitudunal\b", "Longitudinal", name)
+    name = re.sub(r"\bIndicies\b", "Indices", name)
+    name = re.sub(r"Surv\s+ey\b", "Survey", name)
+    name = re.sub(r"InnovationSurvey\b", "Innovation Survey", name)
+    name = re.sub(r"\bInter Departmental\b", "Inter-Departmental", name)
+    name = re.sub(r"Inter-Departmental-Business-Register", "Inter-Departmental Business Register", name)
+
+    lfs_match = re.match(r"^(Labour Force Survey)\s*[-(/]?\s*(Person|Household|Longitudinal)s?\)?(.*)", name)
+    if lfs_match:
+        name = f"{lfs_match.group(1)} {lfs_match.group(2)}{lfs_match.group(3)}"
+
+    aps_match = re.match(r"^(Annual Population Survey)\s*[-(/]?\s*(Person|Household)\)?(.*)", name)
+    if aps_match:
+        name = f"{aps_match.group(1)} {aps_match.group(2)}{aps_match.group(3)}"
+
+    # Understanding Society sub-type delimiter: "- BHPS" / "- UKHLS" → "BHPS" / "UKHLS"
+    us_match = re.match(r"^(Understanding Society)\s*-\s*(BHPS|UKHLS)\b(.*)", name)
+    if us_match:
+        name = f"{us_match.group(1)} {us_match.group(2)}{us_match.group(3)}"
+
+    # ONS prefix on Longitudinal Study
+    name = re.sub(r"^ONS Longitudinal Study of England and Wales$", "Longitudinal Study of England and Wales", name)
+
+    name = re.sub(r"\bWell-?[Bb]eing\b", "Well-Being", name)
+    name = re.sub(r"^(Annual Population) Surveys$", r"\1 Survey", name)
+    name = re.sub(r"^(Living Costs and Food) Surveys$", r"\1 Survey", name)
+
+    lower = name.lower()
+    case_canonical = {
+        "business structure database": "Business Structure Database",
+        "annual population survey": "Annual Population Survey",
+        "annual purchases survey": "Annual Purchases Survey",
+        "low carbon and renewable energy economy survey": "Low Carbon and Renewable Energy Economy Survey",
+        "business enterprise research and development": "Business Enterprise Research and Development",
+    }
+    if lower in case_canonical:
+        name = case_canonical[lower]
+
+    name = re.sub(r"(?i)\blinked with\b", "linked to", name)
+    name = re.sub(r"(?i)\bLinked to\b", "linked to", name)
+    name = re.sub(r"(?i)\bself[- ]assessment\b", "Self-Assessment", name)
+    name = re.sub(r"(?i)\bcross[- ]justice system linking\b", "Cross-Justice System Linking", name)
+    return name
+
+
+def _looks_compound_or_linked(name: str) -> bool:
+    lowered = name.lower()
+    if any(pattern.search(name) for pattern in MULTI_DATASET_PATTERNS):
+        return True
+    return False
+
+
+def _has_truncation_hint(raw: str) -> bool:
+    lowered = raw.lower().strip()
+    return any(lowered.endswith(hint) for hint in TRUNCATION_HINTS)
+
+
+def _looks_unresolved(raw: str, canonical: str, match_type: str) -> bool:
+    lowered = raw.lower()
+    if lowered in REVIEW_CLEARED_ALIASES:
+        return False
+    if match_type == "unresolved":
+        return True
+    year_only_census = re.fullmatch(r"(19|20)\d{2}\s+census", lowered)
+    if year_only_census and lowered not in {"2001 census", "2011 census", "2021 census"}:
+        return True
+    if _has_truncation_hint(raw):
+        return True
+    if any(pattern.search(raw) for pattern in MULTI_DATASET_PATTERNS):
+        return True
+    if UNUSUAL_PUNCTUATION_RE.search(raw):
+        return True
+    if canonical == raw and ("..." in raw or "  " in raw):
+        return True
+    return False
+
+
+def describe_dataset_normalisation(raw_name: str) -> dict[str, object]:
+    raw = raw_name.strip()
+    if not raw:
+        return {
+            "raw_dataset": raw_name,
+            "canonical_dataset_name": raw,
+            "match_type": "identity",
+            "needs_review": 0,
+        }
+
+    cleaned = _basic_cleanup(raw)
+    system_normalised = _apply_systematic_normalisation(cleaned)
+
+    if _looks_compound_or_linked(raw):
+        needs_review = 1
+        return {
+            "raw_dataset": raw,
+            "canonical_dataset_name": system_normalised,
+            "match_type": "compound_or_multi_dataset",
+            "needs_review": needs_review,
+        }
+
+    for pattern, canonical in DATASET_ALIASES:
+        match = pattern.match(system_normalised)
+        if not match:
+            continue
+        if canonical is not None:
+            match_type = "alias"
+            final_name = canonical
+        else:
+            remainder = system_normalised[match.end():].strip()
+            final_name = remainder if remainder else system_normalised
+            match_type = "normalised_format"
+        needs_review = 1 if _looks_unresolved(raw, final_name, match_type) else 0
+        return {
+            "raw_dataset": raw,
+            "canonical_dataset_name": final_name,
+            "match_type": match_type,
+            "needs_review": needs_review,
+        }
+
+    if system_normalised != raw:
+        match_type = "normalised_format"
+        final_name = system_normalised
+    elif _looks_compound_or_linked(raw):
+        match_type = "compound_or_linked_preserved"
+        final_name = raw
+    elif _looks_unresolved(raw, raw, "identity"):
+        match_type = "unresolved"
+        final_name = raw
+    else:
+        match_type = "identity"
+        final_name = raw
+
+    needs_review = 1 if _looks_unresolved(raw, final_name, match_type) else 0
+    return {
+        "raw_dataset": raw,
+        "canonical_dataset_name": final_name,
+        "match_type": match_type,
+        "needs_review": needs_review,
+    }
+
+
+def normalise_dataset_name(name: str) -> str:
+    meta = describe_dataset_normalisation(name)
+    return str(meta["canonical_dataset_name"])
+
+
+def dataset_family_for(canonical_name: str) -> str | None:
+    if not canonical_name:
+        return None
+
+    name = canonical_name.strip()
+    lowered = name.lower()
+
+    if ";" in name:
+        if lowered.startswith("moj data first"):
+            return "Data First"
+        return None
+
+    if (
+        lowered.startswith("census ")
+        or lowered.startswith("census wales ")
+        or lowered.startswith("northern ireland census ")
+        or lowered.startswith("integrated census microdata")
+        or lowered.startswith("census microdata ")
+    ):
+        return "Census"
+
+    if "school census" in lowered:
+        return "School Census"
+
+    if lowered.startswith("annual survey of hours and earnings linked to census"):
+        return "ASHE-linked"
+
+    if lowered == "annual survey of hours and earnings" or lowered.startswith("ashe longitudinal"):
+        return "ASHE"
+
+    if lowered.startswith("longitudinal education outcomes"):
+        return "LEO"
+
+    if lowered.startswith("moj data first"):
+        return "Data First"
+
+    return None
+
+
+def iter_dataset_entries(raw: str):
+    if not isinstance(raw, str) or not raw.strip():
+        return
+    cleaned = _clean_datasets_text(raw)
+    for line in cleaned.split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        if ":" in line:
+            provider, rest = line.split(":", 1)
+            provider = provider.strip()
+            parts = _split_dataset_parts(rest)
+        else:
+            provider = ""
+            parts = _split_dataset_parts(line)
+        for part in parts:
+            if _is_valid_dataset_fragment(part):
+                yield line, provider, part
+
+
+def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    for _, proj in df.iterrows():
+        raw = proj.get("Datasets Used", "")
+        if not isinstance(raw, str) or not raw.strip():
+            continue
+        pid = proj["Project ID"]
+        year = proj["Year"]
+        quarter_date = proj["quarter_date"]
+        for _, provider, part in iter_dataset_entries(raw):
+            dataset = normalise_dataset_name(part)
+            rows.append({
+                "Project ID": pid,
+                "Year": year,
+                "quarter_date": quarter_date,
+                "provider": provider,
+                "dataset": dataset,
+                "dataset_full": f"{provider}: {part}" if provider else part,
+            })
+    return pd.DataFrame(rows)
