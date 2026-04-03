@@ -179,7 +179,7 @@ class DatasetNormalisationTest(unittest.TestCase):
         cases = {
             "Infant Mortality linkage of 2011 Census": "Infant Mortality linkage of 2011 Census",
             "Census 2011 (CENW); Census 2021 (CENS) Ministry of Justice; Family Court (FACO); Magistrates Court (MACO); Crown Court (CRCO); Prisoner Custodial Journey Dataset (PRIS); MOJDF cross justice linking (Cross-Justice System Linking dataset) and MAGS CROWN JOURNEY": "Census 2011 (CENW); Census 2021 (CENS) Ministry of Justice; Family Court (FACO); Magistrates Court (MACO); Crown Court (CRCO); Prisoner Custodial Journey Dataset (PRIS); MOJDF cross justice linking (Cross-Justice System Linking dataset) and MAGS CROWN JOURNEY",
-            "Annual Survey for Hours and Earnings / Census linked": "Annual Survey for Hours and Earnings / Census linked",
+            "Annual Survey for Hours and Earnings / Census linked": "Annual Survey of Hours and Earnings linked to Census 2011",
             "2022 Census": "Census 2022",
         }
         for raw, expected in cases.items():
@@ -234,9 +234,12 @@ class DatasetNormalisationTest(unittest.TestCase):
         self.assertEqual(dataset_family_for("Annual Population Survey Person"), "APS")
         self.assertEqual(dataset_family_for("Annual Population Survey: Well-Being"), "APS")
         self.assertEqual(dataset_family_for("Annual Population Survey 2004-2022"), "APS")
-        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to NHS Test and Trace"), "COVID-19 Infection Survey linked products")
-        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to Combined Vaccination"), "COVID-19 Infection Survey linked products")
-        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to VOA and EPC"), "COVID-19 Infection Survey linked products")
+        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to NHS Test and Trace"), "COVID-19")
+        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to Combined Vaccination"), "COVID-19")
+        self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to VOA and EPC"), "COVID-19")
+        self.assertEqual(dataset_family_for("COVID-19 Infection Survey (CIS)"), "COVID-19")
+        self.assertEqual(dataset_family_for("COVID-19 Weekly Opinions Survey"), "COVID-19")
+        self.assertEqual(dataset_family_for("Census 2011 England and Wales Household Structure for COVID-19 Models"), "COVID-19")
         self.assertEqual(dataset_family_for("Labour Force Survey"), "Labour Force Survey")
         self.assertEqual(dataset_family_for("Labour Force Survey Person"), "Labour Force Survey")
         self.assertEqual(dataset_family_for("Labour Force Survey Household"), "Labour Force Survey")
@@ -252,7 +255,7 @@ class DatasetNormalisationTest(unittest.TestCase):
         self.assertEqual(dataset_family_for("Growing Up in England Wave 1 (GUIE)"), "GUIE")
         self.assertEqual(dataset_family_for("Growing Up in England Wave 2 (GUIE)"), "GUIE")
         self.assertEqual(dataset_family_for("Growing Up in England Wave 2 - Exclusions"), "GUIE")
-        self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"), "WED")
+        self.assertEqual(dataset_family_for("Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"), "ASHE")
         self.assertEqual(dataset_family_for("Administrative Data | Agricultural Research Collection (AD|ARC)"), "AD|ARC")
         self.assertEqual(dataset_family_for("Bespoke Admin Data - Agricultural Research Collection Phase 1"), "AD|ARC")
         self.assertEqual(dataset_family_for("Bespoke Admin Data: Agricultural Research Collection"), "AD|ARC")

@@ -1000,13 +1000,29 @@ FLAGSHIP_TAB = dbc.Tab(label="ADR England Flagship Datasets", tab_id="tab-flagsh
     ]),
 ])
 
+_dataset_project_counts = (
+    df_datasets.drop_duplicates(subset=["Project ID", "dataset"])
+    .groupby("dataset")["Project ID"].nunique()
+)
 _ALL_DATASET_OPTIONS = (
     [{"label": "All datasets", "value": "ALL"}]
-    + [{"label": d, "value": d} for d in sorted(df_datasets["dataset"].unique()) if d]
+    + [
+        {"label": f"{d}  ({n} {'project' if n == 1 else 'projects'})", "value": d}
+        for d in sorted(df_datasets["dataset"].unique()) if d
+        for n in [_dataset_project_counts.get(d, 0)]
+    ]
+)
+_institution_project_counts = (
+    df_institutions.drop_duplicates(subset=["Project ID", "institution"])
+    .groupby("institution")["Project ID"].nunique()
 )
 _ALL_INSTITUTION_OPTIONS = (
     [{"label": "All institutions", "value": "ALL"}]
-    + [{"label": i, "value": i} for i in sorted(df_institutions["institution"].unique()) if i]
+    + [
+        {"label": f"{i}  ({n} {'project' if n == 1 else 'projects'})", "value": i}
+        for i in sorted(df_institutions["institution"].unique()) if i
+        for n in [_institution_project_counts.get(i, 0)]
+    ]
 )
 
 BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
@@ -1028,6 +1044,19 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
             ),
         ], md=2),
         dbc.Col([
+            html.Label("ADR Flagship Collection", className="filter-label"),
+            dcc.Dropdown(
+                id="browse-flagship-filter",
+                options=(
+                    [{"label": "All", "value": "ALL"}]
+                    + [{"label": c, "value": c} for c in FLAGSHIP_COLLECTIONS]
+                ),
+                value="ALL",
+                clearable=False,
+                searchable=False,
+            ),
+        ], md=2),
+        dbc.Col([
             html.Label("Filter by dataset", className="filter-label"),
             dcc.Dropdown(
                 id="browse-dataset-filter",
@@ -1035,9 +1064,9 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
                 value="ALL",
                 clearable=False,
                 searchable=True,
-                placeholder="Search datasets\u2026",
+                placeholder="Search datasets\u2026 (N = projects using)",
             ),
-        ], md=3),
+        ], md=2),
         dbc.Col([
             html.Label("Filter by institution", className="filter-label"),
             dcc.Dropdown(
@@ -1046,9 +1075,9 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
                 value="ALL",
                 clearable=False,
                 searchable=True,
-                placeholder="Search institutions\u2026",
+                placeholder="Search institutions\u2026 (N = projects)",
             ),
-        ], md=3),
+        ], md=2),
         dbc.Col([
             html.Label("Search title / researcher", className="filter-label"),
             dbc.Input(id="browse-search", placeholder="Type to filter\u2026", type="text"),
@@ -1066,7 +1095,7 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
         dbc.Col([
             html.Label("\u00a0", className="filter-label"),  # spacer for alignment
             html.Div(id="browse-count", className="text-muted small pt-2"),
-        ], md=2),
+        ], md=1),
     ], className="mb-3 g-2"),
     html.Div(
         dash_table.DataTable(
@@ -1077,7 +1106,7 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
                 {"name": "Researchers", "id": "Researchers"},
                 {"name": "Datasets Used", "id": "Datasets Used"},
                 {"name": "Date", "id": "Accreditation Date"},
-                {"name": "Collection", "id": "collection"},
+                {"name": "ADR Flagship Collection", "id": "collection"},
             ],
             page_size=20,
             sort_action="native",
@@ -1494,12 +1523,13 @@ def update_flagship(selected_collections, metric_mode):
     Output("browse-table", "page_size"),
     Output("browse-count", "children"),
     Input("browse-scope", "value"),
+    Input("browse-flagship-filter", "value"),
     Input("browse-dataset-filter", "value"),
     Input("browse-institution-filter", "value"),
     Input("browse-search", "value"),
     Input("browse-page-size", "value"),
 )
-def update_browse_table(scope, dataset_filter, institution_filter, search, page_size):
+def update_browse_table(scope, flagship_filter, dataset_filter, institution_filter, search, page_size):
     if scope == "flagship" and len(df_flagship_projects):
         coll_labels = (
             df_flagship_projects.groupby("Project Row ID")["collection"]
@@ -1513,6 +1543,9 @@ def update_browse_table(scope, dataset_filter, institution_filter, search, page_
         base["collection"] = base["collections"].apply(
             lambda x: ", ".join(x) if x else ""
         )
+
+    if flagship_filter and flagship_filter != "ALL":
+        base = base[base["collections"].apply(lambda x: flagship_filter in x)]
 
     if dataset_filter and dataset_filter != "ALL":
         matching_pids = set(
