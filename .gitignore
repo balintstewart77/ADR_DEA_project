@@ -1,8 +1,18 @@
 # macOS system files
 .DS_Store
 
-# Python virtual environment
+# Python virtual environments
 venv/
+.venv/
 
-# Ignore all data files
+# Python cache
+__pycache__/
+*.pyc
+
+# Local helper files
+requirements-mac.txt
+
+# Data
 data/
+
+analysis/DEA_projects_analysis.md
