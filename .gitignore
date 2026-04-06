@@ -13,6 +13,8 @@ __pycache__/
 requirements-mac.txt
 
 # Data
-data/
+data/*
+!data/dea_accredited_projects.csv
+!data/dea_accredited_projects_*.csv
 
 analysis/DEA_projects_analysis.md
