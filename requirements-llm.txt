@@ -1,0 +1,4 @@
+# Optional dependencies for Anthropic-powered title/theme analysis scripts.
+-r requirements-analysis.txt
+anthropic
+pydantic

@@ -20,7 +20,10 @@ import plotly.io as pio
 from dash import Dash, dcc, html, Input, Output, State, dash_table
 import dash_bootstrap_components as dbc
 
-from dataset_normalisation import iter_dataset_entries, parse_datasets
+try:
+    from dashboard.dataset_normalisation import iter_dataset_entries, parse_datasets
+except ModuleNotFoundError:
+    from dataset_normalisation import iter_dataset_entries, parse_datasets
 
 # ---------------------------------------------------------------------------
 # 1. Data loading & processing

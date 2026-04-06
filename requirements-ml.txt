@@ -1,0 +1,7 @@
+# Optional heavyweight ML/NLP stack. Keep this out of the default install.
+huggingface-hub
+safetensors
+sentence-transformers
+tokenizers
+torch
+transformers

@@ -1,0 +1,6 @@
+# Runtime dependencies for the Dash dashboard and shared data utilities.
+dash
+dash-bootstrap-components
+numpy
+pandas
+plotly

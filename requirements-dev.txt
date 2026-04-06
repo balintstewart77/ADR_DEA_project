@@ -1,0 +1,9 @@
+# Optional notebook and interactive development dependencies.
+ipykernel
+ipython
+jupyter_client
+jupyter_core
+matplotlib
+nbformat
+seaborn
+wordcloud

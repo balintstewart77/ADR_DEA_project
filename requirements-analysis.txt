@@ -1,0 +1,7 @@
+# Optional analysis stack for local scripts and notebooks that go beyond
+# the dashboard runtime.
+-r requirements-dashboard.txt
+nltk
+scikit-learn
+scipy
+statsmodels

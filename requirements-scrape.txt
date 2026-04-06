@@ -1,0 +1,5 @@
+# Optional dependencies for refreshing the source data from the public register.
+openpyxl
+pandas
+requests
+selenium
