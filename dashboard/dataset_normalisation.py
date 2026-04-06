@@ -17,6 +17,31 @@ ALLOWED_SHORT_DATASET_NAMES = {
     "ASHE", "BHPS", "EOL", "LEO", "NN4B",
 }
 
+PROVIDER_ALIASES = {
+    "": "Unknown / Unspecified",
+    "DfE": "Department for Education",
+    "Department For Education": "Department for Education",
+    "DfT": "Department for Transport",
+    "MOJ": "Ministry of Justice",
+    "Office For National Statistics": "Office for National Statistics",
+    "Office for national Statistics": "Office for National Statistics",
+    "Office of National Statistics": "Office for National Statistics",
+    "Offcie for National Statistics": "Office for National Statistics",
+    "Department for Business, Energy & Industrial Strategy": "Department for Business, Energy and Industrial Strategy",
+    "Institute for Social and Economic Research": "Institute for Economic and Social Research",
+    "University and Colleges Admission Service": "Universities and Colleges Admissions Service (UCAS)",
+    "UCAS": "Universities and Colleges Admissions Service (UCAS)",
+    "NISRA": "Northern Ireland Statistics and Research Agency",
+    "Northern Ireland Statitiscs and Research Agency": "Northern Ireland Statistics and Research Agency",
+    "SAIL Databank Databank": "SAIL Databank",
+    "NHSD": "NHS Digital",
+    "NMC": "Nursing and Midwifery Council",
+    "Intellectual Property Office - UK DBT": "Intellectual Property Office",
+    "HMRC": "HM Revenue and Customs",
+    "UKHSA": "UK Health Security Agency",
+    "Ofqual": "Office of Qualifications and Examinations Regulation (Ofqual)",
+}
+
 INVALID_DATASET_FRAGMENTS = {
     "_x000D_", "amp", "and 2021", "britain", "britain,", "census", "data",
     "d wales", "database", "dwp and", "england", "index", "index,", "ireland", "ireland,",
@@ -176,8 +201,8 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^census 2001$"), "Census 2001"),
     (re.compile(r"(?i)^ashe$"), "Annual Survey of Hours and Earnings (ASHE)"),
     (re.compile(r"(?i)^annual survey of hours$"), "Annual Survey of Hours and Earnings (ASHE)"),
-    (re.compile(r"(?i)^annual survey of hours and earnings longitudinal(?: and linked to hmrc)?$"), "ASHE Longitudinal"),
-    (re.compile(r"(?i)^ashe longitudinal(?: data(?: england(?: and wales)?| great britain england)?)?$"), "ASHE Longitudinal"),
+    (re.compile(r"(?i)^annual survey of hours and earnings longitudinal(?: and linked to hmrc)?$"), "Annual Survey of Hours and Earnings Longitudinal"),
+    (re.compile(r"(?i)^ashe longitudinal(?: data(?: england(?: and wales)?| great britain england)?)?$"), "Annual Survey of Hours and Earnings Longitudinal"),
     (
         re.compile(
             r"(?i)^(?:administrative data \| )?agricultural research collection"
@@ -194,8 +219,12 @@ DATASET_ALIASES = [
         "Education and Child Health Insights from Linked Data (ECHILD)",
     ),
     (
+        re.compile(r"(?i)^education and child health insights from linked data research data$"),
+        "Education and Child Health Insights from Linked Data (ECHILD)",
+    ),
+    (
         re.compile(r"(?i)^education and child health insights from linked data research database$"),
-        "Education and Child Health Insights from Linked Data Research Data",
+        "Education and Child Health Insights from Linked Data (ECHILD)",
     ),
     (re.compile(r"(?i)^annual business survey$"), "Annual Business Survey (ABS)"),
     (re.compile(r"(?i)^annual population survey$"), "Annual Population Survey (APS)"),
@@ -235,7 +264,7 @@ DATASET_ALIASES = [
     # -- ASHE --
     (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings$"), "Annual Survey of Hours and Earnings (ASHE)"),
     (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings \(ASHE\)$"), "Annual Survey of Hours and Earnings (ASHE)"),
-    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings longitudinal(?:\s.*)?$"), "ASHE Longitudinal"),
+    (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings longitudinal(?:\s.*)?$"), "Annual Survey of Hours and Earnings Longitudinal"),
     (re.compile(r"(?i)^annual survey (?:for|of) hours and earnings\s*/\s*census(?:\s.*)?$"), "Annual Survey of Hours and Earnings linked to Census 2011"),
     # -- BRES --
     (re.compile(r"(?i)^business register (?:and )?employment surveys?(?:\s*\(BRES\))?$"), "Business Register and Employment Survey (BRES)"),
@@ -416,6 +445,12 @@ def _basic_cleanup(name: str) -> str:
 
 def _apply_systematic_normalisation(name: str) -> str:
     original = name
+    if re.fullmatch(
+        r"(?i)education and child health insights from linked data research data(?:base)?",
+        name.strip(),
+    ):
+        return "Education and Child Health Insights from Linked Data (ECHILD)"
+
     name = re.sub(
         r"\s*-\s*(UK|GB|Great Britain|England|England and Wales|Wales|Scotland|Northern Ireland)\s*$",
         "",
@@ -718,6 +753,11 @@ def iter_dataset_entries(raw: str):
                 yield line, provider, part
 
 
+def normalise_provider_name(name: str) -> str:
+    provider = str(name or "").strip()
+    return PROVIDER_ALIASES.get(provider, provider)
+
+
 def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for _, proj in df.iterrows():
@@ -735,7 +775,7 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
                 "Project ID": pid,
                 "Year": year,
                 "quarter_date": quarter_date,
-                "provider": provider,
+                "provider": normalise_provider_name(provider),
                 "dataset": dataset,
                 "dataset_full": f"{provider}: {part}" if provider else part,
             })

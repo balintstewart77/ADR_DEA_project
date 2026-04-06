@@ -118,6 +118,9 @@ FLAGSHIP_COLLECTIONS = {
     "Wage and Employment Dynamics": [
         "annual survey of hours and earnings longitudinal",
         "annual survey of hours and earnings linked",
+        "annual survey for hours and earnings longitudinal",
+        "annual survey for hours and earnings linked",
+        "annual survey for hours and earnings / census 2011 linked",
         "ashe longitudinal",
         "ashe linked",
         "wage and employment dynamics",
@@ -145,7 +148,7 @@ DATASET_LABELS = {
     "longitudinal education outcomes": ("LEO", "Longitudinal Education Outcomes"),
     "education and child health insights from linked data": ("ECHILD", "ECHILD"),
     "growing up in england": ("Growing up in England", "Growing up in England"),
-    "annual survey of hours and earnings longitudinal": ("Wage and Employment Dynamics", "ASHE Longitudinal"),
+    "annual survey of hours and earnings longitudinal": ("Wage and Employment Dynamics", "Annual Survey of Hours and Earnings Longitudinal"),
     "annual survey of hours and earnings linked to census 2011": ("Wage and Employment Dynamics", "ASHE Linked to Census 2011"),
     "annual survey of hours and earnings linked to paye and self-assessment data": (
         "Wage and Employment Dynamics", "ASHE Linked to PAYE/SA"
@@ -173,7 +176,7 @@ def classify_collection(datasets_str: str) -> list[str]:
     """Return list of matching collection names for a datasets string."""
     if not isinstance(datasets_str, str):
         return []
-    s = datasets_str.lower()
+    s = " ".join(datasets_str.lower().split())
     matches = []
     for col, keywords in FLAGSHIP_COLLECTIONS.items():
         if any(kw in s for kw in keywords):
@@ -192,7 +195,7 @@ def count_collection_usages(datasets_str: str) -> list[str]:
         return []
     # Split into individual dataset entries (same logic as parse_datasets)
     entries = [
-        part.lower()
+        " ".join(part.lower().split())
         for _, _, part in iter_dataset_entries(datasets_str)
         if part
     ]
@@ -593,6 +596,31 @@ def make_collection_line_chart(df_flag: pd.DataFrame, metric_mode: str) -> go.Fi
     return _apply_common(fig, height=CHART_HEIGHT + 20)
 
 
+def make_collection_yearly_line_chart(df_flag: pd.DataFrame, metric_mode: str) -> go.Figure:
+    metric_label, title_noun = _metric_labels(metric_mode)
+    counts = (
+        df_flag.groupby(["Year", "collection"])
+        .size()
+        .reset_index()
+        .rename(columns={0: "Value"})
+    )
+    fig = px.line(
+        counts, x="Year", y="Value", color="collection",
+        title=f"ADR England Flagship {metric_label} by Year",
+        labels={"Year": "Year", "Value": metric_label, "collection": "Collection"},
+        color_discrete_map=COLLECTION_COLOURS,
+        markers=True,
+    )
+    fig.update_layout(xaxis_dtick=1)
+    fig.update_traces(
+        line_width=2.5,
+        marker_size=6,
+        hovertemplate=f"<b>%{{fullData.name}}</b><br>%{{x}}<br>%{{y}} {title_noun}<extra></extra>",
+    )
+    _annotate_partial_year(fig, years=counts["Year"].unique())
+    return _apply_common(fig, height=CHART_HEIGHT + 20)
+
+
 def make_collection_totals_chart(df_flag: pd.DataFrame, metric_mode: str) -> go.Figure:
     metric_label, title_noun = _metric_labels(metric_mode)
     totals = (
@@ -919,8 +947,7 @@ STAT_CARDS = dbc.Row([
 
 OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
     html.P(
-        "High-level summary of all DEA-accredited research projects, "
-        "including quarterly and yearly trends and processing environment breakdown.",
+        "A high-level view of how the DEA-accredited project portfolio is changing over time.",
         className="section-desc",
     ),
     dbc.Row([
@@ -943,8 +970,7 @@ OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
 
 FLAGSHIP_TAB = dbc.Tab(label="ADR England Flagship Datasets", tab_id="tab-flagship", children=[
     html.P(
-        "Trends for the seven ADR England flagship data collections. "
-        "Use the controls below to switch between distinct-project and dataset-request views.",
+        "Track use of ADR England flagship datasets using either distinct projects or total dataset requests.",
         className="section-desc",
     ),
     dbc.Row([
@@ -978,24 +1004,38 @@ FLAGSHIP_TAB = dbc.Tab(label="ADR England Flagship Datasets", tab_id="tab-flagsh
     ),
     dbc.Row([
         dbc.Col(
+            html.Div(dcc.Graph(id="flagship-pooled-yearly", config=CHART_CONFIG), className="chart-wrapper"),
+            width=12,
+        ),
+    ]),
+    dbc.Row([
+        dbc.Col(
             html.Div(dcc.Graph(id="flagship-pooled-quarterly", config=CHART_CONFIG), className="chart-wrapper"),
             width=12,
         ),
     ]),
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="flagship-line-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(dcc.Graph(id="flagship-line-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            width=12,
+        ),
+    ]),
+    dbc.Row([
+        dbc.Col(
+            html.Div(dcc.Graph(id="flagship-line-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
             width=12,
         ),
     ]),
     dbc.Row([
         dbc.Col(
             html.Div(dcc.Graph(id="flagship-totals-chart", config=CHART_CONFIG), className="chart-wrapper"),
-            md=6,
+            width=12,
         ),
+    ]),
+    dbc.Row([
         dbc.Col(
             html.Div(dcc.Graph(id="flagship-cumulative-chart", config=CHART_CONFIG), className="chart-wrapper"),
-            md=6,
+            width=12,
         ),
     ]),
 ])
@@ -1010,6 +1050,18 @@ _ALL_DATASET_OPTIONS = (
         {"label": f"{d}  ({n} {'project' if n == 1 else 'projects'})", "value": d}
         for d in sorted(df_datasets["dataset"].unique()) if d
         for n in [_dataset_project_counts.get(d, 0)]
+    ]
+)
+_provider_project_counts = (
+    df_datasets.drop_duplicates(subset=["Project ID", "provider"])
+    .groupby("provider")["Project ID"].nunique()
+)
+_ALL_PROVIDER_OPTIONS = (
+    [{"label": "All providers", "value": "ALL"}]
+    + [
+        {"label": f"{p}  ({n} {'project' if n == 1 else 'projects'})", "value": p}
+        for p in sorted(df_datasets["provider"].unique()) if p
+        for n in [_provider_project_counts.get(p, 0)]
     ]
 )
 _institution_project_counts = (
@@ -1027,7 +1079,7 @@ _ALL_INSTITUTION_OPTIONS = (
 
 BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
     html.P(
-        "Search and filter individual projects. Hover over truncated cells to see full text.",
+        "Find and filter projects across the full portfolio by dataset, dataset provider, institution, flagship collection, title, or researcher.",
         className="section-desc",
     ),
     dbc.Row([
@@ -1068,6 +1120,17 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
             ),
         ], md=2),
         dbc.Col([
+            html.Label("Filter by dataset provider", className="filter-label"),
+            dcc.Dropdown(
+                id="browse-provider-filter",
+                options=_ALL_PROVIDER_OPTIONS,
+                value="ALL",
+                clearable=False,
+                searchable=True,
+                placeholder="Search providers\u2026 (N = projects using)",
+            ),
+        ], md=2),
+        dbc.Col([
             html.Label("Filter by institution", className="filter-label"),
             dcc.Dropdown(
                 id="browse-institution-filter",
@@ -1081,7 +1144,7 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
         dbc.Col([
             html.Label("Search title / researcher", className="filter-label"),
             dbc.Input(id="browse-search", placeholder="Type to filter\u2026", type="text"),
-        ], md=2),
+        ], md=1),
         dbc.Col([
             html.Label("Results per page", className="filter-label"),
             dcc.Dropdown(
@@ -1144,10 +1207,9 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
     ),
 ])
 
-DATASETS_TAB = dbc.Tab(label="All Datasets", tab_id="tab-datasets", children=[
+DATASETS_TAB = dbc.Tab(label="Dataset Demand", tab_id="tab-datasets", children=[
     html.P(
-        "Usage patterns across all individual datasets referenced in DEA projects. "
-        "Datasets are normalised by stripping geographic suffixes (UK, GB, England, etc.).",
+        "Explore which datasets are used most, how demand changes over time, and which providers are most represented.",
         className="section-desc",
     ),
     dbc.Row([
@@ -1179,11 +1241,7 @@ DATASETS_TAB = dbc.Tab(label="All Datasets", tab_id="tab-datasets", children=[
             html.Label("Provider filter", className="filter-label"),
             dcc.Dropdown(
                 id="datasets-provider-filter",
-                options=(
-                    [{"label": "All providers", "value": "ALL"}]
-                    + [{"label": p, "value": p}
-                       for p in sorted(df_datasets["provider"].unique()) if p]
-                ),
+                options=_ALL_PROVIDER_OPTIONS,
                 value="ALL",
                 clearable=False,
             ),
@@ -1292,7 +1350,7 @@ in the first view and **three** Data First access requests in the second.
 
 ---
 
-### Individual Dataset Parsing (All Datasets Tab)
+### Individual Dataset Parsing (Dataset Demand Tab)
 
 The "Datasets Used" free-text field is parsed into individual dataset entries:
 
@@ -1362,8 +1420,7 @@ titles may not fully convey the research methodology or all datasets used.
 
 INSTITUTIONS_TAB = dbc.Tab(label="Institutions", tab_id="tab-institutions", children=[
     html.P(
-        "Analysis of researcher institutions involved in DEA-accredited projects. "
-        "Institutions are extracted from the Accredited Researchers field.",
+        "See which research organisations are most represented through researcher affiliations, and how that changes over time.",
         className="section-desc",
     ),
     dbc.Row([
@@ -1462,8 +1519,10 @@ def update_overview(_tab):
 
 
 @app.callback(
+    Output("flagship-pooled-yearly", "figure"),
     Output("flagship-pooled-quarterly", "figure"),
-    Output("flagship-line-chart", "figure"),
+    Output("flagship-line-yearly-chart", "figure"),
+    Output("flagship-line-quarterly-chart", "figure"),
     Output("flagship-totals-chart", "figure"),
     Output("flagship-cumulative-chart", "figure"),
     Input("collection-filter", "value"),
@@ -1475,11 +1534,46 @@ def update_flagship(selected_collections, metric_mode):
 
     if not len(df_flagship):
         empty = go.Figure().update_layout(title="No ADR England flagship data available")
-        return empty, empty, empty, empty
+        return empty, empty, empty, empty, empty, empty
 
     sub = df_flagship
     if selected_collections:
         sub = df_flagship[df_flagship["collection"].isin(selected_collections)]
+
+    # Pooled yearly across all filtered collections
+    if metric_mode == "projects":
+        pooled_yearly = (
+            sub.groupby("Year")["Project Row ID"]
+            .nunique()
+            .reset_index()
+            .rename(columns={"Project Row ID": "Value"})
+        )
+    else:
+        pooled_yearly = (
+            sub.groupby("Year")
+            .size()
+            .reset_index()
+            .rename(columns={0: "Value"})
+        )
+    year_colours = [
+        SECONDARY_BAR if yr != PARTIAL_YEAR else "#f4a582"
+        for yr in pooled_yearly["Year"]
+    ]
+    fig_pooled_yearly = go.Figure(go.Bar(
+        x=pooled_yearly["Year"], y=pooled_yearly["Value"],
+        marker_color=year_colours,
+        marker_line_width=0,
+        hovertemplate=f"<b>%{{x}}</b><br>%{{y}} {title_noun}<extra></extra>",
+    ))
+    fig_pooled_yearly.update_layout(
+        title=f"All ADR England Flagship {metric_label} by Year",
+        xaxis_title="Year",
+        yaxis_title=metric_label,
+        bargap=0.25,
+        xaxis_dtick=1,
+    )
+    _annotate_partial_year(fig_pooled_yearly, years=pooled_yearly["Year"])
+    _apply_common(fig_pooled_yearly)
 
     # Pooled quarterly across all filtered collections
     if metric_mode == "projects":
@@ -1510,7 +1604,9 @@ def update_flagship(selected_collections, metric_mode):
     _apply_common(fig_pooled)
 
     return (
+        fig_pooled_yearly,
         fig_pooled,
+        make_collection_yearly_line_chart(sub, metric_mode),
         make_collection_line_chart(sub, metric_mode),
         make_collection_totals_chart(sub, metric_mode),
         make_cumulative_chart(df_flagship, selected_collections or [], metric_mode),
@@ -1525,11 +1621,12 @@ def update_flagship(selected_collections, metric_mode):
     Input("browse-scope", "value"),
     Input("browse-flagship-filter", "value"),
     Input("browse-dataset-filter", "value"),
+    Input("browse-provider-filter", "value"),
     Input("browse-institution-filter", "value"),
     Input("browse-search", "value"),
     Input("browse-page-size", "value"),
 )
-def update_browse_table(scope, flagship_filter, dataset_filter, institution_filter, search, page_size):
+def update_browse_table(scope, flagship_filter, dataset_filter, provider_filter, institution_filter, search, page_size):
     if scope == "flagship" and len(df_flagship_projects):
         coll_labels = (
             df_flagship_projects.groupby("Project Row ID")["collection"]
@@ -1550,6 +1647,12 @@ def update_browse_table(scope, flagship_filter, dataset_filter, institution_filt
     if dataset_filter and dataset_filter != "ALL":
         matching_pids = set(
             df_datasets.loc[df_datasets["dataset"] == dataset_filter, "Project ID"]
+        )
+        base = base[base["Project ID"].isin(matching_pids)]
+
+    if provider_filter and provider_filter != "ALL":
+        matching_pids = set(
+            df_datasets.loc[df_datasets["provider"] == provider_filter, "Project ID"]
         )
         base = base[base["Project ID"].isin(matching_pids)]
 

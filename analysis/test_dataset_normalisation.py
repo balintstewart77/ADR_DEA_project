@@ -6,7 +6,13 @@ import unittest
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
 
-from dataset_normalisation import dataset_family_for, describe_dataset_normalisation, iter_dataset_entries, normalise_dataset_name  # noqa: E402
+from dataset_normalisation import (  # noqa: E402
+    dataset_family_for,
+    describe_dataset_normalisation,
+    iter_dataset_entries,
+    normalise_dataset_name,
+    normalise_provider_name,
+)
 
 
 class DatasetNormalisationTest(unittest.TestCase):
@@ -103,11 +109,11 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Growing Up in England Wave 1": "Growing Up in England Wave 1 (GUIE)",
             "Growing Up in England Wave 2": "Growing Up in England Wave 2 (GUIE)",
             "Growing Up in England Wave 2 - Children in Need": "Growing Up in England Wave 2 (GUIE)",
-            "ASHE Longitudinal": "ASHE Longitudinal",
-            "ASHE Longitudinal Data England": "ASHE Longitudinal",
-            "ASHE Longitudinal Data England and Wales": "ASHE Longitudinal",
-            "ASHE Longitudinal Data Great Britain England": "ASHE Longitudinal",
-            "Annual Survey of Hours and Earnings Longitudinal": "ASHE Longitudinal",
+            "ASHE Longitudinal": "Annual Survey of Hours and Earnings Longitudinal",
+            "ASHE Longitudinal Data England": "Annual Survey of Hours and Earnings Longitudinal",
+            "ASHE Longitudinal Data England and Wales": "Annual Survey of Hours and Earnings Longitudinal",
+            "ASHE Longitudinal Data Great Britain England": "Annual Survey of Hours and Earnings Longitudinal",
+            "Annual Survey of Hours and Earnings Longitudinal": "Annual Survey of Hours and Earnings Longitudinal",
             "Annual Survey of Hours and Earnings linked to 2011 Census": "Annual Survey of Hours and Earnings linked to Census 2011",
             "Annual Survey of Hours and Earnings Census 2011 Linked": "Annual Survey of Hours and Earnings linked to Census 2011",
             "Annual Survey of Hours and Earnings linked to 2011 Census England and Wales": "Annual Survey of Hours and Earnings linked to Census 2011 England and Wales",
@@ -123,7 +129,8 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Census microdata 9% sample": "Census Microdata 9% Sample",
             "Education and Child Health Insights from Linked": "Education and Child Health Insights from Linked Data (ECHILD)",
             "Education and Child Health Insights from Linked Data": "Education and Child Health Insights from Linked Data (ECHILD)",
-            "Education and Child Health Insights from Linked Data Research Database": "Education and Child Health Insights from Linked Data Research Data",
+            "Education and Child Health Insights from Linked Data Research Data": "Education and Child Health Insights from Linked Data (ECHILD)",
+            "Education and Child Health Insights from Linked Data Research Database": "Education and Child Health Insights from Linked Data (ECHILD)",
             "Agricultural Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
             "Administrative Data | Agricultural Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
             "Administrative Data | Agriculture Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
@@ -238,6 +245,35 @@ class DatasetNormalisationTest(unittest.TestCase):
         self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to Combined Vaccination"), "COVID-19")
         self.assertEqual(dataset_family_for("COVID-19 Infection Survey linked to VOA and EPC"), "COVID-19")
         self.assertEqual(dataset_family_for("COVID-19 Infection Survey (CIS)"), "COVID-19")
+
+    def test_provider_normalisation(self):
+        cases = {
+            "DfE": "Department for Education",
+            "Department For Education": "Department for Education",
+            "DfT": "Department for Transport",
+            "MOJ": "Ministry of Justice",
+            "Office For National Statistics": "Office for National Statistics",
+            "Office for national Statistics": "Office for National Statistics",
+            "Office of National Statistics": "Office for National Statistics",
+            "Offcie for National Statistics": "Office for National Statistics",
+            "Department for Business, Energy & Industrial Strategy": "Department for Business, Energy and Industrial Strategy",
+            "Institute for Social and Economic Research": "Institute for Economic and Social Research",
+            "University and Colleges Admission Service": "Universities and Colleges Admissions Service (UCAS)",
+            "UCAS": "Universities and Colleges Admissions Service (UCAS)",
+            "NISRA": "Northern Ireland Statistics and Research Agency",
+            "Northern Ireland Statitiscs and Research Agency": "Northern Ireland Statistics and Research Agency",
+            "SAIL Databank Databank": "SAIL Databank",
+            "NHSD": "NHS Digital",
+            "NMC": "Nursing and Midwifery Council",
+            "Intellectual Property Office - UK DBT": "Intellectual Property Office",
+            "HMRC": "HM Revenue and Customs",
+            "UKHSA": "UK Health Security Agency",
+            "Ofqual": "Office of Qualifications and Examinations Regulation (Ofqual)",
+            "": "Unknown / Unspecified",
+        }
+        for raw, expected in cases.items():
+            with self.subTest(raw=raw):
+                self.assertEqual(normalise_provider_name(raw), expected)
         self.assertEqual(dataset_family_for("COVID-19 Weekly Opinions Survey"), "COVID-19")
         self.assertEqual(dataset_family_for("Census 2011 England and Wales Household Structure for COVID-19 Models"), "COVID-19")
         self.assertEqual(dataset_family_for("Labour Force Survey"), "Labour Force Survey")
