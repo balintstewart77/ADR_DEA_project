@@ -16,5 +16,7 @@ requirements-mac.txt
 data/*
 !data/dea_accredited_projects.csv
 !data/dea_accredited_projects_*.csv
+analysis/outputs_v3/
+.claude/
 
 analysis/DEA_projects_analysis.md
