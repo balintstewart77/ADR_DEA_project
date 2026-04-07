@@ -29,6 +29,8 @@ Usage:
     set   ANTHROPIC_API_KEY=sk-ant-...   (Windows)
 
     python analysis/llm_theme_analysis_v3.py
+    python analysis/llm_theme_analysis_v3.py --model claude-opus-4-6 --output-dir analysis/outputs_opus_4_6
+    python analysis/llm_theme_analysis_v3.py --model claude-sonnet-4-6 --output-dir analysis/outputs_sonnet_4_6
 
 Outputs (written to analysis/outputs_v3/):
     - layer_classifications.csv     : One row per project, all three layers
@@ -41,6 +43,7 @@ Outputs (written to analysis/outputs_v3/):
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
@@ -70,10 +73,11 @@ SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
 }
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
-CACHE_SCHEMA_VERSION = 3
+CACHE_SCHEMA_VERSION = 4
+PROMPT_VERSION = "v3.2"
 
 MODEL      = "claude-opus-4-6"
-BATCH_SIZE = 20          # reduced from 30 to accommodate dataset info in prompt
+BATCH_SIZE = 10          # projects per LLM batch (reduced to improve Opus reliability)
 MAX_TOKENS = 8192        # generous ceiling -- 20 projects x ~180 tokens/entry
 MAX_RETRIES = 3          # retry transient API failures before giving up
 
@@ -95,7 +99,7 @@ DOMAINS = [
     "Gender, Race & Ethnicity",
     "COVID-19 & Pandemic",
     "Data Infrastructure & Methodology",
-    "Other",
+    "Unclear from Title",
 ]
 
 DOMAIN_GUIDANCE = textwrap.dedent("""
@@ -113,7 +117,21 @@ DOMAIN_GUIDANCE = textwrap.dedent("""
                                       (not when demographic variables appear as controls or covariates)
   12. COVID-19 & Pandemic           — COVID-19 transmission, vaccination, lockdown impacts
   13. Data Infrastructure & Methodology — record linkage methods, data quality, survey methodology
-  14. Other                         — genuinely uncategorisable; assign when no other domain fits
+  14. Unclear from Title            — the title is too vague or opaque (e.g. an acronym with no
+                                      descriptive words) to determine any substantive domain
+
+  Overlap rules — when a project could fit multiple domains, apply these precedences:
+  • Mortality data: assign to the domain the *research question* targets.  Mortality in a
+    study of hospital outcomes → Health & Social Care.  Mortality in a population/fertility
+    study → Migration & Demographics.  If the research question is about mortality itself
+    and could go either way, assign both.
+  • Poverty vs Inequality vs Gender/Race: "Poverty, Inequality & Living Standards" covers
+    income and material deprivation.  "Gender, Race & Ethnicity" is for projects where a
+    demographic disparity IS the primary research question (not just a covariate).
+    "Inequality / Disparities Analysis" (Layer C purpose) can pair with *any* domain.
+  • COVID-19 overlap: if a project studies COVID-19's impact on employment, assign both
+    "COVID-19 & Pandemic" and "Labour Market & Employment" (or whichever domain applies).
+    COVID-19 should only be the sole domain if the project is purely epidemiological.
 """).strip()
 
 # ---------------------------------------------------------------------------
@@ -132,18 +150,28 @@ LINKAGE_GUIDANCE = textwrap.dedent("""
   Single-Dataset        — project uses only one administrative dataset; no record linkage implied
   Within-Domain Linkage — links 2+ datasets from the same provider or same policy domain
                           (e.g. two ONS surveys, or two health registries)
-  Cross-Domain Linkage  — links datasets from exactly two distinct policy domains or providers
-                          (e.g. education data ↔ employment data, or DfE ↔ DWP)
-  Multi-Domain Linkage  — links datasets spanning three or more distinct domains or providers
+  Cross-Domain Linkage  — links datasets from exactly two distinct policy domains
+                          (e.g. education data ↔ employment data)
+  Multi-Domain Linkage  — links datasets spanning three or more distinct policy domains
   Unclear from Title    — ONLY when both the title and datasets field are too vague to judge
 
-  Use the datasets listed alongside each title to determine linkage mode:
-  • If exactly 1 dataset from 1 provider is listed → Single-Dataset.
-  • If 2+ datasets from the same provider covering the same policy area → Within-Domain Linkage.
-  • If datasets from 2 distinct providers or policy areas → Cross-Domain Linkage.
-  • If datasets from 3+ distinct providers or policy areas → Multi-Domain Linkage.
+  Use the datasets listed alongside each title to determine linkage mode.
+  Count by *policy domain*, not just provider name — large agencies like ONS supply
+  datasets across many domains (e.g. labour, health, crime), so two ONS datasets
+  from different policy areas still count as cross-domain:
+  • If exactly 1 dataset from 1 policy domain → Single-Dataset.
+  • If 2+ datasets all within the same policy domain → Within-Domain Linkage.
+  • If datasets span exactly 2 distinct policy domains → Cross-Domain Linkage.
+  • If datasets span 3+ distinct policy domains → Multi-Domain Linkage.
   • Only use "Unclear from Title" when the datasets field is empty or genuinely ambiguous.
   The title provides additional context for interpreting what the datasets are being used for.
+
+  Some datasets are pre-linked products (e.g. "ASHE linked to Census 2011"). Treat the
+  linkage implied by the component datasets, not the product name:
+  • "ASHE linked to Census 2011" spans employment and demographics → Cross-Domain Linkage.
+  • "COVID-19 Infection Survey linked to NHS Test and Trace" stays within health → still
+    counts as a single health-domain product (Within-Domain Linkage or Single-Dataset,
+    depending on what other datasets the project uses).
 """).strip()
 
 # ---------------------------------------------------------------------------
@@ -152,7 +180,7 @@ LINKAGE_GUIDANCE = textwrap.dedent("""
 
 PURPOSES = [
     "Descriptive Monitoring",
-    "Outcome Linkage",
+    "Outcome Tracking",
     "Life-Course / Trajectory Analysis",
     "Inequality / Disparities Analysis",
     "Service Interaction / Systems Analysis",
@@ -164,7 +192,7 @@ PURPOSES = [
 
 PURPOSE_GUIDANCE = textwrap.dedent("""
   Descriptive Monitoring            — measuring prevalence, trends, or patterns without causal claim
-  Outcome Linkage                   — linking an exposure/condition to a downstream outcome
+  Outcome Tracking                   — linking an exposure/condition to a downstream outcome
   Life-Course / Trajectory Analysis — tracking individuals over time (childhood → adulthood arcs)
   Inequality / Disparities Analysis — comparing outcomes across social groups as the primary aim
   Service Interaction / Systems Analysis — how individuals interact with public services (NHS, DWP, courts)
@@ -172,6 +200,21 @@ PURPOSE_GUIDANCE = textwrap.dedent("""
   Risk Prediction / Early Identification — building risk scores or identifying at-risk subgroups
   Methodological / Infrastructure Research — developing or validating data linkage methods / datasets
   Unclear from Title                — insufficient information in the title
+
+  Distinguishing similar purposes:
+  • Descriptive Monitoring vs Outcome Tracking: if the project only measures "how much" or
+    "what trend" without linking an exposure to a downstream outcome → Descriptive Monitoring.
+    If it asks "does exposure X lead to outcome Y" → Outcome Tracking.
+  • Outcome Tracking vs Life-Course / Trajectory Analysis: Outcome Tracking tests a specific
+    exposure → outcome relationship.  Life-Course / Trajectory Analysis tracks individuals
+    across extended time periods or life stages (e.g. childhood → adulthood) without
+    necessarily testing a single causal hypothesis.
+  • Outcome Tracking vs Policy Evaluation: if the "exposure" is a specific named policy,
+    programme, or intervention (e.g. Universal Credit, Pupil Premium) → Policy Evaluation.
+    If it is a naturally occurring condition or event (e.g. job loss, illness) → Outcome Tracking.
+  • Service Interaction / Systems Analysis vs the above: use this when the research focus
+    is on *how people move through or interact with* public services (pathways, referrals,
+    service uptake), not merely on outcomes that happen to involve a service.
 
   Assign 1 or 2 purposes.  Most projects have exactly 1; assign 2 only when both are clearly
   central and not redundant (e.g. "Inequality / Disparities Analysis" + "Policy Evaluation").
@@ -195,7 +238,7 @@ DOMAIN_LITERALS  = Literal[
     "Gender, Race & Ethnicity",
     "COVID-19 & Pandemic",
     "Data Infrastructure & Methodology",
-    "Other",
+    "Unclear from Title",
 ]
 
 LINKAGE_LITERALS = Literal[
@@ -208,7 +251,7 @@ LINKAGE_LITERALS = Literal[
 
 PURPOSE_LITERALS = Literal[
     "Descriptive Monitoring",
-    "Outcome Linkage",
+    "Outcome Tracking",
     "Life-Course / Trajectory Analysis",
     "Inequality / Disparities Analysis",
     "Service Interaction / Systems Analysis",
@@ -229,16 +272,16 @@ class ProjectLayers(BaseModel):
     @classmethod
     def clean_domains(cls, v):
         if not v:
-            return ["Other"]
+            return ["Unclear from Title"]
         # Deduplicate while preserving order
         seen, deduped = set(), []
         for d in v:
             if d not in seen:
                 seen.add(d)
                 deduped.append(d)
-        # Drop "Other" if a real domain is present
+        # Drop "Unclear from Title" if a real domain is present
         if len(deduped) > 1:
-            deduped = [d for d in deduped if d != "Other"] or ["Other"]
+            deduped = [d for d in deduped if d != "Unclear from Title"] or ["Unclear from Title"]
         return deduped
 
     @field_validator("analytical_purpose")
@@ -280,12 +323,13 @@ _PURPOSE_LOOKUP = {p.lower(): p for p in PURPOSES}
 _LABEL_CORRECTIONS = {
     # Purposes that appear in domains slot
     "descriptive monitoring": None,
-    "outcome linkage": None,
+    "outcome linkage": "Outcome Tracking",
+    "outcome tracking": None,
     "policy evaluation / impact analysis": None,
     "policy evaluation": "Policy Evaluation / Impact Analysis",
     "inequality / disparities analysis": None,
-    # Domains that appear in purpose slot
-    "other": None,
+    # Legacy "Other" → new label
+    "other": "Unclear from Title",
 }
 
 
@@ -323,7 +367,7 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
                 if canon:
                     normalised.append(canon)
                 # else: drop unrecognised labels rather than failing
-            entry["substantive_domains"] = normalised if normalised else ["Other"]
+            entry["substantive_domains"] = normalised if normalised else ["Unclear from Title"]
 
         # Normalise linkage mode
         if "linkage_mode" in entry and isinstance(entry["linkage_mode"], str):
@@ -386,19 +430,41 @@ def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
         df = df[df["Legal Basis"].str.contains("Digital Economy Act", na=False, case=False)]
 
     df = apply_duplicate_policy(df)
-    title_key = df["Title"].fillna("").astype(str).str.strip()
-    duplicated_ids = df["Project ID"].duplicated(keep=False)
-    df["Record ID"] = df["Project ID"].astype(str)
-    df.loc[duplicated_ids, "Record ID"] = (
-        df.loc[duplicated_ids, "Project ID"].astype(str)
-        + " :: "
-        + title_key.loc[duplicated_ids]
+
+    # Clean Project IDs: strip whitespace/newlines and CLOSED suffix
+    df["Project ID"] = (
+        df["Project ID"].astype(str)
+        .str.strip()
+        .str.replace(r"\s*CLOSED\s*$", "", regex=True)
+        .str.strip()
     )
+
+    # Build Record ID — for duplicate Project IDs, append a short letter suffix
+    duplicated_ids = df["Project ID"].duplicated(keep=False)
+    df["Record ID"] = df["Project ID"]
+    if duplicated_ids.any():
+        for pid, grp in df.loc[duplicated_ids].groupby("Project ID"):
+            for i, idx in enumerate(grp.index):
+                df.loc[idx, "Record ID"] = f"{pid}/{chr(ord('a') + i)}"
     df["Year"]         = df["Accreditation Date"].dt.year
     df["Quarter"]      = df["Accreditation Date"].dt.to_period("Q")
     df["Quarter Label"] = df["Quarter"].dt.strftime("Q%q %Y")
 
     return df.reset_index(drop=True)
+
+
+def filter_to_record_ids(df: pd.DataFrame, record_ids_path: str) -> pd.DataFrame:
+    """Restrict the dataset to record IDs listed in a CSV file."""
+    subset = pd.read_csv(record_ids_path, encoding="utf-8-sig")
+    if "Record ID" not in subset.columns:
+        raise ValueError(f"{record_ids_path} must contain a 'Record ID' column")
+
+    wanted_ids = subset["Record ID"].astype(str).dropna().tolist()
+    out = df[df["Record ID"].astype(str).isin(wanted_ids)].copy()
+    missing = sorted(set(wanted_ids) - set(out["Record ID"].astype(str)))
+    if missing:
+        raise ValueError(f"{len(missing)} Record ID(s) from {record_ids_path} were not found in the DEA data")
+    return out.reset_index(drop=True)
 
 
 # ---------------------------------------------------------------------------
@@ -420,6 +486,10 @@ def load_cache(cache_path: str) -> dict:
         if meta.get("cache_schema_version") != CACHE_SCHEMA_VERSION:
             print("[cache] Schema version mismatch — invalidating cache")
             return {}
+        if meta.get("prompt_version") != PROMPT_VERSION:
+            print(f"[cache] Prompt version changed ({meta.get('prompt_version')} → {PROMPT_VERSION}) "
+                  f"— invalidating cache")
+            return {}
         if meta.get("model") != MODEL:
             print(f"[cache] Model changed ({meta.get('model')} → {MODEL}) "
                   f"— invalidating cache")
@@ -433,6 +503,7 @@ def save_cache(cache: dict, cache_path: str):
     payload = {
         "__meta__": {
             "cache_schema_version": CACHE_SCHEMA_VERSION,
+            "prompt_version": PROMPT_VERSION,
             "model": MODEL,
         },
         "entries": cache,
@@ -466,7 +537,7 @@ def _sanitise_prompt_text(value: str) -> str:
     return text.strip()
 
 
-def _summarise_datasets(raw: str, max_chars: int = 300) -> str:
+def _summarise_datasets(raw: str, max_chars: int = 600) -> str:
     """Produce a concise, prompt-safe summary of the 'Datasets Used' field."""
     if not isinstance(raw, str) or not raw.strip():
         return "(no datasets listed)"
@@ -498,25 +569,25 @@ CLASSIFICATION_EXAMPLES = textwrap.dedent("""
     → linkage_mode: "Within-Domain Linkage"  (3 ONS business surveys, all same domain)
     → purpose: ["Descriptive Monitoring"]
 
-  Example 3 — Cross-Domain Linkage (2 distinct providers or policy domains):
+  Example 3 — Cross-Domain Linkage (2 distinct policy domains):
     Title: "Impact of Universal Credit on employment outcomes"
     Datasets: Department for Work and Pensions: Universal Credit Dataset; Office for National Statistics: Annual Population Survey
     → domains: ["Labour Market & Employment", "Poverty, Inequality & Living Standards"]
-    → linkage_mode: "Cross-Domain Linkage"  (DWP + ONS = 2 distinct providers)
+    → linkage_mode: "Cross-Domain Linkage"  (welfare benefits + labour market = 2 policy domains)
     → purpose: ["Policy Evaluation / Impact Analysis"]
 
-  Example 4 — Multi-Domain Linkage (3+ providers or policy domains):
+  Example 4 — Multi-Domain Linkage (3+ policy domains):
     Title: "Pathways from education through employment to health outcomes"
     Datasets: Department for Education: National Pupil Database; Office for National Statistics: ASHE; NHS Digital: Hospital Episode Statistics
     → domains: ["Education & Skills", "Labour Market & Employment", "Health & Social Care"]
-    → linkage_mode: "Multi-Domain Linkage"  (DfE + ONS + NHS = 3 providers)
+    → linkage_mode: "Multi-Domain Linkage"  (education + employment + health = 3 policy domains)
     → purpose: ["Life-Course / Trajectory Analysis"]
 
   Example 5 — Opaque title, datasets disambiguate:
     Title: "AMPHoRA"
     Datasets: Office for National Statistics: Census 2011, Death Registrations
-    → domains: ["Health & Social Care"]  (inferred from death registrations)
-    → linkage_mode: "Within-Domain Linkage"  (2 ONS datasets, health domain)
+    → domains: ["Migration & Demographics"]  (census + mortality = population/demographics)
+    → linkage_mode: "Within-Domain Linkage"  (2 ONS datasets, both demographics)
     → purpose: ["Unclear from Title"]  (acronym gives no analytical clue)
 
   Example 6 — Gender/Race domain, non-Inequality purpose:
@@ -525,6 +596,44 @@ CLASSIFICATION_EXAMPLES = textwrap.dedent("""
     → domains: ["Education & Skills", "Gender, Race & Ethnicity"]
     → linkage_mode: "Single-Dataset"
     → purpose: ["Methodological / Infrastructure Research"]  (NOT Inequality — data validation study)
+
+  Example 7 — Two purposes assigned:
+    Title: "Ethnic disparities in the impact of Universal Credit on employment transitions"
+    Datasets: Department for Work and Pensions: Universal Credit Dataset; Office for National Statistics: Annual Population Survey
+    → domains: ["Labour Market & Employment", "Poverty, Inequality & Living Standards", "Gender, Race & Ethnicity"]
+    → linkage_mode: "Cross-Domain Linkage"  (welfare + labour market)
+    → purpose: ["Policy Evaluation / Impact Analysis", "Inequality / Disparities Analysis"]
+      (both are central: evaluating a policy AND comparing outcomes across ethnic groups)
+
+  Example 8 — Ethnicity mentioned, but NOT Gender/Race domain:
+    Title: "Understanding employment outcomes for ethnic minority graduates"
+    Datasets: Department for Education: National Pupil Database; Office for National Statistics: LEO
+    → domains: ["Education & Skills", "Labour Market & Employment"]
+    → linkage_mode: "Cross-Domain Linkage"  (education + employment)
+    → purpose: ["Outcome Tracking"]
+      (ethnicity is used as a stratifying variable, but the *research question* is about
+       education-to-employment outcomes, not about racial disparities per se)
+
+  Example 9 — Dataset evidence overrides a vague title:
+    Title: "STRIDE"
+    Datasets: Ministry of Justice: Data First Crown Court, Data First Magistrates Court, Data First Probation; Office for National Statistics: Annual Population Survey
+    → domains: ["Crime & Justice", "Labour Market & Employment"]  (datasets reveal justice + employment)
+    → linkage_mode: "Cross-Domain Linkage"  (MoJ justice + ONS employment)
+    → purpose: ["Unclear from Title"]  (acronym gives no clue about analytical design)
+
+  Example 10 — Service interaction / systems analysis:
+    Title: "Pathways through health, housing and social care services for people experiencing homelessness"
+    Datasets: NHS Digital: Hospital Episode Statistics; Ministry of Housing, Communities and Local Government: Homelessness Case Level Information Collection; Local authority adult social care records
+    → domains: ["Housing & Planning", "Health & Social Care"]
+    → linkage_mode: "Cross-Domain Linkage"  (housing + health/social care)
+    → purpose: ["Service Interaction / Systems Analysis"]
+
+  Example 11 — Risk prediction / early identification:
+    Title: "Predicting children at risk of persistent school absence using linked education and social care records"
+    Datasets: Department for Education: National Pupil Database; local authority children's social care records
+    → domains: ["Education & Skills", "Health & Social Care"]
+    → linkage_mode: "Cross-Domain Linkage"  (education + social care)
+    → purpose: ["Risk Prediction / Early Identification"]
 """).strip()
 
 
@@ -558,13 +667,16 @@ def _build_prompt(projects: list[dict]) -> str:
         ══════════════════════════════════════════════════════════════
         • Keep the three layers independent; do not let your domain choice
           bias your linkage or purpose choice.
-        • For Layer B, use the datasets listed — do not guess from the title alone.
-        • For Layers A and C, prefer a specific classification if the title gives
-          reasonable evidence — only use "Unclear from Title" or "Other" when the
-          title is genuinely opaque (e.g. an acronym with no descriptive words).
+        • Use BOTH the title AND the datasets field for ALL three layers.
+          The datasets field is essential for Layer B (counting policy domains),
+          but it also helps determine the substantive domain (Layer A) and can
+          hint at analytical purpose (Layer C) — especially when the title is
+          terse or opaque.
+        • Only assign "Unclear from Title" when neither the title nor the
+          datasets field provides enough evidence to classify.
         • Avoid treating domain and purpose as synonymous — a Gender, Race &
           Ethnicity project is NOT automatically "Inequality / Disparities
-          Analysis"; it could be Descriptive Monitoring, Outcome Linkage, or
+          Analysis"; it could be Descriptive Monitoring, Outcome Tracking, or
           Policy Evaluation depending on the research design.
         • When assigning multiple domains, list the most relevant domain first.
         • Never assign more than 2 purposes.
@@ -583,7 +695,7 @@ def _build_prompt(projects: list[dict]) -> str:
         {{
           "classifications": [
             {{
-              "project_id": "<short batch ID such as P01>",
+              "project_id": "<Record ID shown in brackets, e.g. 2020/001>",
               "substantive_domains": ["<domain>", ...],
               "linkage_mode": "<exactly one linkage mode>",
               "analytical_purpose": ["<purpose>"]
@@ -592,8 +704,8 @@ def _build_prompt(projects: list[dict]) -> str:
           ]
         }}
 
-        The "project_id" field must repeat the exact short batch ID shown in brackets
-        for each project, such as "P01" or "P17".
+        The "project_id" field must repeat the exact Record ID shown in brackets
+        for each project (e.g. "2020/001" or "2023/045").
         Use only the labels defined above, spelled exactly as shown.
         Produce one entry per project in the same order as listed.
     """).strip()
@@ -668,6 +780,7 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
         response = client.messages.parse(
             model=MODEL,
             max_tokens=MAX_TOKENS,
+            temperature=0,
             messages=[{"role": "user", "content": prompt}],
             output_format=BatchLayerResult,
         )
@@ -678,6 +791,7 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
         raw_response = client.messages.create(
             model=MODEL,
             max_tokens=MAX_TOKENS,
+            temperature=0,
             messages=[{"role": "user", "content": prompt}],
         )
         if not raw_response.content or not hasattr(raw_response.content[0], "text"):
@@ -691,6 +805,18 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             classifications = result_obj.classifications
         except Exception as e2:
             raise BatchClassificationError(f"Pydantic validation failed: {e2}") from e2
+
+    # Deduplicate: keep first occurrence of each project_id
+    seen_ids: set[str] = set()
+    deduped: list[ProjectLayers] = []
+    for cls in classifications:
+        if cls.project_id not in seen_ids:
+            seen_ids.add(cls.project_id)
+            deduped.append(cls)
+    if len(deduped) < len(classifications):
+        n_dropped = len(classifications) - len(deduped)
+        print(f"  [info] Dropped {n_dropped} duplicate classification(s) from LLM response")
+    classifications = deduped
 
     _validate_batch_integrity(classifications, projects)
     prompt_to_actual = {p["prompt_id"]: p["id"] for p in projects}
@@ -735,9 +861,9 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
             batch = [
                 {
                     **project,
-                    "prompt_id": f"P{offset:02d}",
+                    "prompt_id": project["id"],
                 }
-                for offset, project in enumerate(batch, start=1)
+                for project in batch
             ]
             batch_num = i // BATCH_SIZE + 1
             print(f"  Batch {batch_num}/{n_batches} ({len(batch)} projects)...")
@@ -779,7 +905,7 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
         return default
 
     df["substantive_domains"] = df["Record ID"].apply(
-        lambda record_id: _get(record_id, "substantive_domains", ["Other"])
+        lambda record_id: _get(record_id, "substantive_domains", ["Unclear from Title"])
     )
     df["linkage_mode"] = df["Record ID"].apply(
         lambda record_id: _get(record_id, "linkage_mode", "Unclear from Title")
@@ -789,7 +915,7 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     )
     # First-listed domain is the most relevant (prompt instructs this ordering)
     df["primary_domain"] = df["substantive_domains"].apply(
-        lambda x: x[0] if x else "Other"
+        lambda x: x[0] if x else "Unclear from Title"
     )
 
     return df
@@ -967,21 +1093,24 @@ def generate_narrative(
         3. The main analytical purposes and which are growing or declining
         4. Interesting combinations revealed by the cross-tabs (e.g. which domains favour
            policy evaluation, or which domains rely most on cross-domain linkage?)
-        5. What this tells us about how UK researchers are exploiting administrative data
-        6. Gaps or emerging areas to watch
+        5. Domains or purposes with notably low or declining share — flag these as
+           under-represented areas visible in the data (do not speculate about why)
 
         Write in a professional policy-briefing style, suitable for a senior civil servant audience.
         STRICT RULES:
-        • Cite exact numbers from the tables above — do not round, smooth, or invent ranges.
-        • Do not speculate about causes or motivations (e.g. "reflecting the post-pandemic
-          equity agenda"). Only describe what the data shows, not why.
-        • Every claim must be directly verifiable from the tables provided. If a pattern
-          is not visible in the data, do not mention it.
+        • Cite exact numbers and percentages from the tables above — do not round, smooth,
+          or invent ranges.
+        • Only describe patterns that are directly visible in the tables. Do not speculate
+          about causes, motivations, or external factors (e.g. "reflecting the post-pandemic
+          equity agenda").
+        • Do not editorialize or make recommendations. The summary should be a factual
+          description of what the data shows, not an interpretation of what it means.
     """).strip()
 
     response = client.messages.create(
         model=MODEL,
         max_tokens=2000,
+        temperature=0,
         messages=[{"role": "user", "content": prompt}],
     )
     if not response.content or not hasattr(response.content[0], "text"):
@@ -1086,6 +1215,33 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Three-layer DEA thematic analysis")
+    parser.add_argument(
+        "--model",
+        default=MODEL,
+        help="Anthropic model ID to use for classification and narrative generation",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=OUTPUT_DIR,
+        help="Directory to write outputs and cache into",
+    )
+    parser.add_argument(
+        "--record-ids-csv",
+        default=None,
+        help="Optional CSV containing a 'Record ID' column to restrict the run to a fixed subset",
+    )
+    parser.add_argument(
+        "--skip-narrative",
+        action="store_true",
+        help="Skip the narrative summary call and save an empty layer_summary.txt",
+    )
+    args = parser.parse_args()
+
+    MODEL = args.model
+    OUTPUT_DIR = args.output_dir
+    CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
+
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         raise EnvironmentError(
@@ -1097,6 +1253,8 @@ if __name__ == "__main__":
 
     # Load data
     df = load_data()
+    if args.record_ids_csv:
+        df = filter_to_record_ids(df, args.record_ids_csv)
     print(f"[data] {len(df):,} DEA projects, {df['Year'].min()}-{df['Year'].max()}")
 
     # Classify
@@ -1108,10 +1266,14 @@ if __name__ == "__main__":
     print_quick_stats(trends)
 
     # Narrative
-    print("\n[llm] Generating narrative summary...")
-    narrative = generate_narrative(client, trends, n_projects=len(df_classified))
-    print("\n--- NARRATIVE SUMMARY ---")
-    print(narrative)
+    if args.skip_narrative:
+        narrative = ""
+        print("\n[llm] Skipping narrative summary (--skip-narrative)")
+    else:
+        print("\n[llm] Generating narrative summary...")
+        narrative = generate_narrative(client, trends, n_projects=len(df_classified))
+        print("\n--- NARRATIVE SUMMARY ---")
+        print(narrative)
 
     # Save
     save_outputs(df_classified, trends, narrative, OUTPUT_DIR)

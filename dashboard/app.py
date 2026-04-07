@@ -175,6 +175,45 @@ COLLECTION_COLOURS = {
 PRIMARY_BAR = "#2a9d8f"
 SECONDARY_BAR = "#e76f51"
 
+# -- Thematic analysis colour palettes -------------------------------------
+
+DOMAIN_COLOURS = {
+    "Labour Market & Employment":           "#2a9d8f",
+    "Business & Productivity":              "#264653",
+    "Education & Skills":                   "#e9c46a",
+    "Health & Social Care":                 "#e76f51",
+    "Poverty, Inequality & Living Standards": "#6a3d9a",
+    "Gender, Race & Ethnicity":             "#d62728",
+    "Migration & Demographics":             "#f4a261",
+    "Crime & Justice":                      "#1f77b4",
+    "COVID-19 & Pandemic":                  "#ff7f0e",
+    "Housing & Planning":                   "#8c564b",
+    "Environment & Agriculture":            "#2ca02c",
+    "Public Finance & Taxation":            "#9467bd",
+    "Data Infrastructure & Methodology":    "#7f7f7f",
+    "Unclear from Title":                   "#bcbd22",
+}
+
+LINKAGE_COLOURS = {
+    "Single-Dataset":           "#a8dadc",
+    "Within-Domain Linkage":    "#457b9d",
+    "Cross-Domain Linkage":     "#e76f51",
+    "Multi-Domain Linkage":     "#264653",
+    "Unclear from Title":       "#bdc3c7",
+}
+
+PURPOSE_COLOURS = {
+    "Descriptive Monitoring":                   "#3366cc",
+    "Policy Evaluation / Impact Analysis":      "#dc3912",
+    "Outcome Tracking":                         "#109618",
+    "Inequality / Disparities Analysis":        "#ff9900",
+    "Methodological / Infrastructure Research":  "#0099c6",
+    "Life-Course / Trajectory Analysis":        "#6a3d9a",
+    "Risk Prediction / Early Identification":   "#e377c2",
+    "Service Interaction / Systems Analysis":   "#8c564b",
+    "Unclear from Title":                       "#bdc3c7",
+}
+
 def classify_collection(datasets_str: str) -> list[str]:
     """Return list of matching collection names for a datasets string."""
     if not isinstance(datasets_str, str):
@@ -403,6 +442,31 @@ RETAINED_CONFLICTING_DUPLICATE_IDS = sorted(
 RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT = (
     ", ".join(RETAINED_CONFLICTING_DUPLICATE_IDS) if RETAINED_CONFLICTING_DUPLICATE_IDS else "None"
 )
+
+# -- Thematic analysis data (LLM classification outputs) -------------------
+
+_THEMATIC_DIR = os.path.join(os.path.dirname(__file__), "..", "analysis", "outputs_v3")
+THEMATIC_DATA_AVAILABLE = False
+
+try:
+    df_thematic_a = pd.read_csv(os.path.join(_THEMATIC_DIR, "layer_a_by_year.csv"), encoding="utf-8-sig")
+    df_thematic_b = pd.read_csv(os.path.join(_THEMATIC_DIR, "layer_b_by_year.csv"), encoding="utf-8-sig")
+    df_thematic_c = pd.read_csv(os.path.join(_THEMATIC_DIR, "layer_c_by_year.csv"), encoding="utf-8-sig")
+    df_thematic_a_totals = pd.read_csv(os.path.join(_THEMATIC_DIR, "layer_a_totals.csv"), encoding="utf-8-sig")
+    df_thematic_b_totals = pd.read_csv(os.path.join(_THEMATIC_DIR, "layer_b_totals.csv"), encoding="utf-8-sig")
+    df_thematic_c_totals = pd.read_csv(os.path.join(_THEMATIC_DIR, "layer_c_totals.csv"), encoding="utf-8-sig")
+    df_cross_mode_domain = pd.read_csv(os.path.join(_THEMATIC_DIR, "cross_mode_domain.csv"), encoding="utf-8-sig")
+    df_cross_domain_purpose = pd.read_csv(os.path.join(_THEMATIC_DIR, "cross_domain_purpose.csv"), encoding="utf-8-sig")
+    with open(os.path.join(_THEMATIC_DIR, "layer_summary.txt"), "r", encoding="utf-8") as _f:
+        THEMATIC_NARRATIVE = _f.read()
+    THEMATIC_PROJECT_COUNT = int(df_thematic_a.groupby("Year")["total"].first().sum())
+    THEMATIC_DATA_AVAILABLE = True
+except (FileNotFoundError, KeyError):
+    df_thematic_a = df_thematic_b = df_thematic_c = pd.DataFrame()
+    df_thematic_a_totals = df_thematic_b_totals = df_thematic_c_totals = pd.DataFrame()
+    df_cross_mode_domain = df_cross_domain_purpose = pd.DataFrame()
+    THEMATIC_NARRATIVE = ""
+    THEMATIC_PROJECT_COUNT = 0
 
 
 # ---------------------------------------------------------------------------
@@ -743,6 +807,160 @@ def make_institution_trend(df_inst: pd.DataFrame, top_n: int = 8) -> go.Figure:
     fig.update_traces(line_width=2.5)
     _annotate_partial_year(fig, years=yearly["Year"].unique())
     return _apply_common(fig)
+
+
+# -- Thematic analysis chart helpers ----------------------------------------
+
+def make_thematic_trend(
+    df_by_year: pd.DataFrame,
+    category_col: str,
+    colour_map: dict,
+    metric_col: str,
+    title: str,
+    height: int = 480,
+) -> go.Figure:
+    """Multi-line trend chart for a thematic layer (domains or purposes)."""
+    fig = go.Figure()
+    for cat in df_by_year[category_col].unique():
+        sub = df_by_year[df_by_year[category_col] == cat].sort_values("Year")
+        fig.add_trace(go.Scatter(
+            x=sub["Year"], y=sub[metric_col],
+            mode="lines+markers",
+            name=cat,
+            line=dict(color=colour_map.get(cat, "#999"), width=2.5),
+            marker=dict(size=6),
+            hovertemplate=(
+                f"<b>{cat}</b><br>"
+                "%{x}<br>"
+                + ("%{y:.1f}%" if metric_col == "pct_of_projects" else "%{y} projects")
+                + "<extra></extra>"
+            ),
+        ))
+    yaxis_title = "% of projects" if metric_col == "pct_of_projects" else "Projects"
+    fig.update_layout(
+        title=title,
+        xaxis_title="Year", yaxis_title=yaxis_title,
+        xaxis_dtick=1,
+        legend=dict(
+            orientation="v",
+            yanchor="top", y=1,
+            xanchor="left", x=1.02,
+            font=dict(size=10),
+        ),
+        margin=dict(r=260),
+    )
+    _annotate_partial_year(fig, years=df_by_year["Year"].unique())
+    return _apply_common(fig, height=height)
+
+
+def make_linkage_area(
+    df_by_year: pd.DataFrame,
+    colour_map: dict,
+    metric_col: str,
+) -> go.Figure:
+    """Stacked area chart for linkage modes (single-label, compositional)."""
+    order = ["Single-Dataset", "Within-Domain Linkage", "Cross-Domain Linkage",
+             "Multi-Domain Linkage", "Unclear from Title"]
+    present = [m for m in order if m in df_by_year["linkage_mode"].values]
+    fig = go.Figure()
+    for mode in present:
+        sub = df_by_year[df_by_year["linkage_mode"] == mode].sort_values("Year")
+        fig.add_trace(go.Scatter(
+            x=sub["Year"], y=sub[metric_col],
+            mode="lines",
+            name=mode,
+            stackgroup="one",
+            line=dict(color=colour_map.get(mode, "#999"), width=0.5),
+            fillcolor=colour_map.get(mode, "#999"),
+            hovertemplate=(
+                f"<b>{mode}</b><br>"
+                "%{x}<br>"
+                + ("%{y:.1f}%" if metric_col == "pct_of_projects" else "%{y} projects")
+                + "<extra></extra>"
+            ),
+        ))
+    yaxis_title = "% of projects" if metric_col == "pct_of_projects" else "Projects"
+    fig.update_layout(
+        title="Data Linkage Complexity Over Time",
+        xaxis_title="Year", yaxis_title=yaxis_title,
+        xaxis_dtick=1,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom", y=1.05,
+            xanchor="left", x=0,
+        ),
+    )
+    _annotate_partial_year(fig, years=df_by_year["Year"].unique())
+    return _apply_common(fig)
+
+
+def make_thematic_totals_bar(
+    df_totals: pd.DataFrame,
+    category_col: str,
+    colour_map: dict,
+    title: str,
+    height: int = CHART_HEIGHT,
+) -> go.Figure:
+    """Horizontal bar chart of total counts for a layer."""
+    df_sorted = df_totals.sort_values("count", ascending=True)
+    colours = [colour_map.get(cat, "#999") for cat in df_sorted[category_col]]
+    fig = go.Figure(go.Bar(
+        y=df_sorted[category_col],
+        x=df_sorted["count"],
+        orientation="h",
+        marker_color=colours,
+        marker_line_width=0,
+        hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
+    ))
+    fig.update_layout(
+        title=title,
+        xaxis_title="Projects",
+        yaxis_title="",
+        margin=dict(l=220),
+    )
+    return _apply_common(fig, height=height)
+
+
+def make_cross_heatmap(
+    df_cross: pd.DataFrame,
+    row_col: str,
+    title: str,
+    colorscale: list | str = "Tealgrn",
+) -> go.Figure:
+    """Annotated heatmap from a cross-tabulation pivot table."""
+    row_labels = df_cross[row_col].tolist()
+    value_cols = [c for c in df_cross.columns if c != row_col]
+    z = df_cross[value_cols].values
+
+    annotations = []
+    for i, row in enumerate(z):
+        for j, val in enumerate(row):
+            annotations.append(dict(
+                x=value_cols[j], y=row_labels[i],
+                text=str(int(val)),
+                showarrow=False,
+                font=dict(
+                    size=11,
+                    color="white" if val > z.max() * 0.55 else "#2c3e50",
+                ),
+            ))
+
+    fig = go.Figure(go.Heatmap(
+        z=z,
+        x=value_cols,
+        y=row_labels,
+        colorscale=colorscale,
+        showscale=True,
+        hovertemplate="<b>%{y}</b> × <b>%{x}</b><br>%{z} projects<extra></extra>",
+    ))
+    fig.update_layout(
+        title=title,
+        annotations=annotations,
+        xaxis=dict(side="bottom", tickangle=-35),
+        yaxis=dict(autorange="reversed"),
+        margin=dict(l=220, b=120),
+    )
+    return _apply_common(fig, height=380)
 
 
 # ---------------------------------------------------------------------------
@@ -1466,6 +1684,241 @@ INSTITUTIONS_TAB = dbc.Tab(label="Institutions", tab_id="tab-institutions", chil
     ]),
 ])
 
+# -- Thematic Analysis tab --------------------------------------------------
+
+_thematic_methodology_md = """
+**Model:** Claude Opus 4.6 (`claude-opus-4-6`) via the Anthropic API with structured
+JSON output and `temperature=0` for deterministic classification.
+
+**Input:** Each project's title and its listed datasets are provided to the model
+together. Both fields inform all three classification layers — titles provide the
+research question while datasets reveal the data domains and linkage scope.
+
+**Batch processing:** Projects are classified in batches of 10-20, with automatic
+retry logic for transient API failures. Results are cached locally so that
+re-runs only classify new or changed projects.
+
+**Validation:** A controlled experiment compared Opus 4.6 and Sonnet 4.6 on a
+150-project stratified sample. Opus was selected as the preferred model after
+manual review of disagreements.
+"""
+
+_thematic_layers_md = """
+#### Layer A — Substantive Domain (1 or more per project)
+
+Projects are assigned to one or more of 14 thematic domains based on the
+research question and datasets used:
+
+| Domain | Description |
+|--------|-------------|
+| Labour Market & Employment | Wages, jobs, skills demand, unemployment, gig economy |
+| Business & Productivity | Firm performance, innovation, trade, enterprise zones |
+| Education & Skills | Schools, universities, qualifications, pupil outcomes |
+| Health & Social Care | NHS, mortality, mental health, social care interactions |
+| Poverty, Inequality & Living Standards | Income distribution, deprivation, benefits, cost of living |
+| Gender, Race & Ethnicity | Disparities by sex, ethnicity, or gender identity |
+| Migration & Demographics | Population flows, fertility, ageing, migrant outcomes |
+| Crime & Justice | Offending, victimisation, courts, policing |
+| COVID-19 & Pandemic | Pandemic-specific research and data |
+| Housing & Planning | Housing markets, homelessness, planning, energy in homes |
+| Environment & Agriculture | Land use, farming, pollution, climate, food |
+| Public Finance & Taxation | Tax policy, revenue, government expenditure |
+| Data Infrastructure & Methodology | Linkage methods, data quality, statistical methodology |
+| Unclear from Title | Insufficient information to classify |
+
+#### Layer B — Linkage Mode (exactly 1 per project)
+
+Each project is assigned to one linkage mode based on the number of policy
+domains its datasets span:
+
+| Mode | Description |
+|------|-------------|
+| Single-Dataset | Uses only one dataset |
+| Within-Domain Linkage | Links multiple datasets from the same policy domain |
+| Cross-Domain Linkage | Links datasets across two distinct policy domains |
+| Multi-Domain Linkage | Links datasets spanning three or more policy domains |
+
+#### Layer C — Analytical Purpose (1 or 2 per project)
+
+Projects are classified by their primary research purpose:
+
+| Purpose | Description |
+|---------|-------------|
+| Descriptive Monitoring | Measuring prevalence, trends, or patterns |
+| Policy Evaluation / Impact Analysis | Evaluating a specific policy, programme, or intervention |
+| Outcome Tracking | Linking an exposure or condition to a downstream outcome |
+| Inequality / Disparities Analysis | Comparing outcomes across social groups |
+| Life-Course / Trajectory Analysis | Tracking individuals over extended time periods |
+| Methodological / Infrastructure Research | Developing or validating data linkage methods |
+| Risk Prediction / Early Identification | Building risk scores or identifying at-risk subgroups |
+| Service Interaction / Systems Analysis | How individuals move through public services |
+"""
+
+if THEMATIC_DATA_AVAILABLE:
+    _thematic_children = [
+        # Section 1: Caveat banner
+        dbc.Alert([
+            html.Strong("Experimental Analysis"),
+            " — Classifications below were generated by a large language model (Claude Opus). "
+            "They are based on project titles and dataset names only, and should be treated as "
+            "indicative rather than definitive. Ambiguous or terse titles may be misclassified.",
+        ], color="warning", className="mb-3 mt-2"),
+
+        # Summary stats
+        dbc.Row([
+            _stat_card(f"{THEMATIC_PROJECT_COUNT:,}", "Projects Classified", "#2a9d8f"),
+            _stat_card("14", "Substantive Domains", "#264653"),
+            _stat_card("5", "Linkage Modes", "#457b9d"),
+            _stat_card("9", "Analytical Purposes", "#e76f51"),
+        ], className="mb-3 g-3"),
+
+        html.P(
+            "Each project is independently classified across three layers: "
+            "the substantive research domain(s), the data linkage complexity, "
+            "and the analytical purpose. Projects may belong to multiple domains "
+            "and may have up to two analytical purposes.",
+            className="section-desc",
+        ),
+
+        # Section 2: Collapsible methods
+        dbc.Accordion([
+            dbc.AccordionItem(
+                dcc.Markdown(_thematic_methodology_md, style={"fontSize": "0.85rem", "lineHeight": "1.6"}),
+                title="Classification Methodology",
+            ),
+            dbc.AccordionItem(
+                dcc.Markdown(_thematic_layers_md, style={"fontSize": "0.85rem", "lineHeight": "1.6"}),
+                title="Layer Definitions",
+            ),
+            dbc.AccordionItem(
+                dcc.Markdown(THEMATIC_NARRATIVE, style={"fontSize": "0.85rem", "lineHeight": "1.6"}),
+                title="Analytical Narrative (LLM-Generated)",
+            ),
+        ], start_collapsed=True, className="mb-4"),
+
+        # Section 3: Metric toggle
+        dbc.Row([
+            dbc.Col([
+                html.Label("Metric", className="filter-label"),
+                dcc.Dropdown(
+                    id="thematic-metric-toggle",
+                    options=[
+                        {"label": "% of projects in year", "value": "pct"},
+                        {"label": "Absolute project count", "value": "count"},
+                    ],
+                    value="pct",
+                    clearable=False,
+                ),
+            ], md=3),
+        ], className="mb-3 g-2"),
+
+        # Section 3: Domain trends
+        html.H5(
+            "Substantive Domains Over Time",
+            className="mt-3 mb-2",
+            style={"color": "#2c3e50", "fontWeight": "600"},
+        ),
+        html.P(
+            "Projects may belong to multiple domains, so percentages sum to more than 100% per year. "
+            "Click a legend entry to show/hide individual domains.",
+            className="section-desc",
+        ),
+        dbc.Row([
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-domain-trend", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), width=12),
+        ]),
+
+        # Section 4: Linkage mode trends
+        html.H5(
+            "Data Linkage Complexity Over Time",
+            className="mt-4 mb-2",
+            style={"color": "#2c3e50", "fontWeight": "600"},
+        ),
+        html.P(
+            "Each project has exactly one linkage mode, so these shares are compositional.",
+            className="section-desc",
+        ),
+        dbc.Row([
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-linkage-trend", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), width=12),
+        ]),
+
+        # Section 5: Purpose trends
+        html.H5(
+            "Analytical Purpose Over Time",
+            className="mt-4 mb-2",
+            style={"color": "#2c3e50", "fontWeight": "600"},
+        ),
+        html.P(
+            "Projects may have up to two purposes, so percentages can sum to slightly more than 100%.",
+            className="section-desc",
+        ),
+        dbc.Row([
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-purpose-trend", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), width=12),
+        ]),
+
+        # Section 6: Totals
+        html.H5(
+            "Overall Distribution",
+            className="mt-4 mb-2",
+            style={"color": "#2c3e50", "fontWeight": "600"},
+        ),
+        dbc.Row([
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-domain-totals", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), md=5),
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-linkage-totals", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), md=3),
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-purpose-totals", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), md=4),
+        ], className="g-3"),
+
+        # Section 7: Cross-layer heatmaps
+        html.H5(
+            "Cross-Layer Patterns",
+            className="mt-4 mb-2",
+            style={"color": "#2c3e50", "fontWeight": "600"},
+        ),
+        html.P(
+            "Cross-tabulations use the primary (first-listed) domain for each project. "
+            "Only the six most common primary domains are shown.",
+            className="section-desc",
+        ),
+        dbc.Row([
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-cross-mode-domain", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), md=6),
+            dbc.Col(html.Div(
+                dcc.Graph(id="thematic-cross-domain-purpose", config=CHART_CONFIG),
+                className="chart-wrapper",
+            ), md=6),
+        ], className="g-3 mb-4"),
+    ]
+else:
+    _thematic_children = [
+        dbc.Alert(
+            "Thematic analysis data not available. Run analysis/llm_theme_analysis_v3.py to generate.",
+            color="info", className="mt-3",
+        ),
+    ]
+
+THEMATIC_TAB = dbc.Tab(
+    label="Thematic Analysis", tab_id="tab-thematic", children=_thematic_children,
+)
+
 ABOUT_TAB = dbc.Tab(label="About", tab_id="tab-about", children=[
     dbc.Row([
         dbc.Col([
@@ -1489,7 +1942,7 @@ app.layout = html.Div([
         html.Div(style={"height": "1.25rem"}),  # spacer below navbar
         STAT_CARDS,
         dbc.Tabs(
-            [OVERVIEW_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, BROWSE_TAB, ABOUT_TAB],
+            [OVERVIEW_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, THEMATIC_TAB, BROWSE_TAB, ABOUT_TAB],
             id="main-tabs",
             active_tab="tab-overview",
             className="dea-tabs",
@@ -1854,6 +2307,67 @@ def update_institutions_tab(preset, custom):
         make_institution_bar(df_institutions, top_n=top_n),
         make_institution_trend(df_institutions, top_n=8),
     )
+
+
+# -- Thematic Analysis tab callback ----------------------------------------
+
+if THEMATIC_DATA_AVAILABLE:
+    @app.callback(
+        Output("thematic-domain-trend", "figure"),
+        Output("thematic-linkage-trend", "figure"),
+        Output("thematic-purpose-trend", "figure"),
+        Output("thematic-domain-totals", "figure"),
+        Output("thematic-linkage-totals", "figure"),
+        Output("thematic-purpose-totals", "figure"),
+        Output("thematic-cross-mode-domain", "figure"),
+        Output("thematic-cross-domain-purpose", "figure"),
+        Input("thematic-metric-toggle", "value"),
+    )
+    def update_thematic_tab(metric_mode):
+        metric_col = "pct_of_projects" if metric_mode == "pct" else "count"
+
+        domain_trend = make_thematic_trend(
+            df_thematic_a, "domain", DOMAIN_COLOURS, metric_col,
+            "Substantive Domains Over Time",
+        )
+        linkage_trend = make_linkage_area(
+            df_thematic_b, LINKAGE_COLOURS, metric_col,
+        )
+        purpose_trend = make_thematic_trend(
+            df_thematic_c, "purpose", PURPOSE_COLOURS, metric_col,
+            "Analytical Purpose Over Time",
+            height=CHART_HEIGHT,
+        )
+
+        domain_totals = make_thematic_totals_bar(
+            df_thematic_a_totals, "domain", DOMAIN_COLOURS,
+            "Projects by Domain", height=440,
+        )
+        linkage_totals = make_thematic_totals_bar(
+            df_thematic_b_totals, "linkage_mode", LINKAGE_COLOURS,
+            "Projects by Linkage Mode", height=280,
+        )
+        purpose_totals = make_thematic_totals_bar(
+            df_thematic_c_totals, "purpose", PURPOSE_COLOURS,
+            "Projects by Purpose", height=380,
+        )
+
+        cross_mode = make_cross_heatmap(
+            df_cross_mode_domain, "primary_domain",
+            "Primary Domain × Linkage Mode",
+            colorscale="Tealgrn",
+        )
+        cross_purpose = make_cross_heatmap(
+            df_cross_domain_purpose, "primary_domain",
+            "Primary Domain × Analytical Purpose",
+            colorscale=[[0, "#fef0ec"], [0.5, "#f4a582"], [1, "#d73027"]],
+        )
+
+        return (
+            domain_trend, linkage_trend, purpose_trend,
+            domain_totals, linkage_totals, purpose_totals,
+            cross_mode, cross_purpose,
+        )
 
 
 # ---------------------------------------------------------------------------

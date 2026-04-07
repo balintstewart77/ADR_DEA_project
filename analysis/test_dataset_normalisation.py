@@ -2,6 +2,8 @@ import os
 import sys
 import unittest
 
+import pandas as pd
+
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
@@ -10,6 +12,7 @@ from dataset_normalisation import (  # noqa: E402
     dataset_family_for,
     describe_dataset_normalisation,
     iter_dataset_entries,
+    parse_datasets,
     normalise_dataset_name,
     normalise_provider_name,
 )
@@ -154,6 +157,24 @@ class DatasetNormalisationTest(unittest.TestCase):
         self.assertNotIn("Census 2021 attributes - England and Wales with Geography", parts)
         self.assertEqual(parts, ["Indexed Census 2021"])
 
+    def test_provider_is_carried_across_wrapped_lines(self):
+        raw = (
+            "Office for National Statistics: Annual Population Survey Person, Annual Population Survey Household,\n"
+            "Occupational differences in mortality from COVID-19,\n"
+            "Annual Survey of Hours and Earnings, Labour Force Survey Household"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Annual Population Survey Person"),
+                ("Office for National Statistics", "Annual Population Survey Household"),
+                ("Office for National Statistics", "Occupational differences in mortality from COVID-19"),
+                ("Office for National Statistics", "Annual Survey of Hours and Earnings"),
+                ("Office for National Statistics", "Labour Force Survey Household"),
+            ],
+        )
+
     def test_semicolon_compound_is_split(self):
         raw = (
             "MoJ Data First: "
@@ -260,8 +281,10 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Institute for Social and Economic Research": "Institute for Economic and Social Research",
             "University and Colleges Admission Service": "Universities and Colleges Admissions Service (UCAS)",
             "UCAS": "Universities and Colleges Admissions Service (UCAS)",
-            "NISRA": "Northern Ireland Statistics and Research Agency",
-            "Northern Ireland Statitiscs and Research Agency": "Northern Ireland Statistics and Research Agency",
+            "NISRA": "Northern Ireland Statistics and Research Agency (NISRA)",
+            "Northern Ireland Statistics and Research Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
+            "Northern Ireland Statitiscs and Research Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
+            "Northern Ireland Statistics and Reserach Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
             "SAIL Databank Databank": "SAIL Databank",
             "NHSD": "NHS Digital",
             "NMC": "Nursing and Midwifery Council",
@@ -274,6 +297,28 @@ class DatasetNormalisationTest(unittest.TestCase):
         for raw, expected in cases.items():
             with self.subTest(raw=raw):
                 self.assertEqual(normalise_provider_name(raw), expected)
+
+    def test_secure_research_service_fallback_provider(self):
+        parsed = parse_datasets(
+            pd.DataFrame(
+                [
+                    {
+                        "Project ID": "2022/156",
+                        "Year": 2022,
+                        "quarter_date": pd.Timestamp("2022-10-01"),
+                        "Datasets Used": "Northern Ireland Annual Business Inquiry , Broad Economy Sales and Exports Statistics",
+                        "Secure Research Service": "Northern Ireland Statistics and Research Agency",
+                    }
+                ]
+            )
+        )
+        self.assertEqual(
+            parsed["provider"].tolist(),
+            [
+                "Northern Ireland Statistics and Research Agency (NISRA)",
+                "Northern Ireland Statistics and Research Agency (NISRA)",
+            ],
+        )
         self.assertEqual(dataset_family_for("COVID-19 Weekly Opinions Survey"), "COVID-19")
         self.assertEqual(dataset_family_for("Census 2011 England and Wales Household Structure for COVID-19 Models"), "COVID-19")
         self.assertEqual(dataset_family_for("Labour Force Survey"), "Labour Force Survey")

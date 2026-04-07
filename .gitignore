@@ -16,7 +16,26 @@ requirements-mac.txt
 data/*
 !data/dea_accredited_projects.csv
 !data/dea_accredited_projects_*.csv
-analysis/outputs_v3/
 .claude/
 
 analysis/DEA_projects_analysis.md
+
+# Main analysis outputs: keep selected files tracked
+analysis/outputs_v3/*
+!analysis/outputs_v3/layer_classifications.csv
+!analysis/outputs_v3/layer_a_by_year.csv
+!analysis/outputs_v3/layer_b_by_year.csv
+!analysis/outputs_v3/layer_c_by_year.csv
+!analysis/outputs_v3/layer_a_totals.csv
+!analysis/outputs_v3/layer_b_totals.csv
+!analysis/outputs_v3/layer_c_totals.csv
+!analysis/outputs_v3/cross_mode_domain.csv
+!analysis/outputs_v3/cross_domain_purpose.csv
+!analysis/outputs_v3/layer_summary.txt
+
+# Ignore cache and QA/review artefacts
+analysis/outputs_v3/llm_layer_cache.json
+analysis/outputs_v3/quality/*
+analysis/outputs_opus/
+analysis/outputs_sonnet/
+.claude/

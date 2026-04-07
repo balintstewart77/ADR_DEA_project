@@ -31,8 +31,11 @@ PROVIDER_ALIASES = {
     "Institute for Social and Economic Research": "Institute for Economic and Social Research",
     "University and Colleges Admission Service": "Universities and Colleges Admissions Service (UCAS)",
     "UCAS": "Universities and Colleges Admissions Service (UCAS)",
-    "NISRA": "Northern Ireland Statistics and Research Agency",
-    "Northern Ireland Statitiscs and Research Agency": "Northern Ireland Statistics and Research Agency",
+    "NISRA": "Northern Ireland Statistics and Research Agency (NISRA)",
+    "Northern Ireland Statistics and Research Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
+    "Northern Ireland Statitiscs and Research Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
+    "Northern Ireland Statistics and Reserach Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
+    "Northern Ireland Statistics Research Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
     "SAIL Databank Databank": "SAIL Databank",
     "NHSD": "NHS Digital",
     "NMC": "Nursing and Midwifery Council",
@@ -40,6 +43,15 @@ PROVIDER_ALIASES = {
     "HMRC": "HM Revenue and Customs",
     "UKHSA": "UK Health Security Agency",
     "Ofqual": "Office of Qualifications and Examinations Regulation (Ofqual)",
+}
+
+SECURE_RESEARCH_SERVICE_PROVIDER_ALIASES = {
+    "Office for National Statistics Secure Research Service": "Office for National Statistics",
+    "Office of National Statistics Secure Research Service": "Office for National Statistics",
+    "Office for National Statisticts Secure Research Service": "Office for National Statistics",
+    "Office of Office of National Statistics Secure Research Service": "Office for National Statistics",
+    "Northern Ireland Statistics and Research Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
+    "Northern Ireland Statistics Research Agency": "Northern Ireland Statistics and Research Agency (NISRA)",
 }
 
 INVALID_DATASET_FRAGMENTS = {
@@ -733,29 +745,55 @@ def dataset_family_for(canonical_name: str) -> str | None:
     return None
 
 
+def _yield_dataset_parts(line: str, provider: str, rest: str):
+    for part in _split_dataset_parts(rest):
+        if _is_valid_dataset_fragment(part):
+            yield line, provider, part
+
+
 def iter_dataset_entries(raw: str):
     if not isinstance(raw, str) or not raw.strip():
         return
     cleaned = _clean_datasets_text(raw)
+    current_provider = ""
+    current_rest_parts: list[str] = []
+    current_line_parts: list[str] = []
+
+    def flush_current():
+        nonlocal current_rest_parts, current_line_parts
+        if not current_rest_parts:
+            return
+        rest = " ".join(part.strip() for part in current_rest_parts if part.strip())
+        line = " ".join(part.strip() for part in current_line_parts if part.strip())
+        for emitted in _yield_dataset_parts(line, current_provider, rest):
+            yield emitted
+        current_rest_parts = []
+        current_line_parts = []
+
     for line in cleaned.split("\n"):
         line = line.strip()
         if not line:
             continue
         if ":" in line:
+            yield from flush_current()
             provider, rest = line.split(":", 1)
-            provider = provider.strip()
-            parts = _split_dataset_parts(rest)
+            current_provider = provider.strip()
+            current_rest_parts = [rest]
+            current_line_parts = [line]
         else:
-            provider = ""
-            parts = _split_dataset_parts(line)
-        for part in parts:
-            if _is_valid_dataset_fragment(part):
-                yield line, provider, part
+            current_rest_parts.append(line)
+            current_line_parts.append(line)
+    yield from flush_current()
 
 
 def normalise_provider_name(name: str) -> str:
     provider = str(name or "").strip()
     return PROVIDER_ALIASES.get(provider, provider)
+
+
+def infer_provider_name(name: str) -> str:
+    provider = str(name or "").strip()
+    return SECURE_RESEARCH_SERVICE_PROVIDER_ALIASES.get(provider, normalise_provider_name(provider))
 
 
 def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
@@ -767,15 +805,19 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
         pid = proj["Project ID"]
         year = proj["Year"]
         quarter_date = proj["quarter_date"]
+        secure_research_service = proj.get("Secure Research Service", "")
         for _, provider, part in iter_dataset_entries(raw):
             dataset = normalise_dataset_name(part)
             if not _is_valid_dataset_fragment(dataset):
                 continue
+            provider_name = normalise_provider_name(provider)
+            if provider_name == "Unknown / Unspecified":
+                provider_name = infer_provider_name(secure_research_service)
             rows.append({
                 "Project ID": pid,
                 "Year": year,
                 "quarter_date": quarter_date,
-                "provider": normalise_provider_name(provider),
+                "provider": provider_name,
                 "dataset": dataset,
                 "dataset_full": f"{provider}: {part}" if provider else part,
             })
