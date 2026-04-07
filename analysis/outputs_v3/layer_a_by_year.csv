@@ -1,0 +1,101 @@
+﻿Year,domain,count,total,pct_of_projects
+2019,Business & Productivity,7,22,31.8
+2019,Crime & Justice,1,22,4.5
+2019,Education & Skills,2,22,9.1
+2019,"Gender, Race & Ethnicity",1,22,4.5
+2019,Health & Social Care,4,22,18.2
+2019,Housing & Planning,4,22,18.2
+2019,Labour Market & Employment,6,22,27.3
+2019,Migration & Demographics,2,22,9.1
+2019,"Poverty, Inequality & Living Standards",5,22,22.7
+2020,Business & Productivity,53,120,44.2
+2020,COVID-19 & Pandemic,19,120,15.8
+2020,Crime & Justice,6,120,5.0
+2020,Data Infrastructure & Methodology,2,120,1.7
+2020,Education & Skills,13,120,10.8
+2020,Environment & Agriculture,6,120,5.0
+2020,"Gender, Race & Ethnicity",2,120,1.7
+2020,Health & Social Care,16,120,13.3
+2020,Housing & Planning,5,120,4.2
+2020,Labour Market & Employment,40,120,33.3
+2020,Migration & Demographics,14,120,11.7
+2020,"Poverty, Inequality & Living Standards",13,120,10.8
+2020,Public Finance & Taxation,5,120,4.2
+2021,Business & Productivity,54,160,33.8
+2021,COVID-19 & Pandemic,31,160,19.4
+2021,Crime & Justice,10,160,6.2
+2021,Data Infrastructure & Methodology,8,160,5.0
+2021,Education & Skills,17,160,10.6
+2021,Environment & Agriculture,12,160,7.5
+2021,"Gender, Race & Ethnicity",22,160,13.8
+2021,Health & Social Care,25,160,15.6
+2021,Housing & Planning,6,160,3.8
+2021,Labour Market & Employment,52,160,32.5
+2021,Migration & Demographics,10,160,6.2
+2021,"Poverty, Inequality & Living Standards",33,160,20.6
+2021,Public Finance & Taxation,2,160,1.2
+2021,Unclear from Title,1,160,0.6
+2022,Business & Productivity,71,202,35.1
+2022,COVID-19 & Pandemic,16,202,7.9
+2022,Crime & Justice,19,202,9.4
+2022,Data Infrastructure & Methodology,5,202,2.5
+2022,Education & Skills,30,202,14.9
+2022,Environment & Agriculture,14,202,6.9
+2022,"Gender, Race & Ethnicity",18,202,8.9
+2022,Health & Social Care,34,202,16.8
+2022,Housing & Planning,9,202,4.5
+2022,Labour Market & Employment,63,202,31.2
+2022,Migration & Demographics,9,202,4.5
+2022,"Poverty, Inequality & Living Standards",26,202,12.9
+2022,Public Finance & Taxation,11,202,5.4
+2023,Business & Productivity,72,209,34.4
+2023,COVID-19 & Pandemic,4,209,1.9
+2023,Crime & Justice,8,209,3.8
+2023,Data Infrastructure & Methodology,3,209,1.4
+2023,Education & Skills,39,209,18.7
+2023,Environment & Agriculture,18,209,8.6
+2023,"Gender, Race & Ethnicity",17,209,8.1
+2023,Health & Social Care,31,209,14.8
+2023,Housing & Planning,6,209,2.9
+2023,Labour Market & Employment,81,209,38.8
+2023,Migration & Demographics,15,209,7.2
+2023,"Poverty, Inequality & Living Standards",40,209,19.1
+2023,Public Finance & Taxation,11,209,5.3
+2024,Business & Productivity,54,236,22.9
+2024,COVID-19 & Pandemic,7,236,3.0
+2024,Crime & Justice,16,236,6.8
+2024,Data Infrastructure & Methodology,7,236,3.0
+2024,Education & Skills,78,236,33.1
+2024,Environment & Agriculture,13,236,5.5
+2024,"Gender, Race & Ethnicity",21,236,8.9
+2024,Health & Social Care,48,236,20.3
+2024,Housing & Planning,10,236,4.2
+2024,Labour Market & Employment,91,236,38.6
+2024,Migration & Demographics,15,236,6.4
+2024,"Poverty, Inequality & Living Standards",31,236,13.1
+2024,Public Finance & Taxation,4,236,1.7
+2025,Business & Productivity,64,271,23.6
+2025,COVID-19 & Pandemic,2,271,0.7
+2025,Crime & Justice,18,271,6.6
+2025,Data Infrastructure & Methodology,12,271,4.4
+2025,Education & Skills,93,271,34.3
+2025,Environment & Agriculture,18,271,6.6
+2025,"Gender, Race & Ethnicity",19,271,7.0
+2025,Health & Social Care,70,271,25.8
+2025,Housing & Planning,8,271,3.0
+2025,Labour Market & Employment,96,271,35.4
+2025,Migration & Demographics,23,271,8.5
+2025,"Poverty, Inequality & Living Standards",27,271,10.0
+2025,Public Finance & Taxation,7,271,2.6
+2026,Business & Productivity,16,51,31.4
+2026,Crime & Justice,3,51,5.9
+2026,Data Infrastructure & Methodology,2,51,3.9
+2026,Education & Skills,13,51,25.5
+2026,Environment & Agriculture,3,51,5.9
+2026,"Gender, Race & Ethnicity",7,51,13.7
+2026,Health & Social Care,11,51,21.6
+2026,Housing & Planning,2,51,3.9
+2026,Labour Market & Employment,16,51,31.4
+2026,Migration & Demographics,3,51,5.9
+2026,"Poverty, Inequality & Living Standards",7,51,13.7
+2026,Public Finance & Taxation,2,51,3.9
