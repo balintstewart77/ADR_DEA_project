@@ -1161,13 +1161,13 @@ CUSTOM_CSS = """
 .overview-lead h4 {
     font-weight: 700;
     color: #1f3c5a;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.75rem;
 }
 .overview-lead p {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #5f7387;
     margin-bottom: 0.9rem;
-    line-height: 1.7;
+    line-height: 1.8;
     max-width: 1100px;
 }
 .overview-lead p:last-child {
@@ -1379,13 +1379,14 @@ STAT_CARDS = dbc.Row([
 
 OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
     html.Div([
-        html.H4("Explore DEA-accredited research projects through a searchable public register and portfolio-level analysis."),
-        "This dashboard is primarily a public-facing tool to make DEA-accredited research projects easier to see, search, and understand. "
-        "It is intended to improve legibility around how public data is being used for accredited research by turning the public register into "
-        "something that can be explored more easily by members of the public, researchers, and people working in government or the research data "
-        "ecosystem. It can also support decision making within organisations such as ONS, ADR UK, and the UK Statistics Authority by showing where "
-        "demand is growing, which datasets and linked collections are seeing the most use, which institutions are most active, and where further "
-        "investment or support may be warranted.",
+        html.H4("Explore Digital Economy Act 2017 (DEA)-accredited research projects through a searchable public register and portfolio-level analysis."),
+        html.P(
+            "The DEA research powers allow accredited researchers to access de-identified data held by public authorities for public-good research "
+            "in accredited secure environments. Built from the public register of DEA-accredited projects, this dashboard is primarily a public-facing "
+            "tool to make those projects easier to see, search, and understand. It is intended to improve legibility around how public data is being "
+            "used for accredited research, while also helping organisations such as ONS, ADR UK, and the UK Statistics Authority understand patterns "
+            "in dataset use, institutional participation, and demand over time."
+        ),
     ], className="overview-lead"),
 
     # Mode selection cards
@@ -1772,6 +1773,22 @@ as a public register of accredited researchers and research projects.
 The data is downloaded as an Excel file from the UKSA website and converted
 to CSV for processing. The dashboard was last refreshed using data up to
 **{DATA_DATE}** (source file: `{source_file}`).
+
+---
+
+### What Data Access Does the DEA Enable?
+
+The **Digital Economy Act 2017** research powers provide a legal gateway that
+allows public authorities to share de-identified data with accredited
+researchers for public-good research. Access is only permitted for accredited
+researchers, accredited projects, and within accredited secure processing
+environments. The framework can cover de-identified data held by public
+authorities in connection with their functions, although data held for the
+provision of health services or adult social care is excluded from this DEA
+gateway. Some projects shown in the public register may also involve data
+accessed under other legal gateways, including unpublished ONS data made
+available under the Statistics and Registration Service Act, so the register is
+not limited to administrative data alone.
 
 ---
 
