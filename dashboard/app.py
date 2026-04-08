@@ -459,14 +459,49 @@ try:
     df_cross_domain_purpose = pd.read_csv(os.path.join(_THEMATIC_DIR, "cross_domain_purpose.csv"), encoding="utf-8-sig")
     with open(os.path.join(_THEMATIC_DIR, "layer_summary.txt"), "r", encoding="utf-8") as _f:
         THEMATIC_NARRATIVE = _f.read()
-    THEMATIC_PROJECT_COUNT = int(df_thematic_a.groupby("Year")["total"].first().sum())
+    df_thematic_projects = pd.read_csv(
+        os.path.join(_THEMATIC_DIR, "layer_classifications.csv"), encoding="utf-8-sig",
+    )
+    THEMATIC_PROJECT_COUNT = len(df_thematic_projects)
+
+    # Build filter options for the thematic browse table
+    _all_domains = sorted({
+        d.strip()
+        for domains in df_thematic_projects["substantive_domains"].dropna()
+        for d in domains.split(";")
+        if d.strip()
+    })
+    _THEMATIC_DOMAIN_OPTIONS = (
+        [{"label": "All domains", "value": "ALL"}]
+        + [{"label": d, "value": d} for d in _all_domains]
+    )
+    _all_linkage = sorted(df_thematic_projects["linkage_mode"].dropna().unique())
+    _THEMATIC_LINKAGE_OPTIONS = (
+        [{"label": "All linkage modes", "value": "ALL"}]
+        + [{"label": m, "value": m} for m in _all_linkage]
+    )
+    _all_purposes = sorted({
+        p.strip()
+        for purposes in df_thematic_projects["analytical_purpose"].dropna()
+        for p in purposes.split(";")
+        if p.strip()
+    })
+    _THEMATIC_PURPOSE_OPTIONS = (
+        [{"label": "All purposes", "value": "ALL"}]
+        + [{"label": p, "value": p} for p in _all_purposes]
+    )
+
     THEMATIC_DATA_AVAILABLE = True
 except (FileNotFoundError, KeyError):
     df_thematic_a = df_thematic_b = df_thematic_c = pd.DataFrame()
     df_thematic_a_totals = df_thematic_b_totals = df_thematic_c_totals = pd.DataFrame()
     df_cross_mode_domain = df_cross_domain_purpose = pd.DataFrame()
+    df_thematic_projects = pd.DataFrame()
     THEMATIC_NARRATIVE = ""
     THEMATIC_PROJECT_COUNT = 0
+    _THEMATIC_DOMAIN_OPTIONS = []
+    _THEMATIC_LINKAGE_OPTIONS = []
+    _THEMATIC_PURPOSE_OPTIONS = []
 
 
 # ---------------------------------------------------------------------------
@@ -956,9 +991,9 @@ def make_cross_heatmap(
     fig.update_layout(
         title=title,
         annotations=annotations,
-        xaxis=dict(side="bottom", tickangle=-35),
+        xaxis=dict(side="bottom", tickangle=-35, automargin=True),
         yaxis=dict(autorange="reversed"),
-        margin=dict(l=220, b=120),
+        margin=dict(l=220, b=165),
     )
     return _apply_common(fig, height=380)
 
@@ -1090,6 +1125,130 @@ CUSTOM_CSS = """
     margin-bottom: 0.3rem;
 }
 
+/* Hero search */
+.hero-search {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 2rem 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.hero-search h4 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+}
+.hero-search .hero-subtitle {
+    font-size: 0.92rem;
+    color: #7f8c8d;
+    margin-bottom: 1.25rem;
+}
+.hero-search .hero-helper {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    margin-top: 0.75rem;
+}
+
+/* Overview lead */
+.overview-lead {
+    background: linear-gradient(135deg, #f7fbff 0%, #eef5fb 100%);
+    border: 1px solid #d9e6f2;
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+}
+.overview-lead h4 {
+    font-weight: 700;
+    color: #1f3c5a;
+    margin-bottom: 0.35rem;
+}
+.overview-lead p {
+    font-size: 0.9rem;
+    color: #5f7387;
+    margin-bottom: 0.9rem;
+    line-height: 1.7;
+    max-width: 1100px;
+}
+.overview-lead p:last-child {
+    margin-bottom: 0;
+}
+
+.analysis-shell {
+    margin-top: 0.5rem;
+}
+
+.about-content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.about-content h4 {
+    margin-top: 1.75rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e3ebf3;
+}
+.about-content hr {
+    margin: 2rem 0 1.5rem;
+}
+
+.page-title {
+    margin-top: 0.5rem;
+    margin-bottom: 0.35rem;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Mode cards */
+.mode-card {
+    border: 1px solid #ecf0f1;
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    background: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s, transform 0.2s;
+    height: 100%;
+}
+.mode-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+}
+.mode-card h5 {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+.mode-card p {
+    font-size: 0.88rem;
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+}
+
+/* Navbar search button */
+.nav-search-btn {
+    background: rgba(255,255,255,0.12) !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+    color: #ecf0f1 !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    padding: 0.3rem 0.9rem !important;
+    border-radius: 6px !important;
+    transition: background 0.2s !important;
+}
+.nav-search-btn:hover {
+    background: rgba(255,255,255,0.22) !important;
+}
+
+/* Project Explorer result bar */
+.explorer-result-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+}
+
 /* Page background */
 body {
     background-color: #f8f9fb !important;
@@ -1131,10 +1290,17 @@ NAVBAR = html.Nav(
             html.Span("DEA Accredited Projects", className="navbar-brand"),
             html.Span(" Dashboard", className="navbar-brand", style={"fontWeight": "400"}),
         ], style={"display": "flex", "alignItems": "center"}),
-        html.Span(
-            f"Data to {DATA_DATE}  \u2022  {source_file}",
-            className="nav-meta ms-auto",
-        ),
+        html.Div([
+            html.Button(
+                "\U0001F50D Search Projects",
+                id="nav-search-btn",
+                className="nav-search-btn btn btn-sm me-3",
+            ),
+            html.Span(
+                f"Data to {DATA_DATE}  \u2022  {source_file}",
+                className="nav-meta",
+            ),
+        ], className="d-flex align-items-center ms-auto"),
     ], fluid=True, className="d-flex align-items-center"),
     className="dea-navbar navbar",
 )
@@ -1167,23 +1333,74 @@ STAT_CARDS = dbc.Row([
 # -- Tab content ------------------------------------------------------------
 
 OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
+    html.Div([
+        html.H4("Explore DEA-accredited research projects through a searchable public register and portfolio-level analysis."),
+        "This dashboard is primarily a public-facing tool to make DEA-accredited research projects easier to see, search, and understand. "
+        "It is intended to improve legibility around how public data is being used for accredited research by turning the public register into "
+        "something that can be explored more easily by members of the public, researchers, and people working in government or the research data "
+        "ecosystem. It can also support decision making within organisations such as ONS, ADR UK, and the UK Statistics Authority by showing where "
+        "demand is growing, which datasets and linked collections are seeing the most use, which institutions are most active, and where further "
+        "investment or support may be warranted.",
+    ], className="overview-lead"),
+
+    # Mode selection cards
+    dbc.Row([
+        dbc.Col(
+            html.Div([
+                html.H5("\U0001F50D Project Explorer"),
+                html.P(
+                    "Search by title, researcher, dataset, provider, institution, or collection."
+                ),
+                html.Button(
+                    "Open Project Explorer",
+                    id="mode-explorer-btn",
+                    className="btn btn-outline-primary btn-sm",
+                ),
+            ], className="mode-card"),
+            md=6,
+        ),
+        dbc.Col(
+            html.Div([
+                html.H5("\U0001F4CA Portfolio Analysis"),
+                html.P(
+                    "Explore trends in project growth, dataset demand, flagship uptake, institutions, and themes."
+                ),
+                html.Button(
+                    "View analysis",
+                    id="mode-analysis-btn",
+                    className="btn btn-outline-primary btn-sm",
+                ),
+            ], className="mode-card"),
+            md=6,
+        ),
+    ], className="mb-4 g-3"),
+
+    dbc.Row([
+        dbc.Col(
+            html.Div(dcc.Graph(id="overview-teaser-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            width=12,
+        ),
+    ]),
+])
+
+OVERALL_TRENDS_TAB = dbc.Tab(label="Overall Trends", tab_id="tab-overall-trends", children=[
     html.P(
-        "A high-level view of how the DEA-accredited project portfolio is changing over time.",
+        "Track portfolio growth over time using yearly and quarterly views, alongside the spread of accredited researchers per project.",
         className="section-desc",
     ),
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="overview-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(dcc.Graph(id="overall-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
             width=12,
         ),
     ]),
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="overview-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(dcc.Graph(id="overall-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
             md=6,
         ),
         dbc.Col(
-            html.Div(dcc.Graph(id="overview-srs-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(dcc.Graph(id="overall-srs-chart", config=CHART_CONFIG), className="chart-wrapper"),
             md=6,
         ),
     ]),
@@ -1265,12 +1482,26 @@ _dataset_project_counts = (
     df_datasets.drop_duplicates(subset=["Project ID", "dataset"])
     .groupby("dataset")["Project ID"].nunique()
 )
+_flagship_collection_project_counts = (
+    df_flagship_projects.drop_duplicates(subset=["Project Row ID", "collection"])
+    .groupby("collection")["Project Row ID"].nunique()
+    if len(df_flagship_projects)
+    else pd.Series(dtype=int)
+)
 _ALL_DATASET_OPTIONS = (
     [{"label": "All datasets", "value": "ALL"}]
     + [
         {"label": f"{d}  ({n} {'project' if n == 1 else 'projects'})", "value": d}
         for d in sorted(df_datasets["dataset"].unique()) if d
         for n in [_dataset_project_counts.get(d, 0)]
+    ]
+    + [
+        {
+            "label": f"ADR England Flagship: {c}  ({n} {'project' if n == 1 else 'projects'})",
+            "value": f"collection::{c}",
+        }
+        for c in COLLECTIONS
+        for n in [_flagship_collection_project_counts.get(c, 0)]
     ]
 )
 _provider_project_counts = (
@@ -1298,76 +1529,65 @@ _ALL_INSTITUTION_OPTIONS = (
     ]
 )
 
-BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
+BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", children=[
+    html.H5(
+        "Project Explorer",
+        className="page-title",
+    ),
     html.P(
-        "Find and filter projects across the full portfolio by dataset, dataset provider, institution, flagship collection, title, or researcher.",
+        "Search and filter the full DEA-accredited project register.",
         className="section-desc",
     ),
+    # Search row — prominent
     dbc.Row([
         dbc.Col([
-            html.Label("Scope", className="filter-label"),
-            dcc.Dropdown(
-                id="browse-scope",
-                options=[
-                    {"label": "All DEA projects", "value": "all"},
-                    {"label": "ADR England Flagship only", "value": "flagship"},
-                ],
-                value="all",
-                clearable=False,
+            html.Label("Search", className="filter-label"),
+            dbc.Input(
+                id="browse-search",
+                placeholder="Search by title or researcher\u2026",
+                type="text",
             ),
-        ], md=2),
+        ],
+            md=6,
+        ),
         dbc.Col([
-            html.Label("ADR Flagship Collection", className="filter-label"),
-            dcc.Dropdown(
-                id="browse-flagship-filter",
-                options=(
-                    [{"label": "All", "value": "ALL"}]
-                    + [{"label": c, "value": c} for c in FLAGSHIP_COLLECTIONS]
-                ),
-                value="ALL",
-                clearable=False,
-                searchable=False,
-            ),
-        ], md=2),
-        dbc.Col([
-            html.Label("Filter by dataset", className="filter-label"),
+            html.Label("Dataset", className="filter-label"),
             dcc.Dropdown(
                 id="browse-dataset-filter",
                 options=_ALL_DATASET_OPTIONS,
                 value="ALL",
                 clearable=False,
                 searchable=True,
-                placeholder="Search datasets\u2026 (N = projects using)",
+                placeholder="All datasets",
             ),
-        ], md=2),
+        ], md=3),
         dbc.Col([
-            html.Label("Filter by dataset provider", className="filter-label"),
+            html.Label("Provider", className="filter-label"),
             dcc.Dropdown(
                 id="browse-provider-filter",
                 options=_ALL_PROVIDER_OPTIONS,
                 value="ALL",
                 clearable=False,
                 searchable=True,
-                placeholder="Search providers\u2026 (N = projects using)",
+                placeholder="All providers",
             ),
-        ], md=2),
+        ], md=3),
+    ], className="mb-2 g-2"),
+    # Secondary filters
+    dbc.Row([
         dbc.Col([
-            html.Label("Filter by institution", className="filter-label"),
+            html.Label("Institution", className="filter-label"),
             dcc.Dropdown(
                 id="browse-institution-filter",
                 options=_ALL_INSTITUTION_OPTIONS,
                 value="ALL",
                 clearable=False,
                 searchable=True,
-                placeholder="Search institutions\u2026 (N = projects)",
+                placeholder="All institutions",
             ),
-        ], md=2),
+        ], md=4),
         dbc.Col([
-            html.Label("Search title / researcher", className="filter-label"),
-            dbc.Input(id="browse-search", placeholder="Type to filter\u2026", type="text"),
-        ], md=1),
-        dbc.Col([
-            html.Label("Results per page", className="filter-label"),
+            html.Label("Per page", className="filter-label"),
             dcc.Dropdown(
                 id="browse-page-size",
                 options=[{"label": str(n), "value": n} for n in [10, 20, 50, 100]],
@@ -1375,11 +1595,11 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
                 clearable=False,
                 searchable=False,
             ),
-        ], md=1),
+        ], md=2),
         dbc.Col([
-            html.Label("\u00a0", className="filter-label"),  # spacer for alignment
-            html.Div(id="browse-count", className="text-muted small pt-2"),
-        ], md=1),
+            html.Div(id="browse-count", className="text-muted small",
+                     style={"paddingTop": "1.8rem"}),
+        ], md=6),
     ], className="mb-3 g-2"),
     html.Div(
         dash_table.DataTable(
@@ -1390,7 +1610,6 @@ BROWSE_TAB = dbc.Tab(label="Browse Projects", tab_id="tab-browse", children=[
                 {"name": "Researchers", "id": "Researchers"},
                 {"name": "Datasets Used", "id": "Datasets Used"},
                 {"name": "Date", "id": "Accreditation Date"},
-                {"name": "ADR Flagship Collection", "id": "collection"},
             ],
             page_size=20,
             sort_action="native",
@@ -1557,6 +1776,8 @@ match multiple collections if it uses datasets from more than one.
 | GRADE | "grading and admissions data england" |
 | Agricultural Research Collection | "agricultural research collection" |
 
+---
+
 #### Counting methodology
 
 The ADR England Flagship Datasets tab supports two views:
@@ -1619,7 +1840,7 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 
 ---
 
-### LLM Theme Classification Methodology
+### LLM Thematic Analysis Methodology
 
 A separate analysis script (`llm_theme_analysis_v3.py`) classifies project
 titles using a three-layer framework:
@@ -1635,8 +1856,8 @@ Classification is performed by Claude (claude-opus-4-6) using structured output
 via the Anthropic API. Results are cached locally to avoid re-classification.
 A narrative summary is auto-generated from the aggregate statistics.
 
-**Note:** Classification is based on project titles only, which limits accuracy -
-titles may not fully convey the research methodology or all datasets used.
+**Note:** Classification is based on both project titles and datasets used.
+These fields may not fully convey the research methodology or the full scope of data linkage.
 """
 
 INSTITUTIONS_TAB = dbc.Tab(label="Institutions", tab_id="tab-institutions", children=[
@@ -1726,6 +1947,8 @@ research question and datasets used:
 | Data Infrastructure & Methodology | Linkage methods, data quality, statistical methodology |
 | Unclear from Title | Insufficient information to classify |
 
+&nbsp;
+
 #### Layer B — Linkage Mode (exactly 1 per project)
 
 Each project is assigned to one linkage mode based on the number of policy
@@ -1737,6 +1960,8 @@ domains its datasets span:
 | Within-Domain Linkage | Links multiple datasets from the same policy domain |
 | Cross-Domain Linkage | Links datasets across two distinct policy domains |
 | Multi-Domain Linkage | Links datasets spanning three or more policy domains |
+
+&nbsp;
 
 #### Layer C — Analytical Purpose (1 or 2 per project)
 
@@ -1906,6 +2131,100 @@ if THEMATIC_DATA_AVAILABLE:
                 className="chart-wrapper",
             ), md=6),
         ], className="g-3 mb-4"),
+
+        # Section 8: Browse classified projects
+        html.H5(
+            "Browse Classified Projects",
+            className="mt-4 mb-2",
+            style={"color": "#2c3e50", "fontWeight": "600"},
+        ),
+        html.P(
+            "Filter by domain, linkage mode, or analytical purpose to explore individual project classifications.",
+            className="section-desc",
+        ),
+        dbc.Row([
+            dbc.Col([
+                html.Label("Domain", className="filter-label"),
+                dcc.Dropdown(
+                    id="thematic-domain-filter",
+                    options=_THEMATIC_DOMAIN_OPTIONS,
+                    value="ALL",
+                    clearable=False,
+                    searchable=True,
+                ),
+            ], md=3),
+            dbc.Col([
+                html.Label("Linkage mode", className="filter-label"),
+                dcc.Dropdown(
+                    id="thematic-linkage-filter",
+                    options=_THEMATIC_LINKAGE_OPTIONS,
+                    value="ALL",
+                    clearable=False,
+                    searchable=False,
+                ),
+            ], md=2),
+            dbc.Col([
+                html.Label("Analytical purpose", className="filter-label"),
+                dcc.Dropdown(
+                    id="thematic-purpose-filter",
+                    options=_THEMATIC_PURPOSE_OPTIONS,
+                    value="ALL",
+                    clearable=False,
+                    searchable=True,
+                ),
+            ], md=3),
+            dbc.Col([
+                html.Label("Search title", className="filter-label"),
+                dbc.Input(id="thematic-search", placeholder="Type to filter\u2026", type="text"),
+            ], md=2),
+            dbc.Col([
+                html.Label("\u00a0", className="filter-label"),
+                html.Div(id="thematic-browse-count", className="text-muted small pt-2"),
+            ], md=2),
+        ], className="mb-3 g-2"),
+        html.Div(
+            dash_table.DataTable(
+                id="thematic-browse-table",
+                columns=[
+                    {"name": "Project ID", "id": "Project ID"},
+                    {"name": "Title", "id": "Title"},
+                    {"name": "Datasets Used", "id": "Datasets Used"},
+                    {"name": "Domains", "id": "substantive_domains"},
+                    {"name": "Linkage Mode", "id": "linkage_mode"},
+                    {"name": "Purpose", "id": "analytical_purpose"},
+                    {"name": "Date", "id": "Accreditation Date"},
+                ],
+                page_size=20,
+                sort_action="native",
+                filter_action="none",
+                style_table={"overflowX": "auto"},
+                style_cell={
+                    "textAlign": "left",
+                    "padding": "8px 12px",
+                    "fontFamily": '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    "fontSize": "13px",
+                    "whiteSpace": "normal",
+                    "maxWidth": "350px",
+                    "overflow": "hidden",
+                    "textOverflow": "ellipsis",
+                    "borderBottom": "1px solid #f0f0f0",
+                },
+                style_header={
+                    "backgroundColor": "#2c3e50",
+                    "color": "white",
+                    "fontWeight": "600",
+                    "fontSize": "12px",
+                    "textTransform": "uppercase",
+                    "letterSpacing": "0.03em",
+                    "padding": "10px 12px",
+                    "borderBottom": "none",
+                },
+                style_data_conditional=[
+                    {"if": {"row_index": "odd"}, "backgroundColor": "#fafbfc"},
+                ],
+            ),
+            className="dea-table mb-4",
+        ),
     ]
 else:
     _thematic_children = [
@@ -1916,14 +2235,32 @@ else:
     ]
 
 THEMATIC_TAB = dbc.Tab(
-    label="Thematic Analysis", tab_id="tab-thematic", children=_thematic_children,
+    label="Thematic Analysis (Experimental)", tab_id="tab-thematic", children=_thematic_children,
 )
+
+PORTFOLIO_ANALYSIS_TAB = dbc.Tab(label="Portfolio Analysis", tab_id="tab-analysis", children=[
+    html.H5(
+        "Portfolio Analysis",
+        className="page-title",
+    ),
+    html.P(
+        "Explore portfolio-level patterns through trends, dataset demand, ADR England Flagship dataset uptake, institutions, and thematic analysis.",
+        className="section-desc",
+    ),
+    dbc.Tabs(
+        [OVERALL_TRENDS_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, THEMATIC_TAB],
+        id="analysis-tabs",
+        active_tab="tab-overall-trends",
+        className="dea-tabs analysis-shell",
+    ),
+])
 
 ABOUT_TAB = dbc.Tab(label="About", tab_id="tab-about", children=[
     dbc.Row([
         dbc.Col([
             dcc.Markdown(
                 _about_md,
+                className="about-content",
                 style={
                     "fontSize": "0.88rem",
                     "lineHeight": "1.65",
@@ -1942,7 +2279,7 @@ app.layout = html.Div([
         html.Div(style={"height": "1.25rem"}),  # spacer below navbar
         STAT_CARDS,
         dbc.Tabs(
-            [OVERVIEW_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, THEMATIC_TAB, BROWSE_TAB, ABOUT_TAB],
+            [OVERVIEW_TAB, BROWSE_TAB, PORTFOLIO_ANALYSIS_TAB, ABOUT_TAB],
             id="main-tabs",
             active_tab="tab-overview",
             className="dea-tabs",
@@ -1961,13 +2298,33 @@ app.layout = html.Div([
 # ---------------------------------------------------------------------------
 
 @app.callback(
-    Output("overview-quarterly-chart", "figure"),
-    Output("overview-yearly-chart", "figure"),
-    Output("overview-srs-chart", "figure"),
-    Input("main-tabs", "active_tab"),
+    Output("main-tabs", "active_tab"),
+    Output("analysis-tabs", "active_tab"),
+    Output("browse-search", "value"),
+    Input("nav-search-btn", "n_clicks"),
+    Input("mode-explorer-btn", "n_clicks"),
+    Input("mode-analysis-btn", "n_clicks"),
+    prevent_initial_call=True,
 )
-def update_overview(_tab):
+def navigate_tabs(nav_click, mode_explore, mode_analysis):
+    from dash import ctx
+    trigger = ctx.triggered_id
+    if trigger == "mode-analysis-btn":
+        return "tab-analysis", "tab-overall-trends", ""
+    return "tab-browse", "tab-overall-trends", ""
+
+
+@app.callback(
+    Output("overview-teaser-chart", "figure"),
+    Output("overall-quarterly-chart", "figure"),
+    Output("overall-yearly-chart", "figure"),
+    Output("overall-srs-chart", "figure"),
+    Input("main-tabs", "active_tab"),
+    Input("analysis-tabs", "active_tab"),
+)
+def update_overview(_tab, _analysis_tab):
     return (
+        make_yearly_chart(df_all),
         make_quarterly_chart(df_all),
         make_yearly_chart(df_all),
         make_srs_chart(df_all),
@@ -2074,37 +2431,24 @@ def update_flagship(selected_collections, metric_mode):
     Output("browse-table", "tooltip_data"),
     Output("browse-table", "page_size"),
     Output("browse-count", "children"),
-    Input("browse-scope", "value"),
-    Input("browse-flagship-filter", "value"),
     Input("browse-dataset-filter", "value"),
     Input("browse-provider-filter", "value"),
     Input("browse-institution-filter", "value"),
     Input("browse-search", "value"),
     Input("browse-page-size", "value"),
 )
-def update_browse_table(scope, flagship_filter, dataset_filter, provider_filter, institution_filter, search, page_size):
-    if scope == "flagship" and len(df_flagship_projects):
-        coll_labels = (
-            df_flagship_projects.groupby("Project Row ID")["collection"]
-            .apply(lambda x: ", ".join(sorted(x.unique())))
-            .rename("collection")
-        )
-        base = df_all[df_all["is_flagship"]].copy()
-        base["collection"] = base["Project Row ID"].map(coll_labels)
-    else:
-        base = df_all.copy()
-        base["collection"] = base["collections"].apply(
-            lambda x: ", ".join(x) if x else ""
-        )
-
-    if flagship_filter and flagship_filter != "ALL":
-        base = base[base["collections"].apply(lambda x: flagship_filter in x)]
+def update_browse_table(dataset_filter, provider_filter, institution_filter, search, page_size):
+    base = df_all.copy()
 
     if dataset_filter and dataset_filter != "ALL":
-        matching_pids = set(
-            df_datasets.loc[df_datasets["dataset"] == dataset_filter, "Project ID"]
-        )
-        base = base[base["Project ID"].isin(matching_pids)]
+        if isinstance(dataset_filter, str) and dataset_filter.startswith("collection::"):
+            selected_collection = dataset_filter.split("::", 1)[1]
+            base = base[base["collections"].apply(lambda x: selected_collection in x)]
+        else:
+            matching_pids = set(
+                df_datasets.loc[df_datasets["dataset"] == dataset_filter, "Project ID"]
+            )
+            base = base[base["Project ID"].isin(matching_pids)]
 
     if provider_filter and provider_filter != "ALL":
         matching_pids = set(
@@ -2127,7 +2471,7 @@ def update_browse_table(scope, flagship_filter, dataset_filter, provider_filter,
 
     base["Accreditation Date"] = pd.to_datetime(base["Accreditation Date"]).dt.strftime("%d %b %Y")
 
-    display_cols = ["Project ID", "Title", "Researchers", "Datasets Used", "Accreditation Date", "collection"]
+    display_cols = ["Project ID", "Title", "Researchers", "Datasets Used", "Accreditation Date"]
     table_data = base[display_cols].to_dict("records")
 
     tooltip_data = [
@@ -2368,6 +2712,32 @@ if THEMATIC_DATA_AVAILABLE:
             domain_totals, linkage_totals, purpose_totals,
             cross_mode, cross_purpose,
         )
+
+    @app.callback(
+        Output("thematic-browse-table", "data"),
+        Output("thematic-browse-count", "children"),
+        Input("thematic-domain-filter", "value"),
+        Input("thematic-linkage-filter", "value"),
+        Input("thematic-purpose-filter", "value"),
+        Input("thematic-search", "value"),
+    )
+    def update_thematic_browse(domain_filter, linkage_filter, purpose_filter, search):
+        base = df_thematic_projects.copy()
+        if domain_filter and domain_filter != "ALL":
+            base = base[base["substantive_domains"].str.contains(domain_filter, na=False)]
+        if linkage_filter and linkage_filter != "ALL":
+            base = base[base["linkage_mode"] == linkage_filter]
+        if purpose_filter and purpose_filter != "ALL":
+            base = base[base["analytical_purpose"].str.contains(purpose_filter, na=False)]
+        if search:
+            base = base[base["Title"].str.contains(search, case=False, na=False)]
+
+        display_cols = [
+            "Project ID", "Title", "Datasets Used", "substantive_domains",
+            "linkage_mode", "analytical_purpose", "Accreditation Date",
+        ]
+        count_text = f"{len(base):,} of {len(df_thematic_projects):,} projects"
+        return base[display_cols].to_dict("records"), count_text
 
 
 # ---------------------------------------------------------------------------
