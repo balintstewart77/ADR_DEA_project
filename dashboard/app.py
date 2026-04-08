@@ -1175,7 +1175,52 @@ CUSTOM_CSS = """
 }
 
 .analysis-shell {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.analysis-panel {
+    background: #f7fafc;
+    border: 1px solid #dde7f0;
+    border-radius: 12px;
+    padding: 1.25rem 1.35rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.analysis-tabs-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #607387;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+}
+
+.analysis-tabs {
+    border-bottom: none;
+    margin-bottom: 1.25rem;
+}
+.analysis-tabs .nav {
+    gap: 0.5rem;
+}
+.analysis-tabs .nav-link {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #4f6274;
+    background: #e8eef5;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 0.5rem 0.95rem;
+    line-height: 1.2;
+}
+.analysis-tabs .nav-link:hover {
+    color: #30475c;
+    background: #dfe7f0;
+}
+.analysis-tabs .nav-link.active {
+    color: #17324d !important;
+    background: #d5e6f8 !important;
+    border: 1px solid #b7d0ea !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
 }
 
 .about-content h3 {
@@ -1406,7 +1451,7 @@ OVERALL_TRENDS_TAB = dbc.Tab(label="Overall Trends", tab_id="tab-overall-trends"
     ]),
 ])
 
-FLAGSHIP_TAB = dbc.Tab(label="ADR England Flagship Datasets", tab_id="tab-flagship", children=[
+FLAGSHIP_TAB = dbc.Tab(label="Flagship Datasets", tab_id="tab-flagship", children=[
     html.P(
         "Track use of ADR England flagship datasets using either distinct projects or total dataset requests.",
         className="section-desc",
@@ -2239,20 +2284,23 @@ THEMATIC_TAB = dbc.Tab(
 )
 
 PORTFOLIO_ANALYSIS_TAB = dbc.Tab(label="Portfolio Analysis", tab_id="tab-analysis", children=[
-    html.H5(
-        "Portfolio Analysis",
-        className="page-title",
-    ),
-    html.P(
-        "Explore portfolio-level patterns through trends, dataset demand, ADR England Flagship dataset uptake, institutions, and thematic analysis.",
-        className="section-desc",
-    ),
-    dbc.Tabs(
-        [OVERALL_TRENDS_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, THEMATIC_TAB],
-        id="analysis-tabs",
-        active_tab="tab-overall-trends",
-        className="dea-tabs analysis-shell",
-    ),
+    html.Div([
+        html.H5(
+            "Portfolio Analysis",
+            className="page-title",
+        ),
+        html.P(
+            "Explore portfolio-level patterns through trends, dataset demand, ADR England Flagship dataset uptake, institutions, and thematic analysis.",
+            className="section-desc",
+        ),
+        html.Div("Choose an analysis view", className="analysis-tabs-label"),
+        dbc.Tabs(
+            [OVERALL_TRENDS_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, THEMATIC_TAB],
+            id="analysis-tabs",
+            active_tab="tab-overall-trends",
+            className="analysis-tabs analysis-shell",
+        ),
+    ], className="analysis-panel"),
 ])
 
 ABOUT_TAB = dbc.Tab(label="About", tab_id="tab-about", children=[
