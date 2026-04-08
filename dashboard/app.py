@@ -1305,6 +1305,7 @@ app = Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     title="DEA Projects Dashboard",
 )
+server = app.server
 
 # Inject custom CSS via index_string (compatible with all Dash versions)
 app.index_string = """<!DOCTYPE html>
@@ -2810,4 +2811,8 @@ if THEMATIC_DATA_AVAILABLE:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    app.run(debug=True, host="127.0.0.1", port=8050)
+    app.run(
+        debug=True,
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8050)),
+    )
