@@ -1297,7 +1297,7 @@ OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
             "The DEA research powers allow accredited researchers to access de-identified data held by public authorities for public-good research "
             "in accredited secure environments. Built from the public register of DEA-accredited projects, this dashboard is primarily a public-facing "
             "tool to make those projects easier to see, search, and understand. It is intended to improve legibility around how public data is being "
-            "used for accredited research, while also helping organisations such as ONS, ADR UK, and the UK Statistics Authority understand patterns "
+            "used for accredited research, while also providing a clearer view of patterns "
             "in dataset use, institutional participation, and demand over time."
         ),
     ], className="overview-lead"),
