@@ -22,8 +22,10 @@ import dash_bootstrap_components as dbc
 
 try:
     from dashboard.dataset_normalisation import iter_dataset_entries, parse_datasets
+    from dashboard.institution_normalisation import parse_institutions
 except ModuleNotFoundError:
     from dataset_normalisation import iter_dataset_entries, parse_datasets
+    from institution_normalisation import parse_institutions
 
 # ---------------------------------------------------------------------------
 # 1. Data loading & processing
@@ -306,96 +308,6 @@ def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict
     df_flagship = pd.DataFrame(flagship_rows)
 
     return df, df_flagship, stats
-
-
-# ---------------------------------------------------------------------------
-# Institution parsing
-# ---------------------------------------------------------------------------
-
-# Common aliases to normalise institution names
-INSTITUTION_ALIASES = {
-    "ONS": "Office for National Statistics",
-    "DfE": "Department for Education",
-    "DWP": "Department for Work and Pensions",
-    "HMRC": "HM Revenue and Customs",
-    "MoJ": "Ministry of Justice",
-    "UCL": "University College London",
-    "LSE": "London School of Economics",
-    "KCL": "King's College London",
-    "LSHTM": "London School of Hygiene and Tropical Medicine",
-    "London School of Economics and Political Science": "London School of Economics",
-    "London School of Economics & Political Science": "London School of Economics",
-    "The University of Manchester": "University of Manchester",
-    "The University of Sheffield": "University of Sheffield",
-    "The University of Edinburgh": "University of Edinburgh",
-    "The University of Warwick": "University of Warwick",
-    "The University of York": "University of York",
-    "The University of Nottingham": "University of Nottingham",
-    "The Alan Turing Institute": "Alan Turing Institute",
-    "King's College London": "King's College London",
-    "Kings College London": "King's College London",
-}
-
-# Patterns that indicate a non-institution fragment
-_NOT_INSTITUTION_RE = re.compile(
-    r"^\s*$|^\d+$|^(and|the|of|for|in|at|to)\s*$",
-    re.IGNORECASE,
-)
-
-
-def _normalise_institution(name: str) -> str:
-    """Clean and normalise an institution name."""
-    name = name.strip().rstrip(".")
-    # Apply known aliases
-    if name in INSTITUTION_ALIASES:
-        return INSTITUTION_ALIASES[name]
-    # Normalise "University of X" / "X University" variants
-    name = re.sub(r"\s+", " ", name)
-    # Strip leading/trailing whitespace and common artefacts
-    name = re.sub(r"_x000D_", "", name)
-    name = name.strip(" \t\r\n,;")
-    return name
-
-
-def parse_institutions(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Parse the 'Researchers' column to extract institutions.
-    Returns DataFrame with columns: Project ID, Year, institution.
-    """
-    rows = []
-    for _, proj in df.iterrows():
-        raw = proj.get("Researchers", "")
-        if not isinstance(raw, str) or not raw.strip():
-            continue
-        pid = proj["Project ID"]
-        year = proj["Year"]
-
-        # Clean control characters
-        text = raw.replace("\r", "\n").replace("\t", " ")
-        text = re.sub(r"_x000D_", " ", text)
-
-        # Re-join lines where institution is split: "Name,\nInstitution"
-        text = re.sub(r",\s*\n\s*", ", ", text)
-
-        institutions_seen = set()
-        for line in text.split("\n"):
-            line = line.strip()
-            if not line:
-                continue
-            # Format: "Name, Institution" — take everything after the first comma
-            if "," in line:
-                _, institution = line.split(",", 1)
-                institution = _normalise_institution(institution)
-                if institution and not _NOT_INSTITUTION_RE.match(institution) and len(institution) > 2:
-                    if institution not in institutions_seen:
-                        institutions_seen.add(institution)
-                        rows.append({
-                            "Project ID": pid,
-                            "Year": year,
-                            "institution": institution,
-                        })
-
-    return pd.DataFrame(rows)
 
 
 # Load data once at startup
