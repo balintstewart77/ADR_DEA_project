@@ -932,6 +932,39 @@ CUSTOM_CSS = """
     color: #95a5a6;
     letter-spacing: 0.01em;
 }
+.navbar-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.6rem;
+    padding: 0.16rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.26);
+    color: #ecf0f1;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.nav-feedback-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    padding: 0.32rem 0.82rem;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #ecf0f1;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.nav-feedback-link:hover {
+    background: rgba(255,255,255,0.18);
+    color: #ffffff;
+}
 
 /* Stat cards */
 .stat-card {
@@ -1085,6 +1118,26 @@ CUSTOM_CSS = """
 .overview-lead p:last-child {
     margin-bottom: 0;
 }
+.prototype-note {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid #d9e3f0;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.72);
+}
+.prototype-note p {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.feedback-link {
+    white-space: nowrap;
+}
 
 .analysis-shell {
     margin-top: 0.75rem;
@@ -1218,6 +1271,15 @@ app = Dash(
     title="DEA Projects Dashboard",
 )
 server = app.server
+FEEDBACK_EMAIL_URL = (
+    "mailto:balintstewart@gmail.com"
+    "?subject=Feedback%20on%20DEA%20Dashboard"
+    "&body=Hello%20Balint%2C%0A%0AI%20have%20some%20feedback%20on%20the%20DEA%20dashboard%3A"
+    "%0A%0AIssue%20%2F%20suggestion%3A"
+    "%0APage%20%2F%20tab%3A"
+    "%0AOptional%20screenshot%20or%20example%3A"
+)
+SOURCE_URL = "https://github.com/balintstewart77/ADR_DEA_project"
 
 # Inject custom CSS via index_string (compatible with all Dash versions)
 app.index_string = """<!DOCTYPE html>
@@ -1247,8 +1309,23 @@ NAVBAR = html.Nav(
         html.Div([
             html.Span("DEA Accredited Projects", className="navbar-brand"),
             html.Span(" Dashboard", className="navbar-brand", style={"fontWeight": "400"}),
+            html.Span("Beta", className="navbar-badge"),
         ], style={"display": "flex", "alignItems": "center"}),
         html.Div([
+            html.A(
+                "Provide feedback",
+                href=FEEDBACK_EMAIL_URL,
+                target="_blank",
+                rel="noopener noreferrer",
+                className="nav-feedback-link",
+            ),
+            html.A(
+                "View source / report issue",
+                href=SOURCE_URL,
+                target="_blank",
+                rel="noopener noreferrer",
+                className="nav-feedback-link",
+            ),
             html.Button(
                 "\U0001F50D Search Projects",
                 id="nav-search-btn",
@@ -1300,6 +1377,25 @@ OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
             "used for accredited research, while also providing a clearer view of patterns "
             "in dataset use, institutional participation, and demand over time."
         ),
+        html.Div([
+            html.P("This dashboard is a public prototype. Feedback, corrections, and suggestions are welcome."),
+            html.Div([
+                html.A(
+                    "Provide feedback",
+                    href=FEEDBACK_EMAIL_URL,
+                    target="_blank",
+                    rel="noopener noreferrer",
+                    className="btn btn-outline-secondary btn-sm feedback-link",
+                ),
+                html.A(
+                    "View source / report issue",
+                    href=SOURCE_URL,
+                    target="_blank",
+                    rel="noopener noreferrer",
+                    className="btn btn-outline-secondary btn-sm feedback-link",
+                ),
+            ], style={"display": "flex", "gap": "0.6rem", "flexWrap": "wrap"}),
+        ], className="prototype-note"),
     ], className="overview-lead"),
 
     # Mode selection cards
@@ -2236,6 +2332,25 @@ PORTFOLIO_ANALYSIS_TAB = dbc.Tab(label="Portfolio Analysis", tab_id="tab-analysi
 ABOUT_TAB = dbc.Tab(label="About", tab_id="tab-about", children=[
     dbc.Row([
         dbc.Col([
+            html.Div([
+                html.P("This dashboard is a public prototype. Feedback, corrections, and suggestions are welcome."),
+                html.Div([
+                    html.A(
+                        "Provide feedback",
+                        href=FEEDBACK_EMAIL_URL,
+                        target="_blank",
+                        rel="noopener noreferrer",
+                        className="btn btn-outline-secondary btn-sm feedback-link",
+                    ),
+                    html.A(
+                        "View source / report issue",
+                        href=SOURCE_URL,
+                        target="_blank",
+                        rel="noopener noreferrer",
+                        className="btn btn-outline-secondary btn-sm feedback-link",
+                    ),
+                ], style={"display": "flex", "gap": "0.6rem", "flexWrap": "wrap"}),
+            ], className="prototype-note mb-4"),
             dcc.Markdown(
                 _about_md,
                 className="about-content",
