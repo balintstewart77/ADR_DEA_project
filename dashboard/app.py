@@ -2,7 +2,7 @@
 DEA Accredited Projects Dashboard
 ===================================
 Interactive Dash app for exploring access requests under the Digital Economy Act,
-focusing on ADR UK flagship datasets.
+focusing on cross-domain linked datasets.
 
 Run with:
     python dashboard/app.py
@@ -568,9 +568,9 @@ def make_srs_chart(df: pd.DataFrame) -> go.Figure:
     )
     fig.update_traces(
         textposition="inside",
-        textinfo="percent+label",
+        texttemplate="%{label}<br>%{percent:.0%}",
         insidetextorientation="horizontal",
-        hovertemplate="<b>%{label}</b><br>%{value} projects (%{percent})<extra></extra>",
+        hovertemplate="<b>%{label}</b><br>%{value} projects (%{percent:.0%})<extra></extra>",
         textfont_size=12,
     )
     fig.update_layout(
@@ -596,7 +596,7 @@ def make_collection_line_chart(df_flag: pd.DataFrame, metric_mode: str) -> go.Fi
     )
     fig = px.line(
         counts, x="quarter_date", y="Value", color="collection",
-        title=f"ADR England Flagship {metric_label} by Quarter",
+        title=f"Cross-Domain Linked {metric_label} by Quarter",
         labels={"quarter_date": "Quarter", "Value": metric_label, "collection": "Collection"},
         color_discrete_map=COLLECTION_COLOURS,
         markers=True,
@@ -620,7 +620,7 @@ def make_collection_yearly_line_chart(df_flag: pd.DataFrame, metric_mode: str) -
     )
     fig = px.line(
         counts, x="Year", y="Value", color="collection",
-        title=f"ADR England Flagship {metric_label} by Year",
+        title=f"Cross-Domain Linked {metric_label} by Year",
         labels={"Year": "Year", "Value": metric_label, "collection": "Collection"},
         color_discrete_map=COLLECTION_COLOURS,
         markers=True,
@@ -646,7 +646,7 @@ def make_collection_totals_chart(df_flag: pd.DataFrame, metric_mode: str) -> go.
     )
     fig = px.bar(
         totals, x="Value", y="collection", orientation="h",
-        title=f"Total ADR England Flagship {metric_label} per Collection",
+        title=f"Total Cross-Domain Linked {metric_label} per Collection",
         labels={"collection": "", "Value": metric_label},
         color="collection",
         color_discrete_map=COLLECTION_COLOURS,
@@ -672,7 +672,7 @@ def make_cumulative_chart(df_flag: pd.DataFrame, selected_collections: list, met
     counts["Cumulative"] = counts.groupby("collection")["New"].cumsum()
     fig = px.area(
         counts, x="quarter_date", y="Cumulative", color="collection",
-        title=f"Cumulative ADR England Flagship {metric_label}",
+        title=f"Cumulative Cross-Domain Linked {metric_label}",
         labels={"quarter_date": "Quarter", "Cumulative": f"Cumulative {title_noun}", "collection": "Collection"},
         color_discrete_map=COLLECTION_COLOURS,
     )
@@ -1360,8 +1360,8 @@ def _stat_card(value, label, accent):
 STAT_CARDS = dbc.Row([
     _stat_card(f"{TOTAL_PROJECTS:,}", "Total DEA Projects", "#3366cc"),
     _stat_card(f"{TOTAL_DATASET_REQUESTS:,}", "DEA Dataset Requests", "#6633cc"),
-    _stat_card(f"{TOTAL_FLAGSHIP:,}", "Projects Using ADR England Linked Datasets", "#109618"),
-    _stat_card(f"{TOTAL_FLAGSHIP_REQUESTS:,}", "ADR England Flagship Dataset Requests", "#ff9900"),
+    _stat_card(f"{TOTAL_FLAGSHIP:,}", "Projects Using Cross-Domain Linked Datasets", "#109618"),
+    _stat_card(f"{TOTAL_FLAGSHIP_REQUESTS:,}", "Cross-Domain Linked Dataset Requests", "#ff9900"),
     _stat_card(YEAR_RANGE, "Year Range", "#0099c6"),
 ], className="mb-4 g-3")
 
@@ -1418,7 +1418,7 @@ OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
             html.Div([
                 html.H5("\U0001F4CA Portfolio Analysis"),
                 html.P(
-                    "Explore trends in project growth, dataset demand, flagship uptake, institutions, and themes."
+                    "Explore trends in project growth, dataset demand, linked dataset uptake, institutions, and themes."
                 ),
                 html.Button(
                     "View analysis",
@@ -1461,77 +1461,6 @@ OVERALL_TRENDS_TAB = dbc.Tab(label="Overall Trends", tab_id="tab-overall-trends"
     ]),
 ])
 
-FLAGSHIP_TAB = dbc.Tab(label="Flagship Datasets", tab_id="tab-flagship", children=[
-    html.P(
-        "Track use of ADR England flagship datasets using either distinct projects or total dataset requests.",
-        className="section-desc",
-    ),
-    dbc.Row([
-        dbc.Col([
-            html.Label("Filter by collection", className="filter-label"),
-            dcc.Dropdown(
-                id="collection-filter",
-                options=[{"label": c, "value": c} for c in COLLECTIONS],
-                multi=True,
-                placeholder="All collections",
-                clearable=True,
-            ),
-        ], md=6),
-        dbc.Col([
-            html.Label("Metric", className="filter-label"),
-            dcc.Dropdown(
-                id="flagship-metric-mode",
-                options=[
-                    {"label": "Distinct projects", "value": "projects"},
-                    {"label": "Dataset access requests", "value": "requests"},
-                ],
-                value="projects",
-                clearable=False,
-            ),
-        ], md=3),
-    ], className="mb-2 g-2"),
-    html.P(
-        "Distinct projects count each retained project once per collection. "
-        "Dataset access requests count every matched dataset request, so one project can contribute multiple requests within the same collection.",
-        className="section-desc",
-    ),
-    dbc.Row([
-        dbc.Col(
-            html.Div(dcc.Graph(id="flagship-pooled-yearly", config=CHART_CONFIG), className="chart-wrapper"),
-            width=12,
-        ),
-    ]),
-    dbc.Row([
-        dbc.Col(
-            html.Div(dcc.Graph(id="flagship-pooled-quarterly", config=CHART_CONFIG), className="chart-wrapper"),
-            width=12,
-        ),
-    ]),
-    dbc.Row([
-        dbc.Col(
-            html.Div(dcc.Graph(id="flagship-line-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
-            width=12,
-        ),
-    ]),
-    dbc.Row([
-        dbc.Col(
-            html.Div(dcc.Graph(id="flagship-line-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
-            width=12,
-        ),
-    ]),
-    dbc.Row([
-        dbc.Col(
-            html.Div(dcc.Graph(id="flagship-totals-chart", config=CHART_CONFIG), className="chart-wrapper"),
-            width=12,
-        ),
-    ]),
-    dbc.Row([
-        dbc.Col(
-            html.Div(dcc.Graph(id="flagship-cumulative-chart", config=CHART_CONFIG), className="chart-wrapper"),
-            width=12,
-        ),
-    ]),
-])
 
 _dataset_project_counts = (
     df_datasets.drop_duplicates(subset=["Project ID", "dataset"])
@@ -1552,7 +1481,7 @@ _ALL_DATASET_OPTIONS = (
     ]
     + [
         {
-            "label": f"ADR England Flagship: {c}  ({n} {'project' if n == 1 else 'projects'})",
+            "label": f"Cross-Domain Linked: {c}  ({n} {'project' if n == 1 else 'projects'})",
             "value": f"collection::{c}",
         }
         for c in COLLECTIONS
@@ -1564,7 +1493,7 @@ _provider_project_counts = (
     .groupby("provider")["Project ID"].nunique()
 )
 _ALL_PROVIDER_OPTIONS = (
-    [{"label": "All providers", "value": "ALL"}]
+    [{"label": "All source organisations", "value": "ALL"}]
     + [
         {"label": f"{p}  ({n} {'project' if n == 1 else 'projects'})", "value": p}
         for p in sorted(df_datasets["provider"].unique()) if p
@@ -1617,14 +1546,14 @@ BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", c
             ),
         ], md=3),
         dbc.Col([
-            html.Label("Provider", className="filter-label"),
+            html.Label("Source organisation", className="filter-label"),
             dcc.Dropdown(
                 id="browse-provider-filter",
                 options=_ALL_PROVIDER_OPTIONS,
                 value="ALL",
                 clearable=False,
                 searchable=True,
-                placeholder="All providers",
+                placeholder="All source organisations",
             ),
         ], md=3),
     ], className="mb-2 g-2"),
@@ -1664,7 +1593,7 @@ BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", c
                 {"name": "Title", "id": "Title"},
                 {"name": "Researchers", "id": "Researchers"},
                 {"name": "Datasets Used", "id": "Datasets Used"},
-                {"name": "Date", "id": "Accreditation Date"},
+                {"name": "Accreditation Date", "id": "Accreditation Date"},
             ],
             page_size=20,
             sort_action="native",
@@ -1704,7 +1633,7 @@ BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", c
 
 DATASETS_TAB = dbc.Tab(label="Dataset Demand", tab_id="tab-datasets", children=[
     html.P(
-        "Explore which datasets are used most, how demand changes over time, and which providers are most represented.",
+        "Explore which datasets are used most, how demand changes over time, and which source organisations are most represented.",
         className="section-desc",
     ),
     dbc.Row([
@@ -1733,7 +1662,7 @@ DATASETS_TAB = dbc.Tab(label="Dataset Demand", tab_id="tab-datasets", children=[
             ], style={"display": "flex", "alignItems": "center"}),
         ], md=3),
         dbc.Col([
-            html.Label("Provider filter", className="filter-label"),
+            html.Label("Source organisation", className="filter-label"),
             dcc.Dropdown(
                 id="datasets-provider-filter",
                 options=_ALL_PROVIDER_OPTIONS,
@@ -1742,10 +1671,10 @@ DATASETS_TAB = dbc.Tab(label="Dataset Demand", tab_id="tab-datasets", children=[
             ),
         ], md=4),
         dbc.Col([
-            html.Label("Exclude flagship datasets", className="filter-label"),
+            html.Label("Exclude cross-domain linked datasets", className="filter-label"),
             dcc.Checklist(
                 id="datasets-exclude-flagship",
-                options=[{"label": " Exclude ADR England flagship", "value": "yes"}],
+                options=[{"label": " Exclude cross-domain linked", "value": "yes"}],
                 value=[],
                 className="pt-1",
             ),
@@ -1767,6 +1696,83 @@ DATASETS_TAB = dbc.Tab(label="Dataset Demand", tab_id="tab-datasets", children=[
             md=5,
         ),
     ]),
+    html.Hr(className="my-4"),
+    dbc.Accordion([
+        dbc.AccordionItem(
+            title="Cross-Domain Linked Dataset Breakdown",
+            children=[
+                html.P(
+                    "Track use of cross-domain linked datasets using either distinct projects or total dataset requests.",
+                    className="section-desc",
+                ),
+                dbc.Row([
+                    dbc.Col([
+                        html.Label("Filter by collection", className="filter-label"),
+                        dcc.Dropdown(
+                            id="collection-filter",
+                            options=[{"label": c, "value": c} for c in COLLECTIONS],
+                            multi=True,
+                            placeholder="All collections",
+                            clearable=True,
+                        ),
+                    ], md=6),
+                    dbc.Col([
+                        html.Label("Metric", className="filter-label"),
+                        dcc.Dropdown(
+                            id="flagship-metric-mode",
+                            options=[
+                                {"label": "Distinct projects", "value": "projects"},
+                                {"label": "Dataset access requests", "value": "requests"},
+                            ],
+                            value="projects",
+                            clearable=False,
+                        ),
+                    ], md=3),
+                ], className="mb-2 g-2"),
+                html.P(
+                    "Distinct projects count each retained project once per collection. "
+                    "Dataset access requests count every matched dataset request, so one project can contribute multiple requests within the same collection.",
+                    className="section-desc",
+                ),
+                dbc.Row([
+                    dbc.Col(
+                        html.Div(dcc.Graph(id="flagship-pooled-yearly", config=CHART_CONFIG), className="chart-wrapper"),
+                        width=12,
+                    ),
+                ]),
+                dbc.Row([
+                    dbc.Col(
+                        html.Div(dcc.Graph(id="flagship-pooled-quarterly", config=CHART_CONFIG), className="chart-wrapper"),
+                        width=12,
+                    ),
+                ]),
+                dbc.Row([
+                    dbc.Col(
+                        html.Div(dcc.Graph(id="flagship-line-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                        width=12,
+                    ),
+                ]),
+                dbc.Row([
+                    dbc.Col(
+                        html.Div(dcc.Graph(id="flagship-line-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                        width=12,
+                    ),
+                ]),
+                dbc.Row([
+                    dbc.Col(
+                        html.Div(dcc.Graph(id="flagship-totals-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                        width=12,
+                    ),
+                ]),
+                dbc.Row([
+                    dbc.Col(
+                        html.Div(dcc.Graph(id="flagship-cumulative-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                        width=12,
+                    ),
+                ]),
+            ],
+        ),
+    ], start_collapsed=True, className="mt-3"),
 ])
 
 # -- About tab (static content) --------------------------------------------
@@ -1831,9 +1837,9 @@ Retained conflicting duplicate IDs:
 
 ---
 
-### ADR England Flagship Dataset Classification
+### Cross-Domain Linked Dataset Classification
 
-Seven ADR England flagship data collections are identified by **case-insensitive
+Seven cross-domain linked data collections are identified by **case-insensitive
 keyword matching** against each project's "Datasets Used" field. A project can
 match multiple collections if it uses datasets from more than one.
 
@@ -1851,7 +1857,7 @@ match multiple collections if it uses datasets from more than one.
 
 #### Counting methodology
 
-The ADR England Flagship Datasets tab supports two views:
+The Cross-Domain Linked Dataset Breakdown section supports two views:
 
 - **Distinct projects** - each retained project counts once per collection.
 - **Dataset access requests** - every matched dataset request counts, so one
@@ -1887,9 +1893,9 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
   the secure setting. Examples include the ONS Secure Research Service (SRS)
   and the SAIL Databank.
 
-- **ADR England Flagship Datasets** - Seven linked administrative data
-  collections curated by ADR England for cross-domain research, spanning
-  justice, education, health, employment, and agriculture.
+- **Cross-Domain Linked Datasets** - Seven linked administrative data
+  collections spanning justice, education, health, employment, and agriculture,
+  identified by keyword matching against project dataset descriptions.
 
 ---
 
@@ -2263,7 +2269,7 @@ if THEMATIC_DATA_AVAILABLE:
                     {"name": "Domains", "id": "substantive_domains"},
                     {"name": "Linkage Mode", "id": "linkage_mode"},
                     {"name": "Purpose", "id": "analytical_purpose"},
-                    {"name": "Date", "id": "Accreditation Date"},
+                    {"name": "Accreditation Date", "id": "Accreditation Date"},
                 ],
                 page_size=20,
                 sort_action="native",
@@ -2316,12 +2322,12 @@ PORTFOLIO_ANALYSIS_TAB = dbc.Tab(label="Portfolio Analysis", tab_id="tab-analysi
             className="page-title",
         ),
         html.P(
-            "Explore portfolio-level patterns through trends, dataset demand, ADR England Flagship dataset uptake, institutions, and thematic analysis.",
+            "Explore portfolio-level patterns through trends, dataset demand, cross-domain linked dataset uptake, institutions, and thematic analysis.",
             className="section-desc",
         ),
         html.Div("Choose an analysis view", className="analysis-tabs-label"),
         dbc.Tabs(
-            [OVERALL_TRENDS_TAB, DATASETS_TAB, FLAGSHIP_TAB, INSTITUTIONS_TAB, THEMATIC_TAB],
+            [OVERALL_TRENDS_TAB, DATASETS_TAB, INSTITUTIONS_TAB, THEMATIC_TAB],
             id="analysis-tabs",
             active_tab="tab-overall-trends",
             className="analysis-tabs analysis-shell",
@@ -2439,7 +2445,7 @@ def update_flagship(selected_collections, metric_mode):
     metric_label, title_noun = _metric_labels(metric_mode)
 
     if not len(df_flagship):
-        empty = go.Figure().update_layout(title="No ADR England flagship data available")
+        empty = go.Figure().update_layout(title="No cross-domain linked data available")
         return empty, empty, empty, empty, empty, empty
 
     sub = df_flagship
@@ -2472,7 +2478,7 @@ def update_flagship(selected_collections, metric_mode):
         hovertemplate=f"<b>%{{x}}</b><br>%{{y}} {title_noun}<extra></extra>",
     ))
     fig_pooled_yearly.update_layout(
-        title=f"All ADR England Flagship {metric_label} by Year",
+        title=f"All Cross-Domain Linked {metric_label} by Year",
         xaxis_title="Year",
         yaxis_title=metric_label,
         bargap=0.25,
@@ -2498,7 +2504,7 @@ def update_flagship(selected_collections, metric_mode):
         )
     fig_pooled = px.bar(
         pooled, x="quarter_date", y="Value",
-        title=f"All ADR England Flagship {metric_label} by Quarter (Pooled)",
+        title=f"All Cross-Domain Linked {metric_label} by Quarter (Pooled)",
         labels={"quarter_date": "Quarter", "Value": metric_label},
         color_discrete_sequence=[PRIMARY_BAR],
     )
@@ -2702,14 +2708,14 @@ def update_datasets_tab(preset, custom, provider, exclude_flagship):
         )
     fig_prov = px.pie(
         prov_counts, names="provider", values="Projects",
-        title="Projects by Data Provider",
+        title="Projects by Source Organisation",
     )
     fig_prov.update_traces(
         textposition="inside",
-        textinfo="percent+label",
+        texttemplate="%{label}<br>%{percent:.0%}",
         insidetextorientation="horizontal",
         textfont_size=11,
-        hovertemplate="<b>%{label}</b><br>%{value} projects (%{percent})<extra></extra>",
+        hovertemplate="<b>%{label}</b><br>%{value} projects (%{percent:.0%})<extra></extra>",
     )
     fig_prov.update_layout(
         showlegend=False,
