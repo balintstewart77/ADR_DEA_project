@@ -1560,7 +1560,7 @@ BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", c
     # Secondary filters
     dbc.Row([
         dbc.Col([
-            html.Label("Institution", className="filter-label"),
+            html.Label("Research Institution", className="filter-label"),
             dcc.Dropdown(
                 id="browse-institution-filter",
                 options=_ALL_INSTITUTION_OPTIONS,
@@ -1873,9 +1873,9 @@ in the first view and **three** Data First access requests in the second.
 
 The "Datasets Used" free-text field is parsed into individual dataset entries:
 
-1. **Split by newline** - each line typically represents one data provider
-2. **Split by colon** - separates the provider name from the dataset list
-3. **Split by comma and ampersand** - separates individual datasets within a provider
+1. **Split by newline** - each line typically represents one source organisation
+2. **Split by colon** - separates the source organisation from the dataset list
+3. **Split by comma and ampersand** - separates individual datasets within a source organisation
 4. **Geographic suffixes stripped** - e.g. "- UK", "- England and Wales" are removed for grouping
 5. **Name aliases applied** - variant names are mapped to canonical labels
    (e.g. "LEO via SRS Iteration 1 Standard Extract" -> "Longitudinal Education Outcomes")
@@ -1904,7 +1904,7 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 - **Keyword matching** may miss dataset names not yet included in the keyword
   lists, or match false positives where keywords appear incidentally.
 - **Dataset parsing** splits on commas and ampersands, which can incorrectly
-  break provider names that contain these characters
+  break source organisation names that contain these characters
   (e.g. "Department for Business, Energy & Industrial Strategy").
 - **Duplicate handling** removes exact duplicates and same-ID/same-title
   duplicates, but retains duplicate IDs where the titles differ.
@@ -1918,6 +1918,10 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 ---
 
 ### LLM Thematic Analysis Methodology
+
+**Note:** The Thematic Analysis tab is **experimental**. Classifications are
+LLM-generated and have not yet been systematically validated against expert
+review.
 
 A separate analysis script (`llm_theme_analysis_v3.py`) classifies project
 titles using a three-layer framework:
