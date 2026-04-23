@@ -193,7 +193,7 @@ def compute_diagnostic_metrics(df: pd.DataFrame) -> str:
 
 FLAG_REASONS = {
     "B_single_but_many_datasets": "Layer B = Single-Dataset but 3+ datasets from 2+ providers",
-    "B_cross_but_one_dataset": "Layer B = Cross/Multi-Domain but only 1 dataset listed",
+    "B_cross_but_one_dataset": "Layer B = Cross-Domain but only 1 dataset listed",
     "B_unclear_but_clear_datasets": "Layer B = Unclear but datasets clearly indicate linkage pattern",
     "short_title": "Title under 30 characters — may be an acronym or jargon",
     "domain_overreach": "4+ substantive domains assigned",
@@ -212,8 +212,8 @@ def flag_suspicious_classifications(df: pd.DataFrame) -> pd.DataFrame:
         if row["linkage_mode"] == "Single-Dataset" and row["n_datasets"] >= 3 and row["n_providers"] >= 2:
             reasons.append("B_single_but_many_datasets")
 
-        # Layer B: Cross/Multi-Domain Linkage but only 1 dataset
-        if row["linkage_mode"] in ("Cross-Domain Linkage", "Multi-Domain Linkage") and row["n_datasets"] <= 1:
+        # Layer B: Cross-Domain Linkage but only 1 dataset
+        if row["linkage_mode"] == "Cross-Domain Linkage" and row["n_datasets"] <= 1:
             reasons.append("B_cross_but_one_dataset")
 
         # Layer B: Unclear but datasets clearly show a pattern

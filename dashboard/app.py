@@ -200,7 +200,6 @@ LINKAGE_COLOURS = {
     "Single-Dataset":           "#a8dadc",
     "Within-Domain Linkage":    "#457b9d",
     "Cross-Domain Linkage":     "#e76f51",
-    "Multi-Domain Linkage":     "#264653",
     "Unclear from Title":       "#bdc3c7",
 }
 
@@ -375,6 +374,30 @@ try:
         os.path.join(_THEMATIC_DIR, "layer_classifications.csv"), encoding="utf-8-sig",
     )
     THEMATIC_PROJECT_COUNT = len(df_thematic_projects)
+
+    # Remap legacy "Multi-Domain Linkage" → "Cross-Domain Linkage"
+    _LINKAGE_REMAP = {"Multi-Domain Linkage": "Cross-Domain Linkage"}
+    for _ldf in [df_thematic_b, df_thematic_b_totals]:
+        if "linkage_mode" in _ldf.columns:
+            _ldf["linkage_mode"] = _ldf["linkage_mode"].replace(_LINKAGE_REMAP)
+    # Aggregate rows that now share the same key after remapping
+    if "linkage_mode" in df_thematic_b.columns:
+        df_thematic_b = df_thematic_b.groupby(["Year", "linkage_mode"], as_index=False).agg(
+            {"count": "sum", "total": "first", "pct_of_projects": "sum"}
+        )
+    if "linkage_mode" in df_thematic_b_totals.columns:
+        df_thematic_b_totals = df_thematic_b_totals.groupby("linkage_mode", as_index=False)["count"].sum()
+        df_thematic_b_totals = df_thematic_b_totals.sort_values("count", ascending=False)
+    df_thematic_projects["linkage_mode"] = df_thematic_projects["linkage_mode"].replace(_LINKAGE_REMAP)
+    # Merge Multi-Domain column into Cross-Domain in cross-tab
+    if "Multi-Domain Linkage" in df_cross_mode_domain.columns:
+        if "Cross-Domain Linkage" not in df_cross_mode_domain.columns:
+            df_cross_mode_domain = df_cross_mode_domain.rename(columns={"Multi-Domain Linkage": "Cross-Domain Linkage"})
+        else:
+            df_cross_mode_domain["Cross-Domain Linkage"] = (
+                df_cross_mode_domain["Cross-Domain Linkage"] + df_cross_mode_domain["Multi-Domain Linkage"]
+            )
+            df_cross_mode_domain = df_cross_mode_domain.drop(columns=["Multi-Domain Linkage"])
 
     # Build filter options for the thematic browse table
     _all_domains = sorted({
@@ -807,7 +830,7 @@ def make_linkage_area(
 ) -> go.Figure:
     """Stacked area chart for linkage modes (single-label, compositional)."""
     order = ["Single-Dataset", "Within-Domain Linkage", "Cross-Domain Linkage",
-             "Multi-Domain Linkage", "Unclear from Title"]
+             "Unclear from Title"]
     present = [m for m in order if m in df_by_year["linkage_mode"].values]
     fig = go.Figure()
     for mode in present:
@@ -1929,7 +1952,7 @@ titles using a three-layer framework:
 - **Layer A - Substantive Domain** (1 or more from 14 themes, e.g. "Education &
   Skills", "Health & Social Care", "Crime & Justice")
 - **Layer B - Linkage Mode** (exactly 1: Single-Dataset, Within-Domain,
-  Cross-Domain, or Multi-Domain Linkage)
+  or Cross-Domain Linkage)
 - **Layer C - Analytical Purpose** (1 or 2, e.g. "Policy Evaluation",
   "Descriptive Monitoring", "Life-Course Analysis")
 
@@ -2039,8 +2062,7 @@ domains its datasets span:
 |------|-------------|
 | Single-Dataset | Uses only one dataset |
 | Within-Domain Linkage | Links multiple datasets from the same policy domain |
-| Cross-Domain Linkage | Links datasets across two distinct policy domains |
-| Multi-Domain Linkage | Links datasets spanning three or more policy domains |
+| Cross-Domain Linkage | Links datasets across two or more distinct policy domains |
 
 &nbsp;
 

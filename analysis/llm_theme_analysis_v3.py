@@ -74,7 +74,7 @@ SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
 CACHE_SCHEMA_VERSION = 4
-PROMPT_VERSION = "v3.2"
+PROMPT_VERSION = "v3.3"
 
 MODEL      = "claude-opus-4-6"
 BATCH_SIZE = 10          # projects per LLM batch (reduced to improve Opus reliability)
@@ -142,7 +142,6 @@ LINKAGE_MODES = [
     "Single-Dataset",
     "Within-Domain Linkage",
     "Cross-Domain Linkage",
-    "Multi-Domain Linkage",
     "Unclear from Title",
 ]
 
@@ -150,9 +149,8 @@ LINKAGE_GUIDANCE = textwrap.dedent("""
   Single-Dataset        — project uses only one administrative dataset; no record linkage implied
   Within-Domain Linkage — links 2+ datasets from the same provider or same policy domain
                           (e.g. two ONS surveys, or two health registries)
-  Cross-Domain Linkage  — links datasets from exactly two distinct policy domains
-                          (e.g. education data ↔ employment data)
-  Multi-Domain Linkage  — links datasets spanning three or more distinct policy domains
+  Cross-Domain Linkage  — links datasets from two or more distinct policy domains
+                          (e.g. education data ↔ employment data, or education + employment + health)
   Unclear from Title    — ONLY when both the title and datasets field are too vague to judge
 
   Use the datasets listed alongside each title to determine linkage mode.
@@ -161,8 +159,7 @@ LINKAGE_GUIDANCE = textwrap.dedent("""
   from different policy areas still count as cross-domain:
   • If exactly 1 dataset from 1 policy domain → Single-Dataset.
   • If 2+ datasets all within the same policy domain → Within-Domain Linkage.
-  • If datasets span exactly 2 distinct policy domains → Cross-Domain Linkage.
-  • If datasets span 3+ distinct policy domains → Multi-Domain Linkage.
+  • If datasets span 2 or more distinct policy domains → Cross-Domain Linkage.
   • Only use "Unclear from Title" when the datasets field is empty or genuinely ambiguous.
   The title provides additional context for interpreting what the datasets are being used for.
 
@@ -245,7 +242,6 @@ LINKAGE_LITERALS = Literal[
     "Single-Dataset",
     "Within-Domain Linkage",
     "Cross-Domain Linkage",
-    "Multi-Domain Linkage",
     "Unclear from Title",
 ]
 
@@ -331,6 +327,9 @@ _LABEL_CORRECTIONS = {
     # Legacy "Other" → new label
     "other": "Unclear from Title",
 }
+
+# Legacy linkage mode remapping (Multi-Domain folded into Cross-Domain)
+_LINKAGE_LOOKUP["multi-domain linkage"] = "Cross-Domain Linkage"
 
 
 def _normalise_label(value: str, lookup: dict) -> str | None:
@@ -576,11 +575,11 @@ CLASSIFICATION_EXAMPLES = textwrap.dedent("""
     → linkage_mode: "Cross-Domain Linkage"  (welfare benefits + labour market = 2 policy domains)
     → purpose: ["Policy Evaluation / Impact Analysis"]
 
-  Example 4 — Multi-Domain Linkage (3+ policy domains):
+  Example 4 — Cross-Domain Linkage (3+ policy domains):
     Title: "Pathways from education through employment to health outcomes"
     Datasets: Department for Education: National Pupil Database; Office for National Statistics: ASHE; NHS Digital: Hospital Episode Statistics
     → domains: ["Education & Skills", "Labour Market & Employment", "Health & Social Care"]
-    → linkage_mode: "Multi-Domain Linkage"  (education + employment + health = 3 policy domains)
+    → linkage_mode: "Cross-Domain Linkage"  (education + employment + health = 3 policy domains)
     → purpose: ["Life-Course / Trajectory Analysis"]
 
   Example 5 — Opaque title, datasets disambiguate:
