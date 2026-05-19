@@ -150,9 +150,9 @@ def compute_diagnostic_metrics(df: pd.DataFrame) -> str:
         cnt = (n_domains == k).sum()
         lines.append(f"    {k} domain(s): {cnt:,} projects ({cnt/n*100:.1f}%)")
 
-    # "Other" usage
-    n_other = df["substantive_domains"].apply(lambda x: "Other" in x).sum()
-    lines.append(f"  Projects using 'Other' domain: {n_other:,} ({n_other/n*100:.1f}%)")
+    # "Unclear from Title" usage
+    n_unclear = df["substantive_domains"].apply(lambda x: "Unclear from Title" in x).sum()
+    lines.append(f"  Projects using 'Unclear from Title' domain: {n_unclear:,} ({n_unclear/n*100:.1f}%)")
 
     # --- Layer C: purpose distribution ---
     lines.append(f"\nLAYER C — ANALYTICAL PURPOSE")

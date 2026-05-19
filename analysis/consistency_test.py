@@ -171,6 +171,15 @@ def save_trial(results: dict, trial_id: int) -> str:
 # Consistency metrics
 # ---------------------------------------------------------------------------
 
+TRIAL_FAILED = "TRIAL_FAILED"
+
+
+def _is_trial_failed(value) -> bool:
+    if isinstance(value, list):
+        return TRIAL_FAILED in value
+    return value == TRIAL_FAILED
+
+
 def load_trials() -> list[dict]:
     """Load all consistency trial JSON files from the quality directory."""
     trials = []
@@ -214,13 +223,24 @@ def compute_consistency_metrics(trials: list[dict]) -> str:
         ("analytical_purpose", "Layer C — Analytical Purpose"),
     ]:
         lines.append(f"{layer_name}")
+        valid_ids = [
+            pid for pid in all_ids
+            if not any(_is_trial_failed(t.get(pid, {}).get(layer_key)) for t in trials)
+        ]
+        if not valid_ids:
+            lines.append("  No valid classifications available; all common projects had trial failures.")
+            lines.append("")
+            continue
+        if len(valid_ids) != n_projects:
+            skipped = n_projects - len(valid_ids)
+            lines.append(f"  Excluding {skipped:,} project(s) with trial failures.")
 
         # Pairwise agreement
         pair_agreements = []
         for i in range(n_trials):
             for j in range(i + 1, n_trials):
                 matches = 0
-                for pid in all_ids:
+                for pid in valid_ids:
                     v_i = trials[i].get(pid, {}).get(layer_key)
                     v_j = trials[j].get(pid, {}).get(layer_key)
                     if isinstance(v_i, list) and isinstance(v_j, list):
@@ -228,7 +248,7 @@ def compute_consistency_metrics(trials: list[dict]) -> str:
                             matches += 1
                     elif v_i == v_j:
                         matches += 1
-                pair_agreements.append(matches / n_projects)
+                pair_agreements.append(matches / len(valid_ids))
 
         mean_agree = np.mean(pair_agreements)
         min_agree = np.min(pair_agreements)
@@ -238,7 +258,7 @@ def compute_consistency_metrics(trials: list[dict]) -> str:
         # Per-project stability (unanimous across all trials)
         unanimous = 0
         unstable_examples = []
-        for pid in all_ids:
+        for pid in valid_ids:
             values = []
             for t in trials:
                 v = t.get(pid, {}).get(layer_key)
@@ -252,7 +272,10 @@ def compute_consistency_metrics(trials: list[dict]) -> str:
                 if len(unstable_examples) < 5:
                     unstable_examples.append((pid, values))
 
-        lines.append(f"  Unanimous (same across all trials): {unanimous}/{n_projects} ({unanimous/n_projects:.1%})")
+        lines.append(
+            f"  Unanimous (same across all trials): "
+            f"{unanimous}/{len(valid_ids)} ({unanimous/len(valid_ids):.1%})"
+        )
 
         if unstable_examples:
             lines.append(f"  Unstable examples:")

@@ -315,19 +315,6 @@ _DOMAIN_LOOKUP = {d.lower(): d for d in DOMAINS}
 _LINKAGE_LOOKUP = {m.lower(): m for m in LINKAGE_MODES}
 _PURPOSE_LOOKUP = {p.lower(): p for p in PURPOSES}
 
-# Common cross-layer mistakes the model makes
-_LABEL_CORRECTIONS = {
-    # Purposes that appear in domains slot
-    "descriptive monitoring": None,
-    "outcome linkage": "Outcome Tracking",
-    "outcome tracking": None,
-    "policy evaluation / impact analysis": None,
-    "policy evaluation": "Policy Evaluation / Impact Analysis",
-    "inequality / disparities analysis": None,
-    # Legacy "Other" → new label
-    "other": "Unclear from Title",
-}
-
 # Legacy linkage mode remapping (Multi-Domain folded into Cross-Domain)
 _LINKAGE_LOOKUP["multi-domain linkage"] = "Cross-Domain Linkage"
 
