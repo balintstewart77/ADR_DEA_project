@@ -1553,6 +1553,13 @@ _ENRICHED_REGISTER_DISPLAY_COLUMNS = [
     "Accreditation Date",
     *_DERIVED_CLASSIFICATION_COLUMNS,
 ]
+_BROWSE_DISPLAY_COLUMNS = [
+    "Project ID",
+    "Title",
+    "Researchers",
+    "Datasets Used",
+    "Accreditation Date",
+]
 
 
 def _format_tre_provider(value) -> str:
@@ -1587,10 +1594,23 @@ _tre_values = sorted({
     for value in df_all["Secure Research Service"].dropna()
     if str(value).strip()
 })
+_tre_project_counts = (
+    df_all.assign(_tre_value=df_all["Secure Research Service"].astype("string").str.strip())
+    .dropna(subset=["_tre_value"])
+    .drop_duplicates(subset=["Project ID", "_tre_value"])
+    .groupby("_tre_value")["Project ID"].nunique()
+)
 _ALL_TRE_OPTIONS = (
     [{"label": "All TRE providers", "value": "ALL"}]
     + [
-        {"label": _format_tre_provider(value), "value": value}
+        {
+            "label": (
+                f"{_format_tre_provider(value)}  "
+                f"({_tre_project_counts.get(value, 0)} "
+                f"{'project' if _tre_project_counts.get(value, 0) == 1 else 'projects'})"
+            ),
+            "value": value,
+        }
         for value in _tre_values
     ]
 )
@@ -1757,6 +1777,87 @@ def _classified_register_count() -> int:
     return int(_classified_mask(classified).sum())
 
 
+def _format_display_dates(series: pd.Series) -> pd.Series:
+    return (
+        pd.to_datetime(series, errors="coerce")
+        .dt.strftime("%d %b %Y")
+        .fillna("")
+    )
+
+
+def _get_browse_display_df(search, dataset, provider, institution, tre) -> pd.DataFrame:
+    base = _apply_register_filters(
+        df_all,
+        search,
+        dataset,
+        provider,
+        institution,
+        tre,
+    )
+    display = base.copy()
+    display["Accreditation Date"] = _format_display_dates(display["Accreditation Date"])
+    return display[_BROWSE_DISPLAY_COLUMNS]
+
+
+def _get_enriched_register_display_df(
+    search,
+    dataset_filter,
+    provider_filter,
+    institution_filter,
+    tre_filter,
+    domain_filter,
+    linkage_filter,
+    purpose_filter,
+    include_unclassified,
+) -> tuple[pd.DataFrame, str]:
+    if include_unclassified:
+        base = _merge_thematic_classifications(df_all)
+    else:
+        base = _ensure_enriched_register_columns(df_thematic_projects)
+        base = base[_classified_mask(base)]
+
+    base = _apply_register_filters(
+        base,
+        search,
+        dataset_filter,
+        provider_filter,
+        institution_filter,
+        tre_filter,
+    )
+
+    if domain_filter and domain_filter != "ALL":
+        base = base[_contains_semicolon_value(base["substantive_domains"], domain_filter)]
+    if linkage_filter and linkage_filter != "ALL":
+        base = base[base["linkage_mode"].notna() & (base["linkage_mode"] == linkage_filter)]
+    if purpose_filter and purpose_filter != "ALL":
+        base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
+
+    n_displayed = len(base)
+    n_total = len(df_all)
+    n_classified_total = _classified_register_count()
+    if include_unclassified:
+        count_text = (
+            f"Showing {n_displayed:,} of {n_total:,} projects "
+            f"({n_classified_total:,} classified)"
+        )
+    else:
+        count_text = (
+            f"Showing {n_displayed:,} of {n_classified_total:,} classified projects"
+        )
+
+    display = base.copy()
+    for col in _DERIVED_CLASSIFICATION_COLUMNS:
+        display[col] = display[col].fillna(DERIVED_EMPTY_VALUE)
+    display["Secure Research Service"] = display["Secure Research Service"].apply(_format_tre_provider)
+    display["Accreditation Date"] = _format_display_dates(display["Accreditation Date"])
+
+    return display[_ENRICHED_REGISTER_DISPLAY_COLUMNS], count_text
+
+
+def _csv_date_stamp() -> str:
+    return pd.Timestamp.today().strftime("%Y-%m-%d")
+
+
 BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", children=[
     html.H5(
         "Project Explorer",
@@ -1838,7 +1939,20 @@ BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", c
         dbc.Col([
             html.Div(id="browse-count", className="text-muted small",
                      style={"paddingTop": "1.8rem"}),
-        ], md=4),
+        ], md=2),
+        dbc.Col([
+            html.Label("\u00a0", className="filter-label"),
+            html.Button(
+                "Download CSV",
+                id="browse-download-btn",
+                className="btn btn-outline-primary btn-sm w-100",
+            ),
+            dbc.Tooltip(
+                "Downloads all projects matching the current filters.",
+                target="browse-download-btn",
+                placement="top",
+            ),
+        ], md=2),
     ], className="mb-3 g-2"),
     html.Div(
         dash_table.DataTable(
@@ -2585,15 +2699,27 @@ if THEMATIC_DATA_AVAILABLE:
                     value=False,
                     className="pt-1",
                 ),
-                md=4,
+                md=3,
             ),
             dbc.Col([
                 html.Div(
                     id="enriched-browse-count",
                     className="text-muted small",
-                    style={"paddingTop": "0.35rem", "textAlign": "right"},
+                    style={"paddingTop": "0.35rem", "textAlign": "center"},
                 ),
-            ], md=8),
+            ], md=6),
+            dbc.Col([
+                html.Button(
+                    "Download CSV",
+                    id="enriched-download-btn",
+                    className="btn btn-outline-primary btn-sm w-100",
+                ),
+                dbc.Tooltip(
+                    "Downloads all projects matching the current filters.",
+                    target="enriched-download-btn",
+                    placement="top",
+                ),
+            ], md=3),
         ], className="mb-3 g-2"),
         html.Div(
             dash_table.DataTable(
@@ -2715,6 +2841,8 @@ ABOUT_TAB = dbc.Tab(label="About", tab_id="tab-about", children=[
 
 app.layout = html.Div([
     NAVBAR,
+    dcc.Download(id="browse-download-csv"),
+    dcc.Download(id="enriched-download-csv"),
     dbc.Container([
         html.Div(style={"height": "1.25rem"}),  # spacer below navbar
         STAT_CARDS,
@@ -2879,29 +3007,41 @@ def update_flagship(selected_collections, metric_mode):
     Input("browse-page-size", "value"),
 )
 def update_browse_table(dataset_filter, provider_filter, institution_filter, tre_filter, search, page_size):
-    base = _apply_register_filters(
-        df_all,
+    display = _get_browse_display_df(
         search,
         dataset_filter,
         provider_filter,
         institution_filter,
         tre_filter,
     )
-    base["Accreditation Date"] = pd.to_datetime(base["Accreditation Date"]).dt.strftime("%d %b %Y")
-
-    display_cols = ["Project ID", "Title", "Researchers", "Datasets Used", "Accreditation Date"]
-    table_data = base[display_cols].to_dict("records")
+    table_data = display.to_dict("records")
 
     tooltip_data = [
         {
             col: {"value": str(row.get(col, "")), "type": "markdown"}
-            for col in display_cols
+            for col in _BROWSE_DISPLAY_COLUMNS
         }
         for row in table_data
     ]
 
     count_text = f"Showing {len(table_data):,} project{'s' if len(table_data) != 1 else ''}"
     return table_data, tooltip_data, page_size or 20, count_text
+
+
+@app.callback(
+    Output("browse-download-csv", "data"),
+    Input("browse-download-btn", "n_clicks"),
+    State("browse-search", "value"),
+    State("browse-dataset-filter", "value"),
+    State("browse-provider-filter", "value"),
+    State("browse-institution-filter", "value"),
+    State("browse-tre-filter", "value"),
+    prevent_initial_call=True,
+)
+def download_browse_csv(n_clicks, search, dataset, provider, institution, tre):
+    display = _get_browse_display_df(search, dataset, provider, institution, tre)
+    filename = f"dea-projects-{_csv_date_stamp()}.csv"
+    return dcc.send_data_frame(display.to_csv, filename, index=False)
 
 
 # Build a set of flagship dataset names (normalised) for optional exclusion
@@ -3158,56 +3298,63 @@ if THEMATIC_DATA_AVAILABLE:
         include_unclassified,
         page_size,
     ):
-        if include_unclassified:
-            base = _merge_thematic_classifications(df_all)
-        else:
-            base = _ensure_enriched_register_columns(df_thematic_projects)
-            base = base[_classified_mask(base)]
-
-        base = _apply_register_filters(
-            base,
+        display, count_text = _get_enriched_register_display_df(
             search,
             dataset_filter,
             provider_filter,
             institution_filter,
             tre_filter,
-        )
-
-        if domain_filter and domain_filter != "ALL":
-            base = base[_contains_semicolon_value(base["substantive_domains"], domain_filter)]
-        if linkage_filter and linkage_filter != "ALL":
-            base = base[base["linkage_mode"].notna() & (base["linkage_mode"] == linkage_filter)]
-        if purpose_filter and purpose_filter != "ALL":
-            base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
-
-        n_displayed = len(base)
-        n_total = len(df_all)
-        n_classified_total = _classified_register_count()
-        if include_unclassified:
-            count_text = (
-                f"Showing {n_displayed:,} of {n_total:,} projects "
-                f"({n_classified_total:,} classified)"
-            )
-        else:
-            count_text = (
-                f"Showing {n_displayed:,} of {n_classified_total:,} classified projects"
-            )
-
-        display = base.copy()
-        for col in _DERIVED_CLASSIFICATION_COLUMNS:
-            display[col] = display[col].fillna(DERIVED_EMPTY_VALUE)
-        display["Secure Research Service"] = display["Secure Research Service"].apply(_format_tre_provider)
-        display["Accreditation Date"] = (
-            pd.to_datetime(display["Accreditation Date"], errors="coerce")
-            .dt.strftime("%d %b %Y")
-            .fillna("")
+            domain_filter,
+            linkage_filter,
+            purpose_filter,
+            include_unclassified,
         )
 
         return (
-            display[_ENRICHED_REGISTER_DISPLAY_COLUMNS].to_dict("records"),
+            display.to_dict("records"),
             page_size or 20,
             count_text,
         )
+
+    @app.callback(
+        Output("enriched-download-csv", "data"),
+        Input("enriched-download-btn", "n_clicks"),
+        State("enriched-search", "value"),
+        State("enriched-dataset-filter", "value"),
+        State("enriched-provider-filter", "value"),
+        State("enriched-institution-filter", "value"),
+        State("enriched-tre-filter", "value"),
+        State("enriched-domain-filter", "value"),
+        State("enriched-linkage-filter", "value"),
+        State("enriched-purpose-filter", "value"),
+        State("enriched-include-unclassified", "value"),
+        prevent_initial_call=True,
+    )
+    def download_enriched_csv(
+        n_clicks,
+        search,
+        dataset_filter,
+        provider_filter,
+        institution_filter,
+        tre_filter,
+        domain_filter,
+        linkage_filter,
+        purpose_filter,
+        include_unclassified,
+    ):
+        display, _ = _get_enriched_register_display_df(
+            search,
+            dataset_filter,
+            provider_filter,
+            institution_filter,
+            tre_filter,
+            domain_filter,
+            linkage_filter,
+            purpose_filter,
+            include_unclassified,
+        )
+        filename = f"dea-enriched-register-{_csv_date_stamp()}.csv"
+        return dcc.send_data_frame(display.to_csv, filename, index=False)
 
 
 # ---------------------------------------------------------------------------
