@@ -400,6 +400,13 @@ try:
             df_cross_mode_domain = df_cross_mode_domain.drop(columns=["Multi-Domain Linkage"])
 
     # Build filter options for the thematic browse table
+    def _filter_label_with_count(label: str, count: int) -> str:
+        return f"{label}  ({count} {'project' if count == 1 else 'projects'})"
+
+    _domain_project_counts = {}
+    for domains in df_thematic_projects["substantive_domains"].dropna():
+        for domain in {d.strip() for d in str(domains).split(";") if d.strip()}:
+            _domain_project_counts[domain] = _domain_project_counts.get(domain, 0) + 1
     _all_domains = sorted({
         d.strip()
         for domains in df_thematic_projects["substantive_domains"].dropna()
@@ -408,13 +415,24 @@ try:
     })
     _THEMATIC_DOMAIN_OPTIONS = (
         [{"label": "All domains", "value": "ALL"}]
-        + [{"label": d, "value": d} for d in _all_domains]
+        + [
+            {"label": _filter_label_with_count(d, _domain_project_counts.get(d, 0)), "value": d}
+            for d in _all_domains
+        ]
     )
+    _linkage_project_counts = df_thematic_projects["linkage_mode"].dropna().value_counts()
     _all_linkage = sorted(df_thematic_projects["linkage_mode"].dropna().unique())
     _THEMATIC_LINKAGE_OPTIONS = (
         [{"label": "All linkage modes", "value": "ALL"}]
-        + [{"label": m, "value": m} for m in _all_linkage]
+        + [
+            {"label": _filter_label_with_count(m, int(_linkage_project_counts.get(m, 0))), "value": m}
+            for m in _all_linkage
+        ]
     )
+    _purpose_project_counts = {}
+    for purposes in df_thematic_projects["analytical_purpose"].dropna():
+        for purpose in {p.strip() for p in str(purposes).split(";") if p.strip()}:
+            _purpose_project_counts[purpose] = _purpose_project_counts.get(purpose, 0) + 1
     _all_purposes = sorted({
         p.strip()
         for purposes in df_thematic_projects["analytical_purpose"].dropna()
@@ -423,7 +441,10 @@ try:
     })
     _THEMATIC_PURPOSE_OPTIONS = (
         [{"label": "All purposes", "value": "ALL"}]
-        + [{"label": p, "value": p} for p in _all_purposes]
+        + [
+            {"label": _filter_label_with_count(p, _purpose_project_counts.get(p, 0)), "value": p}
+            for p in _all_purposes
+        ]
     )
 
     THEMATIC_DATA_AVAILABLE = True
@@ -1388,6 +1409,10 @@ STAT_CARDS = dbc.Row([
     _stat_card(YEAR_RANGE, "Year Range", "#0099c6"),
 ], className="mb-4 g-3")
 
+_OVERVIEW_YEARLY_FIG = make_yearly_chart(df_all)
+_OVERVIEW_QUARTERLY_FIG = make_quarterly_chart(df_all)
+_OVERVIEW_SRS_FIG = make_srs_chart(df_all)
+
 # -- Tab content ------------------------------------------------------------
 
 OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
@@ -1455,7 +1480,14 @@ OVERVIEW_TAB = dbc.Tab(label="Overview", tab_id="tab-overview", children=[
 
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="overview-teaser-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(
+                dcc.Graph(
+                    id="overview-teaser-chart",
+                    figure=_OVERVIEW_YEARLY_FIG,
+                    config=CHART_CONFIG,
+                ),
+                className="chart-wrapper",
+            ),
             width=12,
         ),
     ]),
@@ -1468,17 +1500,38 @@ OVERALL_TRENDS_TAB = dbc.Tab(label="Overall Trends", tab_id="tab-overall-trends"
     ),
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="overall-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(
+                dcc.Graph(
+                    id="overall-yearly-chart",
+                    figure=_OVERVIEW_YEARLY_FIG,
+                    config=CHART_CONFIG,
+                ),
+                className="chart-wrapper",
+            ),
             width=12,
         ),
     ]),
     dbc.Row([
         dbc.Col(
-            html.Div(dcc.Graph(id="overall-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(
+                dcc.Graph(
+                    id="overall-quarterly-chart",
+                    figure=_OVERVIEW_QUARTERLY_FIG,
+                    config=CHART_CONFIG,
+                ),
+                className="chart-wrapper",
+            ),
             md=6,
         ),
         dbc.Col(
-            html.Div(dcc.Graph(id="overall-srs-chart", config=CHART_CONFIG), className="chart-wrapper"),
+            html.Div(
+                dcc.Graph(
+                    id="overall-srs-chart",
+                    figure=_OVERVIEW_SRS_FIG,
+                    config=CHART_CONFIG,
+                ),
+                className="chart-wrapper",
+            ),
             md=6,
         ),
     ]),
@@ -1560,6 +1613,9 @@ _BROWSE_DISPLAY_COLUMNS = [
     "Datasets Used",
     "Accreditation Date",
 ]
+_PROJECT_ID_KEY_COL = "_project_id_key"
+_MERGE_PROJECT_ID_KEY_COL = "_merge_project_id_key"
+_MERGE_TITLE_KEY_COL = "_merge_title_key"
 
 
 def _format_tre_provider(value) -> str:
@@ -1586,7 +1642,17 @@ def _filter_by_project_ids(df: pd.DataFrame, project_ids) -> pd.DataFrame:
         key for key in (_project_id_key(value) for value in project_ids)
         if key
     }
-    return df[df["Project ID"].apply(_project_id_key).isin(matching_keys)]
+    project_key = (
+        df[_PROJECT_ID_KEY_COL]
+        if _PROJECT_ID_KEY_COL in df.columns
+        else df["Project ID"].apply(_project_id_key)
+    )
+    return df[project_key.isin(matching_keys)]
+
+
+df_all[_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
+if len(df_thematic_projects) and "Project ID" in df_thematic_projects.columns:
+    df_thematic_projects[_PROJECT_ID_KEY_COL] = df_thematic_projects["Project ID"].apply(_project_id_key)
 
 
 _tre_values = sorted({
@@ -1670,8 +1736,8 @@ def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institu
             else pd.Series("", index=base.index)
         )
         mask = (
-            title.astype(str).str.contains(search, case=False, na=False)
-            | researchers.astype(str).str.contains(search, case=False, na=False)
+            title.astype(str).str.contains(search, case=False, na=False, regex=False)
+            | researchers.astype(str).str.contains(search, case=False, na=False, regex=False)
         )
         base = base[mask]
 
@@ -1695,13 +1761,13 @@ def _merge_thematic_classifications(register_df: pd.DataFrame) -> pd.DataFrame:
 
     left = base.copy()
     right = df_thematic_projects[classification_cols].copy()
-    left["_project_id_key"] = left["Project ID"].apply(_project_id_key)
-    right["_project_id_key"] = df_thematic_projects["Project ID"].apply(_project_id_key)
-    merge_keys = ["_project_id_key"]
+    left[_MERGE_PROJECT_ID_KEY_COL] = left["Project ID"].apply(_project_id_key)
+    right[_MERGE_PROJECT_ID_KEY_COL] = df_thematic_projects["Project ID"].apply(_project_id_key)
+    merge_keys = [_MERGE_PROJECT_ID_KEY_COL]
     if "Title" in base.columns and "Title" in df_thematic_projects.columns:
-        left["_title_key"] = left["Title"].apply(_title_key)
-        right["_title_key"] = df_thematic_projects["Title"].apply(_title_key)
-        merge_keys = ["_project_id_key", "_title_key"]
+        left[_MERGE_TITLE_KEY_COL] = left["Title"].apply(_title_key)
+        right[_MERGE_TITLE_KEY_COL] = df_thematic_projects["Title"].apply(_title_key)
+        merge_keys = [_MERGE_PROJECT_ID_KEY_COL, _MERGE_TITLE_KEY_COL]
 
     right = (
         right[merge_keys + classification_cols]
@@ -1731,20 +1797,20 @@ def _ensure_enriched_register_columns(source_df: pd.DataFrame) -> pd.DataFrame:
     if missing_register_cols:
         left = base.copy()
         right = df_all[missing_register_cols].copy()
-        left["_project_id_key"] = left["Project ID"].apply(_project_id_key)
-        right["_project_id_key"] = df_all["Project ID"].apply(_project_id_key)
-        merge_keys = ["_project_id_key"]
+        left[_MERGE_PROJECT_ID_KEY_COL] = left["Project ID"].apply(_project_id_key)
+        right[_MERGE_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
+        merge_keys = [_MERGE_PROJECT_ID_KEY_COL]
         if "Title" in base.columns and "Title" in df_all.columns:
-            left["_title_key"] = left["Title"].apply(_title_key)
-            right["_title_key"] = df_all["Title"].apply(_title_key)
-            merge_keys = ["_project_id_key", "_title_key"]
+            left[_MERGE_TITLE_KEY_COL] = left["Title"].apply(_title_key)
+            right[_MERGE_TITLE_KEY_COL] = df_all["Title"].apply(_title_key)
+            merge_keys = [_MERGE_PROJECT_ID_KEY_COL, _MERGE_TITLE_KEY_COL]
             missing_register_cols = [
                 col for col in missing_register_cols
                 if col != "Title"
             ]
             right = df_all[missing_register_cols].copy()
-            right["_project_id_key"] = df_all["Project ID"].apply(_project_id_key)
-            right["_title_key"] = df_all["Title"].apply(_title_key)
+            right[_MERGE_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
+            right[_MERGE_TITLE_KEY_COL] = df_all["Title"].apply(_title_key)
         right = (
             right[merge_keys + missing_register_cols]
             .drop_duplicates(subset=merge_keys, keep="first")
@@ -1770,11 +1836,14 @@ def _classified_mask(df: pd.DataFrame) -> pd.Series:
     return df[_DERIVED_CLASSIFICATION_COLUMNS].notna().all(axis=1)
 
 
-def _classified_register_count() -> int:
+def _compute_classified_register_count() -> int:
     if not len(df_thematic_projects):
         return 0
     classified = _merge_thematic_classifications(df_all)
     return int(_classified_mask(classified).sum())
+
+
+_CLASSIFIED_REGISTER_COUNT = _compute_classified_register_count()
 
 
 def _format_display_dates(series: pd.Series) -> pd.Series:
@@ -1834,7 +1903,7 @@ def _get_enriched_register_display_df(
 
     n_displayed = len(base)
     n_total = len(df_all)
-    n_classified_total = _classified_register_count()
+    n_classified_total = _CLASSIFIED_REGISTER_COUNT
     if include_unclassified:
         count_text = (
             f"Showing {n_displayed:,} of {n_total:,} projects "
@@ -2442,7 +2511,7 @@ if THEMATIC_DATA_AVAILABLE:
         dbc.Row([
             _stat_card(f"{THEMATIC_PROJECT_COUNT:,}", "Projects Classified", "#2a9d8f"),
             _stat_card("14", "Substantive Domains", "#264653"),
-            _stat_card("5", "Linkage Modes", "#457b9d"),
+            _stat_card(f"{len(_THEMATIC_LINKAGE_OPTIONS) - 1:,}", "Linkage Modes", "#457b9d"),
             _stat_card("9", "Analytical Purposes", "#e76f51"),
         ], className="mb-3 g-3"),
 
@@ -2880,23 +2949,6 @@ def navigate_tabs(nav_click, mode_explore, mode_analysis):
     if trigger == "mode-analysis-btn":
         return "tab-analysis", "tab-overall-trends", ""
     return "tab-browse", "tab-overall-trends", ""
-
-
-@app.callback(
-    Output("overview-teaser-chart", "figure"),
-    Output("overall-quarterly-chart", "figure"),
-    Output("overall-yearly-chart", "figure"),
-    Output("overall-srs-chart", "figure"),
-    Input("main-tabs", "active_tab"),
-    Input("analysis-tabs", "active_tab"),
-)
-def update_overview(_tab, _analysis_tab):
-    return (
-        make_yearly_chart(df_all),
-        make_quarterly_chart(df_all),
-        make_yearly_chart(df_all),
-        make_srs_chart(df_all),
-    )
 
 
 @app.callback(

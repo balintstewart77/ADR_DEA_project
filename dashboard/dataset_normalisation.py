@@ -28,7 +28,8 @@ PROVIDER_ALIASES = {
     "Office of National Statistics": "Office for National Statistics",
     "Offcie for National Statistics": "Office for National Statistics",
     "Department for Business, Energy & Industrial Strategy": "Department for Business, Energy and Industrial Strategy",
-    "Institute for Social and Economic Research": "Institute for Economic and Social Research",
+    "Institute for Economic and Social Research": "Institute for Social and Economic Research",
+    "Institute for Social and Economic Research": "Institute for Social and Economic Research",
     "University and Colleges Admission Service": "Universities and Colleges Admissions Service (UCAS)",
     "UCAS": "Universities and Colleges Admissions Service (UCAS)",
     "NISRA": "Northern Ireland Statistics and Research Agency (NISRA)",
@@ -798,14 +799,23 @@ def infer_provider_name(name: str) -> str:
 
 def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
     rows = []
-    for _, proj in df.iterrows():
-        raw = proj.get("Datasets Used", "")
+    col_idx = {col: idx for idx, col in enumerate(df.columns)}
+    datasets_idx = col_idx.get("Datasets Used")
+    if datasets_idx is None:
+        return pd.DataFrame(rows)
+    pid_idx = col_idx["Project ID"]
+    year_idx = col_idx["Year"]
+    quarter_date_idx = col_idx["quarter_date"]
+    srs_idx = col_idx.get("Secure Research Service")
+
+    for proj in df.itertuples(index=False, name=None):
+        raw = proj[datasets_idx]
         if not isinstance(raw, str) or not raw.strip():
             continue
-        pid = proj["Project ID"]
-        year = proj["Year"]
-        quarter_date = proj["quarter_date"]
-        secure_research_service = proj.get("Secure Research Service", "")
+        pid = proj[pid_idx]
+        year = proj[year_idx]
+        quarter_date = proj[quarter_date_idx]
+        secure_research_service = proj[srs_idx] if srs_idx is not None else ""
         for _, provider, part in iter_dataset_entries(raw):
             dataset = normalise_dataset_name(part)
             if not _is_valid_dataset_fragment(dataset):
