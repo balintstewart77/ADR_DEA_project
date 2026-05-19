@@ -1536,6 +1536,227 @@ _ALL_INSTITUTION_OPTIONS = (
     ]
 )
 
+REGISTER_SOURCE_ICON = "▣"
+DERIVED_FIELD_ICON = "✦"
+DERIVED_EMPTY_VALUE = "—"
+_DERIVED_CLASSIFICATION_COLUMNS = [
+    "substantive_domains",
+    "linkage_mode",
+    "analytical_purpose",
+]
+_ENRICHED_REGISTER_DISPLAY_COLUMNS = [
+    "Project ID",
+    "Title",
+    "Researchers",
+    "Datasets Used",
+    "Secure Research Service",
+    "Accreditation Date",
+    *_DERIVED_CLASSIFICATION_COLUMNS,
+]
+
+
+def _format_tre_provider(value) -> str:
+    if pd.isna(value):
+        return ""
+    return str(value).strip().replace(" Secure Research Service", "")
+
+
+def _project_id_key(value) -> str:
+    if pd.isna(value):
+        return ""
+    key = " ".join(str(value).split())
+    return re.sub(r"\s+CLOSED$", "", key, flags=re.IGNORECASE)
+
+
+def _title_key(value) -> str:
+    if pd.isna(value):
+        return ""
+    return " ".join(str(value).split())
+
+
+def _filter_by_project_ids(df: pd.DataFrame, project_ids) -> pd.DataFrame:
+    matching_keys = {
+        key for key in (_project_id_key(value) for value in project_ids)
+        if key
+    }
+    return df[df["Project ID"].apply(_project_id_key).isin(matching_keys)]
+
+
+_tre_values = sorted({
+    str(value).strip()
+    for value in df_all["Secure Research Service"].dropna()
+    if str(value).strip()
+})
+_ALL_TRE_OPTIONS = (
+    [{"label": "All TRE providers", "value": "ALL"}]
+    + [
+        {"label": _format_tre_provider(value), "value": value}
+        for value in _tre_values
+    ]
+)
+
+
+def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institution, tre) -> pd.DataFrame:
+    """Apply the common register-side filters used by Project Explorer and Enriched Register."""
+    base = df.copy()
+
+    if dataset and dataset != "ALL":
+        if isinstance(dataset, str) and dataset.startswith("collection::"):
+            selected_collection = dataset.split("::", 1)[1]
+            if "collections" in base.columns:
+                base = base[
+                    base["collections"].apply(
+                        lambda collections: selected_collection in collections
+                        if isinstance(collections, list)
+                        else False
+                    )
+                ]
+            else:
+                matching_pids = set(
+                    df_all.loc[
+                        df_all["collections"].apply(lambda x: selected_collection in x),
+                        "Project ID",
+                    ]
+                )
+                base = _filter_by_project_ids(base, matching_pids)
+        else:
+            matching_pids = set(
+                df_datasets.loc[df_datasets["dataset"] == dataset, "Project ID"]
+            )
+            base = _filter_by_project_ids(base, matching_pids)
+
+    if provider and provider != "ALL":
+        matching_pids = set(
+            df_datasets.loc[df_datasets["provider"] == provider, "Project ID"]
+        )
+        base = _filter_by_project_ids(base, matching_pids)
+
+    if institution and institution != "ALL":
+        matching_pids = set(
+            df_institutions.loc[df_institutions["institution"] == institution, "Project ID"]
+        )
+        base = _filter_by_project_ids(base, matching_pids)
+
+    if tre and tre != "ALL" and "Secure Research Service" in base.columns:
+        base = base[
+            base["Secure Research Service"].astype("string").str.strip() == str(tre).strip()
+        ]
+
+    if search:
+        title = base["Title"] if "Title" in base.columns else pd.Series("", index=base.index)
+        researchers = (
+            base["Researchers"]
+            if "Researchers" in base.columns
+            else pd.Series("", index=base.index)
+        )
+        mask = (
+            title.astype(str).str.contains(search, case=False, na=False)
+            | researchers.astype(str).str.contains(search, case=False, na=False)
+        )
+        base = base[mask]
+
+    return base
+
+
+def _merge_thematic_classifications(register_df: pd.DataFrame) -> pd.DataFrame:
+    base = register_df.copy()
+    classification_cols = [
+        col for col in _DERIVED_CLASSIFICATION_COLUMNS
+        if col in df_thematic_projects.columns
+    ]
+    for col in _DERIVED_CLASSIFICATION_COLUMNS:
+        if col in base.columns:
+            base = base.drop(columns=col)
+
+    if not classification_cols:
+        for col in _DERIVED_CLASSIFICATION_COLUMNS:
+            base[col] = np.nan
+        return base
+
+    left = base.copy()
+    right = df_thematic_projects[classification_cols].copy()
+    left["_project_id_key"] = left["Project ID"].apply(_project_id_key)
+    right["_project_id_key"] = df_thematic_projects["Project ID"].apply(_project_id_key)
+    merge_keys = ["_project_id_key"]
+    if "Title" in base.columns and "Title" in df_thematic_projects.columns:
+        left["_title_key"] = left["Title"].apply(_title_key)
+        right["_title_key"] = df_thematic_projects["Title"].apply(_title_key)
+        merge_keys = ["_project_id_key", "_title_key"]
+
+    right = (
+        right[merge_keys + classification_cols]
+        .drop_duplicates(subset=merge_keys, keep="first")
+    )
+    merged = left.merge(right, on=merge_keys, how="left")
+    merged = merged.drop(columns=merge_keys)
+    for col in _DERIVED_CLASSIFICATION_COLUMNS:
+        if col not in merged.columns:
+            merged[col] = np.nan
+    return merged
+
+
+def _ensure_enriched_register_columns(source_df: pd.DataFrame) -> pd.DataFrame:
+    base = source_df.copy()
+    register_cols = [
+        "Title",
+        "Researchers",
+        "Datasets Used",
+        "Secure Research Service",
+        "Accreditation Date",
+    ]
+    missing_register_cols = [
+        col for col in register_cols
+        if col not in base.columns
+    ]
+    if missing_register_cols:
+        left = base.copy()
+        right = df_all[missing_register_cols].copy()
+        left["_project_id_key"] = left["Project ID"].apply(_project_id_key)
+        right["_project_id_key"] = df_all["Project ID"].apply(_project_id_key)
+        merge_keys = ["_project_id_key"]
+        if "Title" in base.columns and "Title" in df_all.columns:
+            left["_title_key"] = left["Title"].apply(_title_key)
+            right["_title_key"] = df_all["Title"].apply(_title_key)
+            merge_keys = ["_project_id_key", "_title_key"]
+            missing_register_cols = [
+                col for col in missing_register_cols
+                if col != "Title"
+            ]
+            right = df_all[missing_register_cols].copy()
+            right["_project_id_key"] = df_all["Project ID"].apply(_project_id_key)
+            right["_title_key"] = df_all["Title"].apply(_title_key)
+        right = (
+            right[merge_keys + missing_register_cols]
+            .drop_duplicates(subset=merge_keys, keep="first")
+        )
+        base = left.merge(right, on=merge_keys, how="left").drop(columns=merge_keys)
+
+    if any(col not in base.columns for col in _DERIVED_CLASSIFICATION_COLUMNS):
+        base = _merge_thematic_classifications(base)
+
+    for col in _ENRICHED_REGISTER_DISPLAY_COLUMNS:
+        if col not in base.columns:
+            base[col] = np.nan
+    return base
+
+
+def _contains_semicolon_value(series: pd.Series, value: str) -> pd.Series:
+    return series.notna() & series.fillna("").astype(str).apply(
+        lambda values: value in [part.strip() for part in values.split(";")]
+    )
+
+
+def _classified_mask(df: pd.DataFrame) -> pd.Series:
+    return df[_DERIVED_CLASSIFICATION_COLUMNS].notna().all(axis=1)
+
+
+def _classified_register_count() -> int:
+    if not len(df_thematic_projects):
+        return 0
+    classified = _merge_thematic_classifications(df_all)
+    return int(_classified_mask(classified).sum())
+
+
 BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", children=[
     html.H5(
         "Project Explorer",
@@ -1592,7 +1813,18 @@ BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", c
                 searchable=True,
                 placeholder="All institutions",
             ),
-        ], md=4),
+        ], md=3),
+        dbc.Col([
+            html.Label("TRE provider", className="filter-label"),
+            dcc.Dropdown(
+                id="browse-tre-filter",
+                options=_ALL_TRE_OPTIONS,
+                value="ALL",
+                clearable=False,
+                searchable=True,
+                placeholder="All TRE providers",
+            ),
+        ], md=3),
         dbc.Col([
             html.Label("Per page", className="filter-label"),
             dcc.Dropdown(
@@ -1606,7 +1838,7 @@ BROWSE_TAB = dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", c
         dbc.Col([
             html.Div(id="browse-count", className="text-muted small",
                      style={"paddingTop": "1.8rem"}),
-        ], md=6),
+        ], md=4),
     ], className="mb-3 g-2"),
     html.Div(
         dash_table.DataTable(
@@ -2235,31 +2467,89 @@ if THEMATIC_DATA_AVAILABLE:
             ), md=6),
         ], className="g-3 mb-4"),
 
-        # Section 8: Browse classified projects
+        # Section 8: Enriched Register
         html.H5(
-            "Browse Classified Projects",
+            "Enriched Register",
             className="mt-4 mb-2",
             style={"color": "#2c3e50", "fontWeight": "600"},
         ),
         html.P(
-            "Filter by domain, linkage mode, or analytical purpose to explore individual project classifications.",
+            "The Enriched Register combines the canonical DEA register (the source of truth, "
+            "also accessible via the Project Explorer) with classifications and analytical fields "
+            f"derived from the project descriptions. Columns sourced directly from the public "
+            f"register are marked with a {REGISTER_SOURCE_ICON} icon; classifications derived "
+            f"by the dashboard's analytical layer are marked with a {DERIVED_FIELD_ICON} icon.",
             className="section-desc",
         ),
         dbc.Row([
             dbc.Col([
+                html.Label("Search", className="filter-label"),
+                dbc.Input(
+                    id="enriched-search",
+                    placeholder="Search by title or researcher\u2026",
+                    type="text",
+                ),
+            ], md=6),
+            dbc.Col([
+                html.Label("Dataset", className="filter-label"),
+                dcc.Dropdown(
+                    id="enriched-dataset-filter",
+                    options=_ALL_DATASET_OPTIONS,
+                    value="ALL",
+                    clearable=False,
+                    searchable=True,
+                    placeholder="All datasets",
+                ),
+            ], md=3),
+            dbc.Col([
+                html.Label("Source organisation", className="filter-label"),
+                dcc.Dropdown(
+                    id="enriched-provider-filter",
+                    options=_ALL_PROVIDER_OPTIONS,
+                    value="ALL",
+                    clearable=False,
+                    searchable=True,
+                    placeholder="All source organisations",
+                ),
+            ], md=3),
+        ], className="mb-2 g-2"),
+        dbc.Row([
+            dbc.Col([
+                html.Label("Research institution", className="filter-label"),
+                dcc.Dropdown(
+                    id="enriched-institution-filter",
+                    options=_ALL_INSTITUTION_OPTIONS,
+                    value="ALL",
+                    clearable=False,
+                    searchable=True,
+                    placeholder="All institutions",
+                ),
+            ], md=3),
+            dbc.Col([
+                html.Label("TRE provider", className="filter-label"),
+                dcc.Dropdown(
+                    id="enriched-tre-filter",
+                    options=_ALL_TRE_OPTIONS,
+                    value="ALL",
+                    clearable=False,
+                    searchable=True,
+                    placeholder="All TRE providers",
+                ),
+            ], md=2),
+            dbc.Col([
                 html.Label("Domain", className="filter-label"),
                 dcc.Dropdown(
-                    id="thematic-domain-filter",
+                    id="enriched-domain-filter",
                     options=_THEMATIC_DOMAIN_OPTIONS,
                     value="ALL",
                     clearable=False,
                     searchable=True,
                 ),
-            ], md=3),
+            ], md=2),
             dbc.Col([
                 html.Label("Linkage mode", className="filter-label"),
                 dcc.Dropdown(
-                    id="thematic-linkage-filter",
+                    id="enriched-linkage-filter",
                     options=_THEMATIC_LINKAGE_OPTIONS,
                     value="ALL",
                     clearable=False,
@@ -2269,33 +2559,55 @@ if THEMATIC_DATA_AVAILABLE:
             dbc.Col([
                 html.Label("Analytical purpose", className="filter-label"),
                 dcc.Dropdown(
-                    id="thematic-purpose-filter",
+                    id="enriched-purpose-filter",
                     options=_THEMATIC_PURPOSE_OPTIONS,
                     value="ALL",
                     clearable=False,
                     searchable=True,
                 ),
-            ], md=3),
-            dbc.Col([
-                html.Label("Search title", className="filter-label"),
-                dbc.Input(id="thematic-search", placeholder="Type to filter\u2026", type="text"),
             ], md=2),
             dbc.Col([
-                html.Label("\u00a0", className="filter-label"),
-                html.Div(id="thematic-browse-count", className="text-muted small pt-2"),
-            ], md=2),
+                html.Label("Per page", className="filter-label"),
+                dcc.Dropdown(
+                    id="enriched-page-size",
+                    options=[{"label": str(n), "value": n} for n in [10, 20, 50, 100]],
+                    value=20,
+                    clearable=False,
+                    searchable=False,
+                ),
+            ], md=1),
+        ], className="mb-2 g-2"),
+        dbc.Row([
+            dbc.Col(
+                dbc.Switch(
+                    id="enriched-include-unclassified",
+                    label="Include unclassified projects",
+                    value=False,
+                    className="pt-1",
+                ),
+                md=4,
+            ),
+            dbc.Col([
+                html.Div(
+                    id="enriched-browse-count",
+                    className="text-muted small",
+                    style={"paddingTop": "0.35rem", "textAlign": "right"},
+                ),
+            ], md=8),
         ], className="mb-3 g-2"),
         html.Div(
             dash_table.DataTable(
-                id="thematic-browse-table",
+                id="enriched-register-table",
                 columns=[
-                    {"name": "Project ID", "id": "Project ID"},
-                    {"name": "Title", "id": "Title"},
-                    {"name": "Datasets Used", "id": "Datasets Used"},
-                    {"name": "Domains", "id": "substantive_domains"},
-                    {"name": "Linkage Mode", "id": "linkage_mode"},
-                    {"name": "Purpose", "id": "analytical_purpose"},
-                    {"name": "Accreditation Date", "id": "Accreditation Date"},
+                    {"name": f"{REGISTER_SOURCE_ICON} Project ID", "id": "Project ID"},
+                    {"name": f"{REGISTER_SOURCE_ICON} Title", "id": "Title"},
+                    {"name": f"{REGISTER_SOURCE_ICON} Researchers", "id": "Researchers"},
+                    {"name": f"{REGISTER_SOURCE_ICON} Datasets Used", "id": "Datasets Used"},
+                    {"name": f"{REGISTER_SOURCE_ICON} TRE Provider", "id": "Secure Research Service"},
+                    {"name": f"{REGISTER_SOURCE_ICON} Accreditation Date", "id": "Accreditation Date"},
+                    {"name": f"{DERIVED_FIELD_ICON} Domains", "id": "substantive_domains"},
+                    {"name": f"{DERIVED_FIELD_ICON} Linkage mode", "id": "linkage_mode"},
+                    {"name": f"{DERIVED_FIELD_ICON} Purpose", "id": "analytical_purpose"},
                 ],
                 page_size=20,
                 sort_action="native",
@@ -2324,6 +2636,9 @@ if THEMATIC_DATA_AVAILABLE:
                 },
                 style_data_conditional=[
                     {"if": {"row_index": "odd"}, "backgroundColor": "#fafbfc"},
+                    {"if": {"column_id": "substantive_domains"}, "backgroundColor": "#f5f8fa"},
+                    {"if": {"column_id": "linkage_mode"}, "backgroundColor": "#f5f8fa"},
+                    {"if": {"column_id": "analytical_purpose"}, "backgroundColor": "#f5f8fa"},
                 ],
             ),
             className="dea-table mb-4",
@@ -2559,41 +2874,19 @@ def update_flagship(selected_collections, metric_mode):
     Input("browse-dataset-filter", "value"),
     Input("browse-provider-filter", "value"),
     Input("browse-institution-filter", "value"),
+    Input("browse-tre-filter", "value"),
     Input("browse-search", "value"),
     Input("browse-page-size", "value"),
 )
-def update_browse_table(dataset_filter, provider_filter, institution_filter, search, page_size):
-    base = df_all.copy()
-
-    if dataset_filter and dataset_filter != "ALL":
-        if isinstance(dataset_filter, str) and dataset_filter.startswith("collection::"):
-            selected_collection = dataset_filter.split("::", 1)[1]
-            base = base[base["collections"].apply(lambda x: selected_collection in x)]
-        else:
-            matching_pids = set(
-                df_datasets.loc[df_datasets["dataset"] == dataset_filter, "Project ID"]
-            )
-            base = base[base["Project ID"].isin(matching_pids)]
-
-    if provider_filter and provider_filter != "ALL":
-        matching_pids = set(
-            df_datasets.loc[df_datasets["provider"] == provider_filter, "Project ID"]
-        )
-        base = base[base["Project ID"].isin(matching_pids)]
-
-    if institution_filter and institution_filter != "ALL":
-        matching_pids = set(
-            df_institutions.loc[df_institutions["institution"] == institution_filter, "Project ID"]
-        )
-        base = base[base["Project ID"].isin(matching_pids)]
-
-    if search:
-        mask = (
-            base["Title"].str.contains(search, case=False, na=False)
-            | base["Researchers"].str.contains(search, case=False, na=False)
-        )
-        base = base[mask]
-
+def update_browse_table(dataset_filter, provider_filter, institution_filter, tre_filter, search, page_size):
+    base = _apply_register_filters(
+        df_all,
+        search,
+        dataset_filter,
+        provider_filter,
+        institution_filter,
+        tre_filter,
+    )
     base["Accreditation Date"] = pd.to_datetime(base["Accreditation Date"]).dt.strftime("%d %b %Y")
 
     display_cols = ["Project ID", "Title", "Researchers", "Datasets Used", "Accreditation Date"]
@@ -2839,30 +3132,82 @@ if THEMATIC_DATA_AVAILABLE:
         )
 
     @app.callback(
-        Output("thematic-browse-table", "data"),
-        Output("thematic-browse-count", "children"),
-        Input("thematic-domain-filter", "value"),
-        Input("thematic-linkage-filter", "value"),
-        Input("thematic-purpose-filter", "value"),
-        Input("thematic-search", "value"),
+        Output("enriched-register-table", "data"),
+        Output("enriched-register-table", "page_size"),
+        Output("enriched-browse-count", "children"),
+        Input("enriched-search", "value"),
+        Input("enriched-dataset-filter", "value"),
+        Input("enriched-provider-filter", "value"),
+        Input("enriched-institution-filter", "value"),
+        Input("enriched-tre-filter", "value"),
+        Input("enriched-domain-filter", "value"),
+        Input("enriched-linkage-filter", "value"),
+        Input("enriched-purpose-filter", "value"),
+        Input("enriched-include-unclassified", "value"),
+        Input("enriched-page-size", "value"),
     )
-    def update_thematic_browse(domain_filter, linkage_filter, purpose_filter, search):
-        base = df_thematic_projects.copy()
-        if domain_filter and domain_filter != "ALL":
-            base = base[base["substantive_domains"].str.contains(domain_filter, na=False)]
-        if linkage_filter and linkage_filter != "ALL":
-            base = base[base["linkage_mode"] == linkage_filter]
-        if purpose_filter and purpose_filter != "ALL":
-            base = base[base["analytical_purpose"].str.contains(purpose_filter, na=False)]
-        if search:
-            base = base[base["Title"].str.contains(search, case=False, na=False)]
+    def update_enriched_register(
+        search,
+        dataset_filter,
+        provider_filter,
+        institution_filter,
+        tre_filter,
+        domain_filter,
+        linkage_filter,
+        purpose_filter,
+        include_unclassified,
+        page_size,
+    ):
+        if include_unclassified:
+            base = _merge_thematic_classifications(df_all)
+        else:
+            base = _ensure_enriched_register_columns(df_thematic_projects)
+            base = base[_classified_mask(base)]
 
-        display_cols = [
-            "Project ID", "Title", "Datasets Used", "substantive_domains",
-            "linkage_mode", "analytical_purpose", "Accreditation Date",
-        ]
-        count_text = f"{len(base):,} of {len(df_thematic_projects):,} projects"
-        return base[display_cols].to_dict("records"), count_text
+        base = _apply_register_filters(
+            base,
+            search,
+            dataset_filter,
+            provider_filter,
+            institution_filter,
+            tre_filter,
+        )
+
+        if domain_filter and domain_filter != "ALL":
+            base = base[_contains_semicolon_value(base["substantive_domains"], domain_filter)]
+        if linkage_filter and linkage_filter != "ALL":
+            base = base[base["linkage_mode"].notna() & (base["linkage_mode"] == linkage_filter)]
+        if purpose_filter and purpose_filter != "ALL":
+            base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
+
+        n_displayed = len(base)
+        n_total = len(df_all)
+        n_classified_total = _classified_register_count()
+        if include_unclassified:
+            count_text = (
+                f"Showing {n_displayed:,} of {n_total:,} projects "
+                f"({n_classified_total:,} classified)"
+            )
+        else:
+            count_text = (
+                f"Showing {n_displayed:,} of {n_classified_total:,} classified projects"
+            )
+
+        display = base.copy()
+        for col in _DERIVED_CLASSIFICATION_COLUMNS:
+            display[col] = display[col].fillna(DERIVED_EMPTY_VALUE)
+        display["Secure Research Service"] = display["Secure Research Service"].apply(_format_tre_provider)
+        display["Accreditation Date"] = (
+            pd.to_datetime(display["Accreditation Date"], errors="coerce")
+            .dt.strftime("%d %b %Y")
+            .fillna("")
+        )
+
+        return (
+            display[_ENRICHED_REGISTER_DISPLAY_COLUMNS].to_dict("records"),
+            page_size or 20,
+            count_text,
+        )
 
 
 # ---------------------------------------------------------------------------
