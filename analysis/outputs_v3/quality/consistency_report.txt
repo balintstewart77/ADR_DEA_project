@@ -2,37 +2,37 @@ Consistency Report (3 trials, 75 common projects)
 ============================================================
 
 Layer B — Linkage Mode
-  Pairwise agreement: 93.8% (range: 92.0%–94.7%)
-  Unanimous (same across all trials): 68/75 (90.7%)
+  Pairwise agreement: 90.2% (range: 88.0%–93.3%)
+  Unanimous (same across all trials): 64/75 (85.3%)
   Unstable examples:
-    2020/028: Single-Dataset / Within-Domain Linkage / Within-Domain Linkage
-    2020/045: Single-Dataset / Single-Dataset / Within-Domain Linkage
-    2021/161: Within-Domain Linkage / Cross-Domain Linkage / Within-Domain Linkage
-    2024/239: Within-Domain Linkage / Cross-Domain Linkage / Within-Domain Linkage
-    2025/041: Cross-Domain Linkage / Single-Dataset / Single-Dataset
+    2020/024: Cross-Domain Linkage / Cross-Domain Linkage / Within-Domain Linkage
+    2022/203: Cross-Domain Linkage / Within-Domain Linkage / Within-Domain Linkage
+    2023/019: Single-Dataset / Cross-Domain Linkage / Cross-Domain Linkage
+    2023/307: Within-Domain Linkage / Within-Domain Linkage / Cross-Domain Linkage
+    2024/041: Single-Dataset / Cross-Domain Linkage / Cross-Domain Linkage
 
 Layer A — Substantive Domains
-  Pairwise agreement: 82.7% (range: 81.3%–85.3%)
-  Unanimous (same across all trials): 56/75 (74.7%)
+  Pairwise agreement: 87.6% (range: 85.3%–89.3%)
+  Unanimous (same across all trials): 62/75 (82.7%)
   Unstable examples:
-    2020/052: ('Gender, Race & Ethnicity', 'Labour Market & Employment') / ('Gender, Race & Ethnicity',) / ('Gender, Race & Ethnicity', 'Labour Market & Employment')
-    2020/065: ('Business & Productivity',) / ('Business & Productivity', 'Public Finance & Taxation') / ('Business & Productivity',)
-    2020/067: ('Poverty, Inequality & Living Standards', 'Public Finance & Taxation') / ('COVID-19 & Pandemic', 'Labour Market & Employment', 'Poverty, Inequality & Living Standards', 'Public Finance & Taxation') / ('COVID-19 & Pandemic', 'Labour Market & Employment', 'Poverty, Inequality & Living Standards', 'Public Finance & Taxation')
-    2020/096: ('Business & Productivity', 'Poverty, Inequality & Living Standards') / ('Business & Productivity',) / ('Business & Productivity',)
-    2021/105: ('Migration & Demographics',) / ('Labour Market & Employment', 'Migration & Demographics') / ('Migration & Demographics',)
+    2020/003: ('Housing & Planning', 'Labour Market & Employment') / ('Housing & Planning', 'Labour Market & Employment') / ('Housing & Planning', 'Labour Market & Employment', 'Public Finance & Taxation')
+    2020/059: ('Business & Productivity', 'Education & Skills') / ('Education & Skills', 'Labour Market & Employment') / ('Business & Productivity', 'Education & Skills')
+    2020/099: ('Business & Productivity', 'Environment & Agriculture') / ('Business & Productivity', 'Environment & Agriculture', 'Public Finance & Taxation') / ('Business & Productivity', 'Environment & Agriculture')
+    2021/103: ('Unclear from Title',) / ('Unclear from Title',) / ('Poverty, Inequality & Living Standards',)
+    2022/036/b: ('Business & Productivity', 'Labour Market & Employment') / ('Business & Productivity', 'Labour Market & Employment') / ('Business & Productivity',)
 
 Layer C — Analytical Purpose
-  Pairwise agreement: 94.7% (range: 93.3%–96.0%)
-  Unanimous (same across all trials): 69/75 (92.0%)
+  Pairwise agreement: 88.9% (range: 88.0%–90.7%)
+  Unanimous (same across all trials): 63/75 (84.0%)
   Unstable examples:
-    2020/045: ('Descriptive Monitoring',) / ('Policy Evaluation / Impact Analysis',) / ('Policy Evaluation / Impact Analysis',)
-    2021/050: ('Descriptive Monitoring',) / ('Descriptive Monitoring',) / ('Inequality / Disparities Analysis',)
-    2021/071: ('Inequality / Disparities Analysis',) / ('Descriptive Monitoring', 'Inequality / Disparities Analysis') / ('Inequality / Disparities Analysis',)
-    2023/244: ('Descriptive Monitoring',) / ('Outcome Tracking',) / ('Descriptive Monitoring',)
-    2024/001: ('Inequality / Disparities Analysis',) / ('Inequality / Disparities Analysis',) / ('Descriptive Monitoring',)
+    2020/080: ('Inequality / Disparities Analysis', 'Outcome Tracking') / ('Inequality / Disparities Analysis',) / ('Outcome Tracking',)
+    2021/046: ('Policy Evaluation / Impact Analysis', 'Service Interaction / Systems Analysis') / ('Policy Evaluation / Impact Analysis',) / ('Policy Evaluation / Impact Analysis',)
+    2021/051: ('Life-Course / Trajectory Analysis', 'Policy Evaluation / Impact Analysis') / ('Life-Course / Trajectory Analysis', 'Policy Evaluation / Impact Analysis') / ('Policy Evaluation / Impact Analysis',)
+    2021/115: ('Policy Evaluation / Impact Analysis',) / ('Outcome Tracking',) / ('Policy Evaluation / Impact Analysis',)
+    2022/010: ('Outcome Tracking',) / ('Outcome Tracking',) / ('Descriptive Monitoring',)
 
 Layer B stability by category:
-  Cross-Domain Linkage: 14/16 stable (88%)
-  Single-Dataset: 24/26 stable (92%)
+  Cross-Domain Linkage: 10/16 stable (62%)
+  Single-Dataset: 27/30 stable (90%)
   Unclear from Title: 1/1 stable (100%)
-  Within-Domain Linkage: 29/32 stable (91%)
+  Within-Domain Linkage: 26/28 stable (93%)

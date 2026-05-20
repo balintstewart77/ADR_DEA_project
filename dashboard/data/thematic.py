@@ -30,30 +30,6 @@ def load_thematic_data(thematic_dir):
         )
         thematic_project_count = len(df_thematic_projects)
 
-        # Remap legacy "Multi-Domain Linkage" -> "Cross-Domain Linkage"
-        _LINKAGE_REMAP = {"Multi-Domain Linkage": "Cross-Domain Linkage"}
-        for _ldf in [df_thematic_b, df_thematic_b_totals]:
-            if "linkage_mode" in _ldf.columns:
-                _ldf["linkage_mode"] = _ldf["linkage_mode"].replace(_LINKAGE_REMAP)
-        # Aggregate rows that now share the same key after remapping
-        if "linkage_mode" in df_thematic_b.columns:
-            df_thematic_b = df_thematic_b.groupby(["Year", "linkage_mode"], as_index=False).agg(
-                {"count": "sum", "total": "first", "pct_of_projects": "sum"}
-            )
-        if "linkage_mode" in df_thematic_b_totals.columns:
-            df_thematic_b_totals = df_thematic_b_totals.groupby("linkage_mode", as_index=False)["count"].sum()
-            df_thematic_b_totals = df_thematic_b_totals.sort_values("count", ascending=False)
-        df_thematic_projects["linkage_mode"] = df_thematic_projects["linkage_mode"].replace(_LINKAGE_REMAP)
-        # Merge Multi-Domain column into Cross-Domain in cross-tab
-        if "Multi-Domain Linkage" in df_cross_mode_domain.columns:
-            if "Cross-Domain Linkage" not in df_cross_mode_domain.columns:
-                df_cross_mode_domain = df_cross_mode_domain.rename(columns={"Multi-Domain Linkage": "Cross-Domain Linkage"})
-            else:
-                df_cross_mode_domain["Cross-Domain Linkage"] = (
-                    df_cross_mode_domain["Cross-Domain Linkage"] + df_cross_mode_domain["Multi-Domain Linkage"]
-                )
-                df_cross_mode_domain = df_cross_mode_domain.drop(columns=["Multi-Domain Linkage"])
-
         # Apply project-id keying on df_thematic_projects
         if "Project ID" in df_thematic_projects.columns:
             df_thematic_projects[_PROJECT_ID_KEY_COL] = df_thematic_projects["Project ID"].apply(_project_id_key)
