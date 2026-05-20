@@ -33,6 +33,11 @@ analysis/outputs_v3/*
 !analysis/outputs_v3/cross_domain_purpose.csv
 !analysis/outputs_v3/layer_summary.txt
 
+# Validation / quality outputs: keep only selected evidence tracked
+!analysis/outputs_v3/quality/
+analysis/outputs_v3/quality/*
+!analysis/outputs_v3/quality/consistency_report.txt
+
 # Ignore cache and QA/review artefacts
 analysis/outputs_v3/llm_layer_cache.json
 analysis/outputs_v3/quality/*
