@@ -1,0 +1,470 @@
+metadata:
+  title: Taxonomy Data Dictionary -- DEA Project Classification Ontology v3.4
+  generated: '2026-05-21'
+  source: git history and v3.3 classification prompt
+  notes:
+  - Cells prefixed [DRAFT] are Claude Code draft expository definitions requiring author review.
+  - Cells prefixed (from prompt) or (historical, from prompt) are extracted verbatim from the v3.3 classification prompt.
+  - Cells marked [AUTHOR TO WRITE] or [AUTHOR TO CONFIRM] require authoring before use in the v4 prompt.
+  - This file is the single source of truth. CSV or Markdown renderings are generated from it.
+  v3_4_changes:
+  - 'Layer A: "Gender, Race & Ethnicity" removed (replaced by cross-cutting tag). "Poverty, Inequality & Living Standards"
+    relabelled to "Poverty, Wealth & Living Standards". 12 active domains + Unclear from Title.'
+  - 'Layer B: Unchanged. 4 categories.'
+  - 'Layer C: "Inequality / Disparities Analysis" removed. 7 active purposes + Unclear from Title.'
+  - 'New: Cross-cutting demographic-disparities/equity tag, orthogonal to the three layers.'
+  code_discrepancies:
+  - 'DOMAINS list (line 97): still includes "Gender, Race & Ethnicity" and "Poverty, Inequality & Living Standards".'
+  - 'DOMAIN_LITERALS (line 233): same.'
+  - 'DOMAIN_GUIDANCE (line 114): still includes entry 11 for "Gender, Race & Ethnicity" and entry 6 as "Poverty, Inequality
+    & Living Standards".'
+  - 'PURPOSES list (line 187): still includes "Inequality / Disparities Analysis".'
+  - 'PURPOSE_LITERALS (line 257): same.'
+  - 'PURPOSE_GUIDANCE (line 199): still includes "Inequality / Disparities Analysis" entry.'
+  - 'CLASSIFICATION_EXAMPLES (line 499): Examples 6 and 7 reference removed categories.'
+  - 'Cross-cutting tag: not yet implemented in code.'
+  - 'PROMPT_VERSION (line 87): still "v3.3".'
+categories:
+- label: Labour Market & Employment
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 436 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning the labour market, employment relationships, and workforce dynamics -- including
+    wages, earnings, jobs, unemployment, occupational mobility, and the gig economy.'
+  inclusion_rules: (from prompt) "wages, jobs, unemployment, occupational mobility, gig economy"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 3: "Impact of Universal Credit on employment outcomes" (assigned as secondary domain alongside
+    Poverty, Inequality & Living Standards). Example 8: "Understanding employment outcomes for ethnic minority graduates"
+    (assigned alongside Education & Skills).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Education & Skills
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 294 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning education systems, skills acquisition, and human capital formation -- including
+    schools, colleges, universities, qualifications, apprenticeships, and childcare.'
+  inclusion_rules: (from prompt) "schools, colleges, universities, qualifications, apprenticeships, childcare"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 4: "Pathways from education through employment to health outcomes" (assigned as primary
+    domain). Example 8: "Understanding employment outcomes for ethnic minority graduates" (assigned as primary domain). Example
+    11: "Predicting children at risk of persistent school absence using linked education and social care records" (assigned
+    as primary domain).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Health & Social Care
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 245 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning health systems, clinical practice, and social care provision -- including NHS services,
+    hospitals, GPs, mental health, social care, clinical outcomes, and mortality.'
+  inclusion_rules: '(from prompt) "NHS, hospitals, GP, mental health, social care, clinical outcomes, mortality". Overlap
+    rule (from prompt): mortality data should be assigned to the domain the research question targets -- mortality in a study
+    of hospital outcomes -> Health & Social Care; mortality in a population/fertility study -> Migration & Demographics.'
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 4: "Pathways from education through employment to health outcomes" (assigned as tertiary
+    domain). Example 10: "Pathways through health, housing and social care services for people experiencing homelessness"
+    (assigned alongside Housing & Planning). Example 11: "Predicting children at risk of persistent school absence using linked
+    education and social care records" (assigned alongside Education & Skills).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Crime & Justice
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 79 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning the criminal justice system and public safety -- including policing, courts, prisons,
+    reoffending, victimisation, and criminal records.'
+  inclusion_rules: (from prompt) "policing, courts, prison, reoffending, victimisation, criminal records"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 1: "Analysis of victimisation data from the Crime Survey for England and Wales" (sole domain).
+    Example 9: "STRIDE" (assigned alongside Labour Market & Employment, where datasets reveal justice + employment).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Business & Productivity
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 390 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning business activity, firm performance, and economic productivity -- including firms,
+    innovation, trade, R&D, productivity measurement, and start-ups.'
+  inclusion_rules: (from prompt) "firms, innovation, trade, R&D, productivity, start-ups"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 2: "ESCoE: Using Firm-Level Surveys to Understand Industrial Capacity and Productivity"
+    (sole domain).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Poverty, Wealth & Living Standards
+  layer: Layer A -- domain
+  status: relabelled v3.4
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: v3.4 (relabelled from "Poverty, Inequality & Living Standards")
+  project_count: 183 (v3.3 output under old name "Poverty, Inequality & Living Standards"; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[AUTHOR TO WRITE] (inequality cluster -- relabelled from "Poverty, Inequality & Living Standards" at v3.4;
+    the new name and scope boundary is an author decision). Historical prompt text: "income, benefits, deprivation, food security,
+    debt".'
+  inclusion_rules: '[AUTHOR TO WRITE] (inequality cluster -- the boundary between this category and other domains is a deliberate
+    author decision). Historical prompt text: "Poverty, Inequality & Living Standards covers income and material deprivation."'
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt, historical) Example 3: "Impact of Universal Credit on employment outcomes" (assigned alongside
+    Labour Market & Employment). Example 7: "Ethnic disparities in the impact of Universal Credit on employment transitions"
+    (assigned alongside Labour Market & Employment and Gender, Race & Ethnicity).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Housing & Planning
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 50 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning housing markets, residential conditions, planning systems, and neighbourhood characteristics
+    -- including housing tenure, homelessness, planning policy, and neighbourhood-level analysis.'
+  inclusion_rules: (from prompt) "housing tenure, homelessness, planning, neighbourhoods"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 10: "Pathways through health, housing and social care services for people experiencing
+    homelessness" (assigned as primary domain alongside Health & Social Care).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Migration & Demographics
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 98 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning population structure, movement, and change -- including migration flows, ethnicity
+    as a demographic category, population dynamics, fertility, and mortality as a demographic outcome.'
+  inclusion_rules: '(from prompt) "migration flows, ethnicity, population, fertility, mortality". Overlap rule (from prompt):
+    mortality in a population/fertility study -> Migration & Demographics.'
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 5: "AMPHoRA" -- opaque title but datasets (Census 2011 + Death Registrations) reveal population/demographics
+    scope.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Environment & Agriculture
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 87 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning the natural environment, agricultural systems, and environmental policy -- including
+    pollution, land use, farming, energy systems, and climate adaptation.'
+  inclusion_rules: (from prompt) "pollution, land use, farming, energy, climate adaptation"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '[AUTHOR TO WRITE] (no worked example in prompt)'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Public Finance & Taxation
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 45 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research concerning government revenue, public expenditure, and fiscal policy -- including tax compliance,
+    public spending, and fiscal policy analysis.'
+  inclusion_rules: (from prompt) "tax compliance, public spending, fiscal policy"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '[AUTHOR TO WRITE] (no worked example in prompt)'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: COVID-19 & Pandemic
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 78 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research specifically focused on the COVID-19 pandemic and its consequences -- including transmission
+    dynamics, vaccination, and lockdown impacts. Projects studying COVID-19 impacts on other domains (e.g. employment, education)
+    should be assigned both this domain and the relevant substantive domain.'
+  inclusion_rules: '(from prompt) "COVID-19 transmission, vaccination, lockdown impacts". Overlap rule (from prompt): "if
+    a project studies COVID-19''s impact on employment, assign both COVID-19 & Pandemic and Labour Market & Employment (or
+    whichever domain applies). COVID-19 should only be the sole domain if the project is purely epidemiological."'
+  exclusion_rules: (from prompt) "COVID-19 should only be the sole domain if the project is purely epidemiological."
+  examples: '[AUTHOR TO WRITE] (no worked example in prompt)'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Data Infrastructure & Methodology
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 40 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research focused on the methods, tools, and infrastructure for working with administrative data --
+    including record linkage methods, data quality assessment, and survey methodology development.'
+  inclusion_rules: (from prompt) "record linkage methods, data quality, survey methodology"
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '[AUTHOR TO WRITE] (no prompt example assigns this as a domain; Example 6 assigns Methodological / Infrastructure
+    Research as a Layer C purpose but uses Education & Skills + Gender, Race & Ethnicity as domains)'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Unclear from Title
+  layer: Layer A -- domain
+  status: active
+  date_added: 2026-03-26 (6e067f4, as "Other")
+  date_changed: 2026-04-07 (33f8a8c, renamed from "Other" to "Unclear from Title")
+  project_count: 2 (v3.3 output)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: (from prompt) "the title is too vague or opaque (e.g. an acronym with no descriptive words) to determine any
+    substantive domain."
+  inclusion_rules: (from prompt) "Only assign Unclear from Title when neither the title nor the datasets field provides enough
+    evidence to classify." Pydantic validator drops Unclear from Title if a real domain is also present.
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 5: "AMPHoRA" -- opaque acronym, but datasets disambiguate the domain (assigned Migration
+    & Demographics, not Unclear). Example 9: "STRIDE" -- opaque acronym, datasets reveal Crime & Justice + Labour Market (domain
+    is not Unclear, but purpose IS Unclear). Both demonstrate that datasets can resolve an otherwise-unclear title.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Gender, Race & Ethnicity
+  layer: Layer A -- domain
+  status: removed v3.4
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: v3.4 (removed)
+  project_count: 109 (v3.3 output, historical)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '(historical, from prompt) "gender gaps, racial disparities as the *primary research question* (not when demographic
+    variables appear as controls or covariates)." Removed at v3.4: functioned as a demographic lens across substantive domains
+    rather than a domain in its own right. 109 projects carried this label; 89 as secondary domain (trivially dropped), 17
+    with fallback primary domain, 3 sole-domain cases reclassifiable. Replaced by the cross-cutting demographic-disparities
+    tag.'
+  inclusion_rules: '(historical, from prompt) "Gender, Race & Ethnicity is for projects where a demographic disparity IS the
+    primary research question (not just a covariate)." Anti-tautology rule (ad34cb6): "a Gender, Race & Ethnicity project
+    is NOT automatically Inequality / Disparities Analysis."'
+  exclusion_rules: (historical, from prompt) "not when demographic variables appear as controls or covariates." Counterexample
+    8 further specifies this boundary.
+  examples: '(historical, from prompt) Example 6: "Shaping and demonstrating the value of the Growing up in England dataset:
+    Roma, Gypsy and Traveller children case study" (assigned alongside Education & Skills). Example 7: "Ethnic disparities
+    in the impact of Universal Credit on employment transitions" (assigned alongside Labour Market & Employment and Poverty,
+    Inequality & Living Standards).'
+  counterexamples: '(historical, from prompt) Example 8: "Understanding employment outcomes for ethnic minority graduates"
+    -- NOT assigned Gender, Race & Ethnicity because "ethnicity is used as a stratifying variable, but the research question
+    is about education-to-employment outcomes, not about racial disparities per se."'
+- label: Single-Dataset
+  layer: Layer B -- linkage
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 537 (v3.3 output)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] The project uses only one administrative dataset with no record linkage to other datasets.'
+  inclusion_rules: '(from prompt) "project uses only one administrative dataset; no record linkage implied." Decision rule:
+    "If exactly 1 dataset from 1 policy domain -> Single-Dataset."'
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 1: "Analysis of victimisation data from the Crime Survey for England and Wales" -- 1 dataset,
+    1 provider. Example 6: "Shaping and demonstrating the value of the Growing up in England dataset" -- 1 dataset.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Within-Domain Linkage
+  layer: Layer B -- linkage
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 488 (v3.3 output)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] The project links two or more datasets that all fall within the same policy domain.'
+  inclusion_rules: '(from prompt) "links 2+ datasets from the same provider or same policy domain (e.g. two ONS surveys, or
+    two health registries)." Decision rule: "If 2+ datasets all within the same policy domain -> Within-Domain Linkage." Count
+    by policy domain, not provider: "large agencies like ONS supply datasets across many domains, so two ONS datasets from
+    different policy areas still count as cross-domain."'
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 2: "ESCoE: Using Firm-Level Surveys" -- 3 ONS business surveys, all same domain. Example
+    5: "AMPHoRA" -- Census 2011 + Death Registrations, both demographics.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Cross-Domain Linkage
+  layer: Layer B -- linkage
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: 2026-04-23 (0a6798d, absorbed Multi-Domain Linkage -- now covers 2+ domains, previously exactly 2)
+  project_count: 245 (v3.3 output)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] The project links datasets from two or more distinct policy domains, either through explicit record
+    linkage or by using a pre-linked cross-domain product.'
+  inclusion_rules: '(from prompt) "links datasets from two or more distinct policy domains (e.g. education data <-> employment
+    data, or education + employment + health)." Decision rule: "If datasets span 2 or more distinct policy domains -> Cross-Domain
+    Linkage." Pre-linked products (from prompt): "Some datasets are pre-linked products (e.g. ASHE linked to Census 2011).
+    Treat the linkage implied by the component datasets, not the product name: ASHE linked to Census 2011 spans employment
+    and demographics -> Cross-Domain Linkage."'
+  exclusion_rules: '(from prompt) Pre-linked product within one domain stays within-domain: "COVID-19 Infection Survey linked
+    to NHS Test and Trace stays within health -> still counts as a single health-domain product."'
+  examples: '(from prompt) Example 3: "Impact of Universal Credit on employment outcomes" -- DWP welfare + ONS employment
+    = 2 policy domains. Example 4: "Pathways from education through employment to health outcomes" -- education + employment
+    + health = 3 domains. Examples 7, 8, 9, 10, 11 also demonstrate Cross-Domain.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Unclear from Title
+  layer: Layer B -- linkage
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 1 (v3.3 output)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: (from prompt) "ONLY when both the title and datasets field are too vague to judge."
+  inclusion_rules: (from prompt) "Only use Unclear from Title when the datasets field is empty or genuinely ambiguous."
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '[AUTHOR TO WRITE] (no prompt example assigns Unclear for Layer B)'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Descriptive Monitoring
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 441 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research that measures the prevalence, level, or trend of a phenomenon without making a causal claim
+    -- documenting "how much" or "what pattern" rather than testing an exposure-outcome hypothesis.'
+  inclusion_rules: '(from prompt) "measuring prevalence, trends, or patterns without causal claim." Distinction (from prompt):
+    "if the project only measures how much or what trend without linking an exposure to a downstream outcome -> Descriptive
+    Monitoring."'
+  exclusion_rules: (from prompt) "If it asks does exposure X lead to outcome Y -> Outcome Tracking" (not Descriptive Monitoring).
+  examples: '(from prompt) Example 1: "Analysis of victimisation data from the Crime Survey for England and Wales". Example
+    2: "ESCoE: Using Firm-Level Surveys to Understand Industrial Capacity and Productivity".'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Outcome Tracking
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4, as "Outcome Linkage")
+  date_changed: 2026-04-07 (33f8a8c, renamed from "Outcome Linkage" to "Outcome Tracking")
+  project_count: 261 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research that links a specific exposure, condition, or event to a downstream outcome -- testing whether
+    X leads to Y, where the exposure is naturally occurring rather than a deliberate policy intervention.'
+  inclusion_rules: '(from prompt) "linking an exposure/condition to a downstream outcome." Distinction (from prompt): "If
+    it asks does exposure X lead to outcome Y -> Outcome Tracking."'
+  exclusion_rules: (from prompt) "If the project only measures how much or what trend without linking exposure to outcome
+    -> Descriptive Monitoring." "If the exposure is a specific named policy, programme, or intervention (e.g. Universal Credit,
+    Pupil Premium) -> Policy Evaluation." "If tracking across extended time periods or life stages (e.g. childhood -> adulthood)
+    without necessarily testing a single causal hypothesis -> Life-Course / Trajectory Analysis."
+  examples: '(from prompt) Example 8: "Understanding employment outcomes for ethnic minority graduates" -- education-to-employment
+    outcome tracking.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Life-Course / Trajectory Analysis
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 66 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research that tracks individuals across extended time periods or life stages, studying developmental
+    trajectories or transitions (e.g. childhood to adulthood arcs) without necessarily testing a single causal hypothesis.'
+  inclusion_rules: '(from prompt) "tracking individuals over time (childhood -> adulthood arcs)." Distinction (from prompt):
+    "Life-Course / Trajectory Analysis tracks individuals across extended time periods or life stages without necessarily
+    testing a single causal hypothesis."'
+  exclusion_rules: (from prompt) "Outcome Tracking tests a specific exposure -> outcome relationship" -- if a single exposure-outcome
+    link is the focus, prefer Outcome Tracking.
+  examples: '(from prompt) Example 4: "Pathways from education through employment to health outcomes" -- tracking across education
+    -> employment -> health life stages.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Service Interaction / Systems Analysis
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 25 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research focused on how individuals move through, interact with, or are processed by public service
+    systems -- studying pathways, referral patterns, service uptake, and system-level dynamics rather than individual outcomes.'
+  inclusion_rules: '(from prompt) "how individuals interact with public services (NHS, DWP, courts)." Distinction (from prompt):
+    "use this when the research focus is on how people move through or interact with public services (pathways, referrals,
+    service uptake)."'
+  exclusion_rules: (from prompt) "not merely on outcomes that happen to involve a service" -- if the focus is on an individual
+    outcome rather than the service pathway, prefer Outcome Tracking.
+  examples: '(from prompt) Example 10: "Pathways through health, housing and social care services for people experiencing
+    homelessness" -- focus is on service pathways, not individual health outcomes.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Policy Evaluation / Impact Analysis
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 266 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research that evaluates the effects of a specific named policy, programme, or intervention -- testing
+    whether a deliberate policy action achieved its intended outcomes or had unintended consequences.'
+  inclusion_rules: '(from prompt) "evaluating a specific policy, programme, or intervention." Distinction (from prompt): "if
+    the exposure is a specific named policy, programme, or intervention (e.g. Universal Credit, Pupil Premium) -> Policy Evaluation."'
+  exclusion_rules: (from prompt) "If it is a naturally occurring condition or event (e.g. job loss, illness) -> Outcome Tracking"
+    (not Policy Evaluation).
+  examples: '(from prompt) Example 3: "Impact of Universal Credit on employment outcomes" -- evaluating a named policy (Universal
+    Credit).'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Risk Prediction / Early Identification
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 20 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research focused on building predictive models, risk scores, or screening tools to identify individuals
+    or groups at elevated risk of a negative outcome before it occurs.'
+  inclusion_rules: (from prompt) "building risk scores or identifying at-risk subgroups."
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 11: "Predicting children at risk of persistent school absence using linked education and
+    social care records" -- building a predictive/screening tool.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Methodological / Infrastructure Research
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 64 (v3.3 output; to be repopulated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[DRAFT] Research focused on developing, testing, or validating data linkage methods, data infrastructure, or
+    survey instruments -- where the primary contribution is methodological rather than substantive.'
+  inclusion_rules: (from prompt) "developing or validating data linkage methods / datasets."
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 6: "Shaping and demonstrating the value of the Growing up in England dataset: Roma, Gypsy
+    and Traveller children case study" -- data validation study, NOT Inequality / Disparities Analysis.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Unclear from Title
+  layer: Layer C -- purpose
+  status: active
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: null
+  project_count: 2 (v3.3 output)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: (from prompt) "insufficient information in the title" to determine analytical purpose.
+  inclusion_rules: (from prompt) "Only assign Unclear from Title when neither the title nor the datasets field provides enough
+    evidence to classify." Pydantic validator drops Unclear from Title if a real purpose is also present. Maximum of 2 purposes
+    per project.
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '(from prompt) Example 5: "AMPHoRA" -- "acronym gives no analytical clue" -> purpose Unclear from Title. Example
+    9: "STRIDE" -- "acronym gives no clue about analytical design" -> purpose Unclear from Title.'
+  counterexamples: '[AUTHOR TO WRITE]'
+- label: Inequality / Disparities Analysis
+  layer: Layer C -- purpose
+  status: removed v3.4
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: v3.4 (removed)
+  project_count: 207 (v3.3 output, historical -- these projects will be reclassified at v4)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '(historical, from prompt) "comparing outcomes across social groups as the primary aim." Removed at v3.4: diagnostic
+    review found this label functioned as a topic rather than an analytical method. The classifier assigned it whenever a
+    title was framed in inequality terms, regardless of actual analytical approach, producing tautological couplings with
+    the Gender, Race & Ethnicity domain. 207 projects carried this label. The comparative-disparities signal is now carried
+    by the cross-cutting demographic-disparities tag.'
+  inclusion_rules: '(historical, from prompt) Distinguishing rule: "Inequality / Disparities Analysis + Policy Evaluation"
+    was offered as an example of valid dual-purpose assignment (Example 7). Anti-tautology rule (ad34cb6): "a Gender, Race
+    & Ethnicity project is NOT automatically Inequality / Disparities Analysis; it could be Descriptive Monitoring, Outcome
+    Tracking, or Policy Evaluation depending on the research design."'
+  exclusion_rules: '(historical, from prompt) Example 6 demonstrates exclusion: a Gender, Race & Ethnicity project classified
+    as Methodological, NOT Inequality.'
+  examples: '(historical, from prompt) Example 7: "Ethnic disparities in the impact of Universal Credit on employment transitions"
+    -- assigned both Policy Evaluation and Inequality / Disparities Analysis.'
+  counterexamples: '(historical, from prompt) Example 6: "Shaping and demonstrating the value of the Growing up in England
+    dataset" -- Gender/Race domain but purpose is Methodological, NOT Inequality.'
+- label: Demographic disparities / equity tag
+  layer: Cross-cutting tag
+  status: new v4
+  date_added: v3.4
+  date_changed: null
+  project_count: N/A (new v4 -- to be populated after v4 regeneration)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: '[AUTHOR TO WRITE] (inequality cluster -- this tag replaces the removed "Inequality / Disparities Analysis"
+    purpose and "Gender, Race & Ethnicity" domain; its definition, scope, and assignment rules are author decisions).'
+  inclusion_rules: '[AUTHOR TO WRITE] (inequality cluster)'
+  exclusion_rules: '[AUTHOR TO WRITE]'
+  examples: '[AUTHOR TO WRITE]'
+  counterexamples: '[AUTHOR TO WRITE]'
