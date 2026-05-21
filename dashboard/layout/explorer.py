@@ -114,6 +114,7 @@ def build_explorer_tab():
                     {"name": "Title", "id": "Title"},
                     {"name": "Researchers", "id": "Researchers"},
                     {"name": "Datasets Used", "id": "Datasets Used"},
+                    {"name": "Processing environment", "id": "Secure Research Service"},
                     {"name": "Accreditation Date", "id": "Accreditation Date"},
                 ],
                 page_size=20,

@@ -170,6 +170,7 @@ _BROWSE_DISPLAY_COLUMNS = [
     "Title",
     "Researchers",
     "Datasets Used",
+    "Secure Research Service",
     "Accreditation Date",
 ]
 _PROJECT_ID_KEY_COL = "_project_id_key"

@@ -223,6 +223,7 @@ def _get_browse_display_df(search, dataset, provider, institution, tre) -> pd.Da
         tre,
     )
     display = base.copy()
+    display["Secure Research Service"] = display["Secure Research Service"].apply(_format_tre_provider)
     display["Accreditation Date"] = _format_display_dates(display["Accreditation Date"])
     return display[_BROWSE_DISPLAY_COLUMNS]
 
