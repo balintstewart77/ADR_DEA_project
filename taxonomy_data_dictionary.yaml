@@ -32,14 +32,22 @@ categories:
   date_changed: null
   project_count: 436 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning the labour market, employment relationships, and workforce dynamics -- including
-    wages, earnings, jobs, unemployment, occupational mobility, and the gig economy.'
-  inclusion_rules: (from prompt) "wages, jobs, unemployment, occupational mobility, gig economy"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 3: "Impact of Universal Credit on employment outcomes" (assigned as secondary domain alongside
-    Poverty, Inequality & Living Standards). Example 8: "Understanding employment outcomes for ethnic minority graduates"
-    (assigned alongside Education & Skills).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning work, employment, labour-market participation, and workforce dynamics. Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality, working hours, contracts and working conditions; labour supply and demand; occupational, sectoral and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and transitions into, through, or out of work.
+  inclusion_rules: |
+    Assign when work, employment, earnings, labour supply or demand, workforce composition, job quality, occupational structure, or labour-market transitions are central to the project.
+  exclusion_rules: |
+    Do not assign solely because a project mentions income, education, productivity, health, migration, or workers. Use **Education & Skills** for education systems and qualifications unless labour-market outcomes are central. Use **Poverty, Wealth & Living Standards** for household resources, poverty, wealth, debt, or living standards unless employment/earnings are the main object.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/003` -- "The fall of the labour share and rise of the superstar region..." | Labour Market & Employment | Possible: Business & Productivity | Labour share and earnings make the labour-market domain mandatory; firm/productivity dynamics may also be central. |
+    | `2020/021` -- "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income" | Labour Market & Employment | Poverty, Wealth & Living Standards; Policy Evaluation / Impact Analysis | Employment, hours and earnings are central; household income may also bring in material living standards; National Living Wage is a named policy. |
+    | `2021/027` -- "The employment trajectories of refugees in the UK" | Labour Market & Employment | Migration & Demographics; Life-Course / Trajectory Analysis | Employment trajectories make this labour-market research; refugee status brings in migration/demography. |
+  counterexamples: |
+    `2021/050` -- "Cohort Comparisons of Wealth" -> Poverty, Wealth & Living Standards.
+    `2020/013` -- "Firm-level analysis of research and development" -> Business & Productivity.
+    `2020/008` -- "Contextualised Admissions and University Choice" -> Education & Skills.
 - label: Education & Skills
   layer: Layer A -- domain
   status: active
@@ -47,15 +55,22 @@ categories:
   date_changed: null
   project_count: 294 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning education systems, skills acquisition, and human capital formation -- including
-    schools, colleges, universities, qualifications, apprenticeships, and childcare.'
-  inclusion_rules: (from prompt) "schools, colleges, universities, qualifications, apprenticeships, childcare"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 4: "Pathways from education through employment to health outcomes" (assigned as primary
-    domain). Example 8: "Understanding employment outcomes for ethnic minority graduates" (assigned as primary domain). Example
-    11: "Predicting children at risk of persistent school absence using linked education and social care records" (assigned
-    as primary domain).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning education, learning, training, skills formation, and transitions through education systems. Includes early years, schools, colleges, universities, qualifications, apprenticeships, admissions, attainment, attendance, teacher workforce issues, childcare, and education-to-work pathways.
+  inclusion_rules: |
+    Assign when the project's substantive focus is educational participation, attainment, qualifications, admissions, skills acquisition, apprenticeship pathways, school absence, teacher supply, or educational progression.
+  exclusion_rules: |
+    Do not assign merely because a project uses education data if the research question is mainly about employment, health, crime, poverty, or demography. Add **Labour Market & Employment** where the project studies employment or earnings outcomes after education.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2020/117` -- "Participation in and Progression Through Education in Wales: The Role of Family" | Education & Skills | Life-Course / Trajectory Analysis; possible Poverty, Wealth & Living Standards | Educational participation and progression are central; family background may bring in material conditions depending on detail. |
+    | `2020/008` -- "Contextualised Admissions and University Choice" | Education & Skills | Policy Evaluation / Impact Analysis if contextual admissions policy is evaluated | Admissions and university choice are education-system topics. |
+    | `2024/259` -- "Risk index of NEET for local authority use" | Education & Skills | Labour Market & Employment; Risk Prediction / Early Identification | NEET sits at the education-work boundary; "risk index" makes the predictive purpose explicit. |
+  counterexamples: |
+    `2020/010` -- "Local labour market effects of immigration" -> Labour Market & Employment / Migration & Demographics.
+    `2020/012` -- "Wage progression and firm productivity" -> Labour Market & Employment / Business & Productivity.
+    `2022/139` -- "Understanding and predicting health and social care utilisation..." -> Health & Social Care.
 - label: Health & Social Care
   layer: Layer A -- domain
   status: active
@@ -63,17 +78,22 @@ categories:
   date_changed: null
   project_count: 245 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning health systems, clinical practice, and social care provision -- including NHS services,
-    hospitals, GPs, mental health, social care, clinical outcomes, and mortality.'
-  inclusion_rules: '(from prompt) "NHS, hospitals, GP, mental health, social care, clinical outcomes, mortality". Overlap
-    rule (from prompt): mortality data should be assigned to the domain the research question targets -- mortality in a study
-    of hospital outcomes -> Health & Social Care; mortality in a population/fertility study -> Migration & Demographics.'
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 4: "Pathways from education through employment to health outcomes" (assigned as tertiary
-    domain). Example 10: "Pathways through health, housing and social care services for people experiencing homelessness"
-    (assigned alongside Housing & Planning). Example 11: "Predicting children at risk of persistent school absence using linked
-    education and social care records" (assigned alongside Education & Skills).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning health, illness, mortality, wellbeing, clinical outcomes, health services, public health, mental health, social care, and care-system use. Includes NHS services, hospitals, GP care, palliative care, maternity, morbidity, mortality where health is the research object, and adult or children's social care.
+  inclusion_rules: |
+    Assign when the project studies health outcomes, healthcare access, mental health, mortality as a health outcome, social care, care pathways, service utilisation, clinical risk, morbidity, or wellbeing with a health focus.
+  exclusion_rules: |
+    Do not assign mortality projects automatically. Use **Migration & Demographics** for mortality as a demographic/population outcome. Use **Service Interaction / Systems Analysis** as the purpose where the focus is pathways through services rather than health outcomes.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/005` -- "Measuring the impact of hearing loss on well-being" | Health & Social Care | Outcome Tracking | Hearing loss and wellbeing are health-related outcomes; "impact" suggests exposure-outcome analysis. |
+    | `2019/021` -- "Social and Economic Predictors of the severe mental disorders..." | Health & Social Care | Poverty, Wealth & Living Standards; Outcome Tracking | Severe mental disorder is the health outcome; social/economic predictors may bring in material conditions. |
+    | `2024/216` -- "Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity..." | Health & Social Care | Poverty, Wealth & Living Standards; Risk Prediction / Early Identification or Outcome Tracking | Pregnancy morbidity is health-focused; disadvantage may be a socioeconomic exposure. |
+  counterexamples: |
+    `2020/092` -- "Understanding Recent Fertility in the UK..." -> Migration & Demographics / Methodological.
+    `2019/025` -- "Concessionary Fares Scheme for the population aged 60 and over" -> Migration & Demographics / Service Interaction.
+    `2020/058` -- "Residential energy consumption..." -> Environment & Agriculture.
 - label: Crime & Justice
   layer: Layer A -- domain
   status: active
@@ -81,13 +101,22 @@ categories:
   date_changed: null
   project_count: 79 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning the criminal justice system and public safety -- including policing, courts, prisons,
-    reoffending, victimisation, and criminal records.'
-  inclusion_rules: (from prompt) "policing, courts, prison, reoffending, victimisation, criminal records"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 1: "Analysis of victimisation data from the Crime Survey for England and Wales" (sole domain).
-    Example 9: "STRIDE" (assigned alongside Labour Market & Employment, where datasets reveal justice + employment).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning crime, victimisation, public safety, offending, policing, courts, prisons, probation, sentencing, family justice, civil justice, reoffending, and criminal records.
+  inclusion_rules: |
+    Assign when the project's substantive focus is offending, victimisation, domestic abuse, policing, courts, sentencing, imprisonment, probation, youth justice, family justice, civil justice, or justice-system outcomes.
+  exclusion_rules: |
+    Do not assign merely because a project studies "risk", "fairness", "violence", or "families" unless the justice system, criminal behaviour, legal proceedings, or victimisation are central.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/006` -- "Analysis of victimisation data from the Crime Survey for England and Wales" | Crime & Justice | Descriptive Monitoring | Victimisation and crime survey analysis are justice/public-safety topics. |
+    | `2021/038` -- "Using linked Magistrates and Crown Court data..." | Crime & Justice | Within-Domain Linkage; Life-Course / Trajectory Analysis | Courts data place this in justice; repeated appearances over time suggest trajectory analysis. |
+    | `2023/073` -- "Domestic abuse proceedings in family courts..." | Crime & Justice | Service Interaction / Systems Analysis; possible Health & Social Care | Family court proceedings and domestic abuse pathways are justice-system topics. |
+  counterexamples: |
+    `2019/022` -- "Research on homeless mortality..." -> Housing & Planning / Health & Social Care.
+    `2023/006` -- "Ethnic Minority British Election Study pilot" -> Migration & Demographics.
+    `2024/216` -- "Psychosocial disadvantage in pregnancy..." -> Health & Social Care.
 - label: Business & Productivity
   layer: Layer A -- domain
   status: active
@@ -95,13 +124,22 @@ categories:
   date_changed: null
   project_count: 390 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning business activity, firm performance, and economic productivity -- including firms,
-    innovation, trade, R&D, productivity measurement, and start-ups.'
-  inclusion_rules: (from prompt) "firms, innovation, trade, R&D, productivity, start-ups"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 2: "ESCoE: Using Firm-Level Surveys to Understand Industrial Capacity and Productivity"
-    (sole domain).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning firms, business activity, industrial structure, innovation, productivity, entrepreneurship, trade, exports, foreign direct investment, research and development, business support, and firm-level performance.
+  inclusion_rules: |
+    Assign when the project studies firms, business behaviour, productivity, innovation, investment, exporting, enterprise support, start-ups, industrial policy, business surveys, or firm-level outcomes.
+  exclusion_rules: |
+    Do not assign simply because a project uses firm-level data if the substantive question is mainly about workers, wages, public finance, or environmental impacts. Add **Labour Market & Employment** where jobs, wages, workforce composition, or employment outcomes are central.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/011` -- "Modelling Return on Investment at the firm level" | Business & Productivity | Outcome Tracking or Descriptive Monitoring | Firm-level ROI is a business-performance topic. |
+    | `2020/013` -- "Firm-level analysis of research and development" | Business & Productivity | Methodological / Infrastructure Research only if method-focused | R&D and firm-level analysis sit squarely in business/productivity. |
+    | `2020/024` -- "Assessing the impact of UK Enterprise Zones" | Business & Productivity | Policy Evaluation / Impact Analysis; possible Labour Market & Employment | Enterprise Zones are business/economic policy; employment outcomes may add labour-market domain. |
+  counterexamples: |
+    `2020/012` -- "Wage progression and firm productivity" -> Labour Market & Employment plus Business & Productivity.
+    `2020/019` -- "Government expenditure on employment and wages" -> Public Finance & Taxation / Labour Market & Employment.
+    `2020/021` -- "National Living Wage..." -> Labour Market & Employment.
 - label: Poverty, Wealth & Living Standards
   layer: Layer A -- domain
   status: relabelled v3.4
@@ -109,16 +147,22 @@ categories:
   date_changed: v3.4 (relabelled from "Poverty, Inequality & Living Standards")
   project_count: 183 (v3.3 output under old name "Poverty, Inequality & Living Standards"; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[AUTHOR TO WRITE] (inequality cluster -- relabelled from "Poverty, Inequality & Living Standards" at v3.4;
-    the new name and scope boundary is an author decision). Historical prompt text: "income, benefits, deprivation, food security,
-    debt".'
-  inclusion_rules: '[AUTHOR TO WRITE] (inequality cluster -- the boundary between this category and other domains is a deliberate
-    author decision). Historical prompt text: "Poverty, Inequality & Living Standards covers income and material deprivation."'
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt, historical) Example 3: "Impact of Universal Credit on employment outcomes" (assigned alongside
-    Labour Market & Employment). Example 7: "Ethnic disparities in the impact of Universal Credit on employment transitions"
-    (assigned alongside Labour Market & Employment and Gender, Race & Ethnicity).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning material resources, economic hardship, household living standards, poverty, wealth, debt, savings, benefits, deprivation, food security, cost of living, household income, and distribution of resources.
+  inclusion_rules: |
+    Assign when the project's substantive focus is poverty, household income, wealth, savings, debt, benefits, deprivation, food insecurity, living standards, economic hardship, or household resources.
+  exclusion_rules: |
+    Do not assign solely because a title mentions inequality, pay gaps, ethnicity, gender, employment, or socioeconomic differences. Use **Labour Market & Employment** for wages, pay, earnings, job status, and occupational outcomes unless household resources or poverty are central. Use the demographic-disparities tag for group comparisons.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/015` -- "Understanding saving behaviour in the UK" | Poverty, Wealth & Living Standards | Descriptive Monitoring or Outcome Tracking | Saving behaviour concerns household resources and financial resilience. |
+    | `2020/017` -- "Subjective wellbeing impacts of debt and debt-related factors" | Poverty, Wealth & Living Standards | Health & Social Care; Outcome Tracking | Debt is a material-resource issue; wellbeing makes health/social outcomes relevant. |
+    | `2021/050` -- "Cohort Comparisons of Wealth" | Poverty, Wealth & Living Standards | Migration & Demographics; Descriptive Monitoring | Wealth distribution across cohorts is material living-standards research. |
+  counterexamples: |
+    `2020/018` -- "Labour Market Inequality" -> Labour Market & Employment.
+    `2020/021` -- "National Living Wage..." -> Labour Market & Employment; add Poverty/Wealth only if household income is central.
+    `2022/190` -- "Ethnic inequalities in mortality" -> Health & Social Care plus demographic-disparities tag.
 - label: Housing & Planning
   layer: Layer A -- domain
   status: active
@@ -126,13 +170,22 @@ categories:
   date_changed: null
   project_count: 50 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning housing markets, residential conditions, planning systems, and neighbourhood characteristics
-    -- including housing tenure, homelessness, planning policy, and neighbourhood-level analysis.'
-  inclusion_rules: (from prompt) "housing tenure, homelessness, planning, neighbourhoods"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 10: "Pathways through health, housing and social care services for people experiencing
-    homelessness" (assigned as primary domain alongside Health & Social Care).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning housing, homelessness, residential conditions, tenure, home ownership, planning systems, neighbourhoods, gentrification, residential mobility, and place-based housing or planning interventions.
+  inclusion_rules: |
+    Assign when housing, homelessness, residential tenure, home ownership, housing markets, planning decisions, neighbourhood conditions, or residential mobility are central to the research question.
+  exclusion_rules: |
+    Do not assign merely because a project mentions "home", "place", "local area", or "stay at home" unless housing, residential conditions, or planning are substantive objects. Use **Environment & Agriculture** where domestic energy consumption or environmental exposure is central.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/016` -- "Homeownership of the young" | Housing & Planning | Migration & Demographics; possible Poverty, Wealth & Living Standards | Homeownership is housing; age cohort and affordability may add other domains. |
+    | `2019/022` -- "Research on homeless mortality among St Mungo's clients" | Housing & Planning | Health & Social Care; Outcome Tracking | Homelessness is central; mortality makes health relevant. |
+    | `2019/024` -- "The Right to Buy: Migration and Gentrification" | Housing & Planning | Migration & Demographics; Policy Evaluation / Impact Analysis | Right to Buy and gentrification are housing/planning topics with migration effects. |
+  counterexamples: |
+    `2020/058` -- "Residential energy consumption..." -> Environment & Agriculture.
+    `2020/056` -- "Stay at Home Guidance During COVID-19..." -> COVID-19 & Pandemic.
+    `2019/007` -- "Thriving Places index indicators..." -> place-based monitoring, not necessarily Housing & Planning unless housing/neighbourhood conditions are central.
 - label: Migration & Demographics
   layer: Layer A -- domain
   status: active
@@ -140,14 +193,22 @@ categories:
   date_changed: null
   project_count: 98 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning population structure, movement, and change -- including migration flows, ethnicity
-    as a demographic category, population dynamics, fertility, and mortality as a demographic outcome.'
-  inclusion_rules: '(from prompt) "migration flows, ethnicity, population, fertility, mortality". Overlap rule (from prompt):
-    mortality in a population/fertility study -> Migration & Demographics.'
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 5: "AMPHoRA" -- opaque title but datasets (Census 2011 + Death Registrations) reveal population/demographics
-    scope.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning population structure, population change, migration, immigration, population mobility, fertility, ageing, mortality as a demographic outcome, census-based population analysis, and demographic composition.
+  inclusion_rules: |
+    Assign when the project studies migration flows, immigration policy, population movement, demographic change, fertility, ageing, census populations, population projections, or mortality as part of demographic structure.
+  exclusion_rules: |
+    Do not assign solely because a project includes ethnicity, age, or migrant status as a subgroup. Use **Labour Market & Employment** for migrant employment or earnings if labour-market outcomes are central. Use **Health & Social Care** for mortality or morbidity where the research question is health-focused.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/026` -- "Migration Observatory analysis of EU and non-EU migration in the UK" | Migration & Demographics | Descriptive Monitoring | Migration flows and migrant characteristics are demographic topics. |
+    | `2019/012` -- "The impact of the immigration white paper on the Northern Ireland economy" | Migration & Demographics | Business & Productivity; Policy Evaluation / Impact Analysis | Immigration policy is demographic; economic impacts may add business/economy. |
+    | `2020/092` -- "Understanding Recent Fertility in the UK..." | Migration & Demographics | Methodological / Infrastructure Research; Descriptive Monitoring | Fertility is demographic; methodology is explicit in the title. |
+  counterexamples: |
+    `2020/010` -- "Local labour market effects of immigration" -> Labour Market & Employment, with Migration & Demographics if immigration itself is central.
+    `2022/190` -- "Ethnic inequalities in mortality" -> Health & Social Care plus demographic-disparities tag.
+    `2020/080` -- "Labour Market Outcomes of Migrants and Natives" -> Labour Market & Employment plus Migration & Demographics.
 - label: Environment & Agriculture
   layer: Layer A -- domain
   status: active
@@ -155,12 +216,22 @@ categories:
   date_changed: null
   project_count: 87 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning the natural environment, agricultural systems, and environmental policy -- including
-    pollution, land use, farming, energy systems, and climate adaptation.'
-  inclusion_rules: (from prompt) "pollution, land use, farming, energy, climate adaptation"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '[AUTHOR TO WRITE] (no worked example in prompt)'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning the natural environment, climate, energy, agriculture, farming, land use, pollution, decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic or social activity.
+  inclusion_rules: |
+    Assign when the project studies energy consumption, climate policy, decarbonisation, agriculture, farms, land use, environmental exposure, pollution, green transitions, or environmental dimensions of households, firms, or places.
+  exclusion_rules: |
+    Do not assign because the word "environment" appears in a non-natural-environment sense, such as "economic environment". Use **Business & Productivity** where an energy or climate programme is primarily framed as firm innovation or productivity, but add Environment where environmental outcomes are central.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2020/099` -- "Energy demand drivers... under the climate emergency" | Environment & Agriculture | Policy Evaluation / Impact Analysis | Energy demand and climate emergency are environmental topics; public policies are explicitly mentioned. |
+    | `2020/058` -- "Residential energy consumption..." | Environment & Agriculture | Housing & Planning; Outcome Tracking | Residential energy use is environmental/energy research, with housing context. |
+    | `2021/090` -- "AD \| ARC: Linking Individual and Farm Level Data for Agricultural Research" | Environment & Agriculture | Cross-Domain Linkage; possible Poverty, Wealth & Living Standards | Farm/agricultural data are central; individual-farm linkage may add household/material dimensions. |
+  counterexamples: |
+    `2019/023` -- "Economic environment and child development" -> Education & Skills / Outcome Tracking.
+    `2020/002` -- "Evaluation of the Energy Entrepreneurs Fund" -> Business & Productivity; add Environment only if environmental outcomes are central.
+    `2020/051` -- "Social distancing on firm productivity" -> COVID-19 & Pandemic / Business & Productivity.
 - label: Public Finance & Taxation
   layer: Layer A -- domain
   status: active
@@ -168,12 +239,22 @@ categories:
   date_changed: null
   project_count: 45 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research concerning government revenue, public expenditure, and fiscal policy -- including tax compliance,
-    public spending, and fiscal policy analysis.'
-  inclusion_rules: (from prompt) "tax compliance, public spending, fiscal policy"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '[AUTHOR TO WRITE] (no worked example in prompt)'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research concerning government revenue, taxation, tax compliance, tax credits, public expenditure, public spending, fiscal transfers, business rates, tax reliefs, and fiscal policy.
+  inclusion_rules: |
+    Assign when the project studies tax policy, tax behaviour, tax compliance, government expenditure, public spending, fiscal transfers, tax credits, business rates, or distributional impacts of fiscal policy.
+  exclusion_rules: |
+    Do not assign to private wealth transfers, household wealth, firm investment, or business outcomes unless the public finance/tax mechanism is central. Use **Business & Productivity** for firm outcomes of business-support schemes unless fiscal design or tax/public spending is the main object.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2020/001` -- "How does tax affect incorporation and business outcomes?" | Public Finance & Taxation | Business & Productivity; Outcome Tracking | Tax is the exposure; incorporation and business outcomes add business domain. |
+    | `2020/019` -- "Government expenditure on employment and wages..." | Public Finance & Taxation | Labour Market & Employment; Outcome Tracking | Public expenditure is fiscal; employment and wages add labour-market domain. |
+    | `2020/067` -- "Transfers, tax and tax credits" | Public Finance & Taxation | Poverty, Wealth & Living Standards; Descriptive Monitoring or Policy Evaluation | Tax and transfers are fiscal; distributional/living-standard effects likely matter. |
+  counterexamples: |
+    `2021/150` -- "Intergenerational wealth transfers" -> Poverty, Wealth & Living Standards.
+    `2020/034` -- "Do post-crisis wealth shocks matter?" -> Poverty, Wealth & Living Standards.
+    `2020/024` -- "Enterprise Zones" -> Business & Productivity / Policy Evaluation unless fiscal mechanisms are central.
 - label: COVID-19 & Pandemic
   layer: Layer A -- domain
   status: active
@@ -181,15 +262,22 @@ categories:
   date_changed: null
   project_count: 78 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research specifically focused on the COVID-19 pandemic and its consequences -- including transmission
-    dynamics, vaccination, and lockdown impacts. Projects studying COVID-19 impacts on other domains (e.g. employment, education)
-    should be assigned both this domain and the relevant substantive domain.'
-  inclusion_rules: '(from prompt) "COVID-19 transmission, vaccination, lockdown impacts". Overlap rule (from prompt): "if
-    a project studies COVID-19''s impact on employment, assign both COVID-19 & Pandemic and Labour Market & Employment (or
-    whichever domain applies). COVID-19 should only be the sole domain if the project is purely epidemiological."'
-  exclusion_rules: (from prompt) "COVID-19 should only be the sole domain if the project is purely epidemiological."
-  examples: '[AUTHOR TO WRITE] (no worked example in prompt)'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research specifically focused on COVID-19, the COVID-19 pandemic, pandemic control measures, vaccination, infection surveillance, lockdowns, social distancing, pandemic-related public support, or pandemic consequences.
+  inclusion_rules: |
+    Assign whenever COVID-19 or pandemic conditions are central to the research question. If the project studies COVID-19 effects on employment, business, health, education, inequality, or households, assign both COVID-19 & Pandemic and the relevant substantive domain.
+  exclusion_rules: |
+    Do not assign simply because the project occurred during the pandemic period. Do not assign to infectious disease, health, or mortality studies unless COVID-19/pandemic framing is explicit.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2020/027` -- "COVID-19 Infection Survey" | COVID-19 & Pandemic | Health & Social Care; Descriptive Monitoring | COVID-19 infection surveillance is pandemic-specific and health-focused. |
+    | `2020/047` -- "Controlling COVID-19 through enhanced population surveillance..." | COVID-19 & Pandemic | Health & Social Care; Service Interaction / Systems Analysis or Descriptive Monitoring | Pandemic control and surveillance are explicit. |
+    | `2020/071` -- "Pandemic control measures and financial support on businesses, regions and households" | COVID-19 & Pandemic | Business & Productivity; Poverty, Wealth & Living Standards; Policy Evaluation / Impact Analysis | Pandemic policy effects span firms, regions and households. |
+  counterexamples: |
+    `2019/021` -- "Predictors of severe mental disorders..." -> Health & Social Care.
+    `2024/216` -- "Psychosocial disadvantage in pregnancy..." -> Health & Social Care.
+    `2020/058` -- "Residential energy consumption..." -> Environment & Agriculture.
 - label: Data Infrastructure & Methodology
   layer: Layer A -- domain
   status: active
@@ -197,13 +285,22 @@ categories:
   date_changed: null
   project_count: 40 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research focused on the methods, tools, and infrastructure for working with administrative data --
-    including record linkage methods, data quality assessment, and survey methodology development.'
-  inclusion_rules: (from prompt) "record linkage methods, data quality, survey methodology"
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '[AUTHOR TO WRITE] (no prompt example assigns this as a domain; Example 6 assigns Methodological / Infrastructure
-    Research as a Layer C purpose but uses Education & Skills + Gender, Race & Ethnicity as domains)'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data.
+  inclusion_rules: |
+    Assign when the primary contribution is methodological or infrastructural: record linkage methods, survey methodology, data quality, measurement frameworks, classification systems, statistical estimation, dataset construction, validation studies, or improving indicators.
+  exclusion_rules: |
+    Do not assign merely because a project uses administrative data, linkage, machine learning, or statistical methods. If the method is instrumental to a substantive question, classify by the substantive domain and analytical purpose instead.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2020/009` -- "Panel conditioning and rotation group bias effects in business surveys" | Data Infrastructure & Methodology | Business & Productivity; Methodological / Infrastructure Research | Survey methodology is central; business surveys add business context. |
+    | `2020/075` -- "Extending the use of the former measures of social class beyond 2021" | Data Infrastructure & Methodology | Migration & Demographics or Poverty, Wealth & Living Standards depending use | Classification/measurement is the core contribution. |
+    | `2021/111` -- "Re-counting crime: New methods to improve the accuracy of estimates of crime" | Data Infrastructure & Methodology | Crime & Justice; Methodological / Infrastructure Research | New estimation methods are central; crime is the substantive context. |
+  counterexamples: |
+    `2020/118` -- "Machine learning techniques..." -> use Risk Prediction / substantive domain if the purpose is predictive modelling of health outcomes.
+    `2020/024` -- "Enterprise Zones" -> Business & Productivity / Policy Evaluation.
+    `2024/259` -- "Risk index of NEET..." -> Education & Skills / Risk Prediction.
 - label: Unclear from Title
   layer: Layer A -- domain
   status: active
@@ -211,39 +308,19 @@ categories:
   date_changed: 2026-04-07 (33f8a8c, renamed from "Other" to "Unclear from Title")
   project_count: 2 (v3.3 output)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: (from prompt) "the title is too vague or opaque (e.g. an acronym with no descriptive words) to determine any
-    substantive domain."
-  inclusion_rules: (from prompt) "Only assign Unclear from Title when neither the title nor the datasets field provides enough
-    evidence to classify." Pydantic validator drops Unclear from Title if a real domain is also present.
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 5: "AMPHoRA" -- opaque acronym, but datasets disambiguate the domain (assigned Migration
-    & Demographics, not Unclear). Example 9: "STRIDE" -- opaque acronym, datasets reveal Crime & Justice + Labour Market (domain
-    is not Unclear, but purpose IS Unclear). Both demonstrate that datasets can resolve an otherwise-unclear title.'
-  counterexamples: '[AUTHOR TO WRITE]'
-- label: Gender, Race & Ethnicity
-  layer: Layer A -- domain
-  status: removed v3.4
-  date_added: 2026-03-26 (6e067f4)
-  date_changed: v3.4 (removed)
-  project_count: 109 (v3.3 output, historical)
-  owner: '[AUTHOR TO CONFIRM]'
-  definition: '(historical, from prompt) "gender gaps, racial disparities as the *primary research question* (not when demographic
-    variables appear as controls or covariates)." Removed at v3.4: functioned as a demographic lens across substantive domains
-    rather than a domain in its own right. 109 projects carried this label; 89 as secondary domain (trivially dropped), 17
-    with fallback primary domain, 3 sole-domain cases reclassifiable. Replaced by the cross-cutting demographic-disparities
-    tag.'
-  inclusion_rules: '(historical, from prompt) "Gender, Race & Ethnicity is for projects where a demographic disparity IS the
-    primary research question (not just a covariate)." Anti-tautology rule (ad34cb6): "a Gender, Race & Ethnicity project
-    is NOT automatically Inequality / Disparities Analysis."'
-  exclusion_rules: (historical, from prompt) "not when demographic variables appear as controls or covariates." Counterexample
-    8 further specifies this boundary.
-  examples: '(historical, from prompt) Example 6: "Shaping and demonstrating the value of the Growing up in England dataset:
-    Roma, Gypsy and Traveller children case study" (assigned alongside Education & Skills). Example 7: "Ethnic disparities
-    in the impact of Universal Credit on employment transitions" (assigned alongside Labour Market & Employment and Poverty,
-    Inequality & Living Standards).'
-  counterexamples: '(historical, from prompt) Example 8: "Understanding employment outcomes for ethnic minority graduates"
-    -- NOT assigned Gender, Race & Ethnicity because "ethnicity is used as a stratifying variable, but the research question
-    is about education-to-employment outcomes, not about racial disparities per se."'
+  definition: |
+    Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain.
+  inclusion_rules: |
+    Assign when the title is an opaque acronym, internal project name, or otherwise non-descriptive, and the dataset field does not resolve the substantive area.
+  exclusion_rules: |
+    Do not assign if the dataset field reveals a clear domain. Do not assign alongside a real domain. If any domain can be inferred with reasonable confidence, use that domain.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | Opaque acronym or internal project name with non-informative datasets | Unclear from Title | None | Use only when neither title nor datasets allow a defensible domain assignment. |
+  counterexamples: |
+    `2021/103` -- "AMPHoRA" -> should not be Unclear if datasets reveal population/demography scope.
+    `STRIDE`-style titles -> should not be Unclear where datasets reveal justice, employment, health, or another domain.
 - label: Single-Dataset
   layer: Layer B -- linkage
   status: active
@@ -251,13 +328,22 @@ categories:
   date_changed: null
   project_count: 537 (v3.3 output)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] The project uses only one administrative dataset with no record linkage to other datasets.'
-  inclusion_rules: '(from prompt) "project uses only one administrative dataset; no record linkage implied." Decision rule:
-    "If exactly 1 dataset from 1 policy domain -> Single-Dataset."'
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 1: "Analysis of victimisation data from the Crime Survey for England and Wales" -- 1 dataset,
-    1 provider. Example 6: "Shaping and demonstrating the value of the Growing up in England dataset" -- 1 dataset.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    The project uses one dataset or one internally coherent dataset product from a single policy domain, with no cross-dataset or cross-domain linkage implied by the register entry.
+  inclusion_rules: |
+    Assign where exactly one dataset is listed and it does not itself represent a cross-domain pre-linked product.
+  exclusion_rules: |
+    Do not assign to pre-linked products that combine domains, such as education-health or employment-census products. Do not assign where multiple datasets are listed, even if from the same provider.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/006` -- "Analysis of victimisation data from the Crime Survey for England and Wales" | Single-Dataset | Crime & Justice; Descriptive Monitoring | One crime survey source; no linkage implied. |
+    | `2021/035` -- "Growing Up in England..." | Single-Dataset | Education & Skills; Methodological / Infrastructure Research if dataset validation is central | One named dataset product. |
+    | `2019/015` -- "Understanding saving behaviour in the UK" | Single-Dataset if only one household-resource dataset is listed | Poverty, Wealth & Living Standards | Linkage mode depends on dataset field, not title alone. |
+  counterexamples: |
+    ASHE linked to Census 2011 -> Cross-Domain Linkage.
+    ECHILD -> Cross-Domain Linkage.
+    Multiple ONS business surveys -> Within-Domain Linkage.
 - label: Within-Domain Linkage
   layer: Layer B -- linkage
   status: active
@@ -265,15 +351,22 @@ categories:
   date_changed: null
   project_count: 488 (v3.3 output)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] The project links two or more datasets that all fall within the same policy domain.'
-  inclusion_rules: '(from prompt) "links 2+ datasets from the same provider or same policy domain (e.g. two ONS surveys, or
-    two health registries)." Decision rule: "If 2+ datasets all within the same policy domain -> Within-Domain Linkage." Count
-    by policy domain, not provider: "large agencies like ONS supply datasets across many domains, so two ONS datasets from
-    different policy areas still count as cross-domain."'
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 2: "ESCoE: Using Firm-Level Surveys" -- 3 ONS business surveys, all same domain. Example
-    5: "AMPHoRA" -- Census 2011 + Death Registrations, both demographics.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    The project uses or links two or more datasets that all fall within the same policy domain.
+  inclusion_rules: |
+    Assign where multiple datasets are listed but they belong to the same substantive policy domain, regardless of whether they come from the same provider.
+  exclusion_rules: |
+    Do not assign merely because datasets share a provider. Large providers such as ONS supply datasets across multiple policy domains, so provider identity is not sufficient. If datasets span two or more policy domains, assign Cross-Domain Linkage.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | Firm survey project using multiple ONS business datasets | Within-Domain Linkage | Business & Productivity; Descriptive Monitoring or Outcome Tracking | Multiple datasets, all business/economic. |
+    | `2021/038` -- "Using linked Magistrates and Crown Court data..." | Within-Domain Linkage | Crime & Justice; Life-Course / Trajectory Analysis | Multiple justice datasets within the same policy domain. |
+    | Census plus death registrations for demographic analysis | Within-Domain Linkage | Migration & Demographics | Multiple demographic/population sources. |
+  counterexamples: |
+    Universal Credit plus Annual Population Survey -> Cross-Domain Linkage.
+    Education plus employment outcomes -> Cross-Domain Linkage.
+    Health plus housing records -> Cross-Domain Linkage.
 - label: Cross-Domain Linkage
   layer: Layer B -- linkage
   status: active
@@ -281,19 +374,22 @@ categories:
   date_changed: 2026-04-23 (0a6798d, absorbed Multi-Domain Linkage -- now covers 2+ domains, previously exactly 2)
   project_count: 245 (v3.3 output)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] The project links datasets from two or more distinct policy domains, either through explicit record
-    linkage or by using a pre-linked cross-domain product.'
-  inclusion_rules: '(from prompt) "links datasets from two or more distinct policy domains (e.g. education data <-> employment
-    data, or education + employment + health)." Decision rule: "If datasets span 2 or more distinct policy domains -> Cross-Domain
-    Linkage." Pre-linked products (from prompt): "Some datasets are pre-linked products (e.g. ASHE linked to Census 2011).
-    Treat the linkage implied by the component datasets, not the product name: ASHE linked to Census 2011 spans employment
-    and demographics -> Cross-Domain Linkage."'
-  exclusion_rules: '(from prompt) Pre-linked product within one domain stays within-domain: "COVID-19 Infection Survey linked
-    to NHS Test and Trace stays within health -> still counts as a single health-domain product."'
-  examples: '(from prompt) Example 3: "Impact of Universal Credit on employment outcomes" -- DWP welfare + ONS employment
-    = 2 policy domains. Example 4: "Pathways from education through employment to health outcomes" -- education + employment
-    + health = 3 domains. Examples 7, 8, 9, 10, 11 also demonstrate Cross-Domain.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    The project links, combines, or uses datasets spanning two or more distinct policy domains, including cases where the register lists a single pre-linked product whose component sources are cross-domain.
+  inclusion_rules: |
+    Assign where datasets span at least two policy domains, such as education plus employment, welfare plus labour market, health plus housing, justice plus employment, or agriculture plus individuals/households. Treat pre-linked products according to their component domains, not simply the number of names listed.
+  exclusion_rules: |
+    Do not assign where multiple datasets all remain within one policy domain. Do not assign to a single-domain pre-linked product such as COVID-19 infection data linked to test-and-trace data if both remain within health.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | ECHILD | Cross-Domain Linkage | Education & Skills; Health & Social Care | Pre-linked education and health/social-care data. |
+    | ASHE linked to Census 2011 | Cross-Domain Linkage | Labour Market & Employment; Migration & Demographics | Employment/earnings linked to census/demographic data. |
+    | `2020/021` -- "National Living Wage..." | Cross-Domain Linkage if datasets span labour and household/welfare sources | Labour Market & Employment; Poverty, Wealth & Living Standards; Policy Evaluation / Impact Analysis | Linkage mode depends on datasets; title suggests cross-domain outcomes. |
+  counterexamples: |
+    Three ONS business surveys -> Within-Domain Linkage.
+    Magistrates Court plus Crown Court -> Within-Domain Linkage.
+    One standalone survey/dataset -> Single-Dataset.
 - label: Unclear from Title
   layer: Layer B -- linkage
   status: active
@@ -301,11 +397,18 @@ categories:
   date_changed: null
   project_count: 1 (v3.3 output)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: (from prompt) "ONLY when both the title and datasets field are too vague to judge."
-  inclusion_rules: (from prompt) "Only use Unclear from Title when the datasets field is empty or genuinely ambiguous."
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '[AUTHOR TO WRITE] (no prompt example assigns Unclear for Layer B)'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Use only where the dataset field is missing, malformed, or too ambiguous to determine linkage mode.
+  inclusion_rules: |
+    Assign when the number or domain of datasets cannot be inferred from the register entry.
+  exclusion_rules: |
+    Do not assign based on an unclear title alone. Linkage mode should be determined primarily from the dataset field.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | Dataset field absent or too generic to identify whether one or multiple datasets are used | Unclear from Title | Domain and purpose may still be classifiable from title | Linkage mode cannot be inferred even if subject matter can. |
+  counterexamples: |
+    Opaque titles with clear dataset fields should still receive Single-Dataset, Within-Domain Linkage, or Cross-Domain Linkage.
 - label: Descriptive Monitoring
   layer: Layer C -- purpose
   status: active
@@ -313,15 +416,22 @@ categories:
   date_changed: null
   project_count: 441 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research that measures the prevalence, level, or trend of a phenomenon without making a causal claim
-    -- documenting "how much" or "what pattern" rather than testing an exposure-outcome hypothesis.'
-  inclusion_rules: '(from prompt) "measuring prevalence, trends, or patterns without causal claim." Distinction (from prompt):
-    "if the project only measures how much or what trend without linking an exposure to a downstream outcome -> Descriptive
-    Monitoring."'
-  exclusion_rules: (from prompt) "If it asks does exposure X lead to outcome Y -> Outcome Tracking" (not Descriptive Monitoring).
-  examples: '(from prompt) Example 1: "Analysis of victimisation data from the Crime Survey for England and Wales". Example
-    2: "ESCoE: Using Firm-Level Surveys to Understand Industrial Capacity and Productivity".'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research that measures the level, prevalence, distribution, trend, profile, or pattern of a phenomenon without primarily testing an exposure-outcome relationship or evaluating a named intervention.
+  inclusion_rules: |
+    Assign where the project asks "how much?", "what pattern?", "which groups?", "where?", or "how is this changing over time?" without a causal or intervention-evaluation framing.
+  exclusion_rules: |
+    Do not assign where the project primarily tests whether X leads to Y. Use **Outcome Tracking** for exposure-outcome designs and **Policy Evaluation / Impact Analysis** for named policies, programmes, or interventions.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/006` -- "Analysis of victimisation data from the Crime Survey for England and Wales" | Descriptive Monitoring | Crime & Justice; Single-Dataset | "Analysis of victimisation data" suggests profiling patterns rather than causal testing. |
+    | `2019/026` -- "Migration Observatory analysis of EU and non-EU migration in the UK" | Descriptive Monitoring | Migration & Demographics | Migration Observatory analysis suggests descriptive population monitoring. |
+    | `2020/020` -- "Business dynamism" | Descriptive Monitoring | Business & Productivity | Business dynamism is likely tracking levels/patterns in firm activity. |
+  counterexamples: |
+    `2020/021` -- National Living Wage impact -> Policy Evaluation / Impact Analysis.
+    `2019/005` -- hearing loss impact on wellbeing -> Outcome Tracking.
+    `2024/259` -- NEET risk index -> Risk Prediction / Early Identification.
 - label: Outcome Tracking
   layer: Layer C -- purpose
   status: active
@@ -329,17 +439,22 @@ categories:
   date_changed: 2026-04-07 (33f8a8c, renamed from "Outcome Linkage" to "Outcome Tracking")
   project_count: 261 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research that links a specific exposure, condition, or event to a downstream outcome -- testing whether
-    X leads to Y, where the exposure is naturally occurring rather than a deliberate policy intervention.'
-  inclusion_rules: '(from prompt) "linking an exposure/condition to a downstream outcome." Distinction (from prompt): "If
-    it asks does exposure X lead to outcome Y -> Outcome Tracking."'
-  exclusion_rules: (from prompt) "If the project only measures how much or what trend without linking exposure to outcome
-    -> Descriptive Monitoring." "If the exposure is a specific named policy, programme, or intervention (e.g. Universal Credit,
-    Pupil Premium) -> Policy Evaluation." "If tracking across extended time periods or life stages (e.g. childhood -> adulthood)
-    without necessarily testing a single causal hypothesis -> Life-Course / Trajectory Analysis."
-  examples: '(from prompt) Example 8: "Understanding employment outcomes for ethnic minority graduates" -- education-to-employment
-    outcome tracking.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research that links a naturally occurring exposure, condition, event, status, characteristic, or circumstance to a downstream outcome.
+  inclusion_rules: |
+    Assign where the project asks whether or how X is associated with, predicts, or leads to Y, and X is not a deliberate named policy or intervention. Covers health outcomes, employment outcomes, firm outcomes, educational outcomes, criminal justice outcomes, wellbeing outcomes, and similar exposure-outcome designs.
+  exclusion_rules: |
+    Use **Policy Evaluation / Impact Analysis** if X is a named policy, programme, or intervention. Use **Descriptive Monitoring** if the project only measures patterns or trends. Use **Life-Course / Trajectory Analysis** where the main focus is extended movement across life stages rather than one exposure-outcome link.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/005` -- "Measuring the impact of hearing loss on well-being" | Outcome Tracking | Health & Social Care | Hearing loss is the exposure; wellbeing is the downstream outcome. |
+    | `2019/021` -- "Social and Economic Predictors of the severe mental disorders..." | Outcome Tracking | Health & Social Care; Poverty, Wealth & Living Standards | Predictors are linked to severe mental-health outcomes. |
+    | `2020/012` -- "Wage progression and firm productivity" | Outcome Tracking | Labour Market & Employment; Business & Productivity | Links wage progression and firm productivity outcomes. |
+  counterexamples: |
+    `2020/021` -- National Living Wage effects -> Policy Evaluation.
+    `2020/117` -- education progression over time -> Life-Course / Trajectory Analysis.
+    `2019/026` -- migration analysis -> Descriptive Monitoring.
 - label: Life-Course / Trajectory Analysis
   layer: Layer C -- purpose
   status: active
@@ -347,16 +462,22 @@ categories:
   date_changed: null
   project_count: 66 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research that tracks individuals across extended time periods or life stages, studying developmental
-    trajectories or transitions (e.g. childhood to adulthood arcs) without necessarily testing a single causal hypothesis.'
-  inclusion_rules: '(from prompt) "tracking individuals over time (childhood -> adulthood arcs)." Distinction (from prompt):
-    "Life-Course / Trajectory Analysis tracks individuals across extended time periods or life stages without necessarily
-    testing a single causal hypothesis."'
-  exclusion_rules: (from prompt) "Outcome Tracking tests a specific exposure -> outcome relationship" -- if a single exposure-outcome
-    link is the focus, prefer Outcome Tracking.
-  examples: '(from prompt) Example 4: "Pathways from education through employment to health outcomes" -- tracking across education
-    -> employment -> health life stages.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions, or life stages to understand trajectories, progression, mobility, or cumulative outcomes.
+  inclusion_rules: |
+    Assign where the project tracks movement over time: childhood to adulthood, education to work, offending careers, family trajectories, employment trajectories, intergenerational mobility, social mobility, health trajectories, or long-run outcomes.
+  exclusion_rules: |
+    Do not assign merely because longitudinal data are used. If the study is a single exposure-outcome test, use Outcome Tracking. If it evaluates a named intervention over time, use Policy Evaluation.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2020/117` -- "Participation in and Progression Through Education in Wales" | Life-Course / Trajectory Analysis | Education & Skills | Participation and progression imply tracking educational pathways. |
+    | `2021/027` -- "Employment trajectories of refugees in the UK" | Life-Course / Trajectory Analysis | Labour Market & Employment; Migration & Demographics | Employment trajectories are explicitly longitudinal/pathway-focused. |
+    | `2021/038` -- "Defendant appearance over time: specialisation, escalation or de-escalation?" | Life-Course / Trajectory Analysis | Crime & Justice; Within-Domain Linkage | "Over time" and escalation/de-escalation are trajectory concepts. |
+  counterexamples: |
+    `2019/005` -- hearing loss and wellbeing -> Outcome Tracking.
+    `2019/026` -- migration analysis -> Descriptive Monitoring.
+    `2020/024` -- Enterprise Zones impact -> Policy Evaluation.
 - label: Service Interaction / Systems Analysis
   layer: Layer C -- purpose
   status: active
@@ -364,16 +485,22 @@ categories:
   date_changed: null
   project_count: 25 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research focused on how individuals move through, interact with, or are processed by public service
-    systems -- studying pathways, referral patterns, service uptake, and system-level dynamics rather than individual outcomes.'
-  inclusion_rules: '(from prompt) "how individuals interact with public services (NHS, DWP, courts)." Distinction (from prompt):
-    "use this when the research focus is on how people move through or interact with public services (pathways, referrals,
-    service uptake)."'
-  exclusion_rules: (from prompt) "not merely on outcomes that happen to involve a service" -- if the focus is on an individual
-    outcome rather than the service pathway, prefer Outcome Tracking.
-  examples: '(from prompt) Example 10: "Pathways through health, housing and social care services for people experiencing
-    homelessness" -- focus is on service pathways, not individual health outcomes.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research focused on how people, cases, families, or organisations move through, use, access, or are processed by public service systems.
+  inclusion_rules: |
+    Assign where the core object is service pathways, service uptake, referral patterns, help-seeking, case progression, system interaction, institutional processing, or cross-service movement.
+  exclusion_rules: |
+    Do not assign merely because an outcome occurs in a public service context. If the service is only the setting and the focus is an individual outcome, use Outcome Tracking. If evaluating a named service reform or intervention, use Policy Evaluation.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/025` -- "Uptake and use of the Northern Ireland Concessionary Fares Scheme..." | Service Interaction / Systems Analysis | Migration & Demographics; Policy Evaluation possible | Uptake and use of a public scheme are service-interaction concepts. |
+    | `2022/111` -- "Private family law cases... profiles, pathways and outcomes" | Service Interaction / Systems Analysis | Crime & Justice | "Pathways" through family law cases makes system interaction central. |
+    | `2025/091` -- "IPV victims/survivors' help-seeking of mental healthcare" | Service Interaction / Systems Analysis | Health & Social Care; Crime & Justice | Help-seeking is a service-use/pathway concept; IPV adds justice/public-safety context. |
+  counterexamples: |
+    `2019/005` -- hearing loss and wellbeing -> Outcome Tracking.
+    `2020/021` -- National Living Wage impact -> Policy Evaluation.
+    `2024/216` -- pregnancy morbidity risk -> Risk Prediction or Outcome Tracking.
 - label: Policy Evaluation / Impact Analysis
   layer: Layer C -- purpose
   status: active
@@ -381,15 +508,22 @@ categories:
   date_changed: null
   project_count: 266 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research that evaluates the effects of a specific named policy, programme, or intervention -- testing
-    whether a deliberate policy action achieved its intended outcomes or had unintended consequences.'
-  inclusion_rules: '(from prompt) "evaluating a specific policy, programme, or intervention." Distinction (from prompt): "if
-    the exposure is a specific named policy, programme, or intervention (e.g. Universal Credit, Pupil Premium) -> Policy Evaluation."'
-  exclusion_rules: (from prompt) "If it is a naturally occurring condition or event (e.g. job loss, illness) -> Outcome Tracking"
-    (not Policy Evaluation).
-  examples: '(from prompt) Example 3: "Impact of Universal Credit on employment outcomes" -- evaluating a named policy (Universal
-    Credit).'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research that evaluates the effects, impacts, implementation, or consequences of a specific named policy, programme, regulation, intervention, scheme, or institutional change.
+  inclusion_rules: |
+    Assign when the project studies a deliberate policy action or intervention: Universal Credit, National Living Wage, Enterprise Zones, tax reliefs, transport schemes, business-support programmes, public investment, school or apprenticeship policies, and similar.
+  exclusion_rules: |
+    Do not assign where the exposure is a naturally occurring event, condition, or characteristic. Use Outcome Tracking for non-policy exposures. Use Descriptive Monitoring if the project only profiles or monitors a phenomenon.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2019/013` -- "TechNation programme evaluation" | Policy Evaluation / Impact Analysis | Business & Productivity | Named programme evaluation. |
+    | `2019/024` -- "The Right to Buy: Migration and Gentrification" | Policy Evaluation / Impact Analysis | Housing & Planning; Migration & Demographics | Right to Buy is a named policy; migration/gentrification are outcomes. |
+    | `2020/021` -- "The impact of the National Living Wage..." | Policy Evaluation / Impact Analysis | Labour Market & Employment; Poverty, Wealth & Living Standards | Named wage policy with employment, earnings and household income outcomes. |
+  counterexamples: |
+    `2019/005` -- hearing loss and wellbeing -> Outcome Tracking.
+    `2020/017` -- debt and wellbeing -> Outcome Tracking.
+    `2019/026` -- migration analysis -> Descriptive Monitoring.
 - label: Risk Prediction / Early Identification
   layer: Layer C -- purpose
   status: active
@@ -397,13 +531,22 @@ categories:
   date_changed: null
   project_count: 20 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research focused on building predictive models, risk scores, or screening tools to identify individuals
-    or groups at elevated risk of a negative outcome before it occurs.'
-  inclusion_rules: (from prompt) "building risk scores or identifying at-risk subgroups."
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 11: "Predicting children at risk of persistent school absence using linked education and
-    social care records" -- building a predictive/screening tool.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research focused on predicting risk, identifying at-risk individuals or groups, building risk scores, developing screening tools, or estimating likelihood of adverse outcomes before it occurs or as it emerges.
+  inclusion_rules: |
+    Assign where the project explicitly involves prediction, risk scoring, early identification, screening, risk factors for future outcomes, or machine-learning models used to identify elevated risk.
+  exclusion_rules: |
+    Do not assign merely because a project studies risk factors descriptively. Use Outcome Tracking where the project estimates associations between exposures and outcomes without a prediction/screening aim.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2024/259` -- "Risk index of NEET for local authority use" | Risk Prediction / Early Identification | Education & Skills; Labour Market & Employment | Risk index is explicit; NEET bridges education and employment. |
+    | `2022/196` -- "Homelessness resource allocation with the use of machine learning..." | Risk Prediction / Early Identification | Housing & Planning; Service Interaction / Systems Analysis possible | Machine learning for allocation/risk suggests predictive identification. |
+    | `2025/032` -- "Risk factors for severe mental health outcomes among young people..." | Risk Prediction / Early Identification | Health & Social Care; Outcome Tracking possible | Risk factors and future severe mental-health outcomes are central. |
+  counterexamples: |
+    `2020/017` -- debt and wellbeing -> Outcome Tracking.
+    `2019/026` -- migration analysis -> Descriptive Monitoring.
+    `2020/024` -- Enterprise Zones -> Policy Evaluation.
 - label: Methodological / Infrastructure Research
   layer: Layer C -- purpose
   status: active
@@ -411,13 +554,22 @@ categories:
   date_changed: null
   project_count: 64 (v3.3 output; to be repopulated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[DRAFT] Research focused on developing, testing, or validating data linkage methods, data infrastructure, or
-    survey instruments -- where the primary contribution is methodological rather than substantive.'
-  inclusion_rules: (from prompt) "developing or validating data linkage methods / datasets."
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 6: "Shaping and demonstrating the value of the Growing up in England dataset: Roma, Gypsy
-    and Traveller children case study" -- data validation study, NOT Inequality / Disparities Analysis.'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches, survey methods, or data assets.
+  inclusion_rules: |
+    Assign where the methodological or infrastructural contribution is the main point: developing a dataset, validating a measure, improving data quality, testing linkage, correcting non-response, improving estimates, or assessing survey/data methods.
+  exclusion_rules: |
+    Do not assign just because a project uses advanced methods, linked data, administrative data, or machine learning. If the method serves a substantive question, classify by the substantive analytical purpose.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2020/009` -- "Panel conditioning and rotation group bias effects in business surveys" | Methodological / Infrastructure Research | Data Infrastructure & Methodology; Business & Productivity | Survey-method effects are the main analytical purpose. |
+    | `2020/075` -- "Extending the use of the former measures of social class beyond 2021" | Methodological / Infrastructure Research | Data Infrastructure & Methodology | Measurement/classification development is central. |
+    | `2021/077` -- "Estimation of quality measures for the Consumer Price Index" | Methodological / Infrastructure Research | Data Infrastructure & Methodology; Public Finance & Taxation possible | Quality measurement/statistical estimation is the purpose. |
+  counterexamples: |
+    `2020/118` -- machine learning for multimorbidity phenotypes -> Risk Prediction / Health & Social Care if the goal is prediction/phenotyping.
+    `2020/021` -- National Living Wage impact -> Policy Evaluation.
+    `2019/011` -- firm ROI modelling -> Business & Productivity / Outcome Tracking.
 - label: Unclear from Title
   layer: Layer C -- purpose
   status: active
@@ -425,36 +577,21 @@ categories:
   date_changed: null
   project_count: 2 (v3.3 output)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: (from prompt) "insufficient information in the title" to determine analytical purpose.
-  inclusion_rules: (from prompt) "Only assign Unclear from Title when neither the title nor the datasets field provides enough
-    evidence to classify." Pydantic validator drops Unclear from Title if a real purpose is also present. Maximum of 2 purposes
-    per project.
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '(from prompt) Example 5: "AMPHoRA" -- "acronym gives no analytical clue" -> purpose Unclear from Title. Example
-    9: "STRIDE" -- "acronym gives no clue about analytical design" -> purpose Unclear from Title.'
-  counterexamples: '[AUTHOR TO WRITE]'
-- label: Inequality / Disparities Analysis
-  layer: Layer C -- purpose
-  status: removed v3.4
-  date_added: 2026-03-26 (6e067f4)
-  date_changed: v3.4 (removed)
-  project_count: 207 (v3.3 output, historical -- these projects will be reclassified at v4)
-  owner: '[AUTHOR TO CONFIRM]'
-  definition: '(historical, from prompt) "comparing outcomes across social groups as the primary aim." Removed at v3.4: diagnostic
-    review found this label functioned as a topic rather than an analytical method. The classifier assigned it whenever a
-    title was framed in inequality terms, regardless of actual analytical approach, producing tautological couplings with
-    the Gender, Race & Ethnicity domain. 207 projects carried this label. The comparative-disparities signal is now carried
-    by the cross-cutting demographic-disparities tag.'
-  inclusion_rules: '(historical, from prompt) Distinguishing rule: "Inequality / Disparities Analysis + Policy Evaluation"
-    was offered as an example of valid dual-purpose assignment (Example 7). Anti-tautology rule (ad34cb6): "a Gender, Race
-    & Ethnicity project is NOT automatically Inequality / Disparities Analysis; it could be Descriptive Monitoring, Outcome
-    Tracking, or Policy Evaluation depending on the research design."'
-  exclusion_rules: '(historical, from prompt) Example 6 demonstrates exclusion: a Gender, Race & Ethnicity project classified
-    as Methodological, NOT Inequality.'
-  examples: '(historical, from prompt) Example 7: "Ethnic disparities in the impact of Universal Credit on employment transitions"
-    -- assigned both Policy Evaluation and Inequality / Disparities Analysis.'
-  counterexamples: '(historical, from prompt) Example 6: "Shaping and demonstrating the value of the Growing up in England
-    dataset" -- Gender/Race domain but purpose is Methodological, NOT Inequality.'
+  definition: |
+    Use where the project title and datasets do not provide enough information to infer the analytical purpose.
+  inclusion_rules: |
+    Assign only where the analytical design cannot be inferred. It may be possible to classify the domain and linkage mode while leaving purpose unclear.
+  exclusion_rules: |
+    Do not assign if the title indicates monitoring, impact, prediction, pathways, trajectories, evaluation, or exposure-outcome analysis. Do not assign alongside a valid purpose.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2021/103` -- "AMPHoRA" | Unclear from Title for purpose only, if analytical design remains opaque | Migration & Demographics if datasets reveal Census/deaths; linkage mode depends on datasets | Domain may be inferable from datasets while purpose remains unclear. |
+    | `2023/275` -- "WWTW04 - Walking With The Wounded need project" | Unclear from Title if purpose cannot be inferred | Possible Health & Social Care / Labour Market / Poverty depending datasets | Internal project naming may not reveal analytical purpose. |
+  counterexamples: |
+    `2020/020` -- "Business dynamism" -> Descriptive Monitoring.
+    `2020/024` -- "Assessing the impact of UK Enterprise Zones" -> Policy Evaluation.
+    `2024/259` -- "Risk index of NEET..." -> Risk Prediction.
 - label: Demographic disparities / equity tag
   layer: Cross-cutting tag
   status: new v4
@@ -462,9 +599,62 @@ categories:
   date_changed: null
   project_count: N/A (new v4 -- to be populated after v4 regeneration)
   owner: '[AUTHOR TO CONFIRM]'
-  definition: '[AUTHOR TO WRITE] (inequality cluster -- this tag replaces the removed "Inequality / Disparities Analysis"
-    purpose and "Gender, Race & Ethnicity" domain; its definition, scope, and assignment rules are author decisions).'
-  inclusion_rules: '[AUTHOR TO WRITE] (inequality cluster)'
-  exclusion_rules: '[AUTHOR TO WRITE]'
-  examples: '[AUTHOR TO WRITE]'
-  counterexamples: '[AUTHOR TO WRITE]'
+  definition: |
+    A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups.
+  inclusion_rules: |
+    Assign where comparison across groups is central to the research question, especially by sex, gender, race, ethnicity, religion, disability, age, migrant/refugee status, nationality, or other equality-relevant demographic characteristics. The tag can be combined with any Layer A domain and any Layer C purpose.
+  exclusion_rules: |
+    Do not assign merely because demographic variables are used as controls, covariates, sample descriptors, or routine stratifiers. Do not assign to poverty, income, wealth, or deprivation projects unless demographic/equality-group comparison is central. Do not use this tag as a substitute for the substantive domain.
+  examples: |
+    | Example | Assign | Likely co-labels | Rationale |
+    | --- | --- | --- | --- |
+    | `2021/005` -- "Occupational segregation by ethnicity..." | Demographic disparities / equity tag | Labour Market & Employment; Descriptive Monitoring or Outcome Tracking | Ethnicity is central to the labour-market comparison. |
+    | `2020/083` -- "Religion and Labour Market Outcomes in England and Wales" | Demographic disparities / equity tag | Labour Market & Employment; Outcome Tracking | Religion is central to comparing labour-market outcomes. |
+    | `2022/190` -- "Ethnic inequalities in mortality" | Demographic disparities / equity tag | Health & Social Care; Outcome Tracking or Descriptive Monitoring | Ethnic comparison is central; mortality is the health outcome. |
+    | `2023/056` -- "Ethnic and religious inequalities in children's social services" | Demographic disparities / equity tag | Health & Social Care; Service Interaction / Systems Analysis | Ethnic/religious comparison is central; children's social services are the system. |
+  counterexamples: |
+    `2023/006` -- "Ethnic Minority British Election Study pilot" -> Migration & Demographics unless the research question compares disparities.
+    `2021/050` -- "Cohort Comparisons of Wealth" -> Poverty, Wealth & Living Standards unless equality-group comparison is central.
+    `2020/017` -- "Debt and debt-related factors" -> Poverty, Wealth & Living Standards / Outcome Tracking.
+- label: Gender, Race & Ethnicity
+  layer: Layer A -- domain
+  status: removed v3.4
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: v3.4 (removed)
+  project_count: 109 (v3.3 output, historical)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: |
+    Historical note: Removed from Layer A in v3.4 because it captured demographic characteristics rather than a policy or sector domain. Former assignments should be redistributed to the relevant substantive domain, with demographic comparison represented through the cross-cutting **Demographic disparities / equity tag** where appropriate.
+  inclusion_rules: |
+    Do not use for new classification.
+  exclusion_rules: |
+    Do not use for new classification.
+  examples: |
+    | Historical example | Former label | Replacement classification |
+    | --- | --- | --- |
+    | `2021/005` -- "Occupational segregation by ethnicity..." | Gender, Race & Ethnicity | Labour Market & Employment plus Demographic disparities / equity tag |
+    | `2022/190` -- "Ethnic inequalities in mortality" | Gender, Race & Ethnicity | Health & Social Care plus Demographic disparities / equity tag |
+    | `2023/056` -- "Ethnic and religious inequalities in children's social services" | Gender, Race & Ethnicity | Health & Social Care plus Demographic disparities / equity tag |
+  counterexamples: |
+    Do not use for new classification.
+- label: Inequality / Disparities Analysis
+  layer: Layer C -- purpose
+  status: removed v3.4
+  date_added: 2026-03-26 (6e067f4)
+  date_changed: v3.4 (removed)
+  project_count: 207 (v3.3 output, historical -- these projects will be reclassified at v4)
+  owner: '[AUTHOR TO CONFIRM]'
+  definition: |
+    Historical note: Removed from Layer C in v3.4 because it functioned as a topic or lens rather than a distinct analytical purpose. Former assignments should be reclassified to the project's actual analytical operation, such as Descriptive Monitoring, Outcome Tracking, Policy Evaluation, Life-Course / Trajectory Analysis, Service Interaction / Systems Analysis, Risk Prediction, or Methodological / Infrastructure Research. Demographic-disparities content should be captured using the cross-cutting tag.
+  inclusion_rules: |
+    Do not use for new classification.
+  exclusion_rules: |
+    Do not use for new classification.
+  examples: |
+    | Historical example | Former label | Replacement classification |
+    | --- | --- | --- |
+    | "Gender Pay Gap" / pay-gap studies | Inequality / Disparities Analysis | Labour Market & Employment plus Demographic disparities / equity tag; purpose usually Descriptive Monitoring or Outcome Tracking |
+    | `2022/190` -- "Ethnic inequalities in mortality" | Inequality / Disparities Analysis | Health & Social Care plus Demographic disparities / equity tag; purpose Outcome Tracking or Descriptive Monitoring |
+    | `2023/056` -- "Ethnic and religious inequalities in children's social services" | Inequality / Disparities Analysis | Health & Social Care plus Demographic disparities / equity tag; purpose Service Interaction / Systems Analysis or Outcome Tracking |
+  counterexamples: |
+    Do not use for new classification.
