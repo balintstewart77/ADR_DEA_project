@@ -338,6 +338,7 @@ Analysis of these projects has highlighted an ontological discrepancy in "Inequa
 **Layer C revision: the "Inequality / Disparities Analysis" category**
 Problem identified. Diagnostic review found that the Layer C purpose label "Inequality / Disparities Analysis" does not behave as an analytical-purpose category. It functions as a topic rather than a method: the classifier assigns it whenever a project's title is framed in inequality terms ("pay gap", "disparities", "ethnic inequalities"), regardless of the project's actual analytical approach. This produced 18 tautological classifications where primary domain "Gender, Race & Ethnicity" was almost automatically paired with purpose "Inequality / Disparities Analysis" — and is the same cross-layer confusion seen in the structured-output fallback errors and in known error 2024/042. The label spans a Layer A domain ("Poverty, Inequality & Living Standards") and a Layer C purpose, which is the root cause: a topic placed in the purpose layer.
 Scope. 207 projects (~16% of 1,271) currently carry this purpose label — not only the 18 tautological cases.
+
 Reclassification feasibility check. Each of the 207 was assessed (by Claude Code Opus 4.7, so NOT reproducible but useful as a quick check) for where its Layer C purpose would fall if the category were removed:
 
 | Destination                                          | Count |   % |
@@ -354,9 +355,102 @@ The single ambiguous case (2026/026) is an "Unclear from Title" problem, not a m
 
 **Decision:** Delete the category. Simpler ontology; comparative-group analysis is no longer a distinct purpose; the inequality signal is instead carried by a cross-cutting 'demographic disparities / equity" tag, orthoganel to the three layers (see below).
 
+## Layer A revision (v3.4): demographic characteristics are not policy domains
+
+### Problem
+
+Diagnostic review identified a structural fault in Layer A paralleling the one found in Layer C.
+
+Of the original 13 substantive domains, twelve are policy or sector domains: spheres of social or economic life that government acts on and collects data about, such as Labour Market & Employment, Health & Social Care, Crime & Justice, and Housing & Planning.
+
+One domain, **Gender, Race & Ethnicity**, is not a policy domain of that kind. It is a set of demographic characteristics: dimensions along which outcomes in any policy domain can be disaggregated.
+
+A gender pay gap study is a labour-market study analysed by gender. Ethnic disparities in mortality is a health study analysed by ethnicity. The demographic dimension is an analytical cross-cut, not a subject area.
+
+This miscategorisation was one corner of a three-way confusion. The concept of inequality or disparity appeared in three confusable places:
+
+1. Layer C purpose: **Inequality / Disparities Analysis**
+2. Layer A domain: **Poverty, Inequality & Living Standards**
+3. Layer A domain: **Gender, Race & Ethnicity**
+
+The demographic category was the place such research was most often conducted. The word **inequality** appeared in two of the three category names. The classifier moved between them, producing:
+
+- 18 tautological **Gender, Race & Ethnicity** + **Inequality / Disparities Analysis** pairings
+- Both known classification errors, `2024/042` and `2025/260`, being inequality-adjacent
+- Layer C registering as the least stable layer in consistency testing, with **68.0% unanimous agreement at v3.3**
+
+### Decision: three coordinated changes
+
+The fault was a category being the wrong kind of thing for its layer, not a labelling slip. The fix is therefore structural.
+
+1. **Remove “Inequality / Disparities Analysis” from Layer C**
+
+   This was a topic occupying the analytical-purpose layer. Layer C reduces to seven purposes. Feasibility and reasoning are recorded in the Layer C section.
+
+2. **Remove “Gender, Race & Ethnicity” from Layer A**
+
+   This was a demographic cross-cut occupying the policy-domain layer. Layer A reduces to twelve domains, all genuine policy or sector domains.
+
+3. **Relabel “Poverty, Inequality & Living Standards” to “Poverty, Wealth & Living Standards”**
+
+   This removes the contested word **inequality** from the domain layer entirely, de-conflicting the domain from the now-removed purpose. The new label is also cleaner on its own terms: symmetric across the income/wealth distribution, and purely a description of material conditions, which is what a policy domain should be.
+
+After these three changes, every Layer A entry is a policy domain, every Layer C entry is a genuine analytical purpose, and the **inequality** lexical hook appears in no category name in either layer. The confusion triangle is eliminated.
+
+### Reclassification feasibility for “Gender, Race & Ethnicity”
+
+| Situation | Count | Effect of removal |
+|---|---:|---|
+| Holds GR&E as a secondary domain only | 89 | Trivial: primary domain unchanged; GR&E simply dropped from the domain list |
+| Holds GR&E as primary, but has a fallback domain | 17 | Trivial: primary shifts to the next domain: 13 to Labour Market & Employment, 2 to Health & Social Care, 1 to Education & Skills, 1 to Poverty/Inequality |
+| GR&E as sole domain | 3 | Manageable: see below |
 
 
+The three sole-domain cases reclassify without strain:
 
+| Project ID | Title | Reclassified domain |
+|---|---|---|
+| `2021/109` | Is Britain Fairer? 2020–2021 | Poverty, Wealth & Living Standards |
+| `2023/095` | Statutory Review of Equality and Human Rights 2023 | Poverty, Wealth & Living Standards |
+| `2023/006` | Ethnic Minority British Election Study pilot | Migration & Demographics |
+
+Every one of the 109 projects has a substantive policy domain that describes what the research is actually about. Removing GR&E as a domain loses no project its subject classification.
+
+### The genuine cost, and how it is addressed
+
+Removing GR&E as a domain and removing **Inequality / Disparities Analysis** as a purpose together remove the demographic-disparities dimension from the classification entirely. It would survive in neither layer.
+
+For a dashboard whose purpose is the legibility of the research-data-access ecosystem, this is a real loss. Questions such as the following are squarely the kind of question the classification should be able to answer:
+
+- How much DEA research examines outcomes by ethnicity or gender?
+- Is the portfolio’s attention to demographic disparities changing over time?
+- Which policy domains attract demographic-disparities research?
+
+After the two removals, the classification could not answer those questions.
+
+The resolution is not to retain either miscategorised category, but to represent the dimension as what it actually is. A cross-cutting **demographic-disparities / equity tag** is added in v4: a facet orthogonal to the three layers, marking projects whose work centres on comparing outcomes across demographic groups.
+
+The approximately 109 former GR&E projects and the former inequality-purpose projects are approximately the population this tag should capture.
+
+This mirrors the treatment of multi-domain linkage, which was likewise removed as a layer category and recovered as a derived property. A genuinely cross-cutting attribute belongs neither as a peer of the layer categories, where it generates tautologies and category errors, nor discarded, where it loses real signal. It should be represented as a cross-cutting facet.
+
+The tag requires its own definition:
+
+> Project centres on comparing outcomes across demographic groups to characterise differences.
+
+It also requires its own validation attention. It is in scope for v4 so that the validated ontology is complete rather than carrying a known gap.
+
+### Net effect of the v3.4 ontology revision
+
+| Component | Change |
+|---|---|
+| Layer A | Reduced from 13 to 12 policy domains |
+| Layer C | Reduced from 8 to 7 analytical purposes |
+| Layer A label | “Poverty, Inequality & Living Standards” relabelled to “Poverty, Wealth & Living Standards” |
+| New facet | Cross-cutting demographic-disparities / equity tag added for v4 |
+| Implementation | Full reclassification after ontology update; individual records are not hand-corrected |
+
+All changes precede the v4 classification freeze and the validation sample draw. The changes are to the ontology and classifier, followed by full reclassification. Individual records are not hand-corrected.
 
 ### ISER provider canonicalisation bug window
 
@@ -371,48 +465,3 @@ The original deduplication policy (keying only on Project ID + title) silently d
 ## 8. Inconsistencies and open questions
 
 - **Model comparison artifacts never generated:** `build_experiment_sample.py` and `build_model_comparison.py` were added in `33f8a8c` to support Opus vs Sonnet comparison, but no output artifacts (experiment_sample_150.csv, model_comparison_review.csv, any Sonnet classification CSVs) appear in git history or on disk. It is unclear whether the comparison was conducted, conducted but kept locally, or abandoned.
-
-- **Synthetic prompt IDs added then reverted the same week:** `4b890d1` (2026-03-27) introduced synthetic P01/P02 IDs to replace real Record IDs in the prompt. `33f8a8c` (2026-04-07, 11 days later) reverted this, switching back to real Record IDs. Neither commit explains the reversal.
-
-- **Data snapshot date vs commit date:** `dea_accredited_projects_20260325.csv` is dated 2026-03-25 in its filename but was committed on 2026-04-07 (`8dd315b`). The gap suggests the file was used locally for ~13 days before being committed.
-
-- **Consistency report version mismatch:** The consistency report committed in `60b364c` (2026-05-20 16:54) was generated under the v3.2 prompt, but was then overwritten ~2 hours later in `31af95a` (2026-05-20 19:10) with v3.3 results. The v3.2 results are no longer recoverable from the working tree (only from git history).
-
-- **v2 script created and deleted same day:** `llm_theme_analysis_v2.py` (1,047 lines, with baseline comparators) was added in `6e067f4` and deleted in `778f767`, both on 2026-03-26. The baseline comparators (keyword regex, TF-IDF zero-shot, sentence-transformer embeddings) and pairwise agreement statistics from v2 do not appear in v3 or anywhere in the current codebase.
-
-- **Untracked quality artifacts on disk but not in git:** The following files exist locally but are not tracked in version control, making their provenance uncertain:
-  - `consistency_trial_1.json`, `consistency_trial_2.json`, `consistency_trial_3.json` — the raw trial data behind the consistency report
-  - `diagnostic_report.txt`, `suspicious_flags.csv`, `flag_summary.txt`, `human_review_sample.csv` — quality check outputs
-  - `canonical_dataset_list_20260403.csv` — a dated snapshot alongside the undated tracked version
-  - `institution_review_candidates.csv` — institution normalisation QA output
-  - `all_projects_classified.csv` — the boolean-column inspection CSV
-
----
-
-## Chronological commit index
-
-| Date | Hash | Description |
-|------|------|-------------|
-| 2026-03-25 | `242ce2b` | Initial LLM theme classification script (v1) |
-| 2026-03-26 | `6e067f4` | Introduce three-layer classification framework (v2 and v3) |
-| 2026-03-26 | `778f767` | Remove v1 and v2 scripts |
-| 2026-03-26 | `9502be0` | Increase token budget, reduce batch size, add retry logic (bundled) |
-| 2026-03-26 | `3d22251` | Duplicate handling and Record ID system |
-| 2026-03-27 | `0fbf259` | Harden classification reliability |
-| 2026-03-27 | `4b890d1` | Use synthetic prompt IDs (later reverted) |
-| 2026-03-27 | `ad34cb6` | Quality tooling, prompt improvements, worked examples (bundled) |
-| 2026-04-02 | `d5c3697` | Dataset name normalisation system |
-| 2026-04-02 | `a61dd21` | Dataset normalisation QA tooling |
-| 2026-04-03 | `1ba0b27` | Fix dataset normalisation bugs |
-| 2026-04-06 | `e9be89b` | Provider name normalisation |
-| 2026-04-07 | `33f8a8c` | Prompt v3.2, ontology label changes, model comparison tooling (bundled) |
-| 2026-04-07 | `fdf1a74` | Regenerate outputs under v3.2 |
-| 2026-04-07 | `8dd315b` | Commit DEA data snapshot |
-| 2026-04-08 | `b7eeac6` | Institution name normalisation |
-| 2026-04-14 | `2fe2414` | Integrate Louise Corti recommendations on labelling |
-| 2026-04-23 | `0a6798d` | Contract Multi-Domain into Cross-Domain (prompt v3.3) |
-| 2026-05-19 | `3341ef8` | Update quality metric, remove _LABEL_CORRECTIONS |
-| 2026-05-19 | `6df8226` | Correct ISER provider canonicalisation (bundled) |
-| 2026-05-20 | `60b364c` | Add LLM consistency report |
-| 2026-05-20 | `31af95a` | Regenerate outputs under prompt v3.3 |
-| 2026-05-21 | — | Content-aware duplicate handling policy |
