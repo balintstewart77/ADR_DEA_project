@@ -47,6 +47,7 @@ import argparse
 import json
 import os
 import re
+import sys
 import tempfile
 import textwrap
 import time
@@ -60,6 +61,19 @@ try:
     from analysis.register_cleaning import CANDIDATE_FILES, DATA_DIR, clean_register_dataframe, load_raw_register
 except ModuleNotFoundError:
     from register_cleaning import CANDIDATE_FILES, DATA_DIR, clean_register_dataframe, load_raw_register  # type: ignore
+
+
+def _make_console_output_safe() -> None:
+    """Prevent Unicode log output from crashing on legacy Windows consoles."""
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(errors="backslashreplace")
+            except (OSError, ValueError):
+                pass
+
+
+_make_console_output_safe()
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -405,22 +419,22 @@ def load_cache(cache_path: str) -> dict:
             with open(cache_path, encoding="utf-8") as f:
                 raw = json.load(f)
         except (json.JSONDecodeError, ValueError) as e:
-            print(f"[cache] Corrupt cache file ({e}) — starting fresh")
+            print(f"[cache] Corrupt cache file ({e}) - starting fresh")
             return {}
         if not isinstance(raw, dict) or "entries" not in raw:
-            print("[cache] Unrecognised cache format — invalidating cache")
+            print("[cache] Unrecognised cache format - invalidating cache")
             return {}
         meta = raw.get("__meta__", {})
         if meta.get("cache_schema_version") != CACHE_SCHEMA_VERSION:
-            print("[cache] Schema version mismatch — invalidating cache")
+            print("[cache] Schema version mismatch - invalidating cache")
             return {}
         if meta.get("prompt_version") != PROMPT_VERSION:
-            print(f"[cache] Prompt version changed ({meta.get('prompt_version')} → {PROMPT_VERSION}) "
-                  f"— invalidating cache")
+            print(f"[cache] Prompt version changed ({meta.get('prompt_version')} -> {PROMPT_VERSION}) "
+                  f"- invalidating cache")
             return {}
         if meta.get("model") != MODEL:
-            print(f"[cache] Model changed ({meta.get('model')} → {MODEL}) "
-                  f"— invalidating cache")
+            print(f"[cache] Model changed ({meta.get('model')} -> {MODEL}) "
+                  f"- invalidating cache")
             return {}
         return raw.get("entries", {})
     return {}
