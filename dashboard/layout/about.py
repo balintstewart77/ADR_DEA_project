@@ -145,7 +145,7 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 - **Dataset parsing** includes a cleanup pass for malformed provider breaks and
   drops obvious parser artefacts, but free-text source formatting can still
   produce imperfect splits.
-- **Small TRE provider categories** (under 3% of total projects) are grouped
+- **Small processing environment categories** (under 3% of total projects) are grouped
   as "Other" in the pie chart for readability.
 - **Project titles** alone may not fully describe the scope of a research project.
 

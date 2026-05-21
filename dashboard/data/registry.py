@@ -150,7 +150,7 @@ _tre_project_counts = (
     .groupby("_tre_value")["Project ID"].nunique()
 )
 _ALL_TRE_OPTIONS = (
-    [{"label": "All TRE providers", "value": "ALL"}]
+    [{"label": "All processing environments", "value": "ALL"}]
     + [
         {
             "label": (

@@ -68,14 +68,14 @@ def build_explorer_tab():
                 ),
             ], md=3),
             dbc.Col([
-                html.Label("TRE provider", className="filter-label"),
+                    html.Label("Processing environment", className="filter-label"),
                 dcc.Dropdown(
                     id="browse-tre-filter",
                     options=_ALL_TRE_OPTIONS,
                     value="ALL",
                     clearable=False,
                     searchable=True,
-                    placeholder="All TRE providers",
+                    placeholder="All processing environments",
                 ),
             ], md=3),
             dbc.Col([
