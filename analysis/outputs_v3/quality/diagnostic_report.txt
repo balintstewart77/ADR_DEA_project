@@ -1,0 +1,65 @@
+Classification Quality Diagnostics (1,271 projects)
+============================================================
+
+LAYER B — LINKAGE MODE
+  Overall 'Unclear from Title': 1 / 1,271 (0.1%)
+  By category:
+    Single-Dataset: 537 (42.3%)
+    Within-Domain Linkage: 488 (38.4%)
+    Cross-Domain Linkage: 245 (19.3%)
+    Unclear from Title: 1 (0.1%)
+
+  'Unclear from Title' rate by year:
+    2019: 0/22 (0.0%)
+    2020: 0/120 (0.0%)
+    2021: 0/160 (0.0%)
+    2022: 0/202 (0.0%)
+    2023: 1/209 (0.5%)
+    2024: 0/236 (0.0%)
+    2025: 0/271 (0.0%)
+    2026: 0/51 (0.0%)
+
+  Layer B vs number of datasets listed:
+    Single-Dataset: median 1 datasets, 1 providers
+    Within-Domain Linkage: median 3 datasets, 1 providers
+    Cross-Domain Linkage: median 3 datasets, 1 providers
+    Unclear from Title: median 0 datasets, 0 providers
+
+LAYER A — SUBSTANTIVE DOMAINS
+  Domain count distribution:
+    1 domain(s): 495 projects (38.9%)
+    2 domain(s): 691 projects (54.4%)
+    3 domain(s): 82 projects (6.5%)
+    4 domain(s): 2 projects (0.2%)
+    5 domain(s): 1 projects (0.1%)
+  Projects using 'Unclear from Title' domain: 2 (0.2%)
+
+LAYER C — ANALYTICAL PURPOSE
+  Purpose count distribution:
+    1 purpose(s): 1,190 projects (93.6%)
+    2 purpose(s): 81 projects (6.4%)
+  Projects with 'Unclear from Title' purpose: 2 (0.2%)
+
+DOMAIN-PURPOSE COUPLING
+  Checking whether certain domains always get the same purpose:
+  Business & Productivity:
+    Most common purpose: Descriptive Monitoring (43%)
+  Labour Market & Employment:
+    Most common purpose: Descriptive Monitoring (39%)
+  Education & Skills:
+    Most common purpose: Outcome Tracking (34%)
+  Health & Social Care:
+    Most common purpose: Descriptive Monitoring (25%)
+  Crime & Justice:
+    Most common purpose: Descriptive Monitoring (28%)
+  Poverty, Inequality & Living Standards:
+    Most common purpose: Descriptive Monitoring (36%)
+  Environment & Agriculture:
+    Most common purpose: Policy Evaluation / Impact Analysis (42%)
+  Migration & Demographics:
+    Most common purpose: Descriptive Monitoring (43%)
+
+TITLE LENGTH
+  Median: 67 chars
+  Under 30 chars: 57 projects
+  Under 15 chars: 4 projects

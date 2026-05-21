@@ -1,0 +1,729 @@
+{
+  "2019/014": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2020/003": {
+    "substantive_domains": [
+      "Housing & Planning",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2020/024": {
+    "substantive_domains": [
+      "Business & Productivity",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2020/014": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2020/052": {
+    "substantive_domains": [
+      "Gender, Race & Ethnicity",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2020/059": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2020/066": {
+    "substantive_domains": [
+      "COVID-19 & Pandemic",
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2020/080": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Migration & Demographics"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Outcome Tracking",
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2020/099": {
+    "substantive_domains": [
+      "Environment & Agriculture",
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2020/128": {
+    "substantive_domains": [
+      "Crime & Justice",
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2020/058": {
+    "substantive_domains": [
+      "Environment & Agriculture",
+      "Housing & Planning"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2021/046": {
+    "substantive_domains": [
+      "Health & Social Care",
+      "COVID-19 & Pandemic"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis",
+      "Service Interaction / Systems Analysis"
+    ]
+  },
+  "2021/051": {
+    "substantive_domains": [
+      "Housing & Planning"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis",
+      "Life-Course / Trajectory Analysis"
+    ]
+  },
+  "2021/067": {
+    "substantive_domains": [
+      "Business & Productivity",
+      "COVID-19 & Pandemic"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2021/115": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Education & Skills"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2021/103": {
+    "substantive_domains": [
+      "Unclear from Title"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Unclear from Title"
+    ]
+  },
+  "2021/174": {
+    "substantive_domains": [
+      "Health & Social Care",
+      "COVID-19 & Pandemic",
+      "Gender, Race & Ethnicity"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis",
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2021/172": {
+    "substantive_domains": [
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2022/036/b": {
+    "substantive_domains": [
+      "Business & Productivity",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2021/167": {
+    "substantive_domains": [
+      "Gender, Race & Ethnicity",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2022/015": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2021/184": {
+    "substantive_domains": [
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2021/179": {
+    "substantive_domains": [
+      "Health & Social Care",
+      "COVID-19 & Pandemic"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2022/010": {
+    "substantive_domains": [
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2022/023": {
+    "substantive_domains": [
+      "Crime & Justice",
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2022/048": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Life-Course / Trajectory Analysis"
+    ]
+  },
+  "2022/053": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2022/066": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2022/081": {
+    "substantive_domains": [
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2022/093": {
+    "substantive_domains": [
+      "Education & Skills"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2022/114": {
+    "substantive_domains": [
+      "COVID-19 & Pandemic",
+      "Data Infrastructure & Methodology"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Methodological / Infrastructure Research"
+    ]
+  },
+  "2022/119": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2022/134": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2022/176": {
+    "substantive_domains": [
+      "Business & Productivity",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2022/161": {
+    "substantive_domains": [
+      "Poverty, Inequality & Living Standards",
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Life-Course / Trajectory Analysis",
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2022/170": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2022/203": {
+    "substantive_domains": [
+      "Public Finance & Taxation",
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Methodological / Infrastructure Research"
+    ]
+  },
+  "2023/019": {
+    "substantive_domains": [
+      "Education & Skills"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2023/033": {
+    "substantive_domains": [
+      "Education & Skills"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2023/070": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2023/098": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2023/072": {
+    "substantive_domains": [
+      "Crime & Justice",
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Life-Course / Trajectory Analysis"
+    ]
+  },
+  "2023/102": {
+    "substantive_domains": [
+      "Public Finance & Taxation",
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2023/307": {
+    "substantive_domains": [
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2024/003": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2024/017": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2024/041": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Education & Skills"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Life-Course / Trajectory Analysis"
+    ]
+  },
+  "2024/056": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Education & Skills",
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Outcome Tracking",
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2024/007": {
+    "substantive_domains": [
+      "Business & Productivity",
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2024/109": {
+    "substantive_domains": [
+      "Education & Skills"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2023/214": {
+    "substantive_domains": [
+      "Data Infrastructure & Methodology"
+    ],
+    "linkage_mode": "Unclear from Title",
+    "analytical_purpose": [
+      "Methodological / Infrastructure Research"
+    ]
+  },
+  "2023/263": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Migration & Demographics"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2023/286": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Life-Course / Trajectory Analysis"
+    ]
+  },
+  "2023/132": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2024/103": {
+    "substantive_domains": [
+      "Environment & Agriculture"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2024/149": {
+    "substantive_domains": [
+      "Education & Skills"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2024/163": {
+    "substantive_domains": [
+      "Health & Social Care",
+      "Education & Skills"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2024/157": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2024/216": {
+    "substantive_domains": [
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2025/065": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2025/089": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Gender, Race & Ethnicity"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2025/079": {
+    "substantive_domains": [
+      "Health & Social Care",
+      "Education & Skills"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2025/014": {
+    "substantive_domains": [
+      "Poverty, Inequality & Living Standards"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2025/096": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2024/256": {
+    "substantive_domains": [
+      "Crime & Justice"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2025/131": {
+    "substantive_domains": [
+      "Crime & Justice"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2025/121": {
+    "substantive_domains": [
+      "Data Infrastructure & Methodology"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Methodological / Infrastructure Research"
+    ]
+  },
+  "2025/152": {
+    "substantive_domains": [
+      "Housing & Planning",
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Outcome Tracking"
+    ]
+  },
+  "2025/174": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Outcome Tracking",
+      "Inequality / Disparities Analysis"
+    ]
+  },
+  "2025/184": {
+    "substantive_domains": [
+      "Education & Skills",
+      "Health & Social Care"
+    ],
+    "linkage_mode": "Cross-Domain Linkage",
+    "analytical_purpose": [
+      "Inequality / Disparities Analysis",
+      "Outcome Tracking"
+    ]
+  },
+  "2025/087": {
+    "substantive_domains": [
+      "Health & Social Care",
+      "Environment & Agriculture"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2025/234": {
+    "substantive_domains": [
+      "Labour Market & Employment",
+      "Public Finance & Taxation"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  },
+  "2025/267": {
+    "substantive_domains": [
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Single-Dataset",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2026/049": {
+    "substantive_domains": [
+      "Business & Productivity"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Descriptive Monitoring"
+    ]
+  },
+  "2026/054": {
+    "substantive_domains": [
+      "Labour Market & Employment"
+    ],
+    "linkage_mode": "Within-Domain Linkage",
+    "analytical_purpose": [
+      "Policy Evaluation / Impact Analysis"
+    ]
+  }
+}

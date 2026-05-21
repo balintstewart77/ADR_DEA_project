@@ -32,15 +32,25 @@ analysis/outputs_v3/*
 !analysis/outputs_v3/cross_mode_domain.csv
 !analysis/outputs_v3/cross_domain_purpose.csv
 !analysis/outputs_v3/layer_summary.txt
+!analysis/outputs_v3/model_selection_v3.2/
+!analysis/outputs_v3/model_selection_v3.2/README.md
+!analysis/outputs_v3/model_selection_v3.2/experiment_sample_150.csv
+!analysis/outputs_v3/model_selection_v3.2/model_comparison_review.csv
 
 # Validation / quality outputs: keep only selected evidence tracked
 !analysis/outputs_v3/quality/
 analysis/outputs_v3/quality/*
 !analysis/outputs_v3/quality/consistency_report.txt
+!analysis/outputs_v3/quality/consistency_trial_1.json
+!analysis/outputs_v3/quality/consistency_trial_2.json
+!analysis/outputs_v3/quality/consistency_trial_3.json
+!analysis/outputs_v3/quality/diagnostic_report.txt
+!analysis/outputs_v3/quality/suspicious_flags.csv
+!analysis/outputs_v3/quality/flag_summary.txt
+!analysis/outputs_v3/quality/human_review_sample.csv
 
 # Ignore cache and QA/review artefacts
 analysis/outputs_v3/llm_layer_cache.json
-analysis/outputs_v3/quality/*
 analysis/outputs_opus/
 analysis/outputs_sonnet/
 .claude/

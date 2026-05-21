@@ -1,0 +1,10 @@
+Suspicious Classifications: 134 projects flagged
+============================================================
+
+Flag counts by reason:
+    60  Layer B = Cross-Domain but only 1 dataset listed
+    57  Title under 30 characters — may be an acronym or jargon
+    18  Gender/Race domain with Inequality purpose (potential tautological coupling)
+     3  4+ substantive domains assigned
+
+Projects with multiple flags: 4
