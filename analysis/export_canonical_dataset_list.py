@@ -17,57 +17,19 @@ QUALITY_DIR = os.path.join(PROJECT_ROOT, "analysis", "outputs_v3", "quality")
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
 
 from dataset_normalisation import dataset_family_for, parse_datasets  # noqa: E402
-
-
-CANDIDATE_FILES = [
-    "dea_accredited_projects_20260325.csv",
-    "dea_accredited_projects.csv",
-]
-
-SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
-    ("2023/113", "The Influence of Early Life Health and Nutritional Environment on Later Life Health and Morbidity"),
-}
+from register_cleaning import clean_register_dataframe, load_raw_register  # noqa: E402
 
 
 def load_raw():
-    for fname in CANDIDATE_FILES:
-        path = os.path.join(DATA_DIR, fname)
-        if os.path.exists(path):
-            df = pd.read_csv(path, encoding="utf-8-sig")
-            print(f"[data] Loaded {len(df)} rows from {fname}")
-            return df
-    raise FileNotFoundError("No DEA projects CSV found in data/")
+    df, _source_file = load_raw_register(DATA_DIR)
+    return df
 
 
 def process_data(df_raw: pd.DataFrame) -> pd.DataFrame:
-    df = df_raw.copy()
-    col_map = {
-        "Project Number": "Project ID",
-        "Project Name": "Title",
-        "Accredited Researchers": "Researchers",
-        "Legal Gateway": "Legal Basis",
-        "Protected Data Accessed": "Datasets Used",
-        "Processing Environment": "Secure Research Service",
-    }
-    df = df.rename(columns=col_map)
-    df["Accreditation Date"] = pd.to_datetime(df["Accreditation Date"], errors="coerce")
-    df = df.dropna(subset=["Accreditation Date"])
-    if "Legal Basis" in df.columns:
-        df = df[df["Legal Basis"].astype(str).str.contains("Digital Economy Act", na=False, case=False)]
-
-    df = df.drop_duplicates().reset_index(drop=True)
-    df["_title_key"] = df["Title"].fillna("").astype(str).str.strip()
-    special_mask = df.apply(
-        lambda row: (str(row["Project ID"]), row["_title_key"]) in SPECIAL_DROP_PROJECT_TITLE_PAIRS,
-        axis=1,
+    df, _stats = clean_register_dataframe(
+        df_raw,
+        include_quarter_date=True,
     )
-    df = df.loc[~special_mask].copy()
-    df = df.drop_duplicates(subset=["Project ID", "_title_key"], keep="first").reset_index(drop=True)
-    df = df.drop(columns="_title_key")
-
-    df["Year"] = df["Accreditation Date"].dt.year
-    df["Quarter"] = df["Accreditation Date"].dt.to_period("Q")
-    df["quarter_date"] = df["Quarter"].dt.to_timestamp()
     return df
 
 

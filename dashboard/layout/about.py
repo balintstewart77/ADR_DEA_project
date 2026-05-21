@@ -49,11 +49,11 @@ Row counts at each stage:
 | Step | Rows | Dropped |
 |------|-----:|--------:|
 | Loaded from CSV | {PROCESSING_STATS['raw_loaded']:,} | - |
-| Rows with missing accreditation date removed | {PROCESSING_STATS['raw_loaded'] - PROCESSING_STATS['dropped_no_date']:,} | {PROCESSING_STATS['dropped_no_date']:,} |
-| Filtered to DEA projects only (non-DEA/SRSA rows removed) | {PROCESSING_STATS['after_filters'] + PROCESSING_STATS['dropped_exact_duplicates'] + PROCESSING_STATS['dropped_special_duplicate_rows'] + PROCESSING_STATS['dropped_same_id_same_title']:,} | {PROCESSING_STATS['dropped_non_dea']:,} |
-| Exact duplicate rows removed | {PROCESSING_STATS['after_filters'] + PROCESSING_STATS['dropped_special_duplicate_rows'] + PROCESSING_STATS['dropped_same_id_same_title']:,} | {PROCESSING_STATS['dropped_exact_duplicates']:,} |
-| Same Project ID + Title duplicates removed | {PROCESSING_STATS['after_filters'] + PROCESSING_STATS['dropped_special_duplicate_rows']:,} | {PROCESSING_STATS['dropped_same_id_same_title']:,} |
-| Manual duplicate cleanup for 2023/113 | {PROCESSING_STATS['after_filters']:,} | {PROCESSING_STATS['dropped_special_duplicate_rows']:,} |
+| Rows with missing accreditation date or title removed | {PROCESSING_STATS['rows_after_required_fields']:,} | {PROCESSING_STATS['dropped_no_date_or_title']:,} |
+| Filtered to DEA projects only (non-DEA/SRSA rows removed) | {PROCESSING_STATS['rows_after_dea_filter']:,} | {PROCESSING_STATS['dropped_non_dea']:,} |
+| Tier 1 clerical duplicate rows removed | {PROCESSING_STATS['rows_after_dea_filter'] - PROCESSING_STATS['duplicate_tier1_rows_removed']:,} | {PROCESSING_STATS['duplicate_tier1_rows_removed']:,} |
+| Tier 2 fragmented records merged | {PROCESSING_STATS['rows_after_duplicate_policy']:,} | {PROCESSING_STATS['duplicate_tier2_rows_removed']:,} |
+| Tier 3 ambiguous duplicate rows flagged for review | {PROCESSING_STATS['rows_after_duplicate_policy']:,} | 0 |
 | **Final dataset** | **{PROCESSING_STATS['final_rows']:,}** | |
 
 Additional processing: column names are standardised, accreditation dates are
@@ -61,10 +61,10 @@ parsed, and year/quarter fields are derived for time-series analysis.
 
 Duplicate policy:
 
-- Exact duplicate rows are removed.
-- Duplicate rows sharing the same **Project ID** and **Title** are collapsed to one row.
+- Same **Project ID** and **Title** rows with identical normalised datasets and researchers are collapsed as clerical duplicates.
+- Same **Project ID**, **Title**, and accreditation date rows with fragmented datasets or researchers are merged by taking the union of parsed dataset entries and researcher entries.
+- Ambiguous same-ID/same-title rows are retained and written to `{PROCESSING_STATS['duplicate_review_file']}` for manual review. Current flagged rows: {PROCESSING_STATS['duplicate_tier3_rows_flagged']:,}.
 - Duplicate **Project ID** values with different titles are retained as separate projects for manual review.
-- Project `2023/113` is collapsed because both rows share the same project title.
 
 Retained conflicting duplicate IDs:
 `{RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT}`

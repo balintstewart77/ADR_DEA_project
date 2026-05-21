@@ -10,10 +10,6 @@ CANDIDATE_FILES = [
     "dea_accredited_projects.csv",
 ]
 
-SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
-    ("2023/113", "The Influence of Early Life Health and Nutritional Environment on Later Life Health and Morbidity"),
-}
-
 FLAGSHIP_COLLECTIONS = {
     "Data First": [
         "moj data first",

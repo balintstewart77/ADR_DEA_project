@@ -19,59 +19,17 @@ QUALITY_DIR = os.path.join(PROJECT_ROOT, "analysis", "outputs_v3", "quality")
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
 
 from dataset_normalisation import dataset_family_for, describe_dataset_normalisation, iter_dataset_entries  # noqa: E402
-
-
-CANDIDATE_FILES = [
-    "dea_accredited_projects_20260325.csv",
-    "dea_accredited_projects.csv",
-]
-
-SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
-    ("2023/113", "The Influence of Early Life Health and Nutritional Environment on Later Life Health and Morbidity"),
-}
+from register_cleaning import clean_register_dataframe, load_raw_register  # noqa: E402
 
 
 def load_raw():
-    for fname in CANDIDATE_FILES:
-        path = os.path.join(DATA_DIR, fname)
-        if os.path.exists(path):
-            df = pd.read_csv(path, encoding="utf-8-sig")
-            print(f"[data] Loaded {len(df)} rows from {fname}")
-            return df
-    raise FileNotFoundError("No DEA projects CSV found in data/")
-
-
-def apply_duplicate_policy(df: pd.DataFrame) -> pd.DataFrame:
-    out = df.copy()
-    out = out.drop_duplicates().reset_index(drop=True)
-    if "Project ID" in out.columns and "Title" in out.columns:
-        out["_title_key"] = out["Title"].fillna("").astype(str).str.strip()
-        special_mask = out.apply(
-            lambda row: (str(row["Project ID"]), row["_title_key"]) in SPECIAL_DROP_PROJECT_TITLE_PAIRS,
-            axis=1,
-        )
-        out = out.loc[~special_mask].copy()
-        out = out.drop_duplicates(subset=["Project ID", "_title_key"], keep="first").reset_index(drop=True)
-        out = out.drop(columns="_title_key")
-    return out
+    df, _source_file = load_raw_register(DATA_DIR)
+    return df
 
 
 def process_data(df_raw: pd.DataFrame) -> pd.DataFrame:
-    df = df_raw.copy()
-    col_map = {
-        "Project Number": "Project ID",
-        "Project Name": "Title",
-        "Accredited Researchers": "Researchers",
-        "Legal Gateway": "Legal Basis",
-        "Protected Data Accessed": "Datasets Used",
-        "Processing Environment": "Secure Research Service",
-    }
-    df = df.rename(columns=col_map)
-    df["Accreditation Date"] = pd.to_datetime(df["Accreditation Date"], errors="coerce")
-    df = df.dropna(subset=["Accreditation Date"])
-    if "Legal Basis" in df.columns:
-        df = df[df["Legal Basis"].astype(str).str.contains("Digital Economy Act", na=False, case=False)]
-    return apply_duplicate_policy(df)
+    df, _stats = clean_register_dataframe(df_raw)
+    return df
 
 
 def build_audit_table(df: pd.DataFrame) -> pd.DataFrame:

@@ -56,21 +56,16 @@ import anthropic
 import pandas as pd
 from pydantic import BaseModel, field_validator
 
+try:
+    from analysis.register_cleaning import CANDIDATE_FILES, DATA_DIR, clean_register_dataframe, load_raw_register
+except ModuleNotFoundError:
+    from register_cleaning import CANDIDATE_FILES, DATA_DIR, clean_register_dataframe, load_raw_register  # type: ignore
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
 
-DATA_DIR   = os.path.join(os.path.dirname(__file__), "..", "data")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs_v3")
-
-CANDIDATE_FILES = [
-    "dea_accredited_projects_20260325.csv",
-    "dea_accredited_projects.csv",
-]
-
-SPECIAL_DROP_PROJECT_TITLE_PAIRS = {
-    ("2023/113", "The Influence of Early Life Health and Nutritional Environment on Later Life Health and Morbidity"),
-}
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
 CACHE_SCHEMA_VERSION = 4
@@ -379,64 +374,11 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
 # Data loading
 # ---------------------------------------------------------------------------
 
-def apply_duplicate_policy(df: pd.DataFrame) -> pd.DataFrame:
-    out = df.copy().drop_duplicates().reset_index(drop=True)
-    out["_title_key"] = out["Title"].fillna("").astype(str).str.strip()
-    special_mask = out.apply(
-        lambda row: (str(row["Project ID"]), row["_title_key"]) in SPECIAL_DROP_PROJECT_TITLE_PAIRS,
-        axis=1,
-    )
-    out = out.loc[~special_mask].copy()
-    out = out.drop_duplicates(subset=["Project ID", "_title_key"], keep="first").reset_index(drop=True)
-    return out.drop(columns="_title_key")
 
 def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
-    for fname in CANDIDATE_FILES:
-        path = os.path.join(data_dir, fname)
-        if os.path.exists(path):
-            df = pd.read_csv(path, encoding="utf-8-sig")
-            print(f"[data] Loaded {len(df):,} rows from {fname}")
-            break
-    else:
-        raise FileNotFoundError("No DEA projects CSV found in data/")
-
-    df = df.rename(columns={
-        "Project Number": "Project ID",
-        "Project Name":   "Title",
-        "Accredited Researchers": "Researchers",
-        "Legal Gateway":  "Legal Basis",
-        "Protected Data Accessed": "Datasets Used",
-        "Processing Environment":  "Secure Research Service",
-    })
-
-    df["Accreditation Date"] = pd.to_datetime(df["Accreditation Date"], errors="coerce")
-    df = df.dropna(subset=["Accreditation Date", "Title"])
-
-    if "Legal Basis" in df.columns:
-        df = df[df["Legal Basis"].str.contains("Digital Economy Act", na=False, case=False)]
-
-    df = apply_duplicate_policy(df)
-
-    # Clean Project IDs: strip whitespace/newlines and CLOSED suffix
-    df["Project ID"] = (
-        df["Project ID"].astype(str)
-        .str.strip()
-        .str.replace(r"\s*CLOSED\s*$", "", regex=True)
-        .str.strip()
-    )
-
-    # Build Record ID — for duplicate Project IDs, append a short letter suffix
-    duplicated_ids = df["Project ID"].duplicated(keep=False)
-    df["Record ID"] = df["Project ID"]
-    if duplicated_ids.any():
-        for pid, grp in df.loc[duplicated_ids].groupby("Project ID"):
-            for i, idx in enumerate(grp.index):
-                df.loc[idx, "Record ID"] = f"{pid}/{chr(ord('a') + i)}"
-    df["Year"]         = df["Accreditation Date"].dt.year
-    df["Quarter"]      = df["Accreditation Date"].dt.to_period("Q")
-    df["Quarter Label"] = df["Quarter"].dt.strftime("Q%q %Y")
-
-    return df.reset_index(drop=True)
+    df_raw, _source_file = load_raw_register(data_dir, CANDIDATE_FILES)
+    df, _stats = clean_register_dataframe(df_raw, output_dir=OUTPUT_DIR)
+    return df
 
 
 def filter_to_record_ids(df: pd.DataFrame, record_ids_path: str) -> pd.DataFrame:
