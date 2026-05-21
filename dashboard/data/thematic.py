@@ -4,12 +4,27 @@ import os
 
 import pandas as pd
 
-from dashboard.config import THEMATIC_DIR, _PROJECT_ID_KEY_COL
+from dashboard.config import THEMATIC_DIR, SUBSTANTIVE_DOMAIN_COUNT_COL, _PROJECT_ID_KEY_COL
 from dashboard.data.keys import _project_id_key
 
 
 def _filter_label_with_count(label: str, count: int) -> str:
     return f"{label}  ({count} {'project' if count == 1 else 'projects'})"
+
+
+def _split_semicolon_values(value) -> list[str]:
+    if pd.isna(value):
+        return []
+    return [part.strip() for part in str(value).split(";") if part.strip()]
+
+
+def _count_substantive_domains(value):
+    domains = _split_semicolon_values(value)
+    return len(domains) if domains else pd.NA
+
+
+def _domain_count_label(value: int) -> str:
+    return f"{value} {'domain' if value == 1 else 'domains'}"
 
 
 def load_thematic_data(thematic_dir):
@@ -28,6 +43,11 @@ def load_thematic_data(thematic_dir):
         df_thematic_projects = pd.read_csv(
             os.path.join(thematic_dir, "layer_classifications.csv"), encoding="utf-8-sig",
         )
+        df_thematic_projects[SUBSTANTIVE_DOMAIN_COUNT_COL] = (
+            df_thematic_projects["substantive_domains"]
+            .apply(_count_substantive_domains)
+            .astype("Int64")
+        )
         thematic_project_count = len(df_thematic_projects)
 
         # Apply project-id keying on df_thematic_projects
@@ -37,19 +57,37 @@ def load_thematic_data(thematic_dir):
         # Build filter options for the thematic browse table
         _domain_project_counts = {}
         for domains in df_thematic_projects["substantive_domains"].dropna():
-            for domain in {d.strip() for d in str(domains).split(";") if d.strip()}:
+            for domain in set(_split_semicolon_values(domains)):
                 _domain_project_counts[domain] = _domain_project_counts.get(domain, 0) + 1
         _all_domains = sorted({
-            d.strip()
+            domain
             for domains in df_thematic_projects["substantive_domains"].dropna()
-            for d in domains.split(";")
-            if d.strip()
+            for domain in _split_semicolon_values(domains)
         })
         _thematic_domain_options = (
             [{"label": "All domains", "value": "ALL"}]
             + [
                 {"label": _filter_label_with_count(d, _domain_project_counts.get(d, 0)), "value": d}
                 for d in _all_domains
+            ]
+        )
+        _domain_count_project_counts = (
+            df_thematic_projects[SUBSTANTIVE_DOMAIN_COUNT_COL]
+            .dropna()
+            .value_counts()
+            .sort_index()
+        )
+        _thematic_domain_count_options = (
+            [{"label": "All domain counts", "value": "ALL"}]
+            + [
+                {
+                    "label": _filter_label_with_count(
+                        _domain_count_label(int(domain_count)),
+                        int(count),
+                    ),
+                    "value": int(domain_count),
+                }
+                for domain_count, count in _domain_count_project_counts.items()
             ]
         )
         _linkage_project_counts = df_thematic_projects["linkage_mode"].dropna().value_counts()
@@ -63,13 +101,12 @@ def load_thematic_data(thematic_dir):
         )
         _purpose_project_counts = {}
         for purposes in df_thematic_projects["analytical_purpose"].dropna():
-            for purpose in {p.strip() for p in str(purposes).split(";") if p.strip()}:
+            for purpose in set(_split_semicolon_values(purposes)):
                 _purpose_project_counts[purpose] = _purpose_project_counts.get(purpose, 0) + 1
         _all_purposes = sorted({
-            p.strip()
+            purpose
             for purposes in df_thematic_projects["analytical_purpose"].dropna()
-            for p in purposes.split(";")
-            if p.strip()
+            for purpose in _split_semicolon_values(purposes)
         })
         _thematic_purpose_options = (
             [{"label": "All purposes", "value": "ALL"}]
@@ -92,6 +129,7 @@ def load_thematic_data(thematic_dir):
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
             "_THEMATIC_DOMAIN_OPTIONS": _thematic_domain_options,
+            "_THEMATIC_DOMAIN_COUNT_OPTIONS": _thematic_domain_count_options,
             "_THEMATIC_LINKAGE_OPTIONS": _thematic_linkage_options,
             "_THEMATIC_PURPOSE_OPTIONS": _thematic_purpose_options,
         }, True
@@ -109,6 +147,7 @@ def load_thematic_data(thematic_dir):
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
             "_THEMATIC_DOMAIN_OPTIONS": [],
+            "_THEMATIC_DOMAIN_COUNT_OPTIONS": [],
             "_THEMATIC_LINKAGE_OPTIONS": [],
             "_THEMATIC_PURPOSE_OPTIONS": [],
         }, False
@@ -129,5 +168,6 @@ df_thematic_projects = _thematic_data["df_thematic_projects"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
 _THEMATIC_DOMAIN_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_OPTIONS"]
+_THEMATIC_DOMAIN_COUNT_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_COUNT_OPTIONS"]
 _THEMATIC_LINKAGE_OPTIONS = _thematic_data["_THEMATIC_LINKAGE_OPTIONS"]
 _THEMATIC_PURPOSE_OPTIONS = _thematic_data["_THEMATIC_PURPOSE_OPTIONS"]

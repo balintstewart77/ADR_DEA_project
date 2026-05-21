@@ -8,9 +8,11 @@ from dashboard.config import (
     _MERGE_PROJECT_ID_KEY_COL,
     _MERGE_TITLE_KEY_COL,
     _DERIVED_CLASSIFICATION_COLUMNS,
+    _ENRICHED_DERIVED_COLUMNS,
     _ENRICHED_REGISTER_DISPLAY_COLUMNS,
     _BROWSE_DISPLAY_COLUMNS,
     DERIVED_EMPTY_VALUE,
+    SUBSTANTIVE_DOMAIN_COUNT_COL,
 )
 from dashboard.data.registry import (
     df_all,
@@ -105,21 +107,21 @@ def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institu
 
 def _merge_thematic_classifications(register_df: pd.DataFrame) -> pd.DataFrame:
     base = register_df.copy()
-    classification_cols = [
-        col for col in _DERIVED_CLASSIFICATION_COLUMNS
+    derived_cols = [
+        col for col in _ENRICHED_DERIVED_COLUMNS
         if col in df_thematic_projects.columns
     ]
-    for col in _DERIVED_CLASSIFICATION_COLUMNS:
+    for col in _ENRICHED_DERIVED_COLUMNS:
         if col in base.columns:
             base = base.drop(columns=col)
 
-    if not classification_cols:
-        for col in _DERIVED_CLASSIFICATION_COLUMNS:
+    if not derived_cols:
+        for col in _ENRICHED_DERIVED_COLUMNS:
             base[col] = np.nan
         return base
 
     left = base.copy()
-    right = df_thematic_projects[classification_cols].copy()
+    right = df_thematic_projects[derived_cols].copy()
     left[_MERGE_PROJECT_ID_KEY_COL] = left["Project ID"].apply(_project_id_key)
     right[_MERGE_PROJECT_ID_KEY_COL] = df_thematic_projects["Project ID"].apply(_project_id_key)
     merge_keys = [_MERGE_PROJECT_ID_KEY_COL]
@@ -129,12 +131,12 @@ def _merge_thematic_classifications(register_df: pd.DataFrame) -> pd.DataFrame:
         merge_keys = [_MERGE_PROJECT_ID_KEY_COL, _MERGE_TITLE_KEY_COL]
 
     right = (
-        right[merge_keys + classification_cols]
+        right[merge_keys + derived_cols]
         .drop_duplicates(subset=merge_keys, keep="first")
     )
     merged = left.merge(right, on=merge_keys, how="left")
     merged = merged.drop(columns=merge_keys)
-    for col in _DERIVED_CLASSIFICATION_COLUMNS:
+    for col in _ENRICHED_DERIVED_COLUMNS:
         if col not in merged.columns:
             merged[col] = np.nan
     return merged
@@ -176,7 +178,7 @@ def _ensure_enriched_register_columns(source_df: pd.DataFrame) -> pd.DataFrame:
         )
         base = left.merge(right, on=merge_keys, how="left").drop(columns=merge_keys)
 
-    if any(col not in base.columns for col in _DERIVED_CLASSIFICATION_COLUMNS):
+    if any(col not in base.columns for col in _ENRICHED_DERIVED_COLUMNS):
         base = _merge_thematic_classifications(base)
 
     for col in _ENRICHED_REGISTER_DISPLAY_COLUMNS:
@@ -235,6 +237,7 @@ def _get_enriched_register_display_df(
     institution_filter,
     tre_filter,
     domain_filter,
+    domain_count_filter,
     linkage_filter,
     purpose_filter,
     include_unclassified,
@@ -256,6 +259,11 @@ def _get_enriched_register_display_df(
 
     if domain_filter and domain_filter != "ALL":
         base = base[_contains_semicolon_value(base["substantive_domains"], domain_filter)]
+    if domain_count_filter and domain_count_filter != "ALL":
+        domain_count = int(domain_count_filter)
+        base = base[
+            pd.to_numeric(base[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce") == domain_count
+        ]
     if linkage_filter and linkage_filter != "ALL":
         base = base[base["linkage_mode"].notna() & (base["linkage_mode"] == linkage_filter)]
     if purpose_filter and purpose_filter != "ALL":
@@ -277,6 +285,10 @@ def _get_enriched_register_display_df(
     display = base.copy()
     for col in _DERIVED_CLASSIFICATION_COLUMNS:
         display[col] = display[col].fillna(DERIVED_EMPTY_VALUE)
+    domain_counts = pd.to_numeric(display[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce").astype("Int64")
+    display[SUBSTANTIVE_DOMAIN_COUNT_COL] = (
+        domain_counts.astype("object").where(domain_counts.notna(), None)
+    )
     display["Secure Research Service"] = display["Secure Research Service"].apply(_format_tre_provider)
     display["Accreditation Date"] = _format_display_dates(display["Accreditation Date"])
 

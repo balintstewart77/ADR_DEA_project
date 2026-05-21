@@ -150,11 +150,19 @@ THEMATIC_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v3")
 REGISTER_SOURCE_ICON = "▣"
 DERIVED_FIELD_ICON = "✦"
 DERIVED_EMPTY_VALUE = "—"
+SUBSTANTIVE_DOMAIN_COUNT_COL = "substantive_domain_count"
 
 _DERIVED_CLASSIFICATION_COLUMNS = [
     "substantive_domains",
     "linkage_mode",
     "analytical_purpose",
+]
+_DERIVED_ENRICHMENT_COLUMNS = [
+    SUBSTANTIVE_DOMAIN_COUNT_COL,
+]
+_ENRICHED_DERIVED_COLUMNS = [
+    *_DERIVED_CLASSIFICATION_COLUMNS,
+    *_DERIVED_ENRICHMENT_COLUMNS,
 ]
 _ENRICHED_REGISTER_DISPLAY_COLUMNS = [
     "Project ID",
@@ -163,7 +171,10 @@ _ENRICHED_REGISTER_DISPLAY_COLUMNS = [
     "Datasets Used",
     "Secure Research Service",
     "Accreditation Date",
-    *_DERIVED_CLASSIFICATION_COLUMNS,
+    "substantive_domains",
+    SUBSTANTIVE_DOMAIN_COUNT_COL,
+    "linkage_mode",
+    "analytical_purpose",
 ]
 _BROWSE_DISPLAY_COLUMNS = [
     "Project ID",

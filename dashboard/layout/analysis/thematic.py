@@ -12,7 +12,8 @@ from dashboard.data.registry import (
 )
 from dashboard.data.thematic import (
     THEMATIC_DATA_AVAILABLE, THEMATIC_NARRATIVE, THEMATIC_PROJECT_COUNT,
-    _THEMATIC_DOMAIN_OPTIONS, _THEMATIC_LINKAGE_OPTIONS, _THEMATIC_PURPOSE_OPTIONS,
+    _THEMATIC_DOMAIN_OPTIONS, _THEMATIC_DOMAIN_COUNT_OPTIONS,
+    _THEMATIC_LINKAGE_OPTIONS, _THEMATIC_PURPOSE_OPTIONS,
 )
 
 
@@ -264,7 +265,7 @@ def build_thematic_tab():
                         placeholder="Search by project ID, title, or researcher…",
                         type="text",
                     ),
-                ], md=6),
+                ], md=5),
                 dbc.Col([
                     html.Label("Dataset", className="filter-label"),
                     dcc.Dropdown(
@@ -286,7 +287,17 @@ def build_thematic_tab():
                         searchable=True,
                         placeholder="All source organisations",
                     ),
-                ], md=3),
+                ], md=2),
+                dbc.Col([
+                    html.Label("Domain count", className="filter-label"),
+                    dcc.Dropdown(
+                        id="enriched-domain-count-filter",
+                        options=_THEMATIC_DOMAIN_COUNT_OPTIONS,
+                        value="ALL",
+                        clearable=False,
+                        searchable=False,
+                    ),
+                ], md=2),
             ], className="mb-2 g-2"),
             dbc.Row([
                 dbc.Col([
@@ -393,6 +404,7 @@ def build_thematic_tab():
                         {"name": f"{REGISTER_SOURCE_ICON} Processing environment", "id": "Secure Research Service"},
                         {"name": f"{REGISTER_SOURCE_ICON} Accreditation Date", "id": "Accreditation Date"},
                         {"name": f"{DERIVED_FIELD_ICON} Domains", "id": "substantive_domains"},
+                        {"name": f"{DERIVED_FIELD_ICON} Layer A domain count", "id": "substantive_domain_count"},
                         {"name": f"{DERIVED_FIELD_ICON} Linkage mode", "id": "linkage_mode"},
                         {"name": f"{DERIVED_FIELD_ICON} Purpose", "id": "analytical_purpose"},
                     ],
