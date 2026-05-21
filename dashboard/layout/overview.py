@@ -64,7 +64,7 @@ def build_overview_tab():
                 html.Div([
                     html.H5("\U0001F50D Project Explorer"),
                     html.P(
-                        "Search by title, researcher, dataset, provider, institution, or collection."
+                        "Search by project ID, title, researcher, dataset, provider, institution, or collection."
                     ),
                     html.Button(
                         "Open Project Explorer",

@@ -82,6 +82,11 @@ def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institu
         ]
 
     if search:
+        project_id = (
+            base["Project ID"]
+            if "Project ID" in base.columns
+            else pd.Series("", index=base.index)
+        )
         title = base["Title"] if "Title" in base.columns else pd.Series("", index=base.index)
         researchers = (
             base["Researchers"]
@@ -89,7 +94,8 @@ def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institu
             else pd.Series("", index=base.index)
         )
         mask = (
-            title.astype(str).str.contains(search, case=False, na=False, regex=False)
+            project_id.astype(str).str.contains(search, case=False, na=False, regex=False)
+            | title.astype(str).str.contains(search, case=False, na=False, regex=False)
             | researchers.astype(str).str.contains(search, case=False, na=False, regex=False)
         )
         base = base[mask]

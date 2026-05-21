@@ -261,7 +261,7 @@ def build_thematic_tab():
                     html.Label("Search", className="filter-label"),
                     dbc.Input(
                         id="enriched-search",
-                        placeholder="Search by title or researcher…",
+                        placeholder="Search by project ID, title, or researcher…",
                         type="text",
                     ),
                 ], md=6),
