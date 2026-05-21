@@ -240,13 +240,9 @@ def _get_enriched_register_display_df(
     domain_count_filter,
     linkage_filter,
     purpose_filter,
-    include_unclassified,
 ) -> tuple[pd.DataFrame, str]:
-    if include_unclassified:
-        base = _merge_thematic_classifications(df_all)
-    else:
-        base = _ensure_enriched_register_columns(df_thematic_projects)
-        base = base[_classified_mask(base)]
+    base = _ensure_enriched_register_columns(df_thematic_projects)
+    base = base[_classified_mask(base)]
 
     base = _apply_register_filters(
         base,
@@ -270,17 +266,10 @@ def _get_enriched_register_display_df(
         base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
 
     n_displayed = len(base)
-    n_total = len(df_all)
     n_classified_total = _CLASSIFIED_REGISTER_COUNT
-    if include_unclassified:
-        count_text = (
-            f"Showing {n_displayed:,} of {n_total:,} projects "
-            f"({n_classified_total:,} classified)"
-        )
-    else:
-        count_text = (
-            f"Showing {n_displayed:,} of {n_classified_total:,} classified projects"
-        )
+    count_text = (
+        f"Showing {n_displayed:,} of {n_classified_total:,} classified projects"
+    )
 
     display = base.copy()
     for col in _DERIVED_CLASSIFICATION_COLUMNS:

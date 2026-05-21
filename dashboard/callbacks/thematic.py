@@ -94,7 +94,6 @@ def register(app):
         Input("enriched-domain-count-filter", "value"),
         Input("enriched-linkage-filter", "value"),
         Input("enriched-purpose-filter", "value"),
-        Input("enriched-include-unclassified", "value"),
         Input("enriched-page-size", "value"),
     )
     def update_enriched_register(
@@ -107,7 +106,6 @@ def register(app):
         domain_count_filter,
         linkage_filter,
         purpose_filter,
-        include_unclassified,
         page_size,
     ):
         display, count_text = _get_enriched_register_display_df(
@@ -120,7 +118,6 @@ def register(app):
             domain_count_filter,
             linkage_filter,
             purpose_filter,
-            include_unclassified,
         )
 
         return (
@@ -141,7 +138,6 @@ def register(app):
         State("enriched-domain-count-filter", "value"),
         State("enriched-linkage-filter", "value"),
         State("enriched-purpose-filter", "value"),
-        State("enriched-include-unclassified", "value"),
         prevent_initial_call=True,
     )
     def download_enriched_csv(
@@ -155,7 +151,6 @@ def register(app):
         domain_count_filter,
         linkage_filter,
         purpose_filter,
-        include_unclassified,
     ):
         display, _ = _get_enriched_register_display_df(
             search,
@@ -167,7 +162,6 @@ def register(app):
             domain_count_filter,
             linkage_filter,
             purpose_filter,
-            include_unclassified,
         )
         filename = f"dea-enriched-register-{_csv_date_stamp()}.csv"
         return dcc.send_data_frame(display.to_csv, filename, index=False)

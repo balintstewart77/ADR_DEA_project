@@ -364,22 +364,13 @@ def build_thematic_tab():
                 ], md=1),
             ], className="mb-2 g-2"),
             dbc.Row([
-                dbc.Col(
-                    dbc.Switch(
-                        id="enriched-include-unclassified",
-                        label="Include unclassified projects",
-                        value=False,
-                        className="pt-1",
-                    ),
-                    md=3,
-                ),
                 dbc.Col([
                     html.Div(
                         id="enriched-browse-count",
                         className="text-muted small",
                         style={"paddingTop": "0.35rem", "textAlign": "center"},
                     ),
-                ], md=6),
+                ], md=9),
                 dbc.Col([
                     html.Button(
                         "Download CSV",
