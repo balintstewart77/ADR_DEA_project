@@ -52,17 +52,6 @@ metadata:
   - 'Layer B: "Unclear from Title" renamed to "Unclear from Register Entry". 3 active linkage modes + Unclear from Register Entry.'
   - 'Layer C: "Inequality / Disparities Analysis" removed. "Unclear from Title" renamed to "Unclear from Register Entry". 7 active purposes + Unclear from Register Entry.'
   - 'New: Cross-cutting demographic-disparities/equity tag, orthogonal to the three layers.'
-  code_discrepancies:
-  - 'DOMAINS list (line 97): still includes "Gender, Race & Ethnicity" and "Poverty, Inequality & Living Standards".'
-  - 'DOMAIN_LITERALS (line 233): same.'
-  - 'DOMAIN_GUIDANCE (line 114): still includes entry 11 for "Gender, Race & Ethnicity" and entry 6 as "Poverty, Inequality & Living Standards".'
-  - 'PURPOSES list (line 187): still includes "Inequality / Disparities Analysis".'
-  - 'PURPOSE_LITERALS (line 257): same.'
-  - 'PURPOSE_GUIDANCE (line 199): still includes "Inequality / Disparities Analysis" entry.'
-  - 'CLASSIFICATION_EXAMPLES (line 499): Examples 6 and 7 reference removed categories.'
-  - 'Cross-cutting tag: not yet implemented in code.'
-  - 'PROMPT_VERSION (line 87): still "v3.3".'
-  - '"Unclear from Title" rename to "Unclear from Register Entry" not yet applied in code (DOMAINS, LINKAGE_MODES, PURPOSES, _LITERALS types, prompt guidance, dashboard UI). Dictionary-only change in v3.4; code change is a separate v3.4 task.'
   balance_note: |
     Balance: the categories vary considerably in size. Some Layer C purposes — notably Risk Prediction / Early Identification and Service Interaction / Systems Analysis — are small. They are retained as genuine, conceptually distinct analytical purposes and on future-proofing grounds (these kinds of research are expected to become more common). No claim is made about trends over time in these small categories: at their current size, year-on-year variation is not statistically meaningful and should not be read as a trend.
   covid_category_type_note: |
