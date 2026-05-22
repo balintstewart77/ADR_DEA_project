@@ -1,18 +1,20 @@
 metadata:
   title: Taxonomy Data Dictionary -- DEA Project Classification Ontology v3.4
-  generated: '2026-05-21'
+  generated: '2026-05-22'
   source: git history and v3.3 classification prompt
-  taxonomy_owner: '[AUTHOR TO CONFIRM]'
+  taxonomy_owner: "Project Lead, DEA Dashboard"
   notes:
-  - Cells prefixed [DRAFT] are Claude Code draft expository definitions requiring author review.
   - Cells prefixed (from prompt) or (historical, from prompt) are extracted verbatim from the v3.3 classification prompt.
-  - Cells marked [AUTHOR TO WRITE] or [AUTHOR TO CONFIRM] require authoring before use in the v4 prompt.
   - This file is the single source of truth. CSV or Markdown renderings are generated from it.
+  - Project counts are not stored in this dictionary. They change with each classification run
+    and are reported separately from the latest v4 classification output.
   v3_4_changes:
   - 'Layer A: "Gender, Race & Ethnicity" removed (replaced by cross-cutting tag). "Poverty, Inequality & Living Standards"
-    relabelled to "Poverty, Wealth & Living Standards". 12 active domains + Unclear from Title.'
-  - 'Layer B: Unchanged. 4 categories.'
-  - 'Layer C: "Inequality / Disparities Analysis" removed. 7 active purposes + Unclear from Title.'
+    relabelled to "Poverty, Wealth & Living Standards". "Unclear from Title" renamed to "Unclear from Register Entry".
+    12 active domains + Unclear from Register Entry.'
+  - 'Layer B: "Unclear from Title" renamed to "Unclear from Register Entry". 3 active linkage modes + Unclear from Register Entry.'
+  - 'Layer C: "Inequality / Disparities Analysis" removed. "Unclear from Title" renamed to "Unclear from Register Entry".
+    7 active purposes + Unclear from Register Entry.'
   - 'New: Cross-cutting demographic-disparities/equity tag, orthogonal to the three layers.'
   code_discrepancies:
   - 'DOMAINS list (line 97): still includes "Gender, Race & Ethnicity" and "Poverty, Inequality & Living Standards".'
@@ -25,13 +27,106 @@ metadata:
   - 'CLASSIFICATION_EXAMPLES (line 499): Examples 6 and 7 reference removed categories.'
   - 'Cross-cutting tag: not yet implemented in code.'
   - 'PROMPT_VERSION (line 87): still "v3.3".'
+  - '"Unclear from Title" rename to "Unclear from Register Entry" not yet applied in code (DOMAINS, LINKAGE_MODES, PURPOSES,
+    _LITERALS types, prompt guidance, dashboard UI). Dictionary-only change in v3.4; code change is a separate v3.4 task.'
+  balance_note: >
+    Balance: the categories vary considerably in size. Some Layer C purposes — notably Risk Prediction /
+    Early Identification and Service Interaction / Systems Analysis — are small. They are retained as genuine,
+    conceptually distinct analytical purposes and on future-proofing grounds (these kinds of research are
+    expected to become more common). No claim is made about trends over time in these small categories:
+    at their current size, year-on-year variation is not statistically meaningful and should not be read as a trend.
+  covid_category_type_note: >
+    COVID-19 & Pandemic is retained as a Layer A domain but is a category-type anomaly: unlike the other
+    domains, which are policy/sector areas, it is a time-bounded event that cuts across domains (its own
+    inclusion rule directs that it be assigned alongside a substantive domain). This is the same category-type
+    issue that led to the removal of "Gender, Race & Ethnicity" from Layer A. Whether COVID-19 should likewise
+    be converted from a domain to a cross-cutting tag is a documented open question, to be decided after v4
+    validation; it is not changed in v3.4.
+  adr_uk_theme_alignment:
+    description: >
+      Mapping of this dictionary's Layer A domains to ADR UK's seven research themes, for interoperability
+      reference under the ONS framework's interoperability principle. This alignment is a comparison, not an
+      adoption: the dictionary's domains were derived inductively from the DEA register and diverge from ADR UK's
+      themes where the register's scope is broader.
+    source: "ADR UK website research themes page"
+    accessed: "2026-05-22"
+    adr_uk_themes:
+    - Housing & communities
+    - Health & wellbeing
+    - Children, young people & education
+    - Employment & the economy
+    - Climate & the environment
+    - Social mobility & inclusion
+    - Crime & justice
+    mapping:
+      Labour Market & Employment:
+        adr_uk_theme: "Employment & the economy"
+        alignment_type: "close"
+        note: "Covers labour-market research; ADR UK theme also includes wider economic activity."
+
+      Education & Skills:
+        adr_uk_theme: "Children, young people & education"
+        alignment_type: "close"
+        note: "Close match for education and skills research, although this ontology also includes adult skills and workforce training."
+
+      Health & Social Care:
+        adr_uk_theme: "Health & wellbeing"
+        alignment_type: "close"
+        note: "Close match, with this ontology using a more service-facing health and social care label."
+
+      Crime & Justice:
+        adr_uk_theme: "Crime & justice"
+        alignment_type: "close"
+        note: "Direct match."
+
+      Business & Productivity:
+        adr_uk_theme: "Employment & the economy"
+        alignment_type: "partial"
+        note: "ADR UK combines employment and economy; this ontology separates firm/productivity research from labour-market research because the DEA register contains substantial business-data use."
+
+      Poverty, Wealth & Living Standards:
+        adr_uk_theme: "Social mobility & inclusion"
+        alignment_type: "partial"
+        note: "Partial overlap only. ADR UK's theme is broader, covering social mobility and inclusion; this ontology narrows the domain to material resources, poverty, wealth, benefits, debt, and living standards."
+
+      Housing & Planning:
+        adr_uk_theme: "Housing & communities"
+        alignment_type: "close"
+        note: "Close match, though this ontology foregrounds housing, planning and residential conditions."
+
+      Migration & Demographics:
+        adr_uk_theme: null
+        alignment_type: "none"
+        note: "No direct ADR UK equivalent. Migration, fertility, mortality and population structure appear as cross-cutting concerns rather than a dedicated ADR UK theme."
+
+      Environment & Agriculture:
+        adr_uk_theme: "Climate & the environment"
+        alignment_type: "partial"
+        note: "Partial overlap. ADR UK's theme emphasises climate and environment; this ontology also includes agriculture, land use and farming because these appear in the DEA register."
+
+      Public Finance & Taxation:
+        adr_uk_theme: null
+        alignment_type: "none"
+        note: "No direct ADR UK equivalent. Public finance and taxation are retained because the DEA/SRS portfolio includes fiscal, tax and public-expenditure research."
+
+      COVID-19 & Pandemic:
+        adr_uk_theme: null
+        alignment_type: "none"
+        note: "No direct ADR UK equivalent. COVID-19 is a time-bounded cross-domain event rather than a standing ADR UK research theme."
+
+      Data Infrastructure & Methodology:
+        adr_uk_theme: null
+        alignment_type: "none"
+        note: "No direct ADR UK equivalent. Methodological and data-infrastructure research is retained as a domain because it is visible in the DEA register."
+        
 categories:
 - label: Labour Market & Employment
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 436 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning work, employment, labour-market participation, and workforce dynamics. Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality, working hours, contracts and working conditions; labour supply and demand; occupational, sectoral and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and transitions into, through, or out of work.
   inclusion_rules: |
@@ -53,16 +148,13 @@ categories:
         - "Policy Evaluation / Impact Analysis"
       rationale: "Employment, hours and earnings are central; household income may also bring in material living standards; National Living Wage is a named policy."
     - project_id: "2021/027"
-      title: "The employment trajectories of refugees in the UK"
+      title: "SEARCH, SKILLS AND SATISFACTION: THE EMPLOYMENT TRAJECTORIES OF REFUGEES IN THE UK"
       assign: "Labour Market & Employment"
       likely_co_labels:
         - "Migration & Demographics"
         - "Life-Course / Trajectory Analysis"
       rationale: "Employment trajectories make this labour-market research; refugee status brings in migration/demography."
   counterexamples:
-    - project_id: "2021/050"
-      title: "Cohort Comparisons of Wealth"
-      replacement: "Poverty, Wealth & Living Standards"
     - project_id: "2020/013"
       title: "Firm-level analysis of research and development"
       replacement: "Business & Productivity"
@@ -72,9 +164,10 @@ categories:
 - label: Education & Skills
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 294 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning education, learning, training, skills formation, and transitions through education systems. Includes early years, schools, colleges, universities, qualifications, apprenticeships, admissions, attainment, attendance, teacher workforce issues, childcare, and education-to-work pathways.
   inclusion_rules: |
@@ -115,9 +208,10 @@ categories:
 - label: Health & Social Care
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 245 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning health, illness, mortality, wellbeing, clinical outcomes, health services, public health, mental health, social care, and care-system use. Includes NHS services, hospitals, GP care, palliative care, maternity, morbidity, mortality where health is the research object, and adult or children's social care.
   inclusion_rules: |
@@ -139,7 +233,7 @@ categories:
         - "Outcome Tracking"
       rationale: "Severe mental disorder is the health outcome; social/economic predictors may bring in material conditions."
     - project_id: "2024/216"
-      title: "Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity..."
+      title: "Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care."
       assign: "Health & Social Care"
       likely_co_labels:
         - "Poverty, Wealth & Living Standards"
@@ -150,17 +244,18 @@ categories:
       title: "Understanding Recent Fertility in the UK..."
       replacement: "Migration & Demographics / Methodological"
     - project_id: "2019/025"
-      title: "Concessionary Fares Scheme for the population aged 60 and over"
+      title: "Understanding the uptake and use of the Northern Ireland Concessionary Fares Scheme for the population aged 60 and over"
       replacement: "Migration & Demographics / Service Interaction"
     - project_id: "2020/058"
-      title: "Residential energy consumption..."
+      title: "Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households"
       replacement: "Environment & Agriculture"
 - label: Crime & Justice
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 79 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning crime, victimisation, public safety, offending, policing, courts, prisons, probation, sentencing, family justice, civil justice, reoffending, and criminal records.
   inclusion_rules: |
@@ -196,14 +291,15 @@ categories:
       title: "Ethnic Minority British Election Study pilot"
       replacement: "Migration & Demographics"
     - project_id: "2024/216"
-      title: "Psychosocial disadvantage in pregnancy..."
+      title: "Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care."
       replacement: "Health & Social Care"
 - label: Business & Productivity
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 390 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning firms, business activity, industrial structure, innovation, productivity, entrepreneurship, trade, exports, foreign direct investment, research and development, business support, and firm-level performance.
   inclusion_rules: |
@@ -235,23 +331,24 @@ categories:
       title: "Wage progression and firm productivity"
       replacement: "Labour Market & Employment plus Business & Productivity"
     - project_id: "2020/019"
-      title: "Government expenditure on employment and wages"
+      title: "The impact of government expenditure on employment and wages: evidence from firm-level data for the UK"
       replacement: "Public Finance & Taxation / Labour Market & Employment"
     - project_id: "2020/021"
-      title: "National Living Wage..."
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       replacement: "Labour Market & Employment"
 - label: Poverty, Wealth & Living Standards
   layer: Layer A -- domain
   status: relabelled v3.4
-  date_added: 2026-03-26 (6e067f4)
-  date_changed: v3.4 (relabelled from "Poverty, Inequality & Living Standards")
-  project_count: 183 (v3.3 output under old name "Poverty, Inequality & Living Standards"; to be repopulated after v4 regeneration)
+  version_added: v3
+  version_changed: v3.4
+  date_added: '2026-03-26'
+  date_changed: null
   definition: |
     Research concerning material resources, economic hardship, household living standards, poverty, wealth, debt, savings, benefits, deprivation, food security, cost of living, household income, and distribution of resources.
   inclusion_rules: |
     Assign when the project's substantive focus is poverty, household income, wealth, savings, debt, benefits, deprivation, food insecurity, living standards, economic hardship, or household resources.
   exclusion_rules: |
-    Do not assign solely because a title mentions inequality, pay gaps, ethnicity, gender, employment, or socioeconomic differences. Use **Labour Market & Employment** for wages, pay, earnings, job status, and occupational outcomes unless household resources or poverty are central. Use the demographic-disparities tag for group comparisons.
+    Do not assign solely because a title mentions pay gaps, employment, or socioeconomic differences. Use **Labour Market & Employment** for wages, pay, earnings, job status, and occupational outcomes unless household resources or poverty are central. Comparison of material conditions (poverty, income, wealth) across demographic groups (e.g. by age cohort, ethnicity, or sex) qualifies for the **Demographic disparities / equity tag** in addition to this domain.
   examples:
     - project_id: "2019/015"
       title: "Understanding saving behaviour in the UK"
@@ -272,13 +369,14 @@ categories:
       likely_co_labels:
         - "Migration & Demographics"
         - "Descriptive Monitoring"
-      rationale: "Wealth distribution across cohorts is material living-standards research."
+        - "Demographic disparities / equity tag"
+      rationale: "Wealth distribution across cohorts is material living-standards research; age-cohort comparison qualifies for the demographic-disparities tag."
   counterexamples:
     - project_id: "2020/018"
-      title: "Labour Market Inequality"
+      title: "Inequalities in the 21st Century – Chapter on Labour Market Inequality"
       replacement: "Labour Market & Employment"
     - project_id: "2020/021"
-      title: "National Living Wage..."
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       replacement: "Labour Market & Employment; add Poverty/Wealth only if household income is central"
     - project_id: "2022/190"
       title: "Ethnic inequalities in mortality"
@@ -286,9 +384,10 @@ categories:
 - label: Housing & Planning
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 50 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning housing, homelessness, residential conditions, tenure, home ownership, planning systems, neighbourhoods, gentrification, residential mobility, and place-based housing or planning interventions.
   inclusion_rules: |
@@ -319,20 +418,21 @@ categories:
       rationale: "Right to Buy and gentrification are housing/planning topics with migration effects."
   counterexamples:
     - project_id: "2020/058"
-      title: "Residential energy consumption..."
+      title: "Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households"
       replacement: "Environment & Agriculture"
     - project_id: "2020/056"
-      title: "Stay at Home Guidance During COVID-19..."
+      title: "Factors Predicting Adherence Stay at Home Guidance During COVID-19 Pandemic in the United Kingdom"
       replacement: "COVID-19 & Pandemic"
     - project_id: "2019/007"
-      title: "Thriving Places index indicators..."
+      title: "Thriving Places index – indicators of wellbeing at local authority level"
       replacement: "place-based monitoring, not necessarily Housing & Planning unless housing/neighbourhood conditions are central"
 - label: Migration & Demographics
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 98 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning population structure, population change, migration, immigration, population mobility, fertility, ageing, mortality as a demographic outcome, census-based population analysis, and demographic composition.
   inclusion_rules: |
@@ -368,14 +468,15 @@ categories:
       title: "Ethnic inequalities in mortality"
       replacement: "Health & Social Care plus demographic-disparities tag"
     - project_id: "2020/080"
-      title: "Labour Market Outcomes of Migrants and Natives"
+      title: "Economic Cycles and Labour Market Outcomes of Migrants and Natives"
       replacement: "Labour Market & Employment plus Migration & Demographics"
 - label: Environment & Agriculture
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 87 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning the natural environment, climate, energy, agriculture, farming, land use, pollution, decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic or social activity.
   inclusion_rules: |
@@ -384,20 +485,20 @@ categories:
     Do not assign because the word "environment" appears in a non-natural-environment sense, such as "economic environment". Use **Business & Productivity** where an energy or climate programme is primarily framed as firm innovation or productivity, but add Environment where environmental outcomes are central.
   examples:
     - project_id: "2020/099"
-      title: "Energy demand drivers... under the climate emergency"
+      title: "Estimation of energy demand drivers and the effect of public policies on consumption under the climate emergency"
       assign: "Environment & Agriculture"
       likely_co_labels:
         - "Policy Evaluation / Impact Analysis"
       rationale: "Energy demand and climate emergency are environmental topics; public policies are explicitly mentioned."
     - project_id: "2020/058"
-      title: "Residential energy consumption..."
+      title: "Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households"
       assign: "Environment & Agriculture"
       likely_co_labels:
         - "Housing & Planning"
         - "Outcome Tracking"
       rationale: "Residential energy use is environmental/energy research, with housing context."
     - project_id: "2021/090"
-      title: "AD | ARC: Linking Individual and Farm Level Data for Agricultural Research"
+      title: "AD|ARC : Linking Individual and Farm Level Data for Agricultural Research - Wales Workstream"
       assign: "Environment & Agriculture"
       likely_co_labels:
         - "Cross-Domain Linkage"
@@ -411,14 +512,15 @@ categories:
       title: "Evaluation of the Energy Entrepreneurs Fund"
       replacement: "Business & Productivity; add Environment only if environmental outcomes are central"
     - project_id: "2020/051"
-      title: "Social distancing on firm productivity"
+      title: "Measuring the impact of social distancing on firm productivity"
       replacement: "COVID-19 & Pandemic / Business & Productivity"
 - label: Public Finance & Taxation
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 45 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research concerning government revenue, taxation, tax compliance, tax credits, public expenditure, public spending, fiscal transfers, business rates, tax reliefs, and fiscal policy.
   inclusion_rules: |
@@ -434,14 +536,14 @@ categories:
         - "Outcome Tracking"
       rationale: "Tax is the exposure; incorporation and business outcomes add business domain."
     - project_id: "2020/019"
-      title: "Government expenditure on employment and wages..."
+      title: "The impact of government expenditure on employment and wages: evidence from firm-level data for the UK"
       assign: "Public Finance & Taxation"
       likely_co_labels:
         - "Labour Market & Employment"
         - "Outcome Tracking"
       rationale: "Public expenditure is fiscal; employment and wages add labour-market domain."
     - project_id: "2020/067"
-      title: "Transfers, tax and tax credits"
+      title: "Inequalities in the 21st Century: Transfers, tax and tax credits"
       assign: "Public Finance & Taxation"
       likely_co_labels:
         - "Poverty, Wealth & Living Standards"
@@ -452,23 +554,29 @@ categories:
       title: "Intergenerational wealth transfers"
       replacement: "Poverty, Wealth & Living Standards"
     - project_id: "2020/034"
-      title: "Do post-crisis wealth shocks matter?"
+      title: "Pensions, Place, Populism: Do post-crisis wealth shocks matter?"
       replacement: "Poverty, Wealth & Living Standards"
     - project_id: "2020/024"
-      title: "Enterprise Zones"
+      title: "Assessing the impact of UK Enterprise Zones"
       replacement: "Business & Productivity / Policy Evaluation unless fiscal mechanisms are central"
 - label: COVID-19 & Pandemic
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 78 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research specifically focused on COVID-19, the COVID-19 pandemic, pandemic control measures, vaccination, infection surveillance, lockdowns, social distancing, pandemic-related public support, or pandemic consequences.
   inclusion_rules: |
     Assign whenever COVID-19 or pandemic conditions are central to the research question. If the project studies COVID-19 effects on employment, business, health, education, inequality, or households, assign both COVID-19 & Pandemic and the relevant substantive domain.
   exclusion_rules: |
     Do not assign simply because the project occurred during the pandemic period. Do not assign to infectious disease, health, or mortality studies unless COVID-19/pandemic framing is explicit.
+  category_type_note: >
+    See metadata covid_category_type_note. COVID-19 & Pandemic is a category-type anomaly: it is a
+    time-bounded event rather than a policy/sector area. Whether it should be converted from a domain
+    to a cross-cutting tag (as was done with Gender, Race & Ethnicity) is an open question for post-v4
+    validation.
   examples:
     - project_id: "2020/027"
       title: "COVID-19 Infection Survey"
@@ -485,7 +593,7 @@ categories:
         - "Service Interaction / Systems Analysis or Descriptive Monitoring"
       rationale: "Pandemic control and surveillance are explicit."
     - project_id: "2020/071"
-      title: "Pandemic control measures and financial support on businesses, regions and households"
+      title: "Modelling the effects of pandemic control measures and financial support on businesses, regions and households"
       assign: "COVID-19 & Pandemic"
       likely_co_labels:
         - "Business & Productivity"
@@ -494,20 +602,21 @@ categories:
       rationale: "Pandemic policy effects span firms, regions and households."
   counterexamples:
     - project_id: "2019/021"
-      title: "Predictors of severe mental disorders..."
+      title: "Social and Economic Predictors of the severe mental disorders, the SEP-MD study. Analysis of linked data from southeast London, UK"
       replacement: "Health & Social Care"
     - project_id: "2024/216"
-      title: "Psychosocial disadvantage in pregnancy..."
+      title: "Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care."
       replacement: "Health & Social Care"
     - project_id: "2020/058"
-      title: "Residential energy consumption..."
+      title: "Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households"
       replacement: "Environment & Agriculture"
 - label: Data Infrastructure & Methodology
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 40 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data.
   inclusion_rules: |
@@ -537,43 +646,45 @@ categories:
       rationale: "New estimation methods are central; crime is the substantive context."
   counterexamples:
     - project_id: "2020/118"
-      title: "Machine learning techniques..."
+      title: "Utilising routine data and machine learning techniques to discover new multi-morbidity and polypharmacy phenotype's associated with poorer outcomes, health, resilience and wellbeing in the Welsh population"
       replacement: "use Risk Prediction / substantive domain if the purpose is predictive modelling of health outcomes"
     - project_id: "2020/024"
-      title: "Enterprise Zones"
+      title: "Assessing the impact of UK Enterprise Zones"
       replacement: "Business & Productivity / Policy Evaluation"
     - project_id: "2024/259"
-      title: "Risk index of NEET..."
+      title: "Risk index of NEET for local authority use"
       replacement: "Education & Skills / Risk Prediction"
-- label: Unclear from Title
+- label: Unclear from Register Entry
   layer: Layer A -- domain
   status: active
-  date_added: 2026-03-26 (6e067f4, as "Other")
-  date_changed: 2026-04-07 (33f8a8c, renamed from "Other" to "Unclear from Title")
-  project_count: 2 (v3.3 output)
+  version_added: v3
+  version_changed: v3.4
+  date_added: '2026-03-26'
+  date_changed: '2026-04-07'
   definition: |
-    Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain.
+    Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain. Renamed from "Unclear from Title" in v3.4 because classification draws on the dataset field as well as the title, so "from Title" misdescribed it.
   inclusion_rules: |
     Assign when the title is an opaque acronym, internal project name, or otherwise non-descriptive, and the dataset field does not resolve the substantive area.
   exclusion_rules: |
     Do not assign if the dataset field reveals a clear domain. Do not assign alongside a real domain. If any domain can be inferred with reasonable confidence, use that domain.
   examples:
     - description: "Opaque acronym or internal project name with non-informative datasets"
-      assign: "Unclear from Title"
+      assign: "Unclear from Register Entry"
       likely_co_labels:
       rationale: "Use only when neither title nor datasets allow a defensible domain assignment."
   counterexamples:
     - project_id: "2021/103"
       title: "AMPHoRA"
-      replacement: "should not be Unclear if datasets reveal population/demography scope"
+      replacement: "should not be Unclear from Register Entry if datasets reveal population/demography scope"
     - description: "`STRIDE`-style titles"
-      replacement: "should not be Unclear where datasets reveal justice, employment, health, or another domain"
+      replacement: "should not be Unclear from Register Entry where datasets reveal justice, employment, health, or another domain"
 - label: Single-Dataset
   layer: Layer B -- linkage
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 537 (v3.3 output)
   definition: |
     The project uses one dataset or one internally coherent dataset product from a single policy domain, with no cross-dataset or cross-domain linkage implied by the register entry.
   inclusion_rules: |
@@ -589,7 +700,7 @@ categories:
         - "Descriptive Monitoring"
       rationale: "One crime survey source; no linkage implied."
     - project_id: "2021/035"
-      title: "Growing Up in England..."
+      title: "Shaping, testing and demonstrating the value of the Growing up in England wave 1 dataset: Roma, Gypsy and Traveller children case study"
       assign: "Single-Dataset"
       likely_co_labels:
         - "Education & Skills"
@@ -611,9 +722,10 @@ categories:
 - label: Within-Domain Linkage
   layer: Layer B -- linkage
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 488 (v3.3 output)
   definition: |
     The project uses or links two or more datasets that all fall within the same policy domain.
   inclusion_rules: |
@@ -649,9 +761,10 @@ categories:
 - label: Cross-Domain Linkage
   layer: Layer B -- linkage
   status: active
-  date_added: 2026-03-26 (6e067f4)
-  date_changed: 2026-04-23 (0a6798d, absorbed Multi-Domain Linkage -- now covers 2+ domains, previously exactly 2)
-  project_count: 245 (v3.3 output)
+  version_added: v3
+  version_changed: v3.3
+  date_added: '2026-03-26'
+  date_changed: '2026-04-23'
   definition: |
     The project links, combines, or uses datasets spanning two or more distinct policy domains, including cases where the register lists a single pre-linked product whose component sources are cross-domain.
   inclusion_rules: |
@@ -672,7 +785,7 @@ categories:
         - "Migration & Demographics"
       rationale: "Employment/earnings linked to census/demographic data."
     - project_id: "2020/021"
-      title: "National Living Wage..."
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       assign: "Cross-Domain Linkage if datasets span labour and household/welfare sources"
       likely_co_labels:
         - "Labour Market & Employment"
@@ -686,21 +799,22 @@ categories:
       replacement: "Within-Domain Linkage"
     - description: "One standalone survey/dataset"
       replacement: "Single-Dataset"
-- label: Unclear from Title
+- label: Unclear from Register Entry
   layer: Layer B -- linkage
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: v3.4
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 1 (v3.3 output)
   definition: |
-    Use only where the dataset field is missing, malformed, or too ambiguous to determine linkage mode.
+    Use only where the dataset field is missing, malformed, or too ambiguous to determine linkage mode. Renamed from "Unclear from Title" in v3.4 because classification draws on the dataset field as well as the title, so "from Title" misdescribed it.
   inclusion_rules: |
     Assign when the number or domain of datasets cannot be inferred from the register entry.
   exclusion_rules: |
     Do not assign based on an unclear title alone. Linkage mode should be determined primarily from the dataset field.
   examples:
     - description: "Dataset field absent or too generic to identify whether one or multiple datasets are used"
-      assign: "Unclear from Title"
+      assign: "Unclear from Register Entry"
       likely_co_labels:
         - "Domain and purpose may still be classifiable from title"
       rationale: "Linkage mode cannot be inferred even if subject matter can."
@@ -709,9 +823,10 @@ categories:
 - label: Descriptive Monitoring
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 441 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research that measures the level, prevalence, distribution, trend, profile, or pattern of a phenomenon without primarily testing an exposure-outcome relationship or evaluating a named intervention.
   inclusion_rules: |
@@ -740,20 +855,21 @@ categories:
       rationale: "Business dynamism is likely tracking levels/patterns in firm activity."
   counterexamples:
     - project_id: "2020/021"
-      title: "National Living Wage impact"
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       replacement: "Policy Evaluation / Impact Analysis"
     - project_id: "2019/005"
-      title: "hearing loss impact on wellbeing"
+      title: "Measuring the impact of hearing loss on well-being"
       replacement: "Outcome Tracking"
     - project_id: "2024/259"
-      title: "NEET risk index"
+      title: "Risk index of NEET for local authority use"
       replacement: "Risk Prediction / Early Identification"
 - label: Outcome Tracking
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4, as "Outcome Linkage")
-  date_changed: 2026-04-07 (33f8a8c, renamed from "Outcome Linkage" to "Outcome Tracking")
-  project_count: 261 (v3.3 output; to be repopulated after v4 regeneration)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
+  date_changed: '2026-04-07'
   definition: |
     Research that links a naturally occurring exposure, condition, event, status, characteristic, or circumstance to a downstream outcome.
   inclusion_rules: |
@@ -783,20 +899,21 @@ categories:
       rationale: "Links wage progression and firm productivity outcomes."
   counterexamples:
     - project_id: "2020/021"
-      title: "National Living Wage effects"
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       replacement: "Policy Evaluation"
     - project_id: "2020/117"
-      title: "education progression over time"
+      title: "Participation in and Progression Through Education in Wales: The Role of Family"
       replacement: "Life-Course / Trajectory Analysis"
     - project_id: "2019/026"
-      title: "migration analysis"
+      title: "Migration Observatory analysis of EU and non-EU migration in the UK"
       replacement: "Descriptive Monitoring"
 - label: Life-Course / Trajectory Analysis
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 66 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions, or life stages to understand trajectories, progression, mobility, or cumulative outcomes.
   inclusion_rules: |
@@ -805,20 +922,20 @@ categories:
     Do not assign merely because longitudinal data are used. If the study is a single exposure-outcome test, use Outcome Tracking. If it evaluates a named intervention over time, use Policy Evaluation.
   examples:
     - project_id: "2020/117"
-      title: "Participation in and Progression Through Education in Wales"
+      title: "Participation in and Progression Through Education in Wales: The Role of Family"
       assign: "Life-Course / Trajectory Analysis"
       likely_co_labels:
         - "Education & Skills"
       rationale: "Participation and progression imply tracking educational pathways."
     - project_id: "2021/027"
-      title: "Employment trajectories of refugees in the UK"
+      title: "SEARCH, SKILLS AND SATISFACTION: THE EMPLOYMENT TRAJECTORIES OF REFUGEES IN THE UK"
       assign: "Life-Course / Trajectory Analysis"
       likely_co_labels:
         - "Labour Market & Employment"
         - "Migration & Demographics"
       rationale: "Employment trajectories are explicitly longitudinal/pathway-focused."
     - project_id: "2021/038"
-      title: "Defendant appearance over time: specialisation, escalation or de-escalation?"
+      title: "Using linked Magistrates and Crown Court data to explore defendant appearance over time: specialisation, escalation or de-escalation?"
       assign: "Life-Course / Trajectory Analysis"
       likely_co_labels:
         - "Crime & Justice"
@@ -826,20 +943,21 @@ categories:
       rationale: "\"Over time\" and escalation/de-escalation are trajectory concepts."
   counterexamples:
     - project_id: "2019/005"
-      title: "hearing loss and wellbeing"
+      title: "Measuring the impact of hearing loss on well-being"
       replacement: "Outcome Tracking"
     - project_id: "2019/026"
-      title: "migration analysis"
+      title: "Migration Observatory analysis of EU and non-EU migration in the UK"
       replacement: "Descriptive Monitoring"
     - project_id: "2020/024"
-      title: "Enterprise Zones impact"
+      title: "Assessing the impact of UK Enterprise Zones"
       replacement: "Policy Evaluation"
 - label: Service Interaction / Systems Analysis
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 25 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research focused on how people, cases, families, or organisations move through, use, access, or are processed by public service systems.
   inclusion_rules: |
@@ -848,20 +966,20 @@ categories:
     Do not assign merely because an outcome occurs in a public service context. If the service is only the setting and the focus is an individual outcome, use Outcome Tracking. If evaluating a named service reform or intervention, use Policy Evaluation.
   examples:
     - project_id: "2019/025"
-      title: "Uptake and use of the Northern Ireland Concessionary Fares Scheme..."
+      title: "Understanding the uptake and use of the Northern Ireland Concessionary Fares Scheme for the population aged 60 and over"
       assign: "Service Interaction / Systems Analysis"
       likely_co_labels:
         - "Migration & Demographics"
         - "Policy Evaluation possible"
       rationale: "Uptake and use of a public scheme are service-interaction concepts."
     - project_id: "2022/111"
-      title: "Private family law cases... profiles, pathways and outcomes"
+      title: "Private family law cases in England and Wales: profiles, pathways and outcomes"
       assign: "Service Interaction / Systems Analysis"
       likely_co_labels:
         - "Crime & Justice"
       rationale: "\"Pathways\" through family law cases makes system interaction central."
     - project_id: "2025/091"
-      title: "IPV victims/survivors' help-seeking of mental healthcare"
+      title: "Intimate Partner Violence (IPV) victims/survivors' help-seeking of mental healthcare"
       assign: "Service Interaction / Systems Analysis"
       likely_co_labels:
         - "Health & Social Care"
@@ -869,20 +987,21 @@ categories:
       rationale: "Help-seeking is a service-use/pathway concept; IPV adds justice/public-safety context."
   counterexamples:
     - project_id: "2019/005"
-      title: "hearing loss and wellbeing"
+      title: "Measuring the impact of hearing loss on well-being"
       replacement: "Outcome Tracking"
     - project_id: "2020/021"
-      title: "National Living Wage impact"
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       replacement: "Policy Evaluation"
     - project_id: "2024/216"
-      title: "pregnancy morbidity risk"
+      title: "Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care."
       replacement: "Risk Prediction or Outcome Tracking"
 - label: Policy Evaluation / Impact Analysis
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 266 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research that evaluates the effects, impacts, implementation, or consequences of a specific named policy, programme, regulation, intervention, scheme, or institutional change.
   inclusion_rules: |
@@ -904,7 +1023,7 @@ categories:
         - "Migration & Demographics"
       rationale: "Right to Buy is a named policy; migration/gentrification are outcomes."
     - project_id: "2020/021"
-      title: "The impact of the National Living Wage..."
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       assign: "Policy Evaluation / Impact Analysis"
       likely_co_labels:
         - "Labour Market & Employment"
@@ -912,20 +1031,21 @@ categories:
       rationale: "Named wage policy with employment, earnings and household income outcomes."
   counterexamples:
     - project_id: "2019/005"
-      title: "hearing loss and wellbeing"
+      title: "Measuring the impact of hearing loss on well-being"
       replacement: "Outcome Tracking"
     - project_id: "2020/017"
-      title: "debt and wellbeing"
+      title: "Subjective wellbeing impacts of debt and debt-related factors"
       replacement: "Outcome Tracking"
     - project_id: "2019/026"
-      title: "migration analysis"
+      title: "Migration Observatory analysis of EU and non-EU migration in the UK"
       replacement: "Descriptive Monitoring"
 - label: Risk Prediction / Early Identification
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 20 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research focused on predicting risk, identifying at-risk individuals or groups, building risk scores, developing screening tools, or estimating likelihood of adverse outcomes before it occurs or as it emerges.
   inclusion_rules: |
@@ -956,20 +1076,21 @@ categories:
       rationale: "Risk factors and future severe mental-health outcomes are central."
   counterexamples:
     - project_id: "2020/017"
-      title: "debt and wellbeing"
+      title: "Subjective wellbeing impacts of debt and debt-related factors"
       replacement: "Outcome Tracking"
     - project_id: "2019/026"
-      title: "migration analysis"
+      title: "Migration Observatory analysis of EU and non-EU migration in the UK"
       replacement: "Descriptive Monitoring"
     - project_id: "2020/024"
-      title: "Enterprise Zones"
+      title: "Assessing the impact of UK Enterprise Zones"
       replacement: "Policy Evaluation"
 - label: Methodological / Infrastructure Research
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: null
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 64 (v3.3 output; to be repopulated after v4 regeneration)
   definition: |
     Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches, survey methods, or data assets.
   inclusion_rules: |
@@ -999,22 +1120,23 @@ categories:
       rationale: "Quality measurement/statistical estimation is the purpose."
   counterexamples:
     - project_id: "2020/118"
-      title: "machine learning for multimorbidity phenotypes"
+      title: "Utilising routine data and machine learning techniques to discover new multi-morbidity and polypharmacy phenotype's associated with poorer outcomes, health, resilience and wellbeing in the Welsh population"
       replacement: "Risk Prediction / Health & Social Care if the goal is prediction/phenotyping"
     - project_id: "2020/021"
-      title: "National Living Wage impact"
+      title: "The impact of the National Living Wage on Employment, Hours, Earnings and Household Income"
       replacement: "Policy Evaluation"
     - project_id: "2019/011"
-      title: "firm ROI modelling"
+      title: "Modelling Return on Investment at the firm level"
       replacement: "Business & Productivity / Outcome Tracking"
-- label: Unclear from Title
+- label: Unclear from Register Entry
   layer: Layer C -- purpose
   status: active
-  date_added: 2026-03-26 (6e067f4)
+  version_added: v3
+  version_changed: v3.4
+  date_added: '2026-03-26'
   date_changed: null
-  project_count: 2 (v3.3 output)
   definition: |
-    Use where the project title and datasets do not provide enough information to infer the analytical purpose.
+    Use where the project title and datasets do not provide enough information to infer the analytical purpose. Renamed from "Unclear from Title" in v3.4 because classification draws on the dataset field as well as the title, so "from Title" misdescribed it.
   inclusion_rules: |
     Assign only where the analytical design cannot be inferred. It may be possible to classify the domain and linkage mode while leaving purpose unclear.
   exclusion_rules: |
@@ -1022,14 +1144,14 @@ categories:
   examples:
     - project_id: "2021/103"
       title: "AMPHoRA"
-      assign: "Unclear from Title for purpose only, if analytical design remains opaque"
+      assign: "Unclear from Register Entry for purpose only, if analytical design remains opaque"
       likely_co_labels:
         - "Migration & Demographics if datasets reveal Census/deaths"
         - "linkage mode depends on datasets"
       rationale: "Domain may be inferable from datasets while purpose remains unclear."
     - project_id: "2023/275"
       title: "WWTW04 - Walking With The Wounded need project"
-      assign: "Unclear from Title if purpose cannot be inferred"
+      assign: "Unclear from Register Entry if purpose cannot be inferred"
       likely_co_labels:
         - "Possible Health & Social Care / Labour Market / Poverty depending datasets"
       rationale: "Internal project naming may not reveal analytical purpose."
@@ -1041,20 +1163,21 @@ categories:
       title: "Assessing the impact of UK Enterprise Zones"
       replacement: "Policy Evaluation"
     - project_id: "2024/259"
-      title: "Risk index of NEET..."
+      title: "Risk index of NEET for local authority use"
       replacement: "Risk Prediction"
 - label: Demographic disparities / equity tag
   layer: Cross-cutting tag
   status: new v4
-  date_added: v3.4
+  version_added: v3.4
+  version_changed: null
+  date_added: null
   date_changed: null
-  project_count: N/A (new v4 -- to be populated after v4 regeneration)
   definition: |
     A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups.
   inclusion_rules: |
-    Assign where comparison across groups is central to the research question, especially by sex, gender, race, ethnicity, religion, disability, age, migrant/refugee status, nationality, or other equality-relevant demographic characteristics. The tag can be combined with any Layer A domain and any Layer C purpose.
+    Assign where comparison across groups is central to the research question, especially by sex, gender, race, ethnicity, religion, disability, age, cohort, migrant/refugee status, nationality, or other equality-relevant demographic characteristics. Socioeconomic comparison (e.g. by poverty, income, wealth) qualifies for this tag only when the comparison is made across a demographic group (such as age cohort, ethnicity, or sex); comparison by socioeconomic position alone does not. The tag can be combined with any Layer A domain and any Layer C purpose.
   exclusion_rules: |
-    Do not assign merely because demographic variables are used as controls, covariates, sample descriptors, or routine stratifiers. Do not assign to poverty, income, wealth, or deprivation projects unless demographic/equality-group comparison is central. Do not use this tag as a substitute for the substantive domain.
+    Do not assign merely because demographic variables are used as controls, covariates, sample descriptors, or routine stratifiers. Do not assign to poverty, income, wealth, or deprivation projects where the comparison is purely by socioeconomic position without a demographic/equality-group dimension. Do not use this tag as a substitute for the substantive domain.
   examples:
     - project_id: "2021/005"
       title: "Occupational segregation by ethnicity..."
@@ -1064,7 +1187,7 @@ categories:
         - "Descriptive Monitoring or Outcome Tracking"
       rationale: "Ethnicity is central to the labour-market comparison."
     - project_id: "2020/083"
-      title: "Religion and Labour Market Outcomes in England and Wales"
+      title: "Religion and Labour Market Outcomes in England and Wales: 1991-2011"
       assign: "Demographic disparities / equity tag"
       likely_co_labels:
         - "Labour Market & Employment"
@@ -1078,28 +1201,33 @@ categories:
         - "Outcome Tracking or Descriptive Monitoring"
       rationale: "Ethnic comparison is central; mortality is the health outcome."
     - project_id: "2023/056"
-      title: "Ethnic and religious inequalities in children's social services"
+      title: "Ethnic and religious inequalities in children's social services in Wales: Patterns and outcomes"
       assign: "Demographic disparities / equity tag"
       likely_co_labels:
         - "Health & Social Care"
         - "Service Interaction / Systems Analysis"
       rationale: "Ethnic/religious comparison is central; children's social services are the system."
+    - project_id: "2021/050"
+      title: "Cohort Comparisons of Wealth"
+      assign: "Poverty, Wealth & Living Standards plus Demographic disparities / equity tag"
+      likely_co_labels:
+        - "Migration & Demographics"
+        - "Descriptive Monitoring"
+      rationale: "Age cohort is the demographic comparison; wealth is the substantive domain."
   counterexamples:
     - project_id: "2023/006"
       title: "Ethnic Minority British Election Study pilot"
       replacement: "Migration & Demographics unless the research question compares disparities"
-    - project_id: "2021/050"
-      title: "Cohort Comparisons of Wealth"
-      replacement: "Poverty, Wealth & Living Standards unless equality-group comparison is central"
     - project_id: "2020/017"
-      title: "Debt and debt-related factors"
+      title: "Subjective wellbeing impacts of debt and debt-related factors"
       replacement: "Poverty, Wealth & Living Standards / Outcome Tracking"
 - label: Gender, Race & Ethnicity
   layer: Layer A -- domain
   status: removed v3.4
-  date_added: 2026-03-26 (6e067f4)
-  date_changed: v3.4 (removed)
-  project_count: 109 (v3.3 output, historical)
+  version_added: v3
+  version_changed: v3.4
+  date_added: '2026-03-26'
+  date_changed: null
   definition: |
     Historical note: Removed from Layer A in v3.4 because it captured demographic characteristics rather than a policy or sector domain. Former assignments should be redistributed to the relevant substantive domain, with demographic comparison represented through the cross-cutting **Demographic disparities / equity tag** where appropriate.
   inclusion_rules: |
@@ -1116,7 +1244,7 @@ categories:
       former_label: "Gender, Race & Ethnicity"
       replacement_classification: "Health & Social Care plus Demographic disparities / equity tag"
     - project_id: "2023/056"
-      title: "Ethnic and religious inequalities in children's social services"
+      title: "Ethnic and religious inequalities in children's social services in Wales: Patterns and outcomes"
       former_label: "Gender, Race & Ethnicity"
       replacement_classification: "Health & Social Care plus Demographic disparities / equity tag"
   counterexamples:
@@ -1124,9 +1252,10 @@ categories:
 - label: Inequality / Disparities Analysis
   layer: Layer C -- purpose
   status: removed v3.4
-  date_added: 2026-03-26 (6e067f4)
-  date_changed: v3.4 (removed)
-  project_count: 207 (v3.3 output, historical -- these projects will be reclassified at v4)
+  version_added: v3
+  version_changed: v3.4
+  date_added: '2026-03-26'
+  date_changed: null
   definition: |
     Historical note: Removed from Layer C in v3.4 because it functioned as a topic or lens rather than a distinct analytical purpose. Former assignments should be reclassified to the project's actual analytical operation, such as Descriptive Monitoring, Outcome Tracking, Policy Evaluation, Life-Course / Trajectory Analysis, Service Interaction / Systems Analysis, Risk Prediction, or Methodological / Infrastructure Research. Demographic-disparities content should be captured using the cross-cutting tag.
   inclusion_rules: |
@@ -1142,7 +1271,7 @@ categories:
       former_label: "Inequality / Disparities Analysis"
       replacement_classification: "Health & Social Care plus Demographic disparities / equity tag; purpose Outcome Tracking or Descriptive Monitoring"
     - project_id: "2023/056"
-      title: "Ethnic and religious inequalities in children's social services"
+      title: "Ethnic and religious inequalities in children's social services in Wales: Patterns and outcomes"
       former_label: "Inequality / Disparities Analysis"
       replacement_classification: "Health & Social Care plus Demographic disparities / equity tag; purpose Service Interaction / Systems Analysis or Outcome Tracking"
   counterexamples:
