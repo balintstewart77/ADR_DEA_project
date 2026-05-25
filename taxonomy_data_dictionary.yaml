@@ -20,6 +20,24 @@ metadata:
     Layer B -- linkage: exactly one
     Layer C -- purpose: one or two
     Cross-cutting tag: zero or more / boolean facets
+  example_schema:
+    note: |
+      Examples represent unordered multi-label sets; there is no primary label. The classifier assigns 1-2 domains and 1-2 purposes with no ranking among labels within those layers.
+    fields:
+      project_id: The DEA register project ID the example is drawn from.
+      title: The project's exact title from the register, with register data-quality defects cleaned.
+      datasets: The project's "Datasets Used" value from the register.
+      description: Used instead of project_id for abstract or illustrative examples not tied to a single register row.
+      domains: Layer A substantive domains assigned to the example as an unordered set, usually 1-2 values.
+      linkage: The Layer B linkage mode assigned to the example as a single value, or null when not specified by the example.
+      purposes: Layer C analytical purposes assigned to the example as an unordered set, usually 1-2 values.
+      tags: Cross-cutting tags assigned to the example as an unordered set.
+      conditional_labels: Labels that would additionally apply if a stated condition holds; each item has label, layer, and condition.
+      condition: A stated precondition under which the example's classification holds.
+      rationale: Explanation of why the example is classified as shown.
+      replacement: On a counterexample, the classification that should be used instead.
+      former_label: On a removed-category entry, the retired label.
+      replacement_classification: On a removed-category entry, what former assignments should now become.
   category_identity_note: |-
     Category identity is defined by the combination of project title and datasets used, not by title alone.
     The fallback label "Unclear from Register Entry" appears separately in Layer A, Layer B,
@@ -146,11 +164,11 @@ categories:
   - project_id: 2019/003
     title: The fall of the labour share and rise of the superstar region - Labour share and earning in UK regions
     datasets: "Office for National Statistics: Annual Respondents Database "
-    assign: Labour Market & Employment
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Labour Market & Employment
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Business & Productivity
       layer: Layer A -- domain
@@ -159,25 +177,25 @@ categories:
   - project_id: 2020/021
     title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
     datasets: "Office for National Statistics: Annual Population Survey  & Annual Survey of Hours and Earnings "
-    assign: Labour Market & Employment
-    co_domains:
+    domains:
+    - Labour Market & Employment
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Policy Evaluation / Impact Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Employment, hours and earnings are central; household income may also bring in material living standards; National Living Wage is a named policy.
   - project_id: 2021/027
     title: 'SEARCH, SKILLS AND SATISFACTION: THE EMPLOYMENT TRAJECTORIES OF REFUGEES IN THE UK'
     datasets: "Office for National Statistics: Annual Population Survey, Labour Force Survey   & Labour Force Survey  \n"
-    assign: Labour Market & Employment
-    co_domains:
+    domains:
+    - Labour Market & Employment
     - Migration & Demographics
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Life-Course / Trajectory Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Employment trajectories make this labour-market research; refugee status brings in migration/demography.
   counterexamples:
@@ -207,12 +225,12 @@ categories:
   - project_id: 2020/117
     title: 'Participation in and Progression Through Education in Wales: The Role of Family'
     datasets: "SAIL Databank Databank: 2011 Census Data Welsh residents"
-    assign: Education & Skills
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Education & Skills
+    linkage: null
+    purposes:
     - Life-Course / Trajectory Analysis
-    co_tags: []
+    tags: []
     conditional_labels:
     - &id001
       label: Poverty, Wealth & Living Standards
@@ -222,11 +240,11 @@ categories:
   - project_id: 2020/008
     title: Contextualised Admissions and University Choice
     datasets: "UCAS: Universities and Colleges Admissions Service "
-    assign: Education & Skills
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Education & Skills
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Policy Evaluation / Impact Analysis
       layer: Layer C -- purpose
@@ -235,13 +253,13 @@ categories:
   - project_id: 2024/259
     title: Risk index of NEET for local authority use
     datasets: "DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
-    assign: Education & Skills
-    co_domains:
+    domains:
+    - Education & Skills
     - Labour Market & Employment
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Risk Prediction / Early Identification
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: NEET sits at the education-work boundary; "risk index" makes the predictive purpose explicit.
   counterexamples:
@@ -275,35 +293,35 @@ categories:
   - project_id: 2019/005
     title: Measuring the impact of hearing loss on well-being
     datasets: "Office for National Statistics: Annual Population Survey "
-    assign: Health & Social Care
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Health & Social Care
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Hearing loss and wellbeing are health-related outcomes; "impact" suggests exposure-outcome analysis.
   - project_id: 2019/021
     title: Social and Economic Predictors of the severe mental disorders, the SEP-MD study. Analysis of linked data from southeast London, UK
     datasets: "Office for National Statistics: Census 2011 & Death Registrations "
-    assign: Health & Social Care
-    co_domains:
+    domains:
+    - Health & Social Care
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Severe mental disorder is the health outcome; social/economic predictors may bring in material conditions.
   - project_id: 2024/216
     title: 'Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care.'
     datasets: "NHS; DfE: Education and Child Health Insights from Linked Data - England"
-    assign: Health & Social Care
-    co_domains:
+    domains:
+    - Health & Social Care
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Risk Prediction / Early Identification
       layer: Layer C -- purpose
@@ -343,35 +361,34 @@ categories:
   - project_id: 2019/006
     title: Analysis of victimisation data from the Crime Survey for England and Wales
     datasets: "Office for National Statistics: Crime Survey for England and Wales "
-    assign: Crime & Justice
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Crime & Justice
+    linkage: null
+    purposes:
     - Descriptive Monitoring
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Victimisation and crime survey analysis are justice/public-safety topics.
   - project_id: 2021/038
     title: 'Using linked Magistrates and Crown Court data to explore defendant appearance over time: specialisation, escalation or de-escalation?'
     datasets: "Ministry of Justice: MoJ Data First Crown court defendant case level dataset, MoJ Data First Linked Criminal Courts defendant case level dataset  & MoJ Data First magistrates' court defendant case level dataset "
-    assign: Crime & Justice
-    co_domains: []
-    co_linkage:
-    - Within-Domain Linkage
-    co_purposes:
+    domains:
+    - Crime & Justice
+    linkage: Within-Domain Linkage
+    purposes:
     - Life-Course / Trajectory Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Courts data place this in justice; repeated appearances over time suggest trajectory analysis.
   - project_id: 2023/073
     title: 'Domestic abuse proceedings in family courts: Overlap and pathways in private and public family justice'
     datasets: "Ministry of Justice: Data First FamilyMan Family Court data"
-    assign: Crime & Justice
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Crime & Justice
+    linkage: null
+    purposes:
     - Service Interaction / Systems Analysis
-    co_tags: []
+    tags: []
     conditional_labels:
     - label: Health & Social Care
       layer: Layer A -- domain
@@ -408,11 +425,11 @@ categories:
   - project_id: 2019/011
     title: Modelling Return on Investment at the firm level
     datasets: "Department for Business, Energy & Industrial Strategy: UK Innovation Survey\nOffice for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey"
-    assign: Business & Productivity
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Business & Productivity
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - &id004
       label: Outcome Tracking
@@ -426,11 +443,11 @@ categories:
   - project_id: 2020/013
     title: Firm-level analysis of research and development
     datasets: "Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2 \n\nIntellectual Property Office: Patents, Designs and Trade Marks \n\nOffice for National Statistics / Department for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey"
-    assign: Business & Productivity
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Business & Productivity
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Methodological / Infrastructure Research
       layer: Layer C -- purpose
@@ -439,12 +456,12 @@ categories:
   - project_id: 2020/024
     title: Assessing the impact of UK Enterprise Zones
     datasets: "Office for National Statistics: Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Business Structure Database  & Quarterly Labour Force Survey "
-    assign: Business & Productivity
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Business & Productivity
+    linkage: null
+    purposes:
     - Policy Evaluation / Impact Analysis
-    co_tags: []
+    tags: []
     conditional_labels:
     - label: Labour Market & Employment
       layer: Layer A -- domain
@@ -481,11 +498,11 @@ categories:
   - project_id: 2019/015
     title: Understanding saving behaviour in the UK
     datasets: "Office for National Statistics: Wealth and Assets Survey  & Annual Survey of Hours and Earnings "
-    assign: Poverty, Wealth & Living Standards
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Poverty, Wealth & Living Standards
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - &id002
       label: Descriptive Monitoring
@@ -499,24 +516,24 @@ categories:
   - project_id: 2020/017
     title: Subjective wellbeing impacts of debt and debt-related factors
     datasets: "Office for National Statistics: Wealth and Assets Survey "
-    assign: Poverty, Wealth & Living Standards
-    co_domains:
+    domains:
+    - Poverty, Wealth & Living Standards
     - Health & Social Care
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Debt is a material-resource issue; wellbeing makes health/social outcomes relevant.
   - project_id: 2021/050
     title: Cohort Comparisons of Wealth
     datasets: "Office for National Statistics: Wealth and Assets Survey Great Britain "
-    assign: Poverty, Wealth & Living Standards
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Poverty, Wealth & Living Standards
+    linkage: null
+    purposes:
     - Descriptive Monitoring
-    co_tags:
+    tags:
     - Demographic disparities / equity tag
     conditional_labels: []
     rationale: Wealth distribution across cohorts is material living-standards research; age-cohort comparison qualifies for the demographic-disparities tag.
@@ -551,37 +568,37 @@ categories:
   - project_id: 2019/016
     title: Homeownership of the young
     datasets: "Office for National Statistics: Living Costs and Food Survey, Business Structure Database, Retail Price Index "
-    assign: Housing & Planning
-    co_domains:
+    domains:
+    - Housing & Planning
     - Migration & Demographics
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - *id001
     rationale: Homeownership is housing; age cohort and affordability may add other domains.
   - project_id: 2019/022
     title: Research on homeless mortality among St Mungo's clients
     datasets: "Office for National Statistics: Death Registrations "
-    assign: Housing & Planning
-    co_domains:
+    domains:
+    - Housing & Planning
     - Health & Social Care
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Homelessness is central; mortality makes health relevant.
   - project_id: 2019/024
     title: 'The Right to Buy: Migration and Gentrification'
     datasets: "Office for National Statistics: Longitudinal Study "
-    assign: Housing & Planning
-    co_domains:
+    domains:
+    - Housing & Planning
     - Migration & Demographics
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Policy Evaluation / Impact Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Right to Buy and gentrification are housing/planning topics with migration effects.
   counterexamples:
@@ -615,36 +632,36 @@ categories:
   - project_id: 2019/026
     title: Migration Observatory analysis of EU and non-EU migration in the UK
     datasets: "Office for National Statistics: Annual Population Survey, Annual Population Survey   & Labour Force Survey "
-    assign: Migration & Demographics
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Migration & Demographics
+    linkage: null
+    purposes:
     - Descriptive Monitoring
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Migration flows and migrant characteristics are demographic topics.
   - project_id: 2019/012
     title: The impact of the immigration white paper on the Northern Ireland economy
     datasets: "Office for National Statistics: Labour Force Survey  & Annual Population Survey "
-    assign: Migration & Demographics
-    co_domains:
+    domains:
+    - Migration & Demographics
     - Business & Productivity
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Policy Evaluation / Impact Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Immigration policy is demographic; economic impacts may add business/economy.
   - project_id: 2020/092
     title: Understanding Recent Fertility in the UK and Improving Methodologies for Fertility Forecasting
     datasets: "Office for National Statistics: ONS Longitudinal Study of England and Wales"
-    assign: Migration & Demographics
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Migration & Demographics
+    linkage: null
+    purposes:
     - Methodological / Infrastructure Research
     - Descriptive Monitoring
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Fertility is demographic; methodology is explicit in the title.
   counterexamples:
@@ -678,35 +695,34 @@ categories:
   - project_id: 2020/099
     title: Estimation of energy demand drivers and the effect of public policies on consumption under the climate emergency
     datasets: "Department for Business, Energy & Industrial Strategy: National Energy Efficiency data \nOffice for National Statistics: Annual Respondents Database, Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Products of the European Community, Business Structure Database, Longitudinal Business Structure Database, Annual Inquiry into Foreign Direct Investment, Annual Population Survey  &amp, Labour Force Survey Household, Living Costs and Food Survey \nInstitute for Social and Economic Research: Understanding Society \nDepartment for Business, Energy and Industrial Strategy: Quarterly Fuels Inquiry \nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey "
-    assign: Environment & Agriculture
-    co_domains: []
-    co_linkage: []
-    co_purposes:
+    domains:
+    - Environment & Agriculture
+    linkage: null
+    purposes:
     - Policy Evaluation / Impact Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Energy demand and climate emergency are environmental topics; public policies are explicitly mentioned.
   - project_id: 2020/058
     title: 'Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households'
     datasets: "Department for Business, Energy and Industrial Strategy: Annual gas and electricity \nconsumption at the meter \nlevel "
-    assign: Environment & Agriculture
-    co_domains:
+    domains:
+    - Environment & Agriculture
     - Housing & Planning
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Residential energy use is environmental/energy research, with housing context.
   - project_id: 2021/090
     title: 'AD|ARC : Linking Individual and Farm Level Data for Agricultural Research - Wales Workstream'
     datasets: "SAIL Databank Databank: 2011 Census Data Welsh residents \nOffice for National Statistics: Annual Population Surveys - Wales "
-    assign: Environment & Agriculture
-    co_domains: []
-    co_linkage:
-    - Cross-Domain Linkage
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Environment & Agriculture
+    linkage: Cross-Domain Linkage
+    purposes: []
+    tags: []
     conditional_labels:
     - *id001
     rationale: Farm/agricultural data are central; individual-farm linkage may add household/material dimensions.
@@ -741,36 +757,36 @@ categories:
   - project_id: 2020/001
     title: How does tax affect incorporation and business outcomes?
     datasets: "Department for Business, Energy and Industrial Strategy: Longitudinal Small Business Survey & Small Business Survey"
-    assign: Public Finance & Taxation
-    co_domains:
+    domains:
+    - Public Finance & Taxation
     - Business & Productivity
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Tax is the exposure; incorporation and business outcomes add business domain.
   - project_id: 2020/019
     title: 'The impact of government expenditure on employment and wages: evidence from firm-level data for the UK'
     datasets: "Office for National Statistics: Annual Business Survey, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Register and Employment Survey  & Business Structure Database "
-    assign: Public Finance & Taxation
-    co_domains:
+    domains:
+    - Public Finance & Taxation
     - Labour Market & Employment
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Public expenditure is fiscal; employment and wages add labour-market domain.
   - project_id: 2020/067
     title: 'Inequalities in the 21st Century: Transfers, tax and tax credits'
     datasets: "Office for National Statistics: Annual Population Survey Person, Annual Population Survey Household, \nOccupational differences in mortality from COVID-19,\nAnnual Survey of Hours and Earnings, Labour Force Survey Household, Labour Force Survey Person, Business Structure Database  & Labour Force Survey Longitudinal \n"
-    assign: Public Finance & Taxation
-    co_domains:
+    domains:
+    - Public Finance & Taxation
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Descriptive Monitoring
       layer: Layer C -- purpose
@@ -812,24 +828,24 @@ categories:
   - project_id: 2020/027
     title: COVID-19 Infection Survey
     datasets: "Office for National Statistics: ONS COVID-19 Weekly Opinions Survey, Labour Force Survey, ONS Death Registrations Data \nOffice for National Statistics / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government: Covid-19 Infection Survey linked with VOA and EPC data  \nOffice for National Statistics / University of Oxford: Covid-19 Infection Survey with National Immunisation Management Service, Covid-19 Infection Survey linked with Death Occurrences England and Wales \nOffice for National Statistics / NHSD / University of Oxford: COVID-19 Infection Survey linked with Public Health Research Database  "
-    assign: COVID-19 & Pandemic
-    co_domains:
+    domains:
+    - COVID-19 & Pandemic
     - Health & Social Care
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Descriptive Monitoring
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: COVID-19 infection surveillance is pandemic-specific and health-focused.
   - project_id: 2020/047
     title: 'Controlling COVID-19 through enhanced population surveillance and intervention : a platform approach'
     datasets: "SAIL Databank Databank: 2011 Census Data Welsh residents "
-    assign: COVID-19 & Pandemic
-    co_domains:
+    domains:
+    - COVID-19 & Pandemic
     - Health & Social Care
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Service Interaction / Systems Analysis
       layer: Layer C -- purpose
@@ -841,14 +857,14 @@ categories:
   - project_id: 2020/071
     title: Modelling the effects of pandemic control measures and financial support on businesses, regions and households
     datasets: "Office for National Statistics: Annual Business Survey, Business Impact of COVID-19 Survey, Business Structure Database, Monthly Business Survey  & Quarterly Survey of Financial Assets and Liabilities "
-    assign: COVID-19 & Pandemic
-    co_domains:
+    domains:
+    - COVID-19 & Pandemic
     - Business & Productivity
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Policy Evaluation / Impact Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Pandemic policy effects span firms, regions and households.
   counterexamples:
@@ -882,23 +898,23 @@ categories:
   - project_id: 2020/009
     title: Panel conditioning and rotation group bias effects in business surveys
     datasets: "Office for National Statistics: Monthly Business Survey  \n & all future releases"
-    assign: Data Infrastructure & Methodology
-    co_domains:
+    domains:
+    - Data Infrastructure & Methodology
     - Business & Productivity
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Methodological / Infrastructure Research
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Survey methodology is central; business surveys add business context.
   - project_id: 2020/075
     title: Extending the use of the former measures of social class beyond 2021
     datasets: "Office for National Statistics: Labour Force Survey Household "
-    assign: Data Infrastructure & Methodology
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Data Infrastructure & Methodology
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Migration & Demographics
       layer: Layer A -- domain
@@ -910,13 +926,13 @@ categories:
   - project_id: 2021/111
     title: 'Re-counting crime: New methods to improve the accuracy of estimates of crime'
     datasets: "Office for National Statistics: Crime Survey for England and Wales, 2011 Census: Aggregate Data"
-    assign: Data Infrastructure & Methodology
-    co_domains:
+    domains:
+    - Data Infrastructure & Methodology
     - Crime & Justice
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Methodological / Infrastructure Research
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: New estimation methods are central; crime is the substantive context.
   counterexamples:
@@ -948,11 +964,11 @@ categories:
     Do not assign if the dataset field reveals a clear domain. Do not assign alongside a real domain. If any domain can be inferred with reasonable confidence, use that domain.
   examples:
   - description: Opaque acronym or internal project name with non-informative datasets
-    assign: Unclear from Register Entry
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains:
+    - Unclear from Register Entry
+    linkage: null
+    purposes: []
+    tags: []
     conditional_labels: []
     rationale: Use only when neither title nor datasets allow a defensible domain assignment.
   counterexamples:
@@ -980,24 +996,22 @@ categories:
   - project_id: 2019/006
     title: Analysis of victimisation data from the Crime Survey for England and Wales
     datasets: "Office for National Statistics: Crime Survey for England and Wales "
-    assign: Single-Dataset
-    co_domains:
+    domains:
     - Crime & Justice
-    co_linkage: []
-    co_purposes:
+    linkage: Single-Dataset
+    purposes:
     - Descriptive Monitoring
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: One crime survey source; no linkage implied.
   - project_id: 2021/035
     title: 'Shaping, testing and demonstrating the value of the Growing up in England wave 1 dataset: Roma, Gypsy and Traveller children case study'
     datasets: "Office for National Statistics: Growing Up in England Wave 1 "
-    assign: Single-Dataset
-    co_domains:
+    domains:
     - Education & Skills
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: Single-Dataset
+    purposes: []
+    tags: []
     conditional_labels:
     - label: Methodological / Infrastructure Research
       layer: Layer C -- purpose
@@ -1006,13 +1020,12 @@ categories:
   - project_id: 2019/015
     title: Understanding saving behaviour in the UK
     datasets: "Office for National Statistics: Wealth and Assets Survey  & Annual Survey of Hours and Earnings "
-    assign: Single-Dataset
-    condition: Only if one household-resource dataset is listed.
-    co_domains:
+    domains:
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: Single-Dataset
+    purposes: []
+    tags: []
+    condition: Only if one household-resource dataset is listed.
     conditional_labels: []
     rationale: Linkage mode depends on dataset field, not title alone.
   counterexamples:
@@ -1038,12 +1051,11 @@ categories:
     Do not assign merely because datasets share a provider. Large providers such as ONS supply datasets across multiple policy domains, so provider identity is not sufficient. If datasets span two or more policy domains, assign Cross-Domain Linkage.
   examples:
   - description: Firm survey project using multiple ONS business datasets
-    assign: Within-Domain Linkage
-    co_domains:
+    domains:
     - Business & Productivity
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: Within-Domain Linkage
+    purposes: []
+    tags: []
     conditional_labels:
     - *id002
     - *id003
@@ -1051,22 +1063,20 @@ categories:
   - project_id: 2021/038
     title: 'Using linked Magistrates and Crown Court data to explore defendant appearance over time: specialisation, escalation or de-escalation?'
     datasets: "Ministry of Justice: MoJ Data First Crown court defendant case level dataset, MoJ Data First Linked Criminal Courts defendant case level dataset  & MoJ Data First magistrates' court defendant case level dataset "
-    assign: Within-Domain Linkage
-    co_domains:
+    domains:
     - Crime & Justice
-    co_linkage: []
-    co_purposes:
+    linkage: Within-Domain Linkage
+    purposes:
     - Life-Course / Trajectory Analysis
-    co_tags: []
+    tags: []
     conditional_labels: []
     rationale: Multiple justice datasets within the same policy domain.
   - description: Census plus death registrations for demographic analysis
-    assign: Within-Domain Linkage
-    co_domains:
+    domains:
     - Migration & Demographics
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: Within-Domain Linkage
+    purposes: []
+    tags: []
     conditional_labels: []
     rationale: Multiple demographic/population sources.
   counterexamples:
@@ -1092,37 +1102,34 @@ categories:
     Do not assign where multiple datasets all remain within one policy domain. Do not assign to a single-domain pre-linked product such as COVID-19 infection data linked to test-and-trace data if both remain within health.
   examples:
   - description: ECHILD
-    assign: Cross-Domain Linkage
-    co_domains:
+    domains:
     - Education & Skills
     - Health & Social Care
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: Cross-Domain Linkage
+    purposes: []
+    tags: []
     conditional_labels: []
     rationale: Pre-linked education and health/social-care data.
   - description: ASHE linked to Census 2011
-    assign: Cross-Domain Linkage
-    co_domains:
+    domains:
     - Labour Market & Employment
     - Migration & Demographics
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: Cross-Domain Linkage
+    purposes: []
+    tags: []
     conditional_labels: []
     rationale: Employment/earnings linked to census/demographic data.
   - project_id: 2020/021
     title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
     datasets: "Office for National Statistics: Annual Population Survey  & Annual Survey of Hours and Earnings "
-    assign: Cross-Domain Linkage
-    condition: Only if datasets span labour and household or welfare sources.
-    co_domains:
+    domains:
     - Labour Market & Employment
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes:
+    linkage: Cross-Domain Linkage
+    purposes:
     - Policy Evaluation / Impact Analysis
-    co_tags: []
+    tags: []
+    condition: Only if datasets span labour and household or welfare sources.
     conditional_labels: []
     rationale: Linkage mode depends on datasets; title suggests cross-domain outcomes.
   counterexamples:
@@ -1148,11 +1155,10 @@ categories:
     Do not assign based on an unclear title alone. Linkage mode should be determined primarily from the dataset field.
   examples:
   - description: Dataset field absent or too generic to identify whether one or multiple datasets are used
-    assign: Unclear from Register Entry
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    domains: []
+    linkage: Unclear from Register Entry
+    purposes: []
+    tags: []
     conditional_labels: []
     rationale: Linkage mode cannot be inferred even if subject matter can.
   counterexamples:
@@ -1175,35 +1181,34 @@ categories:
   - project_id: 2019/006
     title: Analysis of victimisation data from the Crime Survey for England and Wales
     datasets: "Office for National Statistics: Crime Survey for England and Wales "
-    assign: Descriptive Monitoring
-    co_domains:
+    domains:
     - Crime & Justice
-    co_linkage:
-    - Single-Dataset
-    co_purposes: []
-    co_tags: []
+    linkage: Single-Dataset
+    purposes:
+    - Descriptive Monitoring
+    tags: []
     conditional_labels: []
     rationale: '"Analysis of victimisation data" suggests profiling patterns rather than causal testing.'
   - project_id: 2019/026
     title: Migration Observatory analysis of EU and non-EU migration in the UK
     datasets: "Office for National Statistics: Annual Population Survey, Annual Population Survey   & Labour Force Survey "
-    assign: Descriptive Monitoring
-    co_domains:
+    domains:
     - Migration & Demographics
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Descriptive Monitoring
+    tags: []
     conditional_labels: []
     rationale: Migration Observatory analysis suggests descriptive population monitoring.
   - project_id: 2020/020
     title: Business dynamism
     datasets: "Office for National Statistics: Business Structure Database"
-    assign: Descriptive Monitoring
-    co_domains:
+    domains:
     - Business & Productivity
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Descriptive Monitoring
+    tags: []
     conditional_labels: []
     rationale: Business dynamism is likely tracking levels/patterns in firm activity.
   counterexamples:
@@ -1237,36 +1242,36 @@ categories:
   - project_id: 2019/005
     title: Measuring the impact of hearing loss on well-being
     datasets: "Office for National Statistics: Annual Population Survey "
-    assign: Outcome Tracking
-    co_domains:
+    domains:
     - Health & Social Care
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Outcome Tracking
+    tags: []
     conditional_labels: []
     rationale: Hearing loss is the exposure; wellbeing is the downstream outcome.
   - project_id: 2019/021
     title: Social and Economic Predictors of the severe mental disorders, the SEP-MD study. Analysis of linked data from southeast London, UK
     datasets: "Office for National Statistics: Census 2011 & Death Registrations "
-    assign: Outcome Tracking
-    co_domains:
+    domains:
     - Health & Social Care
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Outcome Tracking
+    tags: []
     conditional_labels: []
     rationale: Predictors are linked to severe mental-health outcomes.
   - project_id: 2020/012
     title: Wage progression and firm productivity
     datasets: "Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE \nIntellectual Property Office: Patents, Designs and Trade Marks \nDepartment for Education: National Department for Business, Energy and Industrial Strategy: Employer Skills Survey  & Workplace Employment Relations Survey \nDepartment for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal \nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey "
-    assign: Outcome Tracking
-    co_domains:
+    domains:
     - Labour Market & Employment
     - Business & Productivity
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Outcome Tracking
+    tags: []
     conditional_labels: []
     rationale: Links wage progression and firm productivity outcomes.
   counterexamples:
@@ -1300,36 +1305,35 @@ categories:
   - project_id: 2020/117
     title: 'Participation in and Progression Through Education in Wales: The Role of Family'
     datasets: "SAIL Databank Databank: 2011 Census Data Welsh residents"
-    assign: Life-Course / Trajectory Analysis
-    co_domains:
+    domains:
     - Education & Skills
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Life-Course / Trajectory Analysis
+    tags: []
     conditional_labels: []
     rationale: Participation and progression imply tracking educational pathways.
   - project_id: 2021/027
     title: 'SEARCH, SKILLS AND SATISFACTION: THE EMPLOYMENT TRAJECTORIES OF REFUGEES IN THE UK'
     datasets: "Office for National Statistics: Annual Population Survey, Labour Force Survey   & Labour Force Survey  \n"
-    assign: Life-Course / Trajectory Analysis
-    co_domains:
+    domains:
     - Labour Market & Employment
     - Migration & Demographics
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Life-Course / Trajectory Analysis
+    tags: []
     conditional_labels: []
     rationale: Employment trajectories are explicitly longitudinal/pathway-focused.
   - project_id: 2021/038
     title: 'Using linked Magistrates and Crown Court data to explore defendant appearance over time: specialisation, escalation or de-escalation?'
     datasets: "Ministry of Justice: MoJ Data First Crown court defendant case level dataset, MoJ Data First Linked Criminal Courts defendant case level dataset  & MoJ Data First magistrates' court defendant case level dataset "
-    assign: Life-Course / Trajectory Analysis
-    co_domains:
+    domains:
     - Crime & Justice
-    co_linkage:
-    - Within-Domain Linkage
-    co_purposes: []
-    co_tags: []
+    linkage: Within-Domain Linkage
+    purposes:
+    - Life-Course / Trajectory Analysis
+    tags: []
     conditional_labels: []
     rationale: '"Over time" and escalation/de-escalation are trajectory concepts.'
   counterexamples:
@@ -1363,12 +1367,12 @@ categories:
   - project_id: 2019/025
     title: Understanding the uptake and use of the Northern Ireland Concessionary Fares Scheme for the population aged 60 and over
     datasets: "Northern Ireland Statistics and Research Agency: Census 2011  & Census 2011  \nNorthern Ireland Registrar General's Office: Registered Deaths "
-    assign: Service Interaction / Systems Analysis
-    co_domains:
+    domains:
     - Migration & Demographics
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Service Interaction / Systems Analysis
+    tags: []
     conditional_labels:
     - label: Policy Evaluation / Impact Analysis
       layer: Layer C -- purpose
@@ -1377,24 +1381,24 @@ categories:
   - project_id: 2022/111
     title: 'Private family law cases in England and Wales: profiles, pathways and outcomes'
     datasets: "Ministry of Justice: MoJ Data First family court data extract "
-    assign: Service Interaction / Systems Analysis
-    co_domains:
+    domains:
     - Crime & Justice
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Service Interaction / Systems Analysis
+    tags: []
     conditional_labels: []
     rationale: '"Pathways" through family law cases makes system interaction central.'
   - project_id: 2025/091
     title: Intimate Partner Violence (IPV) victims/survivors' help-seeking of mental healthcare
     datasets: "Office for National Statistics: Crime Survey for England and Wales"
-    assign: Service Interaction / Systems Analysis
-    co_domains:
+    domains:
     - Health & Social Care
     - Crime & Justice
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Service Interaction / Systems Analysis
+    tags: []
     conditional_labels: []
     rationale: Help-seeking is a service-use/pathway concept; IPV adds justice/public-safety context.
   counterexamples:
@@ -1428,36 +1432,36 @@ categories:
   - project_id: 2019/013
     title: TechNation programme evaluation
     datasets: "Office for National Statistics: Business Structure Database "
-    assign: Policy Evaluation / Impact Analysis
-    co_domains:
+    domains:
     - Business & Productivity
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Policy Evaluation / Impact Analysis
+    tags: []
     conditional_labels: []
     rationale: Named programme evaluation.
   - project_id: 2019/024
     title: 'The Right to Buy: Migration and Gentrification'
     datasets: "Office for National Statistics: Longitudinal Study "
-    assign: Policy Evaluation / Impact Analysis
-    co_domains:
+    domains:
     - Housing & Planning
     - Migration & Demographics
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Policy Evaluation / Impact Analysis
+    tags: []
     conditional_labels: []
     rationale: Right to Buy is a named policy; migration/gentrification are outcomes.
   - project_id: 2020/021
     title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
     datasets: "Office for National Statistics: Annual Population Survey  & Annual Survey of Hours and Earnings "
-    assign: Policy Evaluation / Impact Analysis
-    co_domains:
+    domains:
     - Labour Market & Employment
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Policy Evaluation / Impact Analysis
+    tags: []
     conditional_labels: []
     rationale: Named wage policy with employment, earnings and household income outcomes.
   counterexamples:
@@ -1491,24 +1495,24 @@ categories:
   - project_id: 2024/259
     title: Risk index of NEET for local authority use
     datasets: "DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
-    assign: Risk Prediction / Early Identification
-    co_domains:
+    domains:
     - Education & Skills
     - Labour Market & Employment
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Risk Prediction / Early Identification
+    tags: []
     conditional_labels: []
     rationale: Risk index is explicit; NEET bridges education and employment.
   - project_id: 2022/196
     title: Homelessness resource allocation with the use of machine learning and discussions around fairness
     datasets: "Office for National Statistics: Statutory Homelessness Flows England"
-    assign: Risk Prediction / Early Identification
-    co_domains:
+    domains:
     - Housing & Planning
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Risk Prediction / Early Identification
+    tags: []
     conditional_labels:
     - label: Service Interaction / Systems Analysis
       layer: Layer C -- purpose
@@ -1517,12 +1521,12 @@ categories:
   - project_id: 2025/032
     title: 'Risk factors for severe mental health outcomes among young people: a national cohort study'
     datasets: "NHS; DfE: Education and Child Health Insights from Linked Data - England"
-    assign: Risk Prediction / Early Identification
-    co_domains:
+    domains:
     - Health & Social Care
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Risk Prediction / Early Identification
+    tags: []
     conditional_labels:
     - label: Outcome Tracking
       layer: Layer C -- purpose
@@ -1559,35 +1563,35 @@ categories:
   - project_id: 2020/009
     title: Panel conditioning and rotation group bias effects in business surveys
     datasets: "Office for National Statistics: Monthly Business Survey  \n & all future releases"
-    assign: Methodological / Infrastructure Research
-    co_domains:
+    domains:
     - Data Infrastructure & Methodology
     - Business & Productivity
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Methodological / Infrastructure Research
+    tags: []
     conditional_labels: []
     rationale: Survey-method effects are the main analytical purpose.
   - project_id: 2020/075
     title: Extending the use of the former measures of social class beyond 2021
     datasets: "Office for National Statistics: Labour Force Survey Household "
-    assign: Methodological / Infrastructure Research
-    co_domains:
+    domains:
     - Data Infrastructure & Methodology
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Methodological / Infrastructure Research
+    tags: []
     conditional_labels: []
     rationale: Measurement/classification development is central.
   - project_id: 2021/077
     title: Estimation of quality measures for the Consumer Price Index
     datasets: "Office for National Statistics: Consumer Prices Indices "
-    assign: Methodological / Infrastructure Research
-    co_domains:
+    domains:
     - Data Infrastructure & Methodology
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes:
+    - Methodological / Infrastructure Research
+    tags: []
     conditional_labels:
     - label: Public Finance & Taxation
       layer: Layer A -- domain
@@ -1624,12 +1628,12 @@ categories:
   - project_id: 2021/103
     title: AMPHoRA
     datasets: "Office for National Statistics: Living Costs and Food Survey "
-    assign: Unclear from Register Entry
+    domains: []
+    linkage: null
+    purposes:
+    - Unclear from Register Entry
+    tags: []
     condition: Use for Layer C purpose only, if analytical design remains opaque.
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
     conditional_labels:
     - label: Migration & Demographics
       layer: Layer A -- domain
@@ -1638,12 +1642,12 @@ categories:
   - project_id: 2023/275
     title: WWTW04 - Walking With The Wounded need project
     datasets: "Office for National Statistics: Annual Population Survey"
-    assign: Unclear from Register Entry
+    domains: []
+    linkage: null
+    purposes:
+    - Unclear from Register Entry
+    tags: []
     condition: Use if analytical purpose cannot be inferred.
-    co_domains: []
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
     conditional_labels:
     - label: Health & Social Care
       layer: Layer A -- domain
@@ -1686,12 +1690,12 @@ categories:
   - project_id: 2021/005
     title: 'Occupational segregation by ethnicity: the impact of regional job availability on occupational choice'
     datasets: "Office for National Statistics: Census 1961, Census 1971, Census 1981, Census 1991, Census 2001, Census 2011 & Labour Force Survey  "
-    assign: Demographic disparities / equity tag
-    co_domains:
+    domains:
     - Labour Market & Employment
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes: []
+    tags:
+    - Demographic disparities / equity tag
     conditional_labels:
     - *id002
     - *id003
@@ -1699,24 +1703,24 @@ categories:
   - project_id: 2020/083
     title: 'Religion and Labour Market Outcomes in England and Wales: 1991-2011'
     datasets: "Office for National Statistics: Longitudinal Study of England and Wales "
-    assign: Demographic disparities / equity tag
-    co_domains:
+    domains:
     - Labour Market & Employment
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Outcome Tracking
-    co_tags: []
+    tags:
+    - Demographic disparities / equity tag
     conditional_labels: []
     rationale: Religion is central to comparing labour-market outcomes.
   - project_id: 2022/190
     title: Ethnic inequalities in mortality
     datasets: "Office for National Statistics: Public Health Research Database"
-    assign: Demographic disparities / equity tag
-    co_domains:
+    domains:
     - Health & Social Care
-    co_linkage: []
-    co_purposes: []
-    co_tags: []
+    linkage: null
+    purposes: []
+    tags:
+    - Demographic disparities / equity tag
     conditional_labels:
     - *id004
     - *id005
@@ -1724,25 +1728,25 @@ categories:
   - project_id: 2023/056
     title: 'Ethnic and religious inequalities in children''s social services in Wales: Patterns and outcomes'
     datasets: "SAIL Databank Databank: 2011 Census"
-    assign: Demographic disparities / equity tag
-    co_domains:
+    domains:
     - Health & Social Care
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Service Interaction / Systems Analysis
-    co_tags: []
+    tags:
+    - Demographic disparities / equity tag
     conditional_labels: []
     rationale: Ethnic/religious comparison is central; children's social services are the system.
   - project_id: 2021/050
     title: Cohort Comparisons of Wealth
     datasets: "Office for National Statistics: Wealth and Assets Survey Great Britain "
-    assign: Demographic disparities / equity tag
-    co_domains:
+    domains:
     - Poverty, Wealth & Living Standards
-    co_linkage: []
-    co_purposes:
+    linkage: null
+    purposes:
     - Descriptive Monitoring
-    co_tags: []
+    tags:
+    - Demographic disparities / equity tag
     conditional_labels: []
     rationale: Age cohort is the demographic comparison; wealth is the substantive domain.
   counterexamples:
