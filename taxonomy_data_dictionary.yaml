@@ -7,14 +7,13 @@ metadata:
     external taxonomy was identified that fits the scope of DEA-accredited research
     activity; the scheme was therefore derived bottom-up from the register and
     compared against ADR UK's research themes for interoperability rather than
-    adopted from a standard. The taxonomy is assessed against the ONS Taxonomy Best
-    Practice Evaluation Framework.
+    adopted from a standard. The taxonomy is developed with in mind and  assessed 
+    against the ONS Taxonomy Best Practice Evaluation Framework.
   dictionary_compiled_from:
   - project git history
   - v3.3 classification prompt
   - v3.4 ontology decisions
   - taxonomy owner review of definitions, rules, examples and counterexamples
-  - cited example-title verification against the register CSV
   taxonomy_owner: Project Lead, DEA Dashboard
   layer_cardinality:
     Layer A -- domain: one or more
@@ -22,7 +21,7 @@ metadata:
     Layer C -- purpose: one or two
     Cross-cutting tag: zero or more / boolean facets
   category_identity_note: |-
-    Category identity is defined by the combination of layer and label, not by label alone.
+    Category identity is defined by the combination of project title and datasets used, not by title alone.
     The fallback label "Unclear from Register Entry" appears separately in Layer A, Layer B,
     and Layer C, and these are distinct categories.
   governance:
@@ -41,24 +40,29 @@ metadata:
       Feedback is collected through the DEA Dashboard project feedback route and reviewed as
       part of the taxonomy revision cycle.
     next_review_trigger: |-
-      Review after v4 validation, after substantial changes to the DEA register, or when repeated
+      Review after first round of external feedback, v4 validation, after substantial changes to the DEA register, or when repeated
       validation errors indicate a category boundary problem.
   notes:
   - Cells prefixed (from prompt) or (historical, from prompt) are extracted verbatim from the v3.3 classification prompt.
-  - This file is the single source of truth. CSV or Markdown renderings are generated from it.
-  - Project counts are not stored in this dictionary. They change with each classification run and are reported separately from the latest v4 classification output.
+  - This file is the single source of truth. CSV or Markdown renderings are generated from it (for ease of machine/human readibility).
   v3_4_changes:
-  - 'Layer A: "Gender, Race & Ethnicity" removed (replaced by cross-cutting tag). "Poverty, Inequality & Living Standards" relabelled to "Poverty, Wealth & Living Standards". "Unclear from Title" renamed to "Unclear from Register Entry". 12 active domains + Unclear from Register Entry.'
-  - 'Layer B: "Unclear from Title" renamed to "Unclear from Register Entry". 3 active linkage modes + Unclear from Register Entry.'
-  - 'Layer C: "Inequality / Disparities Analysis" removed. "Unclear from Title" renamed to "Unclear from Register Entry". 7 active purposes + Unclear from Register Entry.'
+  - 'Layer A: "Gender, Race & Ethnicity" removed (replaced by cross-cutting tag). "Poverty, Inequality & Living Standards" relabelled to "Poverty, Wealth & Living Standards". 
+    "Unclear from Title" renamed to "Unclear from Register Entry" (as labels are generated from titles AND datasets used, not titles alone). 12 active domains + Unclear from Register Entry.'
+  - 'Layer B: "Unclear from Title" renamed to "Unclear from Register Entry" (same reason as for layer A). 3 active linkage modes + Unclear from Register Entry.'
+  - 'Layer C: "Inequality / Disparities Analysis" removed. "Unclear from Title" renamed to "Unclear from Register Entry" (same reason as for layer A). 7 active purposes + Unclear from Register Entry.'
   - 'New: Cross-cutting demographic-disparities/equity tag, orthogonal to the three layers.'
   balance_note: |
-    Balance: the categories vary considerably in size. Some Layer C purposes — notably Risk Prediction / Early Identification and Service Interaction / Systems Analysis — are small. They are retained as genuine, conceptually distinct analytical purposes and on future-proofing grounds (these kinds of research are expected to become more common). No claim is made about trends over time in these small categories: at their current size, year-on-year variation is not statistically meaningful and should not be read as a trend.
+    Balance: the categories vary considerably in size. Some Layer C purposes — notably Risk Prediction / Early Identification and Service Interaction / Systems Analysis — are small. 
+    They are retained as genuine, conceptually distinct analytical purposes and on future-proofing grounds (these kinds of research are expected to become more common). No claim is 
+    made about trends over time in these small categories: at their current size, year-on-year variation is not statistically meaningful and should not be read as a trend.
   covid_category_type_note: |
-    COVID-19 & Pandemic is retained as a Layer A domain but is a category-type anomaly: unlike the other domains, which are policy/sector areas, it is a time-bounded event that cuts across domains (its own inclusion rule directs that it be assigned alongside a substantive domain). This is the same category-type issue that led to the removal of "Gender, Race & Ethnicity" from Layer A. Whether COVID-19 should likewise be converted from a domain to a cross-cutting tag is a documented open question, to be decided after v4 validation; it is not changed in v3.4.
+    COVID-19 & Pandemic is retained as a Layer A domain but is a category-type anomaly: unlike the other domains, which are policy/sector areas, it is a time-bounded event that cuts across domains 
+    (its own inclusion rule directs that it be assigned alongside a substantive domain). This is the same category-type issue that led to the removal of "Gender, Race & Ethnicity" from Layer A. 
+    Whether COVID-19 should likewise be converted from a domain to a cross-cutting tag is a documented open question, to be decided after v4 validation; it is not changed in v3.4.
   adr_uk_theme_alignment:
     description: |
-      Mapping of this dictionary's Layer A domains to ADR UK's seven research themes, for interoperability reference under the ONS framework's interoperability principle. This alignment is a comparison, not an adoption: the dictionary's domains were derived inductively from the DEA register and diverge from ADR UK's themes where the register's scope is broader.
+      Mapping of this dictionary's Layer A domains to ADR UK's seven research themes, for interoperability reference under the ONS framework's interoperability principle. This alignment is a 
+      comparison, not an adoption: the dictionary's domains were derived inductively from the DEA register and diverge from ADR UK's themes where the register's scope is broader.
     source: ADR UK website research themes page
     accessed: '2026-05-22'
     adr_uk_themes:
@@ -93,30 +97,32 @@ metadata:
       Poverty, Wealth & Living Standards:
         adr_uk_theme: Social mobility & inclusion
         alignment_type: partial
-        note: Partial overlap only. ADR UK's theme is broader, covering social mobility and inclusion; this ontology narrows the domain to material resources, poverty, wealth, benefits, debt, and living standards.
+        note: Partial overlap only. ADR UK's theme is broader, covering social mobility and inclusion; this ontology narrows the domain to material resources, poverty, wealth, benefits, debt, 
+          and living standards.
       Housing & Planning:
         adr_uk_theme: Housing & communities
         alignment_type: close
         note: Close match, though this ontology foregrounds housing, planning and residential conditions.
       Migration & Demographics:
         adr_uk_theme: null
-        alignment_type: none
-        note: No direct ADR UK equivalent. Migration, fertility, mortality and population structure appear as cross-cutting concerns rather than a dedicated ADR UK theme.
+        alignment_type: no_equivalent
+        note: No direct ADR UK equivalent. ADR UK's seven themes do not include a dedicated migration/demography theme. Population structure, migration, fertility and mortality (ONS provides access to mortality 
+          data) are a substantial strain of research in the DEA register, the absence of an ADR UK match relects the broader scope of this register-derived scheme rather than a weaker claim to domain status.
       Environment & Agriculture:
         adr_uk_theme: Climate & the environment
         alignment_type: partial
-        note: Partial overlap. ADR UK's theme emphasises climate and environment; this ontology also includes agriculture, land use and farming because these appear in the DEA register.
+        note: Partial overlap. ADR UK's theme emphasises climate and environment; this ontology also includes agriculture, land use and farming because these appear in projects in the DEA register.
       Public Finance & Taxation:
         adr_uk_theme: null
-        alignment_type: none
-        note: No direct ADR UK equivalent. Public finance and taxation are retained because the DEA/SRS portfolio includes fiscal, tax and public-expenditure research.
+        alignment_type: no_equivalent
+        note: No direct ADR UK equivalent. Public finance and taxation are retained because the DEA register includes fiscal, tax and public-expenditure research.
       COVID-19 & Pandemic:
         adr_uk_theme: null
-        alignment_type: none
+        alignment_type: no_equivalent
         note: No direct ADR UK equivalent. COVID-19 is a time-bounded cross-domain event rather than a standing ADR UK research theme.
       Data Infrastructure & Methodology:
         adr_uk_theme: null
-        alignment_type: none
+        alignment_type: no_equivalent
         note: No direct ADR UK equivalent. Methodological and data-infrastructure research is retained as a domain because it is visible in the DEA register.
 categories:
 - label: Labour Market & Employment
@@ -128,15 +134,17 @@ categories:
   date_added: '2026-03-26'
   date_changed: null
   definition: |
-    Research concerning work, employment, labour-market participation, and workforce dynamics. Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality, working hours, contracts and working conditions; labour supply and demand; occupational, sectoral and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and transitions into, through, or out of work.
+    Research concerning work, employment, labour-market participation, and workforce dynamics. Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality, 
+    working hours, contracts and working conditions; labour supply and demand; occupational, sectoral and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and 
+    transitions into, through, or out of work.
   inclusion_rules: |
     Assign when work, employment, earnings, labour supply or demand, workforce composition, job quality, occupational structure, or labour-market transitions are central to the project.
   exclusion_rules: |
-    Do not assign solely because a project mentions income, education, productivity, health, migration, or workers. Use **Education & Skills** for education systems and qualifications unless labour-market outcomes are central. Use **Poverty, Wealth & Living Standards** for household resources, poverty, wealth, debt, or living standards unless employment/earnings are the main object.
+    Do not assign solely because a project mentions income, education, productivity, health, migration, or workers. Use **Education & Skills** for education systems and qualifications unless 
+    labour-market outcomes are central. Use **Poverty, Wealth & Living Standards** for household resources, poverty, wealth, debt, or living standards unless employment/earnings are the main object.
   examples:
   - project_id: 2019/003
-    title: The fall of the labour share and rise of the superstar region? Labour share and earning in UK regions
-    title_display: The fall of the labour share and rise of the superstar region...
+    title: The fall of the labour share and rise of the superstar region - Labour share and earning in UK regions
     assign: Labour Market & Employment
     co_domains: []
     co_linkage: []
