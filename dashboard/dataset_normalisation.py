@@ -1,16 +1,75 @@
+import html
 import re
 
 import pandas as pd
 
 
 DATASET_PROVIDER_RE = re.compile(
-    r"(?=(?:Office for National Statistics|Department for [^:\n]{1,120}|"
-    r"Ministry of Justice|Home Office(?:; NHS)?|NHS(?:; DfE)?|"
-    r"Understanding Society|Institute for [^:\n]{1,120}|"
-    r"SAIL Databank(?: Databank)?|UCAS|Northern Ireland [^:\n]{1,120}|"
-    r"Intellectual Property Office|IPO|Department for Transport|"
-    r"HM Revenue and Customs|HMRC|Data First|MoJ Data First)"
-    r"[^:\n]{0,120}:)"
+    r"""
+    (?:^|\s+|(?<=[^\s]))
+    (?=
+        (?:
+            # ONS and common spelling/case variants observed in the register.
+            DEFRA,\s+Office\s+[Ff]or\s+[Nn]ational\s+Statistics|
+            Office\s+[Ff]or\s+[Nn]ational\s+Statistics|
+            Office\s+of\s+National\s+Statistics|
+            Offcie\s+for\s+National\s+Statistics|
+
+            # Composite government/education provider headers observed in the register.
+            Qualifications\s+Wales,\s+Department\s+[Ff]or\s+Education,\s+University\s+and\s+Colleges\s+Admission\s+Service|
+            DfE,\s+DWP,\s+HMRC\s+and\s+Scottish\s+Government|
+            DfE,\s+DWP\s+and\s+HMRC|
+            OFQUAL\s+and\s+DfE|
+            Ofqual/[\u00ad\-]?DfE[\u00ad\-]?/UCAS|
+
+            # Government departments, agencies, and common standalone abbreviations.
+            (?<!,[ ])Department\s+[Ff]or\s+[^:\n]{1,120}|
+            Department\s+of\s+Health\s+and\s+Social\s+Care|
+            (?<!;[ ])(?<!and[ ])DfE(?=:)|
+            DWP(?=:)|
+            DBT(?=:)|
+            DfT(?=:)|
+            (?<!;[ ])DHSC(?=:)|
+            DESNZ(?=:)|
+            DLUHC(?=:)|
+            DEFRA(?=:)|
+            OFSTED(?=:)|
+            Ofqual(?=:)|
+            MOJ(?=:)|
+            UKHSA(?=:)|
+            Ministry\s+of\s+Justice|
+            Home\s+Office(?:;\s+NHS)?|
+            NHS(?:;\s+DfE)?|
+            (?<!,[ ])(?<!/[ ])HM\s+Revenue(?:\s+and\s+Customs|\s*&\s*Customs)?|
+            (?<!and[ ])HMRC(?=:)|
+            (?<!/[ ])Valuation\s+Office\s+Agency|
+            Bank\s+of\s+England|
+            (?<!and[ ])Scottish\s+Government|
+            National\s+Records\s+Scotland|
+
+            # Education, justice, research, and data-service providers.
+            SAIL\s+Databank(?:\s+Databank)?|
+            UCAS|
+            (?<!,[ ])University\s+and\s+Colleges\s+Admission\s+Service|
+            (?<!-[ ])Northern\s+Ireland\s+[^:\n]{1,120}|
+            NISRA|
+            (?<!Northern[ ]Ireland[ ])Statistics\s+and\s+Research\s+Agency|
+            Intellectual\s+Property\s+Office|
+            IPO|
+            NMC(?=:)|
+            Understanding\s+Society|
+            Institute\s+for\s+[^:\n]{1,120}|
+            Institute\s+of\s+Social\s+and\s+Economic\s+Research|
+            Economic\s+and\s+Social\s+Research\s+Council|
+            Data\s+First|
+            MoJ\s+Data\s+First|
+            University\s+of\s+Leicester|
+            World\s+Bank\s+open\s+data
+        )
+        [^:\n]{0,120}:
+    )
+    """,
+    re.VERBOSE,
 )
 
 ALLOWED_SHORT_DATASET_NAMES = {
@@ -404,13 +463,41 @@ ESCAPED_PROVIDER_COMPOUND_PATTERNS = (
 UNUSUAL_PUNCTUATION_RE = re.compile(r"[:;/]{2,}|[()]{2,}")
 
 
+def _repair_known_text_corruption(text: str) -> str:
+    text = text.replace("\u00a0", " ")
+    text = text.replace("\u00ad", "")
+    text = text.replace("\u00c3\u008d \u00be", ";")
+    text = text.replace("\u02dcLevelling Up\"", "\"Levelling Up\"")
+    text = re.sub(r"\s*\u02dcBrain Drain\s*\u2122", " \"Brain Drain\"", text)
+    text = re.sub(r"\s*\u2122\s*s\b", "'s", text)
+    text = re.sub(r"\s*\u2122(?=\s|$)", "'", text)
+    text = text.replace("\u00b4", "'")
+    text = re.sub(r"(?<=21st Century)\s+\u201c\s+(?=Chapter\b)", " \u2013 ", text)
+    return text
+
+
+def _decode_html_entities(text: str) -> str:
+    return html.unescape(text.replace("&amp,", "&"))
+
+
+def _clean_title_text(raw: str) -> str:
+    text = _repair_known_text_corruption(str(raw))
+    text = _decode_html_entities(text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
 def _clean_datasets_text(raw: str) -> str:
-    text = re.sub(r"_x000D_", " ", raw)
+    text = _repair_known_text_corruption(str(raw))
+    text = re.sub(r"_x000D_", " ", text)
+    text = _decode_html_entities(text)
     text = re.sub(r"<[^>]+>", " ", text)
     text = text.replace("\r", "\n")
     text = re.sub(r"\s{2,}", " ", text)
     text = re.sub(r"\s*\n\s*", "\n", text)
-    text = DATASET_PROVIDER_RE.sub(lambda m: ("\n" if m.start() > 0 else "") + m.group(0), text)
+    text = DATASET_PROVIDER_RE.sub(
+        lambda m: "\n" if m.start() > 0 else "", text
+    )
     return text.strip()
 
 

@@ -39,6 +39,7 @@ COLUMN_MAP = {
 try:
     from dashboard.dataset_normalisation import (
         _clean_datasets_text,
+        _clean_title_text,
         iter_dataset_entries,
         normalise_dataset_name,
         normalise_provider_name,
@@ -47,6 +48,7 @@ except ModuleNotFoundError:
     sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
     from dataset_normalisation import (  # type: ignore
         _clean_datasets_text,
+        _clean_title_text,
         iter_dataset_entries,
         normalise_dataset_name,
         normalise_provider_name,
@@ -441,6 +443,10 @@ def clean_register_dataframe(
     review_file = os.path.join(output_dir, "quality", "duplicate_review_flagged.csv")
     duplicate_result = apply_duplicate_policy(df, review_file=review_file, stats=stats, verbose=verbose)
     df = assign_record_ids(duplicate_result.dataframe)
+    df["Title"] = df["Title"].apply(_clean_title_text)
+    df["Datasets Used"] = df["Datasets Used"].apply(
+        lambda value: _clean_datasets_text(value) if isinstance(value, str) and value.strip() else value
+    )
     df = add_time_fields(df, include_quarter_date=include_quarter_date)
     if include_project_row_id:
         df["Project Row ID"] = [f"proj-{i:04d}" for i in range(len(df))]

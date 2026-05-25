@@ -31,32 +31,16 @@ ANALYSIS_DIR = os.path.dirname(__file__)
 OUTPUT_DIR = os.path.join(ANALYSIS_DIR, "outputs_v3")
 QUALITY_DIR = os.path.join(OUTPUT_DIR, "quality")
 CLASSIFICATIONS_CSV = os.path.join(OUTPUT_DIR, "layer_classifications.csv")
+PROJECT_ROOT = os.path.dirname(ANALYSIS_DIR)
+
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from dashboard.dataset_normalisation import _clean_datasets_text  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Dataset-field helpers (lightweight — just counts providers/datasets)
 # ---------------------------------------------------------------------------
-
-_PROVIDER_RE = re.compile(
-    r"(?=(?:Office for National Statistics|Department for [^:\n]{1,120}|"
-    r"Ministry of Justice|Home Office(?:; NHS)?|NHS(?:; DfE)?|"
-    r"Understanding Society|Institute for [^:\n]{1,120}|"
-    r"HM Inspectorate|HM Revenue|HMRC|UK Data Service|ESRC|"
-    r"National Pupil|School Census|Get Information About Schools|"
-    r"HM Revenue and Customs|HMRC|Data First|MoJ Data First)"
-    r"[^:\n]{0,120}:)"
-)
-
-
-def _clean_datasets_text(raw: str) -> str:
-    text = re.sub(r"_x000D_", " ", raw)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = text.replace("\r", "\n")
-    text = re.sub(r"\s{2,}", " ", text)
-    text = re.sub(r"\s*\n\s*", "\n", text)
-    text = _PROVIDER_RE.sub(
-        lambda m: ("\n" if m.start() > 0 else "") + m.group(0), text
-    )
-    return text.strip()
 
 
 def count_providers_and_datasets(raw: str) -> tuple[int, int, set[str]]:

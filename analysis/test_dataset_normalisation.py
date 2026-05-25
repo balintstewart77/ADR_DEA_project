@@ -201,7 +201,7 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Household Sample, Infection Survey, Prisons and Probation, Prisons and Probation - England and Wales, Living Costs and Food, Consumer Prices, Offending, Offending data, Department for Environment, Rounds 5-7, Wales: Household Sample, Pay As You Earn Real Time Information in the, Pay As You Earn Real Time Information in the UK, Business Structure Database in the, Business Structure Database in the UK"
         )
         parts = [part for _, _, part in iter_dataset_entries(raw)]
-        self.assertEqual(parts, [])
+        self.assertEqual(parts, ["Annual Population Survey"])
 
     def test_ambiguous_cases_remain_distinct(self):
         cases = {

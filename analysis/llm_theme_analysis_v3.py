@@ -483,15 +483,11 @@ def _summarise_datasets(raw: str, max_chars: int = 600) -> str:
     """Produce a concise, prompt-safe summary of the 'Datasets Used' field."""
     if not isinstance(raw, str) or not raw.strip():
         return "(no datasets listed)"
-    # Clean control characters
-    text = re.sub(r"_x000D_", " ", raw)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = text.replace("\r", "\n")
-    text = re.sub(r"\s{2,}", " ", text)
-    text = " ".join(text.split())
+    # Register text cleaning is owned by clean_register_dataframe(); this only
+    # flattens the cleaned dataset field for compact prompt display.
+    text = " ".join(raw.split())
     if len(text) > max_chars:
         text = text[:max_chars] + "..."
-    # Apply the same sanitisation as titles to prevent prompt injection
     text = _sanitise_prompt_text(text)
     return text
 
