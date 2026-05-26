@@ -54,3 +54,6 @@ analysis/outputs_v3/llm_layer_cache.json
 analysis/outputs_opus/
 analysis/outputs_sonnet/
 .claude/
+
+# YAML backup files (e.g. for taxonomy dictionary)
+*.backup.yaml

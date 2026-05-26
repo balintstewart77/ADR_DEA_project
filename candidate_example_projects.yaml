@@ -1,5 +1,8 @@
 _meta:
   note: 'Candidate example projects extracted from the taxonomy data dictionary. These are drafted, UNVALIDATED worked classifications — initially created as a thinking aid while developing the ontology. They are NOT authoritative classifications and are NOT used to generate the classifier prompt. They are raw material for two later, separate pieces of work: the design of the validation-study sample, and (post-validation) the construction of a gold-standard verified example set. This file is a mixed set of drafted candidates of varying difficulty; it is not a curated hard-case set.'
+  fields:
+    uncertain_labels: Per-project record of labels the drafter was not confident applied to that project; each item has the label, its layer, and the reason for uncertainty. An empty list means no specific label was flagged as uncertain; it does not mean the classification is confirmed.
+    classification_confidence: Reserved field for an overall confidence rating of each record's drafted classification. Not yet populated; it will be assessed as part of later validation-study design work, not in the current drafting.
 candidate_example_projects:
 - project_id: 2019/003
   title: The fall of the labour share and rise of the superstar region - Labour share and earning in UK regions
@@ -9,10 +12,11 @@ candidate_example_projects:
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Business & Productivity
     layer: Layer A -- domain
-    condition: Use if firm behaviour, productivity, innovation, or regional business dynamics are central.
+    note: Use if firm behaviour, productivity, innovation, or regional business dynamics are central.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Labour share and earnings make the labour-market domain mandatory; firm/productivity dynamics may also be central.
   source_category:
     layer: Layer A -- domain
@@ -28,7 +32,8 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Employment, hours and earnings are central; household income may also bring in material living standards; National Living Wage is a named policy.
   source_category:
     layer: Layer A -- domain
@@ -44,7 +49,8 @@ candidate_example_projects:
   purposes:
   - Life-Course / Trajectory Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Employment trajectories make this labour-market research; refugee status brings in migration/demography.
   source_category:
     layer: Layer A -- domain
@@ -52,11 +58,15 @@ candidate_example_projects:
     section: examples
 - project_id: 2020/013
   title: Firm-level analysis of research and development
-  datasets: |-
-    Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2
+  datasets: 'Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2
+
     Intellectual Property Office: Patents, Designs and Trade Marks
+
     Office for National Statistics /
-    Department for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey
+
+    Department for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Business & Productivity
   source_category:
     layer: Layer A -- domain
@@ -65,6 +75,8 @@ candidate_example_projects:
 - project_id: 2020/008
   title: Contextualised Admissions and University Choice
   datasets: 'UCAS: Universities and Colleges Admissions Service'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Education & Skills
   source_category:
     layer: Layer A -- domain
@@ -79,10 +91,11 @@ candidate_example_projects:
   purposes:
   - Life-Course / Trajectory Analysis
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Poverty, Wealth & Living Standards
     layer: Layer A -- domain
-    condition: Use if household resources, poverty, wealth, debt, or material living standards are substantive outcomes.
+    note: Use if household resources, poverty, wealth, debt, or material living standards are substantive outcomes.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Educational participation and progression are central; family background may bring in material conditions depending on detail.
   source_category:
     layer: Layer A -- domain
@@ -96,10 +109,11 @@ candidate_example_projects:
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Policy Evaluation / Impact Analysis
     layer: Layer C -- purpose
-    condition: Use if the project evaluates a contextual admissions policy rather than only describing admissions or choices.
+    note: Use if the project evaluates a contextual admissions policy rather than only describing admissions or choices.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Admissions and university choice are education-system topics.
   source_category:
     layer: Layer A -- domain
@@ -115,7 +129,8 @@ candidate_example_projects:
   purposes:
   - Risk Prediction / Early Identification
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: NEET sits at the education-work boundary; "risk index" makes the predictive purpose explicit.
   source_category:
     layer: Layer A -- domain
@@ -123,9 +138,11 @@ candidate_example_projects:
     section: examples
 - project_id: 2020/010
   title: Local labour market effects of immigration
-  datasets: |-
-    Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings
-    Institute for Economic and Social Research: Understanding Society
+  datasets: 'Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings
+
+    Institute for Economic and Social Research: Understanding Society'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment / Migration & Demographics
   source_category:
     layer: Layer A -- domain
@@ -133,13 +150,19 @@ candidate_example_projects:
     section: counterexamples
 - project_id: 2020/012
   title: Wage progression and firm productivity
-  datasets: |-
-    Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE
+  datasets: 'Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE
+
     Intellectual Property Office: Patents, Designs and Trade Marks
+
     Department for Education: National
+
     Department for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey
+
     Department for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal
-    Department for Business, Energy and Industrial Strategy: Community Innovation Survey
+
+    Department for Business, Energy and Industrial Strategy: Community Innovation Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment / Business & Productivity
   source_category:
     layer: Layer A -- domain
@@ -148,6 +171,8 @@ candidate_example_projects:
 - project_id: 2022/139
   title: Understanding and predicting health and social care utilisation and adverse outcomes
   datasets: 'SAIL Databank Databank: 2011 Census Data Welsh residents'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Health & Social Care
   source_category:
     layer: Layer A -- domain
@@ -162,7 +187,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Hearing loss and wellbeing are health-related outcomes; "impact" suggests exposure-outcome analysis.
   source_category:
     layer: Layer A -- domain
@@ -178,7 +204,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Severe mental disorder is the health outcome; social/economic predictors may bring in material conditions.
   source_category:
     layer: Layer A -- domain
@@ -193,13 +220,14 @@ candidate_example_projects:
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Risk Prediction / Early Identification
     layer: Layer C -- purpose
-    condition: Use if the project builds or applies prediction, screening, risk scoring, or early-identification methods.
+    note: Use if the project builds or applies prediction, screening, risk scoring, or early-identification methods.
   - label: Outcome Tracking
     layer: Layer C -- purpose
-    condition: Use if the project primarily estimates exposure-outcome associations.
+    note: Use if the project primarily estimates exposure-outcome associations.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Pregnancy morbidity is health-focused; disadvantage may be a socioeconomic exposure.
   source_category:
     layer: Layer A -- domain
@@ -208,6 +236,8 @@ candidate_example_projects:
 - project_id: 2020/092
   title: Understanding Recent Fertility in the UK and Improving Methodologies for Fertility Forecasting
   datasets: 'Office for National Statistics: ONS Longitudinal Study of England and Wales'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Migration & Demographics / Methodological
   source_category:
     layer: Layer A -- domain
@@ -215,9 +245,11 @@ candidate_example_projects:
     section: counterexamples
 - project_id: 2019/025
   title: Understanding the uptake and use of the Northern Ireland Concessionary Fares Scheme for the population aged 60 and over
-  datasets: |-
-    Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011
-    Northern Ireland Registrar General's Office: Registered Deaths
+  datasets: 'Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011
+
+    Northern Ireland Registrar General''s Office: Registered Deaths'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Migration & Demographics / Service Interaction
   source_category:
     layer: Layer A -- domain
@@ -226,6 +258,8 @@ candidate_example_projects:
 - project_id: 2020/058
   title: 'Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households'
   datasets: 'Department for Business, Energy and Industrial Strategy: Annual gas and electricity consumption at the meter level'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Environment & Agriculture
   source_category:
     layer: Layer A -- domain
@@ -240,7 +274,8 @@ candidate_example_projects:
   purposes:
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Victimisation and crime survey analysis are justice/public-safety topics.
   source_category:
     layer: Layer A -- domain
@@ -255,7 +290,8 @@ candidate_example_projects:
   purposes:
   - Life-Course / Trajectory Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Courts data place this in justice; repeated appearances over time suggest trajectory analysis.
   source_category:
     layer: Layer A -- domain
@@ -270,10 +306,11 @@ candidate_example_projects:
   purposes:
   - Service Interaction / Systems Analysis
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Health & Social Care
     layer: Layer A -- domain
-    condition: Use if health, healthcare, mental health, mortality, or care outcomes are central.
+    note: Use if health, healthcare, mental health, mortality, or care outcomes are central.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Family court proceedings and domestic abuse pathways are justice-system topics.
   source_category:
     layer: Layer A -- domain
@@ -282,6 +319,8 @@ candidate_example_projects:
 - project_id: 2019/022
   title: Research on homeless mortality among St Mungo's clients
   datasets: 'Office for National Statistics: Death Registrations'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Housing & Planning / Health & Social Care
   source_category:
     layer: Layer A -- domain
@@ -290,6 +329,8 @@ candidate_example_projects:
 - project_id: 2023/006
   title: Ethnic Minority British Election Study pilot
   datasets: 'Office for National Statistics: Annual Population Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Migration & Demographics
   source_category:
     layer: Layer A -- domain
@@ -298,6 +339,8 @@ candidate_example_projects:
 - project_id: 2024/216
   title: 'Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care.'
   datasets: 'NHS; DfE: Education and Child Health Insights from Linked Data - England'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Health & Social Care
   source_category:
     layer: Layer A -- domain
@@ -305,21 +348,22 @@ candidate_example_projects:
     section: counterexamples
 - project_id: 2019/011
   title: Modelling Return on Investment at the firm level
-  datasets: |-
-    Department for Business, Energy & Industrial Strategy: UK Innovation Survey
-    Office for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey
+  datasets: 'Department for Business, Energy & Industrial Strategy: UK Innovation Survey
+
+    Office for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey'
   domains:
   - Business & Productivity
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Outcome Tracking
     layer: Layer C -- purpose
-    condition: Use if the project estimates an exposure-outcome relationship.
+    note: Use if the project estimates an exposure-outcome relationship.
   - label: Descriptive Monitoring
     layer: Layer C -- purpose
-    condition: Use if the project primarily profiles levels, patterns, distributions, or trends.
+    note: Use if the project primarily profiles levels, patterns, distributions, or trends.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Firm-level ROI is a business-performance topic.
   source_category:
     layer: Layer A -- domain
@@ -327,20 +371,23 @@ candidate_example_projects:
     section: examples
 - project_id: 2020/013
   title: Firm-level analysis of research and development
-  datasets: |-
-    Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2
+  datasets: 'Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2
+
     Intellectual Property Office: Patents, Designs and Trade Marks
+
     Office for National Statistics /
-    Department for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey
+
+    Department for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey'
   domains:
   - Business & Productivity
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Methodological / Infrastructure Research
     layer: Layer C -- purpose
-    condition: Use if the primary contribution is methodological or infrastructural rather than substantive analysis.
+    note: Use if the primary contribution is methodological or infrastructural rather than substantive analysis.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: R&D and firm-level analysis sit squarely in business/productivity.
   source_category:
     layer: Layer A -- domain
@@ -355,10 +402,11 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Labour Market & Employment
     layer: Layer A -- domain
-    condition: Use if jobs, wages, workforce composition, or employment outcomes are central.
+    note: Use if jobs, wages, workforce composition, or employment outcomes are central.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Enterprise Zones are business/economic policy; employment outcomes may add labour-market domain.
   source_category:
     layer: Layer A -- domain
@@ -366,13 +414,19 @@ candidate_example_projects:
     section: examples
 - project_id: 2020/012
   title: Wage progression and firm productivity
-  datasets: |-
-    Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE
+  datasets: 'Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE
+
     Intellectual Property Office: Patents, Designs and Trade Marks
+
     Department for Education: National
+
     Department for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey
+
     Department for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal
-    Department for Business, Energy and Industrial Strategy: Community Innovation Survey
+
+    Department for Business, Energy and Industrial Strategy: Community Innovation Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment plus Business & Productivity
   source_category:
     layer: Layer A -- domain
@@ -381,6 +435,8 @@ candidate_example_projects:
 - project_id: 2020/019
   title: 'The impact of government expenditure on employment and wages: evidence from firm-level data for the UK'
   datasets: 'Office for National Statistics: Annual Business Survey, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Register and Employment Survey & Business Structure Database'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Public Finance & Taxation / Labour Market & Employment
   source_category:
     layer: Layer A -- domain
@@ -389,6 +445,8 @@ candidate_example_projects:
 - project_id: 2020/021
   title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
   datasets: 'Office for National Statistics: Annual Population Survey & Annual Survey of Hours and Earnings'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment
   source_category:
     layer: Layer A -- domain
@@ -402,13 +460,14 @@ candidate_example_projects:
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Descriptive Monitoring
     layer: Layer C -- purpose
-    condition: Use if the project primarily profiles levels, patterns, distributions, or trends.
+    note: Use if the project primarily profiles levels, patterns, distributions, or trends.
   - label: Outcome Tracking
     layer: Layer C -- purpose
-    condition: Use if the project estimates an exposure-outcome relationship.
+    note: Use if the project estimates an exposure-outcome relationship.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Saving behaviour concerns household resources and financial resilience.
   source_category:
     layer: Layer A -- domain
@@ -424,7 +483,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Debt is a material-resource issue; wellbeing makes health/social outcomes relevant.
   source_category:
     layer: Layer A -- domain
@@ -440,7 +500,8 @@ candidate_example_projects:
   - Descriptive Monitoring
   tags:
   - Demographic disparities / equity tag
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Wealth distribution across cohorts is material living-standards research; age-cohort comparison qualifies for the demographic-disparities tag.
   source_category:
     layer: Layer A -- domain
@@ -449,6 +510,8 @@ candidate_example_projects:
 - project_id: 2020/018
   title: Inequalities in the 21st Century – Chapter on Labour Market Inequality
   datasets: 'Office for National Statistics: Annual Population Survey, Annual Survey of Hours and Earnings, Labour Force Survey, Longitudinal Labour Force Survey & New Earnings Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment
   source_category:
     layer: Layer A -- domain
@@ -457,6 +520,8 @@ candidate_example_projects:
 - project_id: 2020/021
   title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
   datasets: 'Office for National Statistics: Annual Population Survey & Annual Survey of Hours and Earnings'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment; add Poverty/Wealth only if household income is central
   source_category:
     layer: Layer A -- domain
@@ -465,6 +530,8 @@ candidate_example_projects:
 - project_id: 2022/190
   title: Ethnic inequalities in mortality
   datasets: 'Office for National Statistics: Public Health Research Database'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Health & Social Care plus demographic-disparities tag
   source_category:
     layer: Layer A -- domain
@@ -479,10 +546,11 @@ candidate_example_projects:
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Poverty, Wealth & Living Standards
     layer: Layer A -- domain
-    condition: Use if household resources, poverty, wealth, debt, or material living standards are substantive outcomes.
+    note: Use if household resources, poverty, wealth, debt, or material living standards are substantive outcomes.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Homeownership is housing; age cohort and affordability may add other domains.
   source_category:
     layer: Layer A -- domain
@@ -498,7 +566,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Homelessness is central; mortality makes health relevant.
   source_category:
     layer: Layer A -- domain
@@ -514,7 +583,8 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Right to Buy and gentrification are housing/planning topics with migration effects.
   source_category:
     layer: Layer A -- domain
@@ -523,6 +593,8 @@ candidate_example_projects:
 - project_id: 2020/058
   title: 'Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households'
   datasets: 'Department for Business, Energy and Industrial Strategy: Annual gas and electricity consumption at the meter level'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Environment & Agriculture
   source_category:
     layer: Layer A -- domain
@@ -531,6 +603,8 @@ candidate_example_projects:
 - project_id: 2020/056
   title: Factors Predicting Adherence Stay at Home Guidance During COVID-19 Pandemic in the United Kingdom
   datasets: 'Office for National Statistics: Coronavirus and the social impacts on Great Britain'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: COVID-19 & Pandemic
   source_category:
     layer: Layer A -- domain
@@ -539,6 +613,8 @@ candidate_example_projects:
 - project_id: 2019/007
   title: Thriving Places index indicators of wellbeing at local authority level
   datasets: 'Office for National Statistics: Labour Force Survey & Annual Population Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: place-based monitoring, not necessarily Housing & Planning unless housing/neighbourhood conditions are central
   source_category:
     layer: Layer A -- domain
@@ -553,7 +629,8 @@ candidate_example_projects:
   purposes:
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Migration flows and migrant characteristics are demographic topics.
   source_category:
     layer: Layer A -- domain
@@ -569,7 +646,8 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Immigration policy is demographic; economic impacts may add business/economy.
   source_category:
     layer: Layer A -- domain
@@ -585,7 +663,8 @@ candidate_example_projects:
   - Methodological / Infrastructure Research
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Fertility is demographic; methodology is explicit in the title.
   source_category:
     layer: Layer A -- domain
@@ -593,9 +672,11 @@ candidate_example_projects:
     section: examples
 - project_id: 2020/010
   title: Local labour market effects of immigration
-  datasets: |-
-    Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings
-    Institute for Economic and Social Research: Understanding Society
+  datasets: 'Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings
+
+    Institute for Economic and Social Research: Understanding Society'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment, with Migration & Demographics if immigration itself is central
   source_category:
     layer: Layer A -- domain
@@ -604,6 +685,8 @@ candidate_example_projects:
 - project_id: 2022/190
   title: Ethnic inequalities in mortality
   datasets: 'Office for National Statistics: Public Health Research Database'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Health & Social Care plus demographic-disparities tag
   source_category:
     layer: Layer A -- domain
@@ -612,6 +695,8 @@ candidate_example_projects:
 - project_id: 2020/080
   title: Economic Cycles and Labour Market Outcomes of Migrants and Natives
   datasets: 'Office for National Statistics: Labour Force Survey Person, Labour Force Survey Longitudinal'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Labour Market & Employment plus Migration & Demographics
   source_category:
     layer: Layer A -- domain
@@ -619,20 +704,25 @@ candidate_example_projects:
     section: counterexamples
 - project_id: 2020/099
   title: Estimation of energy demand drivers and the effect of public policies on consumption under the climate emergency
-  datasets: |-
-    Department for Business, Energy & Industrial Strategy: National Energy Efficiency data
+  datasets: 'Department for Business, Energy & Industrial Strategy: National Energy Efficiency data
+
     Office for National Statistics: Annual Respondents Database, Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Products of the European Community, Business Structure Database, Longitudinal Business Structure Database, Annual Inquiry into Foreign Direct Investment, Annual Population Survey & Labour Force Survey Household, Living Costs and Food Survey
+
     Institute for Social and Economic Research:
+
     Understanding Society
+
     Department for Business, Energy and Industrial Strategy: Quarterly Fuels Inquiry
-    Department for Business, Energy and Industrial Strategy: Community Innovation Survey
+
+    Department for Business, Energy and Industrial Strategy: Community Innovation Survey'
   domains:
   - Environment & Agriculture
   linkage: null
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Energy demand and climate emergency are environmental topics; public policies are explicitly mentioned.
   source_category:
     layer: Layer A -- domain
@@ -648,7 +738,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Residential energy use is environmental/energy research, with housing context.
   source_category:
     layer: Layer A -- domain
@@ -656,18 +747,19 @@ candidate_example_projects:
     section: examples
 - project_id: 2021/090
   title: 'AD|ARC : Linking Individual and Farm Level Data for Agricultural Research - Wales Workstream'
-  datasets: |-
-    SAIL Databank Databank: 2011 Census Data Welsh residents
-    Office for National Statistics: Annual Population Surveys - Wales
+  datasets: 'SAIL Databank Databank: 2011 Census Data Welsh residents
+
+    Office for National Statistics: Annual Population Surveys - Wales'
   domains:
   - Environment & Agriculture
   linkage: Cross-Domain Linkage
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Poverty, Wealth & Living Standards
     layer: Layer A -- domain
-    condition: Use if household resources, poverty, wealth, debt, or material living standards are substantive outcomes.
+    note: Use if household resources, poverty, wealth, debt, or material living standards are substantive outcomes.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Farm/agricultural data are central; individual-farm linkage may add household/material dimensions.
   source_category:
     layer: Layer A -- domain
@@ -676,6 +768,8 @@ candidate_example_projects:
 - project_id: 2019/023
   title: Economic environment and child development
   datasets: 'Office for National Statistics: Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Education & Skills / Outcome Tracking
   source_category:
     layer: Layer A -- domain
@@ -684,6 +778,8 @@ candidate_example_projects:
 - project_id: 2020/002
   title: Evaluation of the Energy Entrepreneurs Fund
   datasets: 'Office for National Statistics: Business Enterprise Research and Development, Business Structure Database, Annual Business Survey & Annual Survey of Hours and Earnings'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Business & Productivity; add Environment only if environmental outcomes are central
   source_category:
     layer: Layer A -- domain
@@ -692,6 +788,8 @@ candidate_example_projects:
 - project_id: 2020/051
   title: Measuring the impact of social distancing on firm productivity
   datasets: 'Office for National Statistics / HMRC / Companies House : Linked Inter-Departmental Business Register and Valuation Office Agency'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: COVID-19 & Pandemic / Business & Productivity
   source_category:
     layer: Layer A -- domain
@@ -707,7 +805,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Tax is the exposure; incorporation and business outcomes add business domain.
   source_category:
     layer: Layer A -- domain
@@ -723,7 +822,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Public expenditure is fiscal; employment and wages add labour-market domain.
   source_category:
     layer: Layer A -- domain
@@ -731,22 +831,23 @@ candidate_example_projects:
     section: examples
 - project_id: 2020/067
   title: 'Inequalities in the 21st Century: Transfers, tax and tax credits'
-  datasets: |-
-    Office for National Statistics: Annual Population Survey Person, Annual Population Survey Household, Occupational differences in mortality from COVID-19,
-    Annual Survey of Hours and Earnings, Labour Force Survey Household, Labour Force Survey Person, Business Structure Database & Labour Force Survey Longitudinal
+  datasets: 'Office for National Statistics: Annual Population Survey Person, Annual Population Survey Household, Occupational differences in mortality from COVID-19,
+
+    Annual Survey of Hours and Earnings, Labour Force Survey Household, Labour Force Survey Person, Business Structure Database & Labour Force Survey Longitudinal'
   domains:
   - Public Finance & Taxation
   - Poverty, Wealth & Living Standards
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Descriptive Monitoring
     layer: Layer C -- purpose
-    condition: Use if the project primarily profiles levels, patterns, distributions, or trends.
+    note: Use if the project primarily profiles levels, patterns, distributions, or trends.
   - label: Policy Evaluation / Impact Analysis
     layer: Layer C -- purpose
-    condition: Use if the project evaluates a named policy, programme, intervention, or fiscal mechanism.
+    note: Use if the project evaluates a named policy, programme, intervention, or fiscal mechanism.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Tax and transfers are fiscal; distributional/living-standard effects likely matter.
   source_category:
     layer: Layer A -- domain
@@ -755,6 +856,8 @@ candidate_example_projects:
 - project_id: 2021/150
   title: Intergenerational wealth transfers
   datasets: 'Office for National Statistics: Wealth and Assets Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Poverty, Wealth & Living Standards
   source_category:
     layer: Layer A -- domain
@@ -763,6 +866,8 @@ candidate_example_projects:
 - project_id: 2020/034
   title: 'Pensions, Place, Populism: Do post-crisis wealth shocks matter?'
   datasets: 'Office for National Statistics: Wealth and Assets Survey, Waves 1-5'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Poverty, Wealth & Living Standards
   source_category:
     layer: Layer A -- domain
@@ -771,6 +876,8 @@ candidate_example_projects:
 - project_id: 2020/024
   title: Assessing the impact of UK Enterprise Zones
   datasets: 'Office for National Statistics: Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Business Structure Database & Quarterly Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Business & Productivity / Policy Evaluation unless fiscal mechanisms are central
   source_category:
     layer: Layer A -- domain
@@ -778,12 +885,15 @@ candidate_example_projects:
     section: counterexamples
 - project_id: 2020/027
   title: COVID-19 Infection Survey
-  datasets: |-
-    Office for National Statistics: ONS COVID-19 Weekly Opinions Survey, Labour Force Survey, ONS Death Registrations Data
+  datasets: 'Office for National Statistics: ONS COVID-19 Weekly Opinions Survey, Labour Force Survey, ONS Death Registrations Data
+
     Office for National Statistics / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government: Covid-19 Infection Survey linked with VOA and EPC data
+
     Office for National Statistics / University of Oxford: Covid-19 Infection Survey with National Immunisation Management Service, Covid-19 Infection Survey linked with Death Occurrences England and Wales
+
     Office for National Statistics /
-    NHSD / University of Oxford: COVID-19 Infection Survey linked with Public Health Research Database
+
+    NHSD / University of Oxford: COVID-19 Infection Survey linked with Public Health Research Database'
   domains:
   - COVID-19 & Pandemic
   - Health & Social Care
@@ -791,7 +901,8 @@ candidate_example_projects:
   purposes:
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: COVID-19 infection surveillance is pandemic-specific and health-focused.
   source_category:
     layer: Layer A -- domain
@@ -806,13 +917,14 @@ candidate_example_projects:
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Service Interaction / Systems Analysis
     layer: Layer C -- purpose
-    condition: Use if service pathways, system access, surveillance operation, or institutional processing are central.
+    note: Use if service pathways, system access, surveillance operation, or institutional processing are central.
   - label: Descriptive Monitoring
     layer: Layer C -- purpose
-    condition: Use if the project primarily profiles levels, patterns, distributions, or trends.
+    note: Use if the project primarily profiles levels, patterns, distributions, or trends.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Pandemic control and surveillance are explicit.
   source_category:
     layer: Layer A -- domain
@@ -829,7 +941,8 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Pandemic policy effects span firms, regions and households.
   source_category:
     layer: Layer A -- domain
@@ -838,6 +951,8 @@ candidate_example_projects:
 - project_id: 2019/021
   title: Social and Economic Predictors of the severe mental disorders, the SEP-MD study. Analysis of linked data from southeast London, UK
   datasets: 'Office for National Statistics: Census 2011 & Death Registrations'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Health & Social Care
   source_category:
     layer: Layer A -- domain
@@ -846,6 +961,8 @@ candidate_example_projects:
 - project_id: 2024/216
   title: 'Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care.'
   datasets: 'NHS; DfE: Education and Child Health Insights from Linked Data - England'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Health & Social Care
   source_category:
     layer: Layer A -- domain
@@ -854,6 +971,8 @@ candidate_example_projects:
 - project_id: 2020/058
   title: 'Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households'
   datasets: 'Department for Business, Energy and Industrial Strategy: Annual gas and electricity consumption at the meter level'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Environment & Agriculture
   source_category:
     layer: Layer A -- domain
@@ -869,7 +988,8 @@ candidate_example_projects:
   purposes:
   - Methodological / Infrastructure Research
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Survey methodology is central; business surveys add business context.
   source_category:
     layer: Layer A -- domain
@@ -883,13 +1003,14 @@ candidate_example_projects:
   linkage: null
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Migration & Demographics
     layer: Layer A -- domain
-    condition: Use if the project centres on population structure, demographic change, ageing, fertility, mortality, migration, or demographic measurement.
+    note: Use if the project centres on population structure, demographic change, ageing, fertility, mortality, migration, or demographic measurement.
   - label: Poverty, Wealth & Living Standards
     layer: Layer A -- domain
-    condition: Use if the project centres on household resources, poverty, wealth, debt, or living standards measurement.
+    note: Use if the project centres on household resources, poverty, wealth, debt, or living standards measurement.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Classification/measurement is the core contribution.
   source_category:
     layer: Layer A -- domain
@@ -905,7 +1026,8 @@ candidate_example_projects:
   purposes:
   - Methodological / Infrastructure Research
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: New estimation methods are central; crime is the substantive context.
   source_category:
     layer: Layer A -- domain
@@ -914,6 +1036,8 @@ candidate_example_projects:
 - project_id: 2020/118
   title: Utilising routine data and machine learning techniques to discover new multi-morbidity and polypharmacy phenotype's associated with poorer outcomes, health, resilience and wellbeing in the Welsh population
   datasets: 'SAIL Databank Databank: 2011 Census Data Welsh residents'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: use Risk Prediction / substantive domain if the purpose is predictive modelling of health outcomes
   source_category:
     layer: Layer A -- domain
@@ -922,6 +1046,8 @@ candidate_example_projects:
 - project_id: 2020/024
   title: Assessing the impact of UK Enterprise Zones
   datasets: 'Office for National Statistics: Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Business Structure Database & Quarterly Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Business & Productivity / Policy Evaluation
   source_category:
     layer: Layer A -- domain
@@ -930,6 +1056,8 @@ candidate_example_projects:
 - project_id: 2024/259
   title: Risk index of NEET for local authority use
   datasets: 'DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Education & Skills / Risk Prediction
   source_category:
     layer: Layer A -- domain
@@ -938,6 +1066,8 @@ candidate_example_projects:
 - project_id: 2021/103
   title: AMPHoRA
   datasets: 'Office for National Statistics: Living Costs and Food Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: should not be Unclear from Register Entry if datasets reveal population/demography scope
   source_category:
     layer: Layer A -- domain
@@ -952,7 +1082,8 @@ candidate_example_projects:
   purposes:
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: One crime survey source; no linkage implied.
   source_category:
     layer: Layer B -- linkage
@@ -966,10 +1097,11 @@ candidate_example_projects:
   linkage: Single-Dataset
   purposes: []
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Methodological / Infrastructure Research
     layer: Layer C -- purpose
-    condition: Use if dataset development, testing, validation, or infrastructure is central.
+    note: Use if dataset development, testing, validation, or infrastructure is central.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: One named dataset product.
   source_category:
     layer: Layer B -- linkage
@@ -984,7 +1116,8 @@ candidate_example_projects:
   purposes: []
   tags: []
   condition: Only if one household-resource dataset is listed.
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Linkage mode depends on dataset field, not title alone.
   source_category:
     layer: Layer B -- linkage
@@ -999,7 +1132,8 @@ candidate_example_projects:
   purposes:
   - Life-Course / Trajectory Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Multiple justice datasets within the same policy domain.
   source_category:
     layer: Layer B -- linkage
@@ -1016,7 +1150,8 @@ candidate_example_projects:
   - Policy Evaluation / Impact Analysis
   tags: []
   condition: Only if datasets span labour and household or welfare sources.
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Linkage mode depends on datasets; title suggests cross-domain outcomes.
   source_category:
     layer: Layer B -- linkage
@@ -1031,7 +1166,8 @@ candidate_example_projects:
   purposes:
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: '"Analysis of victimisation data" suggests profiling patterns rather than causal testing.'
   source_category:
     layer: Layer C -- purpose
@@ -1046,7 +1182,8 @@ candidate_example_projects:
   purposes:
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Migration Observatory analysis suggests descriptive population monitoring.
   source_category:
     layer: Layer C -- purpose
@@ -1061,7 +1198,8 @@ candidate_example_projects:
   purposes:
   - Descriptive Monitoring
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Business dynamism is likely tracking levels/patterns in firm activity.
   source_category:
     layer: Layer C -- purpose
@@ -1070,6 +1208,8 @@ candidate_example_projects:
 - project_id: 2020/021
   title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
   datasets: 'Office for National Statistics: Annual Population Survey & Annual Survey of Hours and Earnings'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Policy Evaluation / Impact Analysis
   source_category:
     layer: Layer C -- purpose
@@ -1078,6 +1218,8 @@ candidate_example_projects:
 - project_id: 2019/005
   title: Measuring the impact of hearing loss on well-being
   datasets: 'Office for National Statistics: Annual Population Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1086,6 +1228,8 @@ candidate_example_projects:
 - project_id: 2024/259
   title: Risk index of NEET for local authority use
   datasets: 'DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Risk Prediction / Early Identification
   source_category:
     layer: Layer C -- purpose
@@ -1100,7 +1244,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Hearing loss is the exposure; wellbeing is the downstream outcome.
   source_category:
     layer: Layer C -- purpose
@@ -1116,7 +1261,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Predictors are linked to severe mental-health outcomes.
   source_category:
     layer: Layer C -- purpose
@@ -1124,13 +1270,17 @@ candidate_example_projects:
     section: examples
 - project_id: 2020/012
   title: Wage progression and firm productivity
-  datasets: |-
-    Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE
+  datasets: 'Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE
+
     Intellectual Property Office: Patents, Designs and Trade Marks
+
     Department for Education: National
+
     Department for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey
+
     Department for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal
-    Department for Business, Energy and Industrial Strategy: Community Innovation Survey
+
+    Department for Business, Energy and Industrial Strategy: Community Innovation Survey'
   domains:
   - Labour Market & Employment
   - Business & Productivity
@@ -1138,7 +1288,8 @@ candidate_example_projects:
   purposes:
   - Outcome Tracking
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Links wage progression and firm productivity outcomes.
   source_category:
     layer: Layer C -- purpose
@@ -1147,6 +1298,8 @@ candidate_example_projects:
 - project_id: 2020/021
   title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
   datasets: 'Office for National Statistics: Annual Population Survey & Annual Survey of Hours and Earnings'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Policy Evaluation
   source_category:
     layer: Layer C -- purpose
@@ -1155,6 +1308,8 @@ candidate_example_projects:
 - project_id: 2020/117
   title: 'Participation in and Progression Through Education in Wales: The Role of Family'
   datasets: 'SAIL Databank Databank: 2011 Census Data Welsh residents'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Life-Course / Trajectory Analysis
   source_category:
     layer: Layer C -- purpose
@@ -1163,6 +1318,8 @@ candidate_example_projects:
 - project_id: 2019/026
   title: Migration Observatory analysis of EU and non-EU migration in the UK
   datasets: 'Office for National Statistics: Annual Population Survey, Annual Population Survey & Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Descriptive Monitoring
   source_category:
     layer: Layer C -- purpose
@@ -1177,7 +1334,8 @@ candidate_example_projects:
   purposes:
   - Life-Course / Trajectory Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Participation and progression imply tracking educational pathways.
   source_category:
     layer: Layer C -- purpose
@@ -1193,7 +1351,8 @@ candidate_example_projects:
   purposes:
   - Life-Course / Trajectory Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Employment trajectories are explicitly longitudinal/pathway-focused.
   source_category:
     layer: Layer C -- purpose
@@ -1208,7 +1367,8 @@ candidate_example_projects:
   purposes:
   - Life-Course / Trajectory Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: '"Over time" and escalation/de-escalation are trajectory concepts.'
   source_category:
     layer: Layer C -- purpose
@@ -1217,6 +1377,8 @@ candidate_example_projects:
 - project_id: 2019/005
   title: Measuring the impact of hearing loss on well-being
   datasets: 'Office for National Statistics: Annual Population Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1225,6 +1387,8 @@ candidate_example_projects:
 - project_id: 2019/026
   title: Migration Observatory analysis of EU and non-EU migration in the UK
   datasets: 'Office for National Statistics: Annual Population Survey, Annual Population Survey & Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Descriptive Monitoring
   source_category:
     layer: Layer C -- purpose
@@ -1233,6 +1397,8 @@ candidate_example_projects:
 - project_id: 2020/024
   title: Assessing the impact of UK Enterprise Zones
   datasets: 'Office for National Statistics: Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Business Structure Database & Quarterly Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Policy Evaluation
   source_category:
     layer: Layer C -- purpose
@@ -1240,19 +1406,20 @@ candidate_example_projects:
     section: counterexamples
 - project_id: 2019/025
   title: Understanding the uptake and use of the Northern Ireland Concessionary Fares Scheme for the population aged 60 and over
-  datasets: |-
-    Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011
-    Northern Ireland Registrar General's Office: Registered Deaths
+  datasets: 'Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011
+
+    Northern Ireland Registrar General''s Office: Registered Deaths'
   domains:
   - Migration & Demographics
   linkage: null
   purposes:
   - Service Interaction / Systems Analysis
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Policy Evaluation / Impact Analysis
     layer: Layer C -- purpose
-    condition: Use if the project evaluates the scheme as a named policy or intervention.
+    note: Use if the project evaluates the scheme as a named policy or intervention.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Uptake and use of a public scheme are service-interaction concepts.
   source_category:
     layer: Layer C -- purpose
@@ -1267,7 +1434,8 @@ candidate_example_projects:
   purposes:
   - Service Interaction / Systems Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: '"Pathways" through family law cases makes system interaction central.'
   source_category:
     layer: Layer C -- purpose
@@ -1283,7 +1451,8 @@ candidate_example_projects:
   purposes:
   - Service Interaction / Systems Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Help-seeking is a service-use/pathway concept; IPV adds justice/public-safety context.
   source_category:
     layer: Layer C -- purpose
@@ -1292,6 +1461,8 @@ candidate_example_projects:
 - project_id: 2019/005
   title: Measuring the impact of hearing loss on well-being
   datasets: 'Office for National Statistics: Annual Population Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1300,6 +1471,8 @@ candidate_example_projects:
 - project_id: 2020/021
   title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
   datasets: 'Office for National Statistics: Annual Population Survey & Annual Survey of Hours and Earnings'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Policy Evaluation
   source_category:
     layer: Layer C -- purpose
@@ -1308,6 +1481,8 @@ candidate_example_projects:
 - project_id: 2024/216
   title: 'Psychosocial disadvantage in pregnancy: risk of severe maternal morbidity and adverse perinatal outcomes and the role of antenatal care.'
   datasets: 'NHS; DfE: Education and Child Health Insights from Linked Data - England'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Risk Prediction or Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1322,7 +1497,8 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Named programme evaluation.
   source_category:
     layer: Layer C -- purpose
@@ -1338,7 +1514,8 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Right to Buy is a named policy; migration/gentrification are outcomes.
   source_category:
     layer: Layer C -- purpose
@@ -1354,7 +1531,8 @@ candidate_example_projects:
   purposes:
   - Policy Evaluation / Impact Analysis
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Named wage policy with employment, earnings and household income outcomes.
   source_category:
     layer: Layer C -- purpose
@@ -1363,6 +1541,8 @@ candidate_example_projects:
 - project_id: 2019/005
   title: Measuring the impact of hearing loss on well-being
   datasets: 'Office for National Statistics: Annual Population Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1371,6 +1551,8 @@ candidate_example_projects:
 - project_id: 2020/017
   title: Subjective wellbeing impacts of debt and debt-related factors
   datasets: 'Office for National Statistics: Wealth and Assets Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1379,6 +1561,8 @@ candidate_example_projects:
 - project_id: 2019/026
   title: Migration Observatory analysis of EU and non-EU migration in the UK
   datasets: 'Office for National Statistics: Annual Population Survey, Annual Population Survey & Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Descriptive Monitoring
   source_category:
     layer: Layer C -- purpose
@@ -1394,7 +1578,8 @@ candidate_example_projects:
   purposes:
   - Risk Prediction / Early Identification
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Risk index is explicit; NEET bridges education and employment.
   source_category:
     layer: Layer C -- purpose
@@ -1409,10 +1594,11 @@ candidate_example_projects:
   purposes:
   - Risk Prediction / Early Identification
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Service Interaction / Systems Analysis
     layer: Layer C -- purpose
-    condition: Use if the project concerns service pathways, allocation, access, or system processing.
+    note: Use if the project concerns service pathways, allocation, access, or system processing.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Machine learning for allocation/risk suggests predictive identification.
   source_category:
     layer: Layer C -- purpose
@@ -1427,10 +1613,11 @@ candidate_example_projects:
   purposes:
   - Risk Prediction / Early Identification
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Outcome Tracking
     layer: Layer C -- purpose
-    condition: Use if the project estimates associations between risk factors or exposures and downstream outcomes.
+    note: Use if the project estimates associations between risk factors or exposures and downstream outcomes.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Risk factors and future severe mental-health outcomes are central.
   source_category:
     layer: Layer C -- purpose
@@ -1439,6 +1626,8 @@ candidate_example_projects:
 - project_id: 2020/017
   title: Subjective wellbeing impacts of debt and debt-related factors
   datasets: 'Office for National Statistics: Wealth and Assets Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1447,6 +1636,8 @@ candidate_example_projects:
 - project_id: 2019/026
   title: Migration Observatory analysis of EU and non-EU migration in the UK
   datasets: 'Office for National Statistics: Annual Population Survey, Annual Population Survey & Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Descriptive Monitoring
   source_category:
     layer: Layer C -- purpose
@@ -1455,6 +1646,8 @@ candidate_example_projects:
 - project_id: 2020/024
   title: Assessing the impact of UK Enterprise Zones
   datasets: 'Office for National Statistics: Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Business Structure Database & Quarterly Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Policy Evaluation
   source_category:
     layer: Layer C -- purpose
@@ -1470,7 +1663,8 @@ candidate_example_projects:
   purposes:
   - Methodological / Infrastructure Research
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Survey-method effects are the main analytical purpose.
   source_category:
     layer: Layer C -- purpose
@@ -1485,7 +1679,8 @@ candidate_example_projects:
   purposes:
   - Methodological / Infrastructure Research
   tags: []
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Measurement/classification development is central.
   source_category:
     layer: Layer C -- purpose
@@ -1500,10 +1695,11 @@ candidate_example_projects:
   purposes:
   - Methodological / Infrastructure Research
   tags: []
-  conditional_labels:
+  uncertain_labels:
   - label: Public Finance & Taxation
     layer: Layer A -- domain
-    condition: Use if the project is substantively about public-finance, fiscal, tax, or inflation-measurement questions.
+    note: Use if the project is substantively about public-finance, fiscal, tax, or inflation-measurement questions.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Quality measurement/statistical estimation is the purpose.
   source_category:
     layer: Layer C -- purpose
@@ -1512,6 +1708,8 @@ candidate_example_projects:
 - project_id: 2020/118
   title: Utilising routine data and machine learning techniques to discover new multi-morbidity and polypharmacy phenotype's associated with poorer outcomes, health, resilience and wellbeing in the Welsh population
   datasets: 'SAIL Databank Databank: 2011 Census Data Welsh residents'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Risk Prediction / Health & Social Care if the goal is prediction/phenotyping
   source_category:
     layer: Layer C -- purpose
@@ -1520,6 +1718,8 @@ candidate_example_projects:
 - project_id: 2020/021
   title: The impact of the National Living Wage on Employment, Hours, Earnings and Household Income
   datasets: 'Office for National Statistics: Annual Population Survey & Annual Survey of Hours and Earnings'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Policy Evaluation
   source_category:
     layer: Layer C -- purpose
@@ -1527,9 +1727,11 @@ candidate_example_projects:
     section: counterexamples
 - project_id: 2019/011
   title: Modelling Return on Investment at the firm level
-  datasets: |-
-    Department for Business, Energy & Industrial Strategy: UK Innovation Survey
-    Office for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey
+  datasets: 'Department for Business, Energy & Industrial Strategy: UK Innovation Survey
+
+    Office for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Business & Productivity / Outcome Tracking
   source_category:
     layer: Layer C -- purpose
@@ -1544,10 +1746,11 @@ candidate_example_projects:
   - Unclear from Register Entry
   tags: []
   condition: Use for Layer C purpose only, if analytical design remains opaque.
-  conditional_labels:
+  uncertain_labels:
   - label: Migration & Demographics
     layer: Layer A -- domain
-    condition: Use if datasets or project detail reveal a central population, census, mortality, migration, or demographic scope.
+    note: Use if datasets or project detail reveal a central population, census, mortality, migration, or demographic scope.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Domain may be inferable from datasets while purpose remains unclear.
   source_category:
     layer: Layer C -- purpose
@@ -1562,16 +1765,17 @@ candidate_example_projects:
   - Unclear from Register Entry
   tags: []
   condition: Use if analytical purpose cannot be inferred.
-  conditional_labels:
+  uncertain_labels:
   - label: Health & Social Care
     layer: Layer A -- domain
-    condition: Use if datasets or project detail show health, healthcare, mental health, mortality, or care outcomes are central.
+    note: Use if datasets or project detail show health, healthcare, mental health, mortality, or care outcomes are central.
   - label: Labour Market & Employment
     layer: Layer A -- domain
-    condition: Use if datasets or project detail show employment, earnings, workforce, or labour-market outcomes are central.
+    note: Use if datasets or project detail show employment, earnings, workforce, or labour-market outcomes are central.
   - label: Poverty, Wealth & Living Standards
     layer: Layer A -- domain
-    condition: Use if datasets or project detail show household resources, poverty, wealth, debt, or living standards are central.
+    note: Use if datasets or project detail show household resources, poverty, wealth, debt, or living standards are central.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Internal project naming may not reveal analytical purpose.
   source_category:
     layer: Layer C -- purpose
@@ -1580,6 +1784,8 @@ candidate_example_projects:
 - project_id: 2020/020
   title: Business dynamism
   datasets: 'Office for National Statistics: Business Structure Database'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Descriptive Monitoring
   source_category:
     layer: Layer C -- purpose
@@ -1588,6 +1794,8 @@ candidate_example_projects:
 - project_id: 2020/024
   title: Assessing the impact of UK Enterprise Zones
   datasets: 'Office for National Statistics: Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Business Structure Database & Quarterly Labour Force Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Policy Evaluation
   source_category:
     layer: Layer C -- purpose
@@ -1596,6 +1804,8 @@ candidate_example_projects:
 - project_id: 2024/259
   title: Risk index of NEET for local authority use
   datasets: 'DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Risk Prediction
   source_category:
     layer: Layer C -- purpose
@@ -1610,13 +1820,14 @@ candidate_example_projects:
   purposes: []
   tags:
   - Demographic disparities / equity tag
-  conditional_labels:
+  uncertain_labels:
   - label: Descriptive Monitoring
     layer: Layer C -- purpose
-    condition: Use if the project primarily profiles levels, patterns, distributions, or trends.
+    note: Use if the project primarily profiles levels, patterns, distributions, or trends.
   - label: Outcome Tracking
     layer: Layer C -- purpose
-    condition: Use if the project estimates an exposure-outcome relationship.
+    note: Use if the project estimates an exposure-outcome relationship.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Ethnicity is central to the labour-market comparison.
   source_category:
     layer: Cross-cutting tag
@@ -1632,7 +1843,8 @@ candidate_example_projects:
   - Outcome Tracking
   tags:
   - Demographic disparities / equity tag
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Religion is central to comparing labour-market outcomes.
   source_category:
     layer: Cross-cutting tag
@@ -1647,13 +1859,14 @@ candidate_example_projects:
   purposes: []
   tags:
   - Demographic disparities / equity tag
-  conditional_labels:
+  uncertain_labels:
   - label: Outcome Tracking
     layer: Layer C -- purpose
-    condition: Use if the project estimates an exposure-outcome relationship.
+    note: Use if the project estimates an exposure-outcome relationship.
   - label: Descriptive Monitoring
     layer: Layer C -- purpose
-    condition: Use if the project primarily profiles levels, patterns, distributions, or trends.
+    note: Use if the project primarily profiles levels, patterns, distributions, or trends.
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Ethnic comparison is central; mortality is the health outcome.
   source_category:
     layer: Cross-cutting tag
@@ -1669,7 +1882,8 @@ candidate_example_projects:
   - Service Interaction / Systems Analysis
   tags:
   - Demographic disparities / equity tag
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Ethnic/religious comparison is central; children's social services are the system.
   source_category:
     layer: Cross-cutting tag
@@ -1685,7 +1899,8 @@ candidate_example_projects:
   - Descriptive Monitoring
   tags:
   - Demographic disparities / equity tag
-  conditional_labels: []
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   rationale: Age cohort is the demographic comparison; wealth is the substantive domain.
   source_category:
     layer: Cross-cutting tag
@@ -1694,6 +1909,8 @@ candidate_example_projects:
 - project_id: 2023/006
   title: Ethnic Minority British Election Study pilot
   datasets: 'Office for National Statistics: Annual Population Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Migration & Demographics unless the research question compares disparities
   source_category:
     layer: Cross-cutting tag
@@ -1702,6 +1919,8 @@ candidate_example_projects:
 - project_id: 2020/017
   title: Subjective wellbeing impacts of debt and debt-related factors
   datasets: 'Office for National Statistics: Wealth and Assets Survey'
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   replacement: Poverty, Wealth & Living Standards / Outcome Tracking
   source_category:
     layer: Cross-cutting tag
@@ -1712,6 +1931,8 @@ candidate_example_projects:
   datasets: 'Office for National Statistics: Census 1961, Census 1971, Census 1981, Census 1991, Census 2001, Census 2011 & Labour Force Survey'
   former_label: Gender, Race & Ethnicity
   replacement_classification: Labour Market & Employment plus Demographic disparities / equity tag
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   source_category:
     layer: Layer A -- domain
     label: Gender, Race & Ethnicity
@@ -1721,6 +1942,8 @@ candidate_example_projects:
   datasets: 'Office for National Statistics: Public Health Research Database'
   former_label: Gender, Race & Ethnicity
   replacement_classification: Health & Social Care plus Demographic disparities / equity tag
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   source_category:
     layer: Layer A -- domain
     label: Gender, Race & Ethnicity
@@ -1730,6 +1953,8 @@ candidate_example_projects:
   datasets: 'SAIL Databank Databank: 2011 Census'
   former_label: Gender, Race & Ethnicity
   replacement_classification: Health & Social Care plus Demographic disparities / equity tag
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   source_category:
     layer: Layer A -- domain
     label: Gender, Race & Ethnicity
@@ -1739,6 +1964,8 @@ candidate_example_projects:
   datasets: 'Office for National Statistics: Public Health Research Database'
   former_label: Inequality / Disparities Analysis
   replacement_classification: Health & Social Care plus Demographic disparities / equity tag; purpose Outcome Tracking or Descriptive Monitoring
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   source_category:
     layer: Layer C -- purpose
     label: Inequality / Disparities Analysis
@@ -1748,7 +1975,10 @@ candidate_example_projects:
   datasets: 'SAIL Databank Databank: 2011 Census'
   former_label: Inequality / Disparities Analysis
   replacement_classification: Health & Social Care plus Demographic disparities / equity tag; purpose Service Interaction / Systems Analysis or Outcome Tracking
+  uncertain_labels: []
+  classification_confidence: '[NOT YET ASSESSED]'
   source_category:
     layer: Layer C -- purpose
     label: Inequality / Disparities Analysis
     section: examples
+
