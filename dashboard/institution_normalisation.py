@@ -15,6 +15,18 @@ _DASH_TRANSLATION = str.maketrans({
 })
 _ZERO_WIDTH_RE = re.compile(r"[\u00ad\u200b\u200c\u200d\ufeff]")
 _MULTISPACE_RE = re.compile(r"\s+")
+_WRAPPED_NAME_LINE_RE = re.compile(
+    r"(?m)^([A-Z][A-Za-z'`.-]+(?:[ \t]+[A-Z][A-Za-z'`.-]+){0,3})[ \t]*\n[ \t]*"
+    r"([A-Z][A-Za-z'`.-]+(?:[ \t]+[A-Z][A-Za-z'`.-]+){0,3}[ \t]*,)"
+)
+_OPEN_INSTITUTION_TAIL_RE = re.compile(
+    r"\b(?:for|of|and)$",
+    re.IGNORECASE,
+)
+_INSTITUTION_CONTINUATION_TAIL_RE = re.compile(
+    r"\b(?:Department|Education|Institute|University|Office|School|College|Centre|Center|Public Health)\b"
+    r"(?:\s+(?:for|of|and))?$"
+)
 _NOT_INSTITUTION_RE = re.compile(
     r"^\s*$|^\d+$|^(and|the|of|for|in|at|to)\s*$",
     re.IGNORECASE,
@@ -57,6 +69,7 @@ _NON_PERSON_WORDS = {
     "agency",
     "authority",
     "bank",
+    "belfast",
     "biosciences",
     "business",
     "cardiff",
@@ -97,6 +110,7 @@ _NON_PERSON_WORDS = {
     "resolution",
     "royal",
     "school",
+    "science",
     "service",
     "simetrica",
     "statistics",
@@ -235,6 +249,7 @@ _ALIASES = {
     "edniburgh napier university": "Edinburgh Napier University",
     "university college lonfon": "University College London",
     "university of northampton": "University of Northampton",
+    "university of southampt on": "University of Southampton",
     "university of west of england": "University of the West of England",
 }
 _COMPOUND_INSTITUTION_SPLITS = {
@@ -279,9 +294,39 @@ def _clean_text(text: str) -> str:
         r"\1\n\2",
         text,
     )
+    text = _join_wrapped_name_lines(text)
     text = re.sub(r",\s*\n\s*", ", ", text)
     text = re.sub(r"\n+", "\n", text)
     return text
+
+
+def _join_wrapped_name_lines(text: str) -> str:
+    while True:
+        updated = _WRAPPED_NAME_LINE_RE.sub(
+            lambda match: _join_wrapped_name_match(match, text),
+            text,
+        )
+        if updated == text:
+            return text
+        text = updated
+
+
+def _join_wrapped_name_match(match: re.Match, source_text: str) -> str:
+    previous_line = source_text[: match.start()].rstrip("\n").split("\n")[-1]
+    if previous_line.rstrip().endswith(","):
+        return match.group(0)
+    previous_tail = _clean_fragment(previous_line.split(",")[-1])
+    if _INSTITUTION_CONTINUATION_TAIL_RE.search(previous_tail):
+        return match.group(0)
+
+    candidate = f"{match.group(1)} {match.group(2).rstrip(' ,')}"
+    prefix_words = _clean_fragment(match.group(1)).split()
+    suffix_words = _clean_fragment(match.group(2).rstrip(" ,")).split()
+    if len(prefix_words) > 1 and len(suffix_words) > 1:
+        return match.group(0)
+    if _looks_like_name(candidate):
+        return f"{match.group(1)} {match.group(2)}"
+    return match.group(0)
 
 
 def _clean_fragment(text: str) -> str:
@@ -301,10 +346,40 @@ def _build_logical_lines(text: str) -> list[str]:
         tokens = [_clean_fragment(part) for part in line.split(",") if _clean_fragment(part)]
         if logical_lines:
             previous_tail = _clean_fragment(logical_lines[-1].split(",")[-1])
-            if re.search(
-                r"\b(?:Department|Education|Institute|University|Office|School|College|Centre|Center|Public Health)\b(?:\s+(?:for|of|and))?$",
-                previous_tail,
-            ) and not _starts_name(tokens, 0):
+            if "," in line:
+                split_line = _split_leading_institution_continuation(line)
+                if split_line:
+                    continuation, remainder = split_line
+                    if _same_fragment(continuation, previous_tail):
+                        line = _clean_fragment(remainder)
+                        tokens = [_clean_fragment(part) for part in line.split(",") if _clean_fragment(part)]
+                        if not line:
+                            continue
+                    elif (
+                        _OPEN_INSTITUTION_TAIL_RE.search(previous_tail)
+                        or (
+                            _INSTITUTION_CONTINUATION_TAIL_RE.search(previous_tail)
+                            and not _looks_like_single_name_token(continuation)
+                        )
+                    ):
+                        logical_lines[-1] = _clean_fragment(f"{logical_lines[-1]} {continuation}")
+                        line = _clean_fragment(remainder)
+                        tokens = [_clean_fragment(part) for part in line.split(",") if _clean_fragment(part)]
+                        if not line:
+                            continue
+            if _OPEN_INSTITUTION_TAIL_RE.search(previous_tail):
+                split_line = _split_leading_institution_continuation(line)
+                if split_line:
+                    continuation, remainder = split_line
+                    logical_lines[-1] = _clean_fragment(f"{logical_lines[-1]} {continuation}")
+                    line = _clean_fragment(remainder)
+                    tokens = [_clean_fragment(part) for part in line.split(",") if _clean_fragment(part)]
+                    if not line:
+                        continue
+                if not _starts_name(tokens, 0):
+                    logical_lines[-1] = _clean_fragment(f"{logical_lines[-1]} {line}")
+                    continue
+            if "," not in line and _INSTITUTION_CONTINUATION_TAIL_RE.search(previous_tail):
                 logical_lines[-1] = _clean_fragment(f"{logical_lines[-1]} {line}")
                 continue
         if (
@@ -320,6 +395,23 @@ def _build_logical_lines(text: str) -> list[str]:
             continue
         logical_lines.append(line)
     return logical_lines
+
+
+def _same_fragment(left: str, right: str) -> bool:
+    return _clean_fragment(left).casefold() == _clean_fragment(right).casefold()
+
+
+def _split_leading_institution_continuation(line: str) -> tuple[str, str] | None:
+    if "," not in line:
+        return None
+    head, tail = line.split(",", 1)
+    words = head.split()
+    for cut in range(1, len(words) - 1):
+        continuation = " ".join(words[:cut])
+        name = " ".join(words[cut:])
+        if _looks_like_name(name):
+            return continuation, _clean_fragment(f"{name}, {tail}")
+    return None
 
 
 def _looks_like_name_word(word: str) -> bool:

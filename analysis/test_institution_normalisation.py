@@ -100,6 +100,54 @@ class InstitutionNormalisationTest(unittest.TestCase):
         )
         self.assertEqual(institutions, ["Frontier Economics Ltd"])
 
+    def test_wrapped_researcher_names_do_not_pollute_institutions(self):
+        institutions = self.parse(
+            "Gemma Catney, Queen's University Belfast\n"
+            "David \n"
+            "Manley, University of Bristol\n"
+            "Gemma \n"
+            "Catney,\n"
+            "Queen's University \n"
+            "Belfast\n"
+            "Momoko \n"
+            "Nishikido,\n"
+            "Queen's University \n"
+            "Belfast\n"
+            "Stephen \n"
+            "Jivraj, University College \n"
+            "London"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "Queen's University Belfast",
+                "University of Bristol",
+                "University College London",
+            ],
+        )
+
+    def test_wrapped_middle_names_do_not_pollute_institutions(self):
+        institutions = self.parse(
+            "Anne Berrington, University of Southampton\n"
+            "Vincent \n"
+            "Jerald \n"
+            "Ramos, University of \n"
+            "Southampt\n"
+            "on"
+        )
+        self.assertEqual(institutions, ["University of Southampton"])
+
+    def test_institution_only_lines_do_not_absorb_next_researcher(self):
+        institutions = self.parse(
+            "Christian Stow,\n"
+            "IPSOS MORI\n"
+            "Jan Franke,\n"
+            "IPSOS MORI\n"
+            "Scott Carter,\n"
+            "IPSOS MORI"
+        )
+        self.assertEqual(institutions, ["IPSOS MORI"])
+
     def test_continuation_lines_are_joined_into_institution_names(self):
         institutions = self.parse(
             "Manpreet Khera,\nDepartment for\nInternational Trade\n"
