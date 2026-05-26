@@ -7,34 +7,40 @@ metadata:
     external taxonomy was identified that fits the scope of DEA-accredited research
     activity; the scheme was therefore derived bottom-up from the register and
     compared against ADR UK's research themes for interoperability rather than
-    adopted from a standard. The taxonomy is developed with in mind and  assessed 
-    against the ONS Taxonomy Best Practice Evaluation Framework.
-  dictionary_compiled_from:
-  - project git history
-  - v3.3 classification prompt
-  - v3.4 ontology decisions
-  - taxonomy owner review of definitions, rules, examples and counterexamples
+    adopted from a standard. The taxonomy is designed for portfolio-level analysis of DEA-accredited
+    research activity and is self-assessed against the ONS Taxonomy Best Practice
+    Evaluation Framework (see METHODS_LOG.md).
   taxonomy_owner: Project Lead, DEA Dashboard
   layer_cardinality:
     Layer A -- domain: one or more
     Layer B -- linkage: exactly one
     Layer C -- purpose: one or two
     Cross-cutting tag: zero or more / boolean facets
+  example_policy: >-
+    Examples in this dictionary are rule illustrations, not validated project-level
+    classifications. They are authored to clarify category meaning, inclusion rules,
+    exclusion rules and boundary cases. Real project examples, where used, should
+    be treated as candidate illustrations only unless explicitly marked as validated
+    through the validation protocol.
   example_schema:
-    rule_illustrations:
-      location: taxonomy_data_dictionary.yaml
-      status: Authored demonstrations of category definitions; true by construction, not predicted project classifications.
-      schema: >-
-        Rule illustrations use `description`, the single label field for the category's own layer (`domains`, `linkage`, `purposes`, or `tags`), and `rationale`. Counterexamples use the same own-layer field for a concrete replacement label where one exists. They do not carry uncertainty, confidence, verification, or project-validation fields.
-    candidate_project_examples:
-      location: candidate_example_projects.yaml
-      status: Drafted, unvalidated worked classifications of real register projects, pending validation-study design.
+
+    - text: >-
+        Short illustrative phrase, dataset configuration, or study description.
+      rationale: >-
+        Why this illustrates the category.
+  counterexamples:
+    - text: >-
+        Similar-looking case that should NOT trigger this category.
+      rationale: >-
+        Why it falls outside the boundary.
+      instead_consider:
+        - <valid category label>
       schema_note: >-
         Candidate project examples carry the richer project-record schema, including `project_id`, drafted label sets, `uncertain_labels`, and `classification_confidence`. Their epistemic status is different from rule illustrations, so their full schema is held separately rather than duplicated here.
   category_identity_note: >-
-    Category identity is defined by the combination of project title and datasets used, not by title alone.
-    The fallback label "Unclear from Register Entry" appears separately in Layer A, Layer B,
-    and Layer C, and these are distinct categories.
+      Category identity is defined by the combination of layer and label, not by label
+      alone. The fallback label "Unclear from Register Entry" appears separately in
+      Layer A, Layer B, and Layer C, and these are distinct categories.
   governance:
     taxonomy_owner: Project Lead, DEA Dashboard
     review_process: >-
@@ -54,14 +60,7 @@ metadata:
       Review after first round of external feedback, v4 validation, after substantial changes to the DEA register, or when repeated
       validation errors indicate a category boundary problem.
   notes:
-  - Cells prefixed (from prompt) or (historical, from prompt) are extracted verbatim from the v3.3 classification prompt.
   - This file is the single source of truth. CSV or Markdown renderings are generated from it (for ease of machine/human readibility).
-  v3_4_changes:
-  - 'Layer A: "Gender, Race & Ethnicity" removed (replaced by cross-cutting tag). "Poverty, Inequality & Living Standards" relabelled to "Poverty, Wealth & Living Standards". 
-    "Unclear from Title" renamed to "Unclear from Register Entry" (as labels are generated from titles AND datasets used, not titles alone). 12 active domains + Unclear from Register Entry.'
-  - 'Layer B: "Unclear from Title" renamed to "Unclear from Register Entry" (same reason as for layer A). 3 active linkage modes + Unclear from Register Entry.'
-  - 'Layer C: "Inequality / Disparities Analysis" removed. "Unclear from Title" renamed to "Unclear from Register Entry" (same reason as for layer A). 7 active purposes + Unclear from Register Entry.'
-  - 'New: Cross-cutting demographic-disparities/equity tag, orthogonal to the three layers.'
   balance_note: >-
     Balance: the categories vary considerably in size. Some Layer C purposes — notably Risk Prediction / Early Identification and Service Interaction / Systems Analysis — are small. 
     They are retained as genuine, conceptually distinct analytical purposes and on future-proofing grounds (these kinds of research are expected to become more common). No claim is 
@@ -324,14 +323,15 @@ categories:
   exclusion_rules: >-
     Do not assign if the dataset field reveals a clear domain. Do not assign alongside a real domain. If any domain can be inferred with reasonable confidence, use that domain.
   examples:
-  - description: Opaque acronym or internal project name with non-informative datasets
-    domains:
-    - Unclear from Register Entry
-    rationale: Use only when neither title nor datasets allow a defensible domain assignment.
+  - text: >-
+      Opaque acronym or internal project name with non-informative datasets
+    rationale: >-
+      Use only when neither title nor datasets allow a defensible domain assignment.
   counterexamples:
-  - description: '`STRIDE`-style titles'
-    domains: []
-    rationale: Should not be Unclear from Register Entry where datasets reveal justice, employment, health, or another domain.
+  - text: >-
+      `STRIDE`-style titles
+    rationale: >-
+      Should not be Unclear from Register Entry where datasets reveal justice, employment, health, or another domain.
 - label: Single-Dataset
   layer: Layer B -- linkage
   status: active
@@ -347,15 +347,24 @@ categories:
   exclusion_rules: >-
     Do not assign to pre-linked products that combine domains, such as education-health or employment-census products. Do not assign where multiple datasets are listed, even if from the same provider.
   counterexamples:
-  - description: ASHE linked to Census 2011
-    linkage: Cross-Domain Linkage
-    rationale: Should be classified as Cross-Domain Linkage, not Single-Dataset.
-  - description: ECHILD
-    linkage: Cross-Domain Linkage
-    rationale: Should be classified as Cross-Domain Linkage, not Single-Dataset.
-  - description: Multiple ONS business surveys
-    linkage: Within-Domain Linkage
-    rationale: Should be classified as Within-Domain Linkage, not Single-Dataset.
+  - text: >-
+      ASHE linked to Census 2011
+    rationale: >-
+      Should be classified as Cross-Domain Linkage, not Single-Dataset.
+    instead_consider:
+    - Cross-Domain Linkage
+  - text: >-
+      ECHILD
+    rationale: >-
+      Should be classified as Cross-Domain Linkage, not Single-Dataset.
+    instead_consider:
+    - Cross-Domain Linkage
+  - text: >-
+      Multiple ONS business surveys
+    rationale: >-
+      Should be classified as Within-Domain Linkage, not Single-Dataset.
+    instead_consider:
+    - Within-Domain Linkage
 - label: Within-Domain Linkage
   layer: Layer B -- linkage
   status: active
@@ -371,22 +380,33 @@ categories:
   exclusion_rules: >-
     Do not assign merely because datasets share a provider. Large providers such as ONS supply datasets across multiple policy domains, so provider identity is not sufficient. If datasets span two or more policy domains, assign Cross-Domain Linkage.
   examples:
-  - description: Firm survey project using multiple ONS business datasets
-    linkage: Within-Domain Linkage
-    rationale: Multiple datasets, all business/economic.
-  - description: Census plus death registrations for demographic analysis
-    linkage: Within-Domain Linkage
-    rationale: Multiple demographic/population sources.
+  - text: >-
+      Firm survey project using multiple ONS business datasets
+    rationale: >-
+      Multiple datasets, all business/economic.
+  - text: >-
+      Census plus death registrations for demographic analysis
+    rationale: >-
+      Multiple demographic/population sources.
   counterexamples:
-  - description: Universal Credit plus Annual Population Survey
-    linkage: Cross-Domain Linkage
-    rationale: Should be classified as Cross-Domain Linkage, not Within-Domain Linkage.
-  - description: Education plus employment outcomes
-    linkage: Cross-Domain Linkage
-    rationale: Should be classified as Cross-Domain Linkage, not Within-Domain Linkage.
-  - description: Health plus housing records
-    linkage: Cross-Domain Linkage
-    rationale: Should be classified as Cross-Domain Linkage, not Within-Domain Linkage.
+  - text: >-
+      Universal Credit plus Annual Population Survey
+    rationale: >-
+      Should be classified as Cross-Domain Linkage, not Within-Domain Linkage.
+    instead_consider:
+    - Cross-Domain Linkage
+  - text: >-
+      Education plus employment outcomes
+    rationale: >-
+      Should be classified as Cross-Domain Linkage, not Within-Domain Linkage.
+    instead_consider:
+    - Cross-Domain Linkage
+  - text: >-
+      Health plus housing records
+    rationale: >-
+      Should be classified as Cross-Domain Linkage, not Within-Domain Linkage.
+    instead_consider:
+    - Cross-Domain Linkage
 - label: Cross-Domain Linkage
   layer: Layer B -- linkage
   status: active
@@ -402,22 +422,33 @@ categories:
   exclusion_rules: >-
     Do not assign where multiple datasets all remain within one policy domain. Do not assign to a single-domain pre-linked product such as COVID-19 infection data linked to test-and-trace data if both remain within health.
   examples:
-  - description: ECHILD
-    linkage: Cross-Domain Linkage
-    rationale: Pre-linked education and health/social-care data.
-  - description: ASHE linked to Census 2011
-    linkage: Cross-Domain Linkage
-    rationale: Employment/earnings linked to census/demographic data.
+  - text: >-
+      ECHILD
+    rationale: >-
+      Pre-linked education and health/social-care data.
+  - text: >-
+      ASHE linked to Census 2011
+    rationale: >-
+      Employment/earnings linked to census/demographic data.
   counterexamples:
-  - description: Three ONS business surveys
-    linkage: Within-Domain Linkage
-    rationale: Should be classified as Within-Domain Linkage, not Cross-Domain Linkage.
-  - description: Magistrates Court plus Crown Court
-    linkage: Within-Domain Linkage
-    rationale: Should be classified as Within-Domain Linkage, not Cross-Domain Linkage.
-  - description: One standalone survey/dataset
-    linkage: Single-Dataset
-    rationale: Should be classified as Single-Dataset, not Cross-Domain Linkage.
+  - text: >-
+      Three ONS business surveys
+    rationale: >-
+      Should be classified as Within-Domain Linkage, not Cross-Domain Linkage.
+    instead_consider:
+    - Within-Domain Linkage
+  - text: >-
+      Magistrates Court plus Crown Court
+    rationale: >-
+      Should be classified as Within-Domain Linkage, not Cross-Domain Linkage.
+    instead_consider:
+    - Within-Domain Linkage
+  - text: >-
+      One standalone survey/dataset
+    rationale: >-
+      Should be classified as Single-Dataset, not Cross-Domain Linkage.
+    instead_consider:
+    - Single-Dataset
 - label: Unclear from Register Entry
   layer: Layer B -- linkage
   status: active
@@ -433,13 +464,19 @@ categories:
   exclusion_rules: >-
     Do not assign based on an unclear title alone. Linkage mode should be determined primarily from the dataset field.
   examples:
-  - description: Dataset field absent or too generic to identify whether one or multiple datasets are used
-    linkage: Unclear from Register Entry
-    rationale: Linkage mode cannot be inferred even if subject matter can.
+  - text: >-
+      Dataset field absent or too generic to identify whether one or multiple datasets are used
+    rationale: >-
+      Linkage mode cannot be inferred even if subject matter can.
   counterexamples:
-  - description: Opaque titles with clear dataset fields should still receive Single-Dataset, Within-Domain Linkage, or Cross-Domain Linkage
-    linkage: null
-    rationale: Should not be Unclear from Register Entry where clear dataset fields support a concrete linkage mode.
+  - text: >-
+      Opaque titles with clear dataset fields should still receive Single-Dataset, Within-Domain Linkage, or Cross-Domain Linkage
+    rationale: >-
+      Should not be Unclear from Register Entry where clear dataset fields support a concrete linkage mode.
+    instead_consider:
+    - Single-Dataset
+    - Within-Domain Linkage
+    - Cross-Domain Linkage
 - label: Descriptive Monitoring
   layer: Layer C -- purpose
   status: active
@@ -581,9 +618,10 @@ categories:
   exclusion_rules: >-
     Do not use for new classification.
   examples:
-  - description: Do not use for new classification
-    domains: []
-    rationale: Removed Layer A category; do not use for new classification.
+  - text: >-
+      Do not use for new classification
+    rationale: >-
+      Removed Layer A category; do not use for new classification.
 - label: Inequality / Disparities Analysis
   layer: Layer C -- purpose
   status: removed v3.4
@@ -599,9 +637,11 @@ categories:
   exclusion_rules: >-
     Do not use for new classification.
   examples:
-  - description: '"Gender Pay Gap" / pay-gap studies'
-    purposes: []
-    rationale: Removed Layer C category; classify by the project's actual analytical purpose rather than using Inequality / Disparities Analysis.
-  - description: Do not use for new classification
-    purposes: []
-    rationale: Removed Layer C category; do not use for new classification.
+  - text: >-
+      "Gender Pay Gap" / pay-gap studies
+    rationale: >-
+      Removed Layer C category; classify by the project's actual analytical purpose rather than using Inequality / Disparities Analysis.
+  - text: >-
+      Do not use for new classification
+    rationale: >-
+      Removed Layer C category; do not use for new classification.
