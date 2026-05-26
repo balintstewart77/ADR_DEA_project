@@ -75,7 +75,11 @@ Provider normalisation extends the dataset-normalisation approach to the provide
 
 ### Institution name normalisation
 
-Institution parsing was extracted into `dashboard/institution_normalisation.py` (453 lines) with audit script and test suite (`b7eeac6`, 2026-04-08). While institution parsing is used for a dashboard tab (not directly for classification), it applies the same deterministic normalisation approach used for datasets and providers to the research-institution field, and is recorded here as part of the consistent data-cleaning methodology.
+Institution parsing was extracted into `dashboard/institution_normalisation.py` with audit script and test suite (`b7eeac6`, 2026-04-08). It is a dashboard-side normalisation path rather than an LLM-classification input. The dashboard builds `df_institutions = parse_institutions(df_all)` once in `dashboard/data/registry.py`; that same parsed table feeds the Institutions analysis tab and the institution filters used by both the Project Explorer and the Enriched Register through `_apply_register_filters()`.
+
+The thematic classifier does not use the normalised institution table and does not insert the raw `Researchers` field into the LLM prompt. In `analysis/llm_theme_analysis_v3.py`, `classify_all()` builds prompt payloads from `Record ID`, cleaned `Title`, and cleaned/summarised `Datasets Used`; `_build_prompt()` presents only title and datasets to the model. Institution normalisation therefore does not need to be shared with the classifier for classification consistency, but it remains part of the dashboard data-quality pipeline because institution labels drive dashboard filters, counts, and institution charts.
+
+A wrapped-line parsing fix on 2026-05-26 was diff-tested against the previous parser across the full cleaned register. Six projects changed: 2023/162, 2024/247, 2025/027, 2025/056, 2025/066, and 2025/145. Manual inspection of each raw `Researchers` field confirmed that all six changes were corrections of institution labels that had absorbed researcher-name fragments or, in 2025/145, had missed a wrapped Technopolis affiliation. A broader scan for labels shaped as `known institution + person name` returned zero candidates after the fix.
 
 ---
 
