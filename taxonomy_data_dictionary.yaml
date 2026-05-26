@@ -201,7 +201,7 @@ categories:
   counterexamples:
   - project_id: 2020/013
     title: "Firm-level analysis of research and development"
-    datasets: "Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2 \nIntellectual Property Office: Patents, Designs and Trade Marks \nOffice for National Statistics / \nDepartment for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey"
+    datasets: "Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2\nIntellectual Property Office: Patents, Designs and Trade Marks\nOffice for National Statistics /\nDepartment for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey"
     replacement: Business & Productivity
   - project_id: 2020/008
     title: "Contextualised Admissions and University Choice"
@@ -252,7 +252,7 @@ categories:
     rationale: Admissions and university choice are education-system topics.
   - project_id: 2024/259
     title: "Risk index of NEET for local authority use"
-    datasets: "DfE, DWP and \nHMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
+    datasets: "DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
     domains:
     - Education & Skills
     - Labour Market & Employment
@@ -265,11 +265,11 @@ categories:
   counterexamples:
   - project_id: 2020/010
     title: "Local labour market effects of immigration"
-    datasets: "Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings \nInstitute for Economic and Social Research: Understanding Society"
+    datasets: "Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings\nInstitute for Economic and Social Research: Understanding Society"
     replacement: Labour Market & Employment / Migration & Demographics
   - project_id: 2020/012
     title: "Wage progression and firm productivity"
-    datasets: "Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE \nIntellectual Property Office: Patents, Designs and Trade Marks \nDepartment for Education: National \nDepartment for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey \nDepartment for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal \nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
+    datasets: "Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE\nIntellectual Property Office: Patents, Designs and Trade Marks\nDepartment for Education: National\nDepartment for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey\nDepartment for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal\nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
     replacement: Labour Market & Employment / Business & Productivity
   - project_id: 2022/139
     title: "Understanding and predicting health and social care utilisation and adverse outcomes"
@@ -337,7 +337,7 @@ categories:
     replacement: Migration & Demographics / Methodological
   - project_id: 2019/025
     title: "Understanding the uptake and use of the Northern Ireland Concessionary Fares Scheme for the population aged 60 and over"
-    datasets: "Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011 \nNorthern Ireland Registrar General's Office: Registered Deaths"
+    datasets: "Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011\nNorthern Ireland Registrar General's Office: Registered Deaths"
     replacement: Migration & Demographics / Service Interaction
   - project_id: 2020/058
     title: "Movers and stayers: explaining variation in residential energy consumption using longitudinal observations of annual energy consumption in moving households"
@@ -424,7 +424,7 @@ categories:
   examples:
   - project_id: 2019/011
     title: "Modelling Return on Investment at the firm level"
-    datasets: "Department for Business, Energy & Industrial Strategy: UK Innovation Survey\n\nOffice for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey"
+    datasets: "Department for Business, Energy & Industrial Strategy: UK Innovation Survey\nOffice for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey"
     domains:
     - Business & Productivity
     linkage: null
@@ -442,7 +442,7 @@ categories:
     rationale: Firm-level ROI is a business-performance topic.
   - project_id: 2020/013
     title: "Firm-level analysis of research and development"
-    datasets: "Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2 \nIntellectual Property Office: Patents, Designs and Trade Marks \nOffice for National Statistics / \nDepartment for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey"
+    datasets: "Office for National Statistics: Business Expenditure on Research and Development - England, Wales and Scotland, Business Structure Database, Business Structure Database Longitudinal, Annual Business Survey, Annual Respondent Database 2\nIntellectual Property Office: Patents, Designs and Trade Marks\nOffice for National Statistics /\nDepartment for Business, Energy and Industrial Strategy: Covid-19 Infection Survey linked with UK Innovation Survey"
     domains:
     - Business & Productivity
     linkage: null
@@ -470,7 +470,7 @@ categories:
   counterexamples:
   - project_id: 2020/012
     title: "Wage progression and firm productivity"
-    datasets: "Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE \nIntellectual Property Office: Patents, Designs and Trade Marks \nDepartment for Education: National \nDepartment for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey \nDepartment for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal \nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
+    datasets: "Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE\nIntellectual Property Office: Patents, Designs and Trade Marks\nDepartment for Education: National\nDepartment for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey\nDepartment for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal\nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
     replacement: Labour Market & Employment plus Business & Productivity
   - project_id: 2020/019
     title: "The impact of government expenditure on employment and wages: evidence from firm-level data for the UK"
@@ -539,7 +539,7 @@ categories:
     rationale: Wealth distribution across cohorts is material living-standards research; age-cohort comparison qualifies for the demographic-disparities tag.
   counterexamples:
   - project_id: 2020/018
-    title: "Inequalities in the 21st Century “ Chapter on Labour Market Inequality"
+    title: "Inequalities in the 21st Century – Chapter on Labour Market Inequality"
     datasets: "Office for National Statistics: Annual Population Survey, Annual Survey of Hours and Earnings, Labour Force Survey, Longitudinal Labour Force Survey & New Earnings Survey"
     replacement: Labour Market & Employment
   - project_id: 2020/021
@@ -667,7 +667,7 @@ categories:
   counterexamples:
   - project_id: 2020/010
     title: "Local labour market effects of immigration"
-    datasets: "Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings \nInstitute for Economic and Social Research: Understanding Society"
+    datasets: "Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey & Annual Survey of Hours and Earnings\nInstitute for Economic and Social Research: Understanding Society"
     replacement: Labour Market & Employment, with Migration & Demographics if immigration itself is central
   - project_id: 2022/190
     title: "Ethnic inequalities in mortality"
@@ -694,7 +694,7 @@ categories:
   examples:
   - project_id: 2020/099
     title: "Estimation of energy demand drivers and the effect of public policies on consumption under the climate emergency"
-    datasets: "Department for Business, Energy & Industrial Strategy: National Energy Efficiency data \nOffice for National Statistics: Annual Respondents Database, Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Products of the European Community, Business Structure Database, Longitudinal Business Structure Database, Annual Inquiry into Foreign Direct Investment, Annual Population Survey &amp, Labour Force Survey Household, Living Costs and Food Survey \nInstitute for Social and Economic Research: \nUnderstanding Society \nDepartment for Business, Energy and Industrial Strategy: Quarterly Fuels Inquiry \nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
+    datasets: "Department for Business, Energy & Industrial Strategy: National Energy Efficiency data\nOffice for National Statistics: Annual Respondents Database, Annual Respondents Database, Annual Business Survey, Annual Survey of Hours and Earnings, Products of the European Community, Business Structure Database, Longitudinal Business Structure Database, Annual Inquiry into Foreign Direct Investment, Annual Population Survey & Labour Force Survey Household, Living Costs and Food Survey\nInstitute for Social and Economic Research:\nUnderstanding Society\nDepartment for Business, Energy and Industrial Strategy: Quarterly Fuels Inquiry\nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
     domains:
     - Environment & Agriculture
     linkage: null
@@ -717,7 +717,7 @@ categories:
     rationale: Residential energy use is environmental/energy research, with housing context.
   - project_id: 2021/090
     title: "AD|ARC : Linking Individual and Farm Level Data for Agricultural Research - Wales Workstream"
-    datasets: "SAIL Databank Databank: 2011 Census Data Welsh residents \nOffice for National Statistics: Annual Population Surveys - Wales"
+    datasets: "SAIL Databank Databank: 2011 Census Data Welsh residents\nOffice for National Statistics: Annual Population Surveys - Wales"
     domains:
     - Environment & Agriculture
     linkage: Cross-Domain Linkage
@@ -737,7 +737,7 @@ categories:
     replacement: Business & Productivity; add Environment only if environmental outcomes are central
   - project_id: 2020/051
     title: "Measuring the impact of social distancing on firm productivity"
-    datasets: "Office for National Statistics / \nHMRC / Companies House : Linked Inter-Departmental Business Register and Valuation Office Agency"
+    datasets: "Office for National Statistics / HMRC / Companies House : Linked Inter-Departmental Business Register and Valuation Office Agency"
     replacement: COVID-19 & Pandemic / Business & Productivity
 - label: Public Finance & Taxation
   layer: Layer A -- domain
@@ -827,7 +827,7 @@ categories:
   examples:
   - project_id: 2020/027
     title: "COVID-19 Infection Survey"
-    datasets: "Office for National Statistics: ONS COVID-19 Weekly Opinions Survey, Labour Force Survey, ONS Death Registrations Data \nOffice for National Statistics / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government: Covid-19 Infection Survey linked with VOA and EPC data \nOffice for National Statistics / University of Oxford: Covid-19 Infection Survey with National Immunisation Management Service, Covid-19 Infection Survey linked with Death Occurrences England and Wales \nOffice for National Statistics / \nNHSD / University of Oxford: COVID-19 Infection Survey linked with Public Health Research Database"
+    datasets: "Office for National Statistics: ONS COVID-19 Weekly Opinions Survey, Labour Force Survey, ONS Death Registrations Data\nOffice for National Statistics / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government: Covid-19 Infection Survey linked with VOA and EPC data\nOffice for National Statistics / University of Oxford: Covid-19 Infection Survey with National Immunisation Management Service, Covid-19 Infection Survey linked with Death Occurrences England and Wales\nOffice for National Statistics /\nNHSD / University of Oxford: COVID-19 Infection Survey linked with Public Health Research Database"
     domains:
     - COVID-19 & Pandemic
     - Health & Social Care
@@ -946,7 +946,7 @@ categories:
     replacement: Business & Productivity / Policy Evaluation
   - project_id: 2024/259
     title: "Risk index of NEET for local authority use"
-    datasets: "DfE, DWP and \nHMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
+    datasets: "DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
     replacement: Education & Skills / Risk Prediction
 - label: Unclear from Register Entry
   layer: Layer A -- domain
@@ -1222,7 +1222,7 @@ categories:
     replacement: Outcome Tracking
   - project_id: 2024/259
     title: "Risk index of NEET for local authority use"
-    datasets: "DfE, DWP and \nHMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
+    datasets: "DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
     replacement: Risk Prediction / Early Identification
 - label: Outcome Tracking
   layer: Layer C -- purpose
@@ -1264,7 +1264,7 @@ categories:
     rationale: Predictors are linked to severe mental-health outcomes.
   - project_id: 2020/012
     title: "Wage progression and firm productivity"
-    datasets: "Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE \nIntellectual Property Office: Patents, Designs and Trade Marks \nDepartment for Education: National \nDepartment for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey \nDepartment for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal \nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
+    datasets: "Office for National Statistics: Annual Business Inquiry, Annual Inquiry into Foreign Direct Investment, Annual Respondents DatabaseX, Annual Respondents Database, Annual Survey of Hours and Earnings, Business Expenditure on Research and Development, Business Impact of COVID-19 Survey, Business Register Employment Survey, Business Structure Database, Business Structure Database Longitudinal, Capital Stocks, Financial Assets and Liabilities Survey, Interdepartmental Business Register, Investment in Intangible Assets, International Trade in Services, Labour Force Survey, Monthly Wage and Salary Survey, New Earnings Survey, Quarterly Capital Expenditure Survey, Survey of Innovation and Patent Use, Vacancy Survey, ASHE\nIntellectual Property Office: Patents, Designs and Trade Marks\nDepartment for Education: National\nDepartment for Business, Energy and Industrial Strategy: Employer Skills Survey & Workplace Employment Relations Survey\nDepartment for Business, Energy and Industrial Strategy: Small Business Survey Longitudinal\nDepartment for Business, Energy and Industrial Strategy: Community Innovation Survey"
     domains:
     - Labour Market & Employment
     - Business & Productivity
@@ -1366,7 +1366,7 @@ categories:
   examples:
   - project_id: 2019/025
     title: "Understanding the uptake and use of the Northern Ireland Concessionary Fares Scheme for the population aged 60 and over"
-    datasets: "Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011 \nNorthern Ireland Registrar General's Office: Registered Deaths"
+    datasets: "Northern Ireland Statistics and Research Agency: Census 2011 & Census 2011\nNorthern Ireland Registrar General's Office: Registered Deaths"
     domains:
     - Migration & Demographics
     linkage: null
@@ -1494,7 +1494,7 @@ categories:
   examples:
   - project_id: 2024/259
     title: "Risk index of NEET for local authority use"
-    datasets: "DfE, DWP and \nHMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
+    datasets: "DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
     domains:
     - Education & Skills
     - Labour Market & Employment
@@ -1608,7 +1608,7 @@ categories:
     replacement: Policy Evaluation
   - project_id: 2019/011
     title: "Modelling Return on Investment at the firm level"
-    datasets: "Department for Business, Energy & Industrial Strategy: UK Innovation Survey\n\nOffice for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey"
+    datasets: "Department for Business, Energy & Industrial Strategy: UK Innovation Survey\nOffice for National Statistics: Annual Business Survey, Business Enterprise Research and Development, Business Register and Employment Survey"
     replacement: Business & Productivity / Outcome Tracking
 - label: Unclear from Register Entry
   layer: Layer C -- purpose
@@ -1670,7 +1670,7 @@ categories:
     replacement: Policy Evaluation
   - project_id: 2024/259
     title: "Risk index of NEET for local authority use"
-    datasets: "DfE, DWP and \nHMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
+    datasets: "DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England"
     replacement: Risk Prediction
 - label: Demographic disparities / equity tag
   layer: Cross-cutting tag
