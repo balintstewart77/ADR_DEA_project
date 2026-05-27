@@ -830,12 +830,9 @@
         - project_id: "2019/007"
           title: "Thriving Places index indicators of wellbeing at local authority level"
           datasets_used: "Office for National Statistics: Labour Force Survey & Annual Population Survey"
-        - project_id: "2020/037"
-          title: "Zero Hours Contracts: Characteristics, Prevalence and Impacts on Workers"
-          datasets_used: "Office for National Statistics: Annual Population Survey, Quarterly Labour Force Survey, Labour Force Survey Five-Quarter Longitudinal Dataset & Annual Population Survey: Well-Being"
-      caution: >-
-        Some evidence titles use impact language loosely, so the author should check that the
-        design is descriptive rather than exposure-outcome.
+        - project_id: "2022/013"
+          title: "Trends in Cardiovascular diseases subtypes in England and Wales from 2001 to 2019"
+          datasets_used: "Office for National Statistics: Death Registrations, England and Wales"
     - text: >-
         Studies estimating the scale, distribution, or composition of a phenomenon so that
         patterns can be described across places, groups, or time.
@@ -881,9 +878,9 @@
         - project_id: "2019/005"
           title: "Measuring the impact of hearing loss on well-being"
           datasets_used: "Office for National Statistics: Annual Population Survey"
-        - project_id: "2019/020"
-          title: "Housing, family and environmental risk factors for hospital admissions in children"
-          datasets_used: "Office for National Statistics: Death Registrations & Census 2011: Household Sample"
+        - project_id: "2022/017"
+          title: "The link between characteristics of school pupils and labour market outcomes"
+          datasets_used: "DfE, DWP and HMRC: LEO via SRS Iteration 1 Standard Extract"
     - text: >-
         Studies examining determinants, consequences, or relationships between social, health,
         economic, educational, business, or justice phenomena.
@@ -891,15 +888,12 @@
         The analytical operation is tracing an exposure-outcome relationship rather than simply
         profiling a phenomenon.
       evidence:
-        - project_id: "2020/035"
-          title: "An examination of the relationship between the population disclosing domestic violence to the Intimate Violence Module and the Victim Module of the CSEW"
-          datasets_used: "Office for National Statistics: Crime Survey for England and Wales"
-        - project_id: "2025/185"
-          title: "High-intensity Emergency department use and mental health in young people (aged 10-25): a longitudinal data linkage study using administrative data from England"
-          datasets_used: "NHS; DfE: Education and Child Health Insights from Linked Data Research Database - England"
-      caution: >-
-        Some relationship studies may be descriptive cross-tabs; review method text if
-        available.
+        - project_id: "2020/023"
+          title: "The determinants of performance-pay utilisation by firms and its consequences for firm behaviour, performance, and employee outcomes"
+          datasets_used: "Office for National Statistics: Business Structure Database, Annual Business Survey, Workplace Employment Relations Survey, International Trade in Services, Annual Survey of Hours and Earnings & Wealth and Assets Survey"
+        - project_id: "2020/030"
+          title: "Examining the relationship between engaging in design and exporting"
+          datasets_used: "Department for Business, Energy and Industrial Strategy: UK Innovation Survey"
   candidate_counterexamples:
     - text: >-
         Studies estimating the effect of a named policy, programme, scheme, fund, levy, reform,
@@ -982,12 +976,15 @@
         This purpose is illustrated when the service pathway or institutional process is the
         object of analysis.
       evidence:
-        - project_id: "2021/038"
-          title: "Using linked Magistrates and Crown Court data to explore defendant appearance over time: specialisation, escalation or de-escalation?"
-          datasets_used: "Ministry of Justice: MoJ Data First Crown court defendant case level dataset, MoJ Data First Linked Criminal Courts defendant case level dataset & MoJ Data First magistrates' court defendant case level dataset"
+        - project_id: "2023/073"
+          title: "Domestic abuse proceedings in family courts: Overlap and pathways in private and public family justice"
+          datasets_used: "Ministry of Justice: Data First FamilyMan Family Court data"
         - project_id: "2022/111"
           title: "Private family law cases in England and Wales: profiles, pathways and outcomes"
           datasets_used: "Ministry of Justice: MoJ Data First family court data extract"
+        - project_id: "2025/055"
+          title: "Pathways of families in Private law proceedings in England and Wales.B138"
+          datasets_used: "Ministry of Justice: Data First Family Court - England and Wales"
     - text: >-
         Studies of service uptake, high-intensity use, support pathways, referrals, case
         progression, or cross-service movement.
@@ -996,9 +993,15 @@
         experienced by an individual. Health or education outcomes can be present, but this
         purpose is strongest when utilisation or pathway through services is central.
       evidence:
-        - project_id: "2024/095/b"
+        - project_id: "2024/095"
           title: "Understanding pathways for support amongst children and young people in Wales experiencing mental health problems"
           datasets_used: "SAIL Databank Databank: Census (2021)"
+        - project_id: "2024/188"
+          title: "Pathways through support services in neurodivergent children and young people who develop mental health conditions"
+          datasets_used: "NHS; DfE: Education and Child Health Insights from Linked Data - England"
+        - project_id: "2025/185"
+          title: "High-intensity Emergency department use and mental health in young people (aged 10-25): a longitudinal data linkage study using administrative data from England"
+          datasets_used: "NHS; DfE: Education and Child Health Insights from Linked Data Research Database - England"
   candidate_counterexamples:
     - text: >-
         Studies where a public-service dataset is merely the data source for estimating an
@@ -1136,7 +1139,10 @@
           datasets_used: "Office for National Statistics: Crime Survey for England and Wales, 2011 Census: Aggregate Data"
         - project_id: "2025/242"
           title: "Reviewing our Measurement Framework and conducting a data quality review to ensure that our data sources are of a high quality and all protected characteristics are available for analysis ahead of the next Statutory report."
-          datasets_used: "Office for National Statistics: Labour Force Survey (LFS) | Office for National Statistics: Death Registrations | Office for National Statistics: Annual Population Survey (APS) | Office for National Statistics: Annual Survey of Hours and Earnings (ASHE) | Office for National Statistics: Crime Survey for England and Wales (CSEW) | Offi ..."
+          datasets_used: "Office for National Statistics: Labour Force Survey, Death Registration Data, Annual Population Survey - UK, Annual Survey of Hours and Earnings - UK, Crime Survey for England and Wales, Opinions and Lifestyle Survey"
+        - project_id: "2025/077"
+          title: "Mode effects and data quality of occupational coding in UK household surveys"
+          datasets_used: "Office for National Statistics: Census Non Response Link Study 2021 England and Wales indexed"
     - text: >-
         Studies whose purpose is to shape, assess, or demonstrate the value of a data asset,
         measurement framework, or classification system.
@@ -1149,7 +1155,10 @@
           datasets_used: "Office for National Statistics: Growing Up in England Wave 1"
         - project_id: "2024/189"
           title: "Enhancing Approaches to Night-Time Economy Classifications: Initial Data-Driven Insights"
-          datasets_used: "Office for National Statistics: Annual Business Survey in Great Britain, Business Register Employment Survey, Business Structure Database in the UK, | Labour Force Survey, | Longitudinal Business Database, | Standard Industrial Classification and Occupational lookup, | UK small area gross value added estimates, | Annual Survey of Hour ..."
+          datasets_used: "Office for National Statistics: Annual Business Survey in Great Britain, Business Register Employment Survey, Business Structure Database in the UK, Labour Force Survey, Longitudinal Business Database, Standard Industrial Classification and Occupational lookup, UK small area gross value added estimates, Annual Survey of Hours and Earnings, Visa, O2 mobile network operator travel and location data UK"
+        - project_id: "2025/121"
+          title: "Sense-checking a reconstructed ONS Longitudinal Study (LS) data dictionary"
+          datasets_used: "Office for National Statistics: Longitudinal Study 1971, 1981, 1991, 2001, 2011, and 2021"
   candidate_counterexamples:
     - text: >-
         Substantive studies that use administrative data, linkage, modelling, or advanced
@@ -1240,6 +1249,9 @@
         - project_id: "2021/178"
           title: "Unpacking the disability employment gap"
           datasets_used: "Office for National Statistics: Annual Population Survey (APS) | Office for National Statistics: Annual Population Survey Household | Department for Business, Energy and Industrial Strategy: Workplace Employee Relations Survey | Understanding Society: Waves 1-10 and Harmonised BHPS: Waves 1-18"
+        - project_id: "2022/024"
+          title: "Ethnic disparities in infant mortality"
+          datasets_used: "Office for National Statistics: Infant Mortality linkage of 2011 Census, Births and Deaths"
     - text: >-
         Studies examining inequalities in a substantive domain through one or more of the
         taxonomy's demographic or equality-relevant comparison dimensions.
@@ -1254,9 +1266,9 @@
         - project_id: "2023/058"
           title: "Differences in careers by ethnicity, nationality, and social class."
           datasets_used: "Office for National Statistics: Annual Survey of Hours and Earnings linked to 2011 Census - England and Wales"
-      caution: >-
-        Review whether the group comparison is central in the full proposal or only a
-        stratifier.
+        - project_id: "2022/090"
+          title: "Reassessing ethnic disparities in sentencing using different measures of offenders' ethnicity"
+          datasets_used: "Ministry of Justice: MoJ Data First Crown Court Defendant Case Level Dataset, MoJ Data First Magistrates' Court Defendant Case Level Dataset - England and Wales"
   candidate_counterexamples:
     - text: >-
         Studies of socioeconomic inequality, household debt, cost-of-living, deprivation, or
