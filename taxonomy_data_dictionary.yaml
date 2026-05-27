@@ -18,19 +18,29 @@ metadata:
     compared against ADR UK's research themes for interoperability rather than
     adopted from a standard. The taxonomy is designed for portfolio-level analysis of DEA-accredited
     research activity and is self-assessed against the ONS Taxonomy Best Practice
-    Evaluation Framework (see METHODS_LOG.md).
+    Evaluation Framework (see METHODS_LOG.md for details and scoring against the evaluation).
   taxonomy_owner: Project Lead, DEA Dashboard
   layer_cardinality:
     Layer A -- domain: one or more
     Layer B -- linkage: exactly one
     Layer C -- purpose: one or two
     Cross-cutting tag: zero or more / boolean facets
+  layer_a_assignment_rule: >-
+    Domains are multi-label and non-hierarchical. Assign all domains that are
+    substantively analysed. For example, a project about how employment changes affect
+    household debt or living standards may receive both Labour Market & Employment and
+    Poverty, Wealth & Living Standards. Do not assign a domain solely because its
+    variables appear as controls, background characteristics, or contextual measures.
   example_policy: >-
-    Examples and counterexamples in this dictionary are authored rule illustrations,
-    not validated project-level classifications. They clarify category meaning,
-    inclusion rules, exclusion rules, and boundary cases. Real project examples,
-    where used for review or validation, belong in separate candidate or validation
-    artefacts rather than in the dictionary example schema.
+    Examples and counterexamples are authored illustrations, true by construction;
+    they are not validated project-level classifications. An example is a concrete,
+    recognisable instance of the category — it shows what a case looks like, not a
+    restatement of the definition. A counterexample shows a case that falls outside
+    the category and names what to assign instead. Boundary-drawing belongs in the
+    inclusion and exclusion rules, not in the examples. Where no concrete instance
+    adds anything beyond the definition, a category may carry no example. Worked
+    classifications of real register projects are not held in this dictionary; they
+    are a separate, validation-track artefact.
   example_schema:
     rule_illustrations: >-
       Rule illustrations are authored category-level examples. They are true by
@@ -43,22 +53,19 @@ metadata:
         Why this illustrates the category.
     counterexamples:
     - text: >-
-        Similar-looking case that should not trigger this category.
+        Similar-looking case that should NOT trigger this category.
       rationale: >-
         Why it falls outside the boundary.
       instead_consider:
       - <valid category label>
     counterexample_note: >-
       Counterexamples may include instead_consider when an exact valid ontology label
-      gives useful boundary guidance; omit the field where no such label is useful.
-    prohibited_fields: >-
-      Dictionary rule illustrations do not carry project IDs, evidence fields,
-      source dataset fields, confidence fields, uncertainty fields, validation status,
-      or review cautions.
+      gives useful boundary guidance; this field is ommited where no such label is useful.
   category_identity_note: >-
       Category identity is defined by the combination of layer and label, not by label
       alone. The fallback label "Unclear from Register Entry" appears separately in
-      Layer A, Layer B, and Layer C, and these are distinct categories.
+      Layer A, Layer B, and Layer C, and these are distinct categories and thus require layer 
+      identity for precise categorisation.
   governance:
     taxonomy_owner: Project Lead, DEA Dashboard
     review_process: >-
@@ -81,12 +88,12 @@ metadata:
   - This file is the single source of truth. CSV or Markdown renderings are generated from it (for ease of machine/human readibility).
   balance_note: >-
     Balance: the categories vary considerably in size. Some Layer C purposes — notably Risk Prediction / Early Identification and Service Interaction / Systems Analysis — are small. 
-    They are retained as genuine, conceptually distinct analytical purposes and on future-proofing grounds (these kinds of research are expected to become more common). No claim is 
+    They are retained as genuine, conceptually distinct analytical purposes and on future-proofing grounds (these kinds of research e.g. Risk Prediction are expected to become more common). No claim is 
     made about trends over time in these small categories: at their current size, year-on-year variation is not statistically meaningful and should not be read as a trend.
   covid_category_type_note: >-
     COVID-19 & Pandemic is retained as a Layer A domain but is a category-type anomaly: unlike the other domains, which are policy/sector areas, it is a time-bounded event that cuts across domains 
     (its own inclusion rule directs that it be assigned alongside a substantive domain). This is the same category-type issue that led to the removal of "Gender, Race & Ethnicity" from Layer A. 
-    Whether COVID-19 should likewise be converted from a domain to a cross-cutting tag is a documented open question, to be decided after v4 validation; it is not changed in v3.4.
+    Whether COVID-19 should likewise be converted from a domain to a cross-cutting tag is a documented open question, to be decided either before or after v4 validation; it is not changed in v3.4.
   adr_uk_theme_alignment:
     description: >-
       Mapping of this dictionary's Layer A domains to ADR UK's seven research themes, for interoperability reference under the ONS framework's interoperability principle. This alignment is a 
@@ -113,7 +120,7 @@ metadata:
       Health & Social Care:
         adr_uk_theme: Health & wellbeing
         alignment_type: close
-        note: Close match, with this ontology using a more service-facing health and social care label.
+        note: Close match. This ontology uses "Health & Social Care" to foreground administrative health, NHS, mortality, and social care research, whereas ADR UK's "Health & wellbeing" is broader and includes general wellbeing.
       Crime & Justice:
         adr_uk_theme: Crime & justice
         alignment_type: close
@@ -125,8 +132,7 @@ metadata:
       Poverty, Wealth & Living Standards:
         adr_uk_theme: Social mobility & inclusion
         alignment_type: partial
-        note: Partial overlap only. ADR UK's theme is broader, covering social mobility and inclusion; this ontology narrows the domain to material resources, poverty, wealth, benefits, debt, 
-          and living standards.
+        note: Partial overlap only. ADR UK's theme is broader, covering social mobility and inclusion; this ontology narrows the domain to material resources, poverty, wealth, benefits, debt, and living standards.
       Housing & Planning:
         adr_uk_theme: Housing & communities
         alignment_type: close
@@ -134,8 +140,7 @@ metadata:
       Migration & Demographics:
         adr_uk_theme: null
         alignment_type: no_equivalent
-        note: No direct ADR UK equivalent. ADR UK's seven themes do not include a dedicated migration/demography theme. Population structure, migration, fertility and mortality are a substantial strand of
-          research in the DEA register; the absence of an ADR UK match reflects the broader scope of this register-derived scheme rather than a weaker claim to domain status.
+        note: No direct ADR UK equivalent. ADR UK's seven themes do not include a dedicated migration/demography theme. Population structure, migration, fertility and mortality are a substantial strand of research in the DEA register; the absence of an ADR UK match reflects the broader scope of this register-derived scheme rather than a weaker claim to domain status.
       Environment & Agriculture:
         adr_uk_theme: Climate & the environment
         alignment_type: partial
@@ -151,7 +156,7 @@ metadata:
       Data Infrastructure & Methodology:
         adr_uk_theme: null
         alignment_type: no_equivalent
-        note: No direct ADR UK equivalent. Methodological and data-infrastructure research is retained as a domain because it is visible in the DEA register.
+        note: No direct ADR UK equivalent. Methodological and data-infrastructure research is retained as a domain because it is visible (albeit as a smaller category) in the DEA register.
 categories:
 - label: Labour Market & Employment
   layer: Layer A -- domain
@@ -171,20 +176,21 @@ categories:
       Studies that use education, migration, disability, or other group characteristics to examine
       employment, earnings, job quality, or workforce progression.
     rationale: >-
-      The category boundary is set by the outcome being studied. A subgroup can define the
-      population, but the domain is labour-market research when work or earnings are the central
-      object. If education, migration, disability, or another characteristic also matters, that
-      should be treated as possible co-domain or tag context rather than as the reason for this
-      labour-market illustration.
+      The domain is determined by the main outcome being studied. If the project is
+      primarily about employment, earnings, job quality, or labour-market progression,
+      assign Labour Market & Employment even when the population is defined by another
+      characteristic such as education, migration status, disability, parenthood, or
+      ethnicity.
   counterexamples:
   - text: >-
-      Studies whose object is household resources, saving, debt, wealth, or living standards, even
-      where earnings or employment data provide context.
+      Studies whose central object is household resources, saving, debt, wealth,
+      poverty, or living standards, where earnings or employment variables are used
+      only as background characteristics, controls, or contextual measures.
     rationale: >-
-      Labour-market data can be supporting evidence without making employment the substantive
-      domain. The boundary turns on whether work and workforce dynamics are the research object. A
-      project may still have a labour-market co-domain if employment mechanisms are substantively
-      analysed, but supporting earnings data alone are not enough.
+      Labour-market data can support analysis of household resources without making
+      the project labour-market research. Assign Labour Market & Employment only when
+      employment, earnings, job quality, labour-market participation, or workforce
+      progression are substantively analysed.
     instead_consider:
       - "Poverty, Wealth & Living Standards"
 - label: Education & Skills
@@ -192,18 +198,15 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning education, learning, training, skills formation, and transitions through education systems. Includes early years, schools, colleges, universities, qualifications, apprenticeships, admissions, attainment, attendance, teacher workforce issues, childcare, and education-to-work pathways.
+    Research concerning education, learning, training, skills formation, and transitions through education systems. Includes early years, schools, colleges, 
+    universities, qualifications, apprenticeships, admissions, attainment, attendance, teacher workforce issues, childcare, and education-to-work pathways.
   inclusion_rules: >-
-    Assign when the project's substantive focus is educational participation, attainment, qualifications, admissions, skills acquisition, apprenticeship pathways, school absence, teacher supply, or educational progression.
+    Assign when the project's substantive focus is educational participation, attainment, qualifications, admissions, skills acquisition, apprenticeship pathways, 
+    school absence, teacher supply, or educational progression.
   exclusion_rules: >-
-    Do not assign merely because a project uses education data if the research question is mainly about employment, health, crime, poverty, or demography. Add **Labour Market & Employment** where the project studies employment or earnings outcomes after education.
+    Do not assign merely because a project uses education data if the research question is mainly about employment, health, crime, poverty, or demography. 
+    Add **Labour Market & Employment** where the project studies employment or earnings outcomes after education.
   examples:
-  - text: >-
-      Studies whose object is educational participation, admissions, attainment, qualifications,
-      learner progression, or movement through education systems.
-    rationale: >-
-      These cases illustrate the category because the education system or learning pathway is the
-      substantive setting and outcome space.
   - text: >-
       Studies whose object is skills formation, training provision, apprenticeship pathways, or
       the relationship between education routes and later progression.
@@ -389,12 +392,6 @@ categories:
       These cases concern population movement and demographic composition, which are the core
       objects of the domain. If labour-market outcomes are central, this may become a co-domain
       rather than replacing the demographic domain.
-  - text: >-
-      Studies whose object is population structure or change, including mobility, fertility,
-      ageing, mortality as a demographic outcome, or cohort composition.
-    rationale: >-
-      The category is illustrated when the research asks about how populations are composed or
-      change over time.
   counterexamples:
   - text: >-
       Studies comparing outcomes by ethnicity, nationality, or other demographic characteristics
@@ -424,12 +421,6 @@ categories:
       These cases concern the natural environment, climate, or energy systems rather than a
       generic social or economic context. Residential energy cases may also involve housing, but
       this domain is illustrated when energy or environmental mechanisms are central.
-  - text: >-
-      Studies whose object is farming, farm households, agricultural production, land use, or
-      agricultural administrative data.
-    rationale: >-
-      Agriculture and land-use research belongs in this domain because farming or environmental
-      resource use is the substantive object.
   counterexamples:
   - text: >-
       Studies using environment to mean a social, economic, family, or institutional context
@@ -480,14 +471,6 @@ categories:
   category_type_note: >-
     See metadata covid_category_type_note. COVID-19 & Pandemic is a category-type anomaly: it is a time-bounded event rather than a policy/sector area. Whether it should be converted from a domain to a cross-cutting tag (as was done with Gender, Race & Ethnicity) is an open question for post-v4 validation.
   examples:
-  - text: >-
-      Studies where pandemic infection, surveillance, vaccination, containment, or control
-      processes are the substantive research object.
-    rationale: >-
-      This illustrates the event-domain because COVID-19 is the surveillance object or
-      intervention context being studied, not merely the period in which data were collected.
-      Because this is an event-domain, a substantive co-domain may also be needed where the
-      pandemic is studied through health, labour, business, education, or household outcomes.
   - text: >-
       Studies examining how pandemic conditions affected health, work, business, education,
       inequalities, households, or public services.
@@ -742,13 +725,7 @@ categories:
     Assign where the project asks whether or how X is associated with, predicts, or leads to Y, and X is not a deliberate named policy or intervention. Covers health outcomes, employment outcomes, firm outcomes, educational outcomes, criminal justice outcomes, wellbeing outcomes, and similar exposure-outcome designs.
   exclusion_rules: >-
     Use **Policy Evaluation / Impact Analysis** if X is a named policy, programme, or intervention. Use **Descriptive Monitoring** if the project only measures patterns or trends. Use **Life-Course / Trajectory Analysis** where the main focus is extended movement across life stages rather than one exposure-outcome link.
-  examples:
-  - text: >-
-      Studies examining determinants, consequences, or relationships between social, health,
-      economic, educational, business, or justice phenomena.
-    rationale: >-
-      The analytical operation is tracing an exposure-outcome relationship rather than simply
-      profiling a phenomenon.
+  examples: []
   counterexamples:
   - text: >-
       Studies estimating the effect of a named policy, programme, scheme, fund, levy, reform, or
@@ -773,12 +750,6 @@ categories:
   exclusion_rules: >-
     Do not assign merely because longitudinal data are used. If the study is a single exposure-outcome test, use Outcome Tracking. If it evaluates a named intervention over time, use Policy Evaluation.
   examples:
-  - text: >-
-      Studies following individuals, households, firms, or cases through stages, transitions,
-      pathways, or trajectories over an extended period.
-    rationale: >-
-      This purpose is illustrated by movement and progression across time, not just the presence
-      of longitudinal data.
   - text: >-
       Studies examining educational, family, service, health, work, or justice pathways as
       sequences of states or transitions.
@@ -861,12 +832,6 @@ categories:
   exclusion_rules: >-
     Do not assign merely because a project uses risk, risk factor, predictor, or similar vocabulary, or estimates associations between exposures and outcomes. Use **Outcome Tracking** where the project analyses predictors or risk factors without a prediction, screening, early-identification, or prospective-targeting aim.
   examples:
-  - text: >-
-      Studies building or using a risk score, prediction model, screening approach, or
-      early-identification method for future or emerging adverse outcomes.
-    rationale: >-
-      This purpose is illustrated by prospective identification or prediction, not by risk
-      vocabulary alone.
   - text: >-
       Studies estimating elevated likelihood of future harm, crisis, service need, perpetration,
       victimisation, or clinical/event occurrence for individuals or groups.
