@@ -16,70 +16,156 @@ This 3-layer classification framework assigns each project three independent fac
 
 ## 2. Data preparation
 
+## 2. Data preparation
+
+The classification operates on the UK Statistics Authority's public register of DEA-accredited research projects. The register is published as a periodically updated spreadsheet and contains systematic data-quality defects in its free-text fields. The steps below define how the raw register is turned into the cleaned input consumed by the classifier.
+
+A single shared loading pathway, `analysis/register_cleaning.py::clean_register_dataframe()`, serves both the classifier and the dashboard, so both operate on identically prepared data except where explicitly noted.
+
 ### Input data
 
-The classification input is `data/dea_accredited_projects_20260325.csv` (6,229 rows), a snapshot of the UKSA accredited-projects register scraped on 2026-03-25 and committed on 2026-04-07 (`8dd315b`). The scraper (`scrape/scraper_20260325.py`, introduced in `242ce2b`) handles the post-March-2026 xlsx download format.
+The input is a snapshot of the register:
+
+- File: `data/dea_accredited_projects_20260325.csv`
+- Rows: 6,229
+- Scraped: 2026-03-25
+- Scraper: `scrape/scraper_20260325.py`
+- Committed: 2026-04-07, commit `8dd315b`
+
+The scraper handles the post-March-2026 spreadsheet download format.
 
 ### DEA-only legal-basis filter
 
-The raw register includes projects accredited under multiple legal gateways. A filter retains only rows where the "Legal Basis" field contains "Digital Economy Act" (case-insensitive), scoping the analysis to DEA-accredited projects. Originally implemented inline in `llm_theme_analysis_v3.py` (`6e067f4`, 2026-03-26), subsequently moved to `analysis/register_cleaning.py` as part of the shared data-loading pipeline.
+The raw register includes projects accredited under multiple legal gateways. A filter retains only rows whose `Legal Basis` field contains `Digital Economy Act`, case-insensitively, scoping the analysis to DEA-accredited projects.
+
+This was implemented inline initially in `6e067f4` and later moved into the shared loading pathway.
 
 ### Duplicate handling
 
-Inspection of the register identified three categories of duplicate record (documented in `3d22251`, 2026-03-26, and refined 2026-05-21):
+Inspection of the register identified three categories of duplicate record:
 
-1. **Same title, different Project IDs** — genuinely distinct projects, often re-accreditations of similar work by the same team in a later year; retained as separate records.
-2. **Same Project ID, different titles** — distinct projects sharing an ID through register error; disambiguated by appending a suffix to form a unique Record ID.
-3. **Same Project ID and same title** — which on inspection subdivides into clerical double-entries (rows substantively identical, possibly small differences like whitespace or other minor differences) and a more problematic sub-type in which rows share ID and title but differ materially in either the datasets accessed and/or the researchers listed.
+1. **Same title, different Project IDs**  
+   These are genuinely distinct projects, often re-accreditations of similar work by the same team in a later year. They are retained as separate records.
 
-The initial deduplication (`3d22251`, 2026-03-26) introduced `apply_duplicate_policy()` with a `SPECIAL_DROP_PROJECT_TITLE_PAIRS` set (hardcoded: project 2023/113 "The Influence of Early Life Health and Nutritional Environment on Later Life Health and Morbidity") and the `Record ID` concept: for duplicate Project IDs, the Record ID initially appended ` :: <title>` to disambiguate. The diff revealed 40 duplicates in the raw data that were inflating counts. Project 2023/113 appeared twice in the raw register with identical Project ID and title but differing researchers and differing legal basis (SRSA 2007 vs DEA 2017). It was hardcoded into SPECIAL_DROP_PROJECT_TITLE_PAIRS because the general duplicate policy keys only on Project ID + title and cannot disambiguate same-ID/same-title rows that differ in other fields. The subsequently-added legal-basis filter (DEA-only) already removes the SRSA row, making the special-drop redundant and, in effect, harmful — it was deleting the surviving legitimate DEA row, so project 2023/113 was wrongly absent from the dashboard.
+2. **Same Project ID, different titles**  
+   These are distinct projects sharing an ID through register error. They are disambiguated by appending a `/a`, `/b` suffix to form a unique `Record ID`.
 
-The Record ID suffix scheme was changed from ` :: <title>` to `/a`, `/b` suffixes in `33f8a8c` (2026-04-07), and Project ID cleanup was added: strip whitespace/newlines and "CLOSED" suffix.
+3. **Same Project ID and same title**  
+   This subdivides into:
+   - clerical double entries, where rows are substantively identical;
+   - fragmented records, where rows share ID and title but differ materially in datasets accessed and/or researchers listed.
 
-The original deduplication was keyed only on Project ID and title and retained the first occurrence, which silently discarded the differing dataset and researcher information in the third category's problematic sub-type. Because linkage classification depends on the dataset list, this corrupted classification inputs for an unknown number of projects. 
+The current duplicate policy is content-aware: `apply_duplicate_policy()`, revised on 2026-05-21. Rows sharing Project ID and title are compared across their remaining fields. Substantively identical rows are deduplicated. Rows sharing Project ID, title and accreditation date but differing in datasets or researchers are treated as a single accreditation whose record was fragmented across rows, and are merged by taking the union of their dataset and researcher lists. Any remaining ambiguous cases are flagged to a review file rather than silently collapsed.
 
-**Content-aware duplication**: The policy was replaced (2026-05-21) with a content-aware one: rows sharing Project ID and title are compared on their remaining fields; substantively identical rows are deduplicated; rows sharing Project ID, title and accreditation date but differing in datasets or researchers are treated as a single accreditation whose record was fragmented across rows, and are merged by taking the union of their dataset and researcher lists; any remaining ambiguous cases (e.g. shared ID and title but differing accreditation dates) are flagged to a review file rather than silently collapsed (running the analysis revealed that there were no duplciates of this class, reaccredited projects with the same title but different date are given different project IDs). The 2023/113 hardcode was removed, the case being correctly handled by the general policy once the DEA-only legal-basis filter is applied.
+Running the analysis confirmed that no ambiguous cases remain: re-accredited projects with the same title but a different date are issued different Project IDs.
+
+This policy replaced an earlier approach that keyed only on Project ID and title and retained the first occurrence. That earlier approach silently discarded differing dataset and researcher information in the problematic sub-type above. Because linkage classification depends on the dataset list, this had corrupted classification inputs for an unknown number of projects, making the content-aware policy necessary.
+
+#### Known issue: project `2023/113`
+
+The earlier duplicate policy could not disambiguate same-ID/same-title rows differing in other fields, so one such case, `2023/113`, was handled by a hardcoded special-drop.
+
+This later became actively harmful. `2023/113` appeared in the raw register as two rows: one accredited under SRSA 2007 and one under the DEA. The DEA-only legal-basis filter already removed the SRSA row, so the special-drop then deleted the surviving legitimate DEA row. As a result, `2023/113` was wrongly absent from the dashboard.
+
+The hardcode was removed on 2026-05-21. The case is now handled correctly by the general duplicate policy after the legal-basis filter is applied.
+
+### Register text cleaning
+
+The register's `Title` and `Datasets Used` fields contain character-encoding corruption, whitespace artefacts, HTML entities and inconsistent formatting.
+
+Two canonical functions in `dashboard/dataset_normalisation.py` perform this cleaning:
+
+- `_clean_title_text()`
+- `_clean_datasets_text()`
+
+Both the classifier and dashboard receive register text cleaned by these functions.
+
+During this work, duplicate copies of dataset-cleaning logic were found in both `analysis/quality_check.py` and the classifier prompt-construction code. A separate finding established that the title field was not being cleaned before reaching the classifier. These paths were consolidated onto the canonical functions.
+
+The cleaning removes spreadsheet carriage-return artefacts and HTML-like tags, decodes HTML entities, normalises whitespace, including non-breaking spaces and soft hyphens, strips embedded newlines, and repairs a defined set of known character-encoding corruptions, including corrupted dashes, quotation marks and apostrophes.
+
+Encoding-corruption repair is deliberately confined to patterns whose intended character can be confidently inferred. Ambiguous corruption is left in place and recorded rather than guessed at.
+
+Across the register, this cleaning changed the title or dataset text of **192 project records**.
+
+### Provider parsing
+
+Within the dataset field, distinct data providers are identified by a provider-header regex that inserts boundaries between providers' dataset lists. Provider identity feeds the Layer B linkage judgement.
+
+The regex was found to exist in two divergent copies whose provider vocabularies differed. This meant the QA tooling and classifier had been recognising different sets of providers.
+
+The logic was reconciled into a single canonical version and verified against the register:
+
+- every recognised provider was confirmed to appear genuinely in the register;
+- entries with no occurrences were excluded;
+- a complete scan confirmed that remaining unrecognised colon-patterns are dataset-name fragments, not missed providers.
+
+A related defect, in which the regex's interaction with whitespace normalisation introduced stray line-break artefacts, was also corrected.
 
 ### Dataset name normalisation
 
-Dataset normalisation is classification-relevant because the "Datasets Used" field is included in the LLM prompt for Layer B linkage classification (since `ad34cb6`, 2026-03-27).
+Dataset-name normalisation maps variant spellings of a dataset to a canonical form. It uses a deterministic regex-alias table:
 
-A comprehensive dataset name normalisation system was introduced in `dashboard/dataset_normalisation.py` (`d5c3697`, 2026-04-02), reducing 670 unique raw dataset names to 424 canonical forms. Key components:
+- `DATASET_ALIASES`
+- `normalise_dataset_name()`
+- Location: `dashboard/dataset_normalisation.py`
 
-- `iter_dataset_entries()`: splits raw "Datasets Used" text into (line, provider, dataset) tuples
-- `normalise_dataset_name()`: applies alias table, geographic suffix stripping, year-range removal, case normalisation, typo corrections
-- `dataset_family_for()`: groups datasets into families (e.g. Census, ASHE, Labour Force Survey, Data First, APS, ABS, COVID-19)
-- `DATASET_ALIASES`: regex-based alias table mapping variants to canonical names
+This deterministic approach was chosen over fuzzy or probabilistic matching for auditability and reproducibility. A hand-maintained alias table is transparent and inspectable, whereas fuzzy matching introduces a tunable threshold and the risk of non-deterministic or difficult-to-audit merges.
 
-A deterministic regex-alias approach was chosen over fuzzy/probabilistic matching for auditability and reproducibility. A hand-maintained alias table is transparent and inspectable, whereas fuzzy matching introduces a tunable threshold and non-deterministic merges. Examples include ECHILD variants consolidated into single canonical form.
+The normalisation system also strips geographic and year-range suffixes, corrects known typographic variants, and groups datasets into families such as Census, ASHE, Labour Force Survey and COVID-19 datasets.
 
-QA tooling was added in `a61dd21` (2026-04-02): `analysis/export_canonical_dataset_list.py` (canonical list export), `analysis/find_duplicates.py` (duplicate detection), and generated QA outputs (`canonical_dataset_list.csv`, `dataset_normalisation_audit.csv`, `proposed_dataset_merges.csv`, `dataset_normalisation_review_queue.csv`). An audit script (`analysis/dataset_normalisation_audit.py`) and test suite (`analysis/test_dataset_normalisation.py`) were added alongside the normalisation system (`d5c3697`).
+Iterative refinement reduced the raw register's variant dataset names to **321 canonical forms**. Supporting QA tooling and an audit script accompany the normalisation system.
 
-Bug fixes in `1ba0b27` (2026-04-03) addressed:
-- **Systematic bug:** fragment filter now runs post-normalisation, eliminating ~12 garbage entries ("Office for National", "Economy Survey", etc.) — garbage entries were passing through because filtering only happened pre-normalisation
-- **Regex bug:** Broad Economy regex (`bo?ard` never matched "broad")
-- **Family assignment bug:** ASHE linked to PAYE family corrected from WED→ASHE
-- Year-range stripping added (collapses ASHE/ABS/APS year variants like "Annual Business Survey 2005-2022" into canonical form)
-- ~15 missing aliases added (ARD2/ARDx, APS Person/Persons, ASHE variants, Bespoke NCVO, Death Registrations, Coronavirus truncation, EOL, DfE prefix)
-- Understanding Society dataset family created
-- COVID-19 family consolidated (CIS linked products, COVID studies, COVID-19 Schools Infection Survey all mapped to family "COVID-19")
-- Canonical dataset count reduced 424→321
+#### Scope decision: classifier receives cleaned but non-canonicalised dataset text
 
-### Provider name normalisation
+Dataset-name canonicalisation is applied by the dashboard but is not applied to the classifier input.
 
-Provider normalisation extends the dataset-normalisation approach to the provider field (`e9be89b`, 2026-04-06). This is classification-relevant because provider identity feeds the Layer B linkage judgement (a project's datasets are grouped by provider/policy domain), and because inconsistent provider strings fragment dashboard filters and counts.
+The classifier receives cleaned but non-canonicalised dataset text. This is deliberate: canonicalisation tuned for dashboard grouping could mask distinctions the linkage classification depends on, for example by collapsing a pre-linked cross-domain dataset towards a generic form.
 
-`normalise_provider_name()` and `PROVIDER_ALIASES` standardise provider abbreviations: DfE→Department for Education, MOJ→Ministry of Justice, NISRA→Northern Ireland Statistics and Research Agency, NHSD→NHS Digital, UCAS expansion, etc. Typos corrected: "Offcie for National Statistics"→correct form, "Northern Ireland Statitiscs"→correct form. `parse_datasets()` now calls `normalise_provider_name()` on extracted provider strings. ASHE Longitudinal canonical name changed: "ASHE Longitudinal"→"Annual Survey of Hours and Earnings Longitudinal". 
+Whether dataset normalisation should precede classification is recorded as an open question for later evidence-based evaluation.
 
-**ISER canonicalisation bug:** The provider name "Institute for Social and Economic Research" was being incorrectly mapped to "Institute for Economic and Social Research" (words transposed) from its introduction in `e9be89b` (2026-04-06) until the fix in `6df8226` (2026-05-19) — a window of ~43 days. Both the mapping table and test suite were corrected. Any dataset analysis or dashboard views using provider names during this period would show the wrong canonical name.
+### Provider and institution name normalisation
 
-### Institution name normalisation
+Provider names are normalised on the same deterministic regex-alias principle, using:
 
-Institution parsing was extracted into `dashboard/institution_normalisation.py` with audit script and test suite (`b7eeac6`, 2026-04-08). It is a dashboard-side normalisation path rather than an LLM-classification input. The dashboard builds `df_institutions = parse_institutions(df_all)` once in `dashboard/data/registry.py`; that same parsed table feeds the Institutions analysis tab and the institution filters used by both the Project Explorer and the Enriched Register through `_apply_register_filters()`.
+- `normalise_provider_name()`
+- `PROVIDER_ALIASES`
 
-The thematic classifier does not use the normalised institution table and does not insert the raw `Researchers` field into the LLM prompt. In `analysis/llm_theme_analysis_v3.py`, `classify_all()` builds prompt payloads from `Record ID`, cleaned `Title`, and cleaned/summarised `Datasets Used`; `_build_prompt()` presents only title and datasets to the model. Institution normalisation therefore does not need to be shared with the classifier for classification consistency, but it remains part of the dashboard data-quality pipeline because institution labels drive dashboard filters, counts, and institution charts.
+This standardises abbreviations and corrects typographic variants.
 
-A wrapped-line parsing fix on 2026-05-26 was diff-tested against the previous parser across the full cleaned register. Six projects changed: 2023/162, 2024/247, 2025/027, 2025/056, 2025/066, and 2025/145. Manual inspection of each raw `Researchers` field confirmed that all six changes were corrections of institution labels that had absorbed researcher-name fragments or, in 2025/145, had missed a wrapped Technopolis affiliation. A broader scan for labels shaped as `known institution + person name` returned zero candidates after the fix.
+#### Known issue: ISER transposition
+
+From its introduction in `e9be89b` on 2026-04-06 until correction in `6df8226` on 2026-05-19, a window of roughly 43 days, the provider **Institute for Social and Economic Research** was incorrectly mapped to the transposed form **Institute for Economic and Social Research**.
+
+Both the mapping table and its test were corrected. Dashboard views or dataset analyses using provider names during that window would show the wrong canonical name.
+
+### Institution parsing
+
+Institution parsing, implemented in `dashboard/institution_normalisation.py`, is a dashboard-only normalisation path.
+
+The dashboard builds a parsed institutions table once at startup. This table is used by the Institutions analysis tab and by institution filters shared across the Project Explorer and Enriched Register.
+
+The classifier does not use institution parsing. Classifier prompts are built only from:
+
+- `Record ID`
+- cleaned title
+- cleaned dataset text
+
+The `Researchers` field is never presented to the model. Institution normalisation therefore does not need to be shared with the classifier. It remains part of the dashboard data-quality pipeline because institution labels drive dashboard filters and counts.
+
+A wrapped-line parsing defect, in which institution labels absorbed researcher-name fragments, was fixed on 2026-05-26 and diff-tested across the full register. Six projects changed, each confirmed by manual inspection to be a genuine correction.
+
+### Note on cleaning pathways
+
+Three normalisation concerns are handled differently, for different reasons:
+
+| Concern | Pathway | Rationale |
+|---|---|---|
+| Title and dataset text cleaning | Shared by classifier and dashboard | Both require cleaned title and dataset text |
+| Institution normalisation | Dashboard only | The classifier does not consume the researcher field |
+| Dataset/provider-name canonicalisation | Dashboard only | Withheld from classifier pending evidence on whether canonicalisation helps or harms linkage classification |
+
+Every free-text parsing component inspected in the register pipeline contained a genuine defect: title cleaning, dataset cleaning, provider recognition and institution parsing. The register's free-text fields are therefore treated as an expected source of classification risk. This is one reason the validation study specifically attends to data-quality-driven misclassification.
 
 ---
 
@@ -407,10 +493,8 @@ After these three changes, every Layer A entry is a policy domain, every Layer C
 
 | Situation | Count | Effect of removal |
 |---|---:|---|
-| Holds GR&E as a secondary domain only | 89 | Trivial: primary domain unchanged; GR&E simply dropped from the domain list |
-| Holds GR&E as primary, but has a fallback domain | 17 | Trivial: primary shifts to the next domain: 13 to Labour Market & Employment, 2 to Health & Social Care, 1 to Education & Skills, 1 to Poverty/Inequality |
-| GR&E as sole domain | 3 | Manageable: see below |
-
+| GR&E assigned alongside at least one retained substantive domain | 106 | Straightforward: remove GR&E and retain the remaining substantive domain label(s). No project loses its subject classification. |
+| GR&E assigned as the only Layer A domain | 3 | Requires reassignment to a substantive domain based on the project title and dataset context; see below. |
 
 The three sole-domain cases reclassify without strain:
 
@@ -420,9 +504,9 @@ The three sole-domain cases reclassify without strain:
 | `2023/095` | Statutory Review of Equality and Human Rights 2023 | Poverty, Wealth & Living Standards |
 | `2023/006` | Ethnic Minority British Election Study pilot | Migration & Demographics |
 
-Every one of the 109 projects has a substantive policy domain that describes what the research is actually about. Removing GR&E as a domain loses no project its subject classification.
+Across the 109 projects carrying GR&E, 106 already had at least one other substantive Layer A domain. Removing GR&E therefore does not remove their substantive subject classification. Only three records require reassignment, and each can be mapped to an existing substantive domain without creating a new category.
 
-### The genuine cost, and how it is addressed
+### The cost, and how it is addressed
 
 Removing GR&E as a domain and removing **Inequality / Disparities Analysis** as a purpose together remove the demographic-disparities dimension from the classification entirely. It would survive in neither layer.
 
@@ -458,25 +542,9 @@ It also requires its own validation attention. It is in scope for v4 so that the
 
 All changes precede the v4 classification freeze and the validation sample draw. The changes are to the ontology and classifier, followed by full reclassification. Individual records are not hand-corrected.
 
-### Addendum: taxonomy dictionary schema hardening after Codex implementation
+### Taxonomy dictionary schema 
 
-Following the v3.4 ontology decisions above, the taxonomy data dictionary was further hardened as a dictionary-only change before v4 prompt generation. The purpose was not to alter the ontology again, but to make the dictionary reliable as a source of truth for prompt generation, validator guidance, and methods documentation.
-
-The metadata provenance was corrected. The previous `source: git history and v3.3 classification prompt` field was replaced with a fuller `derivation` statement, recording that the ontology was developed inductively from the UKSA public register of DEA-accredited research projects, compared against ADR UK’s research themes for interoperability rather than adopted from an external standard, and assessed against the ONS Taxonomy Best Practice Evaluation Framework. A list-form `dictionary_compiled_from` field now records the practical scaffold sources: project git history, the v3.3 classification prompt, v3.4 ontology decisions, taxonomy-owner review, and cited example-title verification against the register CSV.
-
-Several schema changes were made to make the dictionary more machine-usable. Explicit layer cardinality metadata was added: Layer A accepts one or more domains, Layer B exactly one linkage mode, Layer C one or two purposes, and cross-cutting tags are zero-or-more / boolean facets. A category-identity note was also added, clarifying that category identity is defined by `(layer, label)`, not by label alone. This matters because **Unclear from Register Entry** appears as a distinct fallback category in all three layers.
-
-A governance block was added to the metadata, covering taxonomy ownership, review process, change approval, validation expectations, feedback route, and review triggers. This formalises maintenance of the dictionary without tying ownership to a named individual.
-
-Example records were normalised. The previous `likely_co_labels` field mixed domains, linkage modes, purposes, tags, and uncertainty notes. It was replaced by structured fields: `co_domains`, `co_linkage`, `co_purposes`, `co_tags`, and `conditional_labels`. The `assign` field is now restricted to valid labels only; conditional wording such as “if”, “possible”, or “only if” was moved into `condition`, `rationale`, or `conditional_labels`. Blank list fields were replaced with explicit empty lists.
-
-Shortened example titles were separated from exact register titles. Where an example title is truncated for readability, `title` now holds the exact register title and `title_display` holds the shortened version. This preserves auditability while keeping the dictionary readable.
-
-The cohort-comparison boundary was also tightened. **Cohort Comparisons of Wealth** remains a positive example for **Poverty, Wealth & Living Standards** and the **Demographic disparities / equity tag**, because age cohort is a demographic comparison. However, **Migration & Demographics** is no longer added merely because a project compares cohorts; it should only be assigned where population structure, demographic change, ageing, fertility, mortality, migration, or demographic projection is substantively central.
-
-Finally, `include_in_prompt` flags were added to every category. Active labels and the new cross-cutting tag are marked `true`; removed historical labels, including **Gender, Race & Ethnicity** and **Inequality / Disparities Analysis**, are marked `false`. This allows the dictionary to retain historical audit information without accidentally feeding removed categories into the v4 classifier prompt.
-
-No classifier code, prompt-generation code, dashboard code, notebooks, or output CSVs were changed as part of this schema-hardening step. The excluded changes were deliberate: the demographic tag was not renamed, `validation_priority`, `known_confusions`, and `category_type` fields were not added, **Data Infrastructure & Methodology** was not restructured, and **COVID-19 & Pandemic** was not converted into a tag. Those questions remain outside this dictionary-hardening task.
+Taxonomy data dictionary — entry to be written once the dictionary is finalised (pre-freeze revisions in progress).
 
 ### ISER provider canonicalisation bug window
 
@@ -488,6 +556,8 @@ The original deduplication policy (keying only on Project ID + title) silently d
 
 ---
 
-## 8. Inconsistencies and open questions
+## 8. Open questions and future work
 
 - **Model comparison artifacts never generated:** `build_experiment_sample.py` and `build_model_comparison.py` were added in `33f8a8c` to support Opus vs Sonnet comparison, but no output artifacts (experiment_sample_150.csv, model_comparison_review.csv, any Sonnet classification CSVs) appear in git history or on disk. It is unclear whether the comparison was conducted, conducted but kept locally, or abandoned.
+
+- Cross-lab LLM disagreement is a candidate method for selecting the hard-case validation stratum; to be designed properly. Note: disagreement is a triage signal for sample selection only — agreement does not constitute validation, as frontier models may share correlated bias
