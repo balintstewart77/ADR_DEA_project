@@ -1,6 +1,15 @@
 metadata:
   title: Taxonomy Data Dictionary -- DEA Project Classification Ontology v3.4
-  generated: '2026-05-22'
+  dictionary_version: '1.0'
+  documents_ontology_version: 'v3.4'
+  changelog_note: >-
+    The changelog records evidence-driven revisions made after the v1.0 release;
+    it is not a record of pre-release ontology development, which is documented
+    in the methods log.
+  changelog:
+  - version: '1.0'
+    date: '2026-05-27'
+    note: Initial release of the taxonomy data dictionary.
   derivation: >-
     Classification ontology developed inductively from the UK Statistics Authority
     public register of DEA-accredited research projects. No single authoritative
@@ -125,8 +134,8 @@ metadata:
       Migration & Demographics:
         adr_uk_theme: null
         alignment_type: no_equivalent
-        note: No direct ADR UK equivalent. ADR UK's seven themes do not include a dedicated migration/demography theme. Population structure, migration, fertility and mortality (ONS provides access to mortality 
-          data) are a substantial strain of research in the DEA register, the absence of an ADR UK match relects the broader scope of this register-derived scheme rather than a weaker claim to domain status.
+        note: No direct ADR UK equivalent. ADR UK's seven themes do not include a dedicated migration/demography theme. Population structure, migration, fertility and mortality are a substantial strand of
+          research in the DEA register; the absence of an ADR UK match reflects the broader scope of this register-derived scheme rather than a weaker claim to domain status.
       Environment & Agriculture:
         adr_uk_theme: Climate & the environment
         alignment_type: partial
@@ -148,10 +157,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning work, employment, labour-market participation, and workforce dynamics. Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality, 
     working hours, contracts and working conditions; labour supply and demand; occupational, sectoral and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and 
@@ -186,10 +191,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning education, learning, training, skills formation, and transitions through education systems. Includes early years, schools, colleges, universities, qualifications, apprenticeships, admissions, attainment, attendance, teacher workforce issues, childcare, and education-to-work pathways.
   inclusion_rules: >-
@@ -225,10 +226,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning health, illness, mortality, wellbeing, clinical outcomes, health services, public health, mental health, social care, and care-system use. Includes NHS services, hospitals, GP care, palliative care, maternity, morbidity, mortality where health is the research object, and adult or children's social care.
   inclusion_rules: >-
@@ -265,10 +262,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning crime, victimisation, public safety, offending, policing, courts, prisons, probation, sentencing, family justice, civil justice, reoffending, and criminal records.
   inclusion_rules: >-
@@ -297,10 +290,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning firms, business activity, industrial structure, innovation, productivity, entrepreneurship, trade, exports, foreign direct investment, research and development, business support, and firm-level performance.
   inclusion_rules: >-
@@ -331,10 +320,6 @@ categories:
   layer: Layer A -- domain
   status: relabelled v3.4
   include_in_prompt: true
-  version_added: v3
-  version_changed: v3.4
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning material resources, economic hardship, household living standards, poverty, wealth, debt, savings, benefits, deprivation, food security, cost of living, household income, and distribution of resources.
   inclusion_rules: >-
@@ -363,10 +348,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning housing, homelessness, residential conditions, tenure, home ownership, planning systems, neighbourhoods, gentrification, residential mobility, and place-based housing or planning interventions.
   inclusion_rules: >-
@@ -394,10 +375,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning population structure, population change, migration, immigration, population mobility, fertility, ageing, mortality as a demographic outcome, census-based population analysis, and demographic composition.
   inclusion_rules: >-
@@ -433,10 +410,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning the natural environment, climate, energy, agriculture, farming, land use, pollution, decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic or social activity.
   inclusion_rules: >-
@@ -471,10 +444,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research concerning government revenue, taxation, tax compliance, tax credits, public expenditure, public spending, fiscal transfers, business rates, tax reliefs, and fiscal policy.
   inclusion_rules: >-
@@ -502,10 +471,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research specifically focused on COVID-19, the COVID-19 pandemic, pandemic control measures, vaccination, infection surveillance, lockdowns, social distancing, pandemic-related public support, or pandemic consequences.
   inclusion_rules: >-
@@ -545,10 +510,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data. Distinction from Layer C **Methodological / Infrastructure Research**: this Layer A domain applies when data, methods, or statistical infrastructure are the substantive object of the research -- what the project is about. The Layer C purpose applies when the analytical purpose is methodological or infrastructural -- what the project is doing. The two layers answer different questions, so a methods-focused project may legitimately carry both by design.
   inclusion_rules: >-
@@ -587,10 +548,6 @@ categories:
   layer: Layer A -- domain
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: v3.4
-  date_added: '2026-03-26'
-  date_changed: '2026-04-07'
   definition: >-
     Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain. Renamed from "Unclear from Title" in v3.4 because classification draws on the dataset field as well as the title, so "from Title" misdescribed it.
   inclusion_rules: >-
@@ -628,10 +585,6 @@ categories:
   layer: Layer B -- linkage
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     The project uses one dataset or one internally coherent dataset product from a single policy domain, with no cross-dataset or cross-domain linkage implied by the register entry.
   inclusion_rules: >-
@@ -664,10 +617,6 @@ categories:
   layer: Layer B -- linkage
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     The project uses or links two or more datasets that all fall within the same policy domain.
   inclusion_rules: >-
@@ -700,10 +649,6 @@ categories:
   layer: Layer B -- linkage
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: v3.3
-  date_added: '2026-03-26'
-  date_changed: '2026-04-23'
   definition: >-
     The project links, combines, or uses datasets spanning two or more distinct policy domains, including cases where the register lists a single pre-linked product whose component sources are cross-domain.
   inclusion_rules: >-
@@ -737,10 +682,6 @@ categories:
   layer: Layer B -- linkage
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: v3.4
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Use only where the dataset field is missing, malformed, or too ambiguous to determine linkage mode. Renamed from "Unclear from Title" in v3.4 because classification draws on the dataset field as well as the title, so "from Title" misdescribed it.
   inclusion_rules: >-
@@ -776,10 +717,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research whose analytical purpose is to measure and characterise a phenomenon -- its level, prevalence, distribution, composition, profile, trend, or pattern -- including how it varies across places, populations, or time, without primarily testing an exposure-outcome relationship or evaluating a named intervention.
   inclusion_rules: >-
@@ -799,10 +736,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: '2026-04-07'
   definition: >-
     Research that links a naturally occurring exposure, condition, event, status, characteristic, or circumstance to a downstream outcome.
   inclusion_rules: >-
@@ -833,10 +766,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions, or life stages to understand trajectories, progression, mobility, or cumulative outcomes.
   inclusion_rules: >-
@@ -870,10 +799,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research focused on how people, cases, families, or organisations move through, use, access, or are processed by public service systems.
   inclusion_rules: >-
@@ -902,10 +827,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research that evaluates the effects, impacts, implementation, or consequences of a specific named policy, programme, regulation, intervention, scheme, or institutional change.
   inclusion_rules: >-
@@ -933,10 +854,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research with an explicit predictive or early-identification design focused on predicting risk, identifying at-risk individuals or groups, building risk scores, developing screening tools, or prospectively targeting people or places before or as an adverse outcome emerges.
   inclusion_rules: >-
@@ -969,10 +886,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: null
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches, survey methods, or data assets. Distinction from Layer A **Data Infrastructure & Methodology**: this Layer C purpose applies when the analytical purpose is methodological or infrastructural -- what the project is doing. The Layer A domain applies when data, methods, or statistical infrastructure are the substantive object of the research -- what the project is about. The two layers answer different questions, so a methods-focused project may legitimately carry both by design.
   inclusion_rules: >-
@@ -1008,10 +921,6 @@ categories:
   layer: Layer C -- purpose
   status: active
   include_in_prompt: true
-  version_added: v3
-  version_changed: v3.4
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Use where the project title and datasets do not provide enough information to infer the analytical purpose. Renamed from "Unclear from Title" in v3.4 because classification draws on the dataset field as well as the title, so "from Title" misdescribed it.
   inclusion_rules: >-
@@ -1046,12 +955,8 @@ categories:
       - "Policy Evaluation / Impact Analysis"
 - label: Demographic disparities / equity tag
   layer: Cross-cutting tag
-  status: new v4
+  status: new v3.4
   include_in_prompt: true
-  version_added: v3.4
-  version_changed: null
-  date_added: null
-  date_changed: null
   definition: >-
     A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups.
   inclusion_rules: >-
@@ -1088,10 +993,6 @@ categories:
   layer: Layer A -- domain
   status: removed v3.4
   include_in_prompt: false
-  version_added: v3
-  version_changed: v3.4
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Historical note: Removed from Layer A in v3.4 because it captured demographic characteristics rather than a policy or sector domain. Former assignments should be redistributed to the relevant substantive domain, with demographic comparison represented through the cross-cutting **Demographic disparities / equity tag** where appropriate.
   inclusion_rules: >-
@@ -1107,10 +1008,6 @@ categories:
   layer: Layer C -- purpose
   status: removed v3.4
   include_in_prompt: false
-  version_added: v3
-  version_changed: v3.4
-  date_added: '2026-03-26'
-  date_changed: null
   definition: >-
     Historical note: Removed from Layer C in v3.4 because it functioned as a topic or lens rather than a distinct analytical purpose. Former assignments should be reclassified to the project's actual analytical operation, such as Descriptive Monitoring, Outcome Tracking, Policy Evaluation, Life-Course / Trajectory Analysis, Service Interaction / Systems Analysis, Risk Prediction, or Methodological / Infrastructure Research. Demographic-disparities content should be captured using the cross-cutting tag.
   inclusion_rules: >-
