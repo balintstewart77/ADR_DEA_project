@@ -10,6 +10,14 @@ metadata:
   - version: '1.0'
     date: '2026-05-27'
     note: Initial release of the taxonomy data dictionary.
+  - version: '1.0-principles'
+    date: '2026-05-27'
+    note: >-
+      Added metadata-level assignment principles to clarify layer independence,
+      evidence-not-keyword assignment, domain/purpose separation, setting versus
+      purpose, tag/lens behaviour, and the distinction between Layer A Data
+      Infrastructure & Methodology and Layer C Methodological / Infrastructure
+      Research.
   derivation: >-
     Classification ontology developed inductively from the UK Statistics Authority
     public register of DEA-accredited research projects. No single authoritative
@@ -27,10 +35,62 @@ metadata:
     Cross-cutting tag: zero or more / boolean facets
   layer_a_assignment_rule: >-
     Domains are multi-label and non-hierarchical. Assign all domains that are
-    substantively analysed. For example, a project about how employment changes affect
-    household debt or living standards may receive both Labour Market & Employment and
-    Poverty, Wealth & Living Standards. Do not assign a domain solely because its
-    variables appear as controls, background characteristics, or contextual measures.
+    substantively analysed. Domain assignment follows the substantive object of the
+    research, not every dataset, variable, covariate, population descriptor, or
+    contextual measure mentioned in the register entry. For example, a project about
+    how employment changes affect household debt or living standards may receive both
+    Labour Market & Employment and Poverty, Wealth & Living Standards, but earnings
+    data used only as background context are not enough to assign Labour Market &
+    Employment.
+  layer_c_assignment_rule: >-
+    Analytical purposes are assigned by the study's visible analytical operation.
+    Assign one or two purposes only where the register entry indicates what the project
+    is doing analytically: monitoring patterns, tracking exposure-outcome relationships,
+    evaluating a policy or intervention, analysing trajectories, studying service-system
+    interaction, predicting or identifying risk, or developing methods or infrastructure.
+    Do not assign a purpose merely because a relevant dataset, sector, population,
+    method, or service setting appears in the entry.
+  cross_layer_assignment_principles:
+    layer_independence: >-
+      Layer A, Layer B, Layer C, and cross-cutting tags answer different questions.
+      A policy, programme, dataset, population group, method, or service setting may
+      inform more than one layer, but it should not collapse them into a single label.
+      Assign the substantive domain, linkage mode, analytical purpose, and any
+      cross-cutting tag independently.
+    evidence_not_keyword_rule: >-
+      Do not assign a category solely because a word, dataset, variable, population
+      group, method, or service setting appears in the register entry. Assign categories
+      only where the register fields provide enough evidence that the category is central
+      to the research question, linkage structure, analytical operation, or cross-cutting
+      lens.
+    domain_purpose_separation: >-
+      Domain assignment follows the substantive object of the research: the outcome,
+      system, population process, institution, sector, or mechanism being studied.
+      Purpose assignment follows the analytical operation: monitoring, tracking,
+      evaluation, prediction, pathway analysis, service-system analysis, or methodology.
+      A named policy or programme may determine Layer C without displacing the Layer A
+      domain.
+    setting_vs_purpose_rule: >-
+      Do not assign a Layer C purpose solely because a dataset comes from a service
+      system or because an outcome occurs in a service setting. Assign the purpose only
+      when the analytical operation itself matches that purpose. For example, service
+      datasets do not imply Service Interaction / Systems Analysis unless service uptake,
+      referrals, pathways, case progression, utilisation, or movement through systems are
+      central.
+    tag_lens_rule: >-
+      Cross-cutting tags describe analytical lenses, not substantive domains or purposes.
+      A tag should not replace the domain or purpose label. Do not assign a tag merely
+      because demographic or equality-relevant variables appear as controls, covariates,
+      sample descriptors, or routine stratifiers.
+  methodology_domain_purpose_distinction: >-
+    Data Infrastructure & Methodology in Layer A and Methodological / Infrastructure
+    Research in Layer C are related but not equivalent. Assign the Layer A domain when
+    data assets, linkage, measurement, classification, methods, or statistical
+    infrastructure are the substantive object of the research. Assign the Layer C
+    purpose when the main analytical operation is to develop, test, validate, improve,
+    document, or demonstrate a method, measure, data asset, linkage process, or
+    infrastructure. They may co-occur, but neither label should automatically trigger
+    the other.
   example_policy: >-
     Examples and counterexamples are authored illustrations, true by construction;
     they are not validated project-level classifications. An example is a concrete,
@@ -496,9 +556,9 @@ categories:
   definition: >-
     Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data. Distinction from Layer C **Methodological / Infrastructure Research**: this Layer A domain applies when data, methods, or statistical infrastructure are the substantive object of the research -- what the project is about. The Layer C purpose applies when the analytical purpose is methodological or infrastructural -- what the project is doing. The two layers answer different questions, so a methods-focused project may legitimately carry both by design.
   inclusion_rules: >-
-    Assign when the primary contribution is methodological or infrastructural: record linkage methods, survey methodology, data quality, measurement frameworks, classification systems, statistical estimation, dataset construction, validation studies, or improving indicators.
+    Assign when the data asset, linkage process, measurement approach, classification, survey method, statistical method, or research infrastructure is itself the substantive object of the project.
   exclusion_rules: >-
-    Do not assign merely because a project uses administrative data, linkage, machine learning, or statistical methods. If the method is instrumental to a substantive question, classify by the substantive domain and analytical purpose instead.
+    Do not assign solely because a project uses linked data, administrative data, statistical methods, or a secure research environment to study another substantive domain. In those cases, assign the substantive domain and, where appropriate, Methodological / Infrastructure Research in Layer C.
   examples:
   - text: >-
       Studies whose object is the quality, construction, classification, measurement, linkage, or
@@ -854,9 +914,9 @@ categories:
   definition: >-
     Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches, survey methods, or data assets. Distinction from Layer A **Data Infrastructure & Methodology**: this Layer C purpose applies when the analytical purpose is methodological or infrastructural -- what the project is doing. The Layer A domain applies when data, methods, or statistical infrastructure are the substantive object of the research -- what the project is about. The two layers answer different questions, so a methods-focused project may legitimately carry both by design.
   inclusion_rules: >-
-    Assign where the methodological or infrastructural contribution is the main point: developing a dataset, validating a measure, improving data quality, testing linkage, correcting non-response, improving estimates, or assessing survey/data methods.
+    Assign when developing, testing, validating, improving, documenting, or demonstrating methods, measures, data quality, classifications, datasets, linkage approaches, or research infrastructure is the main analytical operation.
   exclusion_rules: >-
-    Do not assign just because a project uses advanced methods, linked data, administrative data, or machine learning. If the method serves a substantive question, classify by the substantive analytical purpose.
+    Do not assign solely because a project uses complex data or methods. Assign this purpose only where the methodological or infrastructural contribution is central, not merely instrumental.
   examples:
   - text: >-
       Studies developing, testing, validating, improving, or documenting methods, measures, data
