@@ -163,13 +163,6 @@ categories:
     labour-market outcomes are central. Use **Poverty, Wealth & Living Standards** for household resources, poverty, wealth, debt, or living standards unless employment/earnings are the main object.
   examples:
   - text: >-
-      Studies whose object is work, employment, earnings, job quality, workforce retention, or
-      movement into, through, or out of work.
-    rationale: >-
-      This illustrates the domain because the substantive phenomenon is labour-market
-      participation or workforce dynamics, not merely because employment vocabulary appears in a
-      title.
-  - text: >-
       Studies that use education, migration, disability, or other group characteristics to examine
       employment, earnings, job quality, or workforce progression.
     rationale: >-
@@ -284,12 +277,6 @@ categories:
     Do not assign merely because a project studies "risk", "fairness", "violence", or "families" unless the justice system, criminal behaviour, legal proceedings, or victimisation are central.
   examples:
   - text: >-
-      Studies whose object is victimisation, offending, policing, courts, sentencing,
-      imprisonment, probation, reoffending, or criminal records.
-    rationale: >-
-      These are justice-system or criminal-behaviour phenomena, which are the substantive objects
-      covered by the category.
-  - text: >-
       Studies following defendants, cases, victims, or offenders through justice processes and
       outcomes.
     rationale: >-
@@ -321,12 +308,6 @@ categories:
   exclusion_rules: >-
     Do not assign simply because a project uses firm-level data if the substantive question is mainly about workers, wages, public finance, or environmental impacts. Add **Labour Market & Employment** where jobs, wages, workforce composition, or employment outcomes are central.
   examples:
-  - text: >-
-      Studies whose object is firm behaviour, productivity, innovation, investment, trade,
-      exports, entrepreneurship, or business performance.
-    rationale: >-
-      The category is illustrated when firms or business activity are the substantive unit of
-      analysis.
   - text: >-
       Studies evaluating how programmes, policies, or economic conditions affect enterprise
       growth, firm performance, investment, or exporting.
@@ -362,12 +343,6 @@ categories:
     Do not assign solely because a title mentions pay gaps, employment, or socioeconomic differences. Use **Labour Market & Employment** for wages, pay, earnings, job status, and occupational outcomes unless household resources or poverty are central. Comparison of material conditions (poverty, income, wealth) across demographic groups (e.g. by age cohort, ethnicity, or sex) qualifies for the **Demographic disparities / equity tag** in addition to this domain.
   examples:
   - text: >-
-      Studies whose object is household resources, economic hardship, income distribution, wealth,
-      saving, debt, deprivation, or living standards.
-    rationale: >-
-      These are material-resource phenomena. The category applies because the research concerns
-      household economic conditions rather than employment status alone.
-  - text: >-
       Studies examining austerity, cost-of-living pressures, low-income household debt, or
       resource constraints as lived material conditions.
     rationale: >-
@@ -399,12 +374,6 @@ categories:
   exclusion_rules: >-
     Do not assign merely because a project mentions "home", "place", "local area", or "stay at home" unless housing, residential conditions, or planning are substantive objects. Use **Environment & Agriculture** where domestic energy consumption or environmental exposure is central.
   examples:
-  - text: >-
-      Studies whose object is housing markets, affordability, tenure, gentrification, residential
-      mobility, homelessness, or planning decisions.
-    rationale: >-
-      The category is illustrated when housing or residential conditions are the substantive
-      phenomenon being explained.
   - text: >-
       Studies treating the dwelling or residential environment as the mechanism linking housing
       conditions to health, energy use, or place-based outcomes.
@@ -514,12 +483,6 @@ categories:
     Do not assign to private wealth transfers, household wealth, firm investment, or business outcomes unless the public finance/tax mechanism is central. Use **Business & Productivity** for firm outcomes of business-support schemes unless fiscal design or tax/public spending is the main object.
   examples:
   - text: >-
-      Studies whose object is taxation, tax credits, fiscal transfers, public expenditure,
-      business rates, public spending, or revenue mechanisms.
-    rationale: >-
-      The category is illustrated by public-finance instruments or fiscal mechanisms being the
-      subject of the research.
-  - text: >-
       Studies evaluating how a tax, contribution, relief, levy, subsidy, or rates scheme affects
       households, firms, or places.
     rationale: >-
@@ -587,7 +550,7 @@ categories:
   date_added: '2026-03-26'
   date_changed: null
   definition: >-
-    Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data.
+    Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data. Distinction from Layer C **Methodological / Infrastructure Research**: this Layer A domain applies when data, methods, or statistical infrastructure are the substantive object of the research -- what the project is about. The Layer C purpose applies when the analytical purpose is methodological or infrastructural -- what the project is doing. The two layers answer different questions, so a methods-focused project may legitimately carry both by design.
   inclusion_rules: >-
     Assign when the primary contribution is methodological or infrastructural: record linkage methods, survey methodology, data quality, measurement frameworks, classification systems, statistical estimation, dataset construction, validation studies, or improving indicators.
   exclusion_rules: >-
@@ -640,7 +603,11 @@ categories:
       is missing or uninformative.
     rationale: >-
       This illustrates uncertainty because neither available register field supports a defensible
-      substantive domain.
+      substantive domain. "Unclear from Register Entry" covers cases where the available
+      register text genuinely does not determine the category — this includes both genuinely
+      ambiguous research and register entries too sparse or damaged to interpret; it is a
+      statement about the register entry, not a judgement that the research is itself
+      unclassifiable.
   - text: >-
       Register entries using broad public-value language with only generic dataset information and
       no identifiable policy or sector object.
@@ -786,7 +753,11 @@ categories:
       cannot be inferred.
     rationale: >-
       Linkage mode is determined primarily from the dataset field; absent dataset evidence
-      prevents a defensible mode assignment.
+      prevents a defensible mode assignment. "Unclear from Register Entry" covers cases where
+      the available register text genuinely does not determine the category — this includes both
+      genuinely ambiguous research and register entries too sparse or damaged to interpret; it is
+      a statement about the register entry, not a judgement that the research is itself
+      unclassifiable.
   - text: >-
       A register entry whose dataset field includes unknown or unspecified sources alongside
       heterogeneous assets, making the complete linkage structure unclear.
@@ -810,27 +781,12 @@ categories:
   date_added: '2026-03-26'
   date_changed: null
   definition: >-
-    Research that measures the level, prevalence, distribution, trend, profile, or pattern of a phenomenon without primarily testing an exposure-outcome relationship or evaluating a named intervention.
+    Research whose analytical purpose is to measure and characterise a phenomenon -- its level, prevalence, distribution, composition, profile, trend, or pattern -- including how it varies across places, populations, or time, without primarily testing an exposure-outcome relationship or evaluating a named intervention.
   inclusion_rules: >-
     Assign where the project asks "how much?", "what pattern?", "which groups?", "where?", or "how is this changing over time?" without a causal or intervention-evaluation framing.
   exclusion_rules: >-
     Do not assign where the project primarily tests whether X leads to Y. Use **Outcome Tracking** for exposure-outcome designs and **Policy Evaluation / Impact Analysis** for named policies, programmes, or interventions.
-  examples:
-  - text: >-
-      Studies measuring levels, patterns, profiles, distributions, prevalence, characteristics, or
-      trends without testing an exposure-outcome relationship.
-    rationale: >-
-      This purpose is illustrated by describing what exists or how it varies, rather than
-      estimating the effect of one factor on another.
-  - text: >-
-      Studies estimating the scale, distribution, or composition of a phenomenon so that patterns
-      can be described across places, groups, or time.
-    rationale: >-
-      This illustrates the purpose because the analytical operation is to characterise what is
-      happening and how it varies, rather than to test whether an exposure causes an outcome or to
-      evaluate a named intervention. A methods contribution may also be present, but this
-      illustration concerns measurement of scale and distribution rather than causal or evaluative
-      design.
+  examples: []
   counterexamples:
   - text: >-
       Studies designed to estimate whether a condition, exposure, or characteristic is associated
@@ -855,12 +811,6 @@ categories:
     Use **Policy Evaluation / Impact Analysis** if X is a named policy, programme, or intervention. Use **Descriptive Monitoring** if the project only measures patterns or trends. Use **Life-Course / Trajectory Analysis** where the main focus is extended movement across life stages rather than one exposure-outcome link.
   examples:
   - text: >-
-      Studies linking a naturally occurring condition, characteristic, exposure, event, or
-      circumstance to a downstream outcome.
-    rationale: >-
-      This purpose is illustrated when the analysis asks whether or how X is associated with Y and
-      X is not a named intervention.
-  - text: >-
       Studies examining determinants, consequences, or relationships between social, health,
       economic, educational, business, or justice phenomena.
     rationale: >-
@@ -872,7 +822,11 @@ categories:
       intervention.
     rationale: >-
       When the exposure is a deliberate intervention, the design belongs to policy evaluation
-      rather than generic outcome tracking.
+      rather than generic outcome tracking. The named-intervention boundary itself has genuine
+      hard cases: studies of broad statutory parameters such as minimum-wage levels, tax
+      thresholds, or benefit rates can be framed either as evaluating a named policy or as
+      analysing a naturally occurring change, and such cases require the author's judgement about
+      how the project frames the exposure.
     instead_consider:
       - "Policy Evaluation / Impact Analysis"
 - label: Life-Course / Trajectory Analysis
@@ -886,7 +840,7 @@ categories:
   definition: >-
     Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions, or life stages to understand trajectories, progression, mobility, or cumulative outcomes.
   inclusion_rules: >-
-    Assign where the project tracks movement over time: childhood to adulthood, education to work, offending careers, family trajectories, employment trajectories, intergenerational mobility, social mobility, health trajectories, or long-run outcomes.
+    Assign where the project tracks movement over time: childhood to adulthood, education to work, offending careers, family trajectories, employment trajectories, intergenerational mobility, social mobility, health trajectories, or long-run outcomes. Disambiguation guide: where the pathway is movement through public-service or institutional systems (courts, family justice, support services, emergency departments, referrals, or case processing), **Service Interaction / Systems Analysis** is the primary reading. Life-Course / Trajectory Analysis may additionally apply where extended progression across life stages or long time periods is also central; Layer C permits more than one purpose.
   exclusion_rules: >-
     Do not assign merely because longitudinal data are used. If the study is a single exposure-outcome test, use Outcome Tracking. If it evaluates a named intervention over time, use Policy Evaluation.
   examples:
@@ -923,16 +877,10 @@ categories:
   definition: >-
     Research focused on how people, cases, families, or organisations move through, use, access, or are processed by public service systems.
   inclusion_rules: >-
-    Assign where the core object is service pathways, service uptake, referral patterns, help-seeking, case progression, system interaction, institutional processing, or cross-service movement.
+    Assign where the core object is service pathways, service uptake, referral patterns, help-seeking, case progression, system interaction, institutional processing, or cross-service movement. Disambiguation guide: pathways through public-service or institutional systems (courts, family justice, support services, emergency departments, referrals, or case processing) are the primary reading for this category. **Life-Course / Trajectory Analysis** may additionally apply where extended progression across life stages or long time periods is also central; Layer C permits more than one purpose.
   exclusion_rules: >-
     Do not assign merely because an outcome occurs in a public service context. If the service is only the setting and the focus is an individual outcome, use Outcome Tracking. If evaluating a named service reform or intervention, use Policy Evaluation.
   examples:
-  - text: >-
-      Studies examining how people, families, defendants, patients, or cases move through, access,
-      or are processed by public-service systems.
-    rationale: >-
-      This purpose is illustrated when the service pathway or institutional process is the object
-      of analysis.
   - text: >-
       Studies of service uptake, high-intensity use, support pathways, referrals, case
       progression, or cross-service movement.
@@ -966,12 +914,6 @@ categories:
     Do not assign where the exposure is a naturally occurring event, condition, or characteristic. Use Outcome Tracking for non-policy exposures. Use Descriptive Monitoring if the project only profiles or monitors a phenomenon.
   examples:
   - text: >-
-      Studies evaluating the effect, impact, implementation, or consequences of a named policy,
-      programme, fund, levy, scheme, reform, or intervention.
-    rationale: >-
-      This purpose is illustrated when the exposure is a deliberate action or institutional
-      change.
-  - text: >-
       Studies comparing outcomes before, after, or around a designed policy or programme to
       understand its effects.
     rationale: >-
@@ -996,11 +938,11 @@ categories:
   date_added: '2026-03-26'
   date_changed: null
   definition: >-
-    Research focused on predicting risk, identifying at-risk individuals or groups, building risk scores, developing screening tools, or estimating likelihood of adverse outcomes before it occurs or as it emerges.
+    Research with an explicit predictive or early-identification design focused on predicting risk, identifying at-risk individuals or groups, building risk scores, developing screening tools, or prospectively targeting people or places before or as an adverse outcome emerges.
   inclusion_rules: >-
-    Assign where the project explicitly involves prediction, risk scoring, early identification, screening, risk factors for future outcomes, or machine-learning models used to identify elevated risk.
+    Assign only where the project explicitly involves prediction, risk scoring, screening, early identification, a prediction model, or prospective targeting of at-risk individuals or groups. The design must aim to identify who or where is at elevated risk before or as the outcome emerges.
   exclusion_rules: >-
-    Do not assign merely because a project studies risk factors descriptively. Use Outcome Tracking where the project estimates associations between exposures and outcomes without a prediction/screening aim.
+    Do not assign merely because a project uses risk, risk factor, predictor, or similar vocabulary, or estimates associations between exposures and outcomes. Use **Outcome Tracking** where the project analyses predictors or risk factors without a prediction, screening, early-identification, or prospective-targeting aim.
   examples:
   - text: >-
       Studies building or using a risk score, prediction model, screening approach, or
@@ -1032,7 +974,7 @@ categories:
   date_added: '2026-03-26'
   date_changed: null
   definition: >-
-    Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches, survey methods, or data assets.
+    Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches, survey methods, or data assets. Distinction from Layer A **Data Infrastructure & Methodology**: this Layer C purpose applies when the analytical purpose is methodological or infrastructural -- what the project is doing. The Layer A domain applies when data, methods, or statistical infrastructure are the substantive object of the research -- what the project is about. The two layers answer different questions, so a methods-focused project may legitimately carry both by design.
   inclusion_rules: >-
     Assign where the methodological or infrastructural contribution is the main point: developing a dataset, validating a measure, improving data quality, testing linkage, correcting non-response, improving estimates, or assessing survey/data methods.
   exclusion_rules: >-
@@ -1082,7 +1024,11 @@ categories:
       evaluation, prediction, pathways, outcome tracking, or method development.
     rationale: >-
       This fallback purpose is illustrated when the available title and dataset text do not reveal
-      the analytical operation.
+      the analytical operation. "Unclear from Register Entry" covers cases where the available
+      register text genuinely does not determine the category — this includes both genuinely
+      ambiguous research and register entries too sparse or damaged to interpret; it is a
+      statement about the register entry, not a judgement that the research is itself
+      unclassifiable.
   - text: >-
       Register entries whose substantive area may be inferable but whose study design remains
       opaque from the available register fields.
