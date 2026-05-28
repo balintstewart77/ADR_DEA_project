@@ -141,30 +141,35 @@ metadata:
     categories and thus require layer identity for precise categorisation.
   label_change_notes:
     unclear_from_register_entry: >-
-      In v3.4, "Unclear from Title" was renamed to "Unclear from Register Entry"
-      because classification uses the public register entry as a whole, including
-      both the project title and dataset field. The previous wording incorrectly
-      implied that only the title was considered.
+      In v3.4, "Unclear from Title" was renamed to "Unclear from Register Entry" 
+      because classification draws on the register entry's informative fields — 
+      the project title and the dataset field — not the title alone. The previous 
+      wording implied only the title was considered.
 
   # ============================================================
   # ASSIGNMENT RULES
   # ============================================================
   layer_a_assignment_rule: >-
-    Layer A is multi-label and non-hierarchical: a project may carry one or more
-    domains, with no primary/secondary ordering. Assign every domain where the
-    register entry gives substantive evidence that the project analyses that
-    domain. For example, a project about how employment changes affect household
-    debt may receive both Labour Market & Employment and Poverty, Wealth &
-    Living Standards.
+    Assign every Layer A domain where the register entry gives substantive evidence 
+    that the project analyses that domain; domains are non-hierarchical, so where more 
+    than one applies, assign all of them with no primary/secondary ordering. For example, 
+    a project about how employment changes affect household debt may receive both Labour 
+    Market & Employment and Poverty, Wealth & Living Standards.
 
   layer_c_assignment_rule: >-
-    Layer C assigns by the analytical operation visible from the register entry:
-    monitoring patterns, tracking exposure-outcome relationships, evaluating a
-    policy or intervention, analysing trajectories, studying service-system
-    interaction, predicting or identifying risk, or developing methods or
-    infrastructure. A project may carry one or two purposes where more than one
-    operation is central; two should be assigned only where both are genuinely
-    substantive.
+    Assign a Layer C purpose according to the analytical operation visible from the register entry: 
+    monitoring patterns, tracking exposure-outcome relationships, evaluating a policy or 
+    intervention, analysing trajectories, studying service-system interaction, predicting 
+    or identifying risk, or developing methods or infrastructure. Assign one or two purposes 
+    where more than one operation is central; assign two only where both are genuinely substantive.
+
+  unclear_fallback_rule: >-
+      "Unclear from Register Entry" appears in Layer A, Layer B, and Layer C. In
+      every case the label describes insufficient evidence in the public register
+      entry — not research that is inherently unclassifiable. Assign it only where
+      the relevant register fields genuinely do not determine the domain, linkage
+      mode, or purpose; if the evidence resolves the category, assign the resolved
+      category instead.
 
   cross_layer_assignment_principles:
     layer_independence: >-
@@ -181,25 +186,28 @@ metadata:
       structure, analytical operation, or cross-cutting lens. This rule applies
       to every layer.
     domain_purpose_separation: >-
-      Domain assignment follows the substantive object of the research visible
-      from the register entry: the outcome, system, population process,
-      institution, sector, or mechanism being studied. Purpose assignment
-      follows the analytical operation. A named policy or programme may
-      determine the Layer C purpose without displacing the Layer A domain.
+      Domain and purpose are assigned independently. The domain follows the substantive 
+      object of the research visible from the register entry — the outcome, system, population 
+      process, institution, sector, or mechanism being studied. The purpose follows the analytical 
+      operation performed on that object — what the project does with it (for example, monitoring, 
+      evaluation, prediction, or trajectory analysis). Because these are different questions, a named 
+      policy or programme fixes the purpose (typically Policy Evaluation / Impact Analysis) without 
+      displacing the domain: a study evaluating a housing subsidy is a housing study by domain and 
+      a policy-evaluation study by purpose.
     setting_vs_purpose_rule: >-
-      Do not assign a Layer C purpose solely because a dataset comes from a
-      service system or because an outcome occurs in a service setting. Assign
-      the purpose only when the analytical operation itself matches that
-      purpose. For example, service datasets do not imply Service Interaction /
-      Systems Analysis unless service uptake, referrals, pathways, case
-      progression, utilisation, or movement through systems are central.
+      Do not assign a Layer C purpose solely because of where a dataset comes from or where an outcome occurs. 
+      The data source, service setting, or institutional origin of a project is not its analytical operation. 
+      Assign a purpose only when the operation itself matches it. For example, a dataset drawn from a service 
+      system does not by itself imply Service Interaction / Systems Analysis — assign that purpose only where 
+      service uptake, referrals, pathways, case progression, utilisation, or movement through systems is central 
+      to the analysis.
     tag_lens_rule: >-
       Cross-cutting tags describe analytical lenses, not substantive domains or
       purposes. A tag should not replace the domain or purpose label. Do not
       assign a tag merely because demographic or equality-relevant variables
       appear as controls, covariates, sample descriptors, or routine
       stratifiers.
-
+    
   methodology_domain_purpose_distinction: >-
     Data Infrastructure & Methodology in Layer A and Methodological /
     Infrastructure Research in Layer C are related but not equivalent. 
@@ -216,17 +224,21 @@ metadata:
   # ILLUSTRATION CONVENTIONS
   # ============================================================
   example_policy: >-
-    Examples and counterexamples are authored illustrations of the category, true
-    by construction; they are not validated project-level classifications.
-    Examples are optional and are used only where they add a concrete,
-    recognisable case shape that the definition, inclusion rules, exclusion rules,
-    and metadata principles do not already express. Where a category's rules
-    already carry the useful concrete shapes, the examples field is typically
-    empty. A counterexample shows a similar-looking case that falls outside the
-    category; it may name an alternative label where that gives useful boundary
-    guidance. Boundary-drawing belongs in the inclusion and exclusion rules, not
-    in the examples. Worked classifications of real register projects are not
-    held in this dictionary; they are a separate, validation-track artefact.
+    The dictionary is rule-driven: category meaning is carried by the
+    definitions, and assignment — including all boundary-drawing — by the
+    inclusion and exclusion rules and the metadata principles. The examples
+    field is therefore empty for almost all categories. It is reserved for the
+    rare concrete instance that does work the rules cannot — for example,
+    showing a cross-cutting tag operating in combination with a substantive
+    domain. Examples and counterexamples are authored illustrations, true by
+    construction; they are not validated project-level classifications, and
+    they are illustrative rather than operative. An example shows a recognisable
+    case that falls inside the category; a counterexample shows a similar-looking
+    case that falls outside it, and may name an alternative label where that
+    gives useful boundary guidance. Boundary-drawing itself belongs in the
+    inclusion and exclusion rules, not in the examples or counterexamples.
+    Worked classifications of real register projects are not held in this
+    dictionary; they are a separate, validation-track artefact.
 
   example_schema:
     examples:
@@ -339,12 +351,14 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning health, illness, mortality, wellbeing, clinical outcomes, health services, public health, mental health, social care, and care-system use. Includes NHS services, hospitals, GP care, palliative care, maternity, morbidity, mortality where health is the research object, and adult or children's social care.
+    Research concerning health, illness, mortality, wellbeing, clinical outcomes, health services, public health, 
+    mental health, social care, and care-system use. Includes NHS services, hospitals, GP care, palliative care, 
+    maternity, morbidity, mortality where health is the research object, and adult or children's social care.
   inclusion_rules: >-
-    Assign when health status, illness, clinical outcomes, healthcare access, hospital use, mental health,
-    mortality as a health outcome, morbidity, care needs, social care, care pathways, service utilisation,
-    clinical risk, or health-focused wellbeing are central to the research question, including where social,
-    housing, educational, or demographic factors are analysed as exposures.
+    Assign when health status, illness, clinical outcomes, healthcare access, hospital use, mental health, mortality 
+    where health is the research object, morbidity, care needs, social care, clinical risk, or health-focused wellbeing 
+    are central to the research question, including where social, housing, educational, or demographic factors are analysed 
+    as exposures.
   exclusion_rules: >-
     Do not assign mortality projects automatically; assign this domain only where mortality is treated as a
     health outcome. Use **Migration & Demographics** for mortality as a demographic/population outcome, and use
@@ -367,7 +381,8 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning crime, victimisation, public safety, offending, policing, courts, prisons, probation, sentencing, family justice, civil justice, reoffending, and criminal records.
+    Research concerning crime, victimisation, public safety, offending, policing, courts, prisons, probation, sentencing,
+    family justice, civil justice, reoffending, and criminal records.
   inclusion_rules: >-
     Assign when the project's substantive focus is offending, victimisation, domestic abuse, policing, courts,
     sentencing, imprisonment, probation, youth justice, family justice, civil justice, or justice-system
@@ -480,9 +495,9 @@ categories:
     population mobility, fertility, ageing, mortality as a demographic outcome, 
     census-based population analysis, and demographic composition.
   inclusion_rules: >-
-    Assign when the project studies migration flows, immigration policy, population 
-    movement, demographic change, fertility, ageing, census populations, 
-    population projections, or mortality as part of demographic structure.
+    Assign when the project studies migration flows, immigration policy, population movement, 
+    demographic change, fertility, ageing, census populations, population projections, or mortality 
+    as a demographic outcome.
   exclusion_rules: >-
     Do not assign solely because a project includes ethnicity, age, or migrant status as a subgroup. 
     Use **Labour Market & Employment** for migrant employment or earnings if labour-market outcomes 
@@ -508,11 +523,16 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning the natural environment, climate, energy, agriculture, farming, land use, pollution, decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic or social activity.
+    Research concerning the natural environment, climate, energy, agriculture, farming, land use, pollution, 
+    decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic 
+    or social activity.
   inclusion_rules: >-
-    Assign when the project studies energy consumption, climate policy, decarbonisation, agriculture, farms, land use, environmental exposure, pollution, green transitions, or environmental dimensions of households, firms, or places.
+    Assign when the project studies energy consumption, climate policy, decarbonisation, agriculture, farms, land use, 
+    environmental exposure, pollution, green transitions, or environmental dimensions of households, firms, or places.
   exclusion_rules: >-
-    Do not assign because the word "environment" appears in a non-natural-environment sense, such as "economic environment". Use **Business & Productivity** where an energy or climate programme is primarily framed as firm innovation or productivity, but add Environment where environmental outcomes are central.
+    Do not assign because the word "environment" appears in a non-natural-environment sense, such as "economic environment". 
+    Use **Business & Productivity** where an energy or climate programme is primarily framed as firm innovation or productivity 
+    rather than environmental outcomes.
   examples: []
   counterexamples:
   - text: >-
@@ -521,7 +541,6 @@ categories:
     rationale: >-
       The category excludes non-natural-environment uses of environment unless climate, energy,
       land, pollution, agriculture, or ecological exposure is central.
-    instead_consider: []
 
 - label: Public Finance & Taxation
   layer: Layer A -- domain
@@ -568,7 +587,6 @@ categories:
       This falls outside the event-domain when COVID-19 is not the exposure, surveillance object,
       intervention context, substantive outcome frame, or central pandemic condition being
       studied.
-    instead_consider: []
       
 - label: Data Infrastructure & Methodology
   layer: Layer A -- domain
@@ -590,7 +608,6 @@ categories:
     rationale: >-
       Methodological sophistication does not make this the domain unless data or methods are the
       research object.
-    instead_consider: []
 
 - label: Unclear from Register Entry
   layer: Layer A -- domain
@@ -599,18 +616,12 @@ categories:
   definition: >-
     Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain. 
   inclusion_rules: >-
-    Assign when the title is an opaque acronym, internal project name, or otherwise non-descriptive, and the dataset field does not resolve the substantive area.
+    Assign when the title is an opaque acronym, internal project name, or
+    otherwise non-descriptive, and the dataset field does not resolve the
+    substantive domain.
   exclusion_rules: >-
     Do not assign if the dataset field reveals a clear domain. Do not assign alongside a real domain. If any domain can be inferred with reasonable confidence, use that domain.
-  examples:
-  - text: >-
-      Register entries where the title is an opaque acronym, broad programme name,
-      or generic public-value phrase, and the dataset field is missing, generic, or
-      uninformative.
-    rationale: >-
-      This illustrates the fallback because neither available register field supports
-      a defensible substantive domain. The label describes insufficient evidence in
-      the public register entry, not research that is inherently unclassifiable.
+  examples: []
   counterexamples:
   - text: >-
       Acronym-bearing or branded entries where the surrounding wording still identifies a justice,
@@ -619,7 +630,6 @@ categories:
       An opaque project name is not enough for this fallback label when other register text
       resolves the domain. A service-system purpose can be considered separately, but the domain
       should follow the substantive object visible in the register text.
-    instead_consider: []
 
 # === LAYER B: LINKAGE MODE (exactly one) ===
 - label: Single-Dataset
@@ -707,21 +717,13 @@ categories:
   definition: >-
     Use only where the dataset field is missing, malformed, or too ambiguous to determine linkage mode. 
   inclusion_rules: >-
-    Assign when the number of datasets, the identity of the datasets, or the policy domains represented by the datasets cannot be 
-    inferred from the register entry. This covers cases where the register text genuinely does not determine linkage — both genuinely 
-    ambiguous data configurations and register entries too sparse or damaged to interpret. It is a statement about the register entry, 
-    not a judgement about the project itself.
+    Assign when the number of datasets, their identity, or the policy domains
+    they represent cannot be inferred from the register entry. 
   exclusion_rules: >-
     Do not assign based on an unclear title alone. Linkage mode should be determined primarily from the dataset
     field. If the dataset field clearly resolves the number and domain of datasets, assign Single-Dataset,
     Within-Domain Linkage, or Cross-Domain Linkage as appropriate.
-  examples:
-  - text: >-
-      A register entry whose dataset field includes unknown or unspecified sources alongside
-      heterogeneous assets, making the complete linkage structure unclear.
-    rationale: >-
-      The known sources may suggest a mode, but an unspecified component can make the overall
-      configuration unreliable without review.
+  examples: []
   counterexamples:
   - text: >-
       A vague or opaque title paired with a dataset field that clearly lists one
@@ -770,8 +772,7 @@ categories:
   inclusion_rules: >-
     Assign where the project links a naturally occurring exposure, condition, event, status, characteristic, or
     circumstance to a downstream outcome, and the exposure is not a deliberate named policy, programme, or
-    intervention. Covers health, employment, firm, educational, criminal justice, wellbeing, and similar
-    exposure-outcome designs.
+    intervention. 
   exclusion_rules: >-
     Do not assign where the exposure is a named policy, programme, reform, or intervention; use **Policy
     Evaluation / Impact Analysis**. Do not assign if the project only measures patterns or trends; use
@@ -946,16 +947,7 @@ categories:
     Do not assign if the title or dataset field indicates monitoring, impact/evaluation, prediction, pathways,
     trajectories, exposure-outcome analysis, service-system analysis, or method/infrastructure development. Do
     not assign alongside a valid Layer C purpose.
-  examples:
-  - text: >-
-      Register entries with broad acronyms, internal project names, or generic
-      programme titles and no visible signal of monitoring, evaluation,
-      prediction, pathways, outcome tracking, or method development.
-    rationale: >-
-      This fallback purpose is illustrated when the available title and dataset
-      text do not reveal the analytical operation. The label describes
-      insufficient evidence in the public register entry, not research that is
-      inherently unclassifiable.
+  examples: []
   counterexamples:
   - text: >-
       Opaque or branded entries that still contain clear evaluation, impact, prediction, pathway,
@@ -974,13 +966,9 @@ categories:
   definition: >-
     A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups.
   inclusion_rules: >-
-    Assign where demographic or equality-relevant comparison is central to the research question, especially
-    comparison by age, cohort, sex, gender, race, ethnicity, religion, disability, migrant/refugee status,
-    nationality, or similar group characteristics. Use this tag for the demographic or equality-relevant
-    comparative lens while assigning the substantive domain according to the outcome, system, policy area, or
-    mechanism being studied. Socioeconomic comparison qualifies only where the comparison is made across a
-    demographic or equality-relevant group; socioeconomic position alone is not sufficient. The tag can be
-    combined with any Layer A domain and any Layer C purpose.
+    Assign only where the analytical operation cannot be inferred from the
+    register entry. The domain and linkage mode may still be classifiable while
+    the purpose is left unclear.
   exclusion_rules: >-
     Do not assign merely because demographic variables are used as controls, covariates, sample descriptors, or
     routine stratifiers. Do not assign to poverty, income, wealth, deprivation, regional inequality, or
