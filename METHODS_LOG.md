@@ -550,54 +550,174 @@ The provider name "Institute for Social and Economic Research" was being incorre
 
 The original deduplication policy (keying only on Project ID + title) silently discarded differing dataset and researcher information for same-ID/same-title rows that differed materially. Because linkage classification depends on the dataset list, this corrupted classification inputs for an unknown number of projects. The content-aware policy (2026-05-21) addresses this, but all prior classification runs may have been affected.
 
-# Taxonomy Data Dictionary v1.0
+# Methods log — Taxonomy Data Dictionary v1.0-rc1 (release candidate)
 
 **Artefact:** `taxonomy_data_dictionary.yaml`
-**Dictionary version:** 1.0 (frozen at commit `<COMMIT_HASH>`)
+**Dictionary version:** 1.0-rc1 (release candidate, frozen at commit
+`f006abb`)
 **Ontology version documented:** v3.4
-**Status at freeze:** single authoritative specification of the classification ontology; the v4 classifier prompt is generated from it.
+**Status:** frozen as a release candidate for collaborator review. The
+dictionary will be declared v1.0 after review meetings on 1 June and
+10 June 2026. Changes requested during those reviews are pre-release
+refinements (rc1 → rc2 → ... → 1.0), not post-release changelog entries.
+Post-release revisions begin only after v1.0 is declared.
 
-This entry records the design decisions behind the frozen dictionary and the reasoning for each. It is decision-oriented, not a development history; supporting detail (the ONS-framework self-assessment, the register-cleaning provenance) lives in its own sections of this log and in the committed code.
+This entry records the design decisions behind the rc1 candidate and the
+reasoning for each. It is decision-oriented, not a development history;
+supporting detail (the ONS-framework self-assessment, the register-cleaning
+provenance) lives in its own sections of this log and in the committed code.
 
 ## What the dictionary is
 
-The dictionary is the single source of truth for the v3.4 ontology: three faceted layers (A — substantive domain, multi-label; B — linkage mode, exactly one; C — analytical purpose, one or two) plus a cross-cutting demographic-disparities/equity tag. Each active category carries a definition, inclusion rules, exclusion rules, counterexamples, and a status. The dictionary is hand-edited YAML; human-readable renderings and the classifier prompt are *derived* from it rather than maintained separately. This keeps one editable source and avoids divergence between what humans read and what the classifier receives.
+The dictionary is the single source of truth for the v3.4 ontology: three
+faceted layers (A — substantive domain, multi-label; B — linkage mode, exactly
+one; C — analytical purpose, one or two) plus a cross-cutting
+demographic-disparities/equity tag. Each active category carries a definition,
+inclusion rules, exclusion rules, counterexamples, and a status. The
+dictionary is hand-edited YAML; human-readable renderings and the classifier
+prompt are *derived* from it rather than maintained separately. This keeps one
+editable source and avoids divergence between what humans read and what the
+classifier receives.
 
 ## Key design decisions and rationale
 
 ### 1. Dictionary and ontology are versioned independently
-The dictionary carries `dictionary_version` (1.0) separately from `documents_ontology_version` (v3.4). The two can change at different rates: the ontology changes when categories are added, removed, or redefined; the dictionary changes when its wording, structure, or examples change without altering the ontology. Conflating them (as the earlier per-category `version_added`/`version_changed` fields did) produced internal contradictions, so those fields were removed. Category lineage is now carried only by `status` (active / relabelled v3.4 / removed v3.4 / new v3.4); post-release change history is carried by the `changelog`, which records revisions made *after* v1.0 — not pre-release development, which is documented here.
+The dictionary carries `dictionary_version` (1.0-rc1) separately from
+`documents_ontology_version` (v3.4). The two can change at different rates:
+the ontology changes when categories are added, removed, or redefined; the
+dictionary changes when its wording, structure, or examples change without
+altering the ontology. Conflating them (as the earlier per-category
+`version_added`/`version_changed` fields did) produced internal
+contradictions, so those fields were removed. Category lineage is now carried
+only by `status` (active / relabelled v3.4 / removed v3.4 / new v3.4);
+post-release change history is carried by the `changelog`, which records
+named releases (including release candidates) and any evidence-driven
+revisions made after a release — not pre-release development, which is
+documented here.
 
 ### 2. The dictionary is rule-driven, not example-driven
-Category meaning is carried by definitions; assignment by inclusion/exclusion rules and the metadata-level assignment principles; difficult boundaries are illustrated by counterexamples. The `examples` field is empty for all but one category.
+Category meaning is carried by definitions; assignment by inclusion/exclusion
+rules and the metadata-level assignment principles; difficult boundaries are
+illustrated by counterexamples. The `examples` field is empty for all but one
+category.
 
-This was a deliberate reversal of an earlier, more example-heavy draft. On review, most "examples" were one of two things: restatements of the definition (adding nothing), or assignment principles written in example form (rules in disguise). Restatements were cut; the principles they carried were lifted into the rules or — where they recurred across categories — into single metadata-level principles. An example is retained only where it is a concrete, recognisable instance doing work the rules cannot easily do in prose. After this pass, exactly one example survives: the gender pay gap, on the demographic-disparities tag, which shows the tag operating alongside a substantive domain (Labour Market & Employment). The `examples` field is retained but empty elsewhere, reserved for evidence-driven additions post-validation.
+This was a deliberate reversal of an earlier, more example-heavy draft. On
+review, most "examples" were one of two things: restatements of the
+definition (adding nothing), or assignment principles written in example form
+(rules in disguise). Restatements were cut; the principles they carried were
+lifted into the rules or — where they recurred across categories — into
+single metadata-level principles. An example is retained only where it is a
+concrete, recognisable instance doing work the rules cannot easily do in
+prose. After this pass, exactly one example survives: the gender pay gap, on
+the demographic-disparities tag, which shows the tag operating alongside a
+substantive domain (Labour Market & Employment). The `examples` field is
+retained but empty elsewhere, reserved for evidence-driven additions
+post-validation.
 
 ### 3. Recurring assignment principles are stated once, in metadata
-Several assignment rules apply across all categories in a layer, or across layers. Stating them inside each category's rules would have produced drift-prone duplication. They are therefore stated once as metadata principles: `layer_a_assignment_rule` (domains are multi-label and non-hierarchical; assign every domain with substantive evidence, no primary/secondary ordering); `layer_c_assignment_rule` (purpose follows the visible analytical operation; one or two, both substantive); the `cross_layer_assignment_principles` block (`layer_independence`, `evidence_not_keyword_rule`, `domain_purpose_separation`, `setting_vs_purpose_rule`, `tag_lens_rule`); `methodology_domain_purpose_distinction` (Layer A Data Infrastructure & Methodology vs Layer C Methodological / Infrastructure Research); and `unclear_fallback_rule` (the three-layer "Unclear from Register Entry" describes insufficient register evidence, not inherently unclassifiable research). Per-category rules state only what is distinctive about that category and do not repeat the metadata principles.
+Several assignment rules apply across all categories in a layer, or across
+layers. Stating them inside each category's rules would have produced
+drift-prone duplication. They are therefore stated once as metadata
+principles: `layer_a_assignment_rule` (domains are multi-label and
+non-hierarchical; assign every domain with substantive evidence, no
+primary/secondary ordering); `layer_b_assignment_rule` (linkage mode by
+dataset configuration; Single/Within/Cross ladder; provider identity
+insufficient); `layer_c_assignment_rule` (purpose follows the visible
+analytical operation; one or two, both substantive); the
+`cross_layer_assignment_principles` block (`layer_independence`,
+`evidence_not_keyword_rule`, `register_field_evidence_rule`,
+`domain_purpose_separation`, `setting_vs_purpose_rule`, `tag_lens_rule`);
+`methodology_domain_purpose_distinction` (Layer A Data Infrastructure &
+Methodology vs Layer C Methodological / Infrastructure Research); and
+`unclear_fallback_rule` (the three-layer "Unclear from Register Entry"
+describes insufficient evidence in the register entry's informative fields —
+title and dataset field — not inherently unclassifiable research).
+Per-category rules state only what is distinctive about that category and do
+not repeat the metadata principles.
 
 ### 4. The "no primary/secondary domain" decision
-Layer A is multi-label and non-hierarchical: a project receives every domain it substantively analyses, with no ranking. Whether to introduce a primary/secondary distinction was considered and deferred — it would require defining "primary" and a register survey to test inter-assessor agreement, and is recorded as an open question rather than built into v1.0.
+Layer A is multi-label and non-hierarchical: a project receives every domain
+it substantively analyses, with no ranking. Whether to introduce a
+primary/secondary distinction was considered and deferred — it would require
+defining "primary" and a register survey to test inter-assessor agreement,
+and is recorded as an open question rather than built into the rc1 candidate.
 
 ### 5. Worked examples are excluded on circularity grounds
-The dictionary contains no worked classifications of real register projects. Worked classifications are an *output* of the validation process, not an input to it; feeding the classifier's own prior outputs back into the prompt would be circular. They are held in a separate validation-track artefact. The dictionary's examples and counterexamples are authored illustrations, true by construction, and are explicitly not validated classifications. Concrete project-based illustration for human readers is kept in a separate explanatory document (`taxonomy_explanatory_examples.md`), which is not a classifier input.
+The dictionary contains no worked classifications of real register projects.
+Worked classifications are an *output* of the validation process, not an
+input to it; feeding the classifier's own prior outputs back into the prompt
+would be circular. They are held in a separate validation-track artefact.
+The dictionary's examples and counterexamples are authored illustrations,
+true by construction, and are explicitly not validated classifications.
+Concrete project-based illustration for human readers is kept in a separate
+explanatory document (`taxonomy_explanatory_examples.md`), which is not a
+classifier input.
 
 ### 6. Examples and counterexamples illustrate boundaries; they do not define them
-Boundary-drawing is operative and belongs in the inclusion/exclusion rules and metadata principles, which the classifier acts on. Examples and counterexamples are illustrative, not operative: a counterexample shows a similar-looking case that falls outside a category and may name an alternative label, but the boundary it points to is defined in the rules. This keeps the operative logic in one place.
+Boundary-drawing is operative and belongs in the inclusion/exclusion rules
+and metadata principles, which the classifier acts on. Examples and
+counterexamples are illustrative, not operative: a counterexample shows a
+similar-looking case that falls outside a category and may name an
+alternative label, but the boundary it points to is defined in the rules.
+This keeps the operative logic in one place.
 
-## Known anomalies and open questions (documented, not actioned in v1.0)
+## Known anomalies and open questions (documented, not actioned in rc1)
 
-- **COVID-19 & Pandemic** is retained as a Layer A domain but is a category-type anomaly: it is a time-bounded cross-cutting event rather than a policy/sector area, and its inclusion rule directs that it be assigned alongside a substantive domain. Whether to convert it to a cross-cutting tag is an open question for after v4 validation.
-- **Data Infrastructure & Methodology (Layer A) vs Methodological / Infrastructure Research (Layer C):** in the v3 classifications these co-occurred in every case where the Layer A domain was assigned (no Layer A without the matching Layer C; 25 Layer C without Layer A). This is consistent with the layer distinction (methods can be instrumental to another domain, giving C without A) but may also reflect a classifier coupling. Flagged as a v4 validation question.
-- **Small Layer C categories** (Risk Prediction / Early Identification; Service Interaction / Systems Analysis) are retained on conceptual and future-proofing grounds; no trend claims are made about them at current sizes.
+- **COVID-19 & Pandemic** is retained as a Layer A domain but is a
+  category-type anomaly: it is a time-bounded cross-cutting event rather
+  than a policy/sector area, and its inclusion rule directs that it be
+  assigned alongside a substantive domain. Whether to convert it to a
+  cross-cutting tag is an open question for after v4 validation.
+- **Data Infrastructure & Methodology (Layer A) vs Methodological /
+  Infrastructure Research (Layer C):** in the v3 classifications these
+  co-occurred in every case where the Layer A domain was assigned (no Layer
+  A without the matching Layer C; 25 Layer C without Layer A). This is
+  consistent with the layer distinction (methods can be instrumental to
+  another domain, giving C without A) but may also reflect a classifier
+  coupling. Flagged as a v4 validation question.
+- **Small Layer C categories** (Risk Prediction / Early Identification;
+  Service Interaction / Systems Analysis) are retained on conceptual and
+  future-proofing grounds; no trend claims are made about them at current
+  sizes.
+- **Hard-coded category-label references in metadata prose:** the
+  multi-label example in `layer_a_assignment_rule` names two specific
+  domains (Labour Market & Employment; Poverty, Wealth & Living Standards).
+  This is the only place in the dictionary where the prose contains exact
+  category-label references; if either is relabelled, this reference must
+  be updated. No automated check catches it.
 
 ## Validation stance
 
-The dictionary is quality-assured against the ONS Taxonomy Best Practice Evaluation Framework (self-assessment recorded separately in this log). It is not "validated" in the sense of proven correct — no inductive taxonomy is. It is empirically stress-tested *indirectly* through the project-classification validation study: the taxonomy is revised, via the changelog, only where a *systematic pattern* of classification errors indicates a taxonomy fault rather than a classifier fault. Isolated misclassifications are diagnosed as classifier issues, not taxonomy issues. The taxonomy is described as "researcher-validated" where appropriate, never as a "gold standard"; the validator pool's composition is described honestly where the validation is reported.
+The dictionary is quality-assured against the ONS Taxonomy Best Practice
+Evaluation Framework (self-assessment recorded separately in this log). It
+is not "validated" in the sense of proven correct — no inductive taxonomy
+is. It is empirically stress-tested *indirectly* through the
+project-classification validation study: the taxonomy is revised, via the
+changelog, only where a *systematic pattern* of classification errors
+indicates a taxonomy fault rather than a classifier fault. Isolated
+misclassifications are diagnosed as classifier issues, not taxonomy issues.
+The taxonomy is described as "researcher-validated" where appropriate, never
+as a "gold standard"; the validator pool's composition is described honestly
+where the validation is reported.
 
-## Freeze
+## Path to v1.0
 
-v1.0 is frozen at commit `<COMMIT_HASH>` as the provenance anchor. Subsequent changes are recorded in the dictionary's `changelog` and are evidence-driven (post-validation), per the governance block in the dictionary.
+v1.0-rc1 is frozen at commit `f006abb` as the provenance anchor for
+collaborator review. The path to v1.0:
+
+- **1 June 2026:** review meeting with Jo Lam (PI). Discuss the taxonomy and
+  the approach. Surface any structural concerns.
+- **10 June 2026:** presentation to the wider team. Discuss the v4
+  classifications (produced by the dictionary-driven, rationale-equipped
+  classifier described in this log).
+- **Post-10 June:** apply any agreed pre-release changes (rc1 → rc2 → ...
+  → 1.0). When no further changes are requested, the dictionary is declared
+  v1.0.
+- **After v1.0 is declared:** the changelog begins recording post-release
+  evidence-driven revisions only. Pre-release refinements (rc1 → rc2 →
+  ... → 1.0) are recorded as named releases in the changelog *and* discussed
+  in the methods log; evidence-driven post-release changes appear in the
+  changelog only, per `changelog_note`.
 
 ---
 
