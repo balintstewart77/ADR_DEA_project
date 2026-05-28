@@ -155,6 +155,14 @@ metadata:
     than one applies, assign all of them with no primary/secondary ordering. For example, 
     a project about how employment changes affect household debt may receive both Labour 
     Market & Employment and Poverty, Wealth & Living Standards.
+  
+  layer_b_assignment_rule: >- 
+    Layer B assigns exactly one linkage mode by the dataset configuration visible from the register 
+    entry. Assign Single-Dataset where the register entry lists one standalone dataset or one internally 
+    coherent single-domain data product. Assign Within-Domain Linkage where multiple datasets or identifiable 
+    component sources all sit within one substantive policy domain. Assign Cross-Domain Linkage where datasets 
+    or identifiable component sources span two or more substantive policy domains. Provider identity is not sufficient: 
+    large providers may supply datasets across several policy domains.
 
   layer_c_assignment_rule: >-
     Assign a Layer C purpose according to the analytical operation visible from the register entry: 
@@ -184,7 +192,13 @@ metadata:
       entry. Assign a category only where the register fields provide enough
       evidence that the category is central to the research question, linkage
       structure, analytical operation, or cross-cutting lens. This rule applies
-      to every layer.
+      to every layer.- 
+    register_field_evidence_rule: >- 
+      Classification uses the informative public register fields together, especially 
+      the project title and dataset field. The title usually provides the research question 
+      or analytical framing, while the dataset field can resolve the substantive domain, 
+      linkage mode, and sometimes the analytical purpose. Do not treat the dataset field as 
+      relevant only to Layer B.
     domain_purpose_separation: >-
       Domain and purpose are assigned independently. The domain follows the substantive 
       object of the research visible from the register entry — the outcome, system, population 
@@ -288,11 +302,12 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning work, employment, labour-market participation, and workforce dynamics. 
-    Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality, 
-    working hours, contracts and working conditions; labour supply and demand; occupational, sectoral 
-    and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and 
-    transitions into, through, or out of work.
+    Research concerning work, employment, labour-market participation, and
+    workforce dynamics. Includes wages and earnings; employment, unemployment,
+    inactivity and underemployment; job quality; working hours, contracts, gig or
+    platform work, and working conditions; labour supply and demand; occupational,
+    sectoral and geographic mobility; workforce recruitment and retention; skills
+    demand and mismatch; and transitions into, through, or out of work.
   inclusion_rules: >-
     Assign when work, employment, earnings, labour supply or demand, workforce composition, job quality,
     occupational structure, or labour-market transitions are central to the project, even where the study
@@ -522,9 +537,10 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning the natural environment, climate, energy, agriculture, farming, land use, pollution, 
-    decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic 
-    or social activity.
+    Research concerning the natural environment, climate, climate adaptation or
+    resilience, energy, agriculture, farming, land use, pollution,
+    decarbonisation, environmental policy, domestic or industrial energy use, and
+    environmental impacts of economic or social activity.
   inclusion_rules: >-
     Assign when the project studies energy consumption, climate policy, decarbonisation, agriculture, farms, land use, 
     environmental exposure, pollution, green transitions, or environmental dimensions of households, firms, or places.
@@ -567,7 +583,7 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research specifically focused on COVID-19, the COVID-19 pandemic, pandemic control measures, vaccination, 
+    Research specifically focused on COVID-19, the COVID-19 pandemic, transmission, pandemic control measures, vaccination, 
     infection surveillance, lockdowns, social distancing, pandemic-related public support, or pandemic consequences.
   inclusion_rules: >-
     Assign whenever COVID-19 or pandemic conditions are central to the research question. If the project studies 
@@ -692,10 +708,13 @@ categories:
     The project links, combines, or uses datasets spanning two or more distinct policy domains, including cases where the register 
     lists a single pre-linked product whose component sources are cross-domain.
   inclusion_rules: >-
-    Assign where datasets or identifiable component sources span at least two policy domains, such as education
-    plus employment, education plus health, welfare plus labour market, health plus housing, justice plus employment, or agriculture
-    plus individuals/households. Treat pre-linked products according to their component domains, not simply the
-    number of dataset names listed.
+    Assign where datasets or identifiable component sources span at least two
+    policy domains, such as education plus employment, education plus health,
+    welfare plus labour market, health plus housing, justice plus employment,
+    agriculture plus individuals/households, or employment-census products such
+    as Annual Survey of Hours and Earnings linked to Census. Treat pre-linked
+    products according to their component domains, not simply the number of
+    dataset names listed.
   exclusion_rules: >-
     Do not assign where multiple datasets or component sources all remain within one policy domain. Do not
     assign to a single-domain pre-linked product, such as COVID-19 infection data linked to test-and-trace data,
@@ -830,12 +849,15 @@ categories:
   definition: >-
     Research focused on how people, cases, families, or organisations move through, use, access, or are processed by public service systems.
   inclusion_rules: >-
-    Assign where service uptake, help-seeking, referrals, support pathways, repeated or high-intensity use, case
-    progression, institutional processing, utilisation, or cross-service movement are central to the analytical
-    operation. Pathways through public-service or institutional systems (courts, family justice, support
-    services, emergency departments, referrals, or case processing) are the primary reading for this category;
-    **Life-Course / Trajectory Analysis** may additionally apply where extended life-stage progression is also
-    central.
+    Assign where service uptake, help-seeking, referrals, support pathways,
+    repeated or high-intensity use, case progression, institutional processing,
+    utilisation, welfare administration, benefit-service pathways, or
+    cross-service movement are central to the analytical operation. Pathways
+    through public-service or institutional systems (courts, family justice,
+    welfare administration, support services, emergency departments, referrals, or
+    case processing) are the primary reading for this category; **Life-Course /
+    Trajectory Analysis** may additionally apply where extended life-stage
+    progression is also central.
   exclusion_rules: >-
     Do not assign merely because an outcome occurs in a public service context. If the service is only the
     setting and the focus is an individual outcome, use **Outcome Tracking**. If the project evaluates a named
@@ -968,9 +990,16 @@ categories:
   definition: >-
     A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups.
   inclusion_rules: >-
-    Assign only where the analytical operation cannot be inferred from the
-    register entry. The domain and linkage mode may still be classifiable while
-    the purpose is left unclear.
+    Assign where demographic or equality-relevant comparison is central to the
+    research question, especially comparison by age, cohort, sex, gender, race,
+    ethnicity, religion, disability, migrant/refugee status, nationality, or
+    similar group characteristics. Use this tag for the demographic or
+    equality-relevant comparative lens while assigning the substantive domain
+    according to the outcome, system, policy area, or mechanism being studied.
+    Socioeconomic comparison qualifies only where the comparison is made across
+    a demographic or equality-relevant group; socioeconomic position alone is not
+    sufficient. The tag can be combined with any Layer A domain and any Layer C
+    purpose.
   exclusion_rules: >-
     Do not assign merely because demographic variables are used as controls, covariates, sample descriptors, or
     routine stratifiers. Do not assign to poverty, income, wealth, deprivation, regional inequality, or
@@ -1009,11 +1038,14 @@ categories:
     Do not use for new classification.
   exclusion_rules: >-
     Do not use for new classification.
+  examples: []
+  counterexamples: []
   replacement_guidance:
   - text: >-
       Do not use for new classification
     rationale: >-
       Removed Layer A category; do not use for new classification.
+
 - label: Inequality / Disparities Analysis
   layer: Layer C -- purpose
   status: removed v3.4
@@ -1024,6 +1056,8 @@ categories:
     Do not use for new classification.
   exclusion_rules: >-
     Do not use for new classification.
+  examples: []
+  counterexamples: []
   replacement_guidance:
   - text: >-
       "Gender Pay Gap" / pay-gap studies
