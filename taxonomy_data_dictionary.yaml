@@ -135,10 +135,10 @@ metadata:
     Cross-cutting tag: zero or more / boolean facets
 
   category_identity_note: >-
-    Category identity is defined by the combination of layer and label, not by
-    label alone. The fallback label "Unclear from Register Entry" appears
-    separately in Layer A, Layer B, and Layer C, and these are distinct
-    categories and thus require layer identity for precise categorisation.
+    Category identity is the combination of layer and label, not label alone. The 
+    fallback "Unclear from Register Entry" appears in Layer A, Layer B, and Layer C 
+    as three distinct categories; any consumer of this dictionary must key on (layer, label), 
+    since label alone is not unique.
   label_change_notes:
     unclear_from_register_entry: >-
       In v3.4, "Unclear from Title" was renamed to "Unclear from Register Entry" 
@@ -181,36 +181,34 @@ metadata:
 
   cross_layer_assignment_principles:
     layer_independence: >-
-      Layer A, Layer B, Layer C, and cross-cutting tags answer different
-      questions. A policy, programme, dataset, population group, method, or
-      service setting may inform more than one layer, but it should not collapse
-      them into a single label. Assign the substantive domain, linkage mode,
-      analytical purpose, and any cross-cutting tag independently.
+      Layer A, Layer B, Layer C, and cross-cutting tags answer different questions. 
+      The same element — a policy, dataset, population group, method, or service setting — 
+      may inform more than one layer without merging them. Assign the substantive domain, 
+      linkage mode, analytical purpose, and any cross-cutting tag independently.
     evidence_not_keyword_rule: >-
       Do not assign any category solely because a word, dataset, variable,
       population group, method, or service setting appears in the register
       entry. Assign a category only where the register fields provide enough
       evidence that the category is central to the research question, linkage
       structure, analytical operation, or cross-cutting lens. This rule applies
-      to every layer.- 
+      to every layer. 
     register_field_evidence_rule: >- 
-      Classification uses the informative public register fields together, especially 
-      the project title and dataset field. The title usually provides the research question 
-      or analytical framing, while the dataset field can resolve the substantive domain, 
-      linkage mode, and sometimes the analytical purpose. Do not treat the dataset field as 
-      relevant only to Layer B.
+      Classification draws on the register entry's informative fields — the project title 
+      and the dataset field — read together. The title usually provides the research question or analytical 
+      framing, while the dataset field can resolve the substantive domain, linkage mode, and 
+      sometimes the analytical purpose. Do not treat the dataset field as relevant only to
+      Layer B. 
     domain_purpose_separation: >-
       Domain and purpose are assigned independently. The domain follows the substantive 
       object of the research visible from the register entry — the outcome, system, population 
       process, institution, sector, or mechanism being studied. The purpose follows the analytical 
       operation performed on that object — what the project does with it (for example, monitoring, 
       evaluation, prediction, or trajectory analysis). Because these are different questions, a named 
-      policy or programme fixes the purpose (typically Policy Evaluation / Impact Analysis) without 
-      displacing the domain: a study evaluating a housing subsidy is a housing study by domain and 
-      a policy-evaluation study by purpose.
+      policy or programme fixes the purpose without displacing the domain: a study evaluating a housing 
+      subsidy is a housing study by domain and a policy-evaluation study by purpose.
     setting_vs_purpose_rule: >-
       Do not assign a Layer C purpose solely because of where a dataset comes from or where an outcome occurs. 
-      The data source, service setting, or institutional origin of a project is not its analytical operation. 
+      The source, provider, or service setting of the data is not the analytical operation. 
       Assign a purpose only when the operation itself matches it. For example, a dataset drawn from a service 
       system does not by itself imply Service Interaction / Systems Analysis — assign that purpose only where 
       service uptake, referrals, pathways, case progression, utilisation, or movement through systems is central 
@@ -223,16 +221,13 @@ metadata:
       stratifiers.
     
   methodology_domain_purpose_distinction: >-
-    Data Infrastructure & Methodology in Layer A and Methodological /
-    Infrastructure Research in Layer C are related but not equivalent. 
-    Assign Layer A Data Infrastructure & Methodology only when the output, 
-    contribution, or research finding concerns data, methods, measurement, 
-    classification, or statistical infrastructure as an object of knowledge 
-    or as a deliverable. The mere use of administrative data, advanced methods, 
-    or linkage is not sufficient — those are how most modern research is done. 
-    The distinguishing question is: would describing this project's findings 
-    centrally involve describing a data asset, method, classification, measurement 
-    contribution, or linkage contribution?
+    Data Infrastructure & Methodology (Layer A, a domain) and Methodological / Infrastructure Research (Layer C, a purpose) 
+    are related but not equivalent. Assign the Layer A domain when data, methods, measurement, classification, linkage, or 
+    statistical infrastructure are the substantive object of the research — what the project is about. Assign the Layer C purpose 
+    when the project's analytical operation is to develop, test, validate, improve, document, or demonstrate such a method, measure, 
+    data asset, linkage process, or infrastructure — what the project does. The mere use of administrative data, advanced methods, or 
+    linkage is not sufficient for either: those are how most modern research is done. They often co-occur, but neither label 
+    automatically triggers the other.
 
   # ============================================================
   # ILLUSTRATION CONVENTIONS
@@ -275,7 +270,7 @@ metadata:
   # DOCUMENTED ANOMALIES & OPEN QUESTIONS
   # ============================================================
   balance_note: >-
-    Balance: the categories vary considerably in size. Some Layer C purposes —
+    The categories vary considerably in size. Some Layer C purposes —
     notably Risk Prediction / Early Identification and Service Interaction /
     Systems Analysis — are small. They are retained as genuine, conceptually
     distinct analytical purposes and on future-proofing grounds (these kinds
@@ -422,7 +417,8 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning firms, business activity, industrial structure, innovation, productivity, entrepreneurship, trade, exports, foreign direct investment, research and development, business support, and firm-level performance.
+    Research concerning firms, business activity, industrial structure, innovation, productivity, entrepreneurship, 
+    trade, exports, foreign direct investment, research and development, business support, and firm-level performance.
   inclusion_rules: >-
     Assign when firms, business behaviour, productivity, innovation, investment, exporting, enterprise support,
     start-ups, industrial policy, business surveys, enterprise growth, firm performance, or other firm-level
@@ -450,7 +446,8 @@ categories:
   status: relabelled v3.4
   include_in_prompt: true
   definition: >-
-    Research concerning material resources, economic hardship, household living standards, poverty, wealth, debt, savings, benefits, deprivation, food security, cost of living, household income, and distribution of resources.
+    Research concerning material resources, economic hardship, household living standards, poverty, wealth, debt, 
+    savings, benefits, deprivation, food security, cost of living, household income, and distribution of resources.
   inclusion_rules: >-
     Assign when the project's substantive focus is household resources, poverty, household income, wealth,
     savings, debt, benefits, deprivation, food insecurity, cost-of-living pressures, living standards, economic
@@ -477,7 +474,8 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning housing, homelessness, residential conditions, tenure, home ownership, planning systems, neighbourhoods, gentrification, residential mobility, and place-based housing or planning interventions.
+    Research concerning housing, homelessness, residential conditions, tenure, home ownership, planning systems, 
+    neighbourhoods, gentrification, residential mobility, and place-based housing or planning interventions.
   inclusion_rules: >-
     Assign when housing, homelessness, residential tenure, home ownership, housing markets, planning decisions,
     neighbourhood or residential conditions, residential mobility, or dwelling/residential-environment
@@ -526,10 +524,6 @@ categories:
       or demographic change. The demographic-disparities/equity tag may still apply where the
       group comparison is central.
     instead_consider:
-      - "Labour Market & Employment"
-      - "Crime & Justice"
-      - "Health & Social Care"
-      - "Education & Skills"
       - "Demographic disparities / equity tag"
 
 - label: Environment & Agriculture
@@ -562,11 +556,15 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research concerning government revenue, taxation, tax compliance, tax credits, public expenditure, public spending, fiscal transfers, business rates, tax reliefs, and fiscal policy.
+    Research concerning government revenue, taxation, tax compliance, tax credits, public expenditure, 
+    public spending, fiscal transfers, business rates, tax reliefs, and fiscal policy.
   inclusion_rules: >-
-    Assign when the project studies tax policy, tax behaviour, tax compliance, government expenditure, public spending, fiscal transfers, tax credits, business rates, or distributional impacts of fiscal policy.
+    Assign when the project studies tax policy, tax behaviour, tax compliance, government expenditure, 
+    public spending, fiscal transfers, tax credits, business rates, or distributional impacts of fiscal policy.
   exclusion_rules: >-
-    Do not assign to private wealth transfers, household wealth, firm investment, or business outcomes unless the public finance/tax mechanism is central. Use **Business & Productivity** for firm outcomes of business-support schemes unless fiscal design or tax/public spending is the main object.
+    Do not assign to private wealth transfers, household wealth, firm investment, or business outcomes unless the 
+    public finance/tax mechanism is central. Use **Business & Productivity** for firm outcomes of business-support 
+    schemes unless fiscal design or tax/public spending is the main object.
   examples: []
   counterexamples:
   - text: >-
@@ -590,9 +588,8 @@ categories:
     COVID-19 effects on employment, business, health, education, inequality, or households, assign both 
     COVID-19 & Pandemic and the relevant substantive domain.
   exclusion_rules: >-
-    Do not assign simply because the project occurred during the pandemic period. Do not assign to infectious disease, health, or mortality studies unless COVID-19/pandemic framing is explicit.
-  category_type_note: >-
-    See metadata covid_category_type_note. COVID-19 & Pandemic is a category-type anomaly: it is a time-bounded event rather than a policy/sector area. Whether it should be converted from a domain to a cross-cutting tag (as was done with Gender, Race & Ethnicity) is an open question for post-v4 validation.
+    Do not assign simply because the project occurred during the pandemic period. Do not assign to infectious disease, health, 
+    or mortality studies unless COVID-19/pandemic framing is explicit.
   examples: []
   counterexamples:
   - text: >-
@@ -612,9 +609,13 @@ categories:
     linkage processes, data quality, survey design, statistical infrastructure, or
     dataset development needed to produce, improve, validate, or use research data.
   inclusion_rules: >-
-    Assign when the data asset, linkage process, measurement approach, classification, survey method, statistical method, or research infrastructure is itself the substantive object of the project.
+    Assign when the data asset, linkage process, measurement approach, classification, 
+    survey method, statistical method, or research infrastructure is itself the substantive
+    object of the project.
   exclusion_rules: >-
-    Do not assign solely because a project uses linked data, administrative data, statistical methods, or a secure research environment to study another substantive domain. In those cases, assign the substantive domain and, where appropriate, Methodological / Infrastructure Research in Layer C.
+    Do not assign solely because a project uses linked data, administrative data, statistical methods, 
+    or a secure research environment to study another substantive domain. In those cases, assign the 
+    substantive domain and, where appropriate, Methodological / Infrastructure Research in Layer C.
   examples: []
   counterexamples:
   - text: >-
@@ -760,8 +761,8 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research whose analytical purpose is to measure and characterise a phenomenon -- its level, prevalence, 
-    distribution, composition, profile, trend, or pattern -- including how it varies across places, populations, 
+    Research whose analytical purpose is to measure and characterise a phenomenon — its level, prevalence, 
+    distribution, composition, profile, trend, or pattern — including how it varies across places, populations, 
     or time, without primarily testing an exposure-outcome relationship or evaluating a named intervention.
   inclusion_rules: >-
     Assign where the project's visible analytical operation is to measure prevalence, levels, counts, profiles,
@@ -865,7 +866,7 @@ categories:
   examples: []
   counterexamples:
   - text: >-
-      Studies where a public-service dataset is merely the data source for estimating an
+      Studies where a public-service dataset — such as hospital, benefits, tax, or court administrative records — is merely the data source for estimating an
       individual outcome or descriptive pattern.
     rationale: >-
       Use of service records does not make the purpose service-system analysis
@@ -905,7 +906,9 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research with an explicit predictive or early-identification design focused on predicting risk, identifying at-risk individuals or groups, building risk scores, developing screening tools, or prospectively targeting people or places before or as an adverse outcome emerges.
+    Research with an explicit predictive or early-identification design focused on predicting risk, identifying at-risk 
+    individuals or groups, building risk scores, developing screening tools, or prospectively targeting people or places 
+    before or as an adverse outcome emerges.
   inclusion_rules: >-
     Assign only where the project explicitly involves prediction, risk scoring, screening, early identification,
     triage, a prediction model, or prospective targeting of at-risk individuals, groups, places, firms, or
@@ -953,10 +956,6 @@ categories:
       Methods are instrumental in many projects. This purpose requires method,
       measure, data-quality, linkage, dataset, classification, or infrastructure
       development to be central to the analytical operation.
-    instead_consider:
-      - "Outcome Tracking"
-      - "Service Interaction / Systems Analysis"
-      - "Policy Evaluation / Impact Analysis"
 
 - label: Unclear from Register Entry
   layer: Layer C -- purpose
