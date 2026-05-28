@@ -46,13 +46,14 @@ metadata:
       indicate a category boundary problem.
 
   changelog_note: >-
-    The changelog records evidence-driven revisions made after the v1.0 release;
-    it is not a record of pre-release ontology development, which is documented
+    The changelog records each named release of the dictionary, including
+    release candidates, and any evidence-driven revisions made after a release.
+    It is not a record of pre-release ontology development, which is documented
     in the methods log.
   changelog:
-  - version: '1.0'
+  - version: '1.0-rc1'
     date: '2026-05-27'
-    note: Initial release of the taxonomy data dictionary.
+    note: Initial release candidate for collaborator review (1 June, 10 June).
 
   # ============================================================
   # INTEROPERABILITY
