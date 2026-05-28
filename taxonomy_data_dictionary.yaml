@@ -217,28 +217,27 @@ metadata:
     or as a deliverable. The mere use of administrative data, advanced methods, 
     or linkage is not sufficient — those are how most modern research is done. 
     The distinguishing question is: would describing this project's findings 
-    centrally involve describing a data asset, method, classification, 
-    or measurement contribution?
+    centrally involve describing a data asset, method, classification, measurement 
+    contribution, or linkage contribution?
 
   # ============================================================
   # ILLUSTRATION CONVENTIONS
   # ============================================================
   example_policy: >-
     The dictionary is rule-driven: category meaning is carried by the
-    definitions, and assignment — including all boundary-drawing — by the
-    inclusion and exclusion rules and the metadata principles. The examples
-    field is therefore empty for almost all categories. It is reserved for the
-    rare concrete instance that does work the rules cannot — for example,
-    showing a cross-cutting tag operating in combination with a substantive
-    domain. Examples and counterexamples are authored illustrations, true by
-    construction; they are not validated project-level classifications, and
-    they are illustrative rather than operative. An example shows a recognisable
-    case that falls inside the category; a counterexample shows a similar-looking
-    case that falls outside it, and may name an alternative label where that
-    gives useful boundary guidance. Boundary-drawing itself belongs in the
-    inclusion and exclusion rules, not in the examples or counterexamples.
-    Worked classifications of real register projects are not held in this
-    dictionary; they are a separate, validation-track artefact.
+    definitions, assignment by the inclusion and exclusion rules and metadata
+    principles, and difficult boundaries are illustrated by counterexamples.
+    The examples field is therefore empty for most categories. It is reserved
+    for rare concrete instances that do work the rules cannot easily do in their
+    own prose, such as showing how a cross-cutting tag operates alongside a
+    substantive domain. Examples and counterexamples are authored illustrations,
+    true by construction; they are not validated project-level classifications.
+    A counterexample shows a similar-looking case that falls outside the category
+    and may name an alternative label where that gives useful boundary guidance.
+    Boundary-drawing belongs in the inclusion and exclusion rules; examples and
+    counterexamples illustrate those boundaries but do not define them. Worked
+    classifications of real register projects are not held in this dictionary;
+    they are a separate, validation-track artefact.
 
   example_schema:
     examples:
@@ -616,20 +615,22 @@ categories:
   definition: >-
     Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain. 
   inclusion_rules: >-
-    Assign when the title is an opaque acronym, internal project name, or
-    otherwise non-descriptive, and the dataset field does not resolve the
-    substantive domain.
+    Assign only where the title is an opaque acronym, internal project name, or otherwise non-descriptive, and the datasets are 
+    domain-agnostic or absent, so that neither field resolves the substantive domain.
   exclusion_rules: >-
     Do not assign if the dataset field reveals a clear domain. Do not assign alongside a real domain. If any domain can be inferred with reasonable confidence, use that domain.
   examples: []
   counterexamples:
   - text: >-
-      Acronym-bearing or branded entries where the surrounding wording still identifies a justice,
-      health, education, labour, or other substantive object.
+      Acronym-bearing or branded entries where the dataset field lists
+      domain-specific datasets that identify the substantive area, such as
+      court records, hospital admissions, or school census data.
     rationale: >-
-      An opaque project name is not enough for this fallback label when other register text
-      resolves the domain. A service-system purpose can be considered separately, but the domain
-      should follow the substantive object visible in the register text.
+      An opaque title is not enough for this fallback when the dataset field
+      resolves the domain. The fallback applies only where neither the title
+      nor the datasets identify a substantive area; domain-specific datasets
+      resolve it, whereas domain-agnostic datasets (such as the Census or
+      Labour Force Survey, used across many domains) may not.
 
 # === LAYER B: LINKAGE MODE (exactly one) ===
 - label: Single-Dataset
@@ -797,7 +798,8 @@ categories:
   status: active
   include_in_prompt: true
   definition: >-
-    Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions, or life stages to understand trajectories, progression, mobility, or cumulative outcomes.
+    Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions, 
+    or life stages to understand trajectories, progression, mobility, or cumulative outcomes.
   inclusion_rules: >-
     Assign where the project follows individuals, households, firms, or cases through sequences, stages,
     transitions, pathways, or trajectories over an extended period, such as childhood-to-adulthood,
