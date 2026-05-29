@@ -719,6 +719,380 @@ collaborator review. The path to v1.0:
   in the methods log; evidence-driven post-release changes appear in the
   changelog only, per `changelog_note`.
 
+  # Methods log — v1.0-rc1 classifier, classification runs, and noise/model-difference decomposition
+
+**Artefacts:**
+- Classifier code: `analysis/llm_theme_analysis_v3.py`
+- Comparison/decomposition scripts: `analysis/build_v4_comparison.py`,
+  `analysis/build_v4_decomposition.py`
+- Dictionary: `taxonomy_data_dictionary.yaml` (v1.0-rc1, frozen at commit
+  `f006abb`)
+- Classification outputs: `analysis/outputs_v4_8_rc1/`,
+  `analysis/outputs_v4_6_rc1/`, `analysis/outputs_v4_8_rc1_replicate/`
+- Comparison outputs: `analysis/outputs_comparison_v4_rc1/`,
+  `analysis/outputs_comparison_v4_8_intra_rc1/`,
+  `analysis/outputs_comparison_decomposition_rc1/`
+- Repository freeze tag: `v1.0-rc1-frozen` (commit
+  `16a7f41`)
+
+**Status:** v1.0-rc1 baseline produced for collaborator review on 1 June and
+10 June 2026. No artefact in this entry is treated as v1.0; the path to v1.0
+is described in the dictionary's methods-log entry.
+
+This entry records the design and operational choices behind the rc1
+classifier and the three full-register classification runs. It is paired with
+the separate methods-log entry on the dictionary itself and should be read
+alongside it. Decisions are stated as decisions, with rationale; this is not a
+development history.
+
+## What the classifier is
+
+`analysis/llm_theme_analysis_v3.py` is an LLM-as-classifier that assigns each
+project on the UKSA public register of DEA-accredited projects to:
+- one or more Layer A substantive domains,
+- exactly one Layer B linkage mode,
+- one or two Layer C analytical purposes,
+- zero or more cross-cutting tags (the demographic-disparities / equity tag
+  is currently the only tag in the ontology),
+
+and produces a structured prose **rationale** for each classification.
+
+The classifier reads the project title and the dataset field from the
+register entry; it does not use any other register field, and it does not
+have access to external documentation about the project.
+
+## Key design decisions
+
+### 1. The classifier is dictionary-derived
+
+The category ontology — the labels, definitions, inclusion rules, exclusion
+rules, and cross-layer assignment principles — is **not maintained in Python**.
+It lives in `taxonomy_data_dictionary.yaml`. At import time the classifier
+reads the dictionary and derives:
+- the per-layer label sets used for output validation (Pydantic
+  `field_validator` membership checks against derived sets, not static
+  `Literal` types),
+- the per-category guidance blocks in the prompt (the definition, inclusion
+  rules, and exclusion rules of each in-prompt category, rendered as prose),
+- the cross-layer rules section of the prompt (the metadata `*_rule` and
+  `cross_layer_assignment_principles` keys, rendered as prose paragraphs).
+
+Removed and not-in-prompt categories are excluded automatically by status and
+`include_in_prompt` filters.
+
+The motivation is structural: a single source of truth removes the
+divergence-between-prompt-and-code class of bugs (which had been a real and
+documented problem in earlier classifier versions, where Python-side label
+lists and prompt-side category lists could drift). If the dictionary changes,
+the prompt and the validator change together by construction.
+
+A consequence is that the prompt's quality is bounded by the dictionary's
+quality. The discipline that follows: when the prompt reads thinly, the fix is
+in the dictionary, not in the builder. The builder does not "improve on" what
+the dictionary says.
+
+### 2. The prompt is rules-driven, not example-driven
+
+The dictionary contains no worked examples of real register projects (see the
+dictionary methods-log entry for the reasoning). The classifier prompt
+therefore contains no worked examples either. The category guidance section
+provides only definition + inclusion + exclusion for each in-prompt category;
+the rules section provides only the metadata-level assignment principles as
+prose paragraphs. The model is given the rules and the project, and is
+expected to apply the former to the latter.
+
+This is a deliberate architectural choice. Worked examples would have to come
+either from the dictionary (which excludes them on circularity grounds) or
+from a separate authored corpus (which would have its own validation problem).
+The rules-driven prompt avoids both.
+
+### 3. The classifier produces a structured rationale per project
+
+Each classification carries a required, non-empty `rationale` field: a single
+prose sentence structured as
+"Assigned <domains> because <evidence>; <linkage> because <evidence>;
+<purpose> because <evidence>; <tag or no tag> because <evidence>." The model
+is instructed to cite specific evidence from the title and dataset field, not
+to restate definitions.
+
+The rationale field serves two purposes. First, it provides per-case
+reasoning that supports validation by making the classifier's reasoning
+inspectable; an isolated wrong label without reasoning is less diagnostic than
+a wrong label whose reasoning shows which rule the model misapplied. Second,
+the act of producing reasoning appears to constrain the model's own
+classification on boundary cases — for example, the TAGTEST/002
+ethnic-disparities-in-sentencing project moved from Outcome Tracking to
+Descriptive Monitoring when the rationale was added, with reasoning that
+articulated *why* descriptive was the better reading. This is consistent with
+chain-of-thought benefits reported elsewhere for LLM classification tasks.
+
+A required, non-empty rationale rejects empty strings at validation. Missing
+rationales in old cached entries (from prior schema versions) default to a
+`"(rationale not provided)"` placeholder rather than crashing, so old caches
+remain readable.
+
+### 4. The prompt is split into a cached static block and a per-batch dynamic block
+
+The static portion of the prompt — role framing, all four layer guidance
+blocks, all cross-layer rules, the JSON schema, the rationale instruction — is
+identical across every batch in a run. It is marked
+`cache_control: {"type": "ephemeral"}` on the API call. The per-batch list of
+projects to classify is appended as a non-cached suffix.
+
+On Opus 4.8, with a static block of ~10,000 tokens, the first batch in a run
+pays full input price for cache creation; subsequent batches (within the
+ephemeral cache's ~5-minute lifetime) read the static block from cache. In
+practice, cache hit rates above 97% were observed across the full-register
+runs, reducing input cost to roughly 10% of the un-cached price. This made
+running the full register multiple times — once on each of two models, and
+twice on one model — practically and financially trivial (~$19 across three
+full runs).
+
+### 5. Model: Opus 4.8 default with CLI override
+
+The default model is `claude-opus-4-8`. The CLI `--model` argument can target
+any Claude model identifier (used during this project to run a 4.6 comparison
+baseline).
+
+Migration from 4.6 to 4.8 (via the 4.7 breaking-change boundary) required
+removing the `temperature` parameter from all API calls — non-default
+sampling values return a 400 error on 4.7+. `temperature=0` was previously set
+but did not in fact guarantee determinism on 4.6 either; its removal makes
+the non-determinism explicit and documents it.
+
+The choice of 4.8 over 4.6 is empirically motivated, not a default-to-newest
+choice. See "Why 4.8" below.
+
+### 6. The validator is dictionary-driven and tolerant of unknown labels
+
+`ProjectLayers` validation accepts each output field's list of labels and
+checks each value against the dictionary-derived label set for that field.
+Unknown labels are dropped (consistent across the raw-JSON fallback and the
+structured-parse path), rather than raising. Empty Layer A and Layer C lists
+fall back to "Unclear from Register Entry"; empty cross_cutting_tags is
+treated as valid (no tag is the common case, not a fallback). This means a
+model that occasionally produces a label not in the dictionary degrades
+gracefully rather than failing the batch.
+
+## What the rc1 runs measured
+
+Three full-register runs were performed against the rc1 prompt:
+
+| Run | Model | Output directory |
+| --- | --- | --- |
+| Run 1 | Opus 4.8 | `outputs_v4_8_rc1/` |
+| Run 2 | Opus 4.6 | `outputs_v4_6_rc1/` |
+| Run 3 | Opus 4.8 (replicate) | `outputs_v4_8_rc1_replicate/` |
+
+All three runs used the same prompt (`PROMPT_VERSION = "dict-1.0-rc1"`), the
+same register (1,272 projects classified, after register cleaning), and the
+same dictionary (v1.0-rc1).
+
+Two pairwise comparisons were then built using the generalised
+`build_v4_comparison.py` script:
+
+| Comparison | Comparison directory |
+| --- | --- |
+| Inter-model (4.8 run 1 vs 4.6) | `outputs_comparison_v4_rc1/` |
+| Intra-model (4.8 run 1 vs 4.8 run 3) | `outputs_comparison_v4_8_intra_rc1/` |
+
+A third analysis decomposed the two comparisons against each other using
+`build_v4_decomposition.py`:
+
+| Output | Directory |
+| --- | --- |
+| Decomposition report | `outputs_comparison_decomposition_rc1/` |
+
+## Why three runs, not two
+
+A two-model comparison alone cannot decompose "the two models disagreed" into
+"the two models genuinely read this case differently" versus "either model
+would have disagreed with itself on this case." Without a within-model
+baseline, every disagreement counts equally, when in fact some portion of
+disagreement is intrinsic to the model's own stochasticity on identical
+inputs (the Anthropic API is non-deterministic).
+
+Running Opus 4.8 twice against the full register on identical inputs measures
+this stochastic component. The difference between inter-model and intra-model
+disagreement is then an approximate lower bound on the *model-attributable*
+portion of the inter-model disagreement.
+
+Within-vendor versus cross-vendor was a separate question; see "Open methods
+questions" below.
+
+## Headline findings
+
+The decomposition produced the following rates:
+
+| Field | Intra-4.8 agreement | Inter-model agreement | Excess inter-model disagreement |
+| --- | --- | --- | --- |
+| Substantive domains | 91.3% | 79.0% | 12.3 pp |
+| Linkage mode | 93.1% | 86.3% | 6.8 pp |
+| Analytical purpose | 91.7% | 83.5% | 8.3 pp |
+| Cross-cutting tags | 98.3% | 96.1% | 2.1 pp |
+| All four fields | 77.0% | 55.6% | 21.4 pp |
+
+Of the 1,272 projects:
+- 652 disagreed in at least one of the two comparisons (union),
+- 206 disagreed in both intra-4.8 and inter-model (Jaccard 0.316),
+- 87 disagreed intra-4.8 but agreed inter-model,
+- 359 disagreed inter-model but agreed intra-4.8.
+
+The decomposition has three substantive consequences for how the rc1 runs
+should be read:
+
+**(a) Tag discipline is genuinely a model property.** Inter-model
+disagreement on tags exceeds intra-model disagreement by only 2.1 pp, meaning
+almost all of the 4.6-vs-4.8 tag disagreement is real model behaviour rather
+than noise. The asymmetry is one-directional: 4.6 assigned the
+demographic-disparities tag to 44 projects that 4.8 did not, while 4.8 added
+the tag to 5 projects that 4.6 did not. The 4.6 over-tags concentrate on
+projects defined by age, migrant status, socioeconomic background, or other
+characteristics that the dictionary's `tag_lens_rule` exclusion explicitly
+covers as "controls, covariates, sample descriptors, or routine stratifiers".
+4.8 reads this exclusion more literally. This is consistent with reported
+4.7+ behaviour of more literal instruction-following.
+
+**(b) The Layer C Outcome/Descriptive boundary is intrinsically noisy, not
+model-specific.** Inter-model excess on purpose is 8.3 pp; intra-4.8 purpose
+disagreement is itself 8.3 pp (291 projects ÷ 1,272). Roughly half of the
+inter-model purpose disagreement would have arisen between two replicates of
+the same model. The largest specific pattern — Outcome Tracking ↔ Descriptive
+Monitoring — appears in both comparisons. This points at the dictionary's
+distinction between these categories as operationally underspecified, not at
+a model-choice problem.
+
+**(c) The 206 "disagreed in both" projects are the primary dictionary
+refinement candidates.** These are cases that the same model cannot decide
+stably *and* that two models read differently. They concentrate on the
+predictable boundaries (Outcome vs Descriptive; primary-vs-secondary domain
+under multi-label Layer A; the equity tag on inequality-themed projects that
+are not centrally demographic) and are the cases where the dictionary's rules
+are most plausibly leaving the classification underdetermined. Validation
+should oversample this set if it intends to evaluate the dictionary, not just
+the classifier.
+
+## Why 4.8
+
+The decision to use Opus 4.8 as the rc1 default rests on three observations:
+
+1. **The tag-discipline finding above is the primary empirical case.** With
+   intra-4.8 noise on tags at only 1.7 pp, the 4.8-vs-4.6 tag asymmetry is
+   robustly attributable to the models' interpretive difference rather than
+   sampling noise. The dictionary's `tag_lens_rule` is one of the more
+   precisely written rules in the dictionary, and 4.8 applies it more
+   correctly.
+2. **No field-level disadvantage was observed.** On the other three fields,
+   4.8 and 4.6 differ in ways that include but are not dominated by noise;
+   neither model's labels look systematically worse than the other's on
+   inspection of disagreement cases.
+3. **The migration cost was negligible.** Removing one parameter
+   (`temperature`) was the only breaking-change adjustment. Prompt caching,
+   the rationale instruction, and the dictionary-derived prompt structure all
+   worked unchanged across both models.
+
+Run 1 of 4.8 is treated as the rc1 baseline classification (the canonical
+labels for each project). Run 3 (the replicate) is treated as a confidence
+indicator: each project carries a per-case agreement count derived from how
+many of the four fields match across the two 4.8 runs (0-4). Validation is
+expected to stratify by this flag.
+
+The choice of "run 1, not run 3" as the canonical baseline is principled but
+arbitrary at the case level: run 1 was completed first, both runs are
+representative samples from the same underlying distribution, and choosing
+run 3 would produce identical methodological claims with different specific
+labels. This is documented honestly rather than disguised.
+
+## Operational anomalies
+
+Both 4.8 runs encountered a reproducible failure mode at one specific batch
+boundary (batch 76, project IDs including `2024/136`, `2024/014/a`,
+`2024/142`, `2024/131`, `2024/121`, `2024/081`): the model returned
+hallucinated project IDs (e.g. `2024/076b_placeholder`, `2024/076b`) instead
+of the requested IDs. The retry mechanism reproduced the failure across three
+attempts; the targeted cache-fill recovery (classifying the affected projects
+individually) succeeded on the first attempt in both runs.
+
+This is documented because:
+- It is *reproducible*, not random — the same projects failed in both 4.8
+  runs in the same way. This is a systematic 4.8 failure mode on this
+  batch's content, not stochastic instability.
+- The recovery is honest disclosure: the rc1 classifications for these
+  specific projects came from the single-project recovery path, not from
+  batch classification. Their rationale fields and labels are valid; their
+  per-batch classification context is different.
+- It is a methodological note for the methods paper: LLM-as-classifier
+  pipelines should expect and design for such failures at batch boundaries.
+  The retry-then-targeted-fill pattern is the right design choice and worked.
+
+The 4.6 run did not encounter this failure mode on this batch.
+
+## What rc1 does not claim
+
+- rc1 is **not** v1.0. It is a release candidate frozen for collaborator
+  review. The path from rc1 to v1.0 is described in the dictionary's
+  methods-log entry.
+- rc1's classifications are **not** ground truth. They are stochastic
+  outputs of a non-deterministic LLM classifier, with known per-field
+  noise (~7-9% intra-model on purpose and linkage; ~2% on tags) and known
+  model dependence on the tag.
+- The rc1 baseline is **not** "validated" in the sense of having been
+  independently checked against external truth. It is a classifier baseline
+  against which the planned validation study will be run.
+- No accuracy claim is made by this entry. Per-field agreement rates measure
+  *consistency* (between models or between replicates), not correctness.
+
+## Open methods questions for collaborator review
+
+The following are surfaced explicitly so the 1 June and 10 June meetings can
+address them rather than discovering them later:
+
+1. **Confidence flag derivation.** Should the per-case confidence flag be a
+   boolean (all four fields agreed across the two 4.8 runs) or a count
+   (0-4)? Boolean is simpler; count is more diagnostic for stratified
+   validation analysis. Recommendation: count.
+2. **Number of intra-model replicates.** Two replicates measure instability
+   but cannot distinguish "stably right" from "stably wrong" — both register
+   as high confidence. Additional replicates (3-5) would enable mode-based
+   aggregation. Cost is ~$7 per replicate. Whether to do this depends on the
+   rigour bar the PI sets.
+3. **Cross-vendor comparison.** A third independent classifier (e.g. GPT-5)
+   would break the within-vendor correlation in the Opus comparisons. It is
+   most informative for the 359 "inter-model only" disagreements (Bucket A)
+   — cases where the two Anthropic models stably disagree. It does not
+   resolve the 206 "disagreed in both" cases (those are dictionary refinement
+   candidates regardless of how many models classify them). Whether the
+   cross-vendor signal is worth the operational cost (~$10-15 plus an SDK
+   integration) is a PI-level methods decision.
+4. **Validation sample design.** Two complementary samples — random
+   (unbiased discovery instrument) and enriched (powered for pattern
+   characterisation) — were proposed. The enriched sample should combine at
+   least three strata: model-disagreement (intra and inter), structural
+   heuristics derived from the dictionary's boundary points, and (optionally)
+   cross-vendor disagreement. The random sample size should be set to detect
+   unanticipated failure modes at a defined frequency. These design choices
+   are a PI-level decision.
+5. **Primary/secondary domain.** Layer A is multi-label and
+   non-hierarchical in the dictionary. A substantial portion of inter-model
+   domain disagreement (e.g. 20 projects where 4.8 assigns Education + Labour
+   and 4.6 assigns only Education) reflects the unresolved question of
+   whether multi-label assignment should be ranked. This is a dictionary
+   question that the rc1 data forces back onto the agenda.
+
+## Reproducibility
+
+The repository state corresponding to this entry is tagged
+`v1.0-rc1-frozen`. From this tag, the dictionary, the classifier code, the
+three classification CSVs (`layer_classifications.csv` in each
+`outputs_v4_*_rc1*` directory), and the comparison/decomposition artefacts
+are all inspectable. The cache files (`llm_layer_cache.json`) are not
+tracked, on the principle that the canonical artefact is the
+`layer_classifications.csv`, not the cache it was extracted from. A fresh run
+of the classifier against the same dictionary and register would produce
+different specific labels (because the API is non-deterministic), but the
+distributional behaviour — the per-field agreement rates, the pattern of
+disagreements, the tag discipline finding — should reproduce.
+
 ---
 
 ## 8. Open questions and future work
