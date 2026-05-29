@@ -1,0 +1,4 @@
+﻿comparison,Overall agreement,Domains,Linkage,Purpose,Tags
+Intra-4.8 (run 1 vs run 2),76.9654,91.2736,93.0818,91.7453,98.2704
+Inter-model (4.8 vs 4.6),55.5818,79.0094,86.3208,83.4906,96.1478
+"Excess inter-model disagreement, percentage points",21.3836,12.2642,6.761,8.2547,2.1226

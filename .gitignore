@@ -16,6 +16,7 @@ requirements-mac.txt
 data/*
 !data/dea_accredited_projects.csv
 !data/dea_accredited_projects_*.csv
+!data/dea_accredited_projects_*.xlsx
 .claude/
 
 analysis/DEA_projects_analysis.md
@@ -57,3 +58,44 @@ analysis/outputs_sonnet/
 
 # YAML backup files (e.g. for taxonomy dictionary)
 *.backup.yaml
+
+# --- LLM classifier caches (regenerable, large) ---
+**/llm_layer_cache.json
+
+# --- Run logs (transient) ---
+analysis/outputs_v*/run.log
+analysis/outputs_v*_*/run.log
+analysis/outputs_comparison_*/run.log
+
+# --- Derived per-run output (regenerable from layer_classifications.csv) ---
+analysis/outputs_v*/layer_a_by_year.csv
+analysis/outputs_v*/layer_b_by_year.csv
+analysis/outputs_v*/layer_c_by_year.csv
+analysis/outputs_v*/layer_a_totals.csv
+analysis/outputs_v*/layer_b_totals.csv
+analysis/outputs_v*/layer_c_totals.csv
+analysis/outputs_v*/cross_mode_domain.csv
+analysis/outputs_v*/cross_domain_purpose.csv
+analysis/outputs_v*/all_projects_classified.csv
+analysis/outputs_v*/layer_summary.txt
+analysis/outputs_v*/quality/
+
+# --- Backup files from editing ---
+**/*.bak
+**/*.bak_*
+analysis/**/*.instruction*.bak
+
+# --- Python cache ---
+**/__pycache__/
+*.pyc
+
+# --- Virtual envs ---
+venv/
+.venv/
+
+# --- Local or ambiguous development artefacts surfaced during rc1 freeze ---
+analysis/**/*.instruction*_backup
+**/*_backup.yaml
+**/*BACKUP*.yaml
+taxonomy_data_dictionary.current_diff.patch
+analysis/Figures_and_Tables.ipynb

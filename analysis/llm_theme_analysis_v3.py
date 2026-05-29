@@ -51,11 +51,13 @@ import sys
 import tempfile
 import textwrap
 import time
-from typing import Literal
+from functools import lru_cache
+from pathlib import Path
 
 import anthropic
 import pandas as pd
-from pydantic import BaseModel, field_validator
+import yaml
+from pydantic import BaseModel, Field, field_validator
 
 try:
     from analysis.register_cleaning import CANDIDATE_FILES, DATA_DIR, clean_register_dataframe, load_raw_register
@@ -83,217 +85,215 @@ OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs_v3")
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
 CACHE_SCHEMA_VERSION = 4
-PROMPT_VERSION = "v3.3"
+PROMPT_VERSION = "dict-1.0-rc1"
 
-MODEL      = "claude-opus-4-6"
+MODEL      = "claude-opus-4-8"
 BATCH_SIZE = 10          # projects per LLM batch (reduced to improve Opus reliability)
 MAX_TOKENS = 8192        # generous ceiling -- 20 projects x ~180 tokens/entry
 MAX_RETRIES = 3          # retry transient API failures before giving up
+RATIONALE_PLACEHOLDER = "(rationale not provided)"
+LAST_PROMPT_CACHE_USAGE: dict[str, int | None] = {}
+LAST_CLASSIFY_API_PATH = ""
 
 # ---------------------------------------------------------------------------
-# Layer A — Substantive Domains
+# Taxonomy data dictionary
 # ---------------------------------------------------------------------------
 
-DOMAINS = [
-    "Labour Market & Employment",
-    "Education & Skills",
-    "Health & Social Care",
-    "Crime & Justice",
-    "Business & Productivity",
-    "Poverty, Inequality & Living Standards",
-    "Housing & Planning",
-    "Migration & Demographics",
-    "Environment & Agriculture",
-    "Public Finance & Taxation",
-    "Gender, Race & Ethnicity",
-    "COVID-19 & Pandemic",
-    "Data Infrastructure & Methodology",
-    "Unclear from Title",
-]
+TAXONOMY_FILENAME = "taxonomy_data_dictionary.yaml"
+LAYER_A_DOMAIN = "Layer A -- domain"
+LAYER_B_LINKAGE = "Layer B -- linkage"
+LAYER_C_PURPOSE = "Layer C -- purpose"
+LAYER_CROSS_CUTTING_TAG = "Cross-cutting tag"
+PROMPT_LAYERS = (LAYER_A_DOMAIN, LAYER_B_LINKAGE, LAYER_C_PURPOSE, LAYER_CROSS_CUTTING_TAG)
 
-DOMAIN_GUIDANCE = textwrap.dedent("""
-  1.  Labour Market & Employment    — wages, jobs, unemployment, occupational mobility, gig economy
-  2.  Education & Skills            — schools, colleges, universities, qualifications, apprenticeships, childcare
-  3.  Health & Social Care          — NHS, hospitals, GP, mental health, social care, clinical outcomes, mortality
-  4.  Crime & Justice               — policing, courts, prison, reoffending, victimisation, criminal records
-  5.  Business & Productivity       — firms, innovation, trade, R&D, productivity, start-ups
-  6.  Poverty, Inequality & Living Standards — income, benefits, deprivation, food security, debt
-  7.  Housing & Planning            — housing tenure, homelessness, planning, neighbourhoods
-  8.  Migration & Demographics      — migration flows, ethnicity, population, fertility, mortality
-  9.  Environment & Agriculture     — pollution, land use, farming, energy, climate adaptation
-  10. Public Finance & Taxation     — tax compliance, public spending, fiscal policy
-  11. Gender, Race & Ethnicity      — gender gaps, racial disparities as the *primary research question*
-                                      (not when demographic variables appear as controls or covariates)
-  12. COVID-19 & Pandemic           — COVID-19 transmission, vaccination, lockdown impacts
-  13. Data Infrastructure & Methodology — record linkage methods, data quality, survey methodology
-  14. Unclear from Title            — the title is too vague or opaque (e.g. an acronym with no
-                                      descriptive words) to determine any substantive domain
 
-  Overlap rules — when a project could fit multiple domains, apply these precedences:
-  • Mortality data: assign to the domain the *research question* targets.  Mortality in a
-    study of hospital outcomes → Health & Social Care.  Mortality in a population/fertility
-    study → Migration & Demographics.  If the research question is about mortality itself
-    and could go either way, assign both.
-  • Poverty vs Inequality vs Gender/Race: "Poverty, Inequality & Living Standards" covers
-    income and material deprivation.  "Gender, Race & Ethnicity" is for projects where a
-    demographic disparity IS the primary research question (not just a covariate).
-    "Inequality / Disparities Analysis" (Layer C purpose) can pair with *any* domain.
-  • COVID-19 overlap: if a project studies COVID-19's impact on employment, assign both
-    "COVID-19 & Pandemic" and "Labour Market & Employment" (or whichever domain applies).
-    COVID-19 should only be the sole domain if the project is purely epidemiological.
-""").strip()
+def _find_taxonomy_path() -> Path:
+    """Locate the taxonomy dictionary by walking up from this file."""
+    script_path = Path(__file__).resolve()
+    for directory in script_path.parents:
+        candidate = directory / TAXONOMY_FILENAME
+        if candidate.is_file():
+            return candidate
+    expected = script_path.parent.parent / TAXONOMY_FILENAME
+    raise FileNotFoundError(
+        f"Taxonomy data dictionary not found. Expected {TAXONOMY_FILENAME} at {expected}"
+    )
 
-# ---------------------------------------------------------------------------
-# Layer B — Linkage Mode
-# ---------------------------------------------------------------------------
 
-LINKAGE_MODES = [
-    "Single-Dataset",
-    "Within-Domain Linkage",
-    "Cross-Domain Linkage",
-    "Unclear from Title",
-]
+def _load_taxonomy_dictionary() -> dict:
+    path = _find_taxonomy_path()
+    try:
+        with path.open(encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+    except yaml.YAMLError as e:
+        raise RuntimeError(f"Failed to parse taxonomy data dictionary at {path}") from e
+    except OSError as e:
+        raise RuntimeError(f"Failed to read taxonomy data dictionary at {path}") from e
+    if not isinstance(data, dict):
+        raise RuntimeError(f"Taxonomy data dictionary at {path} did not parse to a mapping")
+    if not isinstance(data.get("categories"), list):
+        raise RuntimeError(f"Taxonomy data dictionary at {path} is missing a categories list")
+    if not isinstance(data.get("metadata"), dict):
+        raise RuntimeError(f"Taxonomy data dictionary at {path} is missing a metadata block")
+    return data
 
-LINKAGE_GUIDANCE = textwrap.dedent("""
-  Single-Dataset        — project uses only one administrative dataset; no record linkage implied
-  Within-Domain Linkage — links 2+ datasets from the same provider or same policy domain
-                          (e.g. two ONS surveys, or two health registries)
-  Cross-Domain Linkage  — links datasets from two or more distinct policy domains
-                          (e.g. education data ↔ employment data, or education + employment + health)
-  Unclear from Title    — ONLY when both the title and datasets field are too vague to judge
 
-  Use the datasets listed alongside each title to determine linkage mode.
-  Count by *policy domain*, not just provider name — large agencies like ONS supply
-  datasets across many domains (e.g. labour, health, crime), so two ONS datasets
-  from different policy areas still count as cross-domain:
-  • If exactly 1 dataset from 1 policy domain → Single-Dataset.
-  • If 2+ datasets all within the same policy domain → Within-Domain Linkage.
-  • If datasets span 2 or more distinct policy domains → Cross-Domain Linkage.
-  • Only use "Unclear from Title" when the datasets field is empty or genuinely ambiguous.
-  The title provides additional context for interpreting what the datasets are being used for.
+TAXONOMY_DATA = _load_taxonomy_dictionary()
 
-  Some datasets are pre-linked products (e.g. "ASHE linked to Census 2011"). Treat the
-  linkage implied by the component datasets, not the product name:
-  • "ASHE linked to Census 2011" spans employment and demographics → Cross-Domain Linkage.
-  • "COVID-19 Infection Survey linked to NHS Test and Trace" stays within health → still
-    counts as a single health-domain product (Within-Domain Linkage or Single-Dataset,
-    depending on what other datasets the project uses).
-""").strip()
 
-# ---------------------------------------------------------------------------
-# Layer C — Analytical Purpose
-# ---------------------------------------------------------------------------
+def _flatten_dictionary_text(value: object) -> str:
+    """Collapse YAML-folded whitespace without changing wording."""
+    return " ".join(str(value or "").split()).strip()
 
-PURPOSES = [
-    "Descriptive Monitoring",
-    "Outcome Tracking",
-    "Life-Course / Trajectory Analysis",
-    "Inequality / Disparities Analysis",
-    "Service Interaction / Systems Analysis",
-    "Policy Evaluation / Impact Analysis",
-    "Risk Prediction / Early Identification",
-    "Methodological / Infrastructure Research",
-    "Unclear from Title",
-]
 
-PURPOSE_GUIDANCE = textwrap.dedent("""
-  Descriptive Monitoring            — measuring prevalence, trends, or patterns without causal claim
-  Outcome Tracking                   — linking an exposure/condition to a downstream outcome
-  Life-Course / Trajectory Analysis — tracking individuals over time (childhood → adulthood arcs)
-  Inequality / Disparities Analysis — comparing outcomes across social groups as the primary aim
-  Service Interaction / Systems Analysis — how individuals interact with public services (NHS, DWP, courts)
-  Policy Evaluation / Impact Analysis   — evaluating a specific policy, programme, or intervention
-  Risk Prediction / Early Identification — building risk scores or identifying at-risk subgroups
-  Methodological / Infrastructure Research — developing or validating data linkage methods / datasets
-  Unclear from Title                — insufficient information in the title
+def _in_prompt_category(category: dict, layer: str) -> bool:
+    status = _flatten_dictionary_text(category.get("status")).lower()
+    return (
+        category.get("layer") == layer
+        and category.get("include_in_prompt") is True
+        and not status.startswith("removed")
+    )
 
-  Distinguishing similar purposes:
-  • Descriptive Monitoring vs Outcome Tracking: if the project only measures "how much" or
-    "what trend" without linking an exposure to a downstream outcome → Descriptive Monitoring.
-    If it asks "does exposure X lead to outcome Y" → Outcome Tracking.
-  • Outcome Tracking vs Life-Course / Trajectory Analysis: Outcome Tracking tests a specific
-    exposure → outcome relationship.  Life-Course / Trajectory Analysis tracks individuals
-    across extended time periods or life stages (e.g. childhood → adulthood) without
-    necessarily testing a single causal hypothesis.
-  • Outcome Tracking vs Policy Evaluation: if the "exposure" is a specific named policy,
-    programme, or intervention (e.g. Universal Credit, Pupil Premium) → Policy Evaluation.
-    If it is a naturally occurring condition or event (e.g. job loss, illness) → Outcome Tracking.
-  • Service Interaction / Systems Analysis vs the above: use this when the research focus
-    is on *how people move through or interact with* public services (pathways, referrals,
-    service uptake), not merely on outcomes that happen to involve a service.
 
-  Assign 1 or 2 purposes.  Most projects have exactly 1; assign 2 only when both are clearly
-  central and not redundant (e.g. "Inequality / Disparities Analysis" + "Policy Evaluation").
-""").strip()
+def _categories_for_layer(layer: str) -> list[dict]:
+    return [
+        category
+        for category in TAXONOMY_DATA["categories"]
+        if isinstance(category, dict) and _in_prompt_category(category, layer)
+    ]
+
+
+LAYER_CATEGORIES = {layer: _categories_for_layer(layer) for layer in PROMPT_LAYERS}
+
+
+def _labels_for_layer(layer: str) -> list[str]:
+    labels = []
+    for category in LAYER_CATEGORIES[layer]:
+        label = category.get("label")
+        if not isinstance(label, str) or not label.strip():
+            raise RuntimeError(f"Taxonomy category in {layer} is missing a label")
+        labels.append(label)
+    return labels
+
+
+DOMAINS = _labels_for_layer(LAYER_A_DOMAIN)
+LINKAGE_MODES = _labels_for_layer(LAYER_B_LINKAGE)
+PURPOSES = _labels_for_layer(LAYER_C_PURPOSE)
+CROSS_CUTTING_TAGS = _labels_for_layer(LAYER_CROSS_CUTTING_TAG)
+
+DOMAIN_LABELS = set(DOMAINS)
+LINKAGE_MODE_LABELS = set(LINKAGE_MODES)
+PURPOSE_LABELS = set(PURPOSES)
+CROSS_CUTTING_TAG_LABELS = set(CROSS_CUTTING_TAGS)
+
+
+def _fallback_label_for_layer(layer: str) -> str:
+    matches = [
+        label
+        for label in _labels_for_layer(layer)
+        if label.lower().startswith("unclear ")
+    ]
+    if len(matches) != 1:
+        raise RuntimeError(f"Expected exactly one unclear fallback label for {layer}, found {matches}")
+    return matches[0]
+
+
+UNCLEAR_DOMAIN_LABEL = _fallback_label_for_layer(LAYER_A_DOMAIN)
+UNCLEAR_LINKAGE_LABEL = _fallback_label_for_layer(LAYER_B_LINKAGE)
+UNCLEAR_PURPOSE_LABEL = _fallback_label_for_layer(LAYER_C_PURPOSE)
+
+
+def _render_category_guidance(category: dict) -> str:
+    label = _flatten_dictionary_text(category.get("label"))
+    definition = _flatten_dictionary_text(category.get("definition"))
+    include = _flatten_dictionary_text(category.get("inclusion_rules"))
+    exclude = _flatten_dictionary_text(category.get("exclusion_rules"))
+    return "\n".join([
+        label,
+        f"  Definition: {definition}",
+        f"  Include: {include}",
+        f"  Exclude: {exclude}",
+    ])
+
+
+def _render_layer_guidance(layer: str) -> str:
+    return "\n\n".join(_render_category_guidance(category) for category in LAYER_CATEGORIES[layer])
+
+
+METADATA_RULE_KEYS = (
+    "layer_a_assignment_rule",
+    "layer_b_assignment_rule",
+    "layer_c_assignment_rule",
+    "unclear_fallback_rule",
+)
+
+def _metadata_rule_value(key: str) -> str:
+    metadata = TAXONOMY_DATA["metadata"]
+    if key not in metadata:
+        raise RuntimeError(f"Taxonomy metadata is missing {key}")
+    return _flatten_dictionary_text(metadata[key])
+
+
+def _cross_layer_principle_values() -> list[str]:
+    principles = TAXONOMY_DATA["metadata"].get("cross_layer_assignment_principles")
+    if not isinstance(principles, dict):
+        raise RuntimeError("Taxonomy metadata is missing cross_layer_assignment_principles")
+    return [_flatten_dictionary_text(value) for value in principles.values()]
+
+
+def _render_assignment_rules() -> str:
+    lines = [_metadata_rule_value(key) for key in METADATA_RULE_KEYS]
+    lines.extend(_cross_layer_principle_values())
+    lines.append(_metadata_rule_value("methodology_domain_purpose_distinction"))
+    return "\n\n".join(lines)
+
 
 # ---------------------------------------------------------------------------
 # Pydantic models for structured output
 # ---------------------------------------------------------------------------
 
-DOMAIN_LITERALS  = Literal[
-    "Labour Market & Employment",
-    "Education & Skills",
-    "Health & Social Care",
-    "Crime & Justice",
-    "Business & Productivity",
-    "Poverty, Inequality & Living Standards",
-    "Housing & Planning",
-    "Migration & Demographics",
-    "Environment & Agriculture",
-    "Public Finance & Taxation",
-    "Gender, Race & Ethnicity",
-    "COVID-19 & Pandemic",
-    "Data Infrastructure & Methodology",
-    "Unclear from Title",
-]
-
-LINKAGE_LITERALS = Literal[
-    "Single-Dataset",
-    "Within-Domain Linkage",
-    "Cross-Domain Linkage",
-    "Unclear from Title",
-]
-
-PURPOSE_LITERALS = Literal[
-    "Descriptive Monitoring",
-    "Outcome Tracking",
-    "Life-Course / Trajectory Analysis",
-    "Inequality / Disparities Analysis",
-    "Service Interaction / Systems Analysis",
-    "Policy Evaluation / Impact Analysis",
-    "Risk Prediction / Early Identification",
-    "Methodological / Infrastructure Research",
-    "Unclear from Title",
-]
-
-
 class ProjectLayers(BaseModel):
     project_id: str
-    substantive_domains: list[DOMAIN_LITERALS]
-    linkage_mode: LINKAGE_LITERALS
-    analytical_purpose: list[PURPOSE_LITERALS]
+    substantive_domains: list[str]
+    linkage_mode: str
+    analytical_purpose: list[str]
+    cross_cutting_tags: list[str] = Field(default_factory=list)
+    rationale: str
 
     @field_validator("substantive_domains")
     @classmethod
     def clean_domains(cls, v):
         if not v:
-            return ["Unclear from Title"]
+            return [UNCLEAR_DOMAIN_LABEL]
+        invalid = [d for d in v if d not in DOMAIN_LABELS]
+        if invalid:
+            raise ValueError(f"Unknown Layer A domain label(s): {invalid}")
         # Deduplicate while preserving order
         seen, deduped = set(), []
         for d in v:
             if d not in seen:
                 seen.add(d)
                 deduped.append(d)
-        # Drop "Unclear from Title" if a real domain is present
+        # Drop the unclear fallback if a real domain is present
         if len(deduped) > 1:
-            deduped = [d for d in deduped if d != "Unclear from Title"] or ["Unclear from Title"]
+            deduped = [d for d in deduped if d != UNCLEAR_DOMAIN_LABEL] or [UNCLEAR_DOMAIN_LABEL]
         return deduped
+
+    @field_validator("linkage_mode")
+    @classmethod
+    def validate_linkage_mode(cls, v):
+        if v not in LINKAGE_MODE_LABELS:
+            raise ValueError(f"Unknown Layer B linkage label: {v}")
+        return v
 
     @field_validator("analytical_purpose")
     @classmethod
     def clean_purposes(cls, v):
         if not v:
-            return ["Unclear from Title"]
+            return [UNCLEAR_PURPOSE_LABEL]
+        invalid = [p for p in v if p not in PURPOSE_LABELS]
+        if invalid:
+            raise ValueError(f"Unknown Layer C purpose label(s): {invalid}")
         # Deduplicate while preserving order, cap at 2
         seen, deduped = set(), []
         for p in v:
@@ -301,10 +301,29 @@ class ProjectLayers(BaseModel):
                 seen.add(p)
                 deduped.append(p)
         deduped = deduped[:2]
-        # Drop "Unclear from Title" if a real purpose is present
+        # Drop the unclear fallback if a real purpose is present
         if len(deduped) > 1:
-            deduped = [p for p in deduped if p != "Unclear from Title"] or ["Unclear from Title"]
+            deduped = [p for p in deduped if p != UNCLEAR_PURPOSE_LABEL] or [UNCLEAR_PURPOSE_LABEL]
         return deduped
+
+    @field_validator("cross_cutting_tags")
+    @classmethod
+    def clean_cross_cutting_tags(cls, v):
+        if not v:
+            return []
+        seen, deduped = set(), []
+        for tag in v:
+            if tag in CROSS_CUTTING_TAG_LABELS and tag not in seen:
+                seen.add(tag)
+                deduped.append(tag)
+        return deduped
+
+    @field_validator("rationale")
+    @classmethod
+    def validate_rationale(cls, v):
+        if not isinstance(v, str) or not v.strip():
+            raise ValueError("rationale must be a non-empty string")
+        return v.strip()
 
 
 class BatchLayerResult(BaseModel):
@@ -323,6 +342,7 @@ class BatchClassificationError(RuntimeError):
 _DOMAIN_LOOKUP = {d.lower(): d for d in DOMAINS}
 _LINKAGE_LOOKUP = {m.lower(): m for m in LINKAGE_MODES}
 _PURPOSE_LOOKUP = {p.lower(): p for p in PURPOSES}
+_TAG_LOOKUP = {tag.lower(): tag for tag in CROSS_CUTTING_TAGS}
 
 # Legacy linkage mode remapping (Multi-Domain folded into Cross-Domain)
 _LINKAGE_LOOKUP["multi-domain linkage"] = "Cross-Domain Linkage"
@@ -362,7 +382,7 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
                 if canon:
                     normalised.append(canon)
                 # else: drop unrecognised labels rather than failing
-            entry["substantive_domains"] = normalised if normalised else ["Unclear from Title"]
+            entry["substantive_domains"] = normalised if normalised else [UNCLEAR_DOMAIN_LABEL]
 
         # Normalise linkage mode
         if "linkage_mode" in entry and isinstance(entry["linkage_mode"], str):
@@ -370,7 +390,7 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
             if canon:
                 entry["linkage_mode"] = canon
             else:
-                entry["linkage_mode"] = "Unclear from Title"
+                entry["linkage_mode"] = UNCLEAR_LINKAGE_LABEL
 
         # Normalise purposes
         if "analytical_purpose" in entry and isinstance(entry["analytical_purpose"], list):
@@ -379,7 +399,26 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
                 canon = _normalise_label(p, _PURPOSE_LOOKUP)
                 if canon:
                     normalised.append(canon)
-            entry["analytical_purpose"] = normalised if normalised else ["Unclear from Title"]
+            entry["analytical_purpose"] = normalised if normalised else [UNCLEAR_PURPOSE_LABEL]
+
+        # Normalise cross-cutting tags
+        if "cross_cutting_tags" in entry and isinstance(entry["cross_cutting_tags"], list):
+            normalised = []
+            for tag in entry["cross_cutting_tags"]:
+                canon = _normalise_label(tag, _TAG_LOOKUP)
+                if canon:
+                    normalised.append(canon)
+            entry["cross_cutting_tags"] = normalised
+        else:
+            entry["cross_cutting_tags"] = []
+
+        rationale = entry.get("rationale")
+        if not isinstance(rationale, str) or not rationale.strip():
+            project_id = entry.get("project_id", "<unknown>")
+            print(f"  [warning] Missing rationale for {project_id}; using placeholder")
+            entry["rationale"] = RATIONALE_PLACEHOLDER
+        else:
+            entry["rationale"] = rationale.strip()
 
     return raw_dict
 
@@ -491,162 +530,108 @@ def _summarise_datasets(raw: str, max_chars: int = 600) -> str:
     text = _sanitise_prompt_text(text)
     return text
 
-
-CLASSIFICATION_EXAMPLES = textwrap.dedent("""
-  Example 1 — Single-Dataset (1 dataset, 1 provider):
-    Title: "Analysis of victimisation data from the Crime Survey for England and Wales"
-    Datasets: Office for National Statistics: Crime Survey for England and Wales
-    → domains: ["Crime & Justice"]
-    → linkage_mode: "Single-Dataset"
-    → purpose: ["Descriptive Monitoring"]
-
-  Example 2 — Within-Domain Linkage (2+ datasets, 1 provider, same policy area):
-    Title: "ESCoE: Using Firm-Level Surveys to Understand Industrial Capacity and Productivity"
-    Datasets: Office for National Statistics: Annual Business Survey, Business Structure Database, Monthly Business Survey
-    → domains: ["Business & Productivity"]
-    → linkage_mode: "Within-Domain Linkage"  (3 ONS business surveys, all same domain)
-    → purpose: ["Descriptive Monitoring"]
-
-  Example 3 — Cross-Domain Linkage (2 distinct policy domains):
-    Title: "Impact of Universal Credit on employment outcomes"
-    Datasets: Department for Work and Pensions: Universal Credit Dataset; Office for National Statistics: Annual Population Survey
-    → domains: ["Labour Market & Employment", "Poverty, Inequality & Living Standards"]
-    → linkage_mode: "Cross-Domain Linkage"  (welfare benefits + labour market = 2 policy domains)
-    → purpose: ["Policy Evaluation / Impact Analysis"]
-
-  Example 4 — Cross-Domain Linkage (3+ policy domains):
-    Title: "Pathways from education through employment to health outcomes"
-    Datasets: Department for Education: National Pupil Database; Office for National Statistics: ASHE; NHS Digital: Hospital Episode Statistics
-    → domains: ["Education & Skills", "Labour Market & Employment", "Health & Social Care"]
-    → linkage_mode: "Cross-Domain Linkage"  (education + employment + health = 3 policy domains)
-    → purpose: ["Life-Course / Trajectory Analysis"]
-
-  Example 5 — Opaque title, datasets disambiguate:
-    Title: "AMPHoRA"
-    Datasets: Office for National Statistics: Census 2011, Death Registrations
-    → domains: ["Migration & Demographics"]  (census + mortality = population/demographics)
-    → linkage_mode: "Within-Domain Linkage"  (2 ONS datasets, both demographics)
-    → purpose: ["Unclear from Title"]  (acronym gives no analytical clue)
-
-  Example 6 — Gender/Race domain, non-Inequality purpose:
-    Title: "Shaping and demonstrating the value of the Growing up in England dataset: Roma, Gypsy and Traveller children case study"
-    Datasets: Office for National Statistics: Growing Up in England Wave 1
-    → domains: ["Education & Skills", "Gender, Race & Ethnicity"]
-    → linkage_mode: "Single-Dataset"
-    → purpose: ["Methodological / Infrastructure Research"]  (NOT Inequality — data validation study)
-
-  Example 7 — Two purposes assigned:
-    Title: "Ethnic disparities in the impact of Universal Credit on employment transitions"
-    Datasets: Department for Work and Pensions: Universal Credit Dataset; Office for National Statistics: Annual Population Survey
-    → domains: ["Labour Market & Employment", "Poverty, Inequality & Living Standards", "Gender, Race & Ethnicity"]
-    → linkage_mode: "Cross-Domain Linkage"  (welfare + labour market)
-    → purpose: ["Policy Evaluation / Impact Analysis", "Inequality / Disparities Analysis"]
-      (both are central: evaluating a policy AND comparing outcomes across ethnic groups)
-
-  Example 8 — Ethnicity mentioned, but NOT Gender/Race domain:
-    Title: "Understanding employment outcomes for ethnic minority graduates"
-    Datasets: Department for Education: National Pupil Database; Office for National Statistics: LEO
-    → domains: ["Education & Skills", "Labour Market & Employment"]
-    → linkage_mode: "Cross-Domain Linkage"  (education + employment)
-    → purpose: ["Outcome Tracking"]
-      (ethnicity is used as a stratifying variable, but the *research question* is about
-       education-to-employment outcomes, not about racial disparities per se)
-
-  Example 9 — Dataset evidence overrides a vague title:
-    Title: "STRIDE"
-    Datasets: Ministry of Justice: Data First Crown Court, Data First Magistrates Court, Data First Probation; Office for National Statistics: Annual Population Survey
-    → domains: ["Crime & Justice", "Labour Market & Employment"]  (datasets reveal justice + employment)
-    → linkage_mode: "Cross-Domain Linkage"  (MoJ justice + ONS employment)
-    → purpose: ["Unclear from Title"]  (acronym gives no clue about analytical design)
-
-  Example 10 — Service interaction / systems analysis:
-    Title: "Pathways through health, housing and social care services for people experiencing homelessness"
-    Datasets: NHS Digital: Hospital Episode Statistics; Ministry of Housing, Communities and Local Government: Homelessness Case Level Information Collection; Local authority adult social care records
-    → domains: ["Housing & Planning", "Health & Social Care"]
-    → linkage_mode: "Cross-Domain Linkage"  (housing + health/social care)
-    → purpose: ["Service Interaction / Systems Analysis"]
-
-  Example 11 — Risk prediction / early identification:
-    Title: "Predicting children at risk of persistent school absence using linked education and social care records"
-    Datasets: Department for Education: National Pupil Database; local authority children's social care records
-    → domains: ["Education & Skills", "Health & Social Care"]
-    → linkage_mode: "Cross-Domain Linkage"  (education + social care)
-    → purpose: ["Risk Prediction / Early Identification"]
-""").strip()
-
-
-def _build_prompt(projects: list[dict]) -> str:
+def _build_projects_block(projects: list[dict]) -> str:
     numbered = "\n".join(
         f'{i + 1}. [{p["prompt_id"]}] Title: {p["prompt_title"]} | Datasets: {p["prompt_datasets"]}'
         for i, p in enumerate(projects)
     )
-    return textwrap.dedent(f"""
+    return "\n".join([
+        "══════════════════════════════════════════════════════════════",
+        "PROJECTS TO CLASSIFY",
+        "══════════════════════════════════════════════════════════════",
+        numbered,
+    ])
+
+
+@lru_cache(maxsize=1)
+def _build_static_prompt() -> str:
+    prompt = textwrap.dedent("""
         You are a research classification expert specialising in UK administrative data research.
-        Classify each project below using three independent layers.
+        Classify each project below using three independent layers plus cross-cutting tags.
         Each project shows a title and the datasets it accesses.
 
         ══════════════════════════════════════════════════════════════
         LAYER A — SUBSTANTIVE DOMAIN  (assign 1 or more)
         ══════════════════════════════════════════════════════════════
-        {DOMAIN_GUIDANCE}
+        __DOMAIN_GUIDANCE__
 
         ══════════════════════════════════════════════════════════════
         LAYER B — LINKAGE MODE  (assign exactly 1)
         ══════════════════════════════════════════════════════════════
-        {LINKAGE_GUIDANCE}
+        __LINKAGE_GUIDANCE__
 
         ══════════════════════════════════════════════════════════════
         LAYER C — ANALYTICAL PURPOSE  (assign 1 or 2)
         ══════════════════════════════════════════════════════════════
-        {PURPOSE_GUIDANCE}
+        __PURPOSE_GUIDANCE__
+
+        ══════════════════════════════════════════════════════════════
+        CROSS-CUTTING TAGS  (assign zero or more)
+        ══════════════════════════════════════════════════════════════
+        __TAG_GUIDANCE__
 
         ══════════════════════════════════════════════════════════════
         CLASSIFICATION RULES
         ══════════════════════════════════════════════════════════════
-        • Keep the three layers independent; do not let your domain choice
-          bias your linkage or purpose choice.
-        • Use BOTH the title AND the datasets field for ALL three layers.
-          The datasets field is essential for Layer B (counting policy domains),
-          but it also helps determine the substantive domain (Layer A) and can
-          hint at analytical purpose (Layer C) — especially when the title is
-          terse or opaque.
-        • Only assign "Unclear from Title" when neither the title nor the
-          datasets field provides enough evidence to classify.
-        • Avoid treating domain and purpose as synonymous — a Gender, Race &
-          Ethnicity project is NOT automatically "Inequality / Disparities
-          Analysis"; it could be Descriptive Monitoring, Outcome Tracking, or
-          Policy Evaluation depending on the research design.
-        • When assigning multiple domains, list the most relevant domain first.
-        • Never assign more than 2 purposes.
-
-        ══════════════════════════════════════════════════════════════
-        WORKED EXAMPLES  (for guidance only — do not include in output)
-        ══════════════════════════════════════════════════════════════
-        {CLASSIFICATION_EXAMPLES}
-
-        ══════════════════════════════════════════════════════════════
-        PROJECTS TO CLASSIFY
-        ══════════════════════════════════════════════════════════════
-        {numbered}
+        __ASSIGNMENT_RULES__
 
         Respond with a JSON object matching this schema exactly:
-        {{
+        {
           "classifications": [
-            {{
+            {
               "project_id": "<Record ID shown in brackets, e.g. 2020/001>",
               "substantive_domains": ["<domain>", ...],
               "linkage_mode": "<exactly one linkage mode>",
-              "analytical_purpose": ["<purpose>"]
-            }},
+              "analytical_purpose": ["<purpose>"],
+              "cross_cutting_tags": ["<tag>", ...],
+              "rationale": "Assigned <domains> because <evidence>; <linkage> because <evidence>; <purpose> because <evidence>; <tag or no tag> because <evidence>."
+            },
             ...
           ]
-        }}
+        }
 
         The "project_id" field must repeat the exact Record ID shown in brackets
         for each project (e.g. "2020/001" or "2023/045").
         Use only the labels defined above, spelled exactly as shown.
+        The "cross_cutting_tags" list may be empty ([]); assign tags independently
+        of the other layers.
+        For each project, also provide a "rationale" field: a single concise
+        sentence explaining each layer's assignment in turn. Use the structure:
+        "Assigned <domains> because <evidence>; <linkage> because <evidence>;
+        <purpose> because <evidence>; <tag or no tag> because <evidence>."
+        The rationale should cite specific evidence from the title and dataset
+        field, not restate the category definition.
         Produce one entry per project in the same order as listed.
     """).strip()
+    return (
+        prompt
+        .replace("__DOMAIN_GUIDANCE__", _render_layer_guidance(LAYER_A_DOMAIN))
+        .replace("__LINKAGE_GUIDANCE__", _render_layer_guidance(LAYER_B_LINKAGE))
+        .replace("__PURPOSE_GUIDANCE__", _render_layer_guidance(LAYER_C_PURPOSE))
+        .replace("__TAG_GUIDANCE__", _render_layer_guidance(LAYER_CROSS_CUTTING_TAG))
+        .replace("__ASSIGNMENT_RULES__", _render_assignment_rules())
+    )
+
+
+def _build_prompt(projects: list[dict]) -> str:
+    return f"{_build_static_prompt()}\n\n{_build_projects_block(projects)}"
+
+
+def _build_prompt_messages(projects: list[dict]) -> list[dict]:
+    return [{
+        "role": "user",
+        "content": [
+            {
+                "type": "text",
+                "text": _build_static_prompt(),
+                "cache_control": {"type": "ephemeral"},
+            },
+            {
+                "type": "text",
+                "text": _build_projects_block(projects),
+            },
+        ],
+    }]
 
 
 def _parse_raw_json(raw: str, projects: list[dict]) -> dict:
@@ -670,6 +655,23 @@ def _parse_raw_json(raw: str, projects: list[dict]) -> dict:
                 pass
 
     raise BatchClassificationError("Could not parse JSON from LLM response")
+
+
+def _record_prompt_cache_usage(response) -> dict[str, int | None]:
+    usage = getattr(response, "usage", None)
+    cache_creation = getattr(usage, "cache_creation_input_tokens", None)
+    cache_read = getattr(usage, "cache_read_input_tokens", None)
+    LAST_PROMPT_CACHE_USAGE.clear()
+    LAST_PROMPT_CACHE_USAGE.update({
+        "cache_creation_input_tokens": cache_creation,
+        "cache_read_input_tokens": cache_read,
+    })
+    print(
+        "  [prompt-cache] "
+        f"cache_creation_input_tokens={cache_creation}; "
+        f"cache_read_input_tokens={cache_read}"
+    )
+    return dict(LAST_PROMPT_CACHE_USAGE)
 
 
 def _validate_batch_integrity(
@@ -710,18 +712,21 @@ def _validate_batch_integrity(
 
 def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
     """
-    Returns dict: project_id -> {substantive_domains, linkage_mode, analytical_purpose}
+    Returns dict: project_id -> classification fields.
     """
-    prompt = _build_prompt(projects)
+    global LAST_CLASSIFY_API_PATH
+
+    messages = _build_prompt_messages(projects)
 
     try:
         response = client.messages.parse(
             model=MODEL,
             max_tokens=MAX_TOKENS,
-            temperature=0,
-            messages=[{"role": "user", "content": prompt}],
+            messages=messages,
             output_format=BatchLayerResult,
         )
+        _record_prompt_cache_usage(response)
+        LAST_CLASSIFY_API_PATH = "messages.parse"
         result_obj: BatchLayerResult = response.parsed_output
         classifications = result_obj.classifications
     except Exception as e:
@@ -729,9 +734,10 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
         raw_response = client.messages.create(
             model=MODEL,
             max_tokens=MAX_TOKENS,
-            temperature=0,
-            messages=[{"role": "user", "content": prompt}],
+            messages=messages,
         )
+        _record_prompt_cache_usage(raw_response)
+        LAST_CLASSIFY_API_PATH = "messages.create fallback"
         if not raw_response.content or not hasattr(raw_response.content[0], "text"):
             raise RuntimeError("API returned empty or non-text response content")
         raw_text = raw_response.content[0].text
@@ -767,6 +773,8 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             "substantive_domains": cls.substantive_domains,
             "linkage_mode":        cls.linkage_mode,
             "analytical_purpose":  cls.analytical_purpose,
+            "cross_cutting_tags":  cls.cross_cutting_tags,
+            "rationale":           cls.rationale,
         }
 
     return out
@@ -843,17 +851,23 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
         return default
 
     df["substantive_domains"] = df["Record ID"].apply(
-        lambda record_id: _get(record_id, "substantive_domains", ["Unclear from Title"])
+        lambda record_id: _get(record_id, "substantive_domains", [UNCLEAR_DOMAIN_LABEL])
     )
     df["linkage_mode"] = df["Record ID"].apply(
-        lambda record_id: _get(record_id, "linkage_mode", "Unclear from Title")
+        lambda record_id: _get(record_id, "linkage_mode", UNCLEAR_LINKAGE_LABEL)
     )
     df["analytical_purpose"] = df["Record ID"].apply(
-        lambda record_id: _get(record_id, "analytical_purpose", ["Unclear from Title"])
+        lambda record_id: _get(record_id, "analytical_purpose", [UNCLEAR_PURPOSE_LABEL])
     )
-    # First-listed domain is the most relevant (prompt instructs this ordering)
+    df["cross_cutting_tags"] = df["Record ID"].apply(
+        lambda record_id: _get(record_id, "cross_cutting_tags", [])
+    )
+    df["rationale"] = df["Record ID"].apply(
+        lambda record_id: _get(record_id, "rationale", RATIONALE_PLACEHOLDER)
+    )
+    # Preserve the existing primary-domain summary convention.
     df["primary_domain"] = df["substantive_domains"].apply(
-        lambda x: x[0] if x else "Unclear from Title"
+        lambda x: x[0] if x else UNCLEAR_DOMAIN_LABEL
     )
 
     return df
@@ -1048,7 +1062,6 @@ def generate_narrative(
     response = client.messages.create(
         model=MODEL,
         max_tokens=2000,
-        temperature=0,
         messages=[{"role": "user", "content": prompt}],
     )
     if not response.content or not hasattr(response.content[0], "text"):
@@ -1061,7 +1074,7 @@ def generate_narrative(
 # ---------------------------------------------------------------------------
 
 def _build_inspection_csv(df: pd.DataFrame) -> pd.DataFrame:
-    """Build a spreadsheet-friendly CSV with one boolean column per domain/purpose."""
+    """Build a spreadsheet-friendly CSV with one boolean column per domain/purpose/tag."""
     out = df[["Project ID", "Record ID", "Title", "Datasets Used",
               "Accreditation Date", "Year"]].copy()
 
@@ -1083,6 +1096,16 @@ def _build_inspection_csv(df: pd.DataFrame) -> pd.DataFrame:
             lambda x: 1 if isinstance(x, list) and purpose in x else 0
         )
 
+    # Cross-cutting tags — one boolean column per tag
+    tag_values = df["cross_cutting_tags"] if "cross_cutting_tags" in df else pd.Series([[]] * len(df), index=df.index)
+    for tag in CROSS_CUTTING_TAGS:
+        col = f"tag: {tag}"
+        out[col] = tag_values.apply(
+            lambda x: 1 if isinstance(x, list) and tag in x else 0
+        )
+
+    out["rationale"] = df["rationale"] if "rationale" in df else RATIONALE_PLACEHOLDER
+
     return out
 
 
@@ -1097,6 +1120,13 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
     df_out["analytical_purpose"] = df_out["analytical_purpose"].apply(
         lambda x: "; ".join(x) if isinstance(x, list) else str(x)
     )
+    if "cross_cutting_tags" not in df_out:
+        df_out["cross_cutting_tags"] = [[] for _ in range(len(df_out))]
+    df_out["cross_cutting_tags"] = df_out["cross_cutting_tags"].apply(
+        lambda x: "; ".join(x) if isinstance(x, list) else str(x)
+    )
+    if "rationale" not in df_out:
+        df_out["rationale"] = RATIONALE_PLACEHOLDER
     df_out.to_csv(
         os.path.join(output_dir, "layer_classifications.csv"),
         index=False, encoding="utf-8-sig",
