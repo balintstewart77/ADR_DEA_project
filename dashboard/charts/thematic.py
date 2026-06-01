@@ -91,6 +91,52 @@ def make_linkage_area(
     return _apply_common(fig)
 
 
+def make_linkage_complexity(
+    df_cross_mode_domain: pd.DataFrame,
+    colour_map: dict,
+    height: int = 460,
+) -> go.Figure:
+    """Sorted 100%-stacked horizontal bars of each domain's linkage-mode profile.
+
+    A proportional ("relative complexity") view: each bar is the share of that
+    domain's projects by linkage mode, so domains compare regardless of size.
+    Ordered by cross-domain share. Counts are assignment-weighted (a project is
+    counted once per domain it touches).
+    """
+    if df_cross_mode_domain.empty or "domain" not in df_cross_mode_domain.columns:
+        return _apply_common(go.Figure(), height=height)
+    counts = df_cross_mode_domain.set_index("domain")
+    modes = [m for m in LINKAGE_LABELS if m in counts.columns]
+    counts = counts[modes]
+    row_totals = counts.sum(axis=1)
+    pct = counts.div(row_totals, axis=0).mul(100).fillna(0)
+    cross = "Cross-Domain Linkage"
+    order = (pct[cross] if cross in pct.columns else row_totals).sort_values().index.tolist()
+
+    fig = go.Figure()
+    for mode in modes:
+        fig.add_trace(go.Bar(
+            y=order,
+            x=pct.loc[order, mode],
+            name=mode,
+            orientation="h",
+            marker_color=colour_map.get(mode, "#999"),
+            customdata=counts.loc[order, mode],
+            hovertemplate=(
+                "<b>%{y}</b><br>" + mode + ": %{x:.0f}% (%{customdata} projects)<extra></extra>"
+            ),
+        ))
+    fig.update_layout(
+        barmode="stack",
+        title="Linkage Profile by Domain",
+        xaxis=dict(title="% of the domain's projects", range=[0, 100]),
+        yaxis_title="",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=10)),
+        margin=dict(l=220),
+    )
+    return _apply_common(fig, height=height)
+
+
 def make_thematic_totals_bar(
     df_totals: pd.DataFrame,
     category_col: str,

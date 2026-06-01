@@ -109,6 +109,26 @@ def load_thematic_data(thematic_dir):
             df_thematic_projects, "analytical_purpose", True, PURPOSE_LABELS
         )
 
+        # Cross-domain prevalence two ways, to caption the linkage-profile chart:
+        # project-level (each project once) vs assignment-weighted (each project
+        # once per domain it touches — cross-domain projects span 2+ domains, so
+        # they are over-represented on the assignment-weighted basis).
+        if thematic_project_count and "linkage_mode" in df_thematic_projects.columns:
+            thematic_project_cross_rate = round(
+                (df_thematic_projects["linkage_mode"] == "Cross-Domain Linkage").mean() * 100, 1
+            )
+        else:
+            thematic_project_cross_rate = 0.0
+        if not df_cross_mode_domain.empty and "Cross-Domain Linkage" in df_cross_mode_domain.columns:
+            _mode_cols = [c for c in df_cross_mode_domain.columns if c != "domain"]
+            _grand = float(df_cross_mode_domain[_mode_cols].to_numpy().sum())
+            thematic_assignment_cross_rate = (
+                round(df_cross_mode_domain["Cross-Domain Linkage"].sum() / _grand * 100, 1)
+                if _grand else 0.0
+            )
+        else:
+            thematic_assignment_cross_rate = 0.0
+
         # Apply project-id keying on df_thematic_projects
         if "Project ID" in df_thematic_projects.columns:
             df_thematic_projects[_PROJECT_ID_KEY_COL] = df_thematic_projects["Project ID"].apply(_project_id_key)
@@ -244,6 +264,8 @@ def load_thematic_data(thematic_dir):
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
             "THEMATIC_TAGGED_COUNT": thematic_tagged_count,
+            "THEMATIC_PROJECT_CROSS_RATE": thematic_project_cross_rate,
+            "THEMATIC_ASSIGNMENT_CROSS_RATE": thematic_assignment_cross_rate,
             "_THEMATIC_DOMAIN_OPTIONS": _thematic_domain_options,
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": _thematic_domain_count_options,
             "_THEMATIC_LINKAGE_OPTIONS": _thematic_linkage_options,
@@ -266,6 +288,8 @@ def load_thematic_data(thematic_dir):
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
             "THEMATIC_TAGGED_COUNT": 0,
+            "THEMATIC_PROJECT_CROSS_RATE": 0.0,
+            "THEMATIC_ASSIGNMENT_CROSS_RATE": 0.0,
             "_THEMATIC_DOMAIN_OPTIONS": [],
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": [],
             "_THEMATIC_LINKAGE_OPTIONS": [],
@@ -291,6 +315,8 @@ df_thematic_tag_by_domain = _thematic_data["df_thematic_tag_by_domain"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
 THEMATIC_TAGGED_COUNT = _thematic_data["THEMATIC_TAGGED_COUNT"]
+THEMATIC_PROJECT_CROSS_RATE = _thematic_data["THEMATIC_PROJECT_CROSS_RATE"]
+THEMATIC_ASSIGNMENT_CROSS_RATE = _thematic_data["THEMATIC_ASSIGNMENT_CROSS_RATE"]
 _THEMATIC_DOMAIN_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_OPTIONS"]
 _THEMATIC_DOMAIN_COUNT_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_COUNT_OPTIONS"]
 _THEMATIC_LINKAGE_OPTIONS = _thematic_data["_THEMATIC_LINKAGE_OPTIONS"]

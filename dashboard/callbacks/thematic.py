@@ -14,6 +14,7 @@ from dashboard.data.filtering import _get_enriched_register_display_df, _csv_dat
 from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
     make_thematic_trend, make_linkage_area, make_thematic_totals_bar, make_cross_heatmap,
+    make_linkage_complexity,
 )
 from dashboard.config import DOMAIN_COLOURS, LINKAGE_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 
@@ -33,6 +34,7 @@ def register(app):
         Output("thematic-cross-domain-purpose", "figure"),
         Output("thematic-tag-trend", "figure"),
         Output("thematic-tag-domain", "figure"),
+        Output("thematic-linkage-complexity", "figure"),
         Input("thematic-metric-toggle", "value"),
     )
     def update_thematic_tab(metric_mode):
@@ -93,11 +95,14 @@ def register(app):
             "Tagged Projects by Domain", height=440,
         )
 
+        linkage_complexity = make_linkage_complexity(df_cross_mode_domain, LINKAGE_COLOURS)
+
         return (
             domain_trend, linkage_trend, purpose_trend,
             domain_totals, linkage_totals, purpose_totals,
             cross_mode, cross_purpose,
             tag_trend, tag_domain,
+            linkage_complexity,
         )
 
     @app.callback(
