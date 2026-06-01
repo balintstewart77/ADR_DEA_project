@@ -99,3 +99,6 @@ analysis/**/*.instruction*_backup
 **/*BACKUP*.yaml
 taxonomy_data_dictionary.current_diff.patch
 analysis/Figures_and_Tables.ipynb
+
+# --- Provenance artefacts ---
+analysis/provenance/
