@@ -1,5 +1,6 @@
 """Thematic analysis chart functions."""
 
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -123,22 +124,36 @@ def make_cross_heatmap(
     title: str,
     colorscale: list | str = "Tealgrn",
     height: int = 380,
+    metric: str = "count",
 ) -> go.Figure:
-    """Annotated heatmap from a cross-tabulation pivot table."""
+    """Annotated cross-tab heatmap.
+
+    ``metric`` ("count" | "pct") sets the in-cell value and the colour basis.
+    Percentages are row-wise — each cell as a share of its row (domain) total —
+    and the hover always shows both the absolute count and that row percentage.
+    """
     row_labels = df_cross[row_col].tolist()
     value_cols = [c for c in df_cross.columns if c != row_col]
-    z = df_cross[value_cols].values
+    counts = df_cross[value_cols].to_numpy(dtype=float)
+    row_totals = counts.sum(axis=1, keepdims=True)
+    pct = np.divide(counts * 100, row_totals, out=np.zeros_like(counts), where=row_totals != 0)
+
+    show_pct = metric == "pct"
+    z = pct if show_pct else counts
+    customdata = np.dstack([counts, pct])  # per cell: [count, row %]
+    z_hi = z.max() if z.size else 0
 
     annotations = []
-    for i, row in enumerate(z):
-        for j, val in enumerate(row):
+    for i, label in enumerate(row_labels):
+        for j, col in enumerate(value_cols):
+            text = f"{pct[i][j]:.0f}%" if show_pct else str(int(counts[i][j]))
             annotations.append(dict(
-                x=value_cols[j], y=row_labels[i],
-                text=str(int(val)),
+                x=col, y=label,
+                text=text,
                 showarrow=False,
                 font=dict(
                     size=11,
-                    color="white" if val > z.max() * 0.55 else "#2c3e50",
+                    color="white" if z[i][j] > z_hi * 0.55 else "#2c3e50",
                 ),
             ))
 
@@ -146,9 +161,16 @@ def make_cross_heatmap(
         z=z,
         x=value_cols,
         y=row_labels,
+        customdata=customdata,
         colorscale=colorscale,
         showscale=True,
-        hovertemplate="<b>%{y}</b> × <b>%{x}</b><br>%{z} projects<extra></extra>",
+        colorbar=dict(title="% of domain" if show_pct else "Projects"),
+        hovertemplate=(
+            "<b>%{y}</b> × <b>%{x}</b><br>"
+            "%{customdata[0]:.0f} projects<br>"
+            "%{customdata[1]:.0f}% of %{y}"
+            "<extra></extra>"
+        ),
     ))
     fig.update_layout(
         title=title,

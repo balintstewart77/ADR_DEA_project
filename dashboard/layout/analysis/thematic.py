@@ -220,7 +220,8 @@ def build_thematic_tab():
             html.P(
                 "Substantive domains are multi-label, so each project is counted once per "
                 "domain it is assigned — column totals can therefore exceed the project count. "
-                "All domains are shown.",
+                "All domains are shown. The metric toggle above switches the cells between "
+                "counts and each domain's row-wise percentage; the hover always shows both.",
                 className="section-desc",
             ),
             dbc.Row([
