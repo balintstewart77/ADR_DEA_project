@@ -226,3 +226,69 @@ def make_cross_heatmap(
         margin=dict(l=220, b=165),
     )
     return _apply_common(fig, height=height)
+
+
+def make_domain_cooccurrence(
+    cooc: pd.DataFrame,
+    metric: str = "count",
+    colorscale: list | str = "Greens",
+    height: int | None = None,
+) -> go.Figure:
+    """Domain x domain co-occurrence heatmap.
+
+    ``cooc`` is a square matrix whose diagonal holds each domain's total and whose
+    off-diagonal cells hold the number of projects carrying both domains. The
+    diagonal is masked. ``metric`` ("count" | "pct") switches the off-diagonal
+    cells between the (symmetric) co-occurrence count and the row-wise share
+    P(column | row) = co-occurrences ÷ the row domain's total. The hover shows both.
+    """
+    if cooc.empty:
+        return _apply_common(go.Figure(), height=height or 620)
+    domains = list(cooc.index)
+    if height is None:
+        # tall enough that every domain row labels without Plotly thinning them
+        height = 240 + 44 * len(domains)
+    counts = cooc.to_numpy(dtype=float)
+    totals = np.diag(counts).copy()
+    pct = np.divide(counts * 100, totals[:, None], out=np.zeros_like(counts), where=totals[:, None] != 0)
+
+    mask = np.eye(len(domains), dtype=bool)
+    disp_counts = counts.copy(); disp_counts[mask] = np.nan
+    disp_pct = pct.copy(); disp_pct[mask] = np.nan
+
+    show_pct = metric == "pct"
+    z = disp_pct if show_pct else disp_counts
+    customdata = np.dstack([disp_counts, disp_pct])
+    z_hi = np.nanmax(z) if np.isfinite(z).any() else 0
+
+    annotations = []
+    for i, yd in enumerate(domains):
+        for j, xd in enumerate(domains):
+            val = z[i][j]
+            if i == j or not np.isfinite(val) or val == 0:
+                continue
+            text = f"{disp_pct[i][j]:.0f}%" if show_pct else str(int(disp_counts[i][j]))
+            annotations.append(dict(
+                x=xd, y=yd, text=text, showarrow=False,
+                font=dict(size=10, color="white" if val > z_hi * 0.55 else "#2c3e50"),
+            ))
+
+    fig = go.Figure(go.Heatmap(
+        z=z, x=domains, y=domains, customdata=customdata,
+        colorscale=colorscale, showscale=True, hoverongaps=False,
+        colorbar=dict(title="% of row domain" if show_pct else "Projects"),
+        hovertemplate=(
+            "<b>%{y}</b> + <b>%{x}</b><br>"
+            "%{customdata[0]:.0f} projects carry both<br>"
+            "%{customdata[1]:.0f}% of %{y}"
+            "<extra></extra>"
+        ),
+    ))
+    fig.update_layout(
+        title="Domain Co-occurrence",
+        annotations=annotations,
+        xaxis=dict(side="bottom", tickangle=-35, automargin=True, tickmode="linear", tick0=0, dtick=1),
+        yaxis=dict(autorange="reversed", tickmode="linear", tick0=0, dtick=1),
+        margin=dict(l=240, b=180),
+    )
+    return _apply_common(fig, height=height)

@@ -342,6 +342,25 @@
     margin-bottom: 0.5rem;
 }
 
+/* Taxonomy label/definition tables (Layer Definitions accordion) */
+.taxonomy-defs table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.taxonomy-defs th,
+.taxonomy-defs td {
+    padding: 0.45rem 0;
+    vertical-align: top;
+    border-bottom: 1px solid #eef2f6;
+}
+.taxonomy-defs th:first-child,
+.taxonomy-defs td:first-child {
+    min-width: 13rem;
+    padding-right: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
 /* Page background */
 body {
     background-color: #f8f9fb !important;

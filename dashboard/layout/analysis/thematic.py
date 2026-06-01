@@ -171,6 +171,24 @@ def _analyses_accordion():
             dbc.AccordionItem(
                 [
                     html.P(
+                        "Substantive domains are multi-label, so a project can carry several. "
+                        "This matrix counts how often each pair of domains appears together in "
+                        "the same project — which research areas are studied jointly. The "
+                        "diagonal (a domain with itself) is omitted and the \"Unclear\" fallback "
+                        "is excluded. In count mode the matrix is symmetric (projects carrying "
+                        "both domains); the metric toggle switches it to a row-wise share — of "
+                        "the row domain's projects, the percentage that also touch the column "
+                        "domain — which is directional, so the matrix is no longer symmetric. "
+                        "The hover shows both.",
+                        className="section-desc",
+                    ),
+                    _graph("thematic-domain-cooccurrence"),
+                ],
+                title="Domain Co-occurrence",
+            ),
+            dbc.AccordionItem(
+                [
+                    html.P(
                         f"A cross-cutting tag, orthogonal to the three layers, marks projects whose "
                         f"analysis centres on demographic disparities or equity. It applies to "
                         f"{THEMATIC_TAGGED_COUNT:,} of {THEMATIC_PROJECT_COUNT:,} classified projects. "
@@ -393,7 +411,7 @@ def build_thematic_tab():
                     title="Classification Methodology",
                 ),
                 dbc.AccordionItem(
-                    dcc.Markdown(_thematic_layers_md, style=_MD_STYLE),
+                    dcc.Markdown(_thematic_layers_md, style=_MD_STYLE, className="taxonomy-defs"),
                     title="Layer Definitions",
                 ),
                 dbc.AccordionItem(

@@ -1,6 +1,8 @@
 """Thematic analysis data loading and filter option building."""
 
 import os
+from collections import Counter
+from itertools import combinations
 
 import pandas as pd
 
@@ -78,6 +80,45 @@ def _domain_crosstab(df: pd.DataFrame, other_col: str, other_multi: bool, col_or
     return ct.reset_index()
 
 
+def _domain_cooccurrence(df: pd.DataFrame) -> pd.DataFrame:
+    """Square domain x domain matrix of how often each pair co-occurs in a project.
+
+    The diagonal holds each domain's project total; off-diagonal cells hold the
+    number of projects carrying both domains. Domains are ordered by total
+    (descending). The "Unclear" fallback is excluded — it cannot co-occur with a
+    real domain by construction.
+    """
+    if "substantive_domains" not in df.columns:
+        return pd.DataFrame()
+    project_domains = []
+    for value in df["substantive_domains"]:
+        domains = sorted(
+            d for d in set(_split_semicolon_values(value))
+            if not d.lower().startswith("unclear")
+        )
+        if domains:
+            project_domains.append(domains)
+
+    totals: Counter = Counter()
+    pairs: Counter = Counter()
+    for domains in project_domains:
+        for domain in domains:
+            totals[domain] += 1
+        for a, b in combinations(domains, 2):
+            pairs[(a, b)] += 1
+            pairs[(b, a)] += 1
+    if not totals:
+        return pd.DataFrame()
+
+    order = [domain for domain, _ in totals.most_common()]
+    matrix = pd.DataFrame(0, index=order, columns=order, dtype=int)
+    for domain in order:
+        matrix.loc[domain, domain] = totals[domain]
+    for (a, b), count in pairs.items():
+        matrix.loc[a, b] = count
+    return matrix
+
+
 def load_thematic_data(thematic_dir):
     """Returns (data_dict, available_flag)."""
     try:
@@ -128,6 +169,9 @@ def load_thematic_data(thematic_dir):
             )
         else:
             thematic_assignment_cross_rate = 0.0
+
+        # How often pairs of substantive domains co-occur in the same project.
+        df_domain_cooccurrence = _domain_cooccurrence(df_thematic_projects)
 
         # Apply project-id keying on df_thematic_projects
         if "Project ID" in df_thematic_projects.columns:
@@ -261,6 +305,7 @@ def load_thematic_data(thematic_dir):
             "df_thematic_projects": df_thematic_projects,
             "df_thematic_tag_by_year": df_thematic_tag_by_year,
             "df_thematic_tag_by_domain": df_thematic_tag_by_domain,
+            "df_domain_cooccurrence": df_domain_cooccurrence,
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
             "THEMATIC_TAGGED_COUNT": thematic_tagged_count,
@@ -285,6 +330,7 @@ def load_thematic_data(thematic_dir):
             "df_thematic_projects": pd.DataFrame(),
             "df_thematic_tag_by_year": pd.DataFrame(),
             "df_thematic_tag_by_domain": pd.DataFrame(),
+            "df_domain_cooccurrence": pd.DataFrame(),
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
             "THEMATIC_TAGGED_COUNT": 0,
@@ -312,6 +358,7 @@ df_cross_domain_purpose = _thematic_data["df_cross_domain_purpose"]
 df_thematic_projects = _thematic_data["df_thematic_projects"]
 df_thematic_tag_by_year = _thematic_data["df_thematic_tag_by_year"]
 df_thematic_tag_by_domain = _thematic_data["df_thematic_tag_by_domain"]
+df_domain_cooccurrence = _thematic_data["df_domain_cooccurrence"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
 THEMATIC_TAGGED_COUNT = _thematic_data["THEMATIC_TAGGED_COUNT"]

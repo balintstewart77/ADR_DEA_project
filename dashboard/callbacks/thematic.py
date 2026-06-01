@@ -8,13 +8,14 @@ from dashboard.data.thematic import (
     df_thematic_a_totals, df_thematic_b_totals, df_thematic_c_totals,
     df_cross_mode_domain, df_cross_domain_purpose,
     df_thematic_tag_by_year, df_thematic_tag_by_domain,
+    df_domain_cooccurrence,
 )
 from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
 from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
     make_thematic_trend, make_linkage_area, make_thematic_totals_bar, make_cross_heatmap,
-    make_linkage_complexity,
+    make_linkage_complexity, make_domain_cooccurrence,
 )
 from dashboard.config import DOMAIN_COLOURS, LINKAGE_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 
@@ -35,6 +36,7 @@ def register(app):
         Output("thematic-tag-trend", "figure"),
         Output("thematic-tag-domain", "figure"),
         Output("thematic-linkage-complexity", "figure"),
+        Output("thematic-domain-cooccurrence", "figure"),
         Input("thematic-metric-toggle", "value"),
     )
     def update_thematic_tab(metric_mode):
@@ -96,13 +98,14 @@ def register(app):
         )
 
         linkage_complexity = make_linkage_complexity(df_cross_mode_domain, LINKAGE_COLOURS)
+        domain_cooccurrence = make_domain_cooccurrence(df_domain_cooccurrence, metric=metric_mode)
 
         return (
             domain_trend, linkage_trend, purpose_trend,
             domain_totals, linkage_totals, purpose_totals,
             cross_mode, cross_purpose,
             tag_trend, tag_domain,
-            linkage_complexity,
+            linkage_complexity, domain_cooccurrence,
         )
 
     @app.callback(
