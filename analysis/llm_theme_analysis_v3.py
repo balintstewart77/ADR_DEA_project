@@ -933,8 +933,9 @@ def analyse_layers(df: pd.DataFrame) -> dict:
     # ---- Cross-tabulations (multi-label: one count per assigned domain, all
     # domains shown — Layer A is non-hierarchical, so there is no "primary"
     # domain to key on) ----
+    # reset_index after explode: duplicate index labels make pd.crosstab raise on newer pandas
     df_dom = df.explode("substantive_domains").rename(columns={"substantive_domains": "domain"})
-    df_dom = df_dom[df_dom["domain"].notna()]
+    df_dom = df_dom[df_dom["domain"].notna()].reset_index(drop=True)
 
     # Domain × linkage mode
     cross_mode_domain = pd.crosstab(df_dom["domain"], df_dom["linkage_mode"])
@@ -942,7 +943,7 @@ def analyse_layers(df: pd.DataFrame) -> dict:
     # Domain × analytical purpose (both multi-label, exploded)
     df_dp = df_dom.explode("analytical_purpose").rename(
         columns={"analytical_purpose": "purpose"}
-    )
+    ).reset_index(drop=True)
     cross_domain_purpose = pd.crosstab(df_dp["domain"], df_dp["purpose"])
 
     return {

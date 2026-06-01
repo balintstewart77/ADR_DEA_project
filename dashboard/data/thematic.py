@@ -68,7 +68,7 @@ def _domain_crosstab(df: pd.DataFrame, other_col: str, other_multi: bool, col_or
         & (work["domain"].astype(str).str.strip() != "")
         & work[other_col].notna()
         & (work[other_col].astype(str).str.strip() != "")
-    ]
+    ].reset_index(drop=True)  # explode leaves duplicate index labels; crosstab rejects them
     if work.empty:
         return pd.DataFrame(columns=["domain"])
     ct = pd.crosstab(work["domain"], work[other_col])
