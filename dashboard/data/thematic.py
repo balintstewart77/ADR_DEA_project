@@ -4,7 +4,13 @@ import os
 
 import pandas as pd
 
-from dashboard.config import THEMATIC_DIR, SUBSTANTIVE_DOMAIN_COUNT_COL, _PROJECT_ID_KEY_COL
+from dashboard.config import (
+    CLASSIFICATION_DIR,
+    SUBSTANTIVE_DOMAIN_COUNT_COL,
+    CROSS_CUTTING_TAGS_COL,
+    TAG_LABELS,
+    _PROJECT_ID_KEY_COL,
+)
 from dashboard.data.keys import _project_id_key
 
 
@@ -25,6 +31,17 @@ def _count_substantive_domains(value):
 
 def _domain_count_label(value: int) -> str:
     return f"{value} {'domain' if value == 1 else 'domains'}"
+
+
+def _has_any_tag(value) -> bool:
+    return any(tag in _split_semicolon_values(value) for tag in TAG_LABELS)
+
+
+def _tag_series(df: pd.DataFrame) -> pd.Series:
+    """Cross-cutting-tag column as strings, tolerant of the column being absent."""
+    if CROSS_CUTTING_TAGS_COL in df.columns:
+        return df[CROSS_CUTTING_TAGS_COL]
+    return pd.Series("", index=df.index, dtype=object)
 
 
 def load_thematic_data(thematic_dir):
@@ -116,6 +133,60 @@ def load_thematic_data(thematic_dir):
             ]
         )
 
+        # Cross-cutting tag (e.g. demographic-disparities / equity) — empty for
+        # most projects, so it is surfaced as its own filter and charts rather
+        # than as a layer.
+        _tag_series_values = _tag_series(df_thematic_projects)
+        _tag_project_counts = {}
+        for tags in _tag_series_values.dropna():
+            for tag in set(_split_semicolon_values(tags)):
+                _tag_project_counts[tag] = _tag_project_counts.get(tag, 0) + 1
+        _all_tags = [t for t in TAG_LABELS if t in _tag_project_counts] or sorted(_tag_project_counts)
+        _thematic_tag_options = (
+            [{"label": "All projects", "value": "ALL"}]
+            + [
+                {"label": _filter_label_with_count(t, _tag_project_counts.get(t, 0)), "value": t}
+                for t in _all_tags
+            ]
+        )
+
+        _tagged_mask = _tag_series_values.apply(_has_any_tag)
+        thematic_tagged_count = int(_tagged_mask.sum())
+
+        # Tag prevalence by year (one line per tag; explicit zeros so dips show).
+        if "Year" in df_thematic_projects.columns:
+            _years = sorted(int(y) for y in df_thematic_projects["Year"].dropna().unique())
+            _total_by_year = df_thematic_projects.groupby("Year").size()
+            _tag_year_rows = []
+            for tag in TAG_LABELS:
+                _tag_mask = _tag_series_values.apply(
+                    lambda v, t=tag: t in _split_semicolon_values(v)
+                )
+                _cnt_by_year = df_thematic_projects[_tag_mask].groupby("Year").size()
+                for y in _years:
+                    total = int(_total_by_year.get(y, 0))
+                    count = int(_cnt_by_year.get(y, 0))
+                    _tag_year_rows.append({
+                        "Year": y,
+                        "tag": tag,
+                        "count": count,
+                        "total": total,
+                        "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+                    })
+            df_thematic_tag_by_year = pd.DataFrame(_tag_year_rows)
+        else:
+            df_thematic_tag_by_year = pd.DataFrame()
+
+        # Which domains the tagged projects fall in (where the equity lens applies).
+        _tag_domain_counts = {}
+        for domains in df_thematic_projects.loc[_tagged_mask, "substantive_domains"].dropna():
+            for domain in _split_semicolon_values(domains):
+                _tag_domain_counts[domain] = _tag_domain_counts.get(domain, 0) + 1
+        df_thematic_tag_by_domain = pd.DataFrame(
+            sorted(_tag_domain_counts.items(), key=lambda kv: kv[1], reverse=True),
+            columns=["domain", "count"],
+        )
+
         return {
             "df_thematic_a": df_thematic_a,
             "df_thematic_b": df_thematic_b,
@@ -126,12 +197,16 @@ def load_thematic_data(thematic_dir):
             "df_cross_mode_domain": df_cross_mode_domain,
             "df_cross_domain_purpose": df_cross_domain_purpose,
             "df_thematic_projects": df_thematic_projects,
+            "df_thematic_tag_by_year": df_thematic_tag_by_year,
+            "df_thematic_tag_by_domain": df_thematic_tag_by_domain,
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
+            "THEMATIC_TAGGED_COUNT": thematic_tagged_count,
             "_THEMATIC_DOMAIN_OPTIONS": _thematic_domain_options,
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": _thematic_domain_count_options,
             "_THEMATIC_LINKAGE_OPTIONS": _thematic_linkage_options,
             "_THEMATIC_PURPOSE_OPTIONS": _thematic_purpose_options,
+            "_THEMATIC_TAG_OPTIONS": _thematic_tag_options,
         }, True
     except (FileNotFoundError, KeyError):
         return {
@@ -144,16 +219,20 @@ def load_thematic_data(thematic_dir):
             "df_cross_mode_domain": pd.DataFrame(),
             "df_cross_domain_purpose": pd.DataFrame(),
             "df_thematic_projects": pd.DataFrame(),
+            "df_thematic_tag_by_year": pd.DataFrame(),
+            "df_thematic_tag_by_domain": pd.DataFrame(),
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
+            "THEMATIC_TAGGED_COUNT": 0,
             "_THEMATIC_DOMAIN_OPTIONS": [],
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": [],
             "_THEMATIC_LINKAGE_OPTIONS": [],
             "_THEMATIC_PURPOSE_OPTIONS": [],
+            "_THEMATIC_TAG_OPTIONS": [],
         }, False
 
 
-_thematic_data, THEMATIC_DATA_AVAILABLE = load_thematic_data(THEMATIC_DIR)
+_thematic_data, THEMATIC_DATA_AVAILABLE = load_thematic_data(CLASSIFICATION_DIR)
 
 # Unpack for convenient module-level access
 df_thematic_a = _thematic_data["df_thematic_a"]
@@ -165,9 +244,13 @@ df_thematic_c_totals = _thematic_data["df_thematic_c_totals"]
 df_cross_mode_domain = _thematic_data["df_cross_mode_domain"]
 df_cross_domain_purpose = _thematic_data["df_cross_domain_purpose"]
 df_thematic_projects = _thematic_data["df_thematic_projects"]
+df_thematic_tag_by_year = _thematic_data["df_thematic_tag_by_year"]
+df_thematic_tag_by_domain = _thematic_data["df_thematic_tag_by_domain"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
+THEMATIC_TAGGED_COUNT = _thematic_data["THEMATIC_TAGGED_COUNT"]
 _THEMATIC_DOMAIN_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_OPTIONS"]
 _THEMATIC_DOMAIN_COUNT_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_COUNT_OPTIONS"]
 _THEMATIC_LINKAGE_OPTIONS = _thematic_data["_THEMATIC_LINKAGE_OPTIONS"]
 _THEMATIC_PURPOSE_OPTIONS = _thematic_data["_THEMATIC_PURPOSE_OPTIONS"]
+_THEMATIC_TAG_OPTIONS = _thematic_data["_THEMATIC_TAG_OPTIONS"]

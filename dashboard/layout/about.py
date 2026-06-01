@@ -157,19 +157,21 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 LLM-generated and have not yet been systematically validated against expert
 review.
 
-A separate analysis script (`llm_theme_analysis_v3.py`) classifies project
-titles using a three-layer framework:
+A separate analysis script (`llm_theme_analysis_v3.py`) classifies each project
+from its title and datasets using a three-layer framework plus a cross-cutting tag:
 
-- **Layer A - Substantive Domain** (1 or more from 14 themes, e.g. "Education &
+- **Layer A - Substantive Domain** (1 or more from 13 domains, e.g. "Education &
   Skills", "Health & Social Care", "Crime & Justice")
 - **Layer B - Linkage Mode** (exactly 1: Single-Dataset, Within-Domain,
   or Cross-Domain Linkage)
 - **Layer C - Analytical Purpose** (1 or 2, e.g. "Policy Evaluation",
   "Descriptive Monitoring", "Life-Course Analysis")
+- **Cross-cutting tag** - flags projects centred on demographic disparities or equity
 
-Classification is performed by Claude (claude-opus-4-6) using structured output
-via the Anthropic API. Results are cached locally to avoid re-classification.
-A narrative summary is auto-generated from the aggregate statistics.
+Classification is performed by Claude (claude-opus-4-8) using structured output
+via the Anthropic API. Labels follow the project taxonomy data dictionary, and
+results are cached locally to avoid re-classification. A narrative summary is
+auto-generated from the aggregate statistics.
 
 **Note:** Classification is based on both project titles and datasets used.
 These fields may not fully convey the research methodology or the full scope of data linkage.

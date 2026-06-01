@@ -6,86 +6,77 @@ import dash_bootstrap_components as dbc
 from dashboard.charts.template import CHART_CONFIG
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
+from dashboard import taxonomy
 from dashboard.config import REGISTER_SOURCE_ICON, DERIVED_FIELD_ICON
 from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS, _ALL_INSTITUTION_OPTIONS, _ALL_TRE_OPTIONS,
 )
 from dashboard.data.thematic import (
-    THEMATIC_DATA_AVAILABLE, THEMATIC_NARRATIVE, THEMATIC_PROJECT_COUNT,
+    THEMATIC_DATA_AVAILABLE, THEMATIC_NARRATIVE, THEMATIC_PROJECT_COUNT, THEMATIC_TAGGED_COUNT,
     _THEMATIC_DOMAIN_OPTIONS, _THEMATIC_DOMAIN_COUNT_OPTIONS,
-    _THEMATIC_LINKAGE_OPTIONS, _THEMATIC_PURPOSE_OPTIONS,
+    _THEMATIC_LINKAGE_OPTIONS, _THEMATIC_PURPOSE_OPTIONS, _THEMATIC_TAG_OPTIONS,
 )
 
 
-_thematic_methodology_md = """
-**Model:** Claude Opus 4.6 (`claude-opus-4-6`) via the Anthropic API with structured
-JSON output and `temperature=0` for deterministic classification.
+def _md_table(layer: str) -> str:
+    """Render a label/definition markdown table straight from the taxonomy dictionary."""
+    lines = ["| Label | Definition |", "|---|---|"]
+    for label, definition in taxonomy.category_rows(layer):
+        safe = definition.replace("|", "\\|")
+        lines.append(f"| {label} | {safe} |")
+    return "\n".join(lines)
 
-**Input:** Each project's title and its listed datasets are provided to the model
-together. Both fields inform all three classification layers — titles provide the
-research question while datasets reveal the data domains and linkage scope.
 
-**Batch processing:** Projects are classified in batches of 10-20, with automatic
-retry logic for transient API failures. Results are cached locally so that
-re-runs only classify new or changed projects.
+_thematic_methodology_md = f"""
+**Model:** Claude Opus 4.8 (`claude-opus-4-8`) via the Anthropic API, with
+structured JSON output and `temperature=0`.
 
-**Validation:** A controlled experiment compared Opus 4.6 and Sonnet 4.6 on a
-150-project stratified sample. Opus was selected as the preferred model after
-manual review of disagreements.
+**Taxonomy:** Labels follow the project taxonomy data dictionary
+(`{taxonomy.DICTIONARY_VERSION}`, ontology {taxonomy.ONTOLOGY_VERSION}). The
+dashboard reads its label set directly from that dictionary, so the displayed
+categories cannot drift from the ones the classifier used.
+
+**Input:** Each project's title and its listed datasets are sent together — the
+title gives the research question, the datasets reveal the domains and linkage scope.
+
+**Batch processing:** Projects are classified in batches of 10 with retry logic
+for transient API failures, and results are cached so that re-runs only classify
+new or changed projects.
+
+**Reliability:** Classification is not fully deterministic even at `temperature=0`
+(batching and floating-point effects). Stability was measured by re-running a
+stratified sample; the cross-domain linkage judgement is the least stable and is
+oversampled in validation.
 """
 
-_thematic_layers_md = """
+_thematic_layers_md = f"""
 #### Layer A — Substantive Domain (1 or more per project)
 
-Projects are assigned to one or more of 14 thematic domains based on the
-research question and datasets used:
+What the project is about. Assigned from the datasets and research question:
 
-| Domain | Description |
-|--------|-------------|
-| Labour Market & Employment | Wages, jobs, skills demand, unemployment, gig economy |
-| Business & Productivity | Firm performance, innovation, trade, enterprise zones |
-| Education & Skills | Schools, universities, qualifications, pupil outcomes |
-| Health & Social Care | NHS, mortality, mental health, social care interactions |
-| Poverty, Inequality & Living Standards | Income distribution, deprivation, benefits, cost of living |
-| Gender, Race & Ethnicity | Disparities by sex, ethnicity, or gender identity |
-| Migration & Demographics | Population flows, fertility, ageing, migrant outcomes |
-| Crime & Justice | Offending, victimisation, courts, policing |
-| COVID-19 & Pandemic | Pandemic-specific research and data |
-| Housing & Planning | Housing markets, homelessness, planning, energy in homes |
-| Environment & Agriculture | Land use, farming, pollution, climate, food |
-| Public Finance & Taxation | Tax policy, revenue, government expenditure |
-| Data Infrastructure & Methodology | Linkage methods, data quality, statistical methodology |
-| Unclear from Title | Insufficient information to classify |
+{_md_table(taxonomy.LAYER_A_DOMAIN)}
 
 &nbsp;
 
 #### Layer B — Linkage Mode (exactly 1 per project)
 
-Each project is assigned to one linkage mode based on the number of policy
-domains its datasets span:
+How the data are linked, judged by the number of policy domains the datasets span:
 
-| Mode | Description |
-|------|-------------|
-| Single-Dataset | Uses only one dataset |
-| Within-Domain Linkage | Links multiple datasets from the same policy domain |
-| Cross-Domain Linkage | Links datasets across two or more distinct policy domains |
+{_md_table(taxonomy.LAYER_B_LINKAGE)}
 
 &nbsp;
 
 #### Layer C — Analytical Purpose (1 or 2 per project)
 
-Projects are classified by their primary research purpose:
+What analytical purpose the project serves:
 
-| Purpose | Description |
-|---------|-------------|
-| Descriptive Monitoring | Measuring prevalence, trends, or patterns |
-| Policy Evaluation / Impact Analysis | Evaluating a specific policy, programme, or intervention |
-| Outcome Tracking | Linking an exposure or condition to a downstream outcome |
-| Inequality / Disparities Analysis | Comparing outcomes across social groups |
-| Life-Course / Trajectory Analysis | Tracking individuals over extended time periods |
-| Methodological / Infrastructure Research | Developing or validating data linkage methods |
-| Risk Prediction / Early Identification | Building risk scores or identifying at-risk subgroups |
-| Service Interaction / Systems Analysis | How individuals move through public services |
+{_md_table(taxonomy.LAYER_C_PURPOSE)}
+
+&nbsp;
+
+#### Cross-Cutting Tag (zero or more, orthogonal to the three layers)
+
+{_md_table(taxonomy.LAYER_CROSS_CUTTING_TAG)}
 """
 
 
@@ -103,9 +94,9 @@ def build_thematic_tab():
             # Summary stats
             dbc.Row([
                 stat_card(f"{THEMATIC_PROJECT_COUNT:,}", "Projects Classified", "#2a9d8f"),
-                stat_card("14", "Substantive Domains", "#264653"),
+                stat_card(f"{len(taxonomy.DOMAIN_LABELS)}", "Substantive Domains", "#264653"),
                 stat_card(f"{len(_THEMATIC_LINKAGE_OPTIONS) - 1:,}", "Linkage Modes", "#457b9d"),
-                stat_card("9", "Analytical Purposes", "#e76f51"),
+                stat_card(f"{len(taxonomy.PURPOSE_LABELS)}", "Analytical Purposes", "#e76f51"),
             ], className="mb-3 g-3"),
 
             html.P(
@@ -243,6 +234,31 @@ def build_thematic_tab():
                 ), md=6),
             ], className="g-3 mb-4"),
 
+            # Section 7b: Cross-cutting demographic / equity tag
+            html.H5(
+                "Demographic-Disparities / Equity Lens",
+                className="mt-4 mb-2",
+                style={"color": "#2c3e50", "fontWeight": "600"},
+            ),
+            html.P(
+                f"A cross-cutting tag, orthogonal to the three layers, marks projects whose "
+                f"analysis centres on demographic disparities or equity. It applies to "
+                f"{THEMATIC_TAGGED_COUNT:,} of {THEMATIC_PROJECT_COUNT:,} classified projects. "
+                "The trend follows the metric toggle above; the bar shows which domains the "
+                "tagged projects fall in.",
+                className="section-desc",
+            ),
+            dbc.Row([
+                dbc.Col(html.Div(
+                    dcc.Graph(id="thematic-tag-trend", config=CHART_CONFIG),
+                    className="chart-wrapper",
+                ), md=6),
+                dbc.Col(html.Div(
+                    dcc.Graph(id="thematic-tag-domain", config=CHART_CONFIG),
+                    className="chart-wrapper",
+                ), md=6),
+            ], className="g-3 mb-4"),
+
             # Section 8: Enriched Register
             html.H5(
                 "Enriched Register",
@@ -353,6 +369,16 @@ def build_thematic_tab():
                     ),
                 ], md=2),
                 dbc.Col([
+                    html.Label("Demographic / equity tag", className="filter-label"),
+                    dcc.Dropdown(
+                        id="enriched-tag-filter",
+                        options=_THEMATIC_TAG_OPTIONS,
+                        value="ALL",
+                        clearable=False,
+                        searchable=False,
+                    ),
+                ], md=3),
+                dbc.Col([
                     html.Label("Per page", className="filter-label"),
                     dcc.Dropdown(
                         id="enriched-page-size",
@@ -398,6 +424,8 @@ def build_thematic_tab():
                         {"name": f"{DERIVED_FIELD_ICON} Layer A domain count", "id": "substantive_domain_count"},
                         {"name": f"{DERIVED_FIELD_ICON} Linkage mode", "id": "linkage_mode"},
                         {"name": f"{DERIVED_FIELD_ICON} Purpose", "id": "analytical_purpose"},
+                        {"name": f"{DERIVED_FIELD_ICON} Demographic / equity tag", "id": "cross_cutting_tags"},
+                        {"name": f"{DERIVED_FIELD_ICON} Rationale", "id": "rationale"},
                     ],
                     page_size=20,
                     sort_action="native",

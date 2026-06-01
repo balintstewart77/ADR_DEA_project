@@ -1,0 +1,27 @@
+# Analytical Summary: DEA-Accredited Research Projects (1,272 Projects)
+
+## 1. Dominant Substantive Domains
+
+The research landscape is concentrated in employment and economic domains. Labour Market & Employment is the largest domain at 442 projects, followed by Business & Productivity at 368, Education & Skills at 250, and Health & Social Care at 233. These four domains account for the substantial majority of the 1,272 projects. A second tier comprises Poverty, Wealth & Living Standards (97), Migration & Demographics (86), Environment & Agriculture (84), COVID-19 & Pandemic (78), and Crime & Justice (78). The smallest domains are Data Infrastructure & Methodology (44), Housing & Planning (41), Public Finance & Taxation (32), and Unclear from Register Entry (3).
+
+Over time, Education & Skills shows the most pronounced growth, rising from 4.5% of projects in 2019 to 30.5% in 2024 and 31.0% in 2025 (with 25.5% recorded in 2026). Health & Social Care fluctuates between 13.3% (2020) and 23.6% (2025). COVID-19 & Pandemic activity peaks at 19.4% in 2021, then declines to 1.9% in 2023 and 0.7% in 2025. Business & Productivity declines from a 2020 peak of 45.0% to 20.8% (2024) and 20.3% (2025). Labour Market & Employment remains consistently high, ranging from 27.3% (2019) to a peak of 39.5% (2023) and 39.0% (2024).
+
+## 2. Data Linkage Complexity
+
+Across all projects, Single-Dataset work is the most common linkage mode at 478 projects, followed by Cross-Domain Linkage (413) and Within-Domain Linkage (380), with one entry unclear. The year-by-year figures show no single uniform trend toward cross-domain work. Cross-Domain Linkage rises from 18.2% in 2019 to a peak of 41.5% in 2024, before declining to 37.3% in 2025 and 29.4% in 2026. Within-Domain Linkage moves in the opposite direction over the later years, falling from 38.6% (2022) to 23.3% (2024) and 20.3% (2025), before returning to 35.3% in 2026. Single-Dataset projects fall from 50.0% in 2019 to a low of 34.3% in 2023, then rise to 42.4% in 2025.
+
+## 3. Analytical Purposes
+
+Outcome Tracking is the leading analytical purpose at 461 projects, followed closely by Descriptive Monitoring at 411 and Policy Evaluation / Impact Analysis at 241. The remaining purposes are substantially smaller: Life-Course / Trajectory Analysis (90), Methodological / Infrastructure Research (66), Service Interaction / Systems Analysis (24), Risk Prediction / Early Identification (20), and Unclear (3).
+
+By year, Descriptive Monitoring declines from 40.9% (2019) to 21.6% (2026). Outcome Tracking remains the most stable major purpose, ranging from 30.6% (2021) to 45.1% (2026). Life-Course / Trajectory Analysis grows from 0.0% (2019) to 8.5% (2024) and 8.1% (2025). Policy Evaluation / Impact Analysis stays within a relatively narrow band, from 15.7% (2026) to 21.9% (2021). Risk Prediction / Early Identification remains marginal throughout, never exceeding 3.3% (2020) and falling to 0.5% in 2023.
+
+## 4. Cross-Tabulation Combinations
+
+The linkage cross-tab reveals distinct domain profiles. Business & Productivity is dominated by Within-Domain Linkage (172 of its 318 primary-domain projects), far exceeding its Cross-Domain Linkage (78) and Single-Dataset (68) counts. By contrast, Health & Social Care leans toward Single-Dataset work (85), with only 18 Within-Domain projects. Migration & Demographics is also Single-Dataset–heavy (41), with just 8 Cross-Domain and 10 Within-Domain projects. Labour Market & Employment carries the highest Cross-Domain Linkage count (105) and is relatively balanced across the three modes (105 / 92 / 92).
+
+The purpose cross-tab shows Business & Productivity as the strongest concentration of Policy Evaluation / Impact Analysis (101 projects) and Outcome Tracking (117). Education & Skills holds the largest share of Life-Course / Trajectory Analysis (35 projects), well above any other domain. Health & Social Care accounts for all 11 Service Interaction / Systems Analysis projects in this cross-tab and the largest Risk Prediction / Early Identification count (7). Poverty, Wealth & Living Standards is weighted toward Descriptive Monitoring (29) relative to its low Outcome Tracking count (7).
+
+## 5. Under-Represented Areas
+
+Several domains and purposes register notably low shares. Among substantive domains, Public Finance & Taxation (32 projects), Housing & Planning (41), and Data Infrastructure & Methodology (44) are the smallest substantive categories. Housing & Planning declines markedly over time, from 13.6% in 2019 to 3.9% (2026), 3.0% (2025), and as low as 1.9% (2023). Among analytical purposes, Risk Prediction / Early Identification (20 projects) and Service Interaction / Systems Analysis (24) are the smallest, the former remaining at or below 3.3% in every year. Methodological / Infrastructure Research declines from 9.1% (2019) to 2.9% (2023), with subsequent figures between 5.9% and 7.8%. Descriptive Monitoring, while large overall, shows a sustained decline in share across the period (40.9% in

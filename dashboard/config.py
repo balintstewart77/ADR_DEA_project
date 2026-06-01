@@ -1,6 +1,11 @@
 import os
 from collections import namedtuple
 
+try:
+    from dashboard.taxonomy import DOMAIN_LABELS, LINKAGE_LABELS, PURPOSE_LABELS, TAG_LABELS
+except ModuleNotFoundError:
+    from taxonomy import DOMAIN_LABELS, LINKAGE_LABELS, PURPOSE_LABELS, TAG_LABELS
+
 _PACKAGE_DIR = os.path.dirname(__file__)
 
 DATA_DIR = os.path.join(_PACKAGE_DIR, "..", "data")
@@ -99,13 +104,27 @@ COLLECTION_COLOURS = {
 PRIMARY_BAR = "#2a9d8f"
 SECONDARY_BAR = "#e76f51"
 
-DOMAIN_COLOURS = {
+# The active label *set* comes from the taxonomy dictionary (single source of
+# truth); these overrides only assign a curated colour to each label. Labels
+# introduced by a future ontology revision fall back to a palette colour rather
+# than silently rendering grey, so the charts can never quietly lose a category.
+_FALLBACK_PALETTE = [
+    "#2a9d8f", "#264653", "#e9c46a", "#e76f51", "#6a3d9a", "#f4a261",
+    "#1f77b4", "#ff7f0e", "#8c564b", "#2ca02c", "#9467bd", "#7f7f7f", "#bcbd22",
+]
+
+
+def _assign_colours(labels, overrides):
+    palette = iter(_FALLBACK_PALETTE)
+    return {label: (overrides.get(label) or next(palette, "#999999")) for label in labels}
+
+
+_DOMAIN_COLOUR_OVERRIDES = {
     "Labour Market & Employment":           "#2a9d8f",
     "Business & Productivity":              "#264653",
     "Education & Skills":                   "#e9c46a",
     "Health & Social Care":                 "#e76f51",
-    "Poverty, Inequality & Living Standards": "#6a3d9a",
-    "Gender, Race & Ethnicity":             "#d62728",
+    "Poverty, Wealth & Living Standards":   "#6a3d9a",
     "Migration & Demographics":             "#f4a261",
     "Crime & Justice":                      "#1f77b4",
     "COVID-19 & Pandemic":                  "#ff7f0e",
@@ -113,27 +132,34 @@ DOMAIN_COLOURS = {
     "Environment & Agriculture":            "#2ca02c",
     "Public Finance & Taxation":            "#9467bd",
     "Data Infrastructure & Methodology":    "#7f7f7f",
-    "Unclear from Title":                   "#bcbd22",
+    "Unclear from Register Entry":          "#bcbd22",
 }
+DOMAIN_COLOURS = _assign_colours(DOMAIN_LABELS, _DOMAIN_COLOUR_OVERRIDES)
 
-LINKAGE_COLOURS = {
-    "Single-Dataset":           "#a8dadc",
-    "Within-Domain Linkage":    "#457b9d",
-    "Cross-Domain Linkage":     "#e76f51",
-    "Unclear from Title":       "#bdc3c7",
+_LINKAGE_COLOUR_OVERRIDES = {
+    "Single-Dataset":             "#a8dadc",
+    "Within-Domain Linkage":      "#457b9d",
+    "Cross-Domain Linkage":       "#e76f51",
+    "Unclear from Register Entry": "#bdc3c7",
 }
+LINKAGE_COLOURS = _assign_colours(LINKAGE_LABELS, _LINKAGE_COLOUR_OVERRIDES)
 
-PURPOSE_COLOURS = {
+_PURPOSE_COLOUR_OVERRIDES = {
     "Descriptive Monitoring":                   "#3366cc",
     "Policy Evaluation / Impact Analysis":      "#dc3912",
     "Outcome Tracking":                         "#109618",
-    "Inequality / Disparities Analysis":        "#ff9900",
-    "Methodological / Infrastructure Research":  "#0099c6",
     "Life-Course / Trajectory Analysis":        "#6a3d9a",
+    "Methodological / Infrastructure Research": "#0099c6",
     "Risk Prediction / Early Identification":   "#e377c2",
     "Service Interaction / Systems Analysis":   "#8c564b",
-    "Unclear from Title":                       "#bdc3c7",
+    "Unclear from Register Entry":              "#bdc3c7",
 }
+PURPOSE_COLOURS = _assign_colours(PURPOSE_LABELS, _PURPOSE_COLOUR_OVERRIDES)
+
+_TAG_COLOUR_OVERRIDES = {
+    "Demographic disparities / equity tag": "#d62728",
+}
+TAG_COLOURS = _assign_colours(TAG_LABELS, _TAG_COLOUR_OVERRIDES)
 
 FEEDBACK_EMAIL_URL = (
     "mailto:balintstewart@gmail.com"
@@ -145,13 +171,23 @@ FEEDBACK_EMAIL_URL = (
 )
 SOURCE_URL = "https://github.com/balintstewart77/ADR_DEA_project"
 
-THEMATIC_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v3")
+# Where the dashboard READS the frozen classification outputs (the results run).
+CLASSIFICATION_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v4_8_rc1")
+# Where register cleaning WRITES its duplicate-review diagnostic at startup.
+# Kept separate from CLASSIFICATION_DIR so the live app never writes into the
+# committed results directory.
+CLEANING_OUTPUT_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v3")
 
 REGISTER_SOURCE_ICON = "▣"
 DERIVED_FIELD_ICON = "✦"
 DERIVED_EMPTY_VALUE = "—"
 SUBSTANTIVE_DOMAIN_COUNT_COL = "substantive_domain_count"
+CROSS_CUTTING_TAGS_COL = "cross_cutting_tags"
+RATIONALE_COL = "rationale"
 
+# Columns whose presence defines a "classified" project (drive the classified
+# mask). The cross-cutting tag is intentionally excluded: it is empty for most
+# projects, so requiring it would wrongly drop them.
 _DERIVED_CLASSIFICATION_COLUMNS = [
     "substantive_domains",
     "linkage_mode",
@@ -160,9 +196,15 @@ _DERIVED_CLASSIFICATION_COLUMNS = [
 _DERIVED_ENRICHMENT_COLUMNS = [
     SUBSTANTIVE_DOMAIN_COUNT_COL,
 ]
+# Derived fields shown but not required for the classified mask.
+_DERIVED_DISPLAY_ONLY_COLUMNS = [
+    CROSS_CUTTING_TAGS_COL,
+    RATIONALE_COL,
+]
 _ENRICHED_DERIVED_COLUMNS = [
     *_DERIVED_CLASSIFICATION_COLUMNS,
     *_DERIVED_ENRICHMENT_COLUMNS,
+    *_DERIVED_DISPLAY_ONLY_COLUMNS,
 ]
 _ENRICHED_REGISTER_DISPLAY_COLUMNS = [
     "Project ID",
@@ -175,6 +217,8 @@ _ENRICHED_REGISTER_DISPLAY_COLUMNS = [
     SUBSTANTIVE_DOMAIN_COUNT_COL,
     "linkage_mode",
     "analytical_purpose",
+    CROSS_CUTTING_TAGS_COL,
+    RATIONALE_COL,
 ]
 _BROWSE_DISPLAY_COLUMNS = [
     "Project ID",

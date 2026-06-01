@@ -102,3 +102,17 @@ analysis/Figures_and_Tables.ipynb
 
 # --- Provenance artefacts ---
 analysis/provenance/
+
+# --- Canonical results run (Opus 4.8, taxonomy dict-1.0-rc1) ---
+# This is the frozen run the dashboard reads, so its aggregate outputs are
+# tracked (mirroring outputs_v3), overriding the "regenerable" ignores above.
+# Cache, run.log and quality artefacts stay ignored.
+!analysis/outputs_v4_8_rc1/layer_a_by_year.csv
+!analysis/outputs_v4_8_rc1/layer_b_by_year.csv
+!analysis/outputs_v4_8_rc1/layer_c_by_year.csv
+!analysis/outputs_v4_8_rc1/layer_a_totals.csv
+!analysis/outputs_v4_8_rc1/layer_b_totals.csv
+!analysis/outputs_v4_8_rc1/layer_c_totals.csv
+!analysis/outputs_v4_8_rc1/cross_mode_domain.csv
+!analysis/outputs_v4_8_rc1/cross_domain_purpose.csv
+!analysis/outputs_v4_8_rc1/layer_summary.txt

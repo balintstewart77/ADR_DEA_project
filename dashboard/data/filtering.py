@@ -13,6 +13,8 @@ from dashboard.config import (
     _BROWSE_DISPLAY_COLUMNS,
     DERIVED_EMPTY_VALUE,
     SUBSTANTIVE_DOMAIN_COUNT_COL,
+    CROSS_CUTTING_TAGS_COL,
+    RATIONALE_COL,
 )
 from dashboard.data.registry import (
     df_all,
@@ -240,6 +242,7 @@ def _get_enriched_register_display_df(
     domain_count_filter,
     linkage_filter,
     purpose_filter,
+    tag_filter,
 ) -> tuple[pd.DataFrame, str]:
     base = _ensure_enriched_register_columns(df_thematic_projects)
     base = base[_classified_mask(base)]
@@ -264,6 +267,8 @@ def _get_enriched_register_display_df(
         base = base[base["linkage_mode"].notna() & (base["linkage_mode"] == linkage_filter)]
     if purpose_filter and purpose_filter != "ALL":
         base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
+    if tag_filter and tag_filter != "ALL":
+        base = base[_contains_semicolon_value(base[CROSS_CUTTING_TAGS_COL], tag_filter)]
 
     n_displayed = len(base)
     n_classified_total = _CLASSIFIED_REGISTER_COUNT
@@ -274,6 +279,11 @@ def _get_enriched_register_display_df(
     display = base.copy()
     for col in _DERIVED_CLASSIFICATION_COLUMNS:
         display[col] = display[col].fillna(DERIVED_EMPTY_VALUE)
+    # Tag is blank (not "—") when no equity/demographic lens applies; rationale
+    # is always present for a classified row but filled defensively.
+    for col in (CROSS_CUTTING_TAGS_COL, RATIONALE_COL):
+        if col in display.columns:
+            display[col] = display[col].fillna("")
     domain_counts = pd.to_numeric(display[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce").astype("Int64")
     display[SUBSTANTIVE_DOMAIN_COUNT_COL] = (
         domain_counts.astype("object").where(domain_counts.notna(), None)

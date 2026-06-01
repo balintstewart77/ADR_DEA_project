@@ -6,7 +6,7 @@ from dashboard.config import (
     DATA_DIR,
     CANDIDATE_FILES,
     FLAGSHIP_COLLECTIONS,
-    THEMATIC_DIR,
+    CLEANING_OUTPUT_DIR,
 )
 from analysis.register_cleaning import clean_register_dataframe, load_raw_register
 
@@ -66,7 +66,7 @@ def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict
     """
     df, stats = clean_register_dataframe(
         df_raw,
-        output_dir=THEMATIC_DIR,
+        output_dir=CLEANING_OUTPUT_DIR,
         include_quarter_date=True,
         include_project_row_id=True,
     )

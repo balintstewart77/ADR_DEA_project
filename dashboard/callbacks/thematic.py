@@ -7,6 +7,7 @@ from dashboard.data.thematic import (
     df_thematic_a, df_thematic_b, df_thematic_c,
     df_thematic_a_totals, df_thematic_b_totals, df_thematic_c_totals,
     df_cross_mode_domain, df_cross_domain_purpose,
+    df_thematic_tag_by_year, df_thematic_tag_by_domain,
 )
 from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
@@ -14,7 +15,7 @@ from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
     make_thematic_trend, make_linkage_area, make_thematic_totals_bar, make_cross_heatmap,
 )
-from dashboard.config import DOMAIN_COLOURS, LINKAGE_COLOURS, PURPOSE_COLOURS
+from dashboard.config import DOMAIN_COLOURS, LINKAGE_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 
 
 def register(app):
@@ -30,6 +31,8 @@ def register(app):
         Output("thematic-purpose-totals", "figure"),
         Output("thematic-cross-mode-domain", "figure"),
         Output("thematic-cross-domain-purpose", "figure"),
+        Output("thematic-tag-trend", "figure"),
+        Output("thematic-tag-domain", "figure"),
         Input("thematic-metric-toggle", "value"),
     )
     def update_thematic_tab(metric_mode):
@@ -75,10 +78,22 @@ def register(app):
             colorscale=[[0, "#fef0ec"], [0.5, "#f4a582"], [1, "#d73027"]],
         )
 
+        tag_trend = make_thematic_trend(
+            df_thematic_tag_by_year, "tag", TAG_COLOURS, metric_col,
+            "Demographic-Disparities / Equity Lens Over Time",
+            height=CHART_HEIGHT,
+            partial_year_info=PARTIAL_YEAR_INFO,
+        )
+        tag_domain = make_thematic_totals_bar(
+            df_thematic_tag_by_domain, "domain", DOMAIN_COLOURS,
+            "Tagged Projects by Domain", height=440,
+        )
+
         return (
             domain_trend, linkage_trend, purpose_trend,
             domain_totals, linkage_totals, purpose_totals,
             cross_mode, cross_purpose,
+            tag_trend, tag_domain,
         )
 
     @app.callback(
@@ -94,6 +109,7 @@ def register(app):
         Input("enriched-domain-count-filter", "value"),
         Input("enriched-linkage-filter", "value"),
         Input("enriched-purpose-filter", "value"),
+        Input("enriched-tag-filter", "value"),
         Input("enriched-page-size", "value"),
     )
     def update_enriched_register(
@@ -106,6 +122,7 @@ def register(app):
         domain_count_filter,
         linkage_filter,
         purpose_filter,
+        tag_filter,
         page_size,
     ):
         display, count_text = _get_enriched_register_display_df(
@@ -118,6 +135,7 @@ def register(app):
             domain_count_filter,
             linkage_filter,
             purpose_filter,
+            tag_filter,
         )
 
         return (
@@ -138,6 +156,7 @@ def register(app):
         State("enriched-domain-count-filter", "value"),
         State("enriched-linkage-filter", "value"),
         State("enriched-purpose-filter", "value"),
+        State("enriched-tag-filter", "value"),
         prevent_initial_call=True,
     )
     def download_enriched_csv(
@@ -151,6 +170,7 @@ def register(app):
         domain_count_filter,
         linkage_filter,
         purpose_filter,
+        tag_filter,
     ):
         display, _ = _get_enriched_register_display_df(
             search,
@@ -162,6 +182,7 @@ def register(app):
             domain_count_filter,
             linkage_filter,
             purpose_filter,
+            tag_filter,
         )
         filename = f"dea-enriched-register-{_csv_date_stamp()}.csv"
         return dcc.send_data_frame(display.to_csv, filename, index=False)

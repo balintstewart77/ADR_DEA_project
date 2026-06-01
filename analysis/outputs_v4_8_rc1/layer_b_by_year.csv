@@ -1,0 +1,26 @@
+﻿Year,linkage_mode,count,total,pct_of_projects
+2019,Cross-Domain Linkage,4,22,18.2
+2019,Single-Dataset,11,22,50.0
+2019,Within-Domain Linkage,7,22,31.8
+2020,Cross-Domain Linkage,36,120,30.0
+2020,Single-Dataset,42,120,35.0
+2020,Within-Domain Linkage,42,120,35.0
+2021,Cross-Domain Linkage,49,160,30.6
+2021,Single-Dataset,58,160,36.2
+2021,Within-Domain Linkage,53,160,33.1
+2022,Cross-Domain Linkage,45,202,22.3
+2022,Single-Dataset,79,202,39.1
+2022,Within-Domain Linkage,78,202,38.6
+2023,Cross-Domain Linkage,65,210,31.0
+2023,Single-Dataset,72,210,34.3
+2023,Unclear from Register Entry,1,210,0.5
+2023,Within-Domain Linkage,72,210,34.3
+2024,Cross-Domain Linkage,98,236,41.5
+2024,Single-Dataset,83,236,35.2
+2024,Within-Domain Linkage,55,236,23.3
+2025,Cross-Domain Linkage,101,271,37.3
+2025,Single-Dataset,115,271,42.4
+2025,Within-Domain Linkage,55,271,20.3
+2026,Cross-Domain Linkage,15,51,29.4
+2026,Single-Dataset,18,51,35.3
+2026,Within-Domain Linkage,18,51,35.3

@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from dashboard.charts.template import CHART_HEIGHT, _apply_common, _annotate_partial_year
+from dashboard.config import LINKAGE_LABELS
 
 
 def make_thematic_trend(
@@ -56,9 +57,7 @@ def make_linkage_area(
     partial_year_info=None,
 ) -> go.Figure:
     """Stacked area chart for linkage modes (single-label, compositional)."""
-    order = ["Single-Dataset", "Within-Domain Linkage", "Cross-Domain Linkage",
-             "Unclear from Title"]
-    present = [m for m in order if m in df_by_year["linkage_mode"].values]
+    present = [m for m in LINKAGE_LABELS if m in df_by_year["linkage_mode"].values]
     fig = go.Figure()
     for mode in present:
         sub = df_by_year[df_by_year["linkage_mode"] == mode].sort_values("Year")
