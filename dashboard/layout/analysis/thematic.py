@@ -28,8 +28,8 @@ def _md_table(layer: str) -> str:
 
 
 _thematic_methodology_md = f"""
-**Model:** Claude Opus 4.8 (`claude-opus-4-8`) via the Anthropic API, with
-structured JSON output and `temperature=0`.
+**Model:** Claude Opus 4.8 (`claude-opus-4-8`) via the Anthropic API with
+structured JSON output.
 
 **Taxonomy:** Labels follow the project taxonomy data dictionary
 (`{taxonomy.DICTIONARY_VERSION}`, ontology {taxonomy.ONTOLOGY_VERSION}). The
@@ -43,10 +43,9 @@ title gives the research question, the datasets reveal the domains and linkage s
 for transient API failures, and results are cached so that re-runs only classify
 new or changed projects.
 
-**Reliability:** Classification is not fully deterministic even at `temperature=0`
-(batching and floating-point effects). Stability was measured by re-running a
-stratified sample; the cross-domain linkage judgement is the least stable and is
-oversampled in validation.
+**Reliability:** Classification is not fully deterministic — repeated runs can
+differ on borderline cases. Stability was assessed by re-running the model over
+the entire register a second time and comparing the two passes.
 """
 
 _thematic_layers_md = f"""
@@ -219,8 +218,9 @@ def build_thematic_tab():
                 style={"color": "#2c3e50", "fontWeight": "600"},
             ),
             html.P(
-                "Cross-tabulations use the primary (first-listed) domain for each project. "
-                "Only the six most common primary domains are shown.",
+                "Substantive domains are multi-label, so each project is counted once per "
+                "domain it is assigned — column totals can therefore exceed the project count. "
+                "All domains are shown.",
                 className="section-desc",
             ),
             dbc.Row([

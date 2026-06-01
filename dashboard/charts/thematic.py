@@ -122,6 +122,7 @@ def make_cross_heatmap(
     row_col: str,
     title: str,
     colorscale: list | str = "Tealgrn",
+    height: int = 380,
 ) -> go.Figure:
     """Annotated heatmap from a cross-tabulation pivot table."""
     row_labels = df_cross[row_col].tolist()
@@ -156,4 +157,4 @@ def make_cross_heatmap(
         yaxis=dict(autorange="reversed"),
         margin=dict(l=220, b=165),
     )
-    return _apply_common(fig, height=380)
+    return _apply_common(fig, height=height)

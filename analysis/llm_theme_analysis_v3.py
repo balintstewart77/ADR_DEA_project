@@ -930,18 +930,20 @@ def analyse_layers(df: pd.DataFrame) -> dict:
         .sort_values("count", ascending=False)
     )
 
-    # ---- Cross-tabulations ----
-    top_domains = totals_a.head(6)["domain"].tolist()
-    df_cross = df[df["primary_domain"].isin(top_domains)]
+    # ---- Cross-tabulations (multi-label: one count per assigned domain, all
+    # domains shown — Layer A is non-hierarchical, so there is no "primary"
+    # domain to key on) ----
+    df_dom = df.explode("substantive_domains").rename(columns={"substantive_domains": "domain"})
+    df_dom = df_dom[df_dom["domain"].notna()]
 
-    # Linkage mode × primary domain
-    cross_mode_domain = pd.crosstab(df_cross["primary_domain"], df_cross["linkage_mode"])
+    # Domain × linkage mode
+    cross_mode_domain = pd.crosstab(df_dom["domain"], df_dom["linkage_mode"])
 
-    # Primary domain × analytical purpose (exploded)
-    df_dp = df_cross.explode("analytical_purpose").rename(
+    # Domain × analytical purpose (both multi-label, exploded)
+    df_dp = df_dom.explode("analytical_purpose").rename(
         columns={"analytical_purpose": "purpose"}
     )
-    cross_domain_purpose = pd.crosstab(df_dp["primary_domain"], df_dp["purpose"])
+    cross_domain_purpose = pd.crosstab(df_dp["domain"], df_dp["purpose"])
 
     return {
         "by_year_a":            by_year_a,
@@ -969,10 +971,10 @@ def print_quick_stats(trends: dict):
     print("\n=== Layer C — Analytical Purpose Totals ===")
     print(trends["totals_c"].to_string(index=False))
 
-    print("\n=== Cross-tab: Linkage Mode × Primary Domain ===")
+    print("\n=== Cross-tab: Linkage Mode × Substantive Domain ===")
     print(trends["cross_mode_domain"].to_string())
 
-    print("\n=== Cross-tab: Primary Domain × Analytical Purpose ===")
+    print("\n=== Cross-tab: Substantive Domain × Analytical Purpose ===")
     print(trends["cross_domain_purpose"].to_string())
 
 
@@ -1033,10 +1035,11 @@ def generate_narrative(
         may sum above 100%):
         {year_c_pivot}
 
-        LINKAGE MODE × PRIMARY DOMAIN CROSS-TAB:
+        LINKAGE MODE × SUBSTANTIVE DOMAIN CROSS-TAB (multi-label; a project is
+        counted once per assigned domain, so columns can exceed project totals):
         {cross_mode_str}
 
-        PRIMARY DOMAIN × ANALYTICAL PURPOSE CROSS-TAB:
+        SUBSTANTIVE DOMAIN × ANALYTICAL PURPOSE CROSS-TAB (multi-label):
         {cross_purpose_str}
 
         Write a concise analytical summary (5–7 paragraphs) covering:

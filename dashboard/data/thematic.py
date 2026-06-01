@@ -9,6 +9,8 @@ from dashboard.config import (
     SUBSTANTIVE_DOMAIN_COUNT_COL,
     CROSS_CUTTING_TAGS_COL,
     TAG_LABELS,
+    LINKAGE_LABELS,
+    PURPOSE_LABELS,
     _PROJECT_ID_KEY_COL,
 )
 from dashboard.data.keys import _project_id_key
@@ -44,6 +46,38 @@ def _tag_series(df: pd.DataFrame) -> pd.Series:
     return pd.Series("", index=df.index, dtype=object)
 
 
+def _domain_crosstab(df: pd.DataFrame, other_col: str, other_multi: bool, col_order) -> pd.DataFrame:
+    """Substantive-domain x (linkage|purpose) counts over ALL domains.
+
+    Layer A is non-hierarchical, so a project is counted once per assigned domain
+    (column totals can exceed the project count). Returns a frame whose first
+    column is ``domain`` with the remaining columns holding counts — the shape
+    ``make_cross_heatmap`` expects. Rows are ordered by total descending; columns
+    follow taxonomy order where known.
+    """
+    if "substantive_domains" not in df.columns or other_col not in df.columns:
+        return pd.DataFrame(columns=["domain"])
+    work = df[["substantive_domains", other_col]].copy()
+    work["domain"] = work["substantive_domains"].apply(_split_semicolon_values)
+    work = work.explode("domain")
+    if other_multi:
+        work[other_col] = work[other_col].apply(_split_semicolon_values)
+        work = work.explode(other_col)
+    work = work[
+        work["domain"].notna()
+        & (work["domain"].astype(str).str.strip() != "")
+        & work[other_col].notna()
+        & (work[other_col].astype(str).str.strip() != "")
+    ]
+    if work.empty:
+        return pd.DataFrame(columns=["domain"])
+    ct = pd.crosstab(work["domain"], work[other_col])
+    ordered = [c for c in col_order if c in ct.columns] + [c for c in ct.columns if c not in col_order]
+    ct = ct[ordered]
+    ct = ct.loc[ct.sum(axis=1).sort_values(ascending=False, kind="stable").index]
+    return ct.reset_index()
+
+
 def load_thematic_data(thematic_dir):
     """Returns (data_dict, available_flag)."""
     try:
@@ -53,8 +87,6 @@ def load_thematic_data(thematic_dir):
         df_thematic_a_totals = pd.read_csv(os.path.join(thematic_dir, "layer_a_totals.csv"), encoding="utf-8-sig")
         df_thematic_b_totals = pd.read_csv(os.path.join(thematic_dir, "layer_b_totals.csv"), encoding="utf-8-sig")
         df_thematic_c_totals = pd.read_csv(os.path.join(thematic_dir, "layer_c_totals.csv"), encoding="utf-8-sig")
-        df_cross_mode_domain = pd.read_csv(os.path.join(thematic_dir, "cross_mode_domain.csv"), encoding="utf-8-sig")
-        df_cross_domain_purpose = pd.read_csv(os.path.join(thematic_dir, "cross_domain_purpose.csv"), encoding="utf-8-sig")
         with open(os.path.join(thematic_dir, "layer_summary.txt"), "r", encoding="utf-8") as _f:
             thematic_narrative = _f.read()
         df_thematic_projects = pd.read_csv(
@@ -66,6 +98,16 @@ def load_thematic_data(thematic_dir):
             .astype("Int64")
         )
         thematic_project_count = len(df_thematic_projects)
+
+        # Cross-layer heatmaps, derived over ALL substantive domains (multi-label:
+        # a project is counted once per assigned domain), replacing the legacy
+        # top-6 "primary domain" cross-tabs.
+        df_cross_mode_domain = _domain_crosstab(
+            df_thematic_projects, "linkage_mode", False, LINKAGE_LABELS
+        )
+        df_cross_domain_purpose = _domain_crosstab(
+            df_thematic_projects, "analytical_purpose", True, PURPOSE_LABELS
+        )
 
         # Apply project-id keying on df_thematic_projects
         if "Project ID" in df_thematic_projects.columns:

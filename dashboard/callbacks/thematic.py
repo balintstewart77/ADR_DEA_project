@@ -68,14 +68,16 @@ def register(app):
         )
 
         cross_mode = make_cross_heatmap(
-            df_cross_mode_domain, "primary_domain",
-            "Primary Domain × Linkage Mode",
+            df_cross_mode_domain, "domain",
+            "Substantive Domain × Linkage Mode",
             colorscale="Tealgrn",
+            height=560,
         )
         cross_purpose = make_cross_heatmap(
-            df_cross_domain_purpose, "primary_domain",
-            "Primary Domain × Analytical Purpose",
+            df_cross_domain_purpose, "domain",
+            "Substantive Domain × Analytical Purpose",
             colorscale=[[0, "#fef0ec"], [0.5, "#f4a582"], [1, "#d73027"]],
+            height=560,
         )
 
         tag_trend = make_thematic_trend(
