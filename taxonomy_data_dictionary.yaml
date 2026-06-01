@@ -3,7 +3,7 @@ metadata:
   # IDENTITY
   # ============================================================
   title: Taxonomy Data Dictionary -- DEA Project Classification Ontology v3.4
-  dictionary_version: '1.0'
+  dictionary_version: '1.0-rc1'
   documents_ontology_version: 'v3.4'
 
   notes:
