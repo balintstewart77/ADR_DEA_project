@@ -2,6 +2,7 @@
 # the dashboard runtime.
 -r requirements-dashboard.txt
 nltk
+matplotlib
 scikit-learn
 scipy
 statsmodels

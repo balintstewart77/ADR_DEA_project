@@ -103,6 +103,10 @@ analysis/Figures_and_Tables.ipynb
 # --- Provenance artefacts ---
 analysis/provenance/
 
+# --- Local comparison-analysis artefacts ---
+analysis/opus_v_sonnet_comparison_analysis/
+analysis/outputs/instruction_layer_figures_report.md
+
 # --- Canonical results run (Opus 4.8, taxonomy dict-1.0-rc1) ---
 # This is the frozen run the dashboard reads, so its aggregate outputs are
 # tracked (mirroring outputs_v3), overriding the "regenerable" ignores above.
