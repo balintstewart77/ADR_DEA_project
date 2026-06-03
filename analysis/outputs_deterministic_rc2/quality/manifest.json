@@ -1,0 +1,16 @@
+{
+  "created_at_utc": "2026-06-03T14:31:21.168546+00:00",
+  "git": {
+    "commit": "42973ddf30632ff9dc43550f0dc4e4cb05b8117d",
+    "dirty": true,
+    "status_porcelain": "M analysis/test_dataset_normalisation.py\n M analysis/test_institution_normalisation.py\n M dashboard/dataset_normalisation.py\n M dashboard/institution_normalisation.py\n?? analysis/derive_register_properties.py\n?? analysis/outputs/\n?? analysis/outputs_deterministic_rc2/\n?? analysis/register_reference.yaml\n?? analysis/run_manifest.py\n?? analysis/test_derive_register_properties.py\n?? example_triage_report.txt"
+  },
+  "model": null,
+  "output_files": [
+    "analysis/outputs_deterministic_rc2/quality/duplicate_review_flagged.csv",
+    "analysis/outputs_deterministic_rc2/quality/organisation_names_for_review.csv"
+  ],
+  "reference_table_version": "0.1.0",
+  "run_type": "deterministic_properties_quality",
+  "source_file": "dea_accredited_projects_20260325.csv"
+}
