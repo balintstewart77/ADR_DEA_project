@@ -62,7 +62,7 @@ _INSTITUTION_KEYWORDS = (
     "trust",
     "university",
 )
-_NAME_PARTICLES = {"al", "bin", "da", "de", "del", "der", "di", "du", "la", "le", "st", "van", "von"}
+_NAME_PARTICLES = {"al", "bin", "da", "de", "del", "der", "di", "dos", "du", "la", "le", "st", "van", "von"}
 _NON_PERSON_WORDS = {
     "academy",
     "administrative",
@@ -128,21 +128,40 @@ _ALIASES = {
     "office for national statistics": "Office for National Statistics",
     "dfe": "Department for Education",
     "dwp": "Department for Work and Pensions",
-    "hmrc": "HM Revenue and Customs",
+    "hmrc": "HM Revenue and Customs (HMRC)",
+    "hm revenue and customs": "HM Revenue and Customs (HMRC)",
     "moj": "Ministry of Justice",
-    "insead / institut européen d'administration des affaires": "INSEAD",
-    "insead / institut europã©en d'administration des affaires": "INSEAD",
+    "ads group limited": "ADS (Aerospace, Defence, Security, Space) Group Limited",
+    "belmana ltd": "Belmana",
+    "cebr": "Centre for Economic and Business Research (CEBR)",
+    "centre for economic and business research": "Centre for Economic and Business Research (CEBR)",
+    "centre for economic and business research ltd": "Centre for Economic and Business Research (CEBR)",
+    "centre for economic and business research ltd (cber)": "Centre for Economic and Business Research (CEBR)",
+    "cedar": "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)",
+    "cristina sechel": "",
+    "ecibt": "Engineering Construction Industry Training Board (ECITB)",
+    "ecitb": "Engineering Construction Industry Training Board (ECITB)",
+    "ehrc": "Equality and Human Rights Commission (EHRC)",
+    "equality and human rights commission": "Equality and Human Rights Commission (EHRC)",
+    "esri": "Environmental Systems Research Institute (ESRI)",
+    "independent research": "",
+    "insead": "Institut Européen d'Administration des Affaires (INSEAD)",
+    "insead / institut européen d'administration des affaires": "Institut Européen d'Administration des Affaires (INSEAD)",
+    "insead / institut europã©en d'administration des affaires": "Institut Européen d'Administration des Affaires (INSEAD)",
     "natcen social research": "National Centre for Social Research",
     "ucl": "University College London",
-    "lse": "London School of Economics",
+    "lse": "London School of Economics and Political Science (LSE)",
     "lshtm": "London School of Hygiene and Tropical Medicine",
     "kcl": "King's College London",
     "kings college london": "King's College London",
     "king's college london": "King's College London",
-    "london school of economics and political science": "London School of Economics",
-    "london school of economics & political science": "London School of Economics",
-    "the london school of economics and political science": "London School of Economics",
-    "the london school of economics": "London School of Economics",
+    "king's college london dimitris vallis, king's college london": "King's College London",
+    "london school of economics": "London School of Economics and Political Science (LSE)",
+    "london school of economics and political science": "London School of Economics and Political Science (LSE)",
+    "london school of economics & political science": "London School of Economics and Political Science (LSE)",
+    "the london school of economics and political science": "London School of Economics and Political Science (LSE)",
+    "the london school of economics": "London School of Economics and Political Science (LSE)",
+    "london school of hygiene and tropical medicine rochelle schneider dos": "London School of Hygiene and Tropical Medicine",
     "the university of manchester": "University of Manchester",
     "the university of sheffield": "University of Sheffield",
     "the university of edinburgh": "University of Edinburgh",
@@ -181,10 +200,14 @@ _ALIASES = {
     "university of london - imperial college": "Imperial College London",
     "university of london imperial college": "Imperial College London",
     "university of london “ imperial college": "Imperial College London",
-    "london school of economics and political science, university of london": "London School of Economics",
+    "london school of economics and political science, university of london": "London School of Economics and Political Science (LSE)",
     "northern ireland statistics and research agency (nisra)": "Northern Ireland Statistics and Research Agency",
     "department for digital, culture, media and sport (dcms)": "Department for Digital, Culture, Media and Sport",
-    "dhsc": "Department of Health and Social Care",
+    "dhsc": "Department of Health and Social Care (DHSC)",
+    "department of health": "Department of Health and Social Care (DHSC)",
+    "department of health and social care": "Department of Health and Social Care (DHSC)",
+    "department of health and social care (dhsc)": "Department of Health and Social Care (DHSC)",
+    "department of health - ni": "Department of Health (Northern Ireland)",
     "beis": "Department for Business, Energy and Industrial Strategy",
     "department for business, inovation and skills - enterprise directorate": "Department for Business, Innovation and Skills",
     "administrative data research, wales": "Administrative Data Research Wales",
@@ -199,10 +222,24 @@ _ALIASES = {
     "insititute of occupational medicine": "Institute of Occupational Medicine",
     "institute of education": "UCL Institute of Education",
     "national institute of economic and social research": "National Institute for Economic and Social Research",
-    "national foundation for educational research (nfer)": "National Foundation for Educational Research",
+    "greater london authority": "Greater London Authority (GLA)",
+    "health data research uk": "Health Data Research UK (HDR UK)",
+    "henley business school": "Henley Business School (University of Reading)",
+    "institute for social and economic research": "Institute for Social and Economic Research (University of Essex)",
+    "institute for social and economic research, university of essex": "Institute for Social and Economic Research (University of Essex)",
+    "johannes kepler, university": "",
+    "johannes kepler university": "",
+    "learning and work": "Learning and Work Institute",
+    "london metropolitan, university": "London Metropolitan University",
+    "m&g": "Municipal & General (M&G)",
+    "national foundation for education research": "National Foundation for Education Research (NFER)",
+    "national foundation for educational research": "National Foundation for Education Research (NFER)",
+    "national foundation for educational research (nfer)": "National Foundation for Education Research (NFER)",
+    "nfer": "National Foundation for Education Research (NFER)",
     "london economics ltd": "London Economics",
-    "ipsos mori": "IPSOS MORI",
-    "ipsos uk": "Ipsos UK",
+    "ipsos": "Ipsos",
+    "ipsos mori": "Ipsos",
+    "ipsos uk": "Ipsos",
     "pwc llp": "PwC LLP",
     "pwc": "PwC LLP",
     "pricewaterhousecoopers llp": "PwC LLP",
@@ -226,7 +263,9 @@ _ALIASES = {
     "stanford univeristy": "Stanford University",
     "warwick business school": "Warwick Business School",
     "cardiff metropolitan, university": "Cardiff Metropolitan University",
-    "fraser of allander institute james black, university of strathclyde": "Fraser of Allander Institute",
+    "fraser of allander institute": "Fraser of Allander Institute (University of Strathclyde)",
+    "fraser of allander institute (university of strathclyde)": "Fraser of Allander Institute (University of Strathclyde)",
+    "fraser of allander institute james black, university of strathclyde": "Fraser of Allander Institute (University of Strathclyde)",
     "lancaster university management, school": "Lancaster University Management School",
     "st andrews, university": "University of St Andrews",
     "ucl institute of education": "UCL Institute of Education",
@@ -251,6 +290,7 @@ _ALIASES = {
     "university of northampton": "University of Northampton",
     "university of southampt on": "University of Southampton",
     "university of west of england": "University of the West of England",
+    "university": "",
 }
 _COMPOUND_INSTITUTION_SPLITS = {
     "health foundation/ academy of medical sciences": [
@@ -259,15 +299,15 @@ _COMPOUND_INSTITUTION_SPLITS = {
     ],
     "imperial college business, school/london school of economics": [
         "Imperial Business School",
-        "London School of Economics",
+        "London School of Economics and Political Science (LSE)",
     ],
     "london school of economics; and university college london": [
-        "London School of Economics",
+        "London School of Economics and Political Science (LSE)",
         "University College London",
     ],
     "university of warwick/london school of economics": [
         "University of Warwick",
-        "London School of Economics",
+        "London School of Economics and Political Science (LSE)",
     ],
 }
 
@@ -469,6 +509,14 @@ def _normalise_institution(name: str) -> str:
     if not name:
         return ""
 
+    lowered = name.lower()
+    if lowered in _ALIASES:
+        return _ALIASES[lowered]
+
+    repeated_alias = _normalise_repeated_alias_with_researcher(name)
+    if repeated_alias is not None:
+        return repeated_alias
+
     if "," in name:
         head, tail = name.rsplit(",", 1)
         if _looks_like_institution_fragment(head) and _looks_like_name(tail):
@@ -478,7 +526,60 @@ def _normalise_institution(name: str) -> str:
     if lowered in _ALIASES:
         return _ALIASES[lowered]
 
+    institution_prefix = _normalise_known_institution_prefix(name)
+    if institution_prefix is not None:
+        return institution_prefix
+
     return name
+
+
+def _normalise_repeated_alias_with_researcher(name: str) -> str | None:
+    if "," not in name:
+        return None
+
+    head, tail = (_clean_fragment(part) for part in name.rsplit(",", 1))
+    tail_canonical = _canonical_from_alias_or_name(tail)
+    if tail_canonical is None:
+        return None
+
+    head_lower = head.lower()
+    tail_lower = tail.lower()
+    if not head_lower.startswith(f"{tail_lower} "):
+        return None
+
+    suffix = _clean_fragment(head[len(tail):])
+    if _looks_like_name(suffix):
+        return tail_canonical
+    return None
+
+
+def _normalise_known_institution_prefix(name: str) -> str | None:
+    name_lower = name.lower()
+    for alias, canonical in _known_institution_prefixes():
+        if name_lower.startswith(f"{alias} "):
+            suffix = _clean_fragment(name[len(alias):])
+            if _looks_like_name(suffix):
+                return canonical
+    return None
+
+
+def _known_institution_prefixes() -> list[tuple[str, str]]:
+    candidates: dict[str, str] = {}
+    for alias, canonical in _ALIASES.items():
+        if canonical:
+            candidates[alias] = canonical
+            candidates.setdefault(canonical.lower(), canonical)
+    return sorted(candidates.items(), key=lambda item: len(item[0]), reverse=True)
+
+
+def _canonical_from_alias_or_name(name: str) -> str | None:
+    lowered = name.lower()
+    if lowered in _ALIASES:
+        return _ALIASES[lowered] or None
+    for canonical in {value for value in _ALIASES.values() if value}:
+        if lowered == canonical.lower():
+            return canonical
+    return None
 
 
 def _split_compound_institution(name: str) -> list[str]:

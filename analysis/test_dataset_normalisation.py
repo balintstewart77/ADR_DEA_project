@@ -108,7 +108,23 @@ class DatasetNormalisationTest(unittest.TestCase):
             "GRading and Admissions Data England": "GRading and Admissions Data England (GRADE)",
             "Interdepartmental Business Register": "Inter-Departmental Business Register (IDBR)",
             "Registered Deaths": "Death Registrations",
-            'Community Innovation Survey " United Kingdom Innovation Survey': "Community Innovation Survey",
+            "Business Enterprise Research and Development England": "Business Enterprise Research and Development (BERD)",
+            "Products of the European Community": "UK Manufacturers' Sales by Product Survey",
+            'Community Innovation Survey " United Kingdom Innovation Survey': "UK Innovation Survey (UKIS)",
+            'Community Innovation Survey " United Kingdom Innovation Survey Data given for all available years unless otherwise stated': "UK Innovation Survey (UKIS)",
+            "Bespoke Management and Expectations Survey": "Management and Expectations Survey (MES)",
+            "British Household Panel Survey": "Understanding Society",
+            "Working Lives of Teachers and Leaders": "Working Lives of Teachers and Leaders Survey",
+            "Annual Outward Foreign Direct Investment Survey": "Annual Foreign Direct Investment Survey",
+            "Longitudinal Business Structure Database": "Business Structure Database (BSD)",
+            "Monthly Inquiry into the Distributive and Services Sector": "Monthly Inquiry into the Distributive and Services Sector (MIDSS)",
+            "Monthly Production Inquiry": "Monthly Production Inquiry (MPI)",
+            "Effects of Tax and Benefits": "Effects of Taxes and Benefits on Household Income",
+            "Statutory Homelessness Flows England": "Statutory Homelessness Flows - England",
+            "Online Time Use Survey": "Online Time Use Survey (OTUS)",
+            "Linked NI Census-ASHE": "Earnings and Employees Study (EES) 2011 - Northern Ireland",
+            "Northern Ireland Census linked to ASHE": "Earnings and Employees Study (EES) 2011 - Northern Ireland",
+            "Earnings and Employees Study": "Earnings and Employees Study (EES) 2011 - Northern Ireland",
             "Growing Up in England Wave 1": "Growing Up in England Wave 1 (GUIE)",
             "Growing Up in England Wave 2": "Growing Up in England Wave 2 (GUIE)",
             "Growing Up in England Wave 2 - Children in Need": "Growing Up in England Wave 2 (GUIE)",
@@ -123,7 +139,6 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Annual Survey for Hours and Earnings / Census 2011 Linked Datase": "Annual Survey of Hours and Earnings linked to Census 2011",
             "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment": "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment",
             "2011 Census linked to Benefits and Income": "Census 2011 linked to Benefits and Income",
-            "Linked NI Census-ASHE": "Northern Ireland Census linked to ASHE",
             "Nursing and Midwifery Council Register - UK linked to Census 2021": "Nursing and Midwifery Council Register linked to Census 2021",
             "Census 2011 and 2021 England and Wales": "Census 2011 and Census 2021 England and Wales",
             "Census 2011 100% Household and Individual - England an": "Census 2011 Household and Individual England and Wales",
@@ -138,6 +153,7 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Administrative Data | Agricultural Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
             "Administrative Data | Agriculture Research Collection": "Administrative Data | Agricultural Research Collection (AD|ARC)",
             "AD|ARC Phase 2 - Census 21 unlinked": "Administrative Data | Agricultural Research Collection (AD|ARC)",
+            "Linked Census, HES and Mortality Data": "Linked Census, HES and Mortality Data",
             "MoJ Data First Cross-Justice System Linking Dataset England And Wales": "MoJ Data First Cross-Justice System Linking Dataset",
             "MoJ Data First Cross-Justice System Linking": "MoJ Data First Cross-Justice System Linking Dataset",
             "Capital Stock": "Capital Stock Dataset",
@@ -156,6 +172,31 @@ class DatasetNormalisationTest(unittest.TestCase):
         parts = [part for _, _, part in iter_dataset_entries(raw)]
         self.assertNotIn("Census 2021 attributes - England and Wales with Geography", parts)
         self.assertEqual(parts, ["Indexed Census 2021"])
+
+    def test_dangling_provider_typo_is_dropped(self):
+        raw = (
+            "Offcie for National Statistics &\n"
+            "NMC: Nursing and Midwifery Council Register - UK Linked to Census 2021"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            entries,
+            [
+                (
+                    "NMC",
+                    "Nursing and Midwifery Council Register - UK Linked to Census 2021",
+                )
+            ],
+        )
+
+    def test_non_dataset_fragments_are_dropped(self):
+        raw = (
+            "Office for National Statistics: Racial Disparity Audit, "
+            "Bespoke - National Council for Voluntary Organisations, "
+            "Annual Population Survey"
+        )
+        parts = [part for _, _, part in iter_dataset_entries(raw)]
+        self.assertEqual(parts, ["Annual Population Survey"])
 
     def test_provider_is_carried_across_wrapped_lines(self):
         raw = (
@@ -188,6 +229,15 @@ class DatasetNormalisationTest(unittest.TestCase):
                 "Crown Court Defendant Case Level Dataset",
                 "Magistrates' Court Defendant Case Level",
             ],
+        )
+
+    def test_known_comma_bearing_dataset_is_not_split(self):
+        raw = "Office for National Statistics: Linked Census, HES and Mortality Data"
+        parts = [part for _, _, part in iter_dataset_entries(raw)]
+        self.assertEqual(parts, ["Linked Census, HES and Mortality Data"])
+        self.assertEqual(
+            normalise_dataset_name(parts[0]),
+            "Linked Census, HES and Mortality Data",
         )
 
     def test_junk_fragments_are_suppressed(self):

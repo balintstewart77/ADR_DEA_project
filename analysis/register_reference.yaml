@@ -1,0 +1,1641 @@
+reference_version: "0.1.0"
+meta_principle: >
+  Each entity is classified by an intrinsic, structural, objective property,
+  never by project use or organisational behaviour. Linkage is classified by
+  the structural origin of the linked components, not by how a project frames
+  them. Dataset collection-type is classified by the dataset's design, not by
+  how it is used. Unit of observation is the unit the dataset is structured or
+  collected around, not the unit a project analyses. Researcher sector is
+  classified by legal or constitutional status, not behaviour.
+
+canonical_key_policy: >
+  Dataset entries are parsed with dashboard.dataset_normalisation and matched
+  after normalise_dataset_name. Where the existing normaliser exposes a reviewed
+  family through dataset_family_for, this reference may use that family as the
+  canonical key to avoid duplicating equivalent canonical variants such as
+  Census years, ASHE components, Labour Force Survey files, Data First extracts,
+  GUIE waves, and AD|ARC phases. Researcher organisations are parsed with
+  dashboard.institution_normalisation.parse_institutions and matched on its
+  canonical institution string.
+
+linked_products_rule:
+  rule: >
+    Record linkage is derived from linked-product component domains. A product
+    with components from no recognised linked product is "No record linkage"; a
+    product whose component-domain union contains one domain is within-domain;
+    a product whose union contains two or more domains is cross-domain.
+    linkage_span is derived from component_domains and is never stored in this
+    reference.
+  lens_vs_object_rule: >
+    A linked component contributes the "Migration & Demographics" domain only
+    when the dataset's substantive origin is population or demography, such as
+    Census as a population source, not when a dataset merely carries
+    demographic fields. NPD ethnicity or free-school-meal attributes are
+    attributes of education records, not a separate demographic component.
+  worked_edge_cases:
+    - >
+      GRADE combines Ofqual, NPD, and UCAS components, but NPD demographic
+      fields are attributes of education records. Its component-domain union is
+      Education & Skills only, so the derived span is within-domain.
+    - >
+      MoJ Data First is scoped to the public-register Data First justice
+      extracts listed here. MoJ-DfE linkage is excluded because it uses a
+      different legal gateway and is outside the public-register scope here.
+    - >
+      WED is not uniformly one linkage span. ASHE Longitudinal and ASHE linked
+      to PAYE/Self-Assessment are labour-market components; ASHE linked to
+      Census 2011 combines labour-market and population-demography origins.
+    - >
+      GUIE mirrors the GRADE edge case in the opposite direction: Census is a
+      population-origin source, so the education-Census product is cross-domain.
+
+dataset_collection_type_rule:
+  rule: >
+    Primary type by design, single-label. Each dataset gets exactly one of
+    survey, cohort, or administrative. Cohort means any longitudinal study
+    following the same units over time, including household and business panels.
+    Administrative includes vital-events and registry data such as births and
+    deaths.
+  acknowledged_simplification: >
+    Single-label classification suppresses dual-nature data. Census is filed as
+    survey by design though administratively used; a longitudinal survey is
+    filed under cohort, losing its survey aspect.
+  worked_edge_cases:
+    - "Census -> survey: survey instrument by design; administratively used."
+    - "Understanding Society -> cohort: longitudinal household panel."
+    - "Millennium Cohort Study -> cohort: longitudinal birth cohort."
+    - "ONS Longitudinal Study -> cohort: longitudinal study following persons."
+    - "ASHE -> survey: survey design, even though it samples administrative payroll."
+    - "LEO and ECHILD -> administrative: linked admin products."
+    - "Birth and death registrations -> administrative: vital events are folded in."
+    - "Decision Maker Panel and Longitudinal Small Business Survey -> cohort: business panels are longitudinal."
+
+dataset_unit_rule:
+  rule: >
+    The unit is the unit the dataset is structured or collected around, not the
+    unit a project analyses, and the rule is applied symmetrically. Each dataset
+    gets exactly one of individual, household, business, or area.
+  worked_edge_cases:
+    - >
+      Understanding Society -> household: it is a household panel even though
+      individuals are often analysed.
+    - >
+      Census -> individual: it enumerates persons; household is a grouping. This
+      is a deliberate call that differs from Understanding Society because
+      Census is a population enumeration, not a household panel.
+    - "ASHE -> individual: job/employee-centric, though employer-returned."
+    - "Trade and customs sources -> business."
+    - "Death and birth registrations -> individual: vital events are person-level."
+    - "LEO and person-linked products -> individual."
+    - >
+      Annual gas and electricity consumption at meter level -> area: the actual
+      structural unit is property/meter, which is outside the current unit
+      vocabulary, so area is the nearest fallback.
+    - >
+      Prices Survey Microdata -> business: the actual unit is price
+      quote/item/outlet, which is outside the current unit vocabulary; outlets
+      and businesses are core collection units, so business is the nearest
+      fallback.
+    - >
+      Earnings and Employees Study (EES) 2011 - Northern Ireland -> individual:
+      NI-specific ASHE 2011 linkage to Census and Capital Value data, kept
+      distinct from WED / ASHE-Census England and Wales; employee is the best
+      available unit.
+    - >
+      UK Gross Value Added -> area: an aggregate statistical output/time series
+      rather than a microdataset, with geography/economy-level structure.
+  cross_facet_consistency_note: >
+    Census appears in three facets as survey, individual, and
+    Migration & Demographics as a linkage component. These rulings are mutually
+    consistent: Census is a population survey enumerating individuals whose
+    substantive object is demography.
+
+dataset_lookup_review_notes:
+  - raw: "Research and Development Expenditures and Subsidies"
+    action: "review_manually"
+    rationale: >
+      Likely incomplete or derived. It could relate to BERD plus subsidy/admin
+      data, but should not be auto-mapped without source context.
+  - raw: "Firm Productivity"
+    action: "review_manually"
+    rationale: >
+      Looks like an analytical output or derived measure rather than a dataset
+      title. Do not auto-map to ABS/ABI/IDBR without source context.
+  - raw: "Employment Creation and Survival"
+    action: "review_manually"
+    rationale: >
+      Looks like a derived business-demography measure rather than a dataset
+      title. Do not auto-map to BSD/LBD/IDBR without source context.
+  - raw: "Foreign Direct Investment Index"
+    action: "review_manually"
+    rationale: >
+      Index wording suggests an output/indicator rather than the source FDI
+      survey. Do not auto-map unless project text confirms it means the Annual
+      Foreign Direct Investment Survey.
+  - raw: "Racial Disparity Audit"
+    action: "do_not_map_as_dataset"
+    rationale: >
+      Not a single dataset; closer to a government audit/dashboard/publication
+      drawing on multiple sources. Needs the underlying dataset title.
+  - raw: "Bespoke National Council for Voluntary Organisations"
+    action: "do_not_map_as_dataset"
+    rationale: >
+      Incomplete title naming an organisation/source rather than a dataset.
+      Needs the actual NCVO dataset name.
+
+researcher_sector_rule:
+  rule: >
+    Researcher sector is structural/legal status, not behaviour. Classify each
+    organisation, then derive a project's researcher_sectors as the union of its
+    researchers' organisation sectors.
+  priority_procedure:
+    - "UK HEI or institute constituted within one -> academic."
+    - "Public body, including departments, devolved/local government, NHS, ALBs, NDPBs, regulators, and the central bank -> government."
+    - "Registered charity, foundation, trust, CIC, or not-for-profit NGO -> third-sector, including research foundations and think tanks."
+    - "For-profit company -> commercial."
+    - "Genuinely uncertain -> unclassified; do not guess."
+  worked_edge_cases:
+    - "Nesta -> third-sector: registered charity, regardless of commercial behaviour."
+    - "IFS and comparable think tanks -> third-sector: charities, regardless of academic behaviour."
+    - "Bank of England -> government: public body, operational independence does not make it commercial."
+    - "ALBs, regulators, and ONS -> government."
+    - "University spin-out -> academic if the HEI; commercial if the for-profit subsidiary."
+    - >
+      Tech City UK -> government: use the historical register entity as a
+      government-backed tech-sector programme/public-sector machinery, despite
+      the later Tech Nation company-limited-by-guarantee legal form.
+    - >
+      Office of the Victims' Commissioner for England and Wales -> government:
+      an independent public office working with the Ministry of Justice and
+      criminal justice agencies remains public-sector despite operational
+      independence.
+    - >
+      Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)
+      -> unclassified: the acronym can be resolved, but the register string
+      does not by itself identify a host/legal body clearly enough to assign
+      academic or government without guessing.
+
+linked_products:
+  - canonical: "Longitudinal Education Outcomes (LEO)"
+    aliases:
+      - "LEO"
+      - "Longitudinal Education Outcomes (LEO)"
+    component_domains:
+      - "Education & Skills"
+      - "Labour Market & Employment"
+    notes: "Education records linked to labour-market outcomes."
+
+  - canonical: "Education and Child Health Insights from Linked Data (ECHILD)"
+    aliases:
+      - "Education and Child Health Insights from Linked Data (ECHILD)"
+      - "Education and Child Health Insights from Linked Data"
+    component_domains:
+      - "Health & Social Care"
+      - "Education & Skills"
+    notes: "Child health and education administrative linkage."
+
+  - canonical: "Linked Census, HES and Mortality Data"
+    aliases:
+      - "Linked Census, HES and Mortality Data"
+    component_domains:
+      - "Health & Social Care"
+      - "Migration & Demographics"
+    notes: "Census population-demography source linked to hospital and mortality health records."
+
+  - canonical: "GRading and Admissions Data England (GRADE)"
+    aliases:
+      - "GRading and Admissions Data England (GRADE)"
+      - "GRading and Admissions Data England"
+      - "UCAS Grading and Admissions"
+    component_domains:
+      - "Education & Skills"
+    notes: "Ofqual, NPD, and UCAS are education/admissions components; NPD demographic fields are attributes."
+
+  - canonical: "MoJ Data First"
+    aliases:
+      - "MoJ Data First Crown Court Defendant"
+      - "MoJ Data First Crown Court Defendant Case Level"
+      - "MoJ Data First Crown Court Iteration 2"
+      - "MoJ Data First Cross-Justice System Linking Dataset"
+      - "MoJ Data First Prisoner Custodial Journey"
+      - "MoJ Data First Prison Iteration 2"
+      - "MoJ Data First Probation"
+      - "MoJ Data First Probation Iteration 2"
+      - "MoJ Data First Family Court"
+      - "MoJ Data First Family Court Data Extract"
+      - "MoJ Data First Familyman Family Court"
+      - "MoJ Data First Magistrates' Court Defendant"
+      - "MoJ Data First Magistrates' Court Defendant Case Level"
+      - "MoJ Data First Magistrates Court Iteration 2"
+      - "MoJ Data First Magistrates Court Defendant Iteration 2"
+      - "MoJ Data First Linked Criminal Courts"
+      - "MoJ Data First Linked Criminal Courts Defendant Case Level"
+      - "MoJ Data First Linked Criminal Courts And Prisons Defendant"
+      - "RETIRED MoJ Data First Crown Court Defendant"
+      - "RETIRED MoJ Data First Magistrates Court Defendant"
+      - "RETIRED MoJ Data First Probation"
+    component_domains:
+      - "Crime & Justice"
+    notes: "Public-register Data First justice extracts only; MoJ-DfE linkage is excluded."
+
+  - canonical: "Administrative Data | Agricultural Research Collection (AD|ARC)"
+    aliases:
+      - "AD|ARC"
+      - "Administrative Data | Agricultural Research Collection (AD|ARC)"
+      - "Bespoke Admin Data - Agricultural Research Collection Phase 1"
+      - "Bespoke Admin Data - Agricultural Research Collection Phase 2"
+      - "Bespoke Admin Data: Agricultural Research Collection"
+    component_domains:
+      - "Environment & Agriculture"
+      - "Migration & Demographics"
+    notes: "Agricultural records linked to population-demographic Census components."
+
+  - canonical: "Annual Survey of Hours and Earnings Longitudinal"
+    aliases:
+      - "Annual Survey of Hours and Earnings Longitudinal"
+    component_domains:
+      - "Labour Market & Employment"
+    notes: "WED component: ASHE longitudinal, within labour-market domain."
+
+  - canonical: "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
+    aliases:
+      - "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
+    component_domains:
+      - "Labour Market & Employment"
+    notes: "WED component: ASHE linked to tax earnings records, within labour-market domain."
+
+  - canonical: "Annual Survey of Hours and Earnings linked to Census 2011"
+    aliases:
+      - "ASHE-linked"
+      - "Annual Survey of Hours and Earnings linked to Census 2011"
+      - "Annual Survey of Hours and Earnings linked to Census 2011 England and Wales"
+    component_domains:
+      - "Labour Market & Employment"
+      - "Migration & Demographics"
+    notes: "WED component: ASHE labour-market origin linked to Census population origin."
+
+  - canonical: "Earnings and Employees Study (EES) 2011 - Northern Ireland"
+    aliases:
+      - "Earnings and Employees Study"
+      - "Earnings and Employees Study (EES)"
+      - "Earnings and Employees Study 2011"
+      - "Earnings and Employees Study (EES) 2011"
+      - "Earnings and Employees Study 2011 Northern Ireland"
+      - "Earnings and Employees Study (EES) 2011 Northern Ireland"
+      - "Northern Ireland Census linked to ASHE"
+    component_domains:
+      - "Labour Market & Employment"
+      - "Migration & Demographics"
+      - "Housing & Planning"
+    notes: "ADR NI/NISRA linked dataset: ASHE 2011 for Northern Ireland linked to the 2011 Northern Ireland Census and Land & Property Services Capital Value data. Keep distinct from WED / ASHE-Census England and Wales linkage."
+
+  - canonical: "Growing Up in England (GUIE)"
+    aliases:
+      - "GUIE"
+      - "Growing Up in England Wave 1 (GUIE)"
+      - "Growing Up in England Wave 2 (GUIE)"
+      - "Growing Up in England Wave 2 - Exclusions"
+      - "Growing Up in England Wave 2 Vulnerability Measures"
+    component_domains:
+      - "Education & Skills"
+      - "Migration & Demographics"
+    notes: "Education records linked with Census population-origin components."
+
+datasets:
+  - canonical: "Census"
+    aliases:
+      - "Census"
+      - "Census 2001"
+      - "Census 2011"
+      - "Census 2021"
+      - "Census Wales 2011"
+      - "Census Wales 2021"
+      - "Integrated Census Microdata"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Family key from dataset_family_for for Census variants."
+
+  - canonical: "School Census"
+    aliases:
+      - "School Census"
+      - "English School Census Absences"
+      - "Northern Ireland School Census"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "School census records are pupil-level education administrative data."
+
+  - canonical: "Understanding Society"
+    aliases:
+      - "Understanding Society"
+      - "UK Household Longitudinal Study"
+      - "BHPS"
+      - "British Household Panel Survey"
+    collection_type: "cohort"
+    unit_of_observation: "household"
+    notes: "Defining household-panel edge case."
+
+  - canonical: "Millennium Cohort Study"
+    aliases:
+      - "Millennium Cohort Study"
+    collection_type: "cohort"
+    unit_of_observation: "individual"
+    notes: "Longitudinal birth cohort."
+
+  - canonical: "ONS Longitudinal Study (LS)"
+    aliases:
+      - "ONS Longitudinal Study (LS)"
+      - "ONS Longitudinal Study 1971"
+    collection_type: "cohort"
+    unit_of_observation: "individual"
+    notes: "Longitudinal study following persons over time."
+
+  - canonical: "ASHE"
+    aliases:
+      - "ASHE"
+      - "Annual Survey of Hours and Earnings (ASHE)"
+      - "Annual Survey of Hours and Earnings Longitudinal"
+      - "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
+      - "Annual Survey of Hours and Earnings linked to Census 2011"
+      - "Annual Survey of Hours and Earnings linked to Census 2011 England and Wales"
+      - "ASHE-linked"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Family key from dataset_family_for; ASHE is treated as survey by design."
+
+  - canonical: "Earnings and Employees Study (EES) 2011 - Northern Ireland"
+    aliases:
+      - "Earnings and Employees Study"
+      - "Earnings and Employees Study (EES)"
+      - "Earnings and Employees Study 2011"
+      - "Earnings and Employees Study (EES) 2011"
+      - "Earnings and Employees Study 2011 Northern Ireland"
+      - "Earnings and Employees Study (EES) 2011 Northern Ireland"
+      - "Northern Ireland Census linked to ASHE"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "ADR NI/NISRA linked dataset: ASHE 2011 for Northern Ireland linked to the 2011 Northern Ireland Census and Land & Property Services Capital Value data. Keep distinct from WED / ASHE-Census England and Wales linkage."
+
+  - canonical: "Longitudinal Education Outcomes (LEO)"
+    aliases:
+      - "LEO"
+      - "Longitudinal Education Outcomes (LEO)"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Person-linked education and earnings administrative product."
+
+  - canonical: "Education and Child Health Insights from Linked Data (ECHILD)"
+    aliases:
+      - "Education and Child Health Insights from Linked Data (ECHILD)"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Linked administrative child education and health product."
+
+  - canonical: "GRading and Admissions Data England (GRADE)"
+    aliases:
+      - "GRading and Admissions Data England (GRADE)"
+      - "UCAS Grading and Admissions"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Education/admissions administrative product."
+
+  - canonical: "Data First"
+    aliases:
+      - "Data First"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Family key from dataset_family_for for MoJ justice person/case extracts; individual is the pragmatic single-label unit."
+
+  - canonical: "AD|ARC"
+    aliases:
+      - "AD|ARC"
+      - "Administrative Data | Agricultural Research Collection (AD|ARC)"
+      - "Bespoke Admin Data - Agricultural Research Collection Phase 1"
+      - "Bespoke Admin Data - Agricultural Research Collection Phase 2"
+      - "Bespoke Admin Data: Agricultural Research Collection"
+    collection_type: "administrative"
+    unit_of_observation: "business"
+    notes: "Judgement call: farm/agricultural holding treated as business unit despite individual and farm linkage."
+
+  - canonical: "Growing Up in England (GUIE)"
+    aliases:
+      - "GUIE"
+      - "Growing Up in England Wave 1 (GUIE)"
+      - "Growing Up in England Wave 2 (GUIE)"
+      - "Growing Up in England Wave 2 - Exclusions"
+      - "Growing Up in England Wave 2 Vulnerability Measures"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Education-Census linked product; person/child-level."
+
+  - canonical: "Death Registrations"
+    aliases:
+      - "Death Registrations"
+      - "Death Registrations in England and Wales"
+      - "Death Registrations in England and Wales Indexed"
+      - "Death Registrations Finalised"
+      - "Death Registration Data - Provisional Monthly Extracts"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Vital events folded into administrative."
+
+  - canonical: "Birth Registrations in England and Wales"
+    aliases:
+      - "Birth Registrations in England and Wales"
+      - "Births and Deaths"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Vital events folded into administrative."
+
+  - canonical: "Annual Business Survey (ABS)"
+    aliases:
+      - "ABS"
+      - "Annual Business Survey (ABS)"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey."
+
+  - canonical: "Annual Business Inquiry"
+    aliases:
+      - "Annual Business Inquiry"
+      - "Northern Ireland Annual Business Inquiry"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey."
+
+  - canonical: "Quarterly Capital Expenditure Survey"
+    aliases:
+      - "Quarterly Capital Expenditure Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business investment survey."
+
+  - canonical: "Quarterly Acquisitions and Disposals of Capital Assets Survey"
+    aliases:
+      - "Quarterly Acquisitions and Disposals of Capital Assets Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business capital-assets survey."
+
+  - canonical: "Longitudinal Business Database"
+    aliases:
+      - "Longitudinal Business Database"
+    collection_type: "cohort"
+    unit_of_observation: "business"
+    notes: "Longitudinal business dataset."
+
+  - canonical: "Quarterly Fuels Inquiry"
+    aliases:
+      - "Quarterly Fuels Inquiry"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business energy/fuels survey."
+
+  - canonical: "Investment in Intangible Assets Survey"
+    aliases:
+      - "Investment in Intangible Assets Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business investment survey."
+
+  - canonical: "Annual Survey of Goods and Services"
+    aliases:
+      - "Annual Survey of Goods and Services"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business goods and services survey."
+
+  - canonical: "Broad Economy Sales and Exports"
+    aliases:
+      - "Broad Economy Sales and Exports"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business sales/export survey."
+
+  - canonical: "Annual Population Survey (APS)"
+    aliases:
+      - "APS"
+      - "Annual Population Survey (APS)"
+      - "Annual Population Survey Persons"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Population/labour survey, person-focused for this facet."
+
+  - canonical: "Labour Force Survey"
+    aliases:
+      - "Labour Force Survey"
+      - "Labour Force Survey (LFS)"
+      - "Labour Force Survey Person"
+      - "Quarterly Labour Force Survey"
+      - "Labour Force Survey Longitudinal"
+      - "Labour Force Survey Five-Quarter Longitudinal"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Family key from dataset_family_for; person-focused default."
+
+  - canonical: "Labour Force Survey Household"
+    aliases:
+      - "Labour Force Survey Household"
+    collection_type: "survey"
+    unit_of_observation: "household"
+    notes: "Exact household file override."
+
+  - canonical: "Business Structure Database (BSD)"
+    aliases:
+      - "Business Structure Database (BSD)"
+      - "Business Structure Database Longitudinal"
+      - "Longitudinal Business Structure Database"
+    collection_type: "administrative"
+    unit_of_observation: "business"
+    notes: "Business register/admin source."
+
+  - canonical: "Inter-Departmental Business Register (IDBR)"
+    aliases:
+      - "Inter-Departmental Business Register (IDBR)"
+      - "Longitudinal Inter-Departmental Business Register"
+    collection_type: "administrative"
+    unit_of_observation: "business"
+    notes: "Business register/admin source."
+
+  - canonical: "Linked Trade-in-Goods/Inter-Departmental Business Register"
+    aliases:
+      - "Linked Trade-in-Goods/Inter-Departmental Business Register"
+      - "Linked Trade-in-Goods/IDBR"
+    collection_type: "administrative"
+    unit_of_observation: "business"
+    notes: "Trade/customs and business register source."
+
+  - canonical: "Business Register and Employment Survey (BRES)"
+    aliases:
+      - "Business Register and Employment Survey (BRES)"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Employer/business survey."
+
+  - canonical: "Business Enterprise Research and Development (BERD)"
+    aliases:
+      - "Business Enterprise Research and Development (BERD)"
+      - "Business Enterprise Research and Development England"
+      - "Business Expenditure on Research and Development"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business R&D survey."
+
+  - canonical: "UK Innovation Survey (UKIS)"
+    aliases:
+      - "UK Innovation Survey (UKIS)"
+      - "Community Innovation Survey"
+      - "Community Innovation Survey \" United Kingdom Innovation Survey Data given for all available years unless otherwise stated"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business innovation survey."
+
+  - canonical: "Universities and Colleges Admissions Service (UCAS)"
+    aliases:
+      - "Universities and Colleges Admissions Service (UCAS)"
+      - "UCAS"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Admissions administrative records."
+
+  - canonical: "Annual Respondents Database"
+    aliases:
+      - "Annual Respondents Database"
+      - "Annual Respondents Database X"
+      - "Annual Respondents Database 2"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey-derived microdata."
+
+  - canonical: "Business Insights and Conditions Survey (BICS)"
+    aliases:
+      - "Business Insights and Conditions Survey (BICS)"
+      - "Business Impact of COVID-19 Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey."
+
+  - canonical: "Longitudinal Small Business Survey (LSBS)"
+    aliases:
+      - "Longitudinal Small Business Survey (LSBS)"
+      - "Small Business Survey"
+    collection_type: "cohort"
+    unit_of_observation: "business"
+    notes: "Business-panel edge case."
+
+  - canonical: "Decision Maker Panel"
+    aliases:
+      - "Decision Maker Panel"
+    collection_type: "cohort"
+    unit_of_observation: "business"
+    notes: "Business-panel edge case."
+
+  - canonical: "Management and Expectations Survey (MES)"
+    aliases:
+      - "Management and Expectations Survey (MES)"
+      - "Bespoke Management and Expectations Survey"
+      - "Management Practices Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business management survey."
+
+  - canonical: "International Trade in Services"
+    aliases:
+      - "International Trade in Services"
+      - "Annual International Trade in Services"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Trade-in-services business survey."
+
+  - canonical: "Annual Purchases Survey"
+    aliases:
+      - "Annual Purchases Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey."
+
+  - canonical: "Annual Foreign Direct Investment Survey"
+    aliases:
+      - "Annual Foreign Direct Investment Survey"
+      - "Annual Outward Foreign Direct Investment Survey"
+      - "Annual Inquiry into Foreign Direct Investment"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business/investment survey."
+
+  - canonical: "Mergers and Acquisitions Survey"
+    aliases:
+      - "Mergers and Acquisitions Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business transaction survey."
+
+  - canonical: "E-Commerce Survey"
+    aliases:
+      - "E-Commerce Survey"
+      - "E-Commerce and Digital Economy Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business digital-economy survey."
+
+  - canonical: "Monthly Business Survey"
+    aliases:
+      - "Monthly Business Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey."
+
+  - canonical: "Vacancy Survey"
+    aliases:
+      - "Vacancy Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Employer vacancy survey."
+
+  - canonical: "Low Carbon and Renewable Energy Economy Survey"
+    aliases:
+      - "Low Carbon and Renewable Energy Economy Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey."
+
+  - canonical: "UK Manufacturers' Sales by Product Survey"
+    aliases:
+      - "UK Manufacturers' Sales by Product Survey"
+      - "Products of the European Community"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business/product sales survey; PRODCOM was formally Products of the European Community."
+
+  - canonical: "Annual Gas and Electricity Consumption at Meter Level"
+    aliases:
+      - "Annual Gas and Electricity Consumption at Meter Level"
+      - "Annual gas and electricity consumption at the meter level - Great Britain"
+    collection_type: "administrative"
+    unit_of_observation: "area"
+    notes: "Valid energy-consumption dataset; actual unit is property/meter, outside the current unit vocabulary, so area is the nearest fallback."
+
+  - canonical: "Prices Survey Microdata"
+    aliases:
+      - "Prices Survey Microdata"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Valid prices survey microdata; actual unit is price quote/item/outlet, outside the current unit vocabulary, so business is the nearest fallback."
+
+  - canonical: "Over 50s Lifestyle Study"
+    aliases:
+      - "Over 50s Lifestyle Study"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "ONS individual survey/study."
+
+  - canonical: "Online Time Use Survey (OTUS)"
+    aliases:
+      - "Online Time Use Survey"
+      - "Online Time Use Survey (OTUS)"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "ONS individual time-use survey."
+
+  - canonical: "Working Lives of Teachers and Leaders Survey"
+    aliases:
+      - "Working Lives of Teachers and Leaders"
+      - "Working Lives of Teachers and Leaders Survey"
+    collection_type: "cohort"
+    unit_of_observation: "individual"
+    notes: "Longitudinal survey of individual teachers and leaders."
+
+  - canonical: "Survey of Innovation and Patent Use"
+    aliases:
+      - "Survey of Innovation and Patent Use"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey/report from the Intellectual Property Office; kept separate from UKIS."
+
+  - canonical: "Monthly Inquiry into the Distributive and Services Sector (MIDSS)"
+    aliases:
+      - "Monthly Inquiry into the Distributive and Services Sector"
+      - "Monthly Inquiry into the Distributive and Services Sector (MIDSS)"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business survey later replaced by the Monthly Business Survey."
+
+  - canonical: "Monthly Production Inquiry (MPI)"
+    aliases:
+      - "Monthly Production Inquiry"
+      - "Monthly Production Inquiry (MPI)"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Business production survey later replaced by the Index of Production / Monthly Business Survey."
+
+  - canonical: "Effects of Taxes and Benefits on Household Income"
+    aliases:
+      - "Effects of Tax and Benefits"
+      - "Effects of Taxes and Benefits on Household Income"
+    collection_type: "survey"
+    unit_of_observation: "household"
+    notes: "Published household-income output/dataset; treated as household because the structure is household income after taxes and benefits."
+
+  - canonical: "UK Gross Value Added"
+    aliases:
+      - "UK Gross Value Added"
+    collection_type: "administrative"
+    unit_of_observation: "area"
+    notes: "Aggregate statistical output/time series rather than a microdataset; geography/economy-level structure maps to area."
+
+  - canonical: "Statutory Homelessness Flows - England"
+    aliases:
+      - "Statutory Homelessness Flows England"
+      - "Statutory Homelessness Flows - England"
+    collection_type: "administrative"
+    unit_of_observation: "household"
+    notes: "Administrative homelessness flows dataset structured around households owed homelessness duties."
+
+  - canonical: "Workplace Employment Relations Survey"
+    aliases:
+      - "Workplace Employment Relations Survey"
+      - "Workplace Employment Relations Study"
+      - "Workplace Employment Relations Study (WERS)"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Workplace/establishment survey."
+
+  - canonical: "Employer Skills Survey"
+    aliases:
+      - "Employer Skills Survey"
+      - "Employer Skills Survey and Investment in Training"
+      - "National Employer Skills Survey"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Employer survey."
+
+  - canonical: "New Earnings Survey (NES)"
+    aliases:
+      - "New Earnings Survey (NES)"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Employee earnings survey."
+
+  - canonical: "New Earnings Survey Panel"
+    aliases:
+      - "New Earnings Survey Panel"
+    collection_type: "cohort"
+    unit_of_observation: "individual"
+    notes: "Longitudinal earnings panel."
+
+  - canonical: "Monthly Wages and Salary Survey"
+    aliases:
+      - "Monthly Wages and Salary Survey"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Employee earnings survey."
+
+  - canonical: "Crime Survey for England and Wales (CSEW)"
+    aliases:
+      - "Crime Survey for England and Wales (CSEW)"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Victimisation survey."
+
+  - canonical: "National Travel Survey"
+    aliases:
+      - "National Travel Survey"
+    collection_type: "survey"
+    unit_of_observation: "household"
+    notes: "Household travel survey."
+
+  - canonical: "Living Costs and Food Survey (LCF)"
+    aliases:
+      - "Living Costs and Food Survey (LCF)"
+      - "Safeguarded Living Costs and Food Survey"
+    collection_type: "survey"
+    unit_of_observation: "household"
+    notes: "Household expenditure survey."
+
+  - canonical: "Wealth and Assets Survey (WAS)"
+    aliases:
+      - "Wealth and Assets Survey (WAS)"
+    collection_type: "survey"
+    unit_of_observation: "household"
+    notes: "Household wealth survey."
+
+  - canonical: "Family Resources Survey"
+    aliases:
+      - "Family Resources Survey"
+    collection_type: "survey"
+    unit_of_observation: "household"
+    notes: "Household/family resources survey."
+
+  - canonical: "Opinions and Lifestyle Survey (OPN)"
+    aliases:
+      - "Opinions and Lifestyle Survey (OPN)"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Individual social survey."
+
+  - canonical: "COVID-19"
+    aliases:
+      - "COVID-19"
+      - "COVID-19 Infection Survey (CIS)"
+      - "COVID-19 Weekly Opinions Survey"
+      - "Coronavirus and the Social Impacts on Great Britain"
+    collection_type: "survey"
+    unit_of_observation: "individual"
+    notes: "Family key from dataset_family_for; survey-based COVID sources."
+
+  - canonical: "Public Health Research Database"
+    aliases:
+      - "Public Health Research Database"
+      - "HES and Mortality"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Health administrative records."
+
+  - canonical: "Linked Census, HES and Mortality Data"
+    aliases:
+      - "Linked Census, HES and Mortality Data"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Linked Census, hospital, and mortality product; record-linkage facet captures the cross-domain Census-health structure."
+
+  - canonical: "Nursing and Midwifery Council Register linked to Census 2021"
+    aliases:
+      - "Nursing and Midwifery Council Register linked to Census 2021"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Professional register linked to Census."
+
+  - canonical: "Nursing and Midwifery Council Register"
+    aliases:
+      - "Nursing and Midwifery Council Register"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Professional register."
+
+  - canonical: "Further Education Workforce Data Collection"
+    aliases:
+      - "Further Education Workforce Data Collection"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Person-level workforce administrative collection."
+
+  - canonical: "Linked Census and Death Occurrences"
+    aliases:
+      - "Linked Census and Death Occurrences"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Person-level linked mortality and Census product."
+
+  - canonical: "Consumer Prices Index"
+    aliases:
+      - "Consumer Prices Index"
+      - "Retail Price Index"
+    collection_type: "administrative"
+    unit_of_observation: "area"
+    notes: "Price-index observations are treated as area/product-market statistics; area is the closest available unit."
+
+  - canonical: "Producer Price Index"
+    aliases:
+      - "Producer Price Index"
+    collection_type: "survey"
+    unit_of_observation: "business"
+    notes: "Producer/business price survey."
+
+  - canonical: "Capital Stock Dataset"
+    aliases:
+      - "Capital Stock Dataset"
+    collection_type: "administrative"
+    unit_of_observation: "business"
+    notes: "Business/economic stock dataset."
+
+organisations:
+  - canonical: "University College London"
+    aliases: ["UCL", "University College London"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "London School of Economics and Political Science (LSE)"
+    aliases:
+      - "London School of Economics and Political Science (LSE)"
+      - "London School of Economics"
+      - "London School of Economics and Political Science"
+      - "LSE"
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Swansea University"
+    aliases: ["Swansea University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Institute for Fiscal Studies"
+    aliases: ["Institute for Fiscal Studies", "IFS"]
+    sectors: ["third-sector"]
+    notes: "Research institute/think tank treated by charity/not-for-profit status, not academic behaviour."
+  - canonical: "University of Oxford"
+    aliases: ["University of Oxford", "Oxford University", "University of Oxford - Sociology"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Office for National Statistics"
+    aliases: ["Office for National Statistics", "ONS"]
+    sectors: ["government"]
+    notes: "Public body."
+  - canonical: "University of Manchester"
+    aliases: ["University of Manchester"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Warwick"
+    aliases: ["University of Warwick", "Warwick Business School"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Strathclyde"
+    aliases: ["University of Strathclyde"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Fraser of Allander Institute (University of Strathclyde)"
+    aliases:
+      - "Fraser of Allander Institute (University of Strathclyde)"
+      - "Fraser of Allander Institute"
+    sectors: ["academic"]
+    notes: "Research institute constituted within a UK HEI."
+  - canonical: "King's College London"
+    aliases: ["King's College London", "KCL"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Cardiff University"
+    aliases: ["Cardiff University", "University of Cardiff"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Edinburgh"
+    aliases: ["University of Edinburgh"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Sheffield"
+    aliases: ["University of Sheffield"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Bristol"
+    aliases: ["University of Bristol"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Essex"
+    aliases: ["University of Essex"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Institute for Social and Economic Research (University of Essex)"
+    aliases:
+      - "Institute for Social and Economic Research (University of Essex)"
+      - "Institute for Social and Economic Research"
+      - "Institute for Social and Economic Research, University of Essex"
+    sectors: ["academic"]
+    notes: "Research institute constituted within a UK HEI."
+  - canonical: "University of Cambridge"
+    aliases: ["University of Cambridge", "Cambridge University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Frontier Economics Ltd"
+    aliases: ["Frontier Economics Ltd"]
+    sectors: ["commercial"]
+    notes: "For-profit company."
+  - canonical: "University of Southampton"
+    aliases: ["University of Southampton"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Nottingham"
+    aliases: ["University of Nottingham"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Bank of England"
+    aliases: ["Bank of England"]
+    sectors: ["government"]
+    notes: "Central bank/public body; operational independence does not change sector."
+  - canonical: "University of Bath"
+    aliases: ["University of Bath"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Sussex"
+    aliases: ["University of Sussex"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Ipsos"
+    aliases: ["Ipsos", "IPSOS MORI", "Ipsos UK"]
+    sectors: ["commercial"]
+    notes: "For-profit research company."
+  - canonical: "University of Liverpool"
+    aliases: ["University of Liverpool"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Queen's University Belfast"
+    aliases: ["Queen's University Belfast"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Surrey"
+    aliases: ["University of Surrey"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Exeter"
+    aliases: ["University of Exeter"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Imperial College London"
+    aliases: ["Imperial College London", "Imperial Business School"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of London"
+    aliases: ["University of London"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Queen Mary University of London"
+    aliases: ["Queen Mary University of London"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "National Institute for Economic and Social Research"
+    aliases: ["National Institute for Economic and Social Research"]
+    sectors: ["third-sector"]
+    notes: "Independent research institute/charity."
+  - canonical: "University of St Andrews"
+    aliases: ["University of St Andrews"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Birmingham"
+    aliases: ["University of Birmingham"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Belmana"
+    aliases: ["Belmana", "Belmana Ltd"]
+    sectors: ["commercial"]
+    notes: "Consultancy/company."
+  - canonical: "Welsh Government"
+    aliases: ["Welsh Government"]
+    sectors: ["government"]
+    notes: "Devolved government."
+  - canonical: "Public Health Wales"
+    aliases: ["Public Health Wales"]
+    sectors: ["government"]
+    notes: "Welsh NHS/public-health body."
+  - canonical: "National Foundation for Education Research (NFER)"
+    aliases:
+      - "National Foundation for Education Research (NFER)"
+      - "National Foundation for Education Research"
+      - "National Foundation for Educational Research"
+      - "National Foundation for Educational Research (NFER)"
+      - "NFER"
+    sectors: ["third-sector"]
+    notes: "Research charity/not-for-profit."
+  - canonical: "London School of Hygiene and Tropical Medicine"
+    aliases: ["London School of Hygiene and Tropical Medicine", "LSHTM"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Simetrica"
+    aliases: ["Simetrica"]
+    sectors: ["commercial"]
+    notes: "For-profit consultancy."
+  - canonical: "University of East Anglia"
+    aliases: ["University of East Anglia"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Lancaster University"
+    aliases: ["Lancaster University", "University of Lancaster", "Lancaster University Management School"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Reading"
+    aliases: ["University of Reading"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of York"
+    aliases: ["University of York"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Durham"
+    aliases: ["University of Durham", "Durham University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Leicester"
+    aliases: ["University of Leicester"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Leeds"
+    aliases: ["University of Leeds"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "City, University of London"
+    aliases: ["City, University of London"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Westminster"
+    aliases: ["University of Westminster"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "London Economics"
+    aliases: ["London Economics"]
+    sectors: ["commercial"]
+    notes: "For-profit consultancy."
+  - canonical: "University of the West of England"
+    aliases: ["University of the West of England"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Greater London Authority (GLA)"
+    aliases: ["Greater London Authority (GLA)", "Greater London Authority", "GLA"]
+    sectors: ["government"]
+    notes: "Local/regional public body."
+  - canonical: "University of Dundee"
+    aliases: ["University of Dundee"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "FFT Education Ltd"
+    aliases: ["FFT Education Ltd"]
+    sectors: ["commercial"]
+    notes: "For-profit company."
+  - canonical: "Ulster University"
+    aliases: ["Ulster University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Competition and Markets Authority"
+    aliases: ["Competition and Markets Authority"]
+    sectors: ["government"]
+    notes: "Regulator/public body."
+  - canonical: "Royal Holloway, University of London"
+    aliases: ["Royal Holloway, University of London"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "UCL Institute of Education"
+    aliases: ["UCL Institute of Education"]
+    sectors: ["academic"]
+    notes: "Institute within UK HEI."
+  - canonical: "Newcastle University"
+    aliases: ["Newcastle University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Resolution Foundation"
+    aliases: ["Resolution Foundation"]
+    sectors: ["third-sector"]
+    notes: "Think tank/foundation; classified by not-for-profit status."
+  - canonical: "University of Glasgow"
+    aliases: ["University of Glasgow"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Kent"
+    aliases: ["University of Kent"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Aston"
+    aliases: ["University of Aston", "Aston University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Department for International Trade"
+    aliases: ["Department for International Trade"]
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "Northern Ireland Statistics and Research Agency"
+    aliases: ["Northern Ireland Statistics and Research Agency", "NISRA"]
+    sectors: ["government"]
+    notes: "Public statistics agency."
+  - canonical: "Edinburgh Napier University"
+    aliases: ["Edinburgh Napier University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Agri-Food and Biosciences Institute"
+    aliases: ["Agri-Food and Biosciences Institute"]
+    sectors: ["government"]
+    notes: "Public research body."
+  - canonical: "Heriot-Watt University"
+    aliases: ["Heriot-Watt University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Loughborough University"
+    aliases: ["Loughborough University", "University of Loughborough"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "PwC LLP"
+    aliases: ["PwC LLP", "PwC", "PricewaterhouseCoopers LLP"]
+    sectors: ["commercial"]
+    notes: "For-profit professional services firm."
+  - canonical: "Education Policy Institute"
+    aliases: ["Education Policy Institute"]
+    sectors: ["third-sector"]
+    notes: "Education think tank; classified by not-for-profit status."
+  - canonical: "Innovate UK"
+    aliases: ["Innovate UK"]
+    sectors: ["government"]
+    notes: "Public body/UKRI council."
+  - canonical: "Department for Business, Energy and Industrial Strategy"
+    aliases: ["Department for Business, Energy and Industrial Strategy", "BEIS"]
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "Technopolis"
+    aliases: ["Technopolis"]
+    sectors: ["commercial"]
+    notes: "For-profit consultancy."
+  - canonical: "University of Stirling"
+    aliases: ["University of Stirling"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Massachusetts Institute of Technology"
+    aliases: ["Massachusetts Institute of Technology", "MIT"]
+    sectors: ["academic"]
+    notes: "Higher education institution."
+  - canonical: "Department for Business and Trade"
+    aliases: ["Department for Business and Trade", "DBT"]
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "Public Health England"
+    aliases: ["Public Health England"]
+    sectors: ["government"]
+    notes: "Public health body."
+  - canonical: "Low Pay Commission"
+    aliases: ["Low Pay Commission"]
+    sectors: ["government"]
+    notes: "Public body."
+  - canonical: "SQW - Economic and Management Consultants"
+    aliases: ["SQW - Economic and Management Consultants", "SQW"]
+    sectors: ["commercial"]
+    notes: "For-profit consultancy."
+  - canonical: "Department of Health and Social Care (DHSC)"
+    aliases:
+      - "Department of Health and Social Care (DHSC)"
+      - "Department of Health and Social Care"
+      - "DHSC"
+      - "Department of Health"
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "Centre for Cities"
+    aliases: ["Centre for Cities"]
+    sectors: ["third-sector"]
+    notes: "Think tank/not-for-profit."
+  - canonical: "Harvard University"
+    aliases: ["Harvard University"]
+    sectors: ["academic"]
+    notes: "Higher education institution."
+  - canonical: "Greater Manchester Combined Authority"
+    aliases: ["Greater Manchester Combined Authority"]
+    sectors: ["government"]
+    notes: "Local/regional public body."
+  - canonical: "Whole Life Consultants"
+    aliases: ["Whole Life Consultants"]
+    sectors: ["commercial"]
+    notes: "For-profit consultancy."
+  - canonical: "The Work Foundation"
+    aliases: ["The Work Foundation"]
+    sectors: ["third-sector"]
+    notes: "Think tank/not-for-profit."
+  - canonical: "Scottish Government"
+    aliases: ["Scottish Government"]
+    sectors: ["government"]
+    notes: "Devolved government."
+  - canonical: "Nesta"
+    aliases: ["Nesta"]
+    sectors: ["third-sector"]
+    notes: "Registered charity; behaviour does not make it commercial."
+  - canonical: "RSM UK"
+    aliases: ["RSM UK"]
+    sectors: ["commercial"]
+    notes: "For-profit professional services firm."
+  - canonical: "University of Hertfordshire"
+    aliases: ["University of Hertfordshire"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Manchester Metropolitan University"
+    aliases: ["Manchester Metropolitan University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Nottingham Trent University"
+    aliases: ["Nottingham Trent University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Brunel University London"
+    aliases: ["Brunel University London"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Brighton"
+    aliases: ["University of Brighton"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "HM Treasury"
+    aliases: ["HM Treasury"]
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "Cabinet Office"
+    aliases: ["Cabinet Office"]
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "Oxford Economics Ltd"
+    aliases: ["Oxford Economics Ltd", "Oxford Economics"]
+    sectors: ["commercial"]
+    notes: "Private limited company; Oxford Economics without the Ltd suffix is treated as the same commercial entity."
+  - canonical: "National Centre for Social Research"
+    aliases: ["National Centre for Social Research", "NatCen Social Research"]
+    sectors: ["third-sector"]
+    notes: "Independent social research charity/not-for-profit."
+  - canonical: "Alan Turing Institute"
+    aliases: ["Alan Turing Institute", "The Alan Turing, Institute"]
+    sectors: ["third-sector"]
+    notes: "Independent research institute; not treated as an HEI."
+  - canonical: "Intellectual Property Office"
+    aliases: ["Intellectual Property Office"]
+    sectors: ["government"]
+    notes: "Public body."
+  - canonical: "Department for Levelling Up, Housing and Communities"
+    aliases: ["Department for Levelling Up, Housing and Communities", "DLUHC"]
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "University of Central Lancashire"
+    aliases: ["University of Central Lancashire"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "ARUP"
+    aliases: ["ARUP"]
+    sectors: ["commercial"]
+    notes: "For-profit professional services firm."
+  - canonical: "Cambridge Econometrics"
+    aliases: ["Cambridge Econometrics"]
+    sectors: ["commercial"]
+    notes: "For-profit consultancy."
+  - canonical: "Economic Statistics Centre of Excellence"
+    aliases: ["Economic Statistics Centre of Excellence"]
+    sectors: ["third-sector"]
+    notes: "Research centre outside an HEI in the normalised register; conservative third-sector classification."
+  - canonical: "European University Institute"
+    aliases: ["European University Institute"]
+    sectors: ["academic"]
+    notes: "Higher education institution."
+  - canonical: "ADS (Aerospace, Defence, Security, Space) Group Limited"
+    aliases:
+      - "ADS (Aerospace, Defence, Security, Space) Group Limited"
+      - "ADS Group Limited"
+    sectors: ["commercial"]
+    notes: "Company/industry body; canonical name clarifies the acronym in the register."
+  - canonical: "Centre for Economic and Business Research (CEBR)"
+    aliases:
+      - "Centre for Economic and Business Research (CEBR)"
+      - "Centre for Economic and Business Research"
+      - "Centre for Economic and Business Research Ltd"
+      - "Centre for Economic and Business Research Ltd (CBER)"
+      - "CEBR"
+    sectors: ["commercial"]
+    notes: "Private economic consultancy/research company."
+  - canonical: "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)"
+    aliases:
+      - "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)"
+      - "CEDAR"
+    sectors: ["unclassified"]
+    notes: "Acronym resolved, but the register string does not clearly identify the host/legal body; left unclassified rather than guessing."
+  - canonical: "Department of Health (Northern Ireland)"
+    aliases:
+      - "Department of Health (Northern Ireland)"
+      - "Department of Health - NI"
+    sectors: ["government"]
+    notes: "Northern Ireland Executive department."
+  - canonical: "Engineering Construction Industry Training Board (ECITB)"
+    aliases:
+      - "Engineering Construction Industry Training Board (ECITB)"
+      - "ECITB"
+      - "ECIBT"
+    sectors: ["government"]
+    notes: "Industrial training board/public body; ECIBT is treated as a register typo."
+  - canonical: "Equality and Human Rights Commission (EHRC)"
+    aliases:
+      - "Equality and Human Rights Commission (EHRC)"
+      - "Equality and Human Rights Commission"
+      - "EHRC"
+    sectors: ["government"]
+    notes: "Regulator/public body."
+  - canonical: "Environmental Systems Research Institute (ESRI)"
+    aliases:
+      - "Environmental Systems Research Institute (ESRI)"
+      - "Environmental Systems Research Institute"
+      - "ESRI"
+    sectors: ["commercial"]
+    notes: "For-profit geospatial software/company entity."
+  - canonical: "Health Data Research UK (HDR UK)"
+    aliases:
+      - "Health Data Research UK (HDR UK)"
+      - "Health Data Research UK"
+      - "HDR UK"
+    sectors: ["third-sector"]
+    notes: "Not-for-profit/charitable health data research institute."
+  - canonical: "HM Revenue and Customs (HMRC)"
+    aliases:
+      - "HM Revenue and Customs (HMRC)"
+      - "HM Revenue and Customs"
+      - "HMRC"
+    sectors: ["government"]
+    notes: "UK government department."
+  - canonical: "Henley Business School (University of Reading)"
+    aliases:
+      - "Henley Business School (University of Reading)"
+      - "Henley Business School"
+    sectors: ["academic"]
+    notes: "Business school constituted within a UK HEI."
+  - canonical: "Institut Européen d'Administration des Affaires (INSEAD)"
+    aliases:
+      - "Institut Européen d'Administration des Affaires (INSEAD)"
+      - "INSEAD"
+      - "INSEAD / Institut Européen d'Administration des Affaires"
+    sectors: ["academic"]
+    notes: "Higher education/research institution."
+  - canonical: "Learning and Work Institute"
+    aliases:
+      - "Learning and Work Institute"
+      - "Learning and Work"
+    sectors: ["third-sector"]
+    notes: "Charity/not-for-profit research and policy institute."
+  - canonical: "London Metropolitan University"
+    aliases:
+      - "London Metropolitan University"
+      - "London Metropolitan, University"
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Municipal & General (M&G)"
+    aliases:
+      - "Municipal & General (M&G)"
+      - "M&G"
+    sectors: ["commercial"]
+    notes: "Commercial financial/private-sector entity."
+  - canonical: "PA Consulting"
+    aliases: ["PA Consulting"]
+    sectors: ["commercial"]
+    notes: "For-profit consultancy."
+  - canonical: "UK Health Security Agency"
+    aliases: ["UK Health Security Agency", "UKHSA"]
+    sectors: ["government"]
+    notes: "Public health agency."
+  - canonical: "Glasgow City Council"
+    aliases: ["Glasgow City Council"]
+    sectors: ["government"]
+    notes: "Local government."
+  - canonical: "Health Foundation"
+    aliases: ["Health Foundation"]
+    sectors: ["third-sector"]
+    notes: "Foundation/charity."
+  - canonical: "Academy of Medical Sciences"
+    aliases: ["Academy of Medical Sciences"]
+    sectors: ["third-sector"]
+    notes: "Charity/learned society."
+  - canonical: "Nuffield Family Justice Observatory"
+    aliases: ["Nuffield Family Justice Observatory"]
+    sectors: ["third-sector"]
+    notes: "Research charity/not-for-profit."
+  - canonical: "West Midlands Combined Authority"
+    aliases: ["West Midlands Combined Authority"]
+    sectors: ["government"]
+    notes: "Local/regional public body."
+  - canonical: "Institute of Occupational Medicine"
+    aliases: ["Institute of Occupational Medicine"]
+    sectors: ["third-sector"]
+    notes: "Research charity/not-for-profit."
+  - canonical: "Skills Development Scotland"
+    aliases: ["Skills Development Scotland"]
+    sectors: ["government"]
+    notes: "Public skills body."
+  - canonical: "OFSTED"
+    aliases: ["OFSTED", "Ofsted"]
+    sectors: ["government"]
+    notes: "Regulator/public body."
+  - canonical: "UK Research and Innovation"
+    aliases: ["UK Research and Innovation", "UKRI"]
+    sectors: ["government"]
+    notes: "Public research and innovation body."
+  - canonical: "MIME Consulting Ltd"
+    aliases: ["MIME Consulting Ltd"]
+    sectors: ["commercial"]
+    notes: "For-profit company."
+  - canonical: "Georgetown University"
+    aliases: ["Georgetown University"]
+    sectors: ["academic"]
+    notes: "Higher education institution."
+  - canonical: "University of Barcelona"
+    aliases: ["University of Barcelona"]
+    sectors: ["academic"]
+    notes: "Higher education institution."
+  - canonical: "University of Hull"
+    aliases: ["University of Hull"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Pro Bono Economics"
+    aliases: ["Pro Bono Economics"]
+    sectors: ["third-sector"]
+    notes: "Charity/not-for-profit."
+  - canonical: "Kingston University"
+    aliases: ["Kingston University", "University of Kingston"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Sheffield Hallam University"
+    aliases: ["Sheffield Hallam University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "UK Space Agency"
+    aliases: ["UK Space Agency"]
+    sectors: ["government"]
+    notes: "Public agency."
+  - canonical: "National Physical Laboratory"
+    aliases: ["National Physical Laboratory"]
+    sectors: ["government"]
+    notes: "Public laboratory."
+  - canonical: "University of Northampton"
+    aliases: ["University of Northampton"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Digital Health and Care Wales"
+    aliases: ["Digital Health and Care Wales"]
+    sectors: ["government"]
+    notes: "Welsh public health/data body."
+  - canonical: "RAND Europe"
+    aliases: ["RAND Europe"]
+    sectors: ["third-sector"]
+    notes: "Independent research organisation; conservative not-for-profit classification."
+  - canonical: "University of Padova"
+    aliases: ["University of Padova"]
+    sectors: ["academic"]
+    notes: "Higher education institution."
+  - canonical: "Tech City UK"
+    aliases: ["Tech City UK"]
+    sectors: ["government"]
+    notes: "Government-backed tech-sector organisation/programme; treated as historical public-sector machinery in the register despite later Tech Nation legal-form complexity."
+  - canonical: "University of Derby"
+    aliases: ["University of Derby"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Anglia Ruskin University Higher Education Corporation"
+    aliases: ["Anglia Ruskin University Higher Education Corporation"]
+    sectors: ["academic"]
+    notes: "UK HEI / higher education corporation."
+  - canonical: "Northumbria University"
+    aliases: ["Northumbria University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Suffolk"
+    aliases: ["University of Suffolk"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "Alma Economics"
+    aliases: ["Alma Economics"]
+    sectors: ["commercial"]
+    notes: "Private limited company / consultancy."
+  - canonical: "Chartered Institute of Personnel and Development"
+    aliases: ["Chartered Institute of Personnel and Development"]
+    sectors: ["third-sector"]
+    notes: "Chartered professional body and registered charity."
+  - canonical: "Office of the Victims' Commissioner for England and Wales"
+    aliases: ["Office of the Victims' Commissioner for England and Wales"]
+    sectors: ["government"]
+    notes: "Independent public office working with the Ministry of Justice and criminal justice agencies."
+  - canonical: "Happy City Initiative"
+    aliases: ["Happy City Initiative"]
+    sectors: ["third-sector"]
+    notes: "Registered charity / charitable company, now associated with Centre for Thriving Places."
+  - canonical: "New Economics Foundation"
+    aliases: ["New Economics Foundation"]
+    sectors: ["third-sector"]
+    notes: "Registered charity / think tank."
+  - canonical: "St Mungo's"
+    aliases: ["St Mungo's"]
+    sectors: ["third-sector"]
+    notes: "Registered charity and housing association."
+  - canonical: "Columbia University"
+    aliases: ["Columbia University"]
+    sectors: ["academic"]
+    notes: "University / research institution."
+  - canonical: "Hardisty Jones Associates"
+    aliases: ["Hardisty Jones Associates"]
+    sectors: ["commercial"]
+    notes: "Private limited company / consultancy."
+  - canonical: "BOP Consulting"
+    aliases: ["BOP Consulting"]
+    sectors: ["commercial"]
+    notes: "Private limited company / consultancy."

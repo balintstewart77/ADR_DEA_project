@@ -146,7 +146,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
             "Scott Carter,\n"
             "IPSOS MORI"
         )
-        self.assertEqual(institutions, ["IPSOS MORI"])
+        self.assertEqual(institutions, ["Ipsos"])
 
     def test_continuation_lines_are_joined_into_institution_names(self):
         institutions = self.parse(
@@ -185,8 +185,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
             institutions,
             [
                 "PwC LLP",
-                "IPSOS MORI",
-                "Ipsos UK",
+                "Ipsos",
                 "UCL Institute of Education",
                 "City, University of London",
                 "University of Cambridge",
@@ -203,8 +202,86 @@ class InstitutionNormalisationTest(unittest.TestCase):
             [
                 "Health Foundation",
                 "Academy of Medical Sciences",
-                "London School of Economics",
+                "London School of Economics and Political Science (LSE)",
                 "University College London",
+            ],
+        )
+
+    def test_requested_institution_aliases_are_canonicalised(self):
+        institutions = self.parse(
+            "Jane Smith, ADS Group Limited\n"
+            "John Doe, Belmana Ltd\n"
+            "Jane Smith, CEBR\n"
+            "John Doe, Centre for Economic and Business Research Ltd (CBER)\n"
+            "Jane Smith, CEDAR\n"
+            "John Doe, Department of Health\n"
+            "Jane Smith, Department of Health - NI\n"
+            "John Doe, ECIBT\n"
+            "Jane Smith, EHRC\n"
+            "John Doe, Equality and Human Rights Commission\n"
+            "Jane Smith, ESRI\n"
+            "John Doe, Greater London Authority\n"
+            "Jane Smith, Health Data Research UK\n"
+            "John Doe, HM Revenue and Customs\n"
+            "Jane Smith, Henley Business School\n"
+            "John Doe, INSEAD\n"
+            "Jane Smith, Institute for Social and Economic Research\n"
+            "John Doe, Institute for Social and Economic Research, University of Essex\n"
+            "Jane Smith, Learning and Work\n"
+            "John Doe, London Metropolitan, University\n"
+            "Jane Smith, London School of Economics\n"
+            "John Doe, M&G\n"
+            "Jane Smith, NFER\n"
+            "John Doe, National Foundation for Education Research"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "ADS (Aerospace, Defence, Security, Space) Group Limited",
+                "Belmana",
+                "Centre for Economic and Business Research (CEBR)",
+                "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)",
+                "Department of Health and Social Care (DHSC)",
+                "Department of Health (Northern Ireland)",
+                "Engineering Construction Industry Training Board (ECITB)",
+                "Equality and Human Rights Commission (EHRC)",
+                "Environmental Systems Research Institute (ESRI)",
+                "Greater London Authority (GLA)",
+                "Health Data Research UK (HDR UK)",
+                "HM Revenue and Customs (HMRC)",
+                "Henley Business School (University of Reading)",
+                "Institut Européen d'Administration des Affaires (INSEAD)",
+                "Institute for Social and Economic Research (University of Essex)",
+                "Learning and Work Institute",
+                "London Metropolitan University",
+                "London School of Economics and Political Science (LSE)",
+                "Municipal & General (M&G)",
+                "National Foundation for Education Research (NFER)",
+            ],
+        )
+
+    def test_person_and_placeholder_fragments_are_dropped(self):
+        institutions = self.parse(
+            "Jane Smith, Cristina Sechel\n"
+            "John Doe, Independent Research\n"
+            "Johannes Kepler, University"
+        )
+        self.assertEqual(institutions, [])
+
+    def test_embedded_researcher_names_after_known_institutions_are_removed(self):
+        institutions = self.parse(
+            "John Doe, EHRC Angela Kubi, EHRC, EHRC Arturo Lonighi, EHRC Sian Hughes\n"
+            "Jane Smith, NFER Gemma Schwendel, NFER\n"
+            "Jane Smith, King's College London Dimitris Vallis, King's College London\n"
+            "John Doe, London School of Hygiene and Tropical Medicine Rochelle Schneider dos"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "Equality and Human Rights Commission (EHRC)",
+                "National Foundation for Education Research (NFER)",
+                "King's College London",
+                "London School of Hygiene and Tropical Medicine",
             ],
         )
 
