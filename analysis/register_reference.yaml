@@ -560,6 +560,14 @@ datasets:
     unit_of_observation: "individual"
     notes: "Education/admissions administrative product."
 
+  - canonical: "EOL"
+    aliases:
+      - "EOL"
+      - "EOL Dataset (2015-2022)"
+    collection_type: "administrative"
+    unit_of_observation: "individual"
+    notes: "Education Outcomes Linkage for Northern Ireland; person-level education administrative linkage."
+
   - canonical: "Data First"
     aliases:
       - "Data First"

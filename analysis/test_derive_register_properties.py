@@ -1,3 +1,4 @@
+import copy
 import unittest
 
 from analysis.derive_register_properties import (
@@ -82,6 +83,23 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
         self.assertEqual(self.span_for_dataset("Longitudinal Education Outcomes (LEO)"), "Cross-domain record linkage")
         self.assertEqual(self.span_for_dataset("EOL"), "Within-domain record linkage")
 
+    def test_linked_products_have_dataset_property_records(self):
+        missing = []
+        for product in self.reference.get("linked_products", []):
+            values = [product["canonical"], *(product.get("aliases") or [])]
+            if not any(lookup_dataset_record(value, self.indexes) for value in values):
+                missing.append(product["canonical"])
+        self.assertEqual(missing, [])
+
+    def test_linked_products_require_dataset_property_records(self):
+        reference = copy.deepcopy(self.reference)
+        reference["datasets"] = [
+            record for record in reference.get("datasets", [])
+            if record.get("canonical") != "EOL"
+        ]
+        with self.assertRaisesRegex(ValueError, "Linked product 'EOL' has no matching dataset record"):
+            build_indexes(reference)
+
     def test_dataset_worked_edge_cases(self):
         cases = {
             "Census 2011": ("survey", "individual"),
@@ -91,6 +109,8 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Education and Child Health Insights from Linked Data (ECHILD)": ("administrative", "individual"),
             "Linked Census, HES and Mortality Data": ("administrative", "individual"),
             "Earnings and Employees Study": ("survey", "individual"),
+            "EOL": ("administrative", "individual"),
+            "EOL Dataset (2015-2022)": ("administrative", "individual"),
             "Death Registrations": ("administrative", "individual"),
             "Birth Registrations in England and Wales": ("administrative", "individual"),
             "Decision Maker Panel": ("cohort", "business"),

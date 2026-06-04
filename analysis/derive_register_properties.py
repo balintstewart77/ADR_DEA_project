@@ -187,6 +187,7 @@ def validate_reference(reference: dict) -> None:
         raise ValueError("meta_principle is required")
 
     seen_datasets: set[str] = set()
+    dataset_reference_keys: set[str] = set()
     for record in reference.get("datasets", []):
         canonical = record.get("canonical")
         if not canonical:
@@ -198,6 +199,8 @@ def validate_reference(reference: dict) -> None:
             raise ValueError(f"{canonical!r} has invalid collection_type {record.get('collection_type')!r}")
         if record.get("unit_of_observation") not in UNITS:
             raise ValueError(f"{canonical!r} has invalid unit_of_observation {record.get('unit_of_observation')!r}")
+        for value in [canonical, *_as_list(record.get("aliases"))]:
+            dataset_reference_keys.update(_reference_dataset_keys(str(value)))
 
     seen_orgs: set[str] = set()
     for record in reference.get("organisations", []):
@@ -237,6 +240,14 @@ def validate_reference(reference: dict) -> None:
         invalid = sorted(set(domains) - set(DOMAIN_ORDER))
         if invalid:
             raise ValueError(f"{canonical!r} has invalid component domains {invalid!r}")
+        product_dataset_keys: set[str] = set()
+        for value in [canonical, *_as_list(record.get("aliases"))]:
+            product_dataset_keys.update(_dataset_match_keys(str(value)))
+        if not (product_dataset_keys & dataset_reference_keys):
+            raise ValueError(
+                f"Linked product {canonical!r} has no matching dataset record "
+                "for collection_type/unit_of_observation facets"
+            )
 
 
 def lookup_dataset_record(canonical_dataset: str, indexes: ReferenceIndexes) -> dict | None:

@@ -52,6 +52,8 @@ analysis/outputs_v3/quality/*
 
 # Ignore cache and QA/review artefacts
 analysis/outputs_v3/llm_layer_cache.json
+analysis/outputs_v3/quality/dataset_normalisation_audit.csv
+analysis/outputs_v3/quality/dataset_normalisation_review_queue.csv
 analysis/outputs_opus/
 analysis/outputs_sonnet/
 .claude/
@@ -106,6 +108,7 @@ analysis/provenance/
 # --- Local comparison-analysis artefacts ---
 analysis/opus_v_sonnet_comparison_analysis/
 analysis/outputs/
+analysis/outputs_register_properties_tmp/
 analysis/outputs_deterministic_rc2/
 analysis/outputs/instruction_layer_figures_report.md
 
