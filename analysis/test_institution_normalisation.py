@@ -8,7 +8,12 @@ import pandas as pd
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
 
-from institution_normalisation import parse_institutions  # noqa: E402
+from institution_normalisation import (  # noqa: E402
+    describe_institution_normalisation,
+    institution_sector_for,
+    parse_institutions,
+    parse_institutions_with_metadata,
+)
 
 
 class InstitutionNormalisationTest(unittest.TestCase):
@@ -245,7 +250,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
                 "Department of Health (Northern Ireland)",
                 "Engineering Construction Industry Training Board (ECITB)",
                 "Equality and Human Rights Commission (EHRC)",
-                "Environmental Systems Research Institute (ESRI)",
+                "Economic and Social Research Institute (ESRI)",
                 "Greater London Authority (GLA)",
                 "Health Data Research UK (HDR UK)",
                 "HM Revenue and Customs (HMRC)",
@@ -263,10 +268,33 @@ class InstitutionNormalisationTest(unittest.TestCase):
     def test_person_and_placeholder_fragments_are_dropped(self):
         institutions = self.parse(
             "Jane Smith, Cristina Sechel\n"
-            "John Doe, Independent Research\n"
-            "Johannes Kepler, University"
+            "John Doe, Independent Research"
         )
         self.assertEqual(institutions, [])
+
+    def test_real_johannes_kepler_affiliations_are_preserved(self):
+        institutions = self.parse(
+            "Daniel Schaefer,\n"
+            "Johannes Kepler University\n"
+            "John Doe, Johannes Kepler, University"
+        )
+        self.assertEqual(institutions, ["Johannes Kepler University Linz"])
+
+    def test_empty_canonical_aliases_do_not_prefix_delete_universities(self):
+        for institution in [
+            "University of Derby",
+            "University College London",
+            "University of Suffolk",
+        ]:
+            with self.subTest(institution=institution):
+                description = describe_institution_normalisation(institution)
+                self.assertNotEqual(description["institution"], "")
+                self.assertEqual(description["institution"], institution)
+
+        self.assertEqual(
+            describe_institution_normalisation("University")["institution"],
+            "",
+        )
 
     def test_embedded_researcher_names_after_known_institutions_are_removed(self):
         institutions = self.parse(
@@ -283,6 +311,140 @@ class InstitutionNormalisationTest(unittest.TestCase):
                 "King's College London",
                 "London School of Hygiene and Tropical Medicine",
             ],
+        )
+
+    def test_typo_aliases_are_canonicalised(self):
+        institutions = self.parse(
+            "Jane Smith, Equality and Human Rights Comission\n"
+            "John Doe, Institue for Employment Studies\n"
+            "Jane Smith, Sentencing Acadamey\n"
+            "John Doe, Teeside University\n"
+            "Jane Smith, London School of Economics and Polictical Science"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "Equality and Human Rights Commission (EHRC)",
+                "Institute for Employment Studies",
+                "Sentencing Academy",
+                "Teesside University",
+                "London School of Economics and Political Science (LSE)",
+            ],
+        )
+
+    def test_university_display_names_are_standardised(self):
+        institutions = self.parse(
+            "Jane Smith, University of Aston\n"
+            "John Doe, Oxford University\n"
+            "Jane Smith, Bath University\n"
+            "John Doe, University of Swansea\n"
+            "Jane Smith, Durham University\n"
+            "John Doe, University of Loughborough"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "Aston University",
+                "University of Oxford",
+                "University of Bath",
+                "Swansea University",
+                "Durham University",
+                "Loughborough University",
+            ],
+        )
+
+    def test_subunit_rollups_to_parent_institutions(self):
+        institutions = self.parse(
+            "Jane Smith, Bayes Business School\n"
+            "John Doe, UCL Institute of Health Informatics\n"
+            "Jane Smith, University of Cambridge - Department of Land Economy\n"
+            "John Doe, Centre for Economic Performance, London School of Economics\n"
+            "Jane Smith, Warwick Economics and Development"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "City, University of London",
+                "University College London",
+                "University of Cambridge",
+                "London School of Economics and Political Science (LSE)",
+                "University of Warwick",
+            ],
+        )
+
+    def test_explicit_person_name_contamination_aliases(self):
+        institutions = self.parse(
+            "Jane Smith, King's College London Dimitris Vallis, King's College London Julia Ellingwood, King's College London\n"
+            "John Doe, University of Leeds Jose Pina-Sánchez, University of Leeds"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "King's College London",
+                "University of Leeds",
+            ],
+        )
+
+    def test_ambiguous_campus_names_are_not_specialised(self):
+        institutions = self.parse(
+            "Jane Smith, University of Texas\n"
+            "John Doe, University of California"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "University of Texas",
+                "University of California",
+            ],
+        )
+
+    def test_additional_compound_strings_split_to_expected_institutions(self):
+        institutions = self.parse(
+            "Jane Smith, Imperial College Business School/London School of Economics\n"
+            "John Doe, Health Foundation / Academy of Medical Sciences\n"
+            "Jane Smith, University of Warwick / London School of Economics"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "Imperial College London",
+                "London School of Economics and Political Science (LSE)",
+                "Health Foundation",
+                "Academy of Medical Sciences",
+                "University of Warwick",
+            ],
+        )
+
+    def test_sector_and_metadata_helpers_preserve_existing_parse_output(self):
+        df = pd.DataFrame([
+            {
+                "Project ID": "P1",
+                "Year": 2024,
+                "Researchers": "Jane Smith, AQA Education\nJohn Doe, University of Texas",
+            },
+        ])
+        parsed = parse_institutions(df)
+        self.assertEqual(parsed.columns.tolist(), ["Project ID", "Year", "institution"])
+
+        metadata = parse_institutions_with_metadata(df)
+        self.assertEqual(
+            metadata[["institution", "institution_sector", "match_status"]].values.tolist(),
+            [
+                ["AQA Education", "commercial", "alias"],
+                ["University of Texas", "academic", "alias"],
+            ],
+        )
+        self.assertEqual(institution_sector_for("AQA Education"), "commercial")
+        self.assertEqual(institution_sector_for("Unknown Organisation"), "unclassified")
+        self.assertEqual(
+            describe_institution_normalisation("Cristina Sechel"),
+            {
+                "raw_institution": "Cristina Sechel",
+                "institution": "",
+                "institution_sector": "unclassified",
+                "match_status": "empty",
+                "needs_review": 0,
+            },
         )
 
 

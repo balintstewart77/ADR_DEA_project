@@ -57,6 +57,7 @@ LINKAGE_SPANS = (
     "Within-domain record linkage",
     "Cross-domain record linkage",
 )
+LINKED_PRODUCT_STATUSES = ("standing", "discontinued")
 RC1_PATH_PREFIXES = (
     "analysis/outputs_v3/",
     "analysis/outputs_v4_",
@@ -221,6 +222,15 @@ def validate_reference(reference: dict) -> None:
         if canonical in seen_products:
             raise ValueError(f"Duplicate linked product record {canonical!r}")
         seen_products.add(canonical)
+        status = record.get("status")
+        if status not in LINKED_PRODUCT_STATUSES:
+            raise ValueError(f"{canonical!r} has invalid linked-product status {status!r}")
+        if "available_from" not in record:
+            raise ValueError(f"{canonical!r} is missing available_from")
+        if "discontinued_date" not in record:
+            raise ValueError(f"{canonical!r} is missing discontinued_date")
+        if status == "standing" and record.get("discontinued_date") is not None:
+            raise ValueError(f"{canonical!r} is standing but has discontinued_date")
         domains = _as_list(record.get("component_domains"))
         if not domains:
             raise ValueError(f"{canonical!r} has no component_domains")

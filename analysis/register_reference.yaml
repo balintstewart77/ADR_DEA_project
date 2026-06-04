@@ -1,4 +1,4 @@
-reference_version: "0.1.0"
+reference_version: "0.3.0"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -177,6 +177,9 @@ researcher_sector_rule:
 
 linked_products:
   - canonical: "Longitudinal Education Outcomes (LEO)"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "LEO"
       - "Longitudinal Education Outcomes (LEO)"
@@ -186,6 +189,9 @@ linked_products:
     notes: "Education records linked to labour-market outcomes."
 
   - canonical: "Education and Child Health Insights from Linked Data (ECHILD)"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "Education and Child Health Insights from Linked Data (ECHILD)"
       - "Education and Child Health Insights from Linked Data"
@@ -195,14 +201,23 @@ linked_products:
     notes: "Child health and education administrative linkage."
 
   - canonical: "Linked Census, HES and Mortality Data"
+    status: "discontinued"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "Linked Census, HES and Mortality Data"
+      - "Linked Census and death occurrences"
+      - "Linked census and death occurrences"
+      - "Linked Census and death occurrences - England and Wales"
     component_domains:
       - "Health & Social Care"
       - "Migration & Demographics"
-    notes: "Census population-demography source linked to hospital and mortality health records."
+    notes: "ONS Public Health Data Asset (PHDA) family. The register does not use PHDA as a dataset string; it uses Linked Census/HES/Mortality and Linked Census/death-occurrences string families at different linkage depths."
 
   - canonical: "GRading and Admissions Data England (GRADE)"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "GRading and Admissions Data England (GRADE)"
       - "GRading and Admissions Data England"
@@ -212,6 +227,9 @@ linked_products:
     notes: "Ofqual, NPD, and UCAS are education/admissions components; NPD demographic fields are attributes."
 
   - canonical: "MoJ Data First"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "MoJ Data First Crown Court Defendant"
       - "MoJ Data First Crown Court Defendant Case Level"
@@ -239,6 +257,9 @@ linked_products:
     notes: "Public-register Data First justice extracts only; MoJ-DfE linkage is excluded."
 
   - canonical: "Administrative Data | Agricultural Research Collection (AD|ARC)"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "AD|ARC"
       - "Administrative Data | Agricultural Research Collection (AD|ARC)"
@@ -251,6 +272,9 @@ linked_products:
     notes: "Agricultural records linked to population-demographic Census components."
 
   - canonical: "Annual Survey of Hours and Earnings Longitudinal"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "Annual Survey of Hours and Earnings Longitudinal"
     component_domains:
@@ -258,6 +282,9 @@ linked_products:
     notes: "WED component: ASHE longitudinal, within labour-market domain."
 
   - canonical: "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
     component_domains:
@@ -265,6 +292,9 @@ linked_products:
     notes: "WED component: ASHE linked to tax earnings records, within labour-market domain."
 
   - canonical: "Annual Survey of Hours and Earnings linked to Census 2011"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "ASHE-linked"
       - "Annual Survey of Hours and Earnings linked to Census 2011"
@@ -275,14 +305,12 @@ linked_products:
     notes: "WED component: ASHE labour-market origin linked to Census population origin."
 
   - canonical: "Earnings and Employees Study (EES) 2011 - Northern Ireland"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "Earnings and Employees Study"
-      - "Earnings and Employees Study (EES)"
-      - "Earnings and Employees Study 2011"
-      - "Earnings and Employees Study (EES) 2011"
-      - "Earnings and Employees Study 2011 Northern Ireland"
-      - "Earnings and Employees Study (EES) 2011 Northern Ireland"
-      - "Northern Ireland Census linked to ASHE"
+      - "Linked NI Census-ASHE"
     component_domains:
       - "Labour Market & Employment"
       - "Migration & Demographics"
@@ -290,6 +318,9 @@ linked_products:
     notes: "ADR NI/NISRA linked dataset: ASHE 2011 for Northern Ireland linked to the 2011 Northern Ireland Census and Land & Property Services Capital Value data. Keep distinct from WED / ASHE-Census England and Wales linkage."
 
   - canonical: "Growing Up in England (GUIE)"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
     aliases:
       - "GUIE"
       - "Growing Up in England Wave 1 (GUIE)"
@@ -300,6 +331,137 @@ linked_products:
       - "Education & Skills"
       - "Migration & Demographics"
     notes: "Education records linked with Census population-origin components."
+
+  - canonical: "ONS Longitudinal Study"
+    status: "standing"
+    available_from: 1974
+    discontinued_date: null
+    aliases:
+      - "ONS Longitudinal Study"
+      - "ONS Longitudinal Study (LS)"
+      - "ONS Longitudinal Study - England and Wales"
+      - "ONS Longitudinal Study of England and Wales"
+      - "Longitudinal Study of England and Wales"
+      - "ONS LS"
+      - "Office for National Statistics: Longitudinal Study"
+      - "Office for National Statistics: Longitudinal Study - England and Wales"
+      - "Office for National Statistics: ONS Longitudinal Study"
+      - "Office for National Statistics: ONS Longitudinal Study - England and Wales"
+      - "ONS Longitudinal Study 1971"
+      - "Longitudinal Study 1971"
+    component_domains:
+      - "Migration & Demographics"
+      - "Health & Social Care"
+    notes: "ONS Longitudinal Study for England and Wales; one-percent sample linking Census records from 1971 onward with linked life events including births, deaths, and cancer registrations. Available-from set to 1974 because the study originates from the 1971 Census and was created after that census."
+
+  - canonical: "Linked Trade-in-Goods/IDBR"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "Linked Trade-in-Goods/IDBR"
+      - "Linked Trade-in-Goods/IDBR - UK"
+      - "Linked Trade-in-Goods/IDBR dataset"
+      - "Linked Trade-in-Goods/IDBR Dataset"
+      - "Linked Trade-in-Goods/IDBR dataset UK"
+      - "Linked Trade-in-Goods/Inter-Departmental Business Register"
+      - "Linked Trade-in-Goods/Inter-Departmental Business Register - UK"
+      - "Linked Trade-in-Goods/Inter Departmental Business Register"
+      - "Linked Trade-in-Goods/Inter-Departmental-Business-Register"
+    component_domains:
+      - "Business & Productivity"
+    notes: "HMRC Overseas Trade in Goods matched to the IDBR; firm-level trade."
+
+  - canonical: "2011 Census linked to Benefits and Income - England and Wales"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "2011 Census linked to Benefits and Income - England and Wales"
+    component_domains:
+      - "Migration & Demographics"
+      - "Labour Market & Employment"
+    notes: "Register-present 2011 Census linkage to benefits and income records for England and Wales."
+
+  - canonical: "Nursing and Midwifery Council Register - UK Linked to Census 2021"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "Nursing and Midwifery Council Register - UK Linked to Census 2021"
+    component_domains:
+      - "Health & Social Care"
+      - "Migration & Demographics"
+    notes: "NMC register linked to Census 2021."
+
+  - canonical: "EOL"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "EOL"
+      - "EOL Dataset (2015-2022)"
+    component_domains:
+      - "Education & Skills"
+    notes: "Education Outcomes Linkage for Northern Ireland; EOL is a real NISRA education linkage, not a parse artifact."
+
+  - canonical: "COVID-19 Infection Survey linked to NHS Test and Trace - England"
+    status: "discontinued"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "COVID-19 Infection Survey linked to NHS Test and Trace - England"
+      - "Covid-19 Infection Survey linked to NHS Test and Trace"
+    component_domains:
+      - "Health & Social Care"
+    notes: "COVID-19 Infection Survey linkage to NHS Test and Trace. Kept distinct from standalone COVID-19 Infection Survey and school-setting CIS linkages."
+
+  - canonical: "COVID-19 Infection Survey linked to Combined Vaccination - UK"
+    status: "discontinued"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "COVID-19 Infection Survey linked to Combined Vaccination - UK"
+      - "Covid-19 Infection Survey linked with Combined Vaccination Dataset"
+      - "Covid-19 Infection Survey with Combined Vaccination Dataset"
+    component_domains:
+      - "Health & Social Care"
+    notes: "COVID-19 Infection Survey linkage to combined vaccination data."
+
+  - canonical: "COVID-19 Infection Survey linked to Mortality - England and Wales ONS"
+    status: "discontinued"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "COVID-19 Infection Survey linked to Mortality - England and Wales ONS"
+      - "Covid-19 Infection Survey linked with Death Occurrences England and Wales Office for National Statistics /"
+    component_domains:
+      - "Health & Social Care"
+    notes: "COVID-19 Infection Survey linkage to mortality/death-occurrence data."
+
+  - canonical: "Covid-19 Schools Infection Survey linked with Test and Trace"
+    status: "discontinued"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "Covid-19 Schools Infection Survey linked with Test and Trace"
+      - "COVID-19 Schools Infection Survey linked with Test and Trace - England"
+      - "Covid 19 School Infection Survey linked to NHS Test"
+    component_domains:
+      - "Health & Social Care"
+    notes: "COVID-19 Schools Infection Survey linked with Test and Trace. School setting is treated as population/lens, not an Education & Skills component."
+
+  - canonical: "Covid-19 Infection Survey linked with VOA and EPC data"
+    status: "discontinued"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "Covid-19 Infection Survey linked with VOA and EPC data"
+      - "COVID-19 Infection Survey linked to VOA and EPC - England and Wales Office for National Statistics"
+    component_domains:
+      - "Health & Social Care"
+      - "Housing & Planning"
+    notes: "COVID-19 Infection Survey linked with Valuation Office Agency property data and Energy Performance Certificate data."
 
 datasets:
   - canonical: "Census"
@@ -1435,13 +1597,13 @@ organisations:
       - "EHRC"
     sectors: ["government"]
     notes: "Regulator/public body."
-  - canonical: "Environmental Systems Research Institute (ESRI)"
+  - canonical: "Economic and Social Research Institute (ESRI)"
     aliases:
-      - "Environmental Systems Research Institute (ESRI)"
-      - "Environmental Systems Research Institute"
+      - "Economic and Social Research Institute (ESRI)"
+      - "Economic and Social Research Institute"
       - "ESRI"
-    sectors: ["commercial"]
-    notes: "For-profit geospatial software/company entity."
+    sectors: ["third-sector"]
+    notes: "Independent economic and social research institute."
   - canonical: "Health Data Research UK (HDR UK)"
     aliases:
       - "Health Data Research UK (HDR UK)"
@@ -1449,6 +1611,13 @@ organisations:
       - "HDR UK"
     sectors: ["third-sector"]
     notes: "Not-for-profit/charitable health data research institute."
+  - canonical: "Johannes Kepler University Linz"
+    aliases:
+      - "Johannes Kepler University Linz"
+      - "Johannes Kepler University"
+      - "Johannes Kepler, University"
+    sectors: ["academic"]
+    notes: "Higher education institution."
   - canonical: "HM Revenue and Customs (HMRC)"
     aliases:
       - "HM Revenue and Customs (HMRC)"

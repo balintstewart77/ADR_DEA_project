@@ -87,7 +87,7 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Business Register and Employment Survey": "Business Register and Employment Survey (BRES)",
             "Crime Survey for England and Wales": "Crime Survey for England and Wales (CSEW)",
             "COVID-19 Infection Survey": "COVID-19 Infection Survey (CIS)",
-            "COVID-19 Schools Infection Survey linked to Test and Trace": "COVID-19 Infection Survey linked to NHS Test and Trace",
+            "COVID-19 Schools Infection Survey linked to Test and Trace": "COVID-19 Schools Infection Survey linked to Test and Trace",
             "Inter-Departmental Business Register": "Inter-Departmental Business Register (IDBR)",
             "Labour Force Survey": "Labour Force Survey (LFS)",
             "Living Costs and Food Survey": "Living Costs and Food Survey (LCF)",

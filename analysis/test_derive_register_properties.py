@@ -36,10 +36,33 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Annual Survey of Hours and Earnings Longitudinal": "Within-domain record linkage",
             "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment": "Within-domain record linkage",
             "Annual Survey of Hours and Earnings linked to Census 2011": "Cross-domain record linkage",
+            "ONS Longitudinal Study (LS)": "Cross-domain record linkage",
+            "Longitudinal Study of England and Wales": "Cross-domain record linkage",
+            "Linked Trade-in-Goods/IDBR": "Within-domain record linkage",
+            "Linked Trade-in-Goods/Inter-Departmental Business Register": "Within-domain record linkage",
+            "2011 Census linked to Benefits and Income - England and Wales": "Cross-domain record linkage",
+            "Nursing and Midwifery Council Register - UK Linked to Census 2021": "Cross-domain record linkage",
+            "EOL": "Within-domain record linkage",
+            "EOL Dataset (2015-2022)": "Within-domain record linkage",
+            "Linked Census and death occurrences - England and Wales": "Cross-domain record linkage",
+            "COVID-19 Infection Survey linked to NHS Test and Trace - England": "Within-domain record linkage",
+            "Covid-19 Infection Survey linked with Combined Vaccination Dataset": "Within-domain record linkage",
+            "COVID-19 Infection Survey linked to Mortality - England and Wales ONS": "Within-domain record linkage",
+            "Covid-19 Schools Infection Survey linked with Test and Trace": "Within-domain record linkage",
+            "Covid-19 Infection Survey linked with VOA and EPC data": "Cross-domain record linkage",
         }
         for dataset, expected in cases.items():
             with self.subTest(dataset=dataset):
                 self.assertEqual(self.span_for_dataset(dataset), expected)
+
+    def test_linked_product_lifecycle_fields_are_present(self):
+        for product in self.reference["linked_products"]:
+            with self.subTest(product=product["canonical"]):
+                self.assertIn(product["status"], {"standing", "discontinued"})
+                self.assertIn("available_from", product)
+                self.assertIn("discontinued_date", product)
+                if product["status"] == "standing":
+                    self.assertIsNone(product["discontinued_date"])
 
     def test_multi_product_union_and_no_product(self):
         domains = set()
@@ -51,6 +74,13 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
                 domains.update(product["component_domains"])
         self.assertEqual(linkage_span_for_domains(domains), "Cross-domain record linkage")
         self.assertEqual(self.span_for_dataset("Annual Business Survey (ABS)"), "No record linkage")
+
+    def test_new_linked_product_aliases_do_not_bleed(self):
+        self.assertEqual(self.span_for_dataset("COVID-19 Infection Survey (CIS)"), "No record linkage")
+        self.assertEqual(self.span_for_dataset("Inter-Departmental Business Register (IDBR)"), "No record linkage")
+        self.assertEqual(self.span_for_dataset("International Trade in Services"), "No record linkage")
+        self.assertEqual(self.span_for_dataset("Longitudinal Education Outcomes (LEO)"), "Cross-domain record linkage")
+        self.assertEqual(self.span_for_dataset("EOL"), "Within-domain record linkage")
 
     def test_dataset_worked_edge_cases(self):
         cases = {
@@ -110,6 +140,8 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Office for National Statistics": "government",
             "Frontier Economics Ltd": "commercial",
             "University College London": "academic",
+            "Economic and Social Research Institute (ESRI)": "third-sector",
+            "Johannes Kepler University Linz": "academic",
             "Tech City UK": "government",
             "University of Derby": "academic",
             "Anglia Ruskin University Higher Education Corporation": "academic",

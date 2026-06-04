@@ -131,25 +131,157 @@ _ALIASES = {
     "hmrc": "HM Revenue and Customs (HMRC)",
     "hm revenue and customs": "HM Revenue and Customs (HMRC)",
     "moj": "Ministry of Justice",
+    "administrative data research wales": "Administrative Data Research Wales",
     "ads group limited": "ADS (Aerospace, Defence, Security, Space) Group Limited",
+    "aqa education": "AQA Education",
+    "aston business school": "Aston University",
+    "aston university": "Aston University",
+    "barcelona university": "University of Barcelona",
+    "bath university": "University of Bath",
+    "bayes business school": "City, University of London",
+    "be the business": "Be the Business",
+    "behavioural insights team": "Behavioural Insights Team",
     "belmana ltd": "Belmana",
+    "birkbeck, university of london": "Birkbeck, University of London",
+    "british psychological society": "British Psychological Society",
+    "british sociological society": "British Sociological Society",
+    "cambridge ocr": "Cambridge OCR",
+    "cambridge policy consultants": "Cambridge Policy Consultants",
+    "cancer research uk": "Cancer Research UK",
+    "cardiff and vale university health board": "Cardiff and Vale University Health Board",
+    "cardiff metropolitan university": "Cardiff Metropolitan University",
     "cebr": "Centre for Economic and Business Research (CEBR)",
     "centre for economic and business research": "Centre for Economic and Business Research (CEBR)",
     "centre for economic and business research ltd": "Centre for Economic and Business Research (CEBR)",
     "centre for economic and business research ltd (cber)": "Centre for Economic and Business Research (CEBR)",
+    "centre for economic performance, london school of economics": "London School of Economics and Political Science (LSE)",
+    "centre for economic performance, london school of economics and political science": "London School of Economics and Political Science (LSE)",
     "cedar": "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)",
+    "centre for inclusive trade policy (citp), university of sussex": "University of Sussex",
+    "cranfield school of management": "Cranfield University",
     "cristina sechel": "",
+    "dascrose limited": "DASCROSE Limited",
+    "department for business, innovation and skills": "Department for Business, Innovation and Skills",
+    "department for culture, media and sport": "Department for Culture, Media and Sport",
+    "department for digital, culture, media and sport": "Department for Digital, Culture, Media and Sport",
+    "department for the economy (northern ireland)": "Department for the Economy (Northern Ireland)",
+    "dundee university": "University of Dundee",
+    "durham university": "Durham University",
+    "economic and social research institute (esri)": "Economic and Social Research Institute (ESRI)",
+    "ecorys uk": "Ecorys UK",
     "ecibt": "Engineering Construction Industry Training Board (ECITB)",
     "ecitb": "Engineering Construction Industry Training Board (ECITB)",
     "ehrc": "Equality and Human Rights Commission (EHRC)",
     "equality and human rights commission": "Equality and Human Rights Commission (EHRC)",
-    "esri": "Environmental Systems Research Institute (ESRI)",
+    "equality and human rights comission": "Equality and Human Rights Commission (EHRC)",
+    "esri": "Economic and Social Research Institute (ESRI)",
+    "experian": "Experian",
+    "federal reserve bank of philadelphia": "Federal Reserve Bank of Philadelphia",
+    "federal reserve board of governors": "Federal Reserve Board of Governors",
+    "financial conduct authority": "Financial Conduct Authority",
+    "frazer-nash consultancy": "Frazer-Nash Consultancy",
+    "hackney council": "Hackney Council",
+    "home office": "Home Office",
+    "icf international": "ICF International",
+    "iff research": "IFF Research",
+    "ifo institute for economic research": "Ifo Institute for Economic Research",
+    "incomes data research": "Incomes Data Research",
     "independent research": "",
+    "independent researcher": "Independent Researcher",
+    "infact systems limited": "Infact Systems Limited",
     "insead": "Institut Européen d'Administration des Affaires (INSEAD)",
     "insead / institut européen d'administration des affaires": "Institut Européen d'Administration des Affaires (INSEAD)",
     "insead / institut europã©en d'administration des affaires": "Institut Européen d'Administration des Affaires (INSEAD)",
+    "institue for employment studies": "Institute for Employment Studies",
+    "institute for government": "Institute for Government",
+    "institute for the future of work": "Institute for the Future of Work",
+    "institute of the motor industry": "Institute of the Motor Industry",
+    "international monetary fund": "International Monetary Fund",
+    "joint biosecurity, centre": "Joint Biosecurity Centre",
+    "king's college london dimitris vallis, king's college london julia ellingwood, king's college london": "King's College London",
+    "king's fund": "King's Fund",
+    "kingston university": "Kingston University",
+    "knowledge transfer network": "Knowledge Transfer Network",
+    "lancaster university": "Lancaster University",
+    "leeds university": "University of Leeds",
+    "lightcast": "Lightcast",
     "natcen social research": "National Centre for Social Research",
+    "marie curie": "Marie Curie",
+    "methods analytics": "Methods Analytics",
+    "middlesex university": "Middlesex University",
+    "ministry of justice": "Ministry of Justice",
+    "national infrastructure commission": "National Infrastructure Commission",
+    "netherlands interdisciplinary demographic institute": "Netherlands Interdisciplinary Demographic Institute",
+    "nevin economic research institute": "Nevin Economic Research Institute",
+    "nhs improvement and nhs england": "NHS England",
+    "northumbria university at newcastle": "Northumbria University",
+    "nuffield department of medicine": "University of Oxford",
+    "nuffield foundation": "Nuffield Foundation",
+    "oecd": "OECD",
+    "office for health improvement and disparities": "Office for Health Improvement and Disparities",
+    "oxford university": "University of Oxford",
+    "pearson": "Pearson",
+    "pensions policy institute": "Pensions Policy Institute",
+    "perspective economics": "Perspective Economics",
+    "public health scotland": "Public Health Scotland",
+    "publishers association": "Publishers Association",
+    "rand europe uk limited": "RAND Europe",
+    "research center in applied economics for development cread - algeria": "Research Center in Applied Economics for Development CREAD - Algeria",
+    "rsm uk consulting llp": "RSM UK",
+    "saga city research": "Saga City Research",
+    "scaleup institute": "ScaleUp Institute",
+    "school for policy studies, university of bristol": "University of Bristol",
+    "school of education, university of bristol": "University of Bristol",
+    "sentencing acadamey": "Sentencing Academy",
+    "sgn": "SGN",
+    "sheffield teaching hospitals nhs foundation trust": "Sheffield Teaching Hospitals NHS Foundation Trust",
+    "social care wales": "Social Care Wales",
+    "social market foundation": "Social Market Foundation",
+    "social mobility commission, the cabinet office": "Social Mobility Commission",
+    "sqw": "SQW - Economic and Management Consultants",
+    "state of life": "State of Life",
+    "stripe partners": "Stripe Partners",
+    "swansea bay university health board": "Swansea Bay University Health Board",
+    "swansea university medical school": "Swansea University",
+    "tees valley combined authority": "Tees Valley Combined Authority",
+    "teeside university": "Teesside University",
+    "the equality and human rights commission": "Equality and Human Rights Commission (EHRC)",
+    "the lesbian project": "The Lesbian Project",
+    "the police foundation": "The Police Foundation",
+    "the policy institute, king's college london": "King's College London",
+    "the productivity institute, university of manchester": "University of Manchester",
+    "the alan turing, institute": "Alan Turing Institute",
+    "the university of texas at austin": "University of Texas at Austin",
+    "the young foundation - institute for community studies": "The Young Foundation - Institute for Community Studies",
+    "tu dublin": "Technological University Dublin",
+    "ucl centre for longitudinal studies": "University College London",
+    "ucl institute for global health": "University College London",
+    "ucl institute for epidemiology and health": "University College London",
+    "ucl institute of epidemiology and health": "University College London",
+    "ucl institute of health informatics": "University College London",
+    "uk export finance": "UK Export Finance",
     "ucl": "University College London",
+    "umea university": "Umeå University",
+    "university of aston": "Aston University",
+    "university of bournemouth": "Bournemouth University",
+    "university of california": "University of California",
+    "university of cambridge - department of land economy": "University of Cambridge",
+    "university of cardiff": "Cardiff University",
+    "university of coventry": "Coventry University",
+    "university of durham": "Durham University",
+    "university of illinois urbana campaign": "University of Illinois Urbana-Champaign",
+    "university of kingston": "Kingston University",
+    "university of lancaster": "Lancaster University",
+    "university of leeds jose pina-sanchez, university of leeds": "University of Leeds",
+    "university of leeds jose pina-sánchez, university of leeds": "University of Leeds",
+    "university of loughborough": "Loughborough University",
+    "university of middlesex": "Middlesex University",
+    "university of northumbria at newcastle": "Northumbria University",
+    "university of plymouth - school of law and social science": "University of Plymouth",
+    "university of swansea": "Swansea University",
+    "university of texas": "University of Texas",
+    "university of texas at austin": "University of Texas at Austin",
+    "university of yale": "Yale University",
     "lse": "London School of Economics and Political Science (LSE)",
     "lshtm": "London School of Hygiene and Tropical Medicine",
     "kcl": "King's College London",
@@ -159,6 +291,7 @@ _ALIASES = {
     "london school of economics": "London School of Economics and Political Science (LSE)",
     "london school of economics and political science": "London School of Economics and Political Science (LSE)",
     "london school of economics & political science": "London School of Economics and Political Science (LSE)",
+    "london school of economics and polictical science": "London School of Economics and Political Science (LSE)",
     "the london school of economics and political science": "London School of Economics and Political Science (LSE)",
     "the london school of economics": "London School of Economics and Political Science (LSE)",
     "london school of hygiene and tropical medicine rochelle schneider dos": "London School of Hygiene and Tropical Medicine",
@@ -227,8 +360,9 @@ _ALIASES = {
     "henley business school": "Henley Business School (University of Reading)",
     "institute for social and economic research": "Institute for Social and Economic Research (University of Essex)",
     "institute for social and economic research, university of essex": "Institute for Social and Economic Research (University of Essex)",
-    "johannes kepler, university": "",
-    "johannes kepler university": "",
+    "johannes kepler, university": "Johannes Kepler University Linz",
+    "johannes kepler university": "Johannes Kepler University Linz",
+    "johannes kepler university linz": "Johannes Kepler University Linz",
     "learning and work": "Learning and Work Institute",
     "london metropolitan, university": "London Metropolitan University",
     "m&g": "Municipal & General (M&G)",
@@ -246,7 +380,7 @@ _ALIASES = {
     "price water house coopers": "PwC LLP",
     "the university of surrey": "University of Surrey",
     "the university of kent": "University of Kent",
-    "the university of aston": "University of Aston",
+    "the university of aston": "Aston University",
     "university of west anglia": "University of East Anglia",
     "queen mary university london": "Queen Mary University of London",
     "queen mary univeristy london": "Queen Mary University of London",
@@ -261,7 +395,7 @@ _ALIASES = {
     "office for national statistics </span>": "Office for National Statistics",
     "sheffield hallam univeristy": "Sheffield Hallam University",
     "stanford univeristy": "Stanford University",
-    "warwick business school": "Warwick Business School",
+    "warwick business school": "University of Warwick",
     "cardiff metropolitan, university": "Cardiff Metropolitan University",
     "fraser of allander institute": "Fraser of Allander Institute (University of Strathclyde)",
     "fraser of allander institute (university of strathclyde)": "Fraser of Allander Institute (University of Strathclyde)",
@@ -269,7 +403,6 @@ _ALIASES = {
     "lancaster university management, school": "Lancaster University Management School",
     "st andrews, university": "University of St Andrews",
     "ucl institute of education": "UCL Institute of Education",
-    "ucl institute for epidemiology and health": "UCL Institute of Epidemiology and Health",
     "university of oxford sociology": "University of Oxford - Sociology",
     "university of london - university college rui miguel vieira marques da costa, london school of economics": "University College London",
     "university of southampton cristian": "University of Southampton",
@@ -286,6 +419,12 @@ _ALIASES = {
     "univeristy of exeter": "University of Exeter",
     "swansea univeristy": "Swansea University",
     "edniburgh napier university": "Edinburgh Napier University",
+    "utrecht university school of economics": "Utrecht University",
+    "vanguard": "Vanguard",
+    "wavehill limited": "Wavehill Limited",
+    "warwick economics and development": "University of Warwick",
+    "what works for children's social care": "What Works for Children's Social Care",
+    "wpi economics": "WPI Economics",
     "university college lonfon": "University College London",
     "university of northampton": "University of Northampton",
     "university of southampt on": "University of Southampton",
@@ -297,8 +436,16 @@ _COMPOUND_INSTITUTION_SPLITS = {
         "Health Foundation",
         "Academy of Medical Sciences",
     ],
+    "health foundation / academy of medical sciences": [
+        "Health Foundation",
+        "Academy of Medical Sciences",
+    ],
     "imperial college business, school/london school of economics": [
-        "Imperial Business School",
+        "Imperial College London",
+        "London School of Economics and Political Science (LSE)",
+    ],
+    "imperial college business school/london school of economics": [
+        "Imperial College London",
         "London School of Economics and Political Science (LSE)",
     ],
     "london school of economics; and university college london": [
@@ -309,6 +456,285 @@ _COMPOUND_INSTITUTION_SPLITS = {
         "University of Warwick",
         "London School of Economics and Political Science (LSE)",
     ],
+    "university of warwick / london school of economics": [
+        "University of Warwick",
+        "London School of Economics and Political Science (LSE)",
+    ],
+}
+
+_PARSER_CLEANUP_ALIAS_KEYS = {
+    "cristina sechel",
+    "independent research",
+    "king's college london dimitris vallis, king's college london",
+    "king's college london dimitris vallis, king's college london julia ellingwood, king's college london",
+    "london school of hygiene and tropical medicine rochelle schneider dos",
+    "university",
+    "university of leeds jose pina-sanchez, university of leeds",
+    "university of leeds jose pina-sánchez, university of leeds",
+}
+
+_INSTITUTION_SECTORS = {
+    "Academy of Medical Sciences": "third-sector",
+    "Administrative Data Research Wales": "government",
+    "ADS (Aerospace, Defence, Security, Space) Group Limited": "commercial",
+    "Agri-Food and Biosciences Institute": "government",
+    "Alan Turing Institute": "third-sector",
+    "Alma Economics": "commercial",
+    "AQA Education": "commercial",
+    "ARUP": "commercial",
+    "Aston University": "academic",
+    "Bank of England": "government",
+    "Be the Business": "third-sector",
+    "Behavioural Insights Team": "third-sector",
+    "Belmana": "commercial",
+    "Birkbeck, University of London": "academic",
+    "BOP Consulting": "commercial",
+    "Bournemouth University": "academic",
+    "British Psychological Society": "third-sector",
+    "British Sociological Society": "third-sector",
+    "Brunel University London": "academic",
+    "Cabinet Office": "government",
+    "Cambridge OCR": "commercial",
+    "Cambridge Econometrics": "commercial",
+    "Cambridge Policy Consultants": "commercial",
+    "Cancer Research UK": "third-sector",
+    "Cardiff Metropolitan University": "academic",
+    "Cardiff University": "academic",
+    "Cardiff and Vale University Health Board": "government",
+    "Centre for Cities": "third-sector",
+    "Centre for Economic and Business Research (CEBR)": "commercial",
+    "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)": "unclassified",
+    "Chartered Institute of Personnel and Development": "third-sector",
+    "City, University of London": "academic",
+    "Columbia University": "academic",
+    "Competition and Markets Authority": "government",
+    "Coventry University": "academic",
+    "Cranfield University": "academic",
+    "DASCROSE Limited": "commercial",
+    "Department for Business and Trade": "government",
+    "Department for Business, Energy and Industrial Strategy": "government",
+    "Department for Business, Innovation and Skills": "government",
+    "Department for Culture, Media and Sport": "government",
+    "Department for Digital, Culture, Media and Sport": "government",
+    "Department for Education": "government",
+    "Department for International Trade": "government",
+    "Department for Levelling Up, Housing and Communities": "government",
+    "Department for the Economy (Northern Ireland)": "government",
+    "Department for Work and Pensions": "government",
+    "Department of Health (Northern Ireland)": "government",
+    "Department of Health and Social Care (DHSC)": "government",
+    "Digital Health and Care Wales": "government",
+    "Durham University": "academic",
+    "Ecorys UK": "commercial",
+    "Economic Statistics Centre of Excellence": "third-sector",
+    "Economic and Social Research Institute (ESRI)": "third-sector",
+    "Education Policy Institute": "third-sector",
+    "Engineering Construction Industry Training Board (ECITB)": "government",
+    "Environmental Systems Research Institute (ESRI)": "commercial",
+    "Edinburgh Napier University": "academic",
+    "Equality and Human Rights Commission (EHRC)": "government",
+    "European University Institute": "academic",
+    "Experian": "commercial",
+    "FFT Education Ltd": "commercial",
+    "Federal Reserve Bank of Philadelphia": "government",
+    "Federal Reserve Board of Governors": "government",
+    "Financial Conduct Authority": "government",
+    "Fraser of Allander Institute (University of Strathclyde)": "academic",
+    "Frazer-Nash Consultancy": "commercial",
+    "Frontier Economics Ltd": "commercial",
+    "Greater London Authority (GLA)": "government",
+    "Greater Manchester Combined Authority": "government",
+    "Georgetown University": "academic",
+    "Glasgow City Council": "government",
+    "Hackney Council": "government",
+    "Happy City Initiative": "third-sector",
+    "Harvard University": "academic",
+    "Hardisty Jones Associates": "commercial",
+    "Health Data Research UK (HDR UK)": "third-sector",
+    "Health Foundation": "third-sector",
+    "Henley Business School (University of Reading)": "academic",
+    "Heriot-Watt University": "academic",
+    "HM Revenue and Customs (HMRC)": "government",
+    "Home Office": "government",
+    "ICF International": "commercial",
+    "IFF Research": "commercial",
+    "Ifo Institute for Economic Research": "third-sector",
+    "Imperial College London": "academic",
+    "Incomes Data Research": "commercial",
+    "Independent Researcher": "unclassified",
+    "Infact Systems Limited": "commercial",
+    "Innovate UK": "government",
+    "Institut Européen d'Administration des Affaires (INSEAD)": "academic",
+    "Institute for Employment Studies": "third-sector",
+    "Institute for Fiscal Studies": "third-sector",
+    "Institute for Government": "third-sector",
+    "Institute for Social and Economic Research (University of Essex)": "academic",
+    "Institute for the Future of Work": "third-sector",
+    "Institute of Occupational Medicine": "third-sector",
+    "Institute of the Motor Industry": "third-sector",
+    "Intellectual Property Office": "government",
+    "International Monetary Fund": "government",
+    "Ipsos": "commercial",
+    "Joint Biosecurity Centre": "government",
+    "Johannes Kepler University Linz": "academic",
+    "King's College London": "academic",
+    "King's Fund": "third-sector",
+    "Kingston University": "academic",
+    "Knowledge Transfer Network": "third-sector",
+    "Lancaster University": "academic",
+    "Lancaster University Management School": "academic",
+    "Learning and Work Institute": "third-sector",
+    "Lightcast": "commercial",
+    "London Economics": "commercial",
+    "London Metropolitan University": "academic",
+    "London School of Economics and Political Science (LSE)": "academic",
+    "London School of Hygiene and Tropical Medicine": "academic",
+    "Loughborough University": "academic",
+    "Marie Curie": "third-sector",
+    "Manchester Metropolitan University": "academic",
+    "Massachusetts Institute of Technology": "academic",
+    "Methods Analytics": "commercial",
+    "Middlesex University": "academic",
+    "Ministry of Justice": "government",
+    "MIME Consulting Ltd": "commercial",
+    "Municipal & General (M&G)": "commercial",
+    "National Centre for Social Research": "third-sector",
+    "National Foundation for Education Research (NFER)": "third-sector",
+    "National Infrastructure Commission": "government",
+    "National Physical Laboratory": "government",
+    "National Institute for Economic and Social Research": "third-sector",
+    "National Institute of Social and Economic Research": "third-sector",
+    "Nesta": "third-sector",
+    "Netherlands Interdisciplinary Demographic Institute": "third-sector",
+    "Nevin Economic Research Institute": "third-sector",
+    "New Economics Foundation": "third-sector",
+    "Newcastle University": "academic",
+    "NHS England": "government",
+    "Northern Ireland Statistics and Research Agency": "government",
+    "Northumbria University": "academic",
+    "Nottingham Trent University": "academic",
+    "Nuffield Family Justice Observatory": "third-sector",
+    "Nuffield Foundation": "third-sector",
+    "OECD": "government",
+    "Office for Health Improvement and Disparities": "government",
+    "Office for National Statistics": "government",
+    "Office of the Victims' Commissioner for England and Wales": "government",
+    "OFSTED": "government",
+    "HM Treasury": "government",
+    "Low Pay Commission": "government",
+    "Oxford Economics Ltd": "commercial",
+    "Oxford Economics": "commercial",
+    "PA Consulting": "commercial",
+    "Pearson": "commercial",
+    "Pensions Policy Institute": "third-sector",
+    "Perspective Economics": "commercial",
+    "Pro Bono Economics": "third-sector",
+    "Public Health England": "government",
+    "Public Health Scotland": "government",
+    "Public Health Wales": "government",
+    "Publishers Association": "third-sector",
+    "PwC LLP": "commercial",
+    "Queen Mary University of London": "academic",
+    "Queen's University Belfast": "academic",
+    "Queen's University Belfast Management, School": "academic",
+    "RAND Europe": "third-sector",
+    "Resolution Foundation": "third-sector",
+    "Research Center in Applied Economics for Development CREAD - Algeria": "third-sector",
+    "Royal Holloway, University of London": "academic",
+    "RSM UK": "commercial",
+    "Saga City Research": "commercial",
+    "SAIL Databank, Swansea University": "academic",
+    "ScaleUp Institute": "third-sector",
+    "Scottish Government": "government",
+    "Sentencing Academy": "third-sector",
+    "SGN": "commercial",
+    "Sheffield Hallam University": "academic",
+    "Sheffield Teaching Hospitals NHS Foundation Trust": "government",
+    "Simetrica": "commercial",
+    "Skills Development Scotland": "government",
+    "Social Care Wales": "government",
+    "Social Market Foundation": "third-sector",
+    "Social Mobility Commission": "government",
+    "SQW - Economic and Management Consultants": "commercial",
+    "State of Life": "commercial",
+    "St Mungo's": "third-sector",
+    "Stanford University": "academic",
+    "Stripe Partners": "commercial",
+    "Swansea Bay University Health Board": "government",
+    "Swansea University": "academic",
+    "Tech City UK": "government",
+    "Technological University Dublin": "academic",
+    "Technopolis": "commercial",
+    "Tees Valley Combined Authority": "government",
+    "Teesside University": "academic",
+    "The Lesbian Project": "third-sector",
+    "The Police Foundation": "third-sector",
+    "The Work Foundation": "third-sector",
+    "The Young Foundation - Institute for Community Studies": "third-sector",
+    "UCL Institute of Education": "academic",
+    "UK Export Finance": "government",
+    "UK Health Security Agency": "government",
+    "UK Research and Innovation": "government",
+    "UK Space Agency": "government",
+    "Ulster University": "academic",
+    "University College London": "academic",
+    "University of Aston": "academic",
+    "Anglia Ruskin University Higher Education Corporation": "academic",
+    "University of Barcelona": "academic",
+    "University of Bath": "academic",
+    "University of Birmingham": "academic",
+    "University of Brighton": "academic",
+    "University of Bristol": "academic",
+    "University of California": "academic",
+    "University of Cambridge": "academic",
+    "University of Central Lancashire": "academic",
+    "University of Dundee": "academic",
+    "University of Derby": "academic",
+    "University of East Anglia": "academic",
+    "University of Edinburgh": "academic",
+    "University of Essex": "academic",
+    "University of Exeter": "academic",
+    "University of Glasgow": "academic",
+    "University of Hertfordshire": "academic",
+    "University of Hull": "academic",
+    "University of Illinois Urbana-Champaign": "academic",
+    "University of Kent": "academic",
+    "University of Leeds": "academic",
+    "University of Leicester": "academic",
+    "University of Liverpool": "academic",
+    "University of London": "academic",
+    "University of Manchester": "academic",
+    "University of Northampton": "academic",
+    "University of Nottingham": "academic",
+    "University of Oxford": "academic",
+    "University of Oxford - Sociology": "academic",
+    "University of Padova": "academic",
+    "University of Plymouth": "academic",
+    "University of Reading": "academic",
+    "University of Sheffield": "academic",
+    "University of Southampton": "academic",
+    "University of St Andrews": "academic",
+    "University of Stirling": "academic",
+    "University of Strathclyde": "academic",
+    "University of Suffolk": "academic",
+    "University of Surrey": "academic",
+    "University of Sussex": "academic",
+    "University of Texas": "academic",
+    "University of Texas at Austin": "academic",
+    "University of the West of England": "academic",
+    "University of Warwick": "academic",
+    "University of Westminster": "academic",
+    "University of York": "academic",
+    "Umeå University": "academic",
+    "Utrecht University": "academic",
+    "Vanguard": "commercial",
+    "Wavehill Limited": "commercial",
+    "Welsh Government": "government",
+    "West Midlands Combined Authority": "government",
+    "What Works for Children's Social Care": "third-sector",
+    "Whole Life Consultants": "commercial",
+    "WPI Economics": "commercial",
+    "Yale University": "academic",
 }
 
 
@@ -505,17 +931,26 @@ def _starts_name(tokens: list[str], index: int) -> int:
 
 
 def _normalise_institution(name: str) -> str:
+    return _normalise_institution_with_status(name)[0]
+
+
+def _normalise_institution_with_status(name: str) -> tuple[str, str]:
     name = _clean_fragment(name)
     if not name:
-        return ""
+        return "", "empty"
 
     lowered = name.lower()
     if lowered in _ALIASES:
-        return _ALIASES[lowered]
+        canonical = _ALIASES[lowered]
+        if not canonical:
+            return "", "empty"
+        if lowered in _PARSER_CLEANUP_ALIAS_KEYS:
+            return canonical, "parser_cleanup"
+        return canonical, "alias"
 
     repeated_alias = _normalise_repeated_alias_with_researcher(name)
     if repeated_alias is not None:
-        return repeated_alias
+        return repeated_alias, "parser_cleanup"
 
     if "," in name:
         head, tail = name.rsplit(",", 1)
@@ -524,13 +959,35 @@ def _normalise_institution(name: str) -> str:
 
     lowered = name.lower()
     if lowered in _ALIASES:
-        return _ALIASES[lowered]
+        canonical = _ALIASES[lowered]
+        if not canonical:
+            return "", "empty"
+        if lowered in _PARSER_CLEANUP_ALIAS_KEYS:
+            return canonical, "parser_cleanup"
+        return canonical, "alias"
 
     institution_prefix = _normalise_known_institution_prefix(name)
     if institution_prefix is not None:
-        return institution_prefix
+        return institution_prefix, "parser_cleanup"
 
-    return name
+    return name, "identity"
+
+
+def institution_sector_for(canonical_institution: str) -> str:
+    return _INSTITUTION_SECTORS.get(canonical_institution, "unclassified")
+
+
+def describe_institution_normalisation(raw_name: str) -> dict[str, object]:
+    canonical, match_status = _normalise_institution_with_status(raw_name)
+    sector = institution_sector_for(canonical)
+    needs_review = int(bool(canonical) and sector == "unclassified")
+    return {
+        "raw_institution": raw_name,
+        "institution": canonical,
+        "institution_sector": sector,
+        "match_status": match_status,
+        "needs_review": needs_review,
+    }
 
 
 def _normalise_repeated_alias_with_researcher(name: str) -> str | None:
@@ -589,7 +1046,7 @@ def _split_compound_institution(name: str) -> list[str]:
     return [name]
 
 
-def parse_institutions(df: pd.DataFrame) -> pd.DataFrame:
+def _parse_institution_rows(df: pd.DataFrame, *, include_metadata: bool = False) -> list[dict[str, object]]:
     rows = []
 
     for _, proj in df.iterrows():
@@ -628,7 +1085,9 @@ def parse_institutions(df: pd.DataFrame) -> pd.DataFrame:
                     institution_parts.append(token)
                     i += 1
 
-                institution = _normalise_institution(", ".join(institution_parts))
+                raw_institution = ", ".join(institution_parts)
+                normalisation = describe_institution_normalisation(raw_institution)
+                institution = str(normalisation["institution"])
                 for split_institution in _split_compound_institution(institution):
                     if (
                         split_institution
@@ -637,10 +1096,95 @@ def parse_institutions(df: pd.DataFrame) -> pd.DataFrame:
                         and split_institution not in institutions_seen
                     ):
                         institutions_seen.add(split_institution)
-                        rows.append({
-                            "Project ID": project_id,
-                            "Year": year,
-                            "institution": split_institution,
-                        })
+                        if include_metadata:
+                            sector = institution_sector_for(split_institution)
+                            match_status = str(normalisation["match_status"])
+                            if split_institution != institution:
+                                match_status = "parser_cleanup"
+                            rows.append({
+                                "Project ID": project_id,
+                                "Year": year,
+                                "raw_institution": raw_institution,
+                                "institution": split_institution,
+                                "institution_sector": sector,
+                                "match_status": match_status,
+                                "needs_review": int(sector == "unclassified"),
+                            })
+                        else:
+                            rows.append({
+                                "Project ID": project_id,
+                                "Year": year,
+                                "institution": split_institution,
+                            })
+
+    return rows
+
+
+def parse_institutions(df: pd.DataFrame) -> pd.DataFrame:
+    rows = _parse_institution_rows(df)
 
     return pd.DataFrame(rows, columns=["Project ID", "Year", "institution"])
+
+
+def parse_institutions_with_metadata(df: pd.DataFrame) -> pd.DataFrame:
+    rows = _parse_institution_rows(df, include_metadata=True)
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "Project ID",
+            "Year",
+            "raw_institution",
+            "institution",
+            "institution_sector",
+            "match_status",
+            "needs_review",
+        ],
+    )
+
+
+def institution_normalisation_review_table(df: pd.DataFrame) -> pd.DataFrame:
+    parsed = parse_institutions_with_metadata(df)
+    columns = [
+        "raw_institution",
+        "normalised_institution",
+        "mentions",
+        "project_count",
+        "matched_reference",
+        "sector",
+        "needs_review",
+    ]
+    if not len(parsed):
+        return pd.DataFrame(columns=columns)
+
+    grouped = (
+        parsed.groupby(
+            ["raw_institution", "institution", "institution_sector", "needs_review"],
+            sort=True,
+            dropna=False,
+        )
+        .agg(
+            mentions=("institution", "size"),
+            project_count=("Project ID", "nunique"),
+        )
+        .reset_index()
+    )
+    grouped["matched_reference"] = grouped["institution_sector"].ne("unclassified")
+    grouped = grouped.rename(columns={
+        "institution": "normalised_institution",
+        "institution_sector": "sector",
+    })
+    return grouped[
+        [
+            "raw_institution",
+            "normalised_institution",
+            "mentions",
+            "project_count",
+            "matched_reference",
+            "sector",
+            "needs_review",
+        ]
+    ].sort_values(
+        by=["needs_review", "mentions", "raw_institution"],
+        ascending=[False, False, True],
+        kind="stable",
+    ).reset_index(drop=True)

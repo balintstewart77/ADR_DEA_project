@@ -321,7 +321,7 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^business register and employment survey$"), "Business Register and Employment Survey (BRES)"),
     (re.compile(r"(?i)^crime survey for england and wales$"), "Crime Survey for England and Wales (CSEW)"),
     (re.compile(r"(?i)^covid-19 infection survey$"), "COVID-19 Infection Survey (CIS)"),
-    (re.compile(r"(?i)^covid-19 schools infection survey linked to test and trace$"), "COVID-19 Infection Survey linked to NHS Test and Trace"),
+    (re.compile(r"(?i)^covid-19 schools infection survey linked to test and trace$"), "COVID-19 Schools Infection Survey linked to Test and Trace"),
     (re.compile(r"(?i)^inter-departmental business register$"), "Inter-Departmental Business Register (IDBR)"),
     (re.compile(r"(?i)^labour force survey$"), "Labour Force Survey (LFS)"),
     (re.compile(r"(?i)^living costs and food survey$"), "Living Costs and Food Survey (LCF)"),
