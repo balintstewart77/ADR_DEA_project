@@ -1100,3 +1100,336 @@ disagreements, the tag discipline finding — should reproduce.
 - **Model comparison artifacts never generated:** `build_experiment_sample.py` and `build_model_comparison.py` were added in `33f8a8c` to support Opus vs Sonnet comparison, but no output artifacts (experiment_sample_150.csv, model_comparison_review.csv, any Sonnet classification CSVs) appear in git history or on disk. It is unclear whether the comparison was conducted, conducted but kept locally, or abandoned.
 
 - Cross-lab LLM disagreement is a candidate method for selecting the hard-case validation stratum; to be designed properly. Note: disagreement is a triage signal for sample selection only — agreement does not constitute validation, as frontier models may share correlated bias
+
+---
+
+# Methods log — rc2 revision (post-1-June review)
+
+**Status:** rc2 is the revision arising from the 1 June 2026 review with Jo Lam
+(PI). It is not v1.0. The rc1 → rc2 path anticipated in the dictionary's
+"Path to v1.0" section is being walked: review surfaced structural concerns,
+and those concerns are actioned here. rc1 artefacts are retained unchanged
+(frozen at `v1.0-rc1-frozen`); they are now *evidence motivating* the rc2
+changes, not superseded mistakes.
+
+**Artefacts introduced in rc2:**
+- Controlled-vocabulary reference file: `analysis/register_reference.yaml`
+  (`reference_version` 0.3.0)
+- Deterministic derivation: `analysis/derive_register_properties.py`
+- Run-manifest helper: `analysis/run_manifest.py`
+- Deterministic outputs: `analysis/outputs_deterministic_rc2/`
+
+This entry records the rc2 design decisions and their rationale. The four
+changes agreed at review are: (1) Layer B linkage moved from LLM-inferred
+thematic classification to deterministic record-linkage lookup; (2) dataset
+collection-type tags; (3) dataset unit-of-observation tags; (4) researcher
+sector tags. COVID-19 moving from a Layer A domain to a cross-cutting tag, and
+the consequent retirement of the "Layer A/B/C" naming, are recorded as the LLM
+dictionary changes (separate, forthcoming entry); this entry covers the
+deterministic layer, which is now complete.
+
+## The unifying principle: lens vs object; intrinsic structure vs contingent use
+
+A single principle governs the rc2 changes and resolves several boundary
+questions that rc1 left ambiguous.
+
+**Lens vs object.** A concept is a cross-cutting *tag* when it is a lens or
+attribute applied across domains; it is a *domain* when it is the substantive
+object of research. Demographic disparity is a lens (hence the
+demographic-disparities tag, not a Gender/Race domain — see the v3.4 Layer A
+revision above); COVID-19 is a condition under which research occurs, not a
+policy/sector object (hence COVID-as-tag). The same test resolves whether a
+linked dataset's Census component counts as the Migration & Demographics
+*domain*: it does when the dataset's substantive origin is population/demography
+(the Census as a population source), and does not when a dataset merely carries
+demographic *fields* as attributes (e.g. the National Pupil Database's
+ethnicity/free-school-meal fields are attributes of education records, so they
+do not make an education linkage cross-domain).
+
+**Intrinsic structure vs contingent use.** Every deterministic facet classifies
+an entity by an intrinsic, structural, objective property — never by how a
+project uses it or how an organisation behaves. Linkage span follows the
+structural origin of the linked components; collection-type follows the
+dataset's design; unit of observation follows the unit the dataset is
+structured around; researcher sector follows legal/constitutional status. This
+is one principle applied four times. It is what makes the deterministic layer
+auditable: a classification can always be traced to a fixed property of a named
+entity, not to a judgement about a project.
+
+## Change 1 — Layer B: thematic linkage → deterministic record linkage
+
+### Problem with the rc1 Layer B
+rc1 Layer B (Single-Dataset / Within-Domain / Cross-Domain, LLM-inferred) asked
+the model a *thematic* question — do the datasets span policy domains — and
+inferred it from dataset co-occurrence.
+
+The principal reason for the redesign is substantive, not technical: the object
+of interest is **record-level data linkage** — whether individual-level records
+from different sources are actually joined — not thematic relatedness of the
+datasets a project happens to use. Record linkage is the locus of public
+interest and the focus of UCL and ADR UK: it is where the governance, privacy,
+and methodological questions actually sit, and it is what the register's
+audiences want to be able to see and filter. rc1 Layer B answered a different
+and less relevant question. It conflated two distinct things — whether datasets
+are *record-linked* (a factual property of the data) and whether they *span
+domains thematically* (an interpretive property of the research) — and a project
+using two unlinked datasets from different domains was read as "Cross-Domain
+Linkage" despite no record linkage occurring at all. Refocusing the layer on
+record-level linkage is the point of the change; this would have been the right
+move even had the thematic classification been perfectly reliable.
+
+The instability of the rc1 layer is corroborating, secondary evidence rather
+than the principal motive. The rc1 consistency diagnostics found Cross-Domain
+Linkage only 62% stable across same-model re-runs (the worst of any category),
+and the rc1 quality check flagged 60 projects labelled Cross-Domain with only
+one dataset listed. Both diagnostics independently identified linkage as the
+layer where LLM inference was weakest — which is unsurprising in hindsight,
+since the layer was asking the model to infer, unreliably, something that is
+properly a deterministic fact about the data. These rc1 results are retained as
+supporting evidence for the redesign, but the redesign's justification is the
+substantive refocus on record-level linkage.
+
+### Decision: linkage is a deterministic lookup, not an LLM classification
+Linkage is now a factual property of which datasets a project lists, looked up
+against a controlled table of known record-linked products. No LLM is involved.
+This eliminates the run-to-run instability entirely (the layer is now 100%
+reproducible), makes every classification auditable ("why cross-domain?" →
+"it uses LEO; LEO links Education and Labour"), and makes the layer trivially
+maintainable as the linkage landscape changes (a table edit, not a
+reclassification). Interdisciplinarity — the thematic question Layer B was
+straining to answer — is read directly off Layer A multi-label instead (a
+project with ≥2 substantive domains is the interdisciplinarity signal), which is
+a direct measurement rather than an inference from dataset co-occurrence.
+
+### Label set
+**No record linkage / Within-domain record linkage / Cross-domain record
+linkage.** "No record linkage" is the default (the dataset field contains none
+of the known linked products) and is an explicit value, not a blank, so the
+field is total and filterable; it covers multi-dataset-but-unlinked projects,
+not only single-dataset ones. "Record linkage" (not "data linkage") signals the
+technical meaning and distinguishes it from the retired thematic reading.
+
+### Data model: store components, derive span
+Each linked product stores its `component_domains` (a list of Layer A domain
+labels, populated per the lens-vs-object rule). `linkage_span` is *derived* from
+the union of matched products' component domains (none → no linkage; one domain
+→ within; ≥2 → cross) and is never stored independently, so span and components
+cannot drift. Storing the component domains (not just the span) is required for
+future filtering by specific linkage type (e.g. "health–finance linkages"),
+which a bare span label could not support. Multi-product projects take the union
+of all matched products' components, from which the span is derived.
+
+### Classification is at dataset level, not collection level
+Where a collection's components differ in linkage type, classification is at the
+component-dataset level. WED is the proof case: ASHE-Longitudinal and ASHE-PAYE
+are within-domain (Labour Market only), while ASHE-linked-to-Census-2011 is
+cross-domain (Labour Market + Migration & Demographics). A single collection
+label would have been wrong for one of these.
+
+### Inclusion rule and lifecycle
+A linked product is **a named, record-linked dataset used by ≥2 distinct
+projects.** The ≥2 recurrence is the guard distinguishing a recognised shared
+product from a one-off project-level description of its own data join (a true
+co-occurrence false positive); single-occurrence "linked X to Y" strings do not
+qualify. The term "bespoke" was deliberately dropped: it conflated *custom-built*
+(a construction property) with *single-use* (a reuse property), and only the
+latter is the criterion. Given the governance cost of record linkage, genuinely
+single-use linkages are near-empty as a category; what the ≥2 rule actually
+guards against is co-occurrence misreads, not custom construction. Each product
+carries `status` ∈ {standing, discontinued} (a string enum, kept extensible)
+plus nullable `available_from` / `discontinued_date`. The lifecycle is a real
+property: linkages come online and some are discontinued/superseded (e.g. the
+COVID-era assets). `status` is derivable from the dates or set directly; the
+dates are the substantive fact.
+
+### The product set (reference_version 0.3.0)
+Sixteen products, each triaged with a three-way check — referent verification
+(what the product is and its component domains, established from ONS/ADR UK/
+NISRA catalogues), incidence verification (its presence and project count in the
+register), and a domain-classification decision under the lens-vs-object rule.
+
+Standing: LEO (Education, Labour → cross); ECHILD (Health, Education → cross);
+GRADE (Education only → within; NPD demographic fields are attributes, not a
+domain); MoJ Data First (Crime & Justice → within; MoJ–DfE excluded, different
+legal gateway, not in the public register); AD|ARC (Environment & Agriculture,
+Migration & Demographics → cross); WED components (split as above); GUIE
+(Education, Migration & Demographics → cross; the mirror of GRADE — Census is a
+population source, so cross); ONS Longitudinal Study (Migration & Demographics,
+Health & Social Care → cross — census linked to life events incl. death/cancer);
+EES 2011 NI (Labour, Migration & Demographics, Housing & Planning → cross; the
+Housing component is Land & Property Services capital values); Linked
+Trade-in-Goods/IDBR (Business & Productivity only → within; HMRC is the
+collector, not the subject — trade activity is a business-productivity object,
+so the data is not also Public Finance & Taxation); 2011 Census linked to
+Benefits and Income (Migration & Demographics, Labour Market → cross); NMC
+Register linked to Census 2021 (Health & Social Care, Migration & Demographics →
+cross); Education Outcomes Linkage NI (Education only → within).
+
+Discontinued: the Public Health Data Asset family — merged into one product from
+two register string families ("Linked Census, HES and Mortality Data" and
+"Linked Census and death occurrences") which are the same ONS asset at different
+linkage depths, consistent with data minimisation (Migration & Demographics,
+Health & Social Care → cross); and the five COVID-19 Infection Survey linkages,
+kept as separate products because their spans differ — CIS linked to Test and
+Trace / Combined Vaccination / Mortality / Schools-Test-and-Trace are all
+within-domain (Health), while CIS linked to VOA and EPC is cross-domain (Health,
+Housing & Planning, because Valuation Office and Energy Performance data are a
+housing/property object).
+
+Two judgement calls were resolved deliberately: Trade/IDBR is Business &
+Productivity alone (within), not Business + Public Finance (which would have made
+it cross) — provenance via a tax authority is not subject matter; and the CIS
+Schools survey is Health alone (within), not Health + Education — it is health
+surveillance conducted in a school setting (a population), not education
+research (the lens-vs-object rule applied to setting).
+
+### Naming rule: canonicals and aliases must be register-present strings
+Canonical names and aliases must be strings that actually appear in the register
+dataset field; external/official names learned from research (e.g. "PHDA") are
+recorded in a `notes` field only, never as a canonical or a matchable alias.
+This keeps the reference file matchable against the register a reader actually
+has, rather than against names the register never uses.
+
+### Triage discipline and false-positive guards
+Aliasing carries a specific danger: an over-broad alias matching projects it
+should not, which silently changes a linkage label (the highest-stakes error
+class). Guards applied throughout: the "ESRI lesson" (an acronym must match the
+register's actual referent, not the globally-most-famous expansion — ESRI here
+is the Economic and Social Research Institute, not the GIS company); no
+collapsing of distinct datasets into one family (BHPS is not Understanding
+Society; LEO is not the ONS Longitudinal Study, despite both being
+"Longitudinal"); and a mandatory before/after diff on every application,
+requiring every changed linkage label to be explained by a specific matched
+product — an unexplained change is alias bleed and halts the application.
+
+### Result
+The application before/after diff (v0.2.0 → v0.3.0) changed 52 projects, all
+explained by a matched product, none unexplained. The register-wide distribution
+moved from No 927 / Within 88 / Cross 257 to No 877 / Within 121 / Cross 274.
+The within-domain growth (+33) is the substantive finding: a large share of DEA
+record linkage is within-domain (firm-to-firm business data via Trade/IDBR,
+health-to-health COVID surveillance via the CIS family, education-to-education
+via EOL), which the rc1 thematic Layer B conflated. The layer is now 100%
+reproducible and fully auditable.
+
+### Known conservatism
+The ≥2-project inclusion rule will occasionally exclude a genuine but rare
+linkage. CGIAD (Cross Government Income Administrative Dataset NI) is a real
+linked product but appears in only one register project, so it is not added and
+that project reads "No record linkage." This is a deliberate, documented
+trade-off: the threshold guards against one-off false positives at the cost of
+missing rare genuine linkages, which are recoverable if a second project later
+uses them.
+
+## Changes 2 and 3 — dataset collection-type and unit-of-observation tags
+
+Both are deterministic per-dataset lookups, keyed (like linkage) on the
+canonical dataset form produced by `dashboard/dataset_normalisation.py`. They
+are recorded here as design decisions; the reference sections are partially
+built. Each dataset is a *record* carrying multiple facet fields
+(`collection_type`, `unit_of_observation`), so further facets (a foreseen
+`unit`-style sensitivity or person-vs-firm extension) drop in as new fields
+without restructuring and without re-doing normalisation — the same
+facet-extensibility principle as the rc1 `cross_cutting_tags: list[str]` field.
+
+### Collection-type (single-label): survey / cohort / administrative
+Rule: **primary type by design, single-label.** Cohort = any longitudinal study
+following the same units over time, including household and business panels.
+Administrative includes vital-events/registry data (births, deaths). Acknowledged
+simplification: single-label suppresses dual-nature data (Census is filed as
+survey by design though administratively used; a longitudinal survey files under
+cohort, losing its survey aspect). Worked edge cases: Census → survey;
+Understanding Society / Millennium Cohort / ONS LS → cohort; ASHE → survey
+(survey design, samples administrative payroll); LEO/ECHILD → administrative
+("linked" is captured in record linkage, not here — facets kept orthogonal);
+death/birth registrations → administrative; Decision Maker Panel / Longitudinal
+Small Business Survey → cohort.
+
+### Unit-of-observation (single-label): individual / household / business / area
+Rule: **the unit the dataset is structured/collected around, not the unit a
+project analyses; applied symmetrically.** Worked edge cases: Understanding
+Society → household (a household panel, even though individuals are analysed) —
+the defining case; Census → individual (it enumerates persons; household is a
+grouping — a deliberate call that does *not* follow the Understanding Society
+logic, because the Census is a population enumeration, not a household panel);
+ASHE → individual (employee/job-centric, though employer-returned); trade/customs
+→ business; death/birth registrations → individual (no separate vital-events
+unit); LEO and person-linked products → individual. A small residual of
+genuinely multi-level datasets (e.g. price/transaction data such as the Consumer
+Prices Index) does not fit the four-unit vocabulary cleanly and carries a
+documented forced call; this is a noted limitation of the single-label scheme.
+
+## Change 4 — researcher sector tags
+
+Deterministic lookup on the canonical organisation form from
+`dashboard/institution_normalisation.py`. Multi-tag at the organisation level
+(genuinely spanning organisations may carry more than one); a project inherits
+the **union** of its researchers' organisation sectors.
+
+Rule: **structural/legal status, not behaviour**, applied as an ordered priority
+procedure: (1) UK HEI or institute constituted within one → academic; (2) public
+body (department, devolved/local government, NHS, ALB, NDPB, regulator, central
+bank) → government; (3) registered charity, foundation, trust, CIC, not-for-profit
+NGO → third-sector (this *includes* research foundations and think tanks); (4)
+for-profit company → commercial. Genuine uncertainty → "unclassified" (not a
+guess).
+
+The decisive design choice was to classify by structural status rather than
+behaviour. This puts think tanks and research foundations (Nesta, IFS) in
+third-sector despite their academic/commercial behaviour, and operationally
+independent public bodies (Bank of England) in government. The alternative — a
+behavioural "research institute" category — was rejected because it reintroduces
+a per-organisation judgement and is not a clean lookup; the structural rule has
+one defensible answer per organisation (its legal status), is auditable, and
+lets downstream filtering recover finer distinctions by combination. Accepted
+cost: "third-sector" is broad, spanning service charities and research
+foundations alike; this is documented, and filtering combinations
+(e.g. third-sector + survey-data) can approximate finer cuts.
+
+## Provenance: run manifests as a standing requirement
+
+Every run/comparison/derivation script now writes a `manifest.json` into its
+output directory, written by the run code at run time from the actual parameters
+— never hand-authored for live runs. Fields include model, the actual API
+parameters (temperature recorded as "omitted" when not sent, never a guessed
+default), prompt version, dictionary version, reference-table version, input
+register path/date/hash, git commit, and git-dirty state (whether the working
+tree had uncommitted changes — a real reproducibility caveat recorded honestly).
+
+The requirement was motivated by an rc1 episode in which the temperature used by
+the 4.6 comparison run had to be *reconstructed* from commit timestamps and run
+chronology because the outputs did not record their own request parameters. The
+reconstruction was sound (the 4.6 run post-dated the commit that removed
+`temperature=0`, and sat chronologically between two 4.8 runs), but it was
+inference, not a record. Manifests close that class of problem: outputs now
+self-describe. Backfilled rc1 manifests are explicitly marked
+`reconstructed: true` to preserve the distinction between recorded and inferred.
+
+## On retiring the thematic Layer B
+
+The retirement is a refocus, not a repair. The thematic Layer B measured
+something — whether a project's datasets are thematically related across domains
+— that is not the object of interest. The object of interest is record-level
+data linkage: whether individual records are actually joined across sources.
+That is what the public, UCL, and ADR UK care about, because it is where the
+governance, privacy, and methodological stakes lie. The rc2 layer measures that
+directly and deterministically. The thematic question Layer B was straining to
+answer (does the research cross domains) has not been lost — it is read directly
+off Layer A multi-label, where it belongs, as a property of the research rather
+than an inference from dataset co-occurrence.
+
+The rc1 thematic Layer B results are not discarded; they are retained as
+supporting evidence. The 62% Cross-Domain stability finding and the 60
+single-dataset-Cross-Domain quality flags both independently showed the layer
+was unreliable — corroboration that an LLM was the wrong instrument for what is
+properly a deterministic fact, but secondary to the substantive point that the
+layer was measuring the wrong thing. Replacing a thematic proxy with a direct,
+deterministic measurement of record linkage is the rc1 → rc2 governance path
+working as intended: review surfaced that a layer was answering the wrong
+question, and the release-candidate stage absorbed the revision before v1.0.
+
+The controlled-vocabulary reference file (`register_reference.yaml`) is,
+additionally, a metadata artefact in its own right: a documented mapping of DEA
+register entities (datasets → linkage, collection-type, unit; organisations →
+sector) to controlled properties, which ties to the project's broader
+metadata-interoperability aims.
