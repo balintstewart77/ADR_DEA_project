@@ -84,26 +84,12 @@ _dataset_project_counts = (
     df_datasets.drop_duplicates(subset=["Project ID", "dataset"])
     .groupby("dataset")["Project ID"].nunique()
 )
-_flagship_collection_project_counts = (
-    df_flagship_projects.drop_duplicates(subset=["Project Row ID", "collection"])
-    .groupby("collection")["Project Row ID"].nunique()
-    if len(df_flagship_projects)
-    else pd.Series(dtype=int)
-)
 _ALL_DATASET_OPTIONS = (
     [{"label": "All datasets", "value": "ALL"}]
     + [
         {"label": f"{d}  ({n} {'project' if n == 1 else 'projects'})", "value": d}
         for d in sorted(df_datasets["dataset"].unique()) if d
         for n in [_dataset_project_counts.get(d, 0)]
-    ]
-    + [
-        {
-            "label": f"Cross-Domain Linked: {c}  ({n} {'project' if n == 1 else 'projects'})",
-            "value": f"collection::{c}",
-        }
-        for c in COLLECTIONS
-        for n in [_flagship_collection_project_counts.get(c, 0)]
     ]
 )
 _provider_project_counts = (
