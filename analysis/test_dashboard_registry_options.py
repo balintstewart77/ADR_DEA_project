@@ -1,6 +1,6 @@
 import unittest
 
-from dashboard.data.registry import _ALL_DATASET_OPTIONS
+from dashboard.data.registry import _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS
 
 
 class DashboardRegistryOptionTest(unittest.TestCase):
@@ -16,6 +16,19 @@ class DashboardRegistryOptionTest(unittest.TestCase):
             1,
         )
         self.assertNotIn("collection::ECHILD", values)
+
+    def test_provider_filter_expands_selected_department_acronyms(self):
+        values = [option["value"] for option in _ALL_PROVIDER_OPTIONS]
+
+        expected_values = {
+            "Department for Business and Trade (DBT)",
+            "Department for Levelling Up, Housing and Communities (DLUHC)",
+            "Department for Transport (DfT)",
+            "Department for Work and Pensions (DWP)",
+        }
+        self.assertTrue(expected_values.issubset(set(values)))
+        for acronym in ("DBT", "DLUHC", "DfT", "DWP"):
+            self.assertNotIn(acronym, values)
 
 
 if __name__ == "__main__":
