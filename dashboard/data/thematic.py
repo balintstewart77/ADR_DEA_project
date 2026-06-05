@@ -11,7 +11,6 @@ from dashboard.config import (
     SUBSTANTIVE_DOMAIN_COUNT_COL,
     CROSS_CUTTING_TAGS_COL,
     TAG_LABELS,
-    LINKAGE_LABELS,
     PURPOSE_LABELS,
     _PROJECT_ID_KEY_COL,
 )
@@ -49,7 +48,7 @@ def _tag_series(df: pd.DataFrame) -> pd.Series:
 
 
 def _domain_crosstab(df: pd.DataFrame, other_col: str, other_multi: bool, col_order) -> pd.DataFrame:
-    """Substantive-domain x (linkage|purpose) counts over ALL domains.
+    """Substantive-domain x classification-value counts over ALL domains.
 
     Layer A is non-hierarchical, so a project is counted once per assigned domain
     (column totals can exceed the project count). Returns a frame whose first
@@ -123,10 +122,8 @@ def load_thematic_data(thematic_dir):
     """Returns (data_dict, available_flag)."""
     try:
         df_thematic_a = pd.read_csv(os.path.join(thematic_dir, "layer_a_by_year.csv"), encoding="utf-8-sig")
-        df_thematic_b = pd.read_csv(os.path.join(thematic_dir, "layer_b_by_year.csv"), encoding="utf-8-sig")
         df_thematic_c = pd.read_csv(os.path.join(thematic_dir, "layer_c_by_year.csv"), encoding="utf-8-sig")
         df_thematic_a_totals = pd.read_csv(os.path.join(thematic_dir, "layer_a_totals.csv"), encoding="utf-8-sig")
-        df_thematic_b_totals = pd.read_csv(os.path.join(thematic_dir, "layer_b_totals.csv"), encoding="utf-8-sig")
         df_thematic_c_totals = pd.read_csv(os.path.join(thematic_dir, "layer_c_totals.csv"), encoding="utf-8-sig")
         with open(os.path.join(thematic_dir, "layer_summary.txt"), "r", encoding="utf-8") as _f:
             thematic_narrative = _f.read()
@@ -143,32 +140,9 @@ def load_thematic_data(thematic_dir):
         # Cross-layer heatmaps, derived over ALL substantive domains (multi-label:
         # a project is counted once per assigned domain), replacing the legacy
         # top-6 "primary domain" cross-tabs.
-        df_cross_mode_domain = _domain_crosstab(
-            df_thematic_projects, "linkage_mode", False, LINKAGE_LABELS
-        )
         df_cross_domain_purpose = _domain_crosstab(
             df_thematic_projects, "analytical_purpose", True, PURPOSE_LABELS
         )
-
-        # Cross-domain prevalence two ways, to caption the linkage-profile chart:
-        # project-level (each project once) vs assignment-weighted (each project
-        # once per domain it touches — cross-domain projects span 2+ domains, so
-        # they are over-represented on the assignment-weighted basis).
-        if thematic_project_count and "linkage_mode" in df_thematic_projects.columns:
-            thematic_project_cross_rate = round(
-                (df_thematic_projects["linkage_mode"] == "Cross-Domain Linkage").mean() * 100, 1
-            )
-        else:
-            thematic_project_cross_rate = 0.0
-        if not df_cross_mode_domain.empty and "Cross-Domain Linkage" in df_cross_mode_domain.columns:
-            _mode_cols = [c for c in df_cross_mode_domain.columns if c != "domain"]
-            _grand = float(df_cross_mode_domain[_mode_cols].to_numpy().sum())
-            thematic_assignment_cross_rate = (
-                round(df_cross_mode_domain["Cross-Domain Linkage"].sum() / _grand * 100, 1)
-                if _grand else 0.0
-            )
-        else:
-            thematic_assignment_cross_rate = 0.0
 
         # How often pairs of substantive domains co-occur in the same project.
         df_domain_cooccurrence = _domain_cooccurrence(df_thematic_projects)
@@ -211,15 +185,6 @@ def load_thematic_data(thematic_dir):
                     "value": int(domain_count),
                 }
                 for domain_count, count in _domain_count_project_counts.items()
-            ]
-        )
-        _linkage_project_counts = df_thematic_projects["linkage_mode"].dropna().value_counts()
-        _all_linkage = sorted(df_thematic_projects["linkage_mode"].dropna().unique())
-        _thematic_linkage_options = (
-            [{"label": "All linkage modes", "value": "ALL"}]
-            + [
-                {"label": _filter_label_with_count(m, int(_linkage_project_counts.get(m, 0))), "value": m}
-                for m in _all_linkage
             ]
         )
         _purpose_project_counts = {}
@@ -295,12 +260,9 @@ def load_thematic_data(thematic_dir):
 
         return {
             "df_thematic_a": df_thematic_a,
-            "df_thematic_b": df_thematic_b,
             "df_thematic_c": df_thematic_c,
             "df_thematic_a_totals": df_thematic_a_totals,
-            "df_thematic_b_totals": df_thematic_b_totals,
             "df_thematic_c_totals": df_thematic_c_totals,
-            "df_cross_mode_domain": df_cross_mode_domain,
             "df_cross_domain_purpose": df_cross_domain_purpose,
             "df_thematic_projects": df_thematic_projects,
             "df_thematic_tag_by_year": df_thematic_tag_by_year,
@@ -309,23 +271,17 @@ def load_thematic_data(thematic_dir):
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
             "THEMATIC_TAGGED_COUNT": thematic_tagged_count,
-            "THEMATIC_PROJECT_CROSS_RATE": thematic_project_cross_rate,
-            "THEMATIC_ASSIGNMENT_CROSS_RATE": thematic_assignment_cross_rate,
             "_THEMATIC_DOMAIN_OPTIONS": _thematic_domain_options,
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": _thematic_domain_count_options,
-            "_THEMATIC_LINKAGE_OPTIONS": _thematic_linkage_options,
             "_THEMATIC_PURPOSE_OPTIONS": _thematic_purpose_options,
             "_THEMATIC_TAG_OPTIONS": _thematic_tag_options,
         }, True
     except (FileNotFoundError, KeyError):
         return {
             "df_thematic_a": pd.DataFrame(),
-            "df_thematic_b": pd.DataFrame(),
             "df_thematic_c": pd.DataFrame(),
             "df_thematic_a_totals": pd.DataFrame(),
-            "df_thematic_b_totals": pd.DataFrame(),
             "df_thematic_c_totals": pd.DataFrame(),
-            "df_cross_mode_domain": pd.DataFrame(),
             "df_cross_domain_purpose": pd.DataFrame(),
             "df_thematic_projects": pd.DataFrame(),
             "df_thematic_tag_by_year": pd.DataFrame(),
@@ -334,11 +290,8 @@ def load_thematic_data(thematic_dir):
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
             "THEMATIC_TAGGED_COUNT": 0,
-            "THEMATIC_PROJECT_CROSS_RATE": 0.0,
-            "THEMATIC_ASSIGNMENT_CROSS_RATE": 0.0,
             "_THEMATIC_DOMAIN_OPTIONS": [],
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": [],
-            "_THEMATIC_LINKAGE_OPTIONS": [],
             "_THEMATIC_PURPOSE_OPTIONS": [],
             "_THEMATIC_TAG_OPTIONS": [],
         }, False
@@ -348,12 +301,9 @@ _thematic_data, THEMATIC_DATA_AVAILABLE = load_thematic_data(CLASSIFICATION_DIR)
 
 # Unpack for convenient module-level access
 df_thematic_a = _thematic_data["df_thematic_a"]
-df_thematic_b = _thematic_data["df_thematic_b"]
 df_thematic_c = _thematic_data["df_thematic_c"]
 df_thematic_a_totals = _thematic_data["df_thematic_a_totals"]
-df_thematic_b_totals = _thematic_data["df_thematic_b_totals"]
 df_thematic_c_totals = _thematic_data["df_thematic_c_totals"]
-df_cross_mode_domain = _thematic_data["df_cross_mode_domain"]
 df_cross_domain_purpose = _thematic_data["df_cross_domain_purpose"]
 df_thematic_projects = _thematic_data["df_thematic_projects"]
 df_thematic_tag_by_year = _thematic_data["df_thematic_tag_by_year"]
@@ -362,10 +312,7 @@ df_domain_cooccurrence = _thematic_data["df_domain_cooccurrence"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
 THEMATIC_TAGGED_COUNT = _thematic_data["THEMATIC_TAGGED_COUNT"]
-THEMATIC_PROJECT_CROSS_RATE = _thematic_data["THEMATIC_PROJECT_CROSS_RATE"]
-THEMATIC_ASSIGNMENT_CROSS_RATE = _thematic_data["THEMATIC_ASSIGNMENT_CROSS_RATE"]
 _THEMATIC_DOMAIN_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_OPTIONS"]
 _THEMATIC_DOMAIN_COUNT_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_COUNT_OPTIONS"]
-_THEMATIC_LINKAGE_OPTIONS = _thematic_data["_THEMATIC_LINKAGE_OPTIONS"]
 _THEMATIC_PURPOSE_OPTIONS = _thematic_data["_THEMATIC_PURPOSE_OPTIONS"]
 _THEMATIC_TAG_OPTIONS = _thematic_data["_THEMATIC_TAG_OPTIONS"]

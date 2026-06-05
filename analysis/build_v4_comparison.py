@@ -29,7 +29,6 @@ DEFAULT_RUN_B_LABEL = "4.6"
 META_COLUMNS = ["Record ID", "Project ID", "Title", "Datasets Used", "Year"]
 LABEL_FIELDS = [
     "substantive_domains",
-    "linkage_mode",
     "analytical_purpose",
     "cross_cutting_tags",
 ]
@@ -39,7 +38,6 @@ RATIONALE_PLACEHOLDER = "(rationale not provided)"
 
 FIELD_LABELS = {
     "substantive_domains": "Layer A",
-    "linkage_mode": "Layer B",
     "analytical_purpose": "Layer C",
     "cross_cutting_tags": "Tag",
 }
@@ -181,9 +179,6 @@ def build_comparison(df_a: pd.DataFrame, df_b: pd.DataFrame, run_a: RunSpec, run
         f"substantive_domains_{run_a.suffix}",
         f"substantive_domains_{run_b.suffix}",
         "substantive_domains_agree",
-        f"linkage_mode_{run_a.suffix}",
-        f"linkage_mode_{run_b.suffix}",
-        "linkage_mode_agree",
         f"analytical_purpose_{run_a.suffix}",
         f"analytical_purpose_{run_b.suffix}",
         "analytical_purpose_agree",
@@ -395,7 +390,7 @@ def write_summary(
         "",
         "## Agreement Rates",
         "",
-        f"Overall agreement: {_pct(overall_count, total_rows)} ({overall_count:,} of {total_rows:,} projects agreed on all four label fields).",
+        f"Overall agreement: {_pct(overall_count, total_rows)} ({overall_count:,} of {total_rows:,} projects agreed on all compared label fields).",
         "",
         * _markdown_table(
             ["Field", "Agreement rate", "Agreed projects", "Compared projects"],

@@ -33,8 +33,8 @@ KEY_COLUMNS = [
 
 LABEL_COLUMNS = [
     "substantive_domains",
-    "linkage_mode",
     "analytical_purpose",
+    "cross_cutting_tags",
 ]
 
 
@@ -45,6 +45,10 @@ def _load_csv(path: str) -> pd.DataFrame:
 
 
 def _rename_model_columns(df: pd.DataFrame, prefix: str) -> pd.DataFrame:
+    df = df.copy()
+    for col in LABEL_COLUMNS:
+        if col not in df.columns:
+            df[col] = ""
     extra = ["primary_domain"] if "primary_domain" in df.columns else []
     cols = LABEL_COLUMNS + extra
     rename_map = {col: f"{prefix}_{col}" for col in cols}
@@ -86,23 +90,23 @@ def build_comparison(
         comparison["opus_substantive_domains"].fillna("").astype(str).str.strip()
         == comparison["sonnet_substantive_domains"].fillna("").astype(str).str.strip()
     )
-    comparison["linkage_match"] = (
-        comparison["opus_linkage_mode"].fillna("").astype(str).str.strip()
-        == comparison["sonnet_linkage_mode"].fillna("").astype(str).str.strip()
-    )
     comparison["purpose_match"] = (
         comparison["opus_analytical_purpose"].fillna("").astype(str).str.strip()
         == comparison["sonnet_analytical_purpose"].fillna("").astype(str).str.strip()
     )
+    comparison["tag_match"] = (
+        comparison["opus_cross_cutting_tags"].fillna("").astype(str).str.strip()
+        == comparison["sonnet_cross_cutting_tags"].fillna("").astype(str).str.strip()
+    )
     comparison["all_layers_match"] = (
-        comparison["domain_match"] & comparison["linkage_match"] & comparison["purpose_match"]
+        comparison["domain_match"] & comparison["purpose_match"] & comparison["tag_match"]
     )
 
     comparison["review_status"] = ""
     comparison["preferred_model"] = ""
     comparison["final_domain"] = ""
-    comparison["final_linkage"] = ""
     comparison["final_purpose"] = ""
+    comparison["final_tags"] = ""
     comparison["review_notes"] = ""
 
     sort_cols = ["all_layers_match", "is_flagged", "Record ID"]

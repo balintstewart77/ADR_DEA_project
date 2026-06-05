@@ -480,7 +480,7 @@ _INSTITUTION_SECTORS = {
     "Agri-Food and Biosciences Institute": "government",
     "Alan Turing Institute": "third-sector",
     "Alma Economics": "commercial",
-    "AQA Education": "commercial",
+    "AQA Education": "third-sector",
     "ARUP": "commercial",
     "Aston University": "academic",
     "Bank of England": "government",

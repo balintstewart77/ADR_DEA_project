@@ -430,11 +430,11 @@ class InstitutionNormalisationTest(unittest.TestCase):
         self.assertEqual(
             metadata[["institution", "institution_sector", "match_status"]].values.tolist(),
             [
-                ["AQA Education", "commercial", "alias"],
+                ["AQA Education", "third-sector", "alias"],
                 ["University of Texas", "academic", "alias"],
             ],
         )
-        self.assertEqual(institution_sector_for("AQA Education"), "commercial")
+        self.assertEqual(institution_sector_for("AQA Education"), "third-sector")
         self.assertEqual(institution_sector_for("Unknown Organisation"), "unclassified")
         self.assertEqual(
             describe_institution_normalisation("Cristina Sechel"),

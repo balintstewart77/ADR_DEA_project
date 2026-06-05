@@ -17,7 +17,6 @@ import argparse
 import json
 import os
 import time
-from collections import Counter
 
 import numpy as np
 import pandas as pd
@@ -47,32 +46,36 @@ QUALITY_DIR = os.path.join(OUTPUT_DIR, "quality")
 
 def select_test_sample(df: pd.DataFrame, n: int = 75, seed: int = 42) -> pd.DataFrame:
     """
-    Stratified sample covering all Layer B categories and boundary cases.
+    Stratified sample covering primary substantive domains and boundary cases.
     Returns a subset of the input DataFrame.
     """
     rng = np.random.default_rng(seed)
 
-    # Read existing classifications to stratify by current labels
+    # Read existing classifications to stratify by current primary domains.
     csv_path = os.path.join(OUTPUT_DIR, "layer_classifications.csv")
     if os.path.exists(csv_path):
         df_cls = pd.read_csv(csv_path, encoding="utf-8-sig")
-        # Merge linkage_mode onto df by Record ID
-        if "linkage_mode" in df_cls.columns:
-            mode_map = dict(zip(df_cls["Record ID"].astype(str), df_cls["linkage_mode"]))
+        if "substantive_domains" in df_cls.columns:
+            domain_map = dict(
+                zip(
+                    df_cls["Record ID"].astype(str),
+                    df_cls["substantive_domains"].fillna("").astype(str).str.split(";").str[0].str.strip(),
+                )
+            )
             df = df.copy()
-            df["_linkage_mode"] = df["Record ID"].astype(str).map(mode_map)
+            df["_primary_domain"] = df["Record ID"].astype(str).map(domain_map).fillna("unknown")
         else:
             df = df.copy()
-            df["_linkage_mode"] = "unknown"
+            df["_primary_domain"] = "unknown"
     else:
         df = df.copy()
-        df["_linkage_mode"] = "unknown"
+        df["_primary_domain"] = "unknown"
 
     sampled_ids = set()
 
-    # Ensure each linkage mode is represented
-    for mode in df["_linkage_mode"].dropna().unique():
-        subset = df[df["_linkage_mode"] == mode]
+    # Ensure each primary domain is represented.
+    for domain in df["_primary_domain"].dropna().unique():
+        subset = df[df["_primary_domain"] == domain]
         take = min(max(3, n // 10), len(subset))
         chosen = subset.sample(n=take, random_state=rng.integers(0, 2**31))
         sampled_ids.update(chosen["Record ID"])
@@ -92,7 +95,7 @@ def select_test_sample(df: pd.DataFrame, n: int = 75, seed: int = 42) -> pd.Data
             chosen = remaining.sample(n=extra, random_state=rng.integers(0, 2**31))
             sampled_ids.update(chosen["Record ID"])
 
-    result = df[df["Record ID"].isin(sampled_ids)].drop(columns=["_linkage_mode"], errors="ignore")
+    result = df[df["Record ID"].isin(sampled_ids)].drop(columns=["_primary_domain"], errors="ignore")
     print(f"[sample] Selected {len(result)} projects for consistency testing")
     return result.reset_index(drop=True)
 
@@ -149,8 +152,8 @@ def run_trial(
                 if p["id"] not in results:
                     results[p["id"]] = {
                         "substantive_domains": ["TRIAL_FAILED"],
-                        "linkage_mode": "TRIAL_FAILED",
                         "analytical_purpose": ["TRIAL_FAILED"],
+                        "cross_cutting_tags": ["TRIAL_FAILED"],
                     }
 
         time.sleep(0.5)
@@ -218,9 +221,9 @@ def compute_consistency_metrics(trials: list[dict]) -> str:
 
     # Per-layer agreement
     for layer_key, layer_name in [
-        ("linkage_mode", "Layer B — Linkage Mode"),
         ("substantive_domains", "Layer A — Substantive Domains"),
         ("analytical_purpose", "Layer C — Analytical Purpose"),
+        ("cross_cutting_tags", "Cross-cutting Tags"),
     ]:
         lines.append(f"{layer_name}")
         valid_ids = [
@@ -284,22 +287,6 @@ def compute_consistency_metrics(trials: list[dict]) -> str:
                 lines.append(f"    {pid}: {' / '.join(val_strs)}")
 
         lines.append("")
-
-    # Per-category stability for Layer B
-    lines.append("Layer B stability by category:")
-    category_stable = Counter()
-    category_total = Counter()
-    for pid in all_ids:
-        values = [trials[t].get(pid, {}).get("linkage_mode") for t in range(n_trials)]
-        most_common = Counter(values).most_common(1)[0][0]
-        category_total[most_common] += 1
-        if len(set(values)) == 1:
-            category_stable[most_common] += 1
-
-    for cat in sorted(category_total.keys()):
-        stable = category_stable.get(cat, 0)
-        total = category_total[cat]
-        lines.append(f"  {cat}: {stable}/{total} stable ({stable/total:.0%})" if total else f"  {cat}: 0/0")
 
     return "\n".join(lines)
 

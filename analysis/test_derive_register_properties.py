@@ -65,6 +65,14 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
                 if product["status"] == "standing":
                     self.assertIsNone(product["discontinued_date"])
 
+    def test_dataset_reference_uses_split_collection_schema(self):
+        self.assertEqual(self.reference["reference_version"], "0.4.1")
+        for dataset in self.reference["datasets"]:
+            with self.subTest(dataset=dataset["canonical"]):
+                self.assertNotIn("collection_type", dataset)
+                self.assertIn(dataset["collection_method"], {"survey", "administrative"})
+                self.assertIn(dataset["temporal_structure"], {"cross-sectional", "longitudinal"})
+
     def test_multi_product_union_and_no_product(self):
         domains = set()
         for dataset in [
@@ -102,42 +110,56 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
 
     def test_dataset_worked_edge_cases(self):
         cases = {
-            "Census 2011": ("survey", "individual"),
-            "Understanding Society": ("cohort", "household"),
-            "Annual Survey of Hours and Earnings (ASHE)": ("survey", "individual"),
-            "Longitudinal Education Outcomes (LEO)": ("administrative", "individual"),
-            "Education and Child Health Insights from Linked Data (ECHILD)": ("administrative", "individual"),
-            "Linked Census, HES and Mortality Data": ("administrative", "individual"),
-            "Earnings and Employees Study": ("survey", "individual"),
-            "EOL": ("administrative", "individual"),
-            "EOL Dataset (2015-2022)": ("administrative", "individual"),
-            "Death Registrations": ("administrative", "individual"),
-            "Birth Registrations in England and Wales": ("administrative", "individual"),
-            "Decision Maker Panel": ("cohort", "business"),
-            "Longitudinal Small Business Survey (LSBS)": ("cohort", "business"),
-            "Business Enterprise Research and Development England": ("survey", "business"),
-            "Products of the European Community": ("survey", "business"),
-            "Annual Gas and Electricity Consumption at Meter Level": ("administrative", "area"),
-            "Prices Survey Microdata": ("survey", "business"),
-            "Bespoke Management and Expectations Survey": ("survey", "business"),
-            "Over 50s Lifestyle Study": ("survey", "individual"),
-            "Online Time Use Survey": ("survey", "individual"),
-            "British Household Panel Survey": ("cohort", "household"),
-            "Working Lives of Teachers and Leaders": ("cohort", "individual"),
-            "Annual Outward Foreign Direct Investment Survey": ("survey", "business"),
-            "Survey of Innovation and Patent Use": ("survey", "business"),
-            "Longitudinal Business Structure Database": ("administrative", "business"),
-            "Monthly Inquiry into the Distributive and Services Sector": ("survey", "business"),
-            "Monthly Production Inquiry": ("survey", "business"),
-            "Effects of Tax and Benefits": ("survey", "household"),
-            "UK Gross Value Added": ("administrative", "area"),
-            "Statutory Homelessness Flows England": ("administrative", "household"),
+            "Census 2011": ("survey", "cross-sectional", "individual"),
+            "Understanding Society": ("survey", "longitudinal", "household"),
+            "Millennium Cohort Study": ("survey", "longitudinal", "individual"),
+            "ONS Longitudinal Study (LS)": ("administrative", "longitudinal", "individual"),
+            "Annual Survey of Hours and Earnings (ASHE)": ("survey", "cross-sectional", "individual"),
+            "Annual Survey of Hours and Earnings Longitudinal": ("survey", "longitudinal", "individual"),
+            "Longitudinal Education Outcomes (LEO)": ("administrative", "longitudinal", "individual"),
+            "Education and Child Health Insights from Linked Data (ECHILD)": ("administrative", "longitudinal", "individual"),
+            "Linked Census, HES and Mortality Data": ("administrative", "longitudinal", "individual"),
+            "Public Health Research Database": ("administrative", "longitudinal", "individual"),
+            "Earnings and Employees Study": ("survey", "cross-sectional", "individual"),
+            "EOL": ("administrative", "longitudinal", "individual"),
+            "EOL Dataset (2015-2022)": ("administrative", "longitudinal", "individual"),
+            "Death Registrations": ("administrative", "cross-sectional", "individual"),
+            "Birth Registrations in England and Wales": ("administrative", "cross-sectional", "individual"),
+            "Annual Business Survey (ABS)": ("survey", "cross-sectional", "business"),
+            "Annual Population Survey (APS)": ("survey", "cross-sectional", "individual"),
+            "Labour Force Survey": ("survey", "cross-sectional", "individual"),
+            "Labour Force Survey Longitudinal": ("survey", "longitudinal", "individual"),
+            "Decision Maker Panel": ("survey", "longitudinal", "business"),
+            "Longitudinal Small Business Survey (LSBS)": ("survey", "longitudinal", "business"),
+            "Business Enterprise Research and Development England": ("survey", "cross-sectional", "business"),
+            "Products of the European Community": ("survey", "cross-sectional", "business"),
+            "Annual Gas and Electricity Consumption at Meter Level": ("administrative", "cross-sectional", "area"),
+            "Prices Survey Microdata": ("survey", "cross-sectional", "business"),
+            "Bespoke Management and Expectations Survey": ("survey", "cross-sectional", "business"),
+            "Over 50s Lifestyle Study": ("survey", "cross-sectional", "individual"),
+            "Online Time Use Survey": ("survey", "cross-sectional", "individual"),
+            "British Household Panel Survey": ("survey", "longitudinal", "household"),
+            "Working Lives of Teachers and Leaders": ("survey", "longitudinal", "individual"),
+            "Annual Outward Foreign Direct Investment Survey": ("survey", "cross-sectional", "business"),
+            "Survey of Innovation and Patent Use": ("survey", "cross-sectional", "business"),
+            "Longitudinal Business Structure Database": ("administrative", "longitudinal", "business"),
+            "Monthly Inquiry into the Distributive and Services Sector": ("survey", "cross-sectional", "business"),
+            "Monthly Production Inquiry": ("survey", "cross-sectional", "business"),
+            "Effects of Tax and Benefits": ("survey", "cross-sectional", "household"),
+            "UK Gross Value Added": ("administrative", "cross-sectional", "area"),
+            "Consumer Prices Index": ("administrative", "cross-sectional", "area"),
+            "Producer Price Index": ("survey", "cross-sectional", "business"),
+            "Capital Stock Dataset": ("administrative", "cross-sectional", "business"),
+            "Capital Stock 2014": ("administrative", "cross-sectional", "business"),
+            "Statutory Homelessness Flows England": ("administrative", "cross-sectional", "household"),
         }
-        for dataset, (collection, unit) in cases.items():
+        for dataset, (method, temporal, unit) in cases.items():
             with self.subTest(dataset=dataset):
                 record = lookup_dataset_record(dataset, self.indexes)
                 self.assertIsNotNone(record)
-                self.assertEqual(record["collection_type"], collection)
+                self.assertNotIn("collection_type", record)
+                self.assertEqual(record["collection_method"], method)
+                self.assertEqual(record["temporal_structure"], temporal)
                 self.assertEqual(record["unit_of_observation"], unit)
 
     def test_dataset_manual_review_and_non_dataset_entries_are_not_mapped(self):
@@ -168,6 +190,7 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Northumbria University": "academic",
             "University of Suffolk": "academic",
             "Alma Economics": "commercial",
+            "AQA Education": "third-sector",
             "Chartered Institute of Personnel and Development": "third-sector",
             "Office of the Victims' Commissioner for England and Wales": "government",
             "Happy City Initiative": "third-sector",

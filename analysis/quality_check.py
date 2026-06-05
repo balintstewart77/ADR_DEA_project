@@ -75,9 +75,11 @@ def load_classifications() -> pd.DataFrame:
     df = pd.read_csv(CLASSIFICATIONS_CSV, encoding="utf-8-sig")
 
     # Parse semicolon-separated list columns back into lists
-    for col in ("substantive_domains", "analytical_purpose"):
+    for col in ("substantive_domains", "analytical_purpose", "cross_cutting_tags"):
+        if col not in df.columns:
+            df[col] = ""
         df[col] = df[col].apply(
-            lambda x: [s.strip() for s in str(x).split(";")] if pd.notna(x) else []
+            lambda x: [s.strip() for s in str(x).split(";") if s.strip()] if pd.notna(x) else []
         )
 
     # Add dataset counts
@@ -102,32 +104,8 @@ def compute_diagnostic_metrics(df: pd.DataFrame) -> str:
         "",
     ]
 
-    # --- Layer B: Unclear rate ---
-    b_counts = df["linkage_mode"].value_counts()
-    b_unclear = b_counts.get("Unclear from Title", 0)
-    lines.append(f"LAYER B — LINKAGE MODE")
-    lines.append(f"  Overall 'Unclear from Title': {b_unclear:,} / {n:,} ({b_unclear/n*100:.1f}%)")
-    lines.append(f"  By category:")
-    for mode, count in b_counts.items():
-        lines.append(f"    {mode}: {count:,} ({count/n*100:.1f}%)")
-
-    # Layer B by year
-    lines.append(f"\n  'Unclear from Title' rate by year:")
-    for year in sorted(df["Year"].unique()):
-        yr_df = df[df["Year"] == year]
-        yr_unclear = (yr_df["linkage_mode"] == "Unclear from Title").sum()
-        lines.append(f"    {year}: {yr_unclear}/{len(yr_df)} ({yr_unclear/len(yr_df)*100:.1f}%)")
-
-    # Layer B vs dataset count
-    lines.append(f"\n  Layer B vs number of datasets listed:")
-    for mode in b_counts.index:
-        subset = df[df["linkage_mode"] == mode]
-        med_ds = subset["n_datasets"].median()
-        med_prov = subset["n_providers"].median()
-        lines.append(f"    {mode}: median {med_ds:.0f} datasets, {med_prov:.0f} providers")
-
     # --- Layer A: domain distribution ---
-    lines.append(f"\nLAYER A — SUBSTANTIVE DOMAINS")
+    lines.append(f"LAYER A — SUBSTANTIVE DOMAINS")
     n_domains = df["substantive_domains"].apply(len)
     lines.append(f"  Domain count distribution:")
     for k in sorted(n_domains.unique()):
@@ -176,9 +154,6 @@ def compute_diagnostic_metrics(df: pd.DataFrame) -> str:
 # ---------------------------------------------------------------------------
 
 FLAG_REASONS = {
-    "B_single_but_many_datasets": "Layer B = Single-Dataset but 3+ datasets from 2+ providers",
-    "B_cross_but_one_dataset": "Layer B = Cross-Domain but only 1 dataset listed",
-    "B_unclear_but_clear_datasets": "Layer B = Unclear but datasets clearly indicate linkage pattern",
     "short_title": "Title under 30 characters — may be an acronym or jargon",
     "domain_overreach": "4+ substantive domains assigned",
     "gender_inequality_tautology": "Gender/Race domain with Inequality purpose (potential tautological coupling)",
@@ -191,19 +166,6 @@ def flag_suspicious_classifications(df: pd.DataFrame) -> pd.DataFrame:
 
     for idx, row in df.iterrows():
         reasons = []
-
-        # Layer B: Single-Dataset but many datasets from multiple providers
-        if row["linkage_mode"] == "Single-Dataset" and row["n_datasets"] >= 3 and row["n_providers"] >= 2:
-            reasons.append("B_single_but_many_datasets")
-
-        # Layer B: Cross-Domain Linkage but only 1 dataset
-        if row["linkage_mode"] == "Cross-Domain Linkage" and row["n_datasets"] <= 1:
-            reasons.append("B_cross_but_one_dataset")
-
-        # Layer B: Unclear but datasets clearly show a pattern
-        if row["linkage_mode"] == "Unclear from Title":
-            if row["n_providers"] >= 2:
-                reasons.append("B_unclear_but_clear_datasets")
 
         # Short title
         if isinstance(row["Title"], str) and len(row["Title"]) < 30:
@@ -224,7 +186,6 @@ def flag_suspicious_classifications(df: pd.DataFrame) -> pd.DataFrame:
                 "Project ID": row["Project ID"],
                 "Record ID": row.get("Record ID", row["Project ID"]),
                 "Title": row["Title"],
-                "linkage_mode": row["linkage_mode"],
                 "n_providers": row["n_providers"],
                 "n_datasets": row["n_datasets"],
                 "primary_domain": row["primary_domain"],
@@ -279,7 +240,7 @@ def sample_for_human_review(
 ) -> pd.DataFrame:
     """
     Stratified random sample for human review.
-    Prioritises flagged projects, then fills from each (primary_domain, linkage_mode) cell.
+    Prioritises flagged projects, then fills from each primary-domain cell.
     """
     rng = np.random.default_rng(seed)
 
@@ -290,9 +251,9 @@ def sample_for_human_review(
     else:
         flagged_ids = set()
 
-    # Stratify the rest across (primary_domain, linkage_mode) cells
+    # Stratify the rest across primary-domain cells.
     remaining_n = n - len(flagged_ids)
-    cells = df.groupby(["primary_domain", "linkage_mode"])
+    cells = df.groupby("primary_domain")
     cell_sizes = cells.size()
     n_cells = len(cell_sizes)
 
@@ -300,7 +261,7 @@ def sample_for_human_review(
     per_cell = max(1, remaining_n // n_cells)
     sampled_ids = set(flagged_ids)
 
-    for (domain, mode), group in cells:
+    for domain, group in cells:
         available = group[~group["Record ID"].isin(sampled_ids)]
         if available.empty:
             continue
@@ -325,26 +286,26 @@ def sample_for_human_review(
     # Format for review
     review = sample_df[[
         "Project ID", "Record ID", "Title", "Datasets Used",
-        "substantive_domains", "linkage_mode", "analytical_purpose",
+        "substantive_domains", "analytical_purpose", "cross_cutting_tags",
         "primary_domain", "n_providers", "n_datasets", "is_flagged",
     ]].copy()
 
     # Serialise list columns
-    for col in ("substantive_domains", "analytical_purpose"):
+    for col in ("substantive_domains", "analytical_purpose", "cross_cutting_tags"):
         review[col] = review[col].apply(
             lambda x: "; ".join(x) if isinstance(x, list) else str(x)
         )
 
     # Add blank columns for human review
     review["human_domain"] = ""
-    review["human_linkage"] = ""
     review["human_purpose"] = ""
+    review["human_tags"] = ""
     review["notes"] = ""
 
     # Sort: flagged first, then by primary_domain
     review = review.sort_values(
-        ["is_flagged", "primary_domain", "linkage_mode"],
-        ascending=[False, True, True],
+        ["is_flagged", "primary_domain"],
+        ascending=[False, True],
     ).reset_index(drop=True)
 
     return review
@@ -357,13 +318,19 @@ def sample_for_human_review(
 def compute_agreement_report(review_csv_path: str) -> str:
     """
     Compare human labels against LLM labels in a completed review CSV.
-    Expects columns: substantive_domains, linkage_mode, analytical_purpose,
-                     human_domain, human_linkage, human_purpose
+    Expects columns: substantive_domains, analytical_purpose, cross_cutting_tags,
+                     human_domain, human_purpose, human_tags
     """
     df = pd.read_csv(review_csv_path, encoding="utf-8-sig")
+    for col in ("cross_cutting_tags", "human_domain", "human_purpose", "human_tags"):
+        if col not in df.columns:
+            df[col] = ""
 
-    # Filter to rows with human labels
-    df_reviewed = df[df["human_linkage"].notna() & (df["human_linkage"] != "")].copy()
+    human_cols = ["human_domain", "human_purpose", "human_tags"]
+    reviewed_mask = pd.Series(False, index=df.index)
+    for col in human_cols:
+        reviewed_mask |= df[col].fillna("").astype(str).str.strip() != ""
+    df_reviewed = df[reviewed_mask].copy()
 
     if df_reviewed.empty:
         return "No human-reviewed rows found. Fill in the human_* columns and re-run."
@@ -375,49 +342,37 @@ def compute_agreement_report(review_csv_path: str) -> str:
         "",
     ]
 
-    # --- Layer B: exact match ---
-    b_match = (df_reviewed["linkage_mode"].str.strip() == df_reviewed["human_linkage"].str.strip()).sum()
-    lines.append(f"LAYER B — LINKAGE MODE")
-    lines.append(f"  Exact match: {b_match}/{n} ({b_match/n*100:.1f}%)")
-    lines.append(f"  Disagreements:")
-    b_disagree = df_reviewed[df_reviewed["linkage_mode"].str.strip() != df_reviewed["human_linkage"].str.strip()]
-    if not b_disagree.empty:
-        pairs = list(zip(b_disagree["linkage_mode"], b_disagree["human_linkage"]))
-        pair_counts = Counter(pairs)
-        for (llm, human), count in pair_counts.most_common(10):
-            lines.append(f"    LLM='{llm}' → Human='{human}': {count}")
-    else:
-        lines.append(f"    (none)")
+    def _label_set(value: object) -> set[str]:
+        return {s.strip() for s in str(value).split(";") if s.strip()}
+
+    def _append_set_agreement(title: str, llm_col: str, human_col: str) -> None:
+        section = df_reviewed[df_reviewed[human_col].fillna("").astype(str).str.strip() != ""]
+        lines.append(f"\n{title}")
+        if section.empty:
+            lines.append("  No reviewed labels supplied.")
+            return
+        section_n = len(section)
+        exact = 0
+        overlaps = 0
+        for _, row in section.iterrows():
+            llm_set = _label_set(row[llm_col])
+            human_set = _label_set(row[human_col])
+            if llm_set == human_set:
+                exact += 1
+                overlaps += 1
+            elif llm_set & human_set:
+                overlaps += 1
+        lines.append(f"  Exact set match: {exact}/{section_n} ({exact/section_n*100:.1f}%)")
+        lines.append(f"  Any overlap: {overlaps}/{section_n} ({overlaps/section_n*100:.1f}%)")
 
     # --- Layer A: any-overlap match ---
-    lines.append(f"\nLAYER A — SUBSTANTIVE DOMAINS")
-    a_overlaps = 0
-    a_exact = 0
-    for _, row in df_reviewed.iterrows():
-        llm_set = {s.strip() for s in str(row["substantive_domains"]).split(";")}
-        human_set = {s.strip() for s in str(row["human_domain"]).split(";")}
-        if llm_set == human_set:
-            a_exact += 1
-            a_overlaps += 1
-        elif llm_set & human_set:
-            a_overlaps += 1
-    lines.append(f"  Exact set match: {a_exact}/{n} ({a_exact/n*100:.1f}%)")
-    lines.append(f"  Any overlap: {a_overlaps}/{n} ({a_overlaps/n*100:.1f}%)")
+    _append_set_agreement("LAYER A — SUBSTANTIVE DOMAINS", "substantive_domains", "human_domain")
 
     # --- Layer C: any-overlap match ---
-    lines.append(f"\nLAYER C — ANALYTICAL PURPOSE")
-    c_overlaps = 0
-    c_exact = 0
-    for _, row in df_reviewed.iterrows():
-        llm_set = {s.strip() for s in str(row["analytical_purpose"]).split(";")}
-        human_set = {s.strip() for s in str(row["human_purpose"]).split(";")}
-        if llm_set == human_set:
-            c_exact += 1
-            c_overlaps += 1
-        elif llm_set & human_set:
-            c_overlaps += 1
-    lines.append(f"  Exact set match: {c_exact}/{n} ({c_exact/n*100:.1f}%)")
-    lines.append(f"  Any overlap: {c_overlaps}/{n} ({c_overlaps/n*100:.1f}%)")
+    _append_set_agreement("LAYER C — ANALYTICAL PURPOSE", "analytical_purpose", "human_purpose")
+
+    # --- Tags: set match ---
+    _append_set_agreement("CROSS-CUTTING TAGS", "cross_cutting_tags", "human_tags")
 
     return "\n".join(lines)
 
@@ -483,7 +438,6 @@ def main():
     print(f"Saved {len(review)} projects to {review_path}")
     print(f"  Flagged: {review['is_flagged'].sum()}")
     print(f"  Domains covered: {review['primary_domain'].nunique()}")
-    print(f"  Linkage modes covered: {review['linkage_mode'].nunique()}")
 
     print("\n[done]")
 

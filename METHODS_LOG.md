@@ -1114,7 +1114,7 @@ changes, not superseded mistakes.
 
 **Artefacts introduced in rc2:**
 - Controlled-vocabulary reference file: `analysis/register_reference.yaml`
-  (`reference_version` 0.3.0)
+  (`reference_version` 0.4.1)
 - Deterministic derivation: `analysis/derive_register_properties.py`
 - Run-manifest helper: `analysis/run_manifest.py`
 - Deterministic outputs: `analysis/outputs_deterministic_rc2/`
@@ -1122,11 +1122,11 @@ changes, not superseded mistakes.
 This entry records the rc2 design decisions and their rationale. The four
 changes agreed at review are: (1) Layer B linkage moved from LLM-inferred
 thematic classification to deterministic record-linkage lookup; (2) dataset
-collection-type tags; (3) dataset unit-of-observation tags; (4) researcher
-sector tags. COVID-19 moving from a Layer A domain to a cross-cutting tag, and
-the consequent retirement of the "Layer A/B/C" naming, are recorded as the LLM
-dictionary changes (separate, forthcoming entry); this entry covers the
-deterministic layer, which is now complete.
+collection method and temporal-structure tags; (3) dataset unit-of-observation
+tags; (4) researcher sector tags. COVID-19 moving from a Layer A domain to a
+cross-cutting tag, and the consequent retirement of the "Layer A/B/C" naming,
+are recorded as the LLM dictionary changes (separate, forthcoming entry); this
+entry covers the deterministic layer, which is now complete.
 
 ## The unifying principle: lens vs object; intrinsic structure vs contingent use
 
@@ -1150,11 +1150,12 @@ do not make an education linkage cross-domain).
 an entity by an intrinsic, structural, objective property — never by how a
 project uses it or how an organisation behaves. Linkage span follows the
 structural origin of the linked components; collection-type follows the
-dataset's design; unit of observation follows the unit the dataset is
-structured around; researcher sector follows legal/constitutional status. This
-is one principle applied four times. It is what makes the deterministic layer
-auditable: a classification can always be traced to a fixed property of a named
-entity, not to a judgement about a project.
+dataset's collection design and temporal structure; unit of observation follows
+the unit the dataset is structured around; researcher sector follows
+legal/constitutional status. This is one principle applied four times. It is
+what makes the deterministic layer auditable: a classification can always be
+traced to a fixed property of a named entity, not to a judgement about a
+project.
 
 ## Change 1 — Layer B: thematic linkage → deterministic record linkage
 
@@ -1321,29 +1322,61 @@ trade-off: the threshold guards against one-off false positives at the cost of
 missing rare genuine linkages, which are recoverable if a second project later
 uses them.
 
-## Changes 2 and 3 — dataset collection-type and unit-of-observation tags
+## Changes 2 and 3 — dataset collection metadata and unit-of-observation tags
 
 Both are deterministic per-dataset lookups, keyed (like linkage) on the
 canonical dataset form produced by `dashboard/dataset_normalisation.py`. They
 are recorded here as design decisions; the reference sections are partially
 built. Each dataset is a *record* carrying multiple facet fields
-(`collection_type`, `unit_of_observation`), so further facets (a foreseen
-`unit`-style sensitivity or person-vs-firm extension) drop in as new fields
-without restructuring and without re-doing normalisation — the same
-facet-extensibility principle as the rc1 `cross_cutting_tags: list[str]` field.
+(`collection_method`, `temporal_structure`, `unit_of_observation`), so further
+facets (a foreseen `unit`-style sensitivity or person-vs-firm extension) drop in
+as new fields without restructuring and without re-doing normalisation — the
+same facet-extensibility principle as the rc1 `cross_cutting_tags: list[str]`
+field.
 
-### Collection-type (single-label): survey / cohort / administrative
-Rule: **primary type by design, single-label.** Cohort = any longitudinal study
-following the same units over time, including household and business panels.
-Administrative includes vital-events/registry data (births, deaths). Acknowledged
-simplification: single-label suppresses dual-nature data (Census is filed as
-survey by design though administratively used; a longitudinal survey files under
-cohort, losing its survey aspect). Worked edge cases: Census → survey;
-Understanding Society / Millennium Cohort / ONS LS → cohort; ASHE → survey
-(survey design, samples administrative payroll); LEO/ECHILD → administrative
-("linked" is captured in record linkage, not here — facets kept orthogonal);
-death/birth registrations → administrative; Decision Maker Panel / Longitudinal
-Small Business Survey → cohort.
+### Collection-method and temporal-structure split (reference v0.4.1)
+Decision: retire the single `collection_type` facet and replace it with two
+orthogonal single-label facets. `collection_method` captures provenance by
+design (`survey` / `administrative`). `temporal_structure` captures time
+structure by the producer's design, weighting, and release
+(`cross-sectional` / `longitudinal`), not by project use, the raw sampling
+frame, or what a researcher could construct from repeated identifiers.
+Longitudinal means the released dataset is designed and weighted to follow the
+same units over time; cross-sectional means a point-in-time or repeated
+fresh-extract release.
+
+Rationale: the old `survey` / `cohort` / `administrative` vocabulary conflated
+method with time. "Cohort" was the wrong category name because the rule actually
+meant longitudinality: a business panel such as the Decision Maker Panel is
+longitudinal, but it is not a cohort study. The split follows the same principle
+as linkage-span-from-components and unit-vs-analysis: decompose into orthogonal
+structural facts and classify each by producer design/release rather than by
+downstream analysis.
+
+Worked example: base ASHE is `survey` + `cross-sectional` because ONS weights
+and releases it cross-sectionally even though its NINo sampling frame recurs.
+ASHE Longitudinal is `survey` + `longitudinal` because the longitudinal
+construction and weighting have actually been applied, mirroring the WED lineage
+where units are linked across waves to build a panel.
+
+Limitation - aggregate indicators: CPI, GVA, PPI, and Capital Stock are
+aggregate indices or national time-series outputs, not released panels following
+the same persons, households, firms, or equivalent units. They do not fit the
+unit-based deterministic facets cleanly: there is no unit of observation in the
+four-value vocabulary, so each is mapped to the closest available unit value
+(for example CPI/GVA to `area`, PPI/Capital Stock to `business`) and classified
+as `cross-sectional` because each period is a point-in-time aggregate release.
+This is a known boundary of the schema rather than a new `aggregate` or
+`time-series` value for a handful of cases; that value could be added later if
+these cases become analytically important.
+
+Cost: the temporal axis is genuinely new information for every dataset that was
+not previously `cohort`, so reference v0.4.0 re-decides those calls per dataset
+and writes a review table with the old value, new method, new temporal structure,
+and a `temporal_is_new_decision` flag. Reference v0.4.1 is a targeted
+correction to the rule text and reclassifies the aggregate indicators from
+longitudinal to cross-sectional; some mixed linked/statistical products remain
+flagged for human review rather than being treated as settled facts.
 
 ### Unit-of-observation (single-label): individual / household / business / area
 Rule: **the unit the dataset is structured/collected around, not the unit a
@@ -1430,6 +1463,6 @@ question, and the release-candidate stage absorbed the revision before v1.0.
 
 The controlled-vocabulary reference file (`register_reference.yaml`) is,
 additionally, a metadata artefact in its own right: a documented mapping of DEA
-register entities (datasets → linkage, collection-type, unit; organisations →
-sector) to controlled properties, which ties to the project's broader
+register entities (datasets → linkage, collection method, temporal structure,
+unit; organisations → sector) to controlled properties, which ties to the project's broader
 metadata-interoperability aims.

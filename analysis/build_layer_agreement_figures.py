@@ -3,7 +3,6 @@ Build per-layer agreement figures from an existing v4 comparison CSV.
 
 The figures match each layer's label structure:
 - Layer A: per-domain contested-ness table for multi-label assignments.
-- Layer B: linkage-mode confusion matrix for single-label assignments.
 - Layer C: purpose substitution matrix for single-purpose projects, with
   multi-purpose projects reconciled and reported separately.
 """
@@ -30,17 +29,14 @@ REPO_ROOT = ANALYSIS_DIR.parent
 TAXONOMY_PATH = REPO_ROOT / "taxonomy_data_dictionary.yaml"
 
 LAYER_A_DOMAIN = "Layer A -- domain"
-LAYER_B_LINKAGE = "Layer B -- linkage"
 LAYER_C_PURPOSE = "Layer C -- purpose"
 
 FIELD_LAYERS = {
     "substantive_domains": LAYER_A_DOMAIN,
-    "linkage_mode": LAYER_B_LINKAGE,
     "analytical_purpose": LAYER_C_PURPOSE,
 }
 EXPECTED_LABEL_COUNTS = {
-    "substantive_domains": 13,
-    "linkage_mode": 4,
+    "substantive_domains": 12,
     "analytical_purpose": 8,
 }
 
@@ -200,7 +196,7 @@ def _as_bool(value: object, *, column: str, record_id: str) -> bool:
 
 
 SUMMARY_ROW_RE = re.compile(
-    r"^\|\s*(substantive_domains|linkage_mode|analytical_purpose|cross_cutting_tags)"
+    r"^\|\s*(substantive_domains|analytical_purpose|cross_cutting_tags)"
     r"\s*\|\s*([0-9.]+)%\s*\|\s*([0-9,]+)\s*\|\s*([0-9,]+)\s*\|$"
 )
 
@@ -252,7 +248,7 @@ def read_comparison(
             raise ValueError(f"{csv_path} is missing {agree_column}")
 
         allowed_labels = set(labels_by_field[field])
-        single_label = field == "linkage_mode"
+        single_label = False
         run_1_sets = []
         run_2_sets = []
         stored_agreement = []
@@ -599,51 +595,6 @@ def _render_matrix(
     plt.close(figure)
 
 
-def build_linkage_confusion(
-    *,
-    comparison: ParsedComparison,
-    comparison_dir: Path,
-    comparison_label: str,
-    labels: list[str],
-) -> MatrixStats:
-    label_indexes = {label: index for index, label in enumerate(labels)}
-    matrix = np.zeros((len(labels), len(labels)), dtype=int)
-    run_1_sets, run_2_sets = comparison.label_sets["linkage_mode"]
-    for run_1, run_2 in zip(run_1_sets, run_2_sets):
-        matrix[
-            label_indexes[_single_label(run_1)],
-            label_indexes[_single_label(run_2)],
-        ] += 1
-
-    stats = _matrix_stats(matrix, labels)
-    summary = comparison.summary["linkage_mode"]
-    if (
-        stats.total != summary.compared_projects
-        or stats.diagonal != summary.agreed_projects
-        or stats.agreement_rate != summary.agreement_rate
-    ):
-        raise ValueError(
-            "linkage_mode: confusion matrix reconciliation failed: "
-            f"{stats.diagonal}/{stats.total} ({stats.agreement_rate:.1f}%) vs summary "
-            f"{summary.agreed_projects}/{summary.compared_projects} "
-            f"({summary.agreement_rate:.1f}%)"
-        )
-    caption = (
-        f"Overall diagonal agreement: {stats.diagonal:,}/{stats.total:,} "
-        f"({stats.agreement_rate:.1f}%). Largest contested boundary: "
-        f"{stats.largest_pair} accounts for {stats.largest_pair_count:,} of "
-        f"{stats.disagreements:,} disagreements."
-    )
-    _render_matrix(
-        matrix=matrix,
-        labels=labels,
-        title=f"Layer B: linkage-mode confusion matrix - {comparison_label}",
-        caption=caption,
-        output_path=comparison_dir / "layer_b_linkage_confusion.png",
-    )
-    return stats
-
-
 def build_purpose_confusion(
     *,
     comparison: ParsedComparison,
@@ -750,7 +701,6 @@ def main() -> None:
     print(
         "[dictionary] "
         f"Layer A={len(labels_by_field['substantive_domains'])}, "
-        f"Layer B={len(labels_by_field['linkage_mode'])}, "
         f"Layer C={len(labels_by_field['analytical_purpose'])}"
     )
 
@@ -774,22 +724,6 @@ def main() -> None:
             f"contested_rate={contested_rate}"
         )
     print(f"[output] {comparison_dir / 'layer_a_domain_contested_table.png'}")
-
-    linkage_stats = build_linkage_confusion(
-        comparison=comparison,
-        comparison_dir=comparison_dir,
-        comparison_label=comparison_label,
-        labels=labels_by_field["linkage_mode"],
-    )
-    print(
-        f"[check] linkage_mode: diagonal={linkage_stats.diagonal}/"
-        f"{linkage_stats.total} ({linkage_stats.agreement_rate:.1f}%)"
-    )
-    print(
-        f"[check] linkage_mode: largest off-diagonal pair="
-        f"{linkage_stats.largest_pair} ({linkage_stats.largest_pair_count})"
-    )
-    print(f"[output] {comparison_dir / 'layer_b_linkage_confusion.png'}")
 
     purpose_stats, purpose_split = build_purpose_confusion(
         comparison=comparison,

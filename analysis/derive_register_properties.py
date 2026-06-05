@@ -30,9 +30,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_DIR = Path(__file__).resolve().parent
 REFERENCE_PATH = ANALYSIS_DIR / "register_reference.yaml"
 DEFAULT_OUTPUT_DIR = ANALYSIS_DIR / "outputs_deterministic_rc2"
-DEFAULT_REPORT_PATH = ANALYSIS_DIR / "outputs" / "instruction_rc2_reference_report.md"
+DEFAULT_REPORT_PATH = ANALYSIS_DIR / "outputs" / "instruction_rc2_temporal_correction_report.md"
 
-COLLECTION_TYPES = ("survey", "cohort", "administrative")
+COLLECTION_METHODS = ("survey", "administrative")
+TEMPORAL_STRUCTURES = ("cross-sectional", "longitudinal")
 UNITS = ("individual", "household", "business", "area")
 SECTORS = ("academic", "government", "third-sector", "commercial", "unclassified")
 DOMAIN_ORDER = (
@@ -63,6 +64,139 @@ RC1_PATH_PREFIXES = (
     "analysis/outputs_v4_",
     "analysis/outputs_comparison_",
 )
+
+TEMPORAL_040_DISTRIBUTION = {
+    "cross-sectional": 485,
+    "longitudinal": 387,
+    "cross-sectional; longitudinal": 378,
+    "(none matched)": 22,
+}
+
+TEMPORAL_CORRECTION_RECLASSIFICATIONS = {
+    "UK Gross Value Added": ("longitudinal", "cross-sectional"),
+    "Consumer Prices Index": ("longitudinal", "cross-sectional"),
+    "Producer Price Index": ("longitudinal", "cross-sectional"),
+    "Capital Stock Dataset": ("longitudinal", "cross-sectional"),
+}
+
+UNCHANGED_LONGITUDINAL_CHECKS = [
+    "ONS Longitudinal Study (LS)",
+    "Public Health Research Database",
+    "Longitudinal Education Outcomes (LEO)",
+    "Education and Child Health Insights from Linked Data (ECHILD)",
+    "Understanding Society",
+    "Annual Survey of Hours and Earnings Longitudinal",
+    "Decision Maker Panel",
+    "Labour Force Survey Longitudinal",
+]
+
+LEGACY_COLLECTION_TYPES = {
+    "Census": "survey",
+    "School Census": "administrative",
+    "Understanding Society": "cohort",
+    "Millennium Cohort Study": "cohort",
+    "ONS Longitudinal Study (LS)": "cohort",
+    "ASHE": "survey",
+    "Annual Survey of Hours and Earnings Longitudinal": "survey",
+    "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment": "survey",
+    "Annual Survey of Hours and Earnings linked to Census 2011": "survey",
+    "Earnings and Employees Study (EES) 2011 - Northern Ireland": "survey",
+    "Longitudinal Education Outcomes (LEO)": "administrative",
+    "Education and Child Health Insights from Linked Data (ECHILD)": "administrative",
+    "GRading and Admissions Data England (GRADE)": "administrative",
+    "EOL": "administrative",
+    "Data First": "administrative",
+    "AD|ARC": "administrative",
+    "Growing Up in England (GUIE)": "administrative",
+    "Death Registrations": "administrative",
+    "Birth Registrations in England and Wales": "administrative",
+    "Annual Business Survey (ABS)": "survey",
+    "Annual Business Inquiry": "survey",
+    "Quarterly Capital Expenditure Survey": "survey",
+    "Quarterly Acquisitions and Disposals of Capital Assets Survey": "survey",
+    "Longitudinal Business Database": "cohort",
+    "Quarterly Fuels Inquiry": "survey",
+    "Investment in Intangible Assets Survey": "survey",
+    "Annual Survey of Goods and Services": "survey",
+    "Broad Economy Sales and Exports": "survey",
+    "Annual Population Survey (APS)": "survey",
+    "Labour Force Survey": "survey",
+    "Labour Force Survey Household": "survey",
+    "Labour Force Survey Longitudinal": "survey",
+    "Business Structure Database (BSD)": "administrative",
+    "Business Structure Database Longitudinal": "administrative",
+    "Inter-Departmental Business Register (IDBR)": "administrative",
+    "Longitudinal Inter-Departmental Business Register": "administrative",
+    "Linked Trade-in-Goods/Inter-Departmental Business Register": "administrative",
+    "Business Register and Employment Survey (BRES)": "survey",
+    "Business Enterprise Research and Development (BERD)": "survey",
+    "UK Innovation Survey (UKIS)": "survey",
+    "Universities and Colleges Admissions Service (UCAS)": "administrative",
+    "Annual Respondents Database": "survey",
+    "Business Insights and Conditions Survey (BICS)": "survey",
+    "Longitudinal Small Business Survey (LSBS)": "cohort",
+    "Decision Maker Panel": "cohort",
+    "Management and Expectations Survey (MES)": "survey",
+    "International Trade in Services": "survey",
+    "Annual Purchases Survey": "survey",
+    "Annual Foreign Direct Investment Survey": "survey",
+    "Mergers and Acquisitions Survey": "survey",
+    "E-Commerce Survey": "survey",
+    "Monthly Business Survey": "survey",
+    "Vacancy Survey": "survey",
+    "Low Carbon and Renewable Energy Economy Survey": "survey",
+    "UK Manufacturers' Sales by Product Survey": "survey",
+    "Annual Gas and Electricity Consumption at Meter Level": "administrative",
+    "Prices Survey Microdata": "survey",
+    "Over 50s Lifestyle Study": "survey",
+    "Online Time Use Survey (OTUS)": "survey",
+    "Working Lives of Teachers and Leaders Survey": "cohort",
+    "Survey of Innovation and Patent Use": "survey",
+    "Monthly Inquiry into the Distributive and Services Sector (MIDSS)": "survey",
+    "Monthly Production Inquiry (MPI)": "survey",
+    "Effects of Taxes and Benefits on Household Income": "survey",
+    "UK Gross Value Added": "administrative",
+    "Statutory Homelessness Flows - England": "administrative",
+    "Workplace Employment Relations Survey": "survey",
+    "Employer Skills Survey": "survey",
+    "New Earnings Survey (NES)": "survey",
+    "New Earnings Survey Panel": "cohort",
+    "Monthly Wages and Salary Survey": "survey",
+    "Crime Survey for England and Wales (CSEW)": "survey",
+    "National Travel Survey": "survey",
+    "Living Costs and Food Survey (LCF)": "survey",
+    "Wealth and Assets Survey (WAS)": "survey",
+    "Family Resources Survey": "survey",
+    "Opinions and Lifestyle Survey (OPN)": "survey",
+    "COVID-19": "survey",
+    "COVID-19 Weekly Opinions Survey": "survey",
+    "Coronavirus and the Social Impacts on Great Britain": "survey",
+    "Public Health Research Database": "administrative",
+    "Linked Census, HES and Mortality Data": "administrative",
+    "Nursing and Midwifery Council Register linked to Census 2021": "administrative",
+    "Nursing and Midwifery Council Register": "administrative",
+    "Further Education Workforce Data Collection": "administrative",
+    "Linked Census and Death Occurrences": "administrative",
+    "Consumer Prices Index": "administrative",
+    "Producer Price Index": "survey",
+    "Capital Stock Dataset": "administrative",
+}
+
+TEMPORAL_REVIEW_NOTES = {
+    "ONS Longitudinal Study (LS)": "Mixed Census/vital-event lineage; treated as administrative plus longitudinal because the released product follows linked persons over time.",
+    "Data First": "Family spans case extracts and journey/linkage products; treated as longitudinal because the public-register family includes person/case journeys.",
+    "AD|ARC": "Agricultural collection spans linked administrative phases; temporal call should be reviewed against detailed product documentation.",
+    "Annual Respondents Database": "Repeated annual business survey microdata may support linked firms, but treated as cross-sectional unless a panel design is explicit.",
+    "Business Insights and Conditions Survey (BICS)": "Repeated-wave business survey; treated as cross-sectional unless a panel design is explicit.",
+    "Annual Gas and Electricity Consumption at Meter Level": "Same meters/properties may recur, but treated as cross-sectional annual administrative extracts.",
+    "UK Gross Value Added": "Aggregate indicator/time-series output; classified cross-sectional because it follows no units over time.",
+    "Workplace Employment Relations Survey": "Repeated survey with some panel history; treated as cross-sectional at the reference-record level.",
+    "COVID-19": "CIS-linked products are longitudinal; cross-sectional COVID social surveys have explicit separate records.",
+    "Public Health Research Database": "Health administrative records can be episode-based; treated as longitudinal because the product supports linked person histories.",
+    "Consumer Prices Index": "Price-index time series has no perfect unit vocabulary fit; classified cross-sectional because it follows no units over time.",
+    "Producer Price Index": "Price-index survey time series has no perfect unit vocabulary fit; classified cross-sectional because it follows no units over time.",
+    "Capital Stock Dataset": "Economic stock time-series output; classified cross-sectional because it follows no units over time.",
+}
 
 
 @dataclass(frozen=True)
@@ -195,8 +329,12 @@ def validate_reference(reference: dict) -> None:
         if canonical in seen_datasets:
             raise ValueError(f"Duplicate dataset record {canonical!r}")
         seen_datasets.add(canonical)
-        if record.get("collection_type") not in COLLECTION_TYPES:
-            raise ValueError(f"{canonical!r} has invalid collection_type {record.get('collection_type')!r}")
+        if "collection_type" in record:
+            raise ValueError(f"{canonical!r} still has removed collection_type field")
+        if record.get("collection_method") not in COLLECTION_METHODS:
+            raise ValueError(f"{canonical!r} has invalid collection_method {record.get('collection_method')!r}")
+        if record.get("temporal_structure") not in TEMPORAL_STRUCTURES:
+            raise ValueError(f"{canonical!r} has invalid temporal_structure {record.get('temporal_structure')!r}")
         if record.get("unit_of_observation") not in UNITS:
             raise ValueError(f"{canonical!r} has invalid unit_of_observation {record.get('unit_of_observation')!r}")
         for value in [canonical, *_as_list(record.get("aliases"))]:
@@ -246,7 +384,7 @@ def validate_reference(reference: dict) -> None:
         if not (product_dataset_keys & dataset_reference_keys):
             raise ValueError(
                 f"Linked product {canonical!r} has no matching dataset record "
-                "for collection_type/unit_of_observation facets"
+                "for collection_method/temporal_structure/unit_of_observation facets"
             )
 
 
@@ -321,13 +459,15 @@ def derive_properties(
                     matched_product_names.append(product_name)
                 component_domains.update(_as_list(product.get("component_domains")))
 
-        collection_types: set[str] = set()
+        collection_methods: set[str] = set()
+        temporal_structures: set[str] = set()
         units: set[str] = set()
         for dataset in project_datasets:
             record = lookup_dataset_record(dataset, indexes)
             if record is None:
                 continue
-            collection_types.add(record["collection_type"])
+            collection_methods.add(record["collection_method"])
+            temporal_structures.add(record["temporal_structure"])
             units.add(record["unit_of_observation"])
 
         sectors: set[str] = set()
@@ -348,7 +488,8 @@ def derive_properties(
                 [record["canonical"] for record in indexes.reference.get("linked_products", [])],
             ),
             "record_linkage_component_domains": _join(component_domains, DOMAIN_ORDER),
-            "dataset_collection_types": _join(collection_types, COLLECTION_TYPES),
+            "dataset_collection_methods": _join(collection_methods, COLLECTION_METHODS),
+            "dataset_temporal_structures": _join(temporal_structures, TEMPORAL_STRUCTURES),
             "dataset_units": _join(units, UNITS),
             "researcher_sectors": _join(sectors, SECTORS),
         })
@@ -438,6 +579,31 @@ def organisation_review_table(institutions: pd.DataFrame, indexes: ReferenceInde
     ).reset_index(drop=True)
 
 
+def collection_split_review_table(reference: dict) -> pd.DataFrame:
+    columns = [
+        "dataset",
+        "legacy_collection_type",
+        "collection_method",
+        "temporal_structure",
+        "temporal_is_new_decision",
+        "review_note",
+    ]
+    rows = []
+    for record in reference.get("datasets", []):
+        canonical = str(record.get("canonical", ""))
+        legacy = LEGACY_COLLECTION_TYPES.get(canonical, "")
+        rows.append({
+            "dataset": canonical,
+            "legacy_collection_type": legacy,
+            "collection_method": str(record.get("collection_method", "")),
+            "temporal_structure": str(record.get("temporal_structure", "")),
+            "temporal_is_new_decision": str(legacy != "cohort"),
+            "review_note": TEMPORAL_REVIEW_NOTES.get(canonical, ""),
+        })
+
+    return pd.DataFrame(rows, columns=columns)
+
+
 def _pct(numerator: int, denominator: int) -> str:
     if denominator == 0:
         return "n/a"
@@ -469,26 +635,45 @@ def _counter_markdown(counter: Counter, *, name: str, limit: int = 20) -> str:
 
 def _edge_dataset_checks(indexes: ReferenceIndexes) -> list[dict[str, str]]:
     cases = [
-        ("Census", "survey", "individual"),
-        ("Understanding Society", "cohort", "household"),
-        ("Annual Survey of Hours and Earnings (ASHE)", "survey", "individual"),
-        ("Longitudinal Education Outcomes (LEO)", "administrative", "individual"),
-        ("Education and Child Health Insights from Linked Data (ECHILD)", "administrative", "individual"),
-        ("Linked Census, HES and Mortality Data", "administrative", "individual"),
-        ("Death Registrations", "administrative", "individual"),
-        ("Birth Registrations in England and Wales", "administrative", "individual"),
-        ("Decision Maker Panel", "cohort", "business"),
-        ("Longitudinal Small Business Survey (LSBS)", "cohort", "business"),
+        ("Census", "survey", "cross-sectional", "individual"),
+        ("Understanding Society", "survey", "longitudinal", "household"),
+        ("Millennium Cohort Study", "survey", "longitudinal", "individual"),
+        ("ONS Longitudinal Study (LS)", "administrative", "longitudinal", "individual"),
+        ("Annual Survey of Hours and Earnings (ASHE)", "survey", "cross-sectional", "individual"),
+        ("Annual Survey of Hours and Earnings Longitudinal", "survey", "longitudinal", "individual"),
+        ("Longitudinal Education Outcomes (LEO)", "administrative", "longitudinal", "individual"),
+        ("Education and Child Health Insights from Linked Data (ECHILD)", "administrative", "longitudinal", "individual"),
+        ("Linked Census, HES and Mortality Data", "administrative", "longitudinal", "individual"),
+        ("Public Health Research Database", "administrative", "longitudinal", "individual"),
+        ("Death Registrations", "administrative", "cross-sectional", "individual"),
+        ("Birth Registrations in England and Wales", "administrative", "cross-sectional", "individual"),
+        ("Annual Business Survey (ABS)", "survey", "cross-sectional", "business"),
+        ("Annual Population Survey (APS)", "survey", "cross-sectional", "individual"),
+        ("Labour Force Survey", "survey", "cross-sectional", "individual"),
+        ("Labour Force Survey Longitudinal", "survey", "longitudinal", "individual"),
+        ("Decision Maker Panel", "survey", "longitudinal", "business"),
+        ("Longitudinal Small Business Survey (LSBS)", "survey", "longitudinal", "business"),
+        ("UK Gross Value Added", "administrative", "cross-sectional", "area"),
+        ("Consumer Prices Index", "administrative", "cross-sectional", "area"),
+        ("Producer Price Index", "survey", "cross-sectional", "business"),
+        ("Capital Stock Dataset", "administrative", "cross-sectional", "business"),
+        ("Capital Stock 2014", "administrative", "cross-sectional", "business"),
     ]
     rows = []
-    for name, expected_collection, expected_unit in cases:
+    for name, expected_method, expected_temporal, expected_unit in cases:
         record = lookup_dataset_record(name, indexes)
         rows.append({
             "Dataset": name,
-            "Collection": record.get("collection_type", "UNMATCHED") if record else "UNMATCHED",
+            "Method": record.get("collection_method", "UNMATCHED") if record else "UNMATCHED",
+            "Temporal": record.get("temporal_structure", "UNMATCHED") if record else "UNMATCHED",
             "Unit": record.get("unit_of_observation", "UNMATCHED") if record else "UNMATCHED",
-            "Expected": f"{expected_collection} / {expected_unit}",
-            "Pass": str(bool(record and record.get("collection_type") == expected_collection and record.get("unit_of_observation") == expected_unit)),
+            "Expected": f"{expected_method} / {expected_temporal} / {expected_unit}",
+            "Pass": str(bool(
+                record
+                and record.get("collection_method") == expected_method
+                and record.get("temporal_structure") == expected_temporal
+                and record.get("unit_of_observation") == expected_unit
+            )),
         })
     return rows
 
@@ -501,6 +686,7 @@ def _edge_sector_checks(indexes: ReferenceIndexes) -> list[dict[str, str]]:
         ("Office for National Statistics", "government"),
         ("Frontier Economics Ltd", "commercial"),
         ("University College London", "academic"),
+        ("AQA Education", "third-sector"),
         ("Tech City UK", "government"),
         ("Office of the Victims' Commissioner for England and Wales", "government"),
         ("Chartered Institute of Personnel and Development", "third-sector"),
@@ -551,6 +737,81 @@ def _edge_linkage_checks(indexes: ReferenceIndexes) -> list[dict[str, str]]:
     return rows
 
 
+def _temporal_reclassification_rows(indexes: ReferenceIndexes) -> list[dict[str, str]]:
+    rows = []
+    for dataset, (before, after) in TEMPORAL_CORRECTION_RECLASSIFICATIONS.items():
+        record = lookup_dataset_record(dataset, indexes)
+        current = record.get("temporal_structure", "UNMATCHED") if record else "UNMATCHED"
+        aliases = "; ".join(_as_list(record.get("aliases")) if record else [])
+        rows.append({
+            "Dataset": dataset,
+            "Register spellings": aliases,
+            "0.4.0 temporal_structure": before,
+            "0.4.1 temporal_structure": after,
+            "Current": current,
+            "Pass": str(current == after),
+        })
+    return rows
+
+
+def _unchanged_longitudinal_rows(indexes: ReferenceIndexes) -> list[dict[str, str]]:
+    rows = []
+    for dataset in UNCHANGED_LONGITUDINAL_CHECKS:
+        record = lookup_dataset_record(dataset, indexes)
+        current = record.get("temporal_structure", "UNMATCHED") if record else "UNMATCHED"
+        rows.append({
+            "Dataset": dataset,
+            "Current temporal_structure": current,
+            "Expected": "longitudinal",
+            "Pass": str(current == "longitudinal"),
+        })
+    base_ashe = lookup_dataset_record("Annual Survey of Hours and Earnings (ASHE)", indexes)
+    rows.append({
+        "Dataset": "Annual Survey of Hours and Earnings (ASHE)",
+        "Current temporal_structure": base_ashe.get("temporal_structure", "UNMATCHED") if base_ashe else "UNMATCHED",
+        "Expected": "cross-sectional",
+        "Pass": str(bool(base_ashe and base_ashe.get("temporal_structure") == "cross-sectional")),
+    })
+    return rows
+
+
+def _temporal_distribution_delta_rows(temporal_distribution: pd.Series) -> list[dict[str, str]]:
+    current = {str(label): int(count) for label, count in temporal_distribution.items()}
+    labels = list(TEMPORAL_040_DISTRIBUTION)
+    labels.extend(sorted(set(current) - set(labels)))
+    rows = []
+    for label in labels:
+        before = int(TEMPORAL_040_DISTRIBUTION.get(label, 0))
+        after = int(current.get(label, 0))
+        rows.append({
+            "Project temporal-structure set": label,
+            "0.4.0": str(before),
+            "0.4.1": str(after),
+            "Delta": f"{after - before:+d}",
+        })
+    return rows
+
+
+def _longitudinal_time_series_audit_rows(reference: dict) -> list[dict[str, str]]:
+    triggers = ("time series", "time-series", "index", "price", "gross value", "capital stock")
+    rows = []
+    for record in reference.get("datasets", []):
+        if record.get("temporal_structure") != "longitudinal":
+            continue
+        haystack = " ".join([
+            str(record.get("canonical", "")),
+            str(record.get("unit_of_observation", "")),
+            str(record.get("notes", "")),
+        ]).casefold()
+        if any(trigger in haystack for trigger in triggers):
+            rows.append({
+                "Dataset": str(record.get("canonical", "")),
+                "Unit": str(record.get("unit_of_observation", "")),
+                "Note": str(record.get("notes", "")),
+            })
+    return rows
+
+
 def _rows_markdown(rows: list[dict[str, str]]) -> str:
     if not rows:
         return ""
@@ -586,7 +847,8 @@ def _spot_check_rows(df: pd.DataFrame, properties: pd.DataFrame, *, n: int = 15)
             "Title": " ".join(str(row["Title"]).split())[:100],
             "Record linkage": str(row["record_linkage"]),
             "Products": str(row["matched_products"])[:120],
-            "Dataset types": str(row["dataset_collection_types"]),
+            "Methods": str(row["dataset_collection_methods"]),
+            "Temporal": str(row["dataset_temporal_structures"]),
             "Units": str(row["dataset_units"]),
             "Sectors": str(row["researcher_sectors"]),
         })
@@ -615,16 +877,24 @@ def write_report(
     properties: pd.DataFrame,
     coverage: dict,
     output_csv: Path,
+    collection_review_csv: Path,
     output_manifest: Path,
     quality_manifest: Path,
     report_manifest: Path,
     indexes: ReferenceIndexes,
 ) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
-    collection_distribution = properties["dataset_collection_types"].replace("", "(none matched)").value_counts()
+    method_distribution = properties["dataset_collection_methods"].replace("", "(none matched)").value_counts()
+    temporal_distribution = properties["dataset_temporal_structures"].replace("", "(none matched)").value_counts()
     unit_distribution = properties["dataset_units"].replace("", "(none matched)").value_counts()
     sector_distribution = properties["researcher_sectors"].replace("", "(none)").value_counts()
     span_distribution = properties["record_linkage"].value_counts().reindex(LINKAGE_SPANS, fill_value=0)
+    time_series_audit_rows = _longitudinal_time_series_audit_rows(reference)
+    time_series_audit = (
+        _rows_markdown(time_series_audit_rows)
+        if time_series_audit_rows
+        else "No additional longitudinal dataset records with time-series/index/aggregate cues were found."
+    )
 
     dataset_total = int(coverage["dataset_mentions_total"])
     dataset_matched = int(coverage["dataset_mentions_matched"])
@@ -632,7 +902,7 @@ def write_report(
     org_matched = int(coverage["organisation_mentions_matched"])
 
     lines = [
-        "# rc2 deterministic reference report",
+        "# rc2 temporal-structure correction report",
         "",
         "## Scope",
         "",
@@ -642,6 +912,13 @@ def write_report(
         ),
         "",
         "This run is deterministic and uses no LLM calls.",
+        "",
+        (
+            "Reference 0.4.1 is a targeted correction: it tightens the "
+            "temporal-structure rule to producer design/weighting/release and "
+            "reclassifies aggregate indicators that are time series but not "
+            "unit-following panels."
+        ),
         "",
         "## Canonical keys",
         "",
@@ -670,17 +947,54 @@ def write_report(
         "",
         _rows_markdown(_edge_linkage_checks(indexes)),
         "",
-        "## Dataset collection type",
+        "## Dataset Collection Method",
         "",
-        reference["dataset_collection_type_rule"]["rule"],
+        reference["dataset_collection_method_rule"]["rule"],
         "",
-        reference["dataset_collection_type_rule"]["acknowledged_simplification"],
+        reference["dataset_collection_method_rule"]["edge_case_rule"],
         "",
-        _series_markdown(collection_distribution, name="Project collection-type set"),
+        _series_markdown(method_distribution, name="Project collection-method set"),
+        "",
+        "## Dataset Temporal Structure",
+        "",
+        reference["dataset_temporal_structure_rule"]["rule"],
+        "",
+        reference["dataset_temporal_structure_rule"]["construction_rule"],
+        "",
+        reference["dataset_temporal_structure_rule"]["aggregate_indicator_limitation"],
+        "",
+        reference["dataset_temporal_structure_rule"]["retired_category_note"],
+        "",
+        _series_markdown(temporal_distribution, name="Project temporal-structure set"),
+        "",
+        "### Temporal distribution delta from 0.4.0",
+        "",
+        _rows_markdown(_temporal_distribution_delta_rows(temporal_distribution)),
+        "",
+        "### Reclassified aggregate-indicator datasets",
+        "",
+        _rows_markdown(_temporal_reclassification_rows(indexes)),
+        "",
+        "### Time-series-not-unit-panel audit",
+        "",
+        time_series_audit,
+        "",
+        "### Unchanged temporal edge checks",
+        "",
+        _rows_markdown(_unchanged_longitudinal_rows(indexes)),
+        "",
+        (
+            "Full migration review table: "
+            f"`{collection_review_csv.relative_to(PROJECT_ROOT)}`. It lists every dataset with "
+            "`legacy_collection_type`, `collection_method`, `temporal_structure`, "
+            "and `temporal_is_new_decision`, now refreshed under reference 0.4.1."
+        ),
         "",
         "## Dataset unit of observation",
         "",
         reference["dataset_unit_rule"]["rule"],
+        "",
+        reference["dataset_unit_rule"]["aggregate_indicator_limitation"],
         "",
         reference["dataset_unit_rule"]["cross_facet_consistency_note"],
         "",
@@ -735,6 +1049,12 @@ def write_report(
         "## Judgement calls",
         "",
         (
+            "- Base `ASHE` is cross-sectional because ONS weights and releases it "
+            "cross-sectionally despite the recurring NINo sampling frame. `Annual "
+            "Survey of Hours and Earnings Longitudinal` is longitudinal because the "
+            "longitudinal construction and weighting have actually been applied."
+        ),
+        (
             "- `AD|ARC` is labelled administrative/business for dataset facets. "
             "The product links individual and farm-level data, but the farm or "
             "agricultural holding is treated as the closest available structural unit."
@@ -746,8 +1066,27 @@ def write_report(
         ),
         (
             "- `Consumer Prices Index` is labelled administrative/area because the "
-            "allowed unit vocabulary has no product or price-observation unit."
+            "allowed unit vocabulary has no product or price-observation unit. Its "
+            "temporal structure is cross-sectional because an aggregate index is a "
+            "time series, not a unit panel."
         ),
+        "",
+        "### Temporal calls flagged for human review",
+        "",
+        _rows_markdown([
+            {
+                "Dataset": dataset,
+                "Review note": note,
+            }
+            for dataset, note in TEMPORAL_REVIEW_NOTES.items()
+        ]),
+        "",
+        "## Verification summary",
+        "",
+        "- Cross-table validation passed during reference load: every linked product resolves to a dataset facet record.",
+        "- `PROMPT_VERSION` is not read or changed by this deterministic derivation; no LLM classification is run.",
+        "- The rc1 output prefixes are checked below from git status.",
+        f"- Reference version is `{reference['reference_version']}`.",
         "",
         "## Manifests and rc1",
         "",
@@ -794,6 +1133,12 @@ def run(
         index=False,
         encoding="utf-8-sig",
     )
+    collection_review_csv = quality_dir / "dataset_collection_split_review.csv"
+    collection_split_review_table(reference).to_csv(
+        collection_review_csv,
+        index=False,
+        encoding="utf-8-sig",
+    )
 
     coverage = coverage_summary(datasets, institutions, indexes)
     manifest_extra = {
@@ -819,6 +1164,7 @@ def run(
             "output_files": [
                 str((quality_dir / "duplicate_review_flagged.csv").relative_to(PROJECT_ROOT)),
                 str(organisation_review_csv.relative_to(PROJECT_ROOT)),
+                str(collection_review_csv.relative_to(PROJECT_ROOT)),
             ],
         },
     )
@@ -843,6 +1189,7 @@ def run(
         properties=properties,
         coverage=coverage,
         output_csv=output_csv,
+        collection_review_csv=collection_review_csv,
         output_manifest=output_manifest,
         quality_manifest=quality_manifest,
         report_manifest=report_manifest,

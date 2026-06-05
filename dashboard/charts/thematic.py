@@ -5,7 +5,6 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from dashboard.charts.template import CHART_HEIGHT, _apply_common, _annotate_partial_year
-from dashboard.config import LINKAGE_LABELS
 
 
 def make_thematic_trend(
@@ -48,92 +47,6 @@ def make_thematic_trend(
         margin=dict(r=260),
     )
     _annotate_partial_year(fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info)
-    return _apply_common(fig, height=height)
-
-
-def make_linkage_area(
-    df_by_year: pd.DataFrame,
-    colour_map: dict,
-    metric_col: str,
-    partial_year_info=None,
-) -> go.Figure:
-    """Stacked area chart for linkage modes (single-label, compositional)."""
-    present = [m for m in LINKAGE_LABELS if m in df_by_year["linkage_mode"].values]
-    fig = go.Figure()
-    for mode in present:
-        sub = df_by_year[df_by_year["linkage_mode"] == mode].sort_values("Year")
-        fig.add_trace(go.Scatter(
-            x=sub["Year"], y=sub[metric_col],
-            mode="lines",
-            name=mode,
-            stackgroup="one",
-            line=dict(color=colour_map.get(mode, "#999"), width=0.5),
-            fillcolor=colour_map.get(mode, "#999"),
-            hovertemplate=(
-                f"<b>{mode}</b><br>"
-                "%{x}<br>"
-                + ("%{y:.1f}%" if metric_col == "pct_of_projects" else "%{y} projects")
-                + "<extra></extra>"
-            ),
-        ))
-    yaxis_title = "% of projects" if metric_col == "pct_of_projects" else "Projects"
-    fig.update_layout(
-        title="Data Linkage Complexity Over Time",
-        xaxis_title="Year", yaxis_title=yaxis_title,
-        xaxis_dtick=1,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom", y=1.05,
-            xanchor="left", x=0,
-        ),
-    )
-    _annotate_partial_year(fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info)
-    return _apply_common(fig)
-
-
-def make_linkage_complexity(
-    df_cross_mode_domain: pd.DataFrame,
-    colour_map: dict,
-    height: int = 460,
-) -> go.Figure:
-    """Sorted 100%-stacked horizontal bars of each domain's linkage-mode profile.
-
-    A proportional ("relative complexity") view: each bar is the share of that
-    domain's projects by linkage mode, so domains compare regardless of size.
-    Ordered by cross-domain share. Counts are assignment-weighted (a project is
-    counted once per domain it touches).
-    """
-    if df_cross_mode_domain.empty or "domain" not in df_cross_mode_domain.columns:
-        return _apply_common(go.Figure(), height=height)
-    counts = df_cross_mode_domain.set_index("domain")
-    modes = [m for m in LINKAGE_LABELS if m in counts.columns]
-    counts = counts[modes]
-    row_totals = counts.sum(axis=1)
-    pct = counts.div(row_totals, axis=0).mul(100).fillna(0)
-    cross = "Cross-Domain Linkage"
-    order = (pct[cross] if cross in pct.columns else row_totals).sort_values().index.tolist()
-
-    fig = go.Figure()
-    for mode in modes:
-        fig.add_trace(go.Bar(
-            y=order,
-            x=pct.loc[order, mode],
-            name=mode,
-            orientation="h",
-            marker_color=colour_map.get(mode, "#999"),
-            customdata=counts.loc[order, mode],
-            hovertemplate=(
-                "<b>%{y}</b><br>" + mode + ": %{x:.0f}% (%{customdata} projects)<extra></extra>"
-            ),
-        ))
-    fig.update_layout(
-        barmode="stack",
-        title="Linkage Profile by Domain",
-        xaxis=dict(title="% of the domain's projects", range=[0, 100]),
-        yaxis_title="",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=10)),
-        margin=dict(l=220),
-    )
     return _apply_common(fig, height=height)
 
 

@@ -116,7 +116,7 @@ class DatasetNormalisationTest(unittest.TestCase):
             "British Household Panel Survey": "Understanding Society",
             "Working Lives of Teachers and Leaders": "Working Lives of Teachers and Leaders Survey",
             "Annual Outward Foreign Direct Investment Survey": "Annual Foreign Direct Investment Survey",
-            "Longitudinal Business Structure Database": "Business Structure Database (BSD)",
+            "Longitudinal Business Structure Database": "Business Structure Database Longitudinal",
             "Monthly Inquiry into the Distributive and Services Sector": "Monthly Inquiry into the Distributive and Services Sector (MIDSS)",
             "Monthly Production Inquiry": "Monthly Production Inquiry (MPI)",
             "Effects of Tax and Benefits": "Effects of Taxes and Benefits on Household Income",

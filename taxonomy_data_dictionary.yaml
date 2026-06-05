@@ -2,9 +2,9 @@ metadata:
   # ============================================================
   # IDENTITY
   # ============================================================
-  title: Taxonomy Data Dictionary -- DEA Project Classification Ontology v3.4
-  dictionary_version: '1.0-rc1'
-  documents_ontology_version: 'v3.4'
+  title: Taxonomy Data Dictionary -- DEA Project Classification Ontology v3.4 rc2
+  dictionary_version: '1.0-rc2'
+  documents_ontology_version: 'v3.4-rc2'
 
   notes:
   - This file is the single source of truth. CSV or Markdown renderings are generated from it (for ease of machine/human readability).
@@ -51,6 +51,9 @@ metadata:
     It is not a record of pre-release ontology development, which is documented
     in the methods log.
   changelog:
+  - version: '1.0-rc2'
+    date: '2026-06-04'
+    note: Retired the LLM Layer B linkage layer in place and moved COVID-19 & Pandemic from Layer A domain to active cross-cutting tag.
   - version: '1.0-rc1'
     date: '2026-05-27'
     note: Initial release candidate for collaborator review (1 June, 10 June).
@@ -117,29 +120,30 @@ metadata:
         adr_uk_theme: null
         alignment_type: no_equivalent
         note: No direct ADR UK equivalent. Public finance and taxation are retained because the DEA register includes a lot of fiscal, tax and public-expenditure research.
-      COVID-19 & Pandemic:
-        adr_uk_theme: null
-        alignment_type: no_equivalent
-        note: No direct ADR UK equivalent. COVID-19 is a time-bounded cross-domain event rather than a standing ADR UK research theme.
       Data Infrastructure & Methodology:
         adr_uk_theme: null
         alignment_type: no_equivalent
         note: No direct ADR UK equivalent. Methodological and data-infrastructure research is retained as a domain because it is visible (albeit as a smaller category) in the DEA register.
+    cross_cutting_tag_mapping:
+      COVID-19 & Pandemic:
+        adr_uk_theme: null
+        alignment_type: no_equivalent
+        note: Moved from Layer A domain to cross-cutting tag in rc2. COVID-19 is a time-bounded cross-domain condition rather than a standing ADR UK research theme.
 
   # ============================================================
   # ONTOLOGY STRUCTURE
   # ============================================================
   layer_cardinality:
     Layer A -- domain: one or more
-    Layer B -- linkage: exactly one
     Layer C -- purpose: one or two
     Cross-cutting tag: zero or more / boolean facets
 
   category_identity_note: >-
     Category identity is the combination of layer and label, not label alone. The 
-    fallback "Unclear from Register Entry" appears in Layer A, Layer B, and Layer C 
-    as three distinct categories; any consumer of this dictionary must key on (layer, label), 
-    since label alone is not unique.
+    fallback "Unclear from Register Entry" appears in Layer A and Layer C, and
+    is also retained in retired Layer B placeholders as a historical artefact.
+    Any consumer of this dictionary must key on (layer, label), since label
+    alone is not unique.
   label_change_notes:
     unclear_from_register_entry: >-
       In v3.4, "Unclear from Title" was renamed to "Unclear from Register Entry" 
@@ -157,13 +161,57 @@ metadata:
     a project about how employment changes affect household debt may receive both Labour 
     Market & Employment and Poverty, Wealth & Living Standards.
   
-  layer_b_assignment_rule: >- 
-    Layer B assigns exactly one linkage mode by the dataset configuration visible from the register 
-    entry. Assign Single-Dataset where the register entry lists one standalone dataset or one internally 
-    coherent single-domain data product. Assign Within-Domain Linkage where multiple datasets or identifiable 
-    component sources all sit within one substantive policy domain. Assign Cross-Domain Linkage where datasets 
-    or identifiable component sources span two or more substantive policy domains. Provider identity is not sufficient: 
-    large providers may supply datasets across several policy domains.
+  retired_layer_b_assignment_rule: >- 
+    Retired in rc2. Layer B formerly assigned exactly one linkage mode by the dataset configuration visible
+    from the register entry. Linkage is no longer an LLM output; record-linkage properties are now derived
+    deterministically from register_reference.yaml. This historic rule is retained only to document the
+    removed LLM linkage layer and must not feed prompt assembly.
+
+  deterministic_register_facets:
+    prompt_status: >-
+      These facets document the deterministic register-reference layer. They are
+      not LLM outputs and must not be included in prompt assembly.
+    collection_method: >-
+      Single-label dataset facet with values survey or administrative.
+      Classify by the dataset's collection design, not by project use. Survey
+      means collected through a survey instrument or return, including employer
+      survey forms. Administrative means derived from administrative, register,
+      service, or operational records. ASHE is survey by design even though it
+      is sampled from PAYE administrative records, because it is collected via
+      employer survey returns.
+    temporal_structure: >-
+      Single-label dataset facet with values cross-sectional or longitudinal.
+      Classify by the dataset producer's design, weighting, and release for
+      use, not by the raw sampling frame or by what could be constructed from
+      the data. Longitudinal means the released dataset is designed and
+      weighted to follow the same units over time; cross-sectional means a
+      point-in-time or repeated fresh-extract release. Census is released as a
+      cross-section; Understanding Society and Millennium Cohort Study are
+      longitudinal survey panels; Decision Maker Panel and Longitudinal Small
+      Business Survey are longitudinal business panels. Aggregate indicators
+      such as CPI, GVA, PPI, and Capital Stock are time series but not unit
+      panels, so they are classified cross-sectional.
+    retired_collection_type_note: >-
+      The former single collection-type facet (survey, cohort,
+      administrative) is retired. It conflated provenance with temporal
+      structure and used cohort to mean longitudinal, which wrongly implied
+      individual-level cohort studies and obscured business panels. The
+      replacement is two orthogonal facets: collection_method and
+      temporal_structure.
+    ashe_worked_example: >-
+      Base ASHE is survey plus cross-sectional because ONS weights and releases
+      it cross-sectionally despite the recurring NINo sampling frame. ASHE
+      Longitudinal is survey plus longitudinal because the longitudinal
+      construction and weighting have been applied. This contrast is
+      deterministic metadata only and does not alter the rc2 LLM prompt.
+    aggregate_indicator_limitation: >-
+      Aggregate indicators and national time-series outputs (CPI, GVA, PPI, and
+      Capital Stock) do not fit the unit-based deterministic facets cleanly:
+      they have no unit of observation in the four-value vocabulary and are not
+      unit-following panels. They are mapped to the closest available unit value
+      and treated as cross-sectional point-in-time aggregate releases. A future
+      aggregate or time-series facet value could be added if these cases become
+      analytically important.
 
   layer_c_assignment_rule: >-
     Assign a Layer C purpose according to the analytical operation visible from the register entry: 
@@ -173,32 +221,32 @@ metadata:
     where more than one operation is central; assign two only where both are genuinely substantive.
 
   unclear_fallback_rule: >-
-      "Unclear from Register Entry" appears in Layer A, Layer B, and Layer C. In
-      every case the label describes insufficient evidence in the public register
-      entry — not research that is inherently unclassifiable. Assign it only where
-      the relevant register fields genuinely do not determine the domain, linkage
-      mode, or purpose; if the evidence resolves the category, assign the resolved
-      category instead.
+      "Unclear from Register Entry" appears in Layer A and Layer C. In each
+      active layer the label describes insufficient evidence in the public
+      register entry — not research that is inherently unclassifiable. Assign
+      it only where the relevant register fields genuinely do not determine the
+      domain or purpose; if the evidence resolves the category, assign the
+      resolved category instead.
 
   cross_layer_assignment_principles:
     layer_independence: >-
-      Layer A, Layer B, Layer C, and cross-cutting tags answer different questions. 
+      Layer A, Layer C, and cross-cutting tags answer different questions. 
       The same element — a policy, dataset, population group, method, or service setting — 
       may inform more than one layer without merging them. Assign the substantive domain, 
-      linkage mode, analytical purpose, and any cross-cutting tag independently.
+      analytical purpose, and any cross-cutting tags independently.
     evidence_not_keyword_rule: >-
       Do not assign any category solely because a word, dataset, variable,
       population group, method, or service setting appears in the register
       entry. Assign a category only where the register fields provide enough
-      evidence that the category is central to the research question, linkage
-      structure, analytical operation, or cross-cutting lens. This rule applies
+      evidence that the category is central to the research question,
+      analytical operation, or cross-cutting lens. This rule applies
       to every layer. 
     register_field_evidence_rule: >- 
       Classification draws on the register entry's informative fields — the project title 
       and the dataset field — read together. The title usually provides the research question or analytical 
-      framing, while the dataset field can resolve the substantive domain, linkage mode, and 
-      sometimes the analytical purpose. Do not treat the dataset field as relevant only to
-      Layer B. 
+      framing, while the dataset field can resolve the substantive domain and sometimes
+      the analytical purpose. Do not treat the dataset field as irrelevant to active
+      LLM outputs merely because linkage is now deterministic. 
     domain_purpose_separation: >-
       Domain and purpose are assigned independently. The domain follows the substantive 
       object of the research visible from the register entry — the outcome, system, population 
@@ -216,10 +264,12 @@ metadata:
       to the analysis.
     tag_lens_rule: >-
       Cross-cutting tags describe analytical lenses, not substantive domains or
-      purposes. A tag should not replace the domain or purpose label. Do not
-      assign a tag merely because demographic or equality-relevant variables
-      appear as controls, covariates, sample descriptors, or routine
-      stratifiers.
+      purposes. Tags should not replace the domain or purpose label. Assign
+      every active cross-cutting tag whose lens or condition is central to the
+      research question; multiple tags may apply to the same project. Do not
+      assign a tag merely because tag-relevant variables or background
+      conditions appear as controls, covariates, sample descriptors, routine
+      stratifiers, or incidental context.
     
   methodology_domain_purpose_distinction: >-
     Data Infrastructure & Methodology (Layer A, a domain) and Methodological / Infrastructure Research (Layer C, a purpose) 
@@ -281,14 +331,10 @@ metadata:
     should not be read as a trend.
 
   covid_category_type_note: >-
-    COVID-19 & Pandemic is retained as a Layer A domain but is a category-type
-    anomaly: unlike the other domains, which are policy/sector areas, it is a
-    time-bounded event that cuts across domains (its own inclusion rule
-    directs that it be assigned alongside a substantive domain). This is the
-    same category-type issue that led to the removal of "Gender, Race &
-    Ethnicity" from Layer A. Whether COVID-19 should likewise be converted
-    from a domain to a cross-cutting tag is a documented open question, to be
-    decided either before or after v4 validation; it is not changed in v3.4.
+    Decided and actioned in rc2: COVID-19 & Pandemic moved from Layer A domain
+    to active cross-cutting tag. COVID-19 is a cross-cutting pandemic condition
+    or lens, not a substantive policy domain; this parallels the v3.4 rationale
+    for moving demographic-disparities content out of Layer A.
 
 categories:
 
@@ -495,7 +541,9 @@ categories:
     rationale: >-
       The word home should not trigger this domain unless housing quality, tenure,
       residential conditions, dwelling environments, or planning are the research
-      object.
+      object. If pandemic framing is central, record it with the COVID-19 &
+      Pandemic cross-cutting tag rather than treating home location as housing
+      research.
     instead_consider:
       - "COVID-19 & Pandemic"
 
@@ -577,30 +625,6 @@ categories:
     instead_consider:
       - "Poverty, Wealth & Living Standards"
 
-- label: COVID-19 & Pandemic
-  layer: Layer A -- domain
-  status: active
-  include_in_prompt: true
-  definition: >-
-    Research specifically focused on COVID-19, the COVID-19 pandemic, transmission, pandemic control measures, vaccination, 
-    infection surveillance, lockdowns, social distancing, pandemic-related public support, or pandemic consequences.
-  inclusion_rules: >-
-    Assign whenever COVID-19 or pandemic conditions are central to the research question. If the project studies 
-    COVID-19 effects on employment, business, health, education, inequality, or households, assign both 
-    COVID-19 & Pandemic and the relevant substantive domain.
-  exclusion_rules: >-
-    Do not assign simply because the project occurred during the pandemic period. Do not assign to infectious disease, health, 
-    or mortality studies unless COVID-19/pandemic framing is explicit.
-  examples: []
-  counterexamples:
-  - text: >-
-      Studies where COVID-19 is only a date range, background period, excluded cause, or
-      incidental context for otherwise non-pandemic research.
-    rationale: >-
-      This falls outside the event-domain when COVID-19 is not the exposure, surveillance object,
-      intervention context, substantive outcome frame, or central pandemic condition being
-      studied.
-      
 - label: Data Infrastructure & Methodology
   layer: Layer A -- domain
   status: active
@@ -650,11 +674,11 @@ categories:
       resolve it, whereas domain-agnostic datasets (such as the Census or
       Labour Force Survey, used across many domains) may not.
 
-# === LAYER B: LINKAGE MODE (exactly one) ===
+# === RETIRED rc2: Layer B linkage replaced by the deterministic record-linkage layer (register_reference.yaml) ===
 - label: Single-Dataset
   layer: Layer B -- linkage
-  status: active
-  include_in_prompt: true
+  status: removed rc2
+  include_in_prompt: false
   definition: >-
     The project uses one dataset or one internally coherent dataset product from a single policy domain, with no cross-dataset or cross-domain linkage implied by the register entry.
   inclusion_rules: >-
@@ -679,8 +703,8 @@ categories:
 
 - label: Within-Domain Linkage
   layer: Layer B -- linkage
-  status: active
-  include_in_prompt: true
+  status: removed rc2
+  include_in_prompt: false
   definition: >-
     The project uses or links two or more datasets that all fall within the same policy domain.
   inclusion_rules: >-
@@ -704,8 +728,8 @@ categories:
 
 - label: Cross-Domain Linkage
   layer: Layer B -- linkage
-  status: active
-  include_in_prompt: true
+  status: removed rc2
+  include_in_prompt: false
   definition: >-
     The project links, combines, or uses datasets spanning two or more distinct policy domains, including cases where the register 
     lists a single pre-linked product whose component sources are cross-domain.
@@ -734,8 +758,8 @@ categories:
 
 - label: Unclear from Register Entry
   layer: Layer B -- linkage
-  status: active
-  include_in_prompt: true
+  status: removed rc2
+  include_in_prompt: false
   definition: >-
     Use only where the dataset field is missing, malformed, or too ambiguous to determine linkage mode. 
   inclusion_rules: >-
@@ -966,7 +990,7 @@ categories:
     Use where the project title and datasets do not provide enough information to infer the analytical purpose. 
   inclusion_rules: >-
     Assign only where the analytical design cannot be inferred from the public register entry. It may be
-    possible to classify the domain and linkage mode while leaving purpose unclear.
+    possible to classify the domain while leaving purpose unclear.
   exclusion_rules: >-
     Do not assign if the title or dataset field indicates monitoring, impact/evaluation, prediction, pathways,
     trajectories, exposure-outcome analysis, service-system analysis, or method/infrastructure development. Do
@@ -1026,6 +1050,43 @@ categories:
       is central.
     instead_consider:
       - "Poverty, Wealth & Living Standards"
+
+- label: COVID-19 & Pandemic
+  layer: Cross-cutting tag
+  status: active
+  include_in_prompt: true
+  historical_note: >-
+    Moved from Layer A domain to cross-cutting tag in rc2; COVID-19 is a cross-cutting pandemic
+    condition/lens, not a substantive policy domain. This parallels the v3.4
+    demographic-disparities tag rationale.
+  definition: >-
+    A cross-cutting tag for projects where COVID-19, the COVID-19 pandemic,
+    pandemic conditions, infection surveillance, vaccination, lockdowns, social
+    distancing, pandemic-related public support, or pandemic consequences are a
+    central condition or lens for the research question.
+  inclusion_rules: >-
+    Assign where COVID-19 or pandemic conditions are central to the research
+    question. Use this tag for the pandemic condition or lens while assigning
+    the substantive domain according to the outcome, system, policy area, or
+    mechanism being studied. If the project studies COVID-19 effects on
+    employment, business, health, education, inequality, or households, assign
+    this tag alongside the relevant substantive domain or domains. The tag can
+    be combined with any Layer A domain, any Layer C purpose, and other
+    cross-cutting tags.
+  exclusion_rules: >-
+    Do not assign simply because the project occurred during the pandemic
+    period. Do not assign to infectious disease, health, or mortality studies
+    unless COVID-19 or pandemic framing is explicit. Do not use this tag as a
+    substitute for the substantive domain or analytical purpose.
+  examples: []
+  counterexamples:
+  - text: >-
+      Studies where COVID-19 is only a date range, background period, excluded cause, or
+      incidental context for otherwise non-pandemic research.
+    rationale: >-
+      This falls outside the tag when COVID-19 is not the exposure, surveillance object,
+      intervention context, substantive outcome frame, or central pandemic condition being
+      studied.
 
 # === DEPRECATED (removed v3.4, retained as placeholders) ===
 - label: Gender, Race & Ethnicity

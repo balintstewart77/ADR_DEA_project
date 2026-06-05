@@ -2,9 +2,9 @@ import os
 from collections import namedtuple
 
 try:
-    from dashboard.taxonomy import DOMAIN_LABELS, LINKAGE_LABELS, PURPOSE_LABELS, TAG_LABELS
+    from dashboard.taxonomy import DOMAIN_LABELS, PURPOSE_LABELS, TAG_LABELS
 except ModuleNotFoundError:
-    from taxonomy import DOMAIN_LABELS, LINKAGE_LABELS, PURPOSE_LABELS, TAG_LABELS
+    from taxonomy import DOMAIN_LABELS, PURPOSE_LABELS, TAG_LABELS
 
 _PACKAGE_DIR = os.path.dirname(__file__)
 
@@ -127,7 +127,6 @@ _DOMAIN_COLOUR_OVERRIDES = {
     "Poverty, Wealth & Living Standards":   "#6a3d9a",
     "Migration & Demographics":             "#f4a261",
     "Crime & Justice":                      "#1f77b4",
-    "COVID-19 & Pandemic":                  "#ff7f0e",
     "Housing & Planning":                   "#8c564b",
     "Environment & Agriculture":            "#2ca02c",
     "Public Finance & Taxation":            "#9467bd",
@@ -135,14 +134,6 @@ _DOMAIN_COLOUR_OVERRIDES = {
     "Unclear from Register Entry":          "#bcbd22",
 }
 DOMAIN_COLOURS = _assign_colours(DOMAIN_LABELS, _DOMAIN_COLOUR_OVERRIDES)
-
-_LINKAGE_COLOUR_OVERRIDES = {
-    "Single-Dataset":             "#a8dadc",
-    "Within-Domain Linkage":      "#457b9d",
-    "Cross-Domain Linkage":       "#e76f51",
-    "Unclear from Register Entry": "#bdc3c7",
-}
-LINKAGE_COLOURS = _assign_colours(LINKAGE_LABELS, _LINKAGE_COLOUR_OVERRIDES)
 
 _PURPOSE_COLOUR_OVERRIDES = {
     "Descriptive Monitoring":                   "#3366cc",
@@ -158,6 +149,7 @@ PURPOSE_COLOURS = _assign_colours(PURPOSE_LABELS, _PURPOSE_COLOUR_OVERRIDES)
 
 _TAG_COLOUR_OVERRIDES = {
     "Demographic disparities / equity tag": "#d62728",
+    "COVID-19 & Pandemic": "#ff7f0e",
 }
 TAG_COLOURS = _assign_colours(TAG_LABELS, _TAG_COLOUR_OVERRIDES)
 
@@ -190,7 +182,6 @@ RATIONALE_COL = "rationale"
 # projects, so requiring it would wrongly drop them.
 _DERIVED_CLASSIFICATION_COLUMNS = [
     "substantive_domains",
-    "linkage_mode",
     "analytical_purpose",
 ]
 _DERIVED_ENRICHMENT_COLUMNS = [
@@ -215,7 +206,6 @@ _ENRICHED_REGISTER_DISPLAY_COLUMNS = [
     "Accreditation Date",
     "substantive_domains",
     SUBSTANTIVE_DOMAIN_COUNT_COL,
-    "linkage_mode",
     "analytical_purpose",
     CROSS_CUTTING_TAGS_COL,
     RATIONALE_COL,

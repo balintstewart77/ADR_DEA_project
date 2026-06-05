@@ -13,9 +13,8 @@ from dashboard.data.registry import (
 )
 from dashboard.data.thematic import (
     THEMATIC_DATA_AVAILABLE, THEMATIC_NARRATIVE, THEMATIC_PROJECT_COUNT, THEMATIC_TAGGED_COUNT,
-    THEMATIC_PROJECT_CROSS_RATE, THEMATIC_ASSIGNMENT_CROSS_RATE,
     _THEMATIC_DOMAIN_OPTIONS, _THEMATIC_DOMAIN_COUNT_OPTIONS,
-    _THEMATIC_LINKAGE_OPTIONS, _THEMATIC_PURPOSE_OPTIONS, _THEMATIC_TAG_OPTIONS,
+    _THEMATIC_PURPOSE_OPTIONS, _THEMATIC_TAG_OPTIONS,
 )
 
 _MD_STYLE = {"fontSize": "0.85rem", "lineHeight": "1.6"}
@@ -48,7 +47,8 @@ dashboard reads its label set directly from that dictionary, so the displayed
 categories cannot drift from the ones the classifier used.
 
 **Input:** Each project's title and its listed datasets are sent together — the
-title gives the research question, the datasets reveal the domains and linkage scope.
+title gives the research question, and the datasets provide additional
+classification evidence.
 
 **Batch processing:** Projects are classified in batches of 10 with retry logic
 for transient API failures, and results are cached so that re-runs only classify
@@ -66,16 +66,6 @@ What the project is about. Assigned from the datasets and research question:
 
 {_md_table(taxonomy.LAYER_A_DOMAIN)}
 
-&nbsp;
-
-#### Layer B — Linkage Mode (exactly 1 per project)
-
-How the data are linked, judged by the number of policy domains the datasets span:
-
-{_md_table(taxonomy.LAYER_B_LINKAGE)}
-
-&nbsp;
-
 #### Layer C — Analytical Purpose (1 or 2 per project)
 
 What analytical purpose the project serves:
@@ -84,24 +74,10 @@ What analytical purpose the project serves:
 
 &nbsp;
 
-#### Cross-Cutting Tag (zero or more, orthogonal to the three layers)
+#### Cross-Cutting Tag (zero or more, orthogonal to the layers)
 
 {_md_table(taxonomy.LAYER_CROSS_CUTTING_TAG)}
 """
-
-_linkage_profile_desc = (
-    "This chart compares the linkage profile of each substantive domain, showing "
-    "the share of projects in that domain that are single-dataset, within-domain "
-    "linkage, or cross-domain linkage. Domains are ordered by their cross-domain "
-    "share. Because Layer A is multi-label, a project is counted once in each domain "
-    "it touches; a cross-domain project may therefore contribute to several domain "
-    "bars. The chart is assignment-weighted: it describes the distribution of linkage "
-    "modes across domain assignments, not across unique projects. On that basis, "
-    f"{THEMATIC_ASSIGNMENT_CROSS_RATE:g}% of domain assignments are cross-domain, "
-    f"compared with {THEMATIC_PROJECT_CROSS_RATE:g}% of projects when each project is "
-    "counted once. Use the chart to compare domains with each other, not as the "
-    "headline portfolio-wide project-level rate."
-)
 
 _enriched_register_desc = (
     "The Enriched Register combines the canonical DEA register (the source of truth, "
@@ -124,11 +100,6 @@ def _analyses_accordion():
                     ),
                     _graph("thematic-domain-trend"),
                     html.P(
-                        "Each project has exactly one linkage mode, so these shares are compositional.",
-                        className="section-desc mt-3",
-                    ),
-                    _graph("thematic-linkage-trend"),
-                    html.P(
                         "Projects may have up to two purposes, so percentages can sum to slightly "
                         "more than 100%.",
                         className="section-desc mt-3",
@@ -139,18 +110,10 @@ def _analyses_accordion():
             ),
             dbc.AccordionItem(
                 dbc.Row([
-                    dbc.Col(_graph("thematic-domain-totals"), md=5),
-                    dbc.Col(_graph("thematic-linkage-totals"), md=3),
-                    dbc.Col(_graph("thematic-purpose-totals"), md=4),
+                    dbc.Col(_graph("thematic-domain-totals"), md=6),
+                    dbc.Col(_graph("thematic-purpose-totals"), md=6),
                 ], className="g-3"),
                 title="Overall Distribution",
-            ),
-            dbc.AccordionItem(
-                [
-                    html.P(_linkage_profile_desc, className="section-desc"),
-                    _graph("thematic-linkage-complexity"),
-                ],
-                title="Linkage Profile by Domain (relative complexity)",
             ),
             dbc.AccordionItem(
                 [
@@ -161,10 +124,7 @@ def _analyses_accordion():
                         "counts and each domain's row-wise percentage; the hover always shows both.",
                         className="section-desc",
                     ),
-                    dbc.Row([
-                        dbc.Col(_graph("thematic-cross-mode-domain"), md=6),
-                        dbc.Col(_graph("thematic-cross-domain-purpose"), md=6),
-                    ], className="g-3"),
+                    _graph("thematic-cross-domain-purpose"),
                 ],
                 title="Cross-Layer Patterns",
             ),
@@ -189,8 +149,8 @@ def _analyses_accordion():
             dbc.AccordionItem(
                 [
                     html.P(
-                        f"A cross-cutting tag, orthogonal to the three layers, marks projects whose "
-                        f"analysis centres on demographic disparities or equity. It applies to "
+                        f"Cross-cutting tags, orthogonal to the layers, mark projects whose "
+                        f"analysis centres on a tag-defined lens or condition. At least one tag applies to "
                         f"{THEMATIC_TAGGED_COUNT:,} of {THEMATIC_PROJECT_COUNT:,} classified projects. "
                         "The trend follows the metric toggle above; the bar shows which domains the "
                         "tagged projects fall in.",
@@ -201,7 +161,7 @@ def _analyses_accordion():
                         dbc.Col(_graph("thematic-tag-domain"), md=6),
                     ], className="g-3"),
                 ],
-                title="Demographic-Disparities / Equity Lens",
+                title="Cross-Cutting Tags",
             ),
             dbc.AccordionItem(
                 [
@@ -282,16 +242,6 @@ def _analyses_accordion():
                             ),
                         ], md=2),
                         dbc.Col([
-                            html.Label("Linkage mode", className="filter-label"),
-                            dcc.Dropdown(
-                                id="enriched-linkage-filter",
-                                options=_THEMATIC_LINKAGE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
-                                searchable=False,
-                            ),
-                        ], md=2),
-                        dbc.Col([
                             html.Label("Analytical purpose", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-purpose-filter",
@@ -302,7 +252,7 @@ def _analyses_accordion():
                             ),
                         ], md=2),
                         dbc.Col([
-                            html.Label("Demographic / equity tag", className="filter-label"),
+                            html.Label("Cross-cutting tag", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-tag-filter",
                                 options=_THEMATIC_TAG_OPTIONS,
@@ -355,9 +305,8 @@ def _analyses_accordion():
                                 {"name": f"{REGISTER_SOURCE_ICON} Accreditation Date", "id": "Accreditation Date"},
                                 {"name": f"{DERIVED_FIELD_ICON} Domains", "id": "substantive_domains"},
                                 {"name": f"{DERIVED_FIELD_ICON} Layer A domain count", "id": "substantive_domain_count"},
-                                {"name": f"{DERIVED_FIELD_ICON} Linkage mode", "id": "linkage_mode"},
                                 {"name": f"{DERIVED_FIELD_ICON} Purpose", "id": "analytical_purpose"},
-                                {"name": f"{DERIVED_FIELD_ICON} Demographic / equity tag", "id": "cross_cutting_tags"},
+                                {"name": f"{DERIVED_FIELD_ICON} Cross-cutting tags", "id": "cross_cutting_tags"},
                                 {"name": f"{DERIVED_FIELD_ICON} Rationale", "id": "rationale"},
                             ],
                             page_size=20,
@@ -392,15 +341,14 @@ def build_thematic_tab():
             dbc.Row([
                 stat_card(f"{THEMATIC_PROJECT_COUNT:,}", "Projects Classified", "#2a9d8f"),
                 stat_card(f"{len(taxonomy.DOMAIN_LABELS)}", "Substantive Domains", "#264653"),
-                stat_card(f"{len(_THEMATIC_LINKAGE_OPTIONS) - 1:,}", "Linkage Modes", "#457b9d"),
                 stat_card(f"{len(taxonomy.PURPOSE_LABELS)}", "Analytical Purposes", "#e76f51"),
+                stat_card(f"{len(taxonomy.TAG_LABELS)}", "Cross-Cutting Tags", "#457b9d"),
             ], className="mb-3 g-3"),
 
             html.P(
-                "Each project is independently classified across three layers: "
-                "the substantive research domain(s), the data linkage complexity, "
-                "and the analytical purpose. Projects may belong to multiple domains "
-                "and may have up to two analytical purposes.",
+                "Each project is independently classified by substantive research domain(s), "
+                "analytical purpose, and cross-cutting tags. Projects may belong to multiple "
+                "domains, may have up to two analytical purposes, and may carry multiple tags.",
                 className="section-desc",
             ),
 

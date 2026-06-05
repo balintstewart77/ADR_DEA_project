@@ -1,23 +1,24 @@
 """
-Three-Layer LLM Classification of DEA Project Titles
-=====================================================
-Implements a three-dimensional classification framework that avoids collapsing
-all nuance into a single subject-area label:
+LLM Classification of DEA Project Titles
+========================================
+Implements a classification framework that avoids collapsing all nuance into a
+single subject-area label:
 
     Layer A — Substantive Domain   (1 or more from 14 themes)
-    Layer B — Linkage Mode         (exactly 1)
     Layer C — Analytical Purpose   (1 or 2)
+    Cross-cutting tags             (0 or more)
 
-Each layer is classified independently so that patterns across dimensions can
-be analysed separately (e.g. all "Cross-Domain Linkage" projects, or all
-"Policy Evaluation" projects regardless of domain).
+Each output is classified independently so that patterns across dimensions can
+be analysed separately (e.g. all COVID-tagged projects, or all "Policy Evaluation"
+projects regardless of domain). Record linkage is no longer an LLM output; it is
+derived deterministically from the register reference layer.
 
 Output format per project:
 {
   "ProjectID": {
     "substantive_domains": ["Education & Skills", "Labour Market & Employment"],
-    "linkage_mode": "Cross-Domain Linkage",
-    "analytical_purpose": ["Life-Course / Trajectory Analysis"]
+    "analytical_purpose": ["Life-Course / Trajectory Analysis"],
+    "cross_cutting_tags": ["COVID-19 & Pandemic"]
   }
 }
 
@@ -33,9 +34,8 @@ Usage:
     python analysis/llm_theme_analysis_v3.py --model claude-sonnet-4-6 --output-dir analysis/outputs_sonnet_4_6
 
 Outputs (written to analysis/outputs_v3/):
-    - layer_classifications.csv     : One row per project, all three layers
+    - layer_classifications.csv     : One row per project, all LLM outputs
     - layer_a_by_year.csv           : Domain frequency by year
-    - layer_b_by_year.csv           : Linkage mode frequency by year
     - layer_c_by_year.csv           : Analytical purpose frequency by year
     - layer_summary.txt             : Narrative analysis
     - llm_layer_cache.json          : Cache of raw LLM outputs
@@ -84,8 +84,8 @@ _make_console_output_safe()
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs_v3")
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
-CACHE_SCHEMA_VERSION = 4
-PROMPT_VERSION = "dict-1.0-rc1"
+CACHE_SCHEMA_VERSION = 5
+PROMPT_VERSION = "dict-1.0-rc2"
 
 MODEL      = "claude-opus-4-8"
 BATCH_SIZE = 10          # projects per LLM batch (reduced to improve Opus reliability)
@@ -101,10 +101,9 @@ LAST_CLASSIFY_API_PATH = ""
 
 TAXONOMY_FILENAME = "taxonomy_data_dictionary.yaml"
 LAYER_A_DOMAIN = "Layer A -- domain"
-LAYER_B_LINKAGE = "Layer B -- linkage"
 LAYER_C_PURPOSE = "Layer C -- purpose"
 LAYER_CROSS_CUTTING_TAG = "Cross-cutting tag"
-PROMPT_LAYERS = (LAYER_A_DOMAIN, LAYER_B_LINKAGE, LAYER_C_PURPOSE, LAYER_CROSS_CUTTING_TAG)
+PROMPT_LAYERS = (LAYER_A_DOMAIN, LAYER_C_PURPOSE, LAYER_CROSS_CUTTING_TAG)
 
 
 def _find_taxonomy_path() -> Path:
@@ -177,12 +176,10 @@ def _labels_for_layer(layer: str) -> list[str]:
 
 
 DOMAINS = _labels_for_layer(LAYER_A_DOMAIN)
-LINKAGE_MODES = _labels_for_layer(LAYER_B_LINKAGE)
 PURPOSES = _labels_for_layer(LAYER_C_PURPOSE)
 CROSS_CUTTING_TAGS = _labels_for_layer(LAYER_CROSS_CUTTING_TAG)
 
 DOMAIN_LABELS = set(DOMAINS)
-LINKAGE_MODE_LABELS = set(LINKAGE_MODES)
 PURPOSE_LABELS = set(PURPOSES)
 CROSS_CUTTING_TAG_LABELS = set(CROSS_CUTTING_TAGS)
 
@@ -199,7 +196,6 @@ def _fallback_label_for_layer(layer: str) -> str:
 
 
 UNCLEAR_DOMAIN_LABEL = _fallback_label_for_layer(LAYER_A_DOMAIN)
-UNCLEAR_LINKAGE_LABEL = _fallback_label_for_layer(LAYER_B_LINKAGE)
 UNCLEAR_PURPOSE_LABEL = _fallback_label_for_layer(LAYER_C_PURPOSE)
 
 
@@ -222,7 +218,6 @@ def _render_layer_guidance(layer: str) -> str:
 
 METADATA_RULE_KEYS = (
     "layer_a_assignment_rule",
-    "layer_b_assignment_rule",
     "layer_c_assignment_rule",
     "unclear_fallback_rule",
 )
@@ -255,7 +250,6 @@ def _render_assignment_rules() -> str:
 class ProjectLayers(BaseModel):
     project_id: str
     substantive_domains: list[str]
-    linkage_mode: str
     analytical_purpose: list[str]
     cross_cutting_tags: list[str] = Field(default_factory=list)
     rationale: str
@@ -278,13 +272,6 @@ class ProjectLayers(BaseModel):
         if len(deduped) > 1:
             deduped = [d for d in deduped if d != UNCLEAR_DOMAIN_LABEL] or [UNCLEAR_DOMAIN_LABEL]
         return deduped
-
-    @field_validator("linkage_mode")
-    @classmethod
-    def validate_linkage_mode(cls, v):
-        if v not in LINKAGE_MODE_LABELS:
-            raise ValueError(f"Unknown Layer B linkage label: {v}")
-        return v
 
     @field_validator("analytical_purpose")
     @classmethod
@@ -340,12 +327,8 @@ class BatchClassificationError(RuntimeError):
 
 # Build lookup tables: lowercase → canonical label
 _DOMAIN_LOOKUP = {d.lower(): d for d in DOMAINS}
-_LINKAGE_LOOKUP = {m.lower(): m for m in LINKAGE_MODES}
 _PURPOSE_LOOKUP = {p.lower(): p for p in PURPOSES}
 _TAG_LOOKUP = {tag.lower(): tag for tag in CROSS_CUTTING_TAGS}
-
-# Legacy linkage mode remapping (Multi-Domain folded into Cross-Domain)
-_LINKAGE_LOOKUP["multi-domain linkage"] = "Cross-Domain Linkage"
 
 
 def _normalise_label(value: str, lookup: dict) -> str | None:
@@ -383,14 +366,6 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
                     normalised.append(canon)
                 # else: drop unrecognised labels rather than failing
             entry["substantive_domains"] = normalised if normalised else [UNCLEAR_DOMAIN_LABEL]
-
-        # Normalise linkage mode
-        if "linkage_mode" in entry and isinstance(entry["linkage_mode"], str):
-            canon = _normalise_label(entry["linkage_mode"], _LINKAGE_LOOKUP)
-            if canon:
-                entry["linkage_mode"] = canon
-            else:
-                entry["linkage_mode"] = UNCLEAR_LINKAGE_LABEL
 
         # Normalise purposes
         if "analytical_purpose" in entry and isinstance(entry["analytical_purpose"], list):
@@ -547,18 +522,14 @@ def _build_projects_block(projects: list[dict]) -> str:
 def _build_static_prompt() -> str:
     prompt = textwrap.dedent("""
         You are a research classification expert specialising in UK administrative data research.
-        Classify each project below using three independent layers plus cross-cutting tags.
+        Classify each project below using the active LLM outputs: substantive domains,
+        analytical purpose, and cross-cutting tags.
         Each project shows a title and the datasets it accesses.
 
         ══════════════════════════════════════════════════════════════
         LAYER A — SUBSTANTIVE DOMAIN  (assign 1 or more)
         ══════════════════════════════════════════════════════════════
         __DOMAIN_GUIDANCE__
-
-        ══════════════════════════════════════════════════════════════
-        LAYER B — LINKAGE MODE  (assign exactly 1)
-        ══════════════════════════════════════════════════════════════
-        __LINKAGE_GUIDANCE__
 
         ══════════════════════════════════════════════════════════════
         LAYER C — ANALYTICAL PURPOSE  (assign 1 or 2)
@@ -581,10 +552,9 @@ def _build_static_prompt() -> str:
             {
               "project_id": "<Record ID shown in brackets, e.g. 2020/001>",
               "substantive_domains": ["<domain>", ...],
-              "linkage_mode": "<exactly one linkage mode>",
               "analytical_purpose": ["<purpose>"],
               "cross_cutting_tags": ["<tag>", ...],
-              "rationale": "Assigned <domains> because <evidence>; <linkage> because <evidence>; <purpose> because <evidence>; <tag or no tag> because <evidence>."
+              "rationale": "Assigned <domains> because <evidence>; <purpose> because <evidence>; <tag or no tag> because <evidence>."
             },
             ...
           ]
@@ -593,12 +563,12 @@ def _build_static_prompt() -> str:
         The "project_id" field must repeat the exact Record ID shown in brackets
         for each project (e.g. "2020/001" or "2023/045").
         Use only the labels defined above, spelled exactly as shown.
-        The "cross_cutting_tags" list may be empty ([]); assign tags independently
-        of the other layers.
+        The "cross_cutting_tags" list may be empty ([]), contain one tag, or contain
+        multiple tags; assign each tag independently of the other outputs.
         For each project, also provide a "rationale" field: a single concise
         sentence explaining each layer's assignment in turn. Use the structure:
-        "Assigned <domains> because <evidence>; <linkage> because <evidence>;
-        <purpose> because <evidence>; <tag or no tag> because <evidence>."
+        "Assigned <domains> because <evidence>; <purpose> because <evidence>;
+        <tag or no tag> because <evidence>."
         The rationale should cite specific evidence from the title and dataset
         field, not restate the category definition.
         Produce one entry per project in the same order as listed.
@@ -606,7 +576,6 @@ def _build_static_prompt() -> str:
     return (
         prompt
         .replace("__DOMAIN_GUIDANCE__", _render_layer_guidance(LAYER_A_DOMAIN))
-        .replace("__LINKAGE_GUIDANCE__", _render_layer_guidance(LAYER_B_LINKAGE))
         .replace("__PURPOSE_GUIDANCE__", _render_layer_guidance(LAYER_C_PURPOSE))
         .replace("__TAG_GUIDANCE__", _render_layer_guidance(LAYER_CROSS_CUTTING_TAG))
         .replace("__ASSIGNMENT_RULES__", _render_assignment_rules())
@@ -771,7 +740,6 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
         actual_id = prompt_to_actual[cls.project_id]
         out[actual_id] = {
             "substantive_domains": cls.substantive_domains,
-            "linkage_mode":        cls.linkage_mode,
             "analytical_purpose":  cls.analytical_purpose,
             "cross_cutting_tags":  cls.cross_cutting_tags,
             "rationale":           cls.rationale,
@@ -853,9 +821,6 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     df["substantive_domains"] = df["Record ID"].apply(
         lambda record_id: _get(record_id, "substantive_domains", [UNCLEAR_DOMAIN_LABEL])
     )
-    df["linkage_mode"] = df["Record ID"].apply(
-        lambda record_id: _get(record_id, "linkage_mode", UNCLEAR_LINKAGE_LABEL)
-    )
     df["analytical_purpose"] = df["Record ID"].apply(
         lambda record_id: _get(record_id, "analytical_purpose", [UNCLEAR_PURPOSE_LABEL])
     )
@@ -878,7 +843,7 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 def analyse_layers(df: pd.DataFrame) -> dict:
-    """Compute frequency tables for all three layers."""
+    """Compute frequency tables for the active LLM outputs."""
     # Use Record ID as the unique identifier (handles duplicate Project IDs
     # that were disambiguated by title in load_data).
     rid = "Record ID"
@@ -896,20 +861,6 @@ def analyse_layers(df: pd.DataFrame) -> dict:
 
     totals_a = (
         df_a.groupby("domain")[rid].count()
-        .reset_index().rename(columns={rid: "count"})
-        .sort_values("count", ascending=False)
-    )
-
-    # ---- Layer B: linkage mode (one per project) ----
-    by_year_b = (
-        df.groupby(["Year", "linkage_mode"])[rid].count()
-        .reset_index().rename(columns={rid: "count"})
-    )
-    by_year_b = by_year_b.merge(total_a, on="Year")
-    by_year_b["pct_of_projects"] = (by_year_b["count"] / by_year_b["total"] * 100).round(1)
-
-    totals_b = (
-        df.groupby("linkage_mode")[rid].count()
         .reset_index().rename(columns={rid: "count"})
         .sort_values("count", ascending=False)
     )
@@ -937,9 +888,6 @@ def analyse_layers(df: pd.DataFrame) -> dict:
     df_dom = df.explode("substantive_domains").rename(columns={"substantive_domains": "domain"})
     df_dom = df_dom[df_dom["domain"].notna()].reset_index(drop=True)
 
-    # Domain × linkage mode
-    cross_mode_domain = pd.crosstab(df_dom["domain"], df_dom["linkage_mode"])
-
     # Domain × analytical purpose (both multi-label, exploded)
     df_dp = df_dom.explode("analytical_purpose").rename(
         columns={"analytical_purpose": "purpose"}
@@ -949,11 +897,8 @@ def analyse_layers(df: pd.DataFrame) -> dict:
     return {
         "by_year_a":            by_year_a,
         "totals_a":             totals_a,
-        "by_year_b":            by_year_b,
-        "totals_b":             totals_b,
         "by_year_c":            by_year_c,
         "totals_c":             totals_c,
-        "cross_mode_domain":    cross_mode_domain,
         "cross_domain_purpose": cross_domain_purpose,
     }
 
@@ -966,14 +911,8 @@ def print_quick_stats(trends: dict):
     print("\n=== Layer A — Substantive Domain Totals ===")
     print(trends["totals_a"].to_string(index=False))
 
-    print("\n=== Layer B — Linkage Mode Totals ===")
-    print(trends["totals_b"].to_string(index=False))
-
     print("\n=== Layer C — Analytical Purpose Totals ===")
     print(trends["totals_c"].to_string(index=False))
-
-    print("\n=== Cross-tab: Linkage Mode × Substantive Domain ===")
-    print(trends["cross_mode_domain"].to_string())
 
     print("\n=== Cross-tab: Substantive Domain × Analytical Purpose ===")
     print(trends["cross_domain_purpose"].to_string())
@@ -989,20 +928,12 @@ def generate_narrative(
     n_projects: int,
 ) -> str:
     a_str = trends["totals_a"].to_string(index=False)
-    b_str = trends["totals_b"].to_string(index=False)
     c_str = trends["totals_c"].to_string(index=False)
-    cross_mode_str = trends["cross_mode_domain"].to_string()
     cross_purpose_str = trends["cross_domain_purpose"].to_string()
 
     year_a_pivot = (
         trends["by_year_a"]
         .pivot(index="Year", columns="domain", values="pct_of_projects")
-        .fillna(0).round(1)
-    ).to_string()
-
-    year_b_pivot = (
-        trends["by_year_b"]
-        .pivot(index="Year", columns="linkage_mode", values="pct_of_projects")
         .fillna(0).round(1)
     ).to_string()
 
@@ -1013,7 +944,7 @@ def generate_narrative(
     ).to_string()
 
     prompt = textwrap.dedent(f"""
-        You are a research policy analyst. Below are statistics from a three-layer
+        You are a research policy analyst. Below are statistics from an LLM
         classification of {n_projects:,} DEA-accredited research projects in the UK.
 
         LAYER A — SUBSTANTIVE DOMAIN TOTALS:
@@ -1023,12 +954,6 @@ def generate_narrative(
         projects are counted once per domain, so columns may sum above 100%):
         {year_a_pivot}
 
-        LAYER B — LINKAGE MODE TOTALS:
-        {b_str}
-
-        LAYER B — LINKAGE MODE % BY YEAR (mutually exclusive; columns sum to 100%):
-        {year_b_pivot}
-
         LAYER C — ANALYTICAL PURPOSE TOTALS:
         {c_str}
 
@@ -1036,20 +961,15 @@ def generate_narrative(
         may sum above 100%):
         {year_c_pivot}
 
-        LINKAGE MODE × SUBSTANTIVE DOMAIN CROSS-TAB (multi-label; a project is
-        counted once per assigned domain, so columns can exceed project totals):
-        {cross_mode_str}
-
         SUBSTANTIVE DOMAIN × ANALYTICAL PURPOSE CROSS-TAB (multi-label):
         {cross_purpose_str}
 
         Write a concise analytical summary (5–7 paragraphs) covering:
         1. The dominant substantive domains and how the research landscape has evolved
-        2. Trends in data linkage complexity — are projects becoming more cross-domain over time?
-        3. The main analytical purposes and which are growing or declining
-        4. Interesting combinations revealed by the cross-tabs (e.g. which domains favour
-           policy evaluation, or which domains rely most on cross-domain linkage?)
-        5. Domains or purposes with notably low or declining share — flag these as
+        2. The main analytical purposes and which are growing or declining
+        3. Interesting combinations revealed by the cross-tabs (e.g. which domains favour
+           policy evaluation?)
+        4. Domains or purposes with notably low or declining share — flag these as
            under-represented areas visible in the data (do not speculate about why)
 
         Write in a professional policy-briefing style, suitable for a senior civil servant audience.
@@ -1089,9 +1009,6 @@ def _build_inspection_csv(df: pd.DataFrame) -> pd.DataFrame:
             lambda x: 1 if isinstance(x, list) and domain in x else 0
         )
     out["primary_domain"] = df["primary_domain"]
-
-    # Layer B — single column
-    out["linkage_mode"] = df["linkage_mode"]
 
     # Layer C — one boolean column per purpose
     for purpose in PURPOSES:
@@ -1146,23 +1063,14 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
     trends["by_year_a"].to_csv(
         os.path.join(output_dir, "layer_a_by_year.csv"), index=False, encoding="utf-8-sig"
     )
-    trends["by_year_b"].to_csv(
-        os.path.join(output_dir, "layer_b_by_year.csv"), index=False, encoding="utf-8-sig"
-    )
     trends["by_year_c"].to_csv(
         os.path.join(output_dir, "layer_c_by_year.csv"), index=False, encoding="utf-8-sig"
     )
     trends["totals_a"].to_csv(
         os.path.join(output_dir, "layer_a_totals.csv"), index=False, encoding="utf-8-sig"
     )
-    trends["totals_b"].to_csv(
-        os.path.join(output_dir, "layer_b_totals.csv"), index=False, encoding="utf-8-sig"
-    )
     trends["totals_c"].to_csv(
         os.path.join(output_dir, "layer_c_totals.csv"), index=False, encoding="utf-8-sig"
-    )
-    trends["cross_mode_domain"].to_csv(
-        os.path.join(output_dir, "cross_mode_domain.csv"), encoding="utf-8-sig"
     )
     trends["cross_domain_purpose"].to_csv(
         os.path.join(output_dir, "cross_domain_purpose.csv"), encoding="utf-8-sig"
@@ -1175,9 +1083,9 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
     for name in [
         "all_projects_classified.csv",
         "layer_classifications.csv",
-        "layer_a_by_year.csv", "layer_b_by_year.csv", "layer_c_by_year.csv",
-        "layer_a_totals.csv", "layer_b_totals.csv", "layer_c_totals.csv",
-        "cross_mode_domain.csv", "cross_domain_purpose.csv", "layer_summary.txt",
+        "layer_a_by_year.csv", "layer_c_by_year.csv",
+        "layer_a_totals.csv", "layer_c_totals.csv",
+        "cross_domain_purpose.csv", "layer_summary.txt",
     ]:
         print(f"  - {name}")
 
@@ -1187,7 +1095,7 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Three-layer DEA thematic analysis")
+    parser = argparse.ArgumentParser(description="DEA LLM thematic analysis")
     parser.add_argument(
         "--model",
         default=MODEL,

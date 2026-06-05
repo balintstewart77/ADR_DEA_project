@@ -429,7 +429,7 @@ DATASET_ALIASES = [
     # -- Business Structure Database Longitudinal --
     (re.compile(r"(?i)^business structure database \(BSD\)$"), "Business Structure Database (BSD)"),
     (re.compile(r"(?i)^business structure database[\s:/-]+longitudinal$"), "Business Structure Database Longitudinal"),
-    (re.compile(r"(?i)^longitudinal business structure database$"), "Business Structure Database (BSD)"),
+    (re.compile(r"(?i)^longitudinal business structure database$"), "Business Structure Database Longitudinal"),
     # -- Business Enterprise Research (and)? Development --
     (re.compile(r"(?i)^business enterprise research (?:and )?development$"), "Business Enterprise Research and Development (BERD)"),
     # -- DBT prefix leaking into dataset name --

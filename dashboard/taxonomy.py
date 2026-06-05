@@ -15,7 +15,6 @@ import yaml
 TAXONOMY_FILENAME = "taxonomy_data_dictionary.yaml"
 
 LAYER_A_DOMAIN = "Layer A -- domain"
-LAYER_B_LINKAGE = "Layer B -- linkage"
 LAYER_C_PURPOSE = "Layer C -- purpose"
 LAYER_CROSS_CUTTING_TAG = "Cross-cutting tag"
 
@@ -78,6 +77,5 @@ def category_rows(layer: str) -> list[tuple[str, str]]:
 
 
 DOMAIN_LABELS = labels_for(LAYER_A_DOMAIN)
-LINKAGE_LABELS = labels_for(LAYER_B_LINKAGE)
 PURPOSE_LABELS = labels_for(LAYER_C_PURPOSE)
 TAG_LABELS = labels_for(LAYER_CROSS_CUTTING_TAG)

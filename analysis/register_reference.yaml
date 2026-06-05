@@ -1,10 +1,12 @@
-reference_version: "0.3.0"
+reference_version: "0.4.1"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
   the structural origin of the linked components, not by how a project frames
-  them. Dataset collection-type is classified by the dataset's design, not by
-  how it is used. Unit of observation is the unit the dataset is structured or
+  them. Dataset collection method is classified by collection design. Dataset
+  temporal structure is classified by producer design, weighting, and release,
+  not by project use, the raw sampling frame, or what could be constructed from
+  the data. Unit of observation is the unit the dataset is structured or
   collected around, not the unit a project analyses. Researcher sector is
   classified by legal or constitutional status, not behaviour.
 
@@ -49,26 +51,56 @@ linked_products_rule:
       GUIE mirrors the GRADE edge case in the opposite direction: Census is a
       population-origin source, so the education-Census product is cross-domain.
 
-dataset_collection_type_rule:
+dataset_collection_method_rule:
   rule: >
-    Primary type by design, single-label. Each dataset gets exactly one of
-    survey, cohort, or administrative. Cohort means any longitudinal study
-    following the same units over time, including household and business panels.
-    Administrative includes vital-events and registry data such as births and
-    deaths.
-  acknowledged_simplification: >
-    Single-label classification suppresses dual-nature data. Census is filed as
-    survey by design though administratively used; a longitudinal survey is
-    filed under cohort, losing its survey aspect.
+    Collection method is a provenance fact, by design, single-label. Each
+    dataset gets exactly one of survey or administrative. Survey means collected
+    through a survey instrument or survey return, including employer survey
+    forms. Administrative means derived from administrative, register, service,
+    or operational records.
+  edge_case_rule: >
+    ASHE is survey by design even though sampled from PAYE administrative
+    records, because it is collected through employer survey returns.
   worked_edge_cases:
-    - "Census -> survey: survey instrument by design; administratively used."
-    - "Understanding Society -> cohort: longitudinal household panel."
-    - "Millennium Cohort Study -> cohort: longitudinal birth cohort."
-    - "ONS Longitudinal Study -> cohort: longitudinal study following persons."
-    - "ASHE -> survey: survey design, even though it samples administrative payroll."
-    - "LEO and ECHILD -> administrative: linked admin products."
-    - "Birth and death registrations -> administrative: vital events are folded in."
-    - "Decision Maker Panel and Longitudinal Small Business Survey -> cohort: business panels are longitudinal."
+    - "Census -> survey: survey instrument by design."
+    - "ASHE and ASHE Longitudinal -> survey: employer survey-return design."
+    - "Understanding Society and Millennium Cohort Study -> survey."
+    - "LEO and ECHILD -> administrative: linked administrative products."
+    - "Birth and death registrations -> administrative: vital-event registers."
+
+dataset_temporal_structure_rule:
+  rule: >
+    Temporal structure is a time-structure fact, single-label, classified by the
+    dataset producer's design, weighting, and release for use. Each dataset gets
+    exactly one of cross-sectional or longitudinal. Longitudinal means the
+    released dataset is designed and weighted to follow the same units
+    (persons, households, firms, or equivalent records) over time.
+    Cross-sectional means a point-in-time release or repeated fresh-extract
+    release.
+  construction_rule: >
+    Classify by producer design, weighting, and release, not by the raw sampling
+    frame or by what could be constructed from the data. A dataset whose
+    sampling frame permits longitudinal linkage but which is produced and
+    weighted cross-sectionally is cross-sectional; a longitudinal version exists
+    as a distinct entry only when the longitudinal construction and weighting
+    has actually been done.
+  aggregate_indicator_limitation: >
+    Aggregate indicators and national or area-level time-series outputs such as
+    CPI, GVA, PPI, and Capital Stock are not longitudinal under this facet
+    because they follow no units. They are time series, but not unit panels, and
+    are classified as cross-sectional point-in-time aggregate releases.
+  retired_category_note: >
+    The former cohort category is retired because it conflated collection method
+    with temporal structure and misnamed longitudinality. Business panels are
+    longitudinal but are not cohort studies.
+  worked_edge_cases:
+    - "Census -> cross-sectional: population enumeration released as a cross-section."
+    - "Understanding Society -> longitudinal: designed household panel."
+    - "Millennium Cohort Study -> longitudinal: designed birth cohort."
+    - "Base ASHE -> cross-sectional: ONS weights and releases it cross-sectionally despite the recurring NINo frame."
+    - "ASHE Longitudinal -> longitudinal: the longitudinal construction and weighting have been applied."
+    - "Decision Maker Panel and Longitudinal Small Business Survey -> longitudinal: business panels."
+    - "Birth and death registrations -> cross-sectional: continuous event registers, typically extracted as event records."
 
 dataset_unit_rule:
   rule: >
@@ -104,6 +136,14 @@ dataset_unit_rule:
     - >
       UK Gross Value Added -> area: an aggregate statistical output/time series
       rather than a microdataset, with geography/economy-level structure.
+  aggregate_indicator_limitation: >
+    Aggregate indicators and national time-series outputs (CPI, GVA, PPI, and
+    Capital Stock) do not fit the unit-based deterministic facets cleanly. They
+    have no unit of observation in the four-value vocabulary, so they are mapped
+    to the closest available value (area for CPI/GVA, business for PPI/Capital
+    Stock) and classified as cross-sectional because they are not unit-following
+    panels. This is a known boundary of the unit-based schema rather than a new
+    aggregate/time-series facet value for a small number of cases.
   cross_facet_consistency_note: >
     Census appears in three facets as survey, individual, and
     Migration & Demographics as a linkage component. These rulings are mutually
@@ -156,6 +196,7 @@ researcher_sector_rule:
     - "Genuinely uncertain -> unclassified; do not guess."
   worked_edge_cases:
     - "Nesta -> third-sector: registered charity, regardless of commercial behaviour."
+    - "AQA Education -> third-sector: registered charity, regardless of commercial behaviour."
     - "IFS and comparable think tanks -> third-sector: charities, regardless of academic behaviour."
     - "Bank of England -> government: public body, operational independence does not make it commercial."
     - "ALBs, regulators, and ONS -> government."
@@ -473,7 +514,8 @@ datasets:
       - "Census Wales 2011"
       - "Census Wales 2021"
       - "Integrated Census Microdata"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Family key from dataset_family_for for Census variants."
 
@@ -482,7 +524,8 @@ datasets:
       - "School Census"
       - "English School Census Absences"
       - "Northern Ireland School Census"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "School census records are pupil-level education administrative data."
 
@@ -492,14 +535,16 @@ datasets:
       - "UK Household Longitudinal Study"
       - "BHPS"
       - "British Household Panel Survey"
-    collection_type: "cohort"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "household"
     notes: "Defining household-panel edge case."
 
   - canonical: "Millennium Cohort Study"
     aliases:
       - "Millennium Cohort Study"
-    collection_type: "cohort"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Longitudinal birth cohort."
 
@@ -507,7 +552,8 @@ datasets:
     aliases:
       - "ONS Longitudinal Study (LS)"
       - "ONS Longitudinal Study 1971"
-    collection_type: "cohort"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Longitudinal study following persons over time."
 
@@ -515,14 +561,36 @@ datasets:
     aliases:
       - "ASHE"
       - "Annual Survey of Hours and Earnings (ASHE)"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "individual"
+    notes: "Base ASHE is collected by employer survey returns and ONS weights/releases it cross-sectionally despite the recurring NINo sampling frame."
+
+  - canonical: "Annual Survey of Hours and Earnings Longitudinal"
+    aliases:
       - "Annual Survey of Hours and Earnings Longitudinal"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "individual"
+    notes: "ASHE-derived WED component where the longitudinal construction and weighting have been applied to link units across waves."
+
+  - canonical: "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
+    aliases:
       - "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "individual"
+    notes: "ASHE-derived linked WED component; temporal call follows the WED panel lineage."
+
+  - canonical: "Annual Survey of Hours and Earnings linked to Census 2011"
+    aliases:
       - "Annual Survey of Hours and Earnings linked to Census 2011"
       - "Annual Survey of Hours and Earnings linked to Census 2011 England and Wales"
       - "ASHE-linked"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Family key from dataset_family_for; ASHE is treated as survey by design."
+    notes: "ASHE-Census WED component; ASHE side follows linked units across waves while Census supplies population-origin attributes."
 
   - canonical: "Earnings and Employees Study (EES) 2011 - Northern Ireland"
     aliases:
@@ -533,7 +601,8 @@ datasets:
       - "Earnings and Employees Study 2011 Northern Ireland"
       - "Earnings and Employees Study (EES) 2011 Northern Ireland"
       - "Northern Ireland Census linked to ASHE"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "ADR NI/NISRA linked dataset: ASHE 2011 for Northern Ireland linked to the 2011 Northern Ireland Census and Land & Property Services Capital Value data. Keep distinct from WED / ASHE-Census England and Wales linkage."
 
@@ -541,14 +610,16 @@ datasets:
     aliases:
       - "LEO"
       - "Longitudinal Education Outcomes (LEO)"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Person-linked education and earnings administrative product."
 
   - canonical: "Education and Child Health Insights from Linked Data (ECHILD)"
     aliases:
       - "Education and Child Health Insights from Linked Data (ECHILD)"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Linked administrative child education and health product."
 
@@ -556,7 +627,8 @@ datasets:
     aliases:
       - "GRading and Admissions Data England (GRADE)"
       - "UCAS Grading and Admissions"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Education/admissions administrative product."
 
@@ -564,14 +636,16 @@ datasets:
     aliases:
       - "EOL"
       - "EOL Dataset (2015-2022)"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Education Outcomes Linkage for Northern Ireland; person-level education administrative linkage."
 
   - canonical: "Data First"
     aliases:
       - "Data First"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Family key from dataset_family_for for MoJ justice person/case extracts; individual is the pragmatic single-label unit."
 
@@ -582,7 +656,8 @@ datasets:
       - "Bespoke Admin Data - Agricultural Research Collection Phase 1"
       - "Bespoke Admin Data - Agricultural Research Collection Phase 2"
       - "Bespoke Admin Data: Agricultural Research Collection"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "business"
     notes: "Judgement call: farm/agricultural holding treated as business unit despite individual and farm linkage."
 
@@ -593,7 +668,8 @@ datasets:
       - "Growing Up in England Wave 2 (GUIE)"
       - "Growing Up in England Wave 2 - Exclusions"
       - "Growing Up in England Wave 2 Vulnerability Measures"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Education-Census linked product; person/child-level."
 
@@ -604,7 +680,8 @@ datasets:
       - "Death Registrations in England and Wales Indexed"
       - "Death Registrations Finalised"
       - "Death Registration Data - Provisional Monthly Extracts"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Vital events folded into administrative."
 
@@ -612,7 +689,8 @@ datasets:
     aliases:
       - "Birth Registrations in England and Wales"
       - "Births and Deaths"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Vital events folded into administrative."
 
@@ -620,7 +698,8 @@ datasets:
     aliases:
       - "ABS"
       - "Annual Business Survey (ABS)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey."
 
@@ -628,56 +707,64 @@ datasets:
     aliases:
       - "Annual Business Inquiry"
       - "Northern Ireland Annual Business Inquiry"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey."
 
   - canonical: "Quarterly Capital Expenditure Survey"
     aliases:
       - "Quarterly Capital Expenditure Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business investment survey."
 
   - canonical: "Quarterly Acquisitions and Disposals of Capital Assets Survey"
     aliases:
       - "Quarterly Acquisitions and Disposals of Capital Assets Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business capital-assets survey."
 
   - canonical: "Longitudinal Business Database"
     aliases:
       - "Longitudinal Business Database"
-    collection_type: "cohort"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "business"
     notes: "Longitudinal business dataset."
 
   - canonical: "Quarterly Fuels Inquiry"
     aliases:
       - "Quarterly Fuels Inquiry"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business energy/fuels survey."
 
   - canonical: "Investment in Intangible Assets Survey"
     aliases:
       - "Investment in Intangible Assets Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business investment survey."
 
   - canonical: "Annual Survey of Goods and Services"
     aliases:
       - "Annual Survey of Goods and Services"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business goods and services survey."
 
   - canonical: "Broad Economy Sales and Exports"
     aliases:
       - "Broad Economy Sales and Exports"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business sales/export survey."
 
@@ -686,7 +773,8 @@ datasets:
       - "APS"
       - "Annual Population Survey (APS)"
       - "Annual Population Survey Persons"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Population/labour survey, person-focused for this facet."
 
@@ -696,48 +784,75 @@ datasets:
       - "Labour Force Survey (LFS)"
       - "Labour Force Survey Person"
       - "Quarterly Labour Force Survey"
-      - "Labour Force Survey Longitudinal"
-      - "Labour Force Survey Five-Quarter Longitudinal"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
-    notes: "Family key from dataset_family_for; person-focused default."
+    notes: "Base/person LFS files are treated as cross-sectional survey extracts; explicit longitudinal LFS files are separate."
 
   - canonical: "Labour Force Survey Household"
     aliases:
       - "Labour Force Survey Household"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "household"
     notes: "Exact household file override."
+
+  - canonical: "Labour Force Survey Longitudinal"
+    aliases:
+      - "Labour Force Survey Longitudinal"
+      - "Labour Force Survey Five-Quarter Longitudinal"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "individual"
+    notes: "Explicit longitudinal LFS panel file."
 
   - canonical: "Business Structure Database (BSD)"
     aliases:
       - "Business Structure Database (BSD)"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "business"
+    notes: "Business register/admin source; BSD is maintained as a longitudinal business database."
+
+  - canonical: "Business Structure Database Longitudinal"
+    aliases:
       - "Business Structure Database Longitudinal"
       - "Longitudinal Business Structure Database"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "business"
-    notes: "Business register/admin source."
+    notes: "Explicit longitudinal BSD variant."
 
   - canonical: "Inter-Departmental Business Register (IDBR)"
     aliases:
       - "Inter-Departmental Business Register (IDBR)"
-      - "Longitudinal Inter-Departmental Business Register"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business register/admin source."
+
+  - canonical: "Longitudinal Inter-Departmental Business Register"
+    aliases:
+      - "Longitudinal Inter-Departmental Business Register"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "business"
+    notes: "Explicit longitudinal IDBR variant."
 
   - canonical: "Linked Trade-in-Goods/Inter-Departmental Business Register"
     aliases:
       - "Linked Trade-in-Goods/Inter-Departmental Business Register"
       - "Linked Trade-in-Goods/IDBR"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Trade/customs and business register source."
 
   - canonical: "Business Register and Employment Survey (BRES)"
     aliases:
       - "Business Register and Employment Survey (BRES)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Employer/business survey."
 
@@ -746,7 +861,8 @@ datasets:
       - "Business Enterprise Research and Development (BERD)"
       - "Business Enterprise Research and Development England"
       - "Business Expenditure on Research and Development"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business R&D survey."
 
@@ -755,7 +871,8 @@ datasets:
       - "UK Innovation Survey (UKIS)"
       - "Community Innovation Survey"
       - "Community Innovation Survey \" United Kingdom Innovation Survey Data given for all available years unless otherwise stated"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business innovation survey."
 
@@ -763,7 +880,8 @@ datasets:
     aliases:
       - "Universities and Colleges Admissions Service (UCAS)"
       - "UCAS"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Admissions administrative records."
 
@@ -772,7 +890,8 @@ datasets:
       - "Annual Respondents Database"
       - "Annual Respondents Database X"
       - "Annual Respondents Database 2"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey-derived microdata."
 
@@ -780,7 +899,8 @@ datasets:
     aliases:
       - "Business Insights and Conditions Survey (BICS)"
       - "Business Impact of COVID-19 Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey."
 
@@ -788,14 +908,16 @@ datasets:
     aliases:
       - "Longitudinal Small Business Survey (LSBS)"
       - "Small Business Survey"
-    collection_type: "cohort"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "business"
     notes: "Business-panel edge case."
 
   - canonical: "Decision Maker Panel"
     aliases:
       - "Decision Maker Panel"
-    collection_type: "cohort"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "business"
     notes: "Business-panel edge case."
 
@@ -804,7 +926,8 @@ datasets:
       - "Management and Expectations Survey (MES)"
       - "Bespoke Management and Expectations Survey"
       - "Management Practices Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business management survey."
 
@@ -812,14 +935,16 @@ datasets:
     aliases:
       - "International Trade in Services"
       - "Annual International Trade in Services"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Trade-in-services business survey."
 
   - canonical: "Annual Purchases Survey"
     aliases:
       - "Annual Purchases Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey."
 
@@ -828,14 +953,16 @@ datasets:
       - "Annual Foreign Direct Investment Survey"
       - "Annual Outward Foreign Direct Investment Survey"
       - "Annual Inquiry into Foreign Direct Investment"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business/investment survey."
 
   - canonical: "Mergers and Acquisitions Survey"
     aliases:
       - "Mergers and Acquisitions Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business transaction survey."
 
@@ -843,28 +970,32 @@ datasets:
     aliases:
       - "E-Commerce Survey"
       - "E-Commerce and Digital Economy Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business digital-economy survey."
 
   - canonical: "Monthly Business Survey"
     aliases:
       - "Monthly Business Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey."
 
   - canonical: "Vacancy Survey"
     aliases:
       - "Vacancy Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Employer vacancy survey."
 
   - canonical: "Low Carbon and Renewable Energy Economy Survey"
     aliases:
       - "Low Carbon and Renewable Energy Economy Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey."
 
@@ -872,7 +1003,8 @@ datasets:
     aliases:
       - "UK Manufacturers' Sales by Product Survey"
       - "Products of the European Community"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business/product sales survey; PRODCOM was formally Products of the European Community."
 
@@ -880,21 +1012,24 @@ datasets:
     aliases:
       - "Annual Gas and Electricity Consumption at Meter Level"
       - "Annual gas and electricity consumption at the meter level - Great Britain"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "area"
     notes: "Valid energy-consumption dataset; actual unit is property/meter, outside the current unit vocabulary, so area is the nearest fallback."
 
   - canonical: "Prices Survey Microdata"
     aliases:
       - "Prices Survey Microdata"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Valid prices survey microdata; actual unit is price quote/item/outlet, outside the current unit vocabulary, so business is the nearest fallback."
 
   - canonical: "Over 50s Lifestyle Study"
     aliases:
       - "Over 50s Lifestyle Study"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "ONS individual survey/study."
 
@@ -902,7 +1037,8 @@ datasets:
     aliases:
       - "Online Time Use Survey"
       - "Online Time Use Survey (OTUS)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "ONS individual time-use survey."
 
@@ -910,14 +1046,16 @@ datasets:
     aliases:
       - "Working Lives of Teachers and Leaders"
       - "Working Lives of Teachers and Leaders Survey"
-    collection_type: "cohort"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Longitudinal survey of individual teachers and leaders."
 
   - canonical: "Survey of Innovation and Patent Use"
     aliases:
       - "Survey of Innovation and Patent Use"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey/report from the Intellectual Property Office; kept separate from UKIS."
 
@@ -925,7 +1063,8 @@ datasets:
     aliases:
       - "Monthly Inquiry into the Distributive and Services Sector"
       - "Monthly Inquiry into the Distributive and Services Sector (MIDSS)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business survey later replaced by the Monthly Business Survey."
 
@@ -933,7 +1072,8 @@ datasets:
     aliases:
       - "Monthly Production Inquiry"
       - "Monthly Production Inquiry (MPI)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Business production survey later replaced by the Index of Production / Monthly Business Survey."
 
@@ -941,22 +1081,25 @@ datasets:
     aliases:
       - "Effects of Tax and Benefits"
       - "Effects of Taxes and Benefits on Household Income"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "household"
     notes: "Published household-income output/dataset; treated as household because the structure is household income after taxes and benefits."
 
   - canonical: "UK Gross Value Added"
     aliases:
       - "UK Gross Value Added"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "area"
-    notes: "Aggregate statistical output/time series rather than a microdataset; geography/economy-level structure maps to area."
+    notes: "Aggregate statistical output/time series rather than a unit-following panel; geography/economy-level structure maps to area, and temporal structure is cross-sectional as a point-in-time aggregate release."
 
   - canonical: "Statutory Homelessness Flows - England"
     aliases:
       - "Statutory Homelessness Flows England"
       - "Statutory Homelessness Flows - England"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "household"
     notes: "Administrative homelessness flows dataset structured around households owed homelessness duties."
 
@@ -965,7 +1108,8 @@ datasets:
       - "Workplace Employment Relations Survey"
       - "Workplace Employment Relations Study"
       - "Workplace Employment Relations Study (WERS)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Workplace/establishment survey."
 
@@ -974,42 +1118,48 @@ datasets:
       - "Employer Skills Survey"
       - "Employer Skills Survey and Investment in Training"
       - "National Employer Skills Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Employer survey."
 
   - canonical: "New Earnings Survey (NES)"
     aliases:
       - "New Earnings Survey (NES)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Employee earnings survey."
 
   - canonical: "New Earnings Survey Panel"
     aliases:
       - "New Earnings Survey Panel"
-    collection_type: "cohort"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Longitudinal earnings panel."
 
   - canonical: "Monthly Wages and Salary Survey"
     aliases:
       - "Monthly Wages and Salary Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Employee earnings survey."
 
   - canonical: "Crime Survey for England and Wales (CSEW)"
     aliases:
       - "Crime Survey for England and Wales (CSEW)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Victimisation survey."
 
   - canonical: "National Travel Survey"
     aliases:
       - "National Travel Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "household"
     notes: "Household travel survey."
 
@@ -1017,28 +1167,32 @@ datasets:
     aliases:
       - "Living Costs and Food Survey (LCF)"
       - "Safeguarded Living Costs and Food Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "household"
     notes: "Household expenditure survey."
 
   - canonical: "Wealth and Assets Survey (WAS)"
     aliases:
       - "Wealth and Assets Survey (WAS)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "household"
     notes: "Household wealth survey."
 
   - canonical: "Family Resources Survey"
     aliases:
       - "Family Resources Survey"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "household"
     notes: "Household/family resources survey."
 
   - canonical: "Opinions and Lifestyle Survey (OPN)"
     aliases:
       - "Opinions and Lifestyle Survey (OPN)"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Individual social survey."
 
@@ -1046,52 +1200,73 @@ datasets:
     aliases:
       - "COVID-19"
       - "COVID-19 Infection Survey (CIS)"
-      - "COVID-19 Weekly Opinions Survey"
-      - "Coronavirus and the Social Impacts on Great Britain"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Family key from dataset_family_for; survey-based COVID sources."
+    notes: "Family key from dataset_family_for for COVID-19 Infection Survey linked products; CIS is treated as longitudinal by design."
+
+  - canonical: "COVID-19 Weekly Opinions Survey"
+    aliases:
+      - "COVID-19 Weekly Opinions Survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "individual"
+    notes: "Repeated social survey treated as cross-sectional rather than a panel product."
+
+  - canonical: "Coronavirus and the Social Impacts on Great Britain"
+    aliases:
+      - "Coronavirus and the Social Impacts on Great Britain"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "individual"
+    notes: "Repeated social-impact survey output treated as cross-sectional rather than a panel product."
 
   - canonical: "Public Health Research Database"
     aliases:
       - "Public Health Research Database"
       - "HES and Mortality"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Health administrative records."
 
   - canonical: "Linked Census, HES and Mortality Data"
     aliases:
       - "Linked Census, HES and Mortality Data"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Linked Census, hospital, and mortality product; record-linkage facet captures the cross-domain Census-health structure."
 
   - canonical: "Nursing and Midwifery Council Register linked to Census 2021"
     aliases:
       - "Nursing and Midwifery Council Register linked to Census 2021"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Professional register linked to Census."
 
   - canonical: "Nursing and Midwifery Council Register"
     aliases:
       - "Nursing and Midwifery Council Register"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Professional register."
 
   - canonical: "Further Education Workforce Data Collection"
     aliases:
       - "Further Education Workforce Data Collection"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "Person-level workforce administrative collection."
 
   - canonical: "Linked Census and Death Occurrences"
     aliases:
       - "Linked Census and Death Occurrences"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
     unit_of_observation: "individual"
     notes: "Person-level linked mortality and Census product."
 
@@ -1099,23 +1274,29 @@ datasets:
     aliases:
       - "Consumer Prices Index"
       - "Retail Price Index"
-    collection_type: "administrative"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "area"
-    notes: "Price-index observations are treated as area/product-market statistics; area is the closest available unit."
+    notes: "Aggregate price index with no unit-following panel; area is the closest available unit, and temporal structure is cross-sectional as a point-in-time aggregate release."
 
   - canonical: "Producer Price Index"
     aliases:
       - "Producer Price Index"
-    collection_type: "survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
-    notes: "Producer/business price survey."
+    notes: "Aggregate producer-price index rather than a released unit-following panel; business is the closest available unit, and temporal structure is cross-sectional as a point-in-time aggregate release."
 
   - canonical: "Capital Stock Dataset"
     aliases:
       - "Capital Stock Dataset"
-    collection_type: "administrative"
+      - "Capital Stock 2014"
+      - "Capital Stock"
+      - "Capital Stocks"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
-    notes: "Business/economic stock dataset."
+    notes: "Aggregate economic stock series rather than a released unit-following panel; business is the closest available unit, and temporal structure is cross-sectional as a point-in-time aggregate release."
 
 organisations:
   - canonical: "University College London"
@@ -1784,6 +1965,10 @@ organisations:
     aliases: ["Alma Economics"]
     sectors: ["commercial"]
     notes: "Private limited company / consultancy."
+  - canonical: "AQA Education"
+    aliases: ["AQA Education", "AQA"]
+    sectors: ["third-sector"]
+    notes: "Registered charity; business-like operating model does not make it commercial."
   - canonical: "Chartered Institute of Personnel and Development"
     aliases: ["Chartered Institute of Personnel and Development"]
     sectors: ["third-sector"]

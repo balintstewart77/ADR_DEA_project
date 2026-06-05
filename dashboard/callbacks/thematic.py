@@ -4,9 +4,9 @@ from dash import dcc, Input, Output, State
 
 from dashboard.data.thematic import (
     THEMATIC_DATA_AVAILABLE,
-    df_thematic_a, df_thematic_b, df_thematic_c,
-    df_thematic_a_totals, df_thematic_b_totals, df_thematic_c_totals,
-    df_cross_mode_domain, df_cross_domain_purpose,
+    df_thematic_a, df_thematic_c,
+    df_thematic_a_totals, df_thematic_c_totals,
+    df_cross_domain_purpose,
     df_thematic_tag_by_year, df_thematic_tag_by_domain,
     df_domain_cooccurrence,
 )
@@ -14,10 +14,10 @@ from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
 from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
-    make_thematic_trend, make_linkage_area, make_thematic_totals_bar, make_cross_heatmap,
-    make_linkage_complexity, make_domain_cooccurrence,
+    make_thematic_trend, make_thematic_totals_bar, make_cross_heatmap,
+    make_domain_cooccurrence,
 )
-from dashboard.config import DOMAIN_COLOURS, LINKAGE_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
+from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 
 
 def register(app):
@@ -26,16 +26,12 @@ def register(app):
 
     @app.callback(
         Output("thematic-domain-trend", "figure"),
-        Output("thematic-linkage-trend", "figure"),
         Output("thematic-purpose-trend", "figure"),
         Output("thematic-domain-totals", "figure"),
-        Output("thematic-linkage-totals", "figure"),
         Output("thematic-purpose-totals", "figure"),
-        Output("thematic-cross-mode-domain", "figure"),
         Output("thematic-cross-domain-purpose", "figure"),
         Output("thematic-tag-trend", "figure"),
         Output("thematic-tag-domain", "figure"),
-        Output("thematic-linkage-complexity", "figure"),
         Output("thematic-domain-cooccurrence", "figure"),
         Input("thematic-metric-toggle", "value"),
     )
@@ -45,10 +41,6 @@ def register(app):
         domain_trend = make_thematic_trend(
             df_thematic_a, "domain", DOMAIN_COLOURS, metric_col,
             "Substantive Domains Over Time",
-            partial_year_info=PARTIAL_YEAR_INFO,
-        )
-        linkage_trend = make_linkage_area(
-            df_thematic_b, LINKAGE_COLOURS, metric_col,
             partial_year_info=PARTIAL_YEAR_INFO,
         )
         purpose_trend = make_thematic_trend(
@@ -62,22 +54,11 @@ def register(app):
             df_thematic_a_totals, "domain", DOMAIN_COLOURS,
             "Projects by Domain", height=440,
         )
-        linkage_totals = make_thematic_totals_bar(
-            df_thematic_b_totals, "linkage_mode", LINKAGE_COLOURS,
-            "Projects by Linkage Mode", height=280,
-        )
         purpose_totals = make_thematic_totals_bar(
             df_thematic_c_totals, "purpose", PURPOSE_COLOURS,
             "Projects by Purpose", height=380,
         )
 
-        cross_mode = make_cross_heatmap(
-            df_cross_mode_domain, "domain",
-            "Substantive Domain × Linkage Mode",
-            colorscale="Tealgrn",
-            height=560,
-            metric=metric_mode,
-        )
         cross_purpose = make_cross_heatmap(
             df_cross_domain_purpose, "domain",
             "Substantive Domain × Analytical Purpose",
@@ -88,7 +69,7 @@ def register(app):
 
         tag_trend = make_thematic_trend(
             df_thematic_tag_by_year, "tag", TAG_COLOURS, metric_col,
-            "Demographic-Disparities / Equity Lens Over Time",
+            "Cross-Cutting Tags Over Time",
             height=CHART_HEIGHT,
             partial_year_info=PARTIAL_YEAR_INFO,
         )
@@ -97,15 +78,14 @@ def register(app):
             "Tagged Projects by Domain", height=440,
         )
 
-        linkage_complexity = make_linkage_complexity(df_cross_mode_domain, LINKAGE_COLOURS)
         domain_cooccurrence = make_domain_cooccurrence(df_domain_cooccurrence, metric=metric_mode)
 
         return (
-            domain_trend, linkage_trend, purpose_trend,
-            domain_totals, linkage_totals, purpose_totals,
-            cross_mode, cross_purpose,
+            domain_trend, purpose_trend,
+            domain_totals, purpose_totals,
+            cross_purpose,
             tag_trend, tag_domain,
-            linkage_complexity, domain_cooccurrence,
+            domain_cooccurrence,
         )
 
     @app.callback(
@@ -119,7 +99,6 @@ def register(app):
         Input("enriched-tre-filter", "value"),
         Input("enriched-domain-filter", "value"),
         Input("enriched-domain-count-filter", "value"),
-        Input("enriched-linkage-filter", "value"),
         Input("enriched-purpose-filter", "value"),
         Input("enriched-tag-filter", "value"),
         Input("enriched-page-size", "value"),
@@ -132,7 +111,6 @@ def register(app):
         tre_filter,
         domain_filter,
         domain_count_filter,
-        linkage_filter,
         purpose_filter,
         tag_filter,
         page_size,
@@ -145,7 +123,6 @@ def register(app):
             tre_filter,
             domain_filter,
             domain_count_filter,
-            linkage_filter,
             purpose_filter,
             tag_filter,
         )
@@ -166,7 +143,6 @@ def register(app):
         State("enriched-tre-filter", "value"),
         State("enriched-domain-filter", "value"),
         State("enriched-domain-count-filter", "value"),
-        State("enriched-linkage-filter", "value"),
         State("enriched-purpose-filter", "value"),
         State("enriched-tag-filter", "value"),
         prevent_initial_call=True,
@@ -180,7 +156,6 @@ def register(app):
         tre_filter,
         domain_filter,
         domain_count_filter,
-        linkage_filter,
         purpose_filter,
         tag_filter,
     ):
@@ -192,7 +167,6 @@ def register(app):
             tre_filter,
             domain_filter,
             domain_count_filter,
-            linkage_filter,
             purpose_filter,
             tag_filter,
         )

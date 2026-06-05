@@ -240,7 +240,6 @@ def _get_enriched_register_display_df(
     tre_filter,
     domain_filter,
     domain_count_filter,
-    linkage_filter,
     purpose_filter,
     tag_filter,
 ) -> tuple[pd.DataFrame, str]:
@@ -263,8 +262,6 @@ def _get_enriched_register_display_df(
         base = base[
             pd.to_numeric(base[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce") == domain_count
         ]
-    if linkage_filter and linkage_filter != "ALL":
-        base = base[base["linkage_mode"].notna() & (base["linkage_mode"] == linkage_filter)]
     if purpose_filter and purpose_filter != "ALL":
         base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
     if tag_filter and tag_filter != "ALL":

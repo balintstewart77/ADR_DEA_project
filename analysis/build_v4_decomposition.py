@@ -18,11 +18,10 @@ DEFAULT_OUTPUT_DIR = ANALYSIS_DIR / "outputs_comparison_decomposition_rc1"
 
 FIELD_COLUMNS = {
     "Domains": "substantive_domains_agree",
-    "Linkage": "linkage_mode_agree",
     "Purpose": "analytical_purpose_agree",
     "Tags": "cross_cutting_tags_agree",
 }
-FIELD_ORDER = ["Domains", "Linkage", "Purpose", "Tags"]
+FIELD_ORDER = ["Domains", "Purpose", "Tags"]
 
 
 def _read_comparison(path: Path) -> pd.DataFrame:
@@ -156,7 +155,6 @@ def write_summary(
             "Intra-4.8 (run 1 vs run 2)",
             _fmt_pct(intra_rates["Overall agreement"]),
             _fmt_pct(intra_rates["Domains"]),
-            _fmt_pct(intra_rates["Linkage"]),
             _fmt_pct(intra_rates["Purpose"]),
             _fmt_pct(intra_rates["Tags"]),
         ],
@@ -164,7 +162,6 @@ def write_summary(
             "Inter-model (4.8 vs 4.6)",
             _fmt_pct(inter_rates["Overall agreement"]),
             _fmt_pct(inter_rates["Domains"]),
-            _fmt_pct(inter_rates["Linkage"]),
             _fmt_pct(inter_rates["Purpose"]),
             _fmt_pct(inter_rates["Tags"]),
         ],
@@ -172,7 +169,6 @@ def write_summary(
             "Difference (inter - intra disagreement)",
             _fmt_pp(diff_disagreement["Overall agreement"]),
             _fmt_pp(diff_disagreement["Domains"]),
-            _fmt_pp(diff_disagreement["Linkage"]),
             _fmt_pp(diff_disagreement["Purpose"]),
             _fmt_pp(diff_disagreement["Tags"]),
         ],
@@ -186,7 +182,7 @@ def write_summary(
         "## 1. Headline Decomposition",
         "",
         * _markdown_table(
-            ["Comparison", "Overall agreement", "Domains", "Linkage", "Purpose", "Tags"],
+            ["Comparison", "Overall agreement", "Domains", "Purpose", "Tags"],
             headline_rows,
         ),
         "",
@@ -199,13 +195,12 @@ def write_summary(
         "## 3. Per-Field Rates",
         "",
         * _markdown_table(
-            ["Comparison", "Overall agreement", "Domains", "Linkage", "Purpose", "Tags"],
+            ["Comparison", "Overall agreement", "Domains", "Purpose", "Tags"],
             [
                 [
                     row["comparison"],
                     f"{row['Overall agreement']:.4f}",
                     f"{row['Domains']:.4f}",
-                    f"{row['Linkage']:.4f}",
                     f"{row['Purpose']:.4f}",
                     f"{row['Tags']:.4f}",
                 ]
