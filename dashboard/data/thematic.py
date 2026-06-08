@@ -85,6 +85,41 @@ def _semicolon_value_options(df: pd.DataFrame, column: str, all_label: str) -> l
     )
 
 
+def _single_value_totals(
+    df: pd.DataFrame,
+    source_col: str,
+    output_col: str,
+    preferred_order: list[str] | None = None,
+) -> pd.DataFrame:
+    if source_col not in df.columns:
+        return pd.DataFrame(columns=[output_col, "count"])
+    counts: Counter = Counter()
+    for value in df[source_col].fillna("").astype(str).str.strip():
+        if value:
+            counts[_display_record_linkage(value) if source_col == "record_linkage" else value] += 1
+    if preferred_order:
+        ordered = [value for value in preferred_order if value in counts]
+        ordered.extend(sorted(value for value in counts if value not in ordered))
+    else:
+        ordered = sorted(counts)
+    return pd.DataFrame(
+        [{output_col: value, "count": int(counts[value])} for value in ordered],
+        columns=[output_col, "count"],
+    )
+
+
+def _semicolon_value_totals(df: pd.DataFrame, source_col: str, output_col: str) -> pd.DataFrame:
+    if source_col not in df.columns:
+        return pd.DataFrame(columns=[output_col, "count"])
+    counts: Counter = Counter()
+    for values in df[source_col].dropna():
+        counts.update(set(_split_semicolon_values(values)))
+    return pd.DataFrame(
+        [{output_col: value, "count": int(counts[value])} for value in sorted(counts)],
+        columns=[output_col, "count"],
+    )
+
+
 def _count_substantive_domains(value):
     domains = _split_semicolon_values(value)
     return len(domains) if domains else pd.NA
@@ -370,6 +405,32 @@ def load_thematic_data(thematic_dir):
             sorted(_tag_domain_counts.items(), key=lambda kv: kv[1], reverse=True),
             columns=["domain", "count"],
         )
+        df_record_linkage_totals = _single_value_totals(
+            df_thematic_projects,
+            "record_linkage",
+            "record_linkage",
+            ["No record linkage", "Cross-domain", "Within-domain"],
+        )
+        df_collection_method_totals = _semicolon_value_totals(
+            df_thematic_projects,
+            "dataset_collection_methods",
+            "collection_method",
+        )
+        df_temporal_structure_totals = _semicolon_value_totals(
+            df_thematic_projects,
+            "dataset_temporal_structures",
+            "temporal_structure",
+        )
+        df_unit_totals = _semicolon_value_totals(
+            df_thematic_projects,
+            "dataset_units",
+            "unit_of_observation",
+        )
+        df_researcher_sector_totals = _semicolon_value_totals(
+            df_thematic_projects,
+            "researcher_sectors",
+            "researcher_sector",
+        )
 
         return {
             "df_thematic_a": df_thematic_a,
@@ -381,6 +442,11 @@ def load_thematic_data(thematic_dir):
             "df_thematic_tag_by_year": df_thematic_tag_by_year,
             "df_thematic_tag_by_domain": df_thematic_tag_by_domain,
             "df_domain_cooccurrence": df_domain_cooccurrence,
+            "df_record_linkage_totals": df_record_linkage_totals,
+            "df_collection_method_totals": df_collection_method_totals,
+            "df_temporal_structure_totals": df_temporal_structure_totals,
+            "df_unit_totals": df_unit_totals,
+            "df_researcher_sector_totals": df_researcher_sector_totals,
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
             "THEMATIC_TAGGED_COUNT": thematic_tagged_count,
@@ -405,6 +471,11 @@ def load_thematic_data(thematic_dir):
             "df_thematic_tag_by_year": pd.DataFrame(),
             "df_thematic_tag_by_domain": pd.DataFrame(),
             "df_domain_cooccurrence": pd.DataFrame(),
+            "df_record_linkage_totals": pd.DataFrame(),
+            "df_collection_method_totals": pd.DataFrame(),
+            "df_temporal_structure_totals": pd.DataFrame(),
+            "df_unit_totals": pd.DataFrame(),
+            "df_researcher_sector_totals": pd.DataFrame(),
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
             "THEMATIC_TAGGED_COUNT": 0,
@@ -432,6 +503,11 @@ df_thematic_projects = _thematic_data["df_thematic_projects"]
 df_thematic_tag_by_year = _thematic_data["df_thematic_tag_by_year"]
 df_thematic_tag_by_domain = _thematic_data["df_thematic_tag_by_domain"]
 df_domain_cooccurrence = _thematic_data["df_domain_cooccurrence"]
+df_record_linkage_totals = _thematic_data["df_record_linkage_totals"]
+df_collection_method_totals = _thematic_data["df_collection_method_totals"]
+df_temporal_structure_totals = _thematic_data["df_temporal_structure_totals"]
+df_unit_totals = _thematic_data["df_unit_totals"]
+df_researcher_sector_totals = _thematic_data["df_researcher_sector_totals"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
 THEMATIC_TAGGED_COUNT = _thematic_data["THEMATIC_TAGGED_COUNT"]

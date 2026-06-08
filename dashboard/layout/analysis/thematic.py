@@ -170,6 +170,18 @@ def _analyses_accordion():
             ),
             dbc.AccordionItem(
                 [
+                    dbc.Row([
+                        dbc.Col(_graph("deterministic-record-linkage-distribution"), lg=4, md=6),
+                        dbc.Col(_graph("deterministic-collection-method-distribution"), lg=4, md=6),
+                        dbc.Col(_graph("deterministic-temporal-structure-distribution"), lg=4, md=6),
+                        dbc.Col(_graph("deterministic-unit-distribution"), lg=4, md=6),
+                        dbc.Col(_graph("deterministic-researcher-sector-distribution"), lg=4, md=6),
+                    ], className="g-3"),
+                ],
+                title="Record linkage & data structure",
+            ),
+            dbc.AccordionItem(
+                [
                     html.P(_enriched_register_desc, className="section-desc"),
                     dbc.Row([
                         dbc.Col([

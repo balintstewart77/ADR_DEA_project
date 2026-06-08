@@ -9,13 +9,18 @@ from dashboard.data.thematic import (
     df_cross_domain_purpose,
     df_thematic_tag_by_year, df_thematic_tag_by_domain,
     df_domain_cooccurrence,
+    df_record_linkage_totals,
+    df_collection_method_totals,
+    df_temporal_structure_totals,
+    df_unit_totals,
+    df_researcher_sector_totals,
 )
 from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
 from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
     make_thematic_trend, make_thematic_totals_bar, make_cross_heatmap,
-    make_domain_cooccurrence,
+    make_domain_cooccurrence, make_compact_distribution_bar,
 )
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 
@@ -33,6 +38,11 @@ def register(app):
         Output("thematic-tag-trend", "figure"),
         Output("thematic-tag-domain", "figure"),
         Output("thematic-domain-cooccurrence", "figure"),
+        Output("deterministic-record-linkage-distribution", "figure"),
+        Output("deterministic-collection-method-distribution", "figure"),
+        Output("deterministic-temporal-structure-distribution", "figure"),
+        Output("deterministic-unit-distribution", "figure"),
+        Output("deterministic-researcher-sector-distribution", "figure"),
         Input("thematic-metric-toggle", "value"),
     )
     def update_thematic_tab(metric_mode):
@@ -79,6 +89,40 @@ def register(app):
         )
 
         domain_cooccurrence = make_domain_cooccurrence(df_domain_cooccurrence, metric=metric_mode)
+        record_linkage_distribution = make_compact_distribution_bar(
+            df_record_linkage_totals,
+            "record_linkage",
+            "Record Linkage",
+            height=280,
+        )
+        collection_method_distribution = make_compact_distribution_bar(
+            df_collection_method_totals,
+            "collection_method",
+            "Collection method",
+            multi_count=True,
+            height=280,
+        )
+        temporal_structure_distribution = make_compact_distribution_bar(
+            df_temporal_structure_totals,
+            "temporal_structure",
+            "Temporal structure",
+            multi_count=True,
+            height=280,
+        )
+        unit_distribution = make_compact_distribution_bar(
+            df_unit_totals,
+            "unit_of_observation",
+            "Unit of observation",
+            multi_count=True,
+            height=280,
+        )
+        researcher_sector_distribution = make_compact_distribution_bar(
+            df_researcher_sector_totals,
+            "researcher_sector",
+            "Researcher sector",
+            multi_count=True,
+            height=280,
+        )
 
         return (
             domain_trend, purpose_trend,
@@ -86,6 +130,11 @@ def register(app):
             cross_purpose,
             tag_trend, tag_domain,
             domain_cooccurrence,
+            record_linkage_distribution,
+            collection_method_distribution,
+            temporal_structure_distribution,
+            unit_distribution,
+            researcher_sector_distribution,
         )
 
     @app.callback(

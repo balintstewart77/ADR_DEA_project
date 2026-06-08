@@ -77,6 +77,51 @@ def make_thematic_totals_bar(
     return _apply_common(fig, height=height)
 
 
+def make_compact_distribution_bar(
+    df_totals: pd.DataFrame,
+    category_col: str,
+    title: str,
+    multi_count: bool = False,
+    height: int = 280,
+) -> go.Figure:
+    """Compact horizontal distribution bar for deterministic facet totals."""
+    fig = go.Figure()
+    if not df_totals.empty and category_col in df_totals.columns and "count" in df_totals.columns:
+        df_sorted = df_totals.sort_values("count", ascending=True, kind="stable")
+        palette = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#72b7b2", "#e45756"]
+        colours = [palette[i % len(palette)] for i in range(len(df_sorted))]
+        fig.add_trace(go.Bar(
+            y=df_sorted[category_col],
+            x=df_sorted["count"],
+            orientation="h",
+            marker_color=colours,
+            marker_line_width=0,
+            text=df_sorted["count"],
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
+        ))
+    fig.update_layout(
+        title=title,
+        xaxis_title="Projects",
+        yaxis_title="",
+        showlegend=False,
+        margin=dict(l=130, r=28, t=72, b=54),
+    )
+    if multi_count:
+        fig.add_annotation(
+            text="Multi-count: a project can appear under more than one value.",
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=-0.18,
+            showarrow=False,
+            xanchor="left",
+            font=dict(size=10, color="#7f8c8d"),
+        )
+    return _apply_common(fig, height=height)
+
+
 def make_cross_heatmap(
     df_cross: pd.DataFrame,
     row_col: str,
