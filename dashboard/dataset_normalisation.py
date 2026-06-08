@@ -168,7 +168,79 @@ PROVIDER_COMPONENT_RENAMES = {
 }
 
 
-def _with_approved_provider_acronym(canonical: str) -> str:
+def _acronym_suffix(value: str) -> str:
+    match = re.search(r"\(([^()]+)\)\s*$", value)
+    return match.group(1) if match else ""
+
+
+def _composite_member_acronym_map() -> dict[str, str]:
+    member_map: dict[str, str] = {}
+
+    def add(name: str, acronym: str) -> None:
+        cleaned = str(name or "").strip()
+        if cleaned and acronym:
+            member_map[cleaned] = acronym
+
+    for name, acronym_name in APPROVED_PROVIDER_ACRONYM_RENAMES.items():
+        acronym = _acronym_suffix(acronym_name)
+        add(name, acronym)
+        add(acronym_name, acronym)
+        add(acronym, acronym)
+
+    for alias, canonical in PROVIDER_ALIASES.items():
+        acronym_name = APPROVED_PROVIDER_ACRONYM_RENAMES.get(canonical, canonical)
+        acronym = _acronym_suffix(acronym_name)
+        add(alias, acronym)
+        add(canonical, acronym)
+        add(acronym_name, acronym)
+        add(acronym, acronym)
+
+    for name, acronym_name in PROVIDER_COMPONENT_RENAMES.items():
+        acronym = _acronym_suffix(acronym_name)
+        add(name, acronym)
+        add(acronym_name, acronym)
+        add(acronym, acronym)
+
+    # Existing register source strings use this all-caps form in composites.
+    add("OFQUAL", "Ofqual")
+    return member_map
+
+
+PROVIDER_COMPOSITE_MEMBER_ACRONYMS = _composite_member_acronym_map()
+
+
+STANDALONE_PROVIDER_DISPLAY_NAMES = (
+    set(PROVIDER_ALIASES.values())
+    | set(APPROVED_PROVIDER_ACRONYM_RENAMES)
+    | set(APPROVED_PROVIDER_ACRONYM_RENAMES.values())
+    | set(PROVIDER_COMPONENT_RENAMES.values())
+)
+
+
+COMPOSITE_PROVIDER_SEPARATOR_RE = re.compile(r"\s*/\s*|,\s*|\s+and\s+|\.\s+")
+
+
+def _has_composite_provider_separator(value: str) -> bool:
+    return bool(COMPOSITE_PROVIDER_SEPARATOR_RE.search(value))
+
+
+def _replace_provider_members(value: str, replacements: dict[str, str]) -> str:
+    updated = value
+    for name, replacement in sorted(
+        replacements.items(),
+        key=lambda item: len(item[0]),
+        reverse=True,
+    ):
+        updated = re.sub(
+            rf"(?<![A-Za-z0-9]){re.escape(name)}(?![A-Za-z0-9])",
+            replacement,
+            updated,
+            flags=re.IGNORECASE,
+        )
+    return updated
+
+
+def _with_standalone_provider_acronyms(canonical: str) -> str:
     if canonical in APPROVED_PROVIDER_ACRONYM_RENAMES:
         return APPROVED_PROVIDER_ACRONYM_RENAMES[canonical]
 
@@ -185,6 +257,20 @@ def _with_approved_provider_acronym(canonical: str) -> str:
                 updated,
             )
     return updated
+
+
+def _with_composite_provider_acronyms(canonical: str) -> str:
+    return _replace_provider_members(canonical, PROVIDER_COMPOSITE_MEMBER_ACRONYMS)
+
+
+def _with_approved_provider_acronym(canonical: str) -> str:
+    if canonical in APPROVED_PROVIDER_ACRONYM_RENAMES:
+        return APPROVED_PROVIDER_ACRONYM_RENAMES[canonical]
+    if canonical in STANDALONE_PROVIDER_DISPLAY_NAMES:
+        return canonical
+    if _has_composite_provider_separator(canonical):
+        return _with_composite_provider_acronyms(canonical)
+    return _with_standalone_provider_acronyms(canonical)
 
 
 SECURE_RESEARCH_SERVICE_PROVIDER_ALIASES = {
