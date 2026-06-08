@@ -441,6 +441,49 @@ _ALIASES = {
     "university of west of england": "University of the West of England",
     "university": "",
 }
+
+_APPROVED_ACRONYM_RENAMES = {
+    "Department for Education": "Department for Education (DfE)",
+    "Department for Work and Pensions": "Department for Work and Pensions (DWP)",
+    "Ministry of Justice": "Ministry of Justice (MoJ)",
+    "Office for National Statistics": "Office for National Statistics (ONS)",
+    "Financial Conduct Authority": "Financial Conduct Authority (FCA)",
+    "Competition and Markets Authority": "Competition and Markets Authority (CMA)",
+    "Intellectual Property Office": "Intellectual Property Office (IPO)",
+    "Office for Health Improvement and Disparities": (
+        "Office for Health Improvement and Disparities (OHID)"
+    ),
+    "Public Health England": "Public Health England (PHE)",
+    "Public Health Scotland": "Public Health Scotland (PHS)",
+    "Public Health Wales": "Public Health Wales (PHW)",
+    "Low Pay Commission": "Low Pay Commission (LPC)",
+    "Social Mobility Commission": "Social Mobility Commission (SMC)",
+    "National Centre for Social Research": "National Centre for Social Research (NatCen)",
+    "National Institute for Economic and Social Research": (
+        "National Institute for Economic and Social Research (NIESR)"
+    ),
+    "Chartered Institute of Personnel and Development": (
+        "Chartered Institute of Personnel and Development (CIPD)"
+    ),
+    "Institute for Fiscal Studies": "Institute for Fiscal Studies (IFS)",
+    "Institute for Government": "Institute for Government (IfG)",
+    "Institute for Employment Studies": "Institute for Employment Studies (IES)",
+    "Institute for the Future of Work": "Institute for the Future of Work (IFOW)",
+    "International Monetary Fund": "International Monetary Fund (IMF)",
+    "University College London": "University College London (UCL)",
+    "King's College London": "King's College London (KCL)",
+    "London School of Hygiene and Tropical Medicine": (
+        "London School of Hygiene and Tropical Medicine (LSHTM)"
+    ),
+    "Massachusetts Institute of Technology": "Massachusetts Institute of Technology (MIT)",
+    "National Physical Laboratory": "National Physical Laboratory (NPL)",
+}
+
+
+def _with_approved_acronym(canonical: str) -> str:
+    return _APPROVED_ACRONYM_RENAMES.get(canonical, canonical)
+
+
 _COMPOUND_INSTITUTION_SPLITS = {
     "health foundation/ academy of medical sciences": [
         "Health Foundation",
@@ -514,10 +557,10 @@ _INSTITUTION_SECTORS = {
     "Centre for Cities": "third-sector",
     "Centre for Economic and Business Research (CEBR)": "commercial",
     "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)": "unclassified",
-    "Chartered Institute of Personnel and Development": "third-sector",
+    "Chartered Institute of Personnel and Development (CIPD)": "third-sector",
     "City, University of London": "academic",
     "Columbia University": "academic",
-    "Competition and Markets Authority": "government",
+    "Competition and Markets Authority (CMA)": "government",
     "Coventry University": "academic",
     "Cranfield University": "academic",
     "DASCROSE Limited": "commercial",
@@ -527,13 +570,13 @@ _INSTITUTION_SECTORS = {
     "Department for Business, Innovation and Skills": "government",
     "Department for Culture, Media and Sport": "government",
     "Department for Digital, Culture, Media and Sport": "government",
-    "Department for Education": "government",
+    "Department for Education (DfE)": "government",
     "Department for International Trade": "government",
     "Department for Levelling Up, Housing and Communities": "government",
     "Department for Levelling Up, Housing and Communities (DLUHC)": "government",
     "Department for Transport (DfT)": "government",
     "Department for the Economy (Northern Ireland)": "government",
-    "Department for Work and Pensions": "government",
+    "Department for Work and Pensions (DWP)": "government",
     "Department of Health (Northern Ireland)": "government",
     "Department of Health and Social Care (DHSC)": "government",
     "Digital Health and Care Wales": "government",
@@ -551,7 +594,7 @@ _INSTITUTION_SECTORS = {
     "FFT Education Ltd": "commercial",
     "Federal Reserve Bank of Philadelphia": "government",
     "Federal Reserve Board of Governors": "government",
-    "Financial Conduct Authority": "government",
+    "Financial Conduct Authority (FCA)": "government",
     "Fraser of Allander Institute (University of Strathclyde)": "academic",
     "Frazer-Nash Consultancy": "commercial",
     "Frontier Economics Ltd": "commercial",
@@ -578,19 +621,19 @@ _INSTITUTION_SECTORS = {
     "Infact Systems Limited": "commercial",
     "Innovate UK": "government",
     "Institut Européen d'Administration des Affaires (INSEAD)": "academic",
-    "Institute for Employment Studies": "third-sector",
-    "Institute for Fiscal Studies": "third-sector",
-    "Institute for Government": "third-sector",
+    "Institute for Employment Studies (IES)": "third-sector",
+    "Institute for Fiscal Studies (IFS)": "third-sector",
+    "Institute for Government (IfG)": "third-sector",
     "Institute for Social and Economic Research (University of Essex)": "academic",
-    "Institute for the Future of Work": "third-sector",
+    "Institute for the Future of Work (IFOW)": "third-sector",
     "Institute of Occupational Medicine": "third-sector",
     "Institute of the Motor Industry": "third-sector",
-    "Intellectual Property Office": "government",
-    "International Monetary Fund": "government",
+    "Intellectual Property Office (IPO)": "government",
+    "International Monetary Fund (IMF)": "government",
     "Ipsos": "commercial",
     "Joint Biosecurity Centre": "government",
     "Johannes Kepler University Linz": "academic",
-    "King's College London": "academic",
+    "King's College London (KCL)": "academic",
     "King's Fund": "third-sector",
     "Kingston University": "academic",
     "Knowledge Transfer Network": "third-sector",
@@ -601,21 +644,21 @@ _INSTITUTION_SECTORS = {
     "London Economics": "commercial",
     "London Metropolitan University": "academic",
     "London School of Economics and Political Science (LSE)": "academic",
-    "London School of Hygiene and Tropical Medicine": "academic",
+    "London School of Hygiene and Tropical Medicine (LSHTM)": "academic",
     "Loughborough University": "academic",
     "Marie Curie": "third-sector",
     "Manchester Metropolitan University": "academic",
-    "Massachusetts Institute of Technology": "academic",
+    "Massachusetts Institute of Technology (MIT)": "academic",
     "Methods Analytics": "commercial",
     "Middlesex University": "academic",
-    "Ministry of Justice": "government",
+    "Ministry of Justice (MoJ)": "government",
     "MIME Consulting Ltd": "commercial",
     "Municipal & General (M&G)": "commercial",
-    "National Centre for Social Research": "third-sector",
+    "National Centre for Social Research (NatCen)": "third-sector",
     "National Foundation for Education Research (NFER)": "third-sector",
     "National Infrastructure Commission": "government",
-    "National Physical Laboratory": "government",
-    "National Institute for Economic and Social Research": "third-sector",
+    "National Physical Laboratory (NPL)": "government",
+    "National Institute for Economic and Social Research (NIESR)": "third-sector",
     "National Institute of Social and Economic Research": "third-sector",
     "Nesta": "third-sector",
     "Netherlands Interdisciplinary Demographic Institute": "third-sector",
@@ -630,12 +673,12 @@ _INSTITUTION_SECTORS = {
     "Nuffield Family Justice Observatory": "third-sector",
     "Nuffield Foundation": "third-sector",
     "OECD": "government",
-    "Office for Health Improvement and Disparities": "government",
-    "Office for National Statistics": "government",
+    "Office for Health Improvement and Disparities (OHID)": "government",
+    "Office for National Statistics (ONS)": "government",
     "Office of the Victims' Commissioner for England and Wales": "government",
     "OFSTED": "government",
     "HM Treasury": "government",
-    "Low Pay Commission": "government",
+    "Low Pay Commission (LPC)": "government",
     "Oxford Economics Ltd": "commercial",
     "Oxford Economics": "commercial",
     "PA Consulting": "commercial",
@@ -643,9 +686,9 @@ _INSTITUTION_SECTORS = {
     "Pensions Policy Institute": "third-sector",
     "Perspective Economics": "commercial",
     "Pro Bono Economics": "third-sector",
-    "Public Health England": "government",
-    "Public Health Scotland": "government",
-    "Public Health Wales": "government",
+    "Public Health England (PHE)": "government",
+    "Public Health Scotland (PHS)": "government",
+    "Public Health Wales (PHW)": "government",
     "Publishers Association": "third-sector",
     "PwC LLP": "commercial",
     "Queen Mary University of London": "academic",
@@ -668,7 +711,7 @@ _INSTITUTION_SECTORS = {
     "Skills Development Scotland": "government",
     "Social Care Wales": "government",
     "Social Market Foundation": "third-sector",
-    "Social Mobility Commission": "government",
+    "Social Mobility Commission (SMC)": "government",
     "SQW - Economic and Management Consultants": "commercial",
     "State of Life": "commercial",
     "St Mungo's": "third-sector",
@@ -691,7 +734,7 @@ _INSTITUTION_SECTORS = {
     "UK Research and Innovation": "government",
     "UK Space Agency": "government",
     "Ulster University": "academic",
-    "University College London": "academic",
+    "University College London (UCL)": "academic",
     "University of Aston": "academic",
     "Anglia Ruskin University Higher Education Corporation": "academic",
     "University of Barcelona": "academic",
@@ -955,7 +998,7 @@ def _normalise_institution_with_status(name: str) -> tuple[str, str]:
 
     lowered = name.lower()
     if lowered in _ALIASES:
-        canonical = _ALIASES[lowered]
+        canonical = _with_approved_acronym(_ALIASES[lowered])
         if not canonical:
             return "", "empty"
         if lowered in _PARSER_CLEANUP_ALIAS_KEYS:
@@ -964,7 +1007,7 @@ def _normalise_institution_with_status(name: str) -> tuple[str, str]:
 
     repeated_alias = _normalise_repeated_alias_with_researcher(name)
     if repeated_alias is not None:
-        return repeated_alias, "parser_cleanup"
+        return _with_approved_acronym(repeated_alias), "parser_cleanup"
 
     if "," in name:
         head, tail = name.rsplit(",", 1)
@@ -973,7 +1016,7 @@ def _normalise_institution_with_status(name: str) -> tuple[str, str]:
 
     lowered = name.lower()
     if lowered in _ALIASES:
-        canonical = _ALIASES[lowered]
+        canonical = _with_approved_acronym(_ALIASES[lowered])
         if not canonical:
             return "", "empty"
         if lowered in _PARSER_CLEANUP_ALIAS_KEYS:
@@ -982,13 +1025,16 @@ def _normalise_institution_with_status(name: str) -> tuple[str, str]:
 
     institution_prefix = _normalise_known_institution_prefix(name)
     if institution_prefix is not None:
-        return institution_prefix, "parser_cleanup"
+        return _with_approved_acronym(institution_prefix), "parser_cleanup"
 
-    return name, "identity"
+    return _with_approved_acronym(name), "identity"
 
 
 def institution_sector_for(canonical_institution: str) -> str:
-    return _INSTITUTION_SECTORS.get(canonical_institution, "unclassified")
+    return _INSTITUTION_SECTORS.get(
+        _with_approved_acronym(canonical_institution),
+        "unclassified",
+    )
 
 
 def describe_institution_normalisation(raw_name: str) -> dict[str, object]:
@@ -1038,7 +1084,10 @@ def _known_institution_prefixes() -> list[tuple[str, str]]:
     candidates: dict[str, str] = {}
     for alias, canonical in _ALIASES.items():
         if canonical:
+            original = canonical
+            canonical = _with_approved_acronym(canonical)
             candidates[alias] = canonical
+            candidates.setdefault(original.lower(), canonical)
             candidates.setdefault(canonical.lower(), canonical)
     return sorted(candidates.items(), key=lambda item: len(item[0]), reverse=True)
 
@@ -1046,9 +1095,10 @@ def _known_institution_prefixes() -> list[tuple[str, str]]:
 def _canonical_from_alias_or_name(name: str) -> str | None:
     lowered = name.lower()
     if lowered in _ALIASES:
-        return _ALIASES[lowered] or None
-    for canonical in {value for value in _ALIASES.values() if value}:
-        if lowered == canonical.lower():
+        return _with_approved_acronym(_ALIASES[lowered]) or None
+    for value in {value for value in _ALIASES.values() if value}:
+        canonical = _with_approved_acronym(value)
+        if lowered in {value.lower(), canonical.lower()}:
             return canonical
     return None
 
@@ -1056,8 +1106,11 @@ def _canonical_from_alias_or_name(name: str) -> str | None:
 def _split_compound_institution(name: str) -> list[str]:
     lowered = name.lower()
     if lowered in _COMPOUND_INSTITUTION_SPLITS:
-        return _COMPOUND_INSTITUTION_SPLITS[lowered]
-    return [name]
+        return [
+            _with_approved_acronym(institution)
+            for institution in _COMPOUND_INSTITUTION_SPLITS[lowered]
+        ]
+    return [_with_approved_acronym(name)]
 
 
 def _parse_institution_rows(df: pd.DataFrame, *, include_metadata: bool = False) -> list[dict[str, object]]:

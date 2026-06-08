@@ -116,6 +116,62 @@ PROVIDER_ALIASES = {
     "Ofqual": "Office of Qualifications and Examinations Regulation (Ofqual)",
 }
 
+APPROVED_PROVIDER_ACRONYM_RENAMES = {
+    "Department for Education": "Department for Education (DfE)",
+    "Department for Work and Pensions": "Department for Work and Pensions (DWP)",
+    "Ministry of Justice": "Ministry of Justice (MoJ)",
+    "Office for National Statistics": "Office for National Statistics (ONS)",
+    "Financial Conduct Authority": "Financial Conduct Authority (FCA)",
+    "Competition and Markets Authority": "Competition and Markets Authority (CMA)",
+    "Intellectual Property Office": "Intellectual Property Office (IPO)",
+    "Office for Health Improvement and Disparities": (
+        "Office for Health Improvement and Disparities (OHID)"
+    ),
+    "Public Health England": "Public Health England (PHE)",
+    "Public Health Scotland": "Public Health Scotland (PHS)",
+    "Public Health Wales": "Public Health Wales (PHW)",
+    "Low Pay Commission": "Low Pay Commission (LPC)",
+    "Social Mobility Commission": "Social Mobility Commission (SMC)",
+    "National Centre for Social Research": "National Centre for Social Research (NatCen)",
+    "National Institute for Economic and Social Research": (
+        "National Institute for Economic and Social Research (NIESR)"
+    ),
+    "Chartered Institute of Personnel and Development": (
+        "Chartered Institute of Personnel and Development (CIPD)"
+    ),
+    "Institute for Fiscal Studies": "Institute for Fiscal Studies (IFS)",
+    "Institute for Government": "Institute for Government (IfG)",
+    "Institute for Employment Studies": "Institute for Employment Studies (IES)",
+    "Institute for the Future of Work": "Institute for the Future of Work (IFOW)",
+    "International Monetary Fund": "International Monetary Fund (IMF)",
+    "University College London": "University College London (UCL)",
+    "King's College London": "King's College London (KCL)",
+    "London School of Hygiene and Tropical Medicine": (
+        "London School of Hygiene and Tropical Medicine (LSHTM)"
+    ),
+    "Massachusetts Institute of Technology": "Massachusetts Institute of Technology (MIT)",
+    "National Physical Laboratory": "National Physical Laboratory (NPL)",
+}
+
+
+def _with_approved_provider_acronym(canonical: str) -> str:
+    if canonical in APPROVED_PROVIDER_ACRONYM_RENAMES:
+        return APPROVED_PROVIDER_ACRONYM_RENAMES[canonical]
+
+    updated = canonical
+    for name, acronym_name in sorted(
+        APPROVED_PROVIDER_ACRONYM_RENAMES.items(),
+        key=lambda item: len(item[0]),
+        reverse=True,
+    ):
+        updated = re.sub(
+            rf"(?<![A-Za-z0-9]){re.escape(name)}(?!\s*\()",
+            acronym_name,
+            updated,
+        )
+    return updated
+
+
 SECURE_RESEARCH_SERVICE_PROVIDER_ALIASES = {
     "Office for National Statistics Secure Research Service": "Office for National Statistics",
     "Office of National Statistics Secure Research Service": "Office for National Statistics",
@@ -926,12 +982,17 @@ def iter_dataset_entries(raw: str):
 
 def normalise_provider_name(name: str) -> str:
     provider = str(name or "").strip()
-    return PROVIDER_ALIASES.get(provider, provider)
+    return _with_approved_provider_acronym(PROVIDER_ALIASES.get(provider, provider))
 
 
 def infer_provider_name(name: str) -> str:
     provider = str(name or "").strip()
-    return SECURE_RESEARCH_SERVICE_PROVIDER_ALIASES.get(provider, normalise_provider_name(provider))
+    return _with_approved_provider_acronym(
+        SECURE_RESEARCH_SERVICE_PROVIDER_ALIASES.get(
+            provider,
+            normalise_provider_name(provider),
+        )
+    )
 
 
 def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
