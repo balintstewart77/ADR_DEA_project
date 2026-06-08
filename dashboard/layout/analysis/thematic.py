@@ -170,6 +170,7 @@ def _analyses_accordion():
             ),
             dbc.AccordionItem(
                 [
+                    _graph("deterministic-record-linkage-trend"),
                     dbc.Row([
                         dbc.Col(_graph("deterministic-record-linkage-distribution"), lg=4, md=6),
                         dbc.Col(_graph("deterministic-collection-method-distribution"), lg=4, md=6),

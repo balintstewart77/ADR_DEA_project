@@ -120,6 +120,42 @@ def _semicolon_value_totals(df: pd.DataFrame, source_col: str, output_col: str) 
     )
 
 
+def _record_linkage_by_year(df: pd.DataFrame) -> pd.DataFrame:
+    columns = ["Year", "record_linkage", "count", "total", "pct_of_projects"]
+    if "Year" not in df.columns or "record_linkage" not in df.columns:
+        return pd.DataFrame(columns=columns)
+
+    work = df[["Year", "record_linkage"]].copy()
+    work["Year"] = pd.to_numeric(work["Year"], errors="coerce")
+    work["record_linkage"] = work["record_linkage"].fillna("").astype(str).str.strip().apply(_display_record_linkage)
+    work = work[work["Year"].notna() & (work["record_linkage"] != "")]
+    if work.empty:
+        return pd.DataFrame(columns=columns)
+
+    work["Year"] = work["Year"].astype(int)
+    years = sorted(work["Year"].unique())
+    linkage_order = [
+        value
+        for value in ["No record linkage", "Within-domain", "Cross-domain"]
+        if value in set(work["record_linkage"])
+    ]
+    rows = []
+    grouped = work.groupby(["Year", "record_linkage"]).size()
+    totals = work.groupby("Year").size()
+    for year in years:
+        total = int(totals.get(year, 0))
+        for linkage in linkage_order:
+            count = int(grouped.get((year, linkage), 0))
+            rows.append({
+                "Year": year,
+                "record_linkage": linkage,
+                "count": count,
+                "total": total,
+                "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+            })
+    return pd.DataFrame(rows, columns=columns)
+
+
 def _count_substantive_domains(value):
     domains = _split_semicolon_values(value)
     return len(domains) if domains else pd.NA
@@ -431,6 +467,7 @@ def load_thematic_data(thematic_dir):
             "researcher_sectors",
             "researcher_sector",
         )
+        df_record_linkage_by_year = _record_linkage_by_year(df_thematic_projects)
 
         return {
             "df_thematic_a": df_thematic_a,
@@ -447,6 +484,7 @@ def load_thematic_data(thematic_dir):
             "df_temporal_structure_totals": df_temporal_structure_totals,
             "df_unit_totals": df_unit_totals,
             "df_researcher_sector_totals": df_researcher_sector_totals,
+            "df_record_linkage_by_year": df_record_linkage_by_year,
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
             "THEMATIC_TAGGED_COUNT": thematic_tagged_count,
@@ -476,6 +514,7 @@ def load_thematic_data(thematic_dir):
             "df_temporal_structure_totals": pd.DataFrame(),
             "df_unit_totals": pd.DataFrame(),
             "df_researcher_sector_totals": pd.DataFrame(),
+            "df_record_linkage_by_year": pd.DataFrame(),
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
             "THEMATIC_TAGGED_COUNT": 0,
@@ -508,6 +547,7 @@ df_collection_method_totals = _thematic_data["df_collection_method_totals"]
 df_temporal_structure_totals = _thematic_data["df_temporal_structure_totals"]
 df_unit_totals = _thematic_data["df_unit_totals"]
 df_researcher_sector_totals = _thematic_data["df_researcher_sector_totals"]
+df_record_linkage_by_year = _thematic_data["df_record_linkage_by_year"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
 THEMATIC_TAGGED_COUNT = _thematic_data["THEMATIC_TAGGED_COUNT"]

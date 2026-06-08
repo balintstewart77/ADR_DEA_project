@@ -122,6 +122,55 @@ def make_compact_distribution_bar(
     return _apply_common(fig, height=height)
 
 
+def make_record_linkage_trend(
+    df_by_year: pd.DataFrame,
+    metric: str = "pct",
+    height: int = 360,
+    partial_year_info=None,
+) -> go.Figure:
+    """Stacked area trend for record-linkage span by year."""
+    fig = go.Figure()
+    if df_by_year.empty:
+        return _apply_common(fig, height=height)
+
+    metric_col = "pct_of_projects" if metric == "pct" else "count"
+    linkage_order = ["No record linkage", "Within-domain", "Cross-domain"]
+    colours = {
+        "No record linkage": "#8d99ae",
+        "Within-domain": "#2a9d8f",
+        "Cross-domain": "#e76f51",
+    }
+    for linkage in linkage_order:
+        sub = df_by_year[df_by_year["record_linkage"] == linkage].sort_values("Year")
+        if sub.empty:
+            continue
+        fig.add_trace(go.Scatter(
+            x=sub["Year"],
+            y=sub[metric_col],
+            name=linkage,
+            mode="lines",
+            stackgroup="one",
+            line=dict(color=colours.get(linkage, "#999999"), width=1.5),
+            fillcolor=colours.get(linkage, "#999999"),
+            hovertemplate=(
+                f"<b>{linkage}</b><br>%{{x}}<br>"
+                + ("%{y:.1f}% of projects" if metric == "pct" else "%{y} projects")
+                + "<extra></extra>"
+            ),
+        ))
+
+    fig.update_layout(
+        title="Record Linkage Over Time",
+        xaxis_title="Year",
+        yaxis_title="% of projects" if metric == "pct" else "Projects",
+        xaxis_dtick=1,
+        yaxis=dict(range=[0, 100] if metric == "pct" else None),
+        margin=dict(r=160),
+    )
+    _annotate_partial_year(fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info)
+    return _apply_common(fig, height=height)
+
+
 def make_cross_heatmap(
     df_cross: pd.DataFrame,
     row_col: str,

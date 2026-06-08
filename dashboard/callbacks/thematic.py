@@ -14,6 +14,7 @@ from dashboard.data.thematic import (
     df_temporal_structure_totals,
     df_unit_totals,
     df_researcher_sector_totals,
+    df_record_linkage_by_year,
 )
 from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
@@ -21,6 +22,7 @@ from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
     make_thematic_trend, make_thematic_totals_bar, make_cross_heatmap,
     make_domain_cooccurrence, make_compact_distribution_bar,
+    make_record_linkage_trend,
 )
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 
@@ -38,6 +40,7 @@ def register(app):
         Output("thematic-tag-trend", "figure"),
         Output("thematic-tag-domain", "figure"),
         Output("thematic-domain-cooccurrence", "figure"),
+        Output("deterministic-record-linkage-trend", "figure"),
         Output("deterministic-record-linkage-distribution", "figure"),
         Output("deterministic-collection-method-distribution", "figure"),
         Output("deterministic-temporal-structure-distribution", "figure"),
@@ -89,6 +92,11 @@ def register(app):
         )
 
         domain_cooccurrence = make_domain_cooccurrence(df_domain_cooccurrence, metric=metric_mode)
+        record_linkage_trend = make_record_linkage_trend(
+            df_record_linkage_by_year,
+            metric=metric_mode,
+            partial_year_info=PARTIAL_YEAR_INFO,
+        )
         record_linkage_distribution = make_compact_distribution_bar(
             df_record_linkage_totals,
             "record_linkage",
@@ -130,6 +138,7 @@ def register(app):
             cross_purpose,
             tag_trend, tag_domain,
             domain_cooccurrence,
+            record_linkage_trend,
             record_linkage_distribution,
             collection_method_distribution,
             temporal_structure_distribution,
