@@ -228,6 +228,18 @@ linked_products:
       - "Education & Skills"
       - "Labour Market & Employment"
     notes: "Education records linked to labour-market outcomes."
+    component_datasets:
+      - dataset: "DfE education records (NPD / ILR / HESA-Jisc education tables)"
+        domain_reading: "Education & Skills"
+        reason: "pupil, learner and higher-education records are education objects."
+      - dataset: "HMRC employment and earnings records"
+        domain_reading: "Labour Market & Employment"
+        reason: "earnings and employment spells are labour-market outcomes."
+      - dataset: "DWP benefits records"
+        domain_reading: "Labour Market & Employment"
+        reason: "benefits/income records are treated as labour-market and income support outcomes under the reference rule."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/government/publications/longitudinal-education-outcomes-leo-dataset/longitudinal-education-outcomes-leo-data ; https://www.ucl.ac.uk/ioe/events/2024/mar/introduction-longitudinal-education-outcomes-leo-data"
 
   - canonical: "Education and Child Health Insights from Linked Data (ECHILD)"
     status: "standing"
@@ -240,6 +252,18 @@ linked_products:
       - "Health & Social Care"
       - "Education & Skills"
     notes: "Child health and education administrative linkage."
+    component_datasets:
+      - dataset: "Hospital Episode Statistics (HES)"
+        domain_reading: "Health & Social Care"
+        reason: "hospital activity and care records are health-service data."
+      - dataset: "National Pupil Database (NPD)"
+        domain_reading: "Education & Skills"
+        reason: "pupil-level school education records; demographic fields are attributes only."
+      - dataset: "Children's social care services data"
+        domain_reading: "Health & Social Care"
+        reason: "children's social care service contact is in the health/social-care domain."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.echild.ac.uk/ ; https://docs.echild.ac.uk/echild-introduction ; https://adc.bmj.com/content/106/Suppl_1/A163.2"
 
   - canonical: "Linked Census, HES and Mortality Data"
     status: "discontinued"
@@ -254,6 +278,18 @@ linked_products:
       - "Health & Social Care"
       - "Migration & Demographics"
     notes: "ONS Public Health Data Asset (PHDA) family. The register does not use PHDA as a dataset string; it uses Linked Census/HES/Mortality and Linked Census/death-occurrences string families at different linkage depths."
+    component_datasets:
+      - dataset: "2011 Census / Census records"
+        domain_reading: "Migration & Demographics"
+        reason: "population enumeration and demographic characteristics."
+      - dataset: "Hospital Episode Statistics (HES)"
+        domain_reading: "Health & Social Care"
+        reason: "hospital attendance and treatment records."
+      - dataset: "ONS mortality / death registration records"
+        domain_reading: "Health & Social Care"
+        reason: "vital event / mortality source under the reference rule."
+    component_datasets_verified: true
+    component_datasets_source: "https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/linked-hes-ons-mortality-data ; https://ons.metadata.works/browser/dataset?id=292"
 
   - canonical: "GRading and Admissions Data England (GRADE)"
     status: "standing"
@@ -266,6 +302,18 @@ linked_products:
     component_domains:
       - "Education & Skills"
     notes: "Ofqual, NPD, and UCAS are education/admissions components; NPD demographic fields are attributes."
+    component_datasets:
+      - dataset: "Ofqual qualification and grading data"
+        domain_reading: "Education & Skills"
+        reason: "assessment and qualification outcomes are education-system data."
+      - dataset: "DfE National Pupil Database (NPD)"
+        domain_reading: "Education & Skills"
+        reason: "pupil education records; demographic fields are attributes only."
+      - dataset: "UCAS university application and admissions data"
+        domain_reading: "Education & Skills"
+        reason: "university application and admissions process data."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/government/publications/grading-and-admissions-data-for-england-grade-framework/grading-and-admissions-data-for-england-grade-user-guide"
 
   - canonical: "MoJ Data First"
     status: "standing"
@@ -296,6 +344,30 @@ linked_products:
     component_domains:
       - "Crime & Justice"
     notes: "Public-register Data First justice extracts only; MoJ-DfE linkage is excluded."
+    component_datasets:
+      - dataset: "Magistrates' court defendant data"
+        domain_reading: "Crime & Justice"
+        reason: "criminal court administrative records."
+      - dataset: "Crown Court defendant data"
+        domain_reading: "Crime & Justice"
+        reason: "criminal court administrative records."
+      - dataset: "Prisoner custodial journey data"
+        domain_reading: "Crime & Justice"
+        reason: "prison custody records."
+      - dataset: "Probation and offender assessment data"
+        domain_reading: "Crime & Justice"
+        reason: "offender management and probation records."
+      - dataset: "Family court data"
+        domain_reading: "Crime & Justice"
+        reason: "court-system administrative data, not a separate family-domain dataset in this taxonomy."
+      - dataset: "Civil court data"
+        domain_reading: "Crime & Justice"
+        reason: "court-system administrative data."
+      - dataset: "Cross-justice system linking table"
+        domain_reading: "Crime & Justice"
+        reason: "linkage spine across justice-system datasets."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first ; https://datacatalogue.adruk.org/browser/dataset/58617/1"
 
   - canonical: "Administrative Data | Agricultural Research Collection (AD|ARC)"
     status: "standing"
@@ -311,6 +383,19 @@ linked_products:
       - "Environment & Agriculture"
       - "Migration & Demographics"
     notes: "Agricultural records linked to population-demographic Census components."
+    component_datasets:
+      - dataset: "2011 Census / Census of Population and Households"
+        domain_reading: "Migration & Demographics"
+        reason: "population and household source; classify by population object."
+      - dataset: "Agricultural administrative records (farm database / agricultural census / farm payments)"
+        domain_reading: "Environment & Agriculture"
+        reason: "farm businesses, holdings, payments and agricultural census are substantively agricultural."
+      - dataset: "Inter-Departmental Business Register (IDBR) (England strand)"
+        domain_reading: "uncertain - pending external review"
+        reason: "IDBR may be a linkage/identification frame for agricultural businesses (no Business domain), or a substantive Business & Productivity component (would add that domain). Conservative current reading: linkage frame, Business NOT added. Contrast with Linked Trade-in-Goods/IDBR, where IDBR is the analytical subject and Business is counted."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/administrative-data ; https://ons.metadata.works/browser/dataset/1408718/0"
+    component_datasets_review_flag: "AD|ARC IDBR domain contribution needs external human review; Business & Productivity may be added later if IDBR is judged substantive. component_domains left unchanged (Environment & Agriculture, Migration & Demographics) for now."
 
   - canonical: "Annual Survey of Hours and Earnings Longitudinal"
     status: "standing"
@@ -321,6 +406,12 @@ linked_products:
     component_domains:
       - "Labour Market & Employment"
     notes: "WED component: ASHE longitudinal, within labour-market domain."
+    component_datasets:
+      - dataset: "Annual Survey of Hours and Earnings (ASHE) longitudinal records"
+        domain_reading: "Labour Market & Employment"
+        reason: "employee jobs, earnings and paid hours over time."
+    component_datasets_verified: true
+    component_datasets_source: "https://datacatalogue.adruk.org/browser/dataset/323/1"
 
   - canonical: "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
     status: "standing"
@@ -331,6 +422,18 @@ linked_products:
     component_domains:
       - "Labour Market & Employment"
     notes: "WED component: ASHE linked to tax earnings records, within labour-market domain."
+    component_datasets:
+      - dataset: "Annual Survey of Hours and Earnings (ASHE)"
+        domain_reading: "Labour Market & Employment"
+        reason: "employee earnings and hours survey."
+      - dataset: "HMRC Pay As You Earn (PAYE)"
+        domain_reading: "Labour Market & Employment"
+        reason: "payrolled employment and earnings records."
+      - dataset: "HMRC Self-Assessment"
+        domain_reading: "Labour Market & Employment"
+        reason: "self-employment and other earned income records for labour-market analysis."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.adruk.org/data-access/flagship-datasets/annual-survey-of-hours-and-earnings-linked-to-his-majestys-revenue-and-customs-england-scotland-and-wales/ ; https://ons.metadata.works/browser/dataset/1408719/0"
 
   - canonical: "Annual Survey of Hours and Earnings linked to Census 2011"
     status: "standing"
@@ -344,6 +447,15 @@ linked_products:
       - "Labour Market & Employment"
       - "Migration & Demographics"
     notes: "WED component: ASHE labour-market origin linked to Census population origin."
+    component_datasets:
+      - dataset: "Annual Survey of Hours and Earnings (ASHE)"
+        domain_reading: "Labour Market & Employment"
+        reason: "employee earnings and paid-hours survey."
+      - dataset: "2011 Census"
+        domain_reading: "Migration & Demographics"
+        reason: "population and household characteristics source."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.adruk.org/data-access/flagship-datasets/annual-survey-of-hours-and-earnings-linked-to-2011-census-england-and-wales/ ; https://datacatalogue.adruk.org/browser/dataset/124775/1"
 
   - canonical: "Earnings and Employees Study (EES) 2011 - Northern Ireland"
     status: "standing"
@@ -357,6 +469,18 @@ linked_products:
       - "Migration & Demographics"
       - "Housing & Planning"
     notes: "ADR NI/NISRA linked dataset: ASHE 2011 for Northern Ireland linked to the 2011 Northern Ireland Census and Land & Property Services Capital Value data. Keep distinct from WED / ASHE-Census England and Wales linkage."
+    component_datasets:
+      - dataset: "Annual Survey of Hours and Earnings (ASHE) 2011"
+        domain_reading: "Labour Market & Employment"
+        reason: "earnings and hours for employees."
+      - dataset: "Census of Population and Housing 2011"
+        domain_reading: "Migration & Demographics"
+        reason: "population and household enumeration; housing variables are attributes for this domain reading."
+      - dataset: "Land and Property Services Capital Value data"
+        domain_reading: "Housing & Planning"
+        reason: "property valuation data."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/earnings-and-employees ; https://www.adruk.org/data-access/flagship-datasets/earnings-and-employees-study-2011/"
 
   - canonical: "Growing Up in England (GUIE)"
     status: "standing"
@@ -372,6 +496,15 @@ linked_products:
       - "Education & Skills"
       - "Migration & Demographics"
     notes: "Education records linked with Census population-origin components."
+    component_datasets:
+      - dataset: "All Education Dataset for England / National Pupil Database family"
+        domain_reading: "Education & Skills"
+        reason: "school enrolment, attainment and education administrative records."
+      - dataset: "2011 Census"
+        domain_reading: "Migration & Demographics"
+        reason: "population-origin and household characteristics source."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.ons.gov.uk/peoplepopulationandcommunity/educationandchildcare/methodologies/growingupinenglandguie ; https://atlaslongitudinaldatasets.ac.uk/datasets/guie"
 
   - canonical: "ONS Longitudinal Study"
     status: "standing"
@@ -394,6 +527,21 @@ linked_products:
       - "Migration & Demographics"
       - "Health & Social Care"
     notes: "ONS Longitudinal Study for England and Wales; one-percent sample linking Census records from 1971 onward with linked life events including births, deaths, and cancer registrations. Available-from set to 1974 because the study originates from the 1971 Census and was created after that census."
+    component_datasets:
+      - dataset: "Census records from 1971 onward"
+        domain_reading: "Migration & Demographics"
+        reason: "longitudinal population and household census records."
+      - dataset: "Births and other vital events"
+        domain_reading: "Health & Social Care"
+        reason: "vital events are treated as health/social-care components under the reference rule."
+      - dataset: "Deaths"
+        domain_reading: "Health & Social Care"
+        reason: "mortality/vital registration source."
+      - dataset: "Cancer registrations"
+        domain_reading: "Health & Social Care"
+        reason: "disease registration source."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.ons.gov.uk/aboutus/whatwedo/paidservices/longitudinalstudyls"
 
   - canonical: "Linked Trade-in-Goods/IDBR"
     status: "standing"
@@ -412,6 +560,15 @@ linked_products:
     component_domains:
       - "Business & Productivity"
     notes: "HMRC Overseas Trade in Goods matched to the IDBR; firm-level trade."
+    component_datasets:
+      - dataset: "HMRC Overseas Trade in Goods Statistics"
+        domain_reading: "Business & Productivity"
+        reason: "firm-level international goods trade, not HMRC as subject."
+      - dataset: "Inter-Departmental Business Register (IDBR)"
+        domain_reading: "Business & Productivity"
+        reason: "business register / reporting-unit structure."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset/374/0 ; https://app.integrateddataservice.gov.uk/data-catalogue/linked_trade_in_goods_inter_departmental_business_register"
 
   - canonical: "2011 Census linked to Benefits and Income - England and Wales"
     status: "standing"
@@ -423,6 +580,21 @@ linked_products:
       - "Migration & Demographics"
       - "Labour Market & Employment"
     notes: "Register-present 2011 Census linkage to benefits and income records for England and Wales."
+    component_datasets:
+      - dataset: "2011 Census"
+        domain_reading: "Migration & Demographics"
+        reason: "population and household source."
+      - dataset: "DWP benefit systems (CB, PIP, UC, SHBE, NBD)"
+        domain_reading: "Labour Market & Employment"
+        reason: "benefits/income support records under the reference rule."
+      - dataset: "HMRC Tax Credits"
+        domain_reading: "Labour Market & Employment"
+        reason: "income-support/tax-credit records."
+      - dataset: "HMRC Pay As You Earn (PAYE)"
+        domain_reading: "Labour Market & Employment"
+        reason: "earnings/income records."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset/213775/0"
 
   - canonical: "Nursing and Midwifery Council Register - UK Linked to Census 2021"
     status: "standing"
@@ -434,6 +606,15 @@ linked_products:
       - "Health & Social Care"
       - "Migration & Demographics"
     notes: "NMC register linked to Census 2021."
+    component_datasets:
+      - dataset: "Nursing and Midwifery Council Register"
+        domain_reading: "Health & Social Care"
+        reason: "health and care professional registration data."
+      - dataset: "Census 2021"
+        domain_reading: "Migration & Demographics"
+        reason: "population and demographic characteristics source."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.adruk.org/data-access/flagship-datasets/nursing-and-midwifery-council-register-linked-to-census-2021-england-and-wales/ ; https://ons.metadata.works/browser/dataset/2077752/0 ; https://www.nmc.org.uk/news/news-and-updates/nmc-data-linked-with-census-to-help-influence-positive-change-in-nursing-and-midwifery/"
 
   - canonical: "EOL"
     status: "standing"
@@ -445,6 +626,21 @@ linked_products:
     component_domains:
       - "Education & Skills"
     notes: "Education Outcomes Linkage for Northern Ireland; EOL is a real NISRA education linkage, not a parse artifact."
+    component_datasets:
+      - dataset: "School Census"
+        domain_reading: "Education & Skills"
+        reason: "school pupil administrative records."
+      - dataset: "School Attendance"
+        domain_reading: "Education & Skills"
+        reason: "school attendance records."
+      - dataset: "School Leavers Survey"
+        domain_reading: "Education & Skills"
+        reason: "education destinations/qualifications of school leavers."
+      - dataset: "Exams Database"
+        domain_reading: "Education & Skills"
+        reason: "examination outcome data."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/education-outcomes ; https://www.adruk.org/data-access/flagship-datasets/education-outcomes-linkage-2018/19/"
 
   - canonical: "COVID-19 Infection Survey linked to NHS Test and Trace - England"
     status: "discontinued"
@@ -456,6 +652,18 @@ linked_products:
     component_domains:
       - "Health & Social Care"
     notes: "COVID-19 Infection Survey linkage to NHS Test and Trace. Kept distinct from standalone COVID-19 Infection Survey and school-setting CIS linkages."
+    component_datasets:
+      - dataset: "COVID-19 Infection Survey (CIS)"
+        domain_reading: "Health & Social Care"
+        reason: "infection, swab and antibody survey focused on COVID-19 health outcomes."
+      - dataset: "NHS Test and Trace"
+        domain_reading: "Health & Social Care"
+        reason: "infectious-disease testing/contact-tracing records."
+      - dataset: "Personal Demographics Service (linkage spine)"
+        domain_reading: "Health & Social Care"
+        reason: "NHS patient demographic linkage spine; not a separate non-health policy object."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset?id=163402 ; https://ijpds.org/article/view/2094"
 
   - canonical: "COVID-19 Infection Survey linked to Combined Vaccination - UK"
     status: "discontinued"
@@ -468,6 +676,18 @@ linked_products:
     component_domains:
       - "Health & Social Care"
     notes: "COVID-19 Infection Survey linkage to combined vaccination data."
+    component_datasets:
+      - dataset: "COVID-19 Infection Survey (CIS)"
+        domain_reading: "Health & Social Care"
+        reason: "infection and antibody survey data."
+      - dataset: "NIMS / NIVS / UKHSA / Wales vaccination records"
+        domain_reading: "Health & Social Care"
+        reason: "vaccination programme and immunisation records."
+      - dataset: "CIS self-reported vaccination responses where administrative records unavailable"
+        domain_reading: "Health & Social Care"
+        reason: "vaccination status information collected for health analysis."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset/306/domain"
 
   - canonical: "COVID-19 Infection Survey linked to Mortality - England and Wales ONS"
     status: "discontinued"
@@ -479,6 +699,15 @@ linked_products:
     component_domains:
       - "Health & Social Care"
     notes: "COVID-19 Infection Survey linkage to mortality/death-occurrence data."
+    component_datasets:
+      - dataset: "COVID-19 Infection Survey (CIS)"
+        domain_reading: "Health & Social Care"
+        reason: "infection and antibody survey data."
+      - dataset: "ONS mortality / death registration data"
+        domain_reading: "Health & Social Care"
+        reason: "vital event / mortality source."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset/344644/0"
 
   - canonical: "Covid-19 Schools Infection Survey linked with Test and Trace"
     status: "discontinued"
@@ -491,6 +720,15 @@ linked_products:
     component_domains:
       - "Health & Social Care"
     notes: "COVID-19 Schools Infection Survey linked with Test and Trace. School setting is treated as population/lens, not an Education & Skills component."
+    component_datasets:
+      - dataset: "COVID-19 Schools Infection Survey (SIS)"
+        domain_reading: "Health & Social Care"
+        reason: "school setting is the sampling frame/lens; the object is COVID-19 infection and antibodies."
+      - dataset: "NHS Test and Trace"
+        domain_reading: "Health & Social Care"
+        reason: "infectious-disease testing/contact-tracing records."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset/187279/0 ; https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/conditionsanddiseases/methodologies/covid19schoolsinfectionsurveymethodsandfurtherinformation"
 
   - canonical: "Covid-19 Infection Survey linked with VOA and EPC data"
     status: "discontinued"
@@ -503,6 +741,21 @@ linked_products:
       - "Health & Social Care"
       - "Housing & Planning"
     notes: "COVID-19 Infection Survey linked with Valuation Office Agency property data and Energy Performance Certificate data."
+    component_datasets:
+      - dataset: "COVID-19 Infection Survey (CIS)"
+        domain_reading: "Health & Social Care"
+        reason: "infection, swab and antibody survey data."
+      - dataset: "Valuation Office Agency (VOA) property data"
+        domain_reading: "Housing & Planning"
+        reason: "property characteristics and valuation records."
+      - dataset: "Energy Performance Certificate (EPC) data"
+        domain_reading: "Housing & Planning"
+        reason: "building energy/property information."
+      - dataset: "AddressBase / UPRN matching spine"
+        domain_reading: "Housing & Planning"
+        reason: "address-property linkage infrastructure; not counted as a separate non-housing policy object."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset/290"
 
 datasets:
   - canonical: "Census"
