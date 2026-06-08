@@ -4,7 +4,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG
-from dashboard.data.registry import COLLECTIONS, _ALL_PROVIDER_OPTIONS
+from dashboard.data.registry import _ALL_PROVIDER_OPTIONS
 
 
 def build_datasets_tab():
@@ -73,81 +73,7 @@ def build_datasets_tab():
                 md=5,
             ),
         ]),
-        html.Hr(className="my-4"),
-        dbc.Accordion([
-            dbc.AccordionItem(
-                title="Cross-Domain Linked Dataset Breakdown",
-                children=[
-                    html.P(
-                        "Track use of cross-domain linked datasets using either distinct projects or total dataset requests.",
-                        className="section-desc",
-                    ),
-                    dbc.Row([
-                        dbc.Col([
-                            html.Label("Filter by collection", className="filter-label"),
-                            dcc.Dropdown(
-                                id="collection-filter",
-                                options=[{"label": c, "value": c} for c in COLLECTIONS],
-                                multi=True,
-                                placeholder="All collections",
-                                clearable=True,
-                            ),
-                        ], md=6),
-                        dbc.Col([
-                            html.Label("Metric", className="filter-label"),
-                            dcc.Dropdown(
-                                id="flagship-metric-mode",
-                                options=[
-                                    {"label": "Distinct projects", "value": "projects"},
-                                    {"label": "Dataset access requests", "value": "requests"},
-                                ],
-                                value="projects",
-                                clearable=False,
-                            ),
-                        ], md=3),
-                    ], className="mb-2 g-2"),
-                    html.P(
-                        "Distinct projects count each retained project once per collection. "
-                        "Dataset access requests count every matched dataset request, so one project can contribute multiple requests within the same collection.",
-                        className="section-desc",
-                    ),
-                    dbc.Row([
-                        dbc.Col(
-                            html.Div(dcc.Graph(id="flagship-pooled-yearly", config=CHART_CONFIG), className="chart-wrapper"),
-                            width=12,
-                        ),
-                    ]),
-                    dbc.Row([
-                        dbc.Col(
-                            html.Div(dcc.Graph(id="flagship-pooled-quarterly", config=CHART_CONFIG), className="chart-wrapper"),
-                            width=12,
-                        ),
-                    ]),
-                    dbc.Row([
-                        dbc.Col(
-                            html.Div(dcc.Graph(id="flagship-line-yearly-chart", config=CHART_CONFIG), className="chart-wrapper"),
-                            width=12,
-                        ),
-                    ]),
-                    dbc.Row([
-                        dbc.Col(
-                            html.Div(dcc.Graph(id="flagship-line-quarterly-chart", config=CHART_CONFIG), className="chart-wrapper"),
-                            width=12,
-                        ),
-                    ]),
-                    dbc.Row([
-                        dbc.Col(
-                            html.Div(dcc.Graph(id="flagship-totals-chart", config=CHART_CONFIG), className="chart-wrapper"),
-                            width=12,
-                        ),
-                    ]),
-                    dbc.Row([
-                        dbc.Col(
-                            html.Div(dcc.Graph(id="flagship-cumulative-chart", config=CHART_CONFIG), className="chart-wrapper"),
-                            width=12,
-                        ),
-                    ]),
-                ],
-            ),
-        ], start_collapsed=True, className="mt-3"),
+        # The previous Cross-Domain Linked Dataset Breakdown used the stale ADR
+        # flagship dataset list. Rebuild it from deterministic record-linkage
+        # data before surfacing that breakdown again.
     ])

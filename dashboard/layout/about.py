@@ -71,35 +71,17 @@ Retained conflicting duplicate IDs:
 
 ---
 
-### Cross-Domain Linked Dataset Classification
+### Record Linkage Enrichment
 
-Seven cross-domain linked data collections are identified by **case-insensitive
-keyword matching** against each project's "Datasets Used" field. A project can
-match multiple collections if it uses datasets from more than one.
+Record-linkage and data-structure facets are read from the deterministic
+register reference layer used by the Thematic Analysis tab. They are controlled
+vocabulary lookups rather than LLM classifications.
 
-| Collection | Example keywords |
-|------------|-----------------|
-| Data First | "data first", "crown court", "magistrates court", "prisoner dataset", "civil court", "cafcass", "familyman" |
-| LEO | "longitudinal education outcomes", "LEO via SRS" |
-| ECHILD | "education and child health insights", "echild" |
-| Growing up in England | "growing up in england", "guie" |
-| Wage and Employment Dynamics | "annual survey of hours and earnings longitudinal", "ashe linked" |
-| GRADE | "grading and admissions data england" |
-| Agricultural Research Collection | "agricultural research collection" |
-
----
-
-#### Counting methodology
-
-The Cross-Domain Linked Dataset Breakdown section supports two views:
-
-- **Distinct projects** - each retained project counts once per collection.
-- **Dataset access requests** - every matched dataset request counts, so one
-  project can contribute multiple requests to the same collection.
-
-If a single project accesses three Data First datasets (e.g. Crown Court,
-Magistrates Court, and Prisoner), that contributes **one** Data First project
-in the first view and **three** Data First access requests in the second.
+Earlier dashboard versions included a keyword-matched "Cross-Domain Linked
+Dataset Breakdown" based on the ADR UK flagship dataset list. That view is no
+longer shown in Dataset Demand because it has been superseded by the
+deterministic linkage layer. A future replacement should be recreated from the
+current deterministic record-linkage and component-domain data.
 
 ---
 
@@ -127,16 +109,14 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
   the secure setting. Examples include the ONS Secure Research Service (SRS)
   and the SAIL Databank.
 
-- **Cross-Domain Linked Datasets** - Seven linked administrative data
-  collections spanning justice, education, health, employment, and agriculture,
-  identified by keyword matching against project dataset descriptions.
+- **Record linkage** - Deterministic classification of whether a project uses no
+  record linkage, within-domain linkage, or cross-domain linkage, drawn from the
+  register reference layer.
 
 ---
 
 ### Limitations and Caveats
 
-- **Keyword matching** may miss dataset names not yet included in the keyword
-  lists, or match false positives where keywords appear incidentally.
 - **Dataset parsing** splits on commas and ampersands, which can incorrectly
   break source organisation names that contain these characters
   (e.g. "Department for Business, Energy & Industrial Strategy").

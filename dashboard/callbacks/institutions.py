@@ -18,15 +18,37 @@ def register(app):
         return {**base, "display": "none"}
 
     @app.callback(
+        Output("institutions-trend-topn-custom", "style"),
+        Input("institutions-trend-topn-preset", "value"),
+    )
+    def toggle_institutions_trend_custom(preset):
+        base = {"width": "80px", "verticalAlign": "middle", "marginLeft": "8px"}
+        if preset == -1:
+            return {**base, "display": "inline-block"}
+        return {**base, "display": "none"}
+
+    @app.callback(
         Output("institutions-bar-chart", "figure"),
         Output("institutions-trend-chart", "figure"),
         Input("institutions-topn-preset", "value"),
         Input("institutions-topn-custom", "value"),
+        Input("institutions-trend-topn-preset", "value"),
+        Input("institutions-trend-topn-custom", "value"),
     )
-    def update_institutions_tab(preset, custom):
+    def update_institutions_tab(preset, custom, trend_preset, trend_custom):
         top_n = int(custom) if preset == -1 and custom else (preset if preset != -1 else 10)
         top_n = max(1, int(top_n))
+        trend_top_n = (
+            int(trend_custom)
+            if trend_preset == -1 and trend_custom
+            else (trend_preset if trend_preset != -1 else 8)
+        )
+        trend_top_n = max(1, int(trend_top_n))
         return (
             make_institution_bar(df_institutions, top_n=top_n),
-            make_institution_trend(df_institutions, top_n=8, partial_year_info=PARTIAL_YEAR_INFO),
+            make_institution_trend(
+                df_institutions,
+                top_n=trend_top_n,
+                partial_year_info=PARTIAL_YEAR_INFO,
+            ),
         )

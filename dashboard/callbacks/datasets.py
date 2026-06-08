@@ -112,7 +112,7 @@ def register(app):
         _annotate_partial_year(fig_trend, years=trend_data["Year"].unique(), partial_year_info=PARTIAL_YEAR_INFO)
         _apply_common(fig_trend)
 
-        # -- Provider breakdown pie --
+        # -- Provider breakdown bar --
         prov_counts = (
             sub[sub["provider"] != ""]
             .groupby("provider")["Project ID"]
@@ -121,30 +121,39 @@ def register(app):
             .rename(columns={"Project ID": "Projects"})
             .sort_values("Projects", ascending=False)
         )
-        # Collapse small providers
-        threshold = prov_counts["Projects"].sum() * 0.02
-        small = prov_counts[prov_counts["Projects"] < threshold]
-        if len(small) > 0:
-            prov_counts = prov_counts[prov_counts["Projects"] >= threshold].copy()
+        provider_top_n = 15
+        if len(prov_counts) > provider_top_n:
+            top = prov_counts.head(provider_top_n).copy()
+            small = prov_counts.iloc[provider_top_n:]
             prov_counts = pd.concat(
-                [prov_counts, pd.DataFrame([{"provider": "Other", "Projects": small["Projects"].sum()}])],
+                [
+                    top,
+                    pd.DataFrame([{"provider": "Other", "Projects": int(small["Projects"].sum())}]),
+                ],
                 ignore_index=True,
             )
-        fig_prov = px.pie(
-            prov_counts, names="provider", values="Projects",
-            title="Projects by Source Organisation",
+        prov_plot = prov_counts.sort_values("Projects", ascending=True, kind="stable")
+        fig_prov = px.bar(
+            prov_plot,
+            x="Projects",
+            y="provider",
+            orientation="h",
+            title="Projects by Source organisation",
+            labels={"provider": "", "Projects": "Distinct projects"},
+            color_discrete_sequence=[PRIMARY_BAR],
         )
         fig_prov.update_traces(
-            textposition="inside",
-            texttemplate="%{label}<br>%{percent:.0%}",
-            insidetextorientation="horizontal",
-            textfont_size=11,
-            hovertemplate="<b>%{label}</b><br>%{value} projects (%{percent:.0%})<extra></extra>",
+            marker_line_width=0,
+            text=prov_plot["Projects"],
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
         )
         fig_prov.update_layout(
             showlegend=False,
-            margin=dict(l=8, r=8, t=56, b=8),
+            margin=dict(l=260, r=48, t=56, b=48),
+            yaxis_tickfont_size=10,
         )
-        _apply_common(fig_prov)
+        _apply_common(fig_prov, height=max(420, len(prov_plot) * 26))
 
         return fig_top, fig_trend, fig_prov
