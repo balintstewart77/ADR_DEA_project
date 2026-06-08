@@ -101,6 +101,11 @@ def register(app):
         Input("enriched-domain-count-filter", "value"),
         Input("enriched-purpose-filter", "value"),
         Input("enriched-tag-filter", "value"),
+        Input("enriched-record-linkage-filter", "value"),
+        Input("enriched-collection-method-filter", "value"),
+        Input("enriched-temporal-structure-filter", "value"),
+        Input("enriched-unit-filter", "value"),
+        Input("enriched-researcher-sector-filter", "value"),
         Input("enriched-page-size", "value"),
     )
     def update_enriched_register(
@@ -113,6 +118,11 @@ def register(app):
         domain_count_filter,
         purpose_filter,
         tag_filter,
+        record_linkage_filter,
+        collection_method_filter,
+        temporal_structure_filter,
+        unit_filter,
+        researcher_sector_filter,
         page_size,
     ):
         display, count_text = _get_enriched_register_display_df(
@@ -125,6 +135,11 @@ def register(app):
             domain_count_filter,
             purpose_filter,
             tag_filter,
+            record_linkage_filter,
+            collection_method_filter,
+            temporal_structure_filter,
+            unit_filter,
+            researcher_sector_filter,
         )
 
         return (
@@ -145,6 +160,11 @@ def register(app):
         State("enriched-domain-count-filter", "value"),
         State("enriched-purpose-filter", "value"),
         State("enriched-tag-filter", "value"),
+        State("enriched-record-linkage-filter", "value"),
+        State("enriched-collection-method-filter", "value"),
+        State("enriched-temporal-structure-filter", "value"),
+        State("enriched-unit-filter", "value"),
+        State("enriched-researcher-sector-filter", "value"),
         prevent_initial_call=True,
     )
     def download_enriched_csv(
@@ -158,6 +178,11 @@ def register(app):
         domain_count_filter,
         purpose_filter,
         tag_filter,
+        record_linkage_filter,
+        collection_method_filter,
+        temporal_structure_filter,
+        unit_filter,
+        researcher_sector_filter,
     ):
         display, _ = _get_enriched_register_display_df(
             search,
@@ -169,6 +194,11 @@ def register(app):
             domain_count_filter,
             purpose_filter,
             tag_filter,
+            record_linkage_filter,
+            collection_method_filter,
+            temporal_structure_filter,
+            unit_filter,
+            researcher_sector_filter,
         )
         filename = f"dea-enriched-register-{_csv_date_stamp()}.csv"
         return dcc.send_data_frame(display.to_csv, filename, index=False)

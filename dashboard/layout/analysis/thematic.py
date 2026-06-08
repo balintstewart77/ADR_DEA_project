@@ -15,6 +15,11 @@ from dashboard.data.thematic import (
     THEMATIC_DATA_AVAILABLE, THEMATIC_NARRATIVE, THEMATIC_PROJECT_COUNT, THEMATIC_TAGGED_COUNT,
     _THEMATIC_DOMAIN_OPTIONS, _THEMATIC_DOMAIN_COUNT_OPTIONS,
     _THEMATIC_PURPOSE_OPTIONS, _THEMATIC_TAG_OPTIONS,
+    _DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
+    _DETERMINISTIC_COLLECTION_METHOD_OPTIONS,
+    _DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS,
+    _DETERMINISTIC_UNIT_OPTIONS,
+    _DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
 )
 
 _MD_STYLE = {"fontSize": "0.85rem", "lineHeight": "1.6"}
@@ -271,6 +276,58 @@ def _analyses_accordion():
                                 searchable=False,
                             ),
                         ], md=1),
+                    ], className="mb-2 g-2"),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Label("Record Linkage", className="filter-label"),
+                            dcc.Dropdown(
+                                id="enriched-record-linkage-filter",
+                                options=_DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
+                                value="ALL",
+                                clearable=False,
+                                searchable=False,
+                            ),
+                        ], md=2),
+                        dbc.Col([
+                            html.Label("Collection method", className="filter-label"),
+                            dcc.Dropdown(
+                                id="enriched-collection-method-filter",
+                                options=_DETERMINISTIC_COLLECTION_METHOD_OPTIONS,
+                                value="ALL",
+                                clearable=False,
+                                searchable=True,
+                            ),
+                        ], md=3),
+                        dbc.Col([
+                            html.Label("Temporal structure", className="filter-label"),
+                            dcc.Dropdown(
+                                id="enriched-temporal-structure-filter",
+                                options=_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS,
+                                value="ALL",
+                                clearable=False,
+                                searchable=True,
+                            ),
+                        ], md=2),
+                        dbc.Col([
+                            html.Label("Unit of observation", className="filter-label"),
+                            dcc.Dropdown(
+                                id="enriched-unit-filter",
+                                options=_DETERMINISTIC_UNIT_OPTIONS,
+                                value="ALL",
+                                clearable=False,
+                                searchable=True,
+                            ),
+                        ], md=2),
+                        dbc.Col([
+                            html.Label("Researcher sector", className="filter-label"),
+                            dcc.Dropdown(
+                                id="enriched-researcher-sector-filter",
+                                options=_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
+                                value="ALL",
+                                clearable=False,
+                                searchable=True,
+                            ),
+                        ], md=3),
                     ], className="mb-2 g-2"),
                     dbc.Row([
                         dbc.Col([

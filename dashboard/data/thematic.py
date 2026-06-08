@@ -16,6 +16,7 @@ from dashboard.config import (
 )
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
+    RECORD_LINKAGE_DISPLAY_LABELS,
     load_register_properties,
 )
 from dashboard.data.keys import _project_id_key
@@ -32,6 +33,56 @@ def _split_semicolon_values(value) -> list[str]:
     if pd.isna(value):
         return []
     return [part.strip() for part in str(value).split(";") if part.strip()]
+
+
+def _display_record_linkage(value: str) -> str:
+    cleaned = str(value).strip()
+    return RECORD_LINKAGE_DISPLAY_LABELS.get(cleaned, cleaned)
+
+
+def _single_value_options(
+    df: pd.DataFrame,
+    column: str,
+    all_label: str,
+    preferred_order: list[str] | None = None,
+) -> list[dict]:
+    if column not in df.columns:
+        return [{"label": all_label, "value": "ALL"}]
+    values = df[column].fillna("").astype(str).str.strip()
+    counts = Counter(v for v in values if v)
+    display_counts = Counter()
+    for value, count in counts.items():
+        display_counts[_display_record_linkage(value) if column == "record_linkage" else value] += count
+    if preferred_order:
+        ordered = [v for v in preferred_order if v in display_counts]
+        ordered.extend(sorted(v for v in display_counts if v not in ordered))
+    else:
+        ordered = sorted(display_counts)
+    return (
+        [{"label": all_label, "value": "ALL"}]
+        + [
+            {
+                "label": _filter_label_with_count(value, display_counts[value]),
+                "value": value,
+            }
+            for value in ordered
+        ]
+    )
+
+
+def _semicolon_value_options(df: pd.DataFrame, column: str, all_label: str) -> list[dict]:
+    if column not in df.columns:
+        return [{"label": all_label, "value": "ALL"}]
+    counts: Counter = Counter()
+    for values in df[column].dropna():
+        counts.update(set(_split_semicolon_values(values)))
+    return (
+        [{"label": all_label, "value": "ALL"}]
+        + [
+            {"label": _filter_label_with_count(value, counts[value]), "value": value}
+            for value in sorted(counts)
+        ]
+    )
 
 
 def _count_substantive_domains(value):
@@ -256,6 +307,32 @@ def load_thematic_data(thematic_dir):
                 for t in _all_tags
             ]
         )
+        _deterministic_record_linkage_options = _single_value_options(
+            df_thematic_projects,
+            "record_linkage",
+            "All record linkage",
+            ["No record linkage", "Cross-domain", "Within-domain"],
+        )
+        _deterministic_collection_method_options = _semicolon_value_options(
+            df_thematic_projects,
+            "dataset_collection_methods",
+            "All collection methods",
+        )
+        _deterministic_temporal_structure_options = _semicolon_value_options(
+            df_thematic_projects,
+            "dataset_temporal_structures",
+            "All temporal structures",
+        )
+        _deterministic_unit_options = _semicolon_value_options(
+            df_thematic_projects,
+            "dataset_units",
+            "All units",
+        )
+        _deterministic_researcher_sector_options = _semicolon_value_options(
+            df_thematic_projects,
+            "researcher_sectors",
+            "All researcher sectors",
+        )
 
         _tagged_mask = _tag_series_values.apply(_has_any_tag)
         thematic_tagged_count = int(_tagged_mask.sum())
@@ -311,6 +388,11 @@ def load_thematic_data(thematic_dir):
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": _thematic_domain_count_options,
             "_THEMATIC_PURPOSE_OPTIONS": _thematic_purpose_options,
             "_THEMATIC_TAG_OPTIONS": _thematic_tag_options,
+            "_DETERMINISTIC_RECORD_LINKAGE_OPTIONS": _deterministic_record_linkage_options,
+            "_DETERMINISTIC_COLLECTION_METHOD_OPTIONS": _deterministic_collection_method_options,
+            "_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS": _deterministic_temporal_structure_options,
+            "_DETERMINISTIC_UNIT_OPTIONS": _deterministic_unit_options,
+            "_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS": _deterministic_researcher_sector_options,
         }, True
     except (FileNotFoundError, KeyError):
         return {
@@ -330,6 +412,11 @@ def load_thematic_data(thematic_dir):
             "_THEMATIC_DOMAIN_COUNT_OPTIONS": [],
             "_THEMATIC_PURPOSE_OPTIONS": [],
             "_THEMATIC_TAG_OPTIONS": [],
+            "_DETERMINISTIC_RECORD_LINKAGE_OPTIONS": [],
+            "_DETERMINISTIC_COLLECTION_METHOD_OPTIONS": [],
+            "_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS": [],
+            "_DETERMINISTIC_UNIT_OPTIONS": [],
+            "_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS": [],
         }, False
 
 
@@ -352,3 +439,8 @@ _THEMATIC_DOMAIN_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_OPTIONS"]
 _THEMATIC_DOMAIN_COUNT_OPTIONS = _thematic_data["_THEMATIC_DOMAIN_COUNT_OPTIONS"]
 _THEMATIC_PURPOSE_OPTIONS = _thematic_data["_THEMATIC_PURPOSE_OPTIONS"]
 _THEMATIC_TAG_OPTIONS = _thematic_data["_THEMATIC_TAG_OPTIONS"]
+_DETERMINISTIC_RECORD_LINKAGE_OPTIONS = _thematic_data["_DETERMINISTIC_RECORD_LINKAGE_OPTIONS"]
+_DETERMINISTIC_COLLECTION_METHOD_OPTIONS = _thematic_data["_DETERMINISTIC_COLLECTION_METHOD_OPTIONS"]
+_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS = _thematic_data["_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS"]
+_DETERMINISTIC_UNIT_OPTIONS = _thematic_data["_DETERMINISTIC_UNIT_OPTIONS"]
+_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS = _thematic_data["_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS"]

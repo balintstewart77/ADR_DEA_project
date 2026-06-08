@@ -257,6 +257,11 @@ def _get_enriched_register_display_df(
     domain_count_filter,
     purpose_filter,
     tag_filter,
+    record_linkage_filter="ALL",
+    collection_method_filter="ALL",
+    temporal_structure_filter="ALL",
+    unit_filter="ALL",
+    researcher_sector_filter="ALL",
 ) -> tuple[pd.DataFrame, str]:
     base = _ensure_enriched_register_columns(df_thematic_projects)
     base = base[_classified_mask(base)]
@@ -281,6 +286,28 @@ def _get_enriched_register_display_df(
         base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
     if tag_filter and tag_filter != "ALL":
         base = base[_contains_semicolon_value(base[CROSS_CUTTING_TAGS_COL], tag_filter)]
+    if record_linkage_filter and record_linkage_filter != "ALL":
+        base = base[_format_record_linkage(base[RECORD_LINKAGE_COL]) == record_linkage_filter]
+    if collection_method_filter and collection_method_filter != "ALL":
+        base = base[
+            _contains_semicolon_value(
+                base["dataset_collection_methods"],
+                collection_method_filter,
+            )
+        ]
+    if temporal_structure_filter and temporal_structure_filter != "ALL":
+        base = base[
+            _contains_semicolon_value(
+                base["dataset_temporal_structures"],
+                temporal_structure_filter,
+            )
+        ]
+    if unit_filter and unit_filter != "ALL":
+        base = base[_contains_semicolon_value(base["dataset_units"], unit_filter)]
+    if researcher_sector_filter and researcher_sector_filter != "ALL":
+        base = base[
+            _contains_semicolon_value(base["researcher_sectors"], researcher_sector_filter)
+        ]
 
     n_displayed = len(base)
     n_classified_total = _CLASSIFIED_REGISTER_COUNT
