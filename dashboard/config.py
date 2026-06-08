@@ -164,7 +164,7 @@ FEEDBACK_EMAIL_URL = (
 SOURCE_URL = "https://github.com/balintstewart77/ADR_DEA_project"
 
 # Where the dashboard READS the frozen classification outputs (the results run).
-CLASSIFICATION_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v4_8_rc1")
+CLASSIFICATION_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v4_8_rc2")
 # Where register cleaning WRITES its duplicate-review diagnostic at startup.
 # Kept separate from CLASSIFICATION_DIR so the live app never writes into the
 # committed results directory.

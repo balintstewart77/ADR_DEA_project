@@ -80,6 +80,7 @@ analysis/outputs_v*/cross_mode_domain.csv
 analysis/outputs_v*/cross_domain_purpose.csv
 analysis/outputs_v*/all_projects_classified.csv
 analysis/outputs_v*/layer_summary.txt
+analysis/outputs_v*/manifest.json
 analysis/outputs_v*/quality/
 
 # --- Backup files from editing ---
@@ -125,3 +126,14 @@ analysis/outputs/instruction_layer_figures_report.md
 !analysis/outputs_v4_8_rc1/layer_b_totals.csv
 !analysis/outputs_v4_8_rc1/layer_c_totals.csv
 !analysis/outputs_v4_8_rc1/layer_summary.txt
+
+# --- Canonical results run (Opus 4.8, taxonomy dict-1.0-rc2) ---
+# Dashboard-consumed files only; cache, run.log, manifest, quality/review
+# artefacts, all_projects_classified.csv and cross-domain CSVs stay ignored.
+!analysis/outputs_v4_8_rc2/layer_a_by_year.csv
+!analysis/outputs_v4_8_rc2/layer_b_by_year.csv
+!analysis/outputs_v4_8_rc2/layer_c_by_year.csv
+!analysis/outputs_v4_8_rc2/layer_a_totals.csv
+!analysis/outputs_v4_8_rc2/layer_b_totals.csv
+!analysis/outputs_v4_8_rc2/layer_c_totals.csv
+!analysis/outputs_v4_8_rc2/layer_summary.txt

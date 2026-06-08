@@ -1,0 +1,25 @@
+# Analytical Summary: DEA-Accredited Research Project Classification
+
+## 1. Dominant Substantive Domains
+
+The research landscape is concentrated in a small number of substantive domains. Labour Market & Employment is the single largest domain, appearing in 416 projects, followed by Business & Productivity (366), Education & Skills (253), and Health & Social Care (245). These four domains dominate the register relative to the remaining categories, which each fall below 100 projects: Poverty, Wealth & Living Standards (91), Environment & Agriculture (86), Migration & Demographics (79), Crime & Justice (79), Data Infrastructure & Methodology (51), Housing & Planning (46), and Public Finance & Taxation (25). Only 4 projects were classified as Unclear from Register Entry.
+
+## 2. Evolution Over Time
+
+The year-by-year domain shares show several distinct trajectories. Education & Skills rose markedly, from 4.5% of projects in 2019 to 12.4% in 2022, 16.2% in 2023, and 30.5% in 2024, peaking at 31.0% in 2025 before settling at 27.5% in 2026. Labour Market & Employment increased from 22.7% in 2019 to 36.9% in 2024, then 33.9% in 2025 and 23.5% in 2026. By contrast, Business & Productivity declined over the latter years, from a peak of 45.8% in 2020 to 31.9% in 2021, 20.8% in 2024, and 19.9% in 2025, before rising to 29.4% in 2026. Health & Social Care fluctuated within a band of 14.8% (2023) to 24.0% (2025). Housing & Planning fell sharply from 18.2% in 2019 to 4.2% in 2020 and has remained low, between 2.5% (2021) and 5.9% (2026).
+
+## 3. Main Analytical Purposes
+
+Across the analytical-purpose classification, Outcome Tracking is the most common purpose with 471 projects, followed by Descriptive Monitoring (397) and Policy Evaluation / Impact Analysis (239). Life-Course / Trajectory Analysis (95) and Methodological / Infrastructure Research (78) form a middle tier, while Service Interaction / Systems Analysis (24), Risk Prediction / Early Identification (19), and Unclear from Register Entry (4) are the smallest categories. Year-on-year, Outcome Tracking grew from 31.8% in 2019 to 40.3% in 2024 and 45.1% in 2026. Descriptive Monitoring declined over the same period, from 45.5% in 2019 to 26.3% in 2024 and 23.5% in 2026. Policy Evaluation / Impact Analysis remained relatively stable but with a slight downward drift, from 18.2% (2019) to a range of 15.7% (2026) to 23.1% (2021). Life-Course / Trajectory Analysis rose from 0.0% in 2019 to 8.9% in 2024 and 9.2% in 2025.
+
+## 4. Notable Domain–Purpose Combinations
+
+The cross-tabulation reveals that some domains are disproportionately associated with particular purposes. Policy Evaluation / Impact Analysis is most prominent in Business & Productivity (121 projects), Labour Market & Employment (70), and Environment & Agriculture (34). Within Public Finance & Taxation, Policy Evaluation accounts for 16 of its limited project counts, exceeding Outcome Tracking (8) and Descriptive Monitoring (1) — the only domain where evaluation is the leading purpose. Outcome Tracking dominates in Labour Market & Employment (160), Health & Social Care (134), Business & Productivity (128), and Education & Skills (118). Life-Course / Trajectory Analysis concentrates in Labour Market & Employment (51) and Education & Skills (49), with Health & Social Care a distant third (17). Service Interaction / Systems Analysis appears most in Health & Social Care (15) and Crime & Justice (11), and is absent or near-absent across most other domains.
+
+## 5. Specialised and Low-Distribution Categories
+
+Data Infrastructure & Methodology is almost entirely associated with a single purpose: of its 51 projects, 51 are classified as Methodological / Infrastructure Research, with no Outcome Tracking or Policy Evaluation entries. Risk Prediction / Early Identification, the smallest substantive purpose at 19 projects, is most present in Health & Social Care (11) and Education & Skills (5), and absent from several domains including Business & Productivity (2) and Crime & Justice (0).
+
+## 6. Under-Represented Areas Visible in the Data
+
+Several categories occupy a consistently small share of the register. Public Finance & Taxation (25 projects) is the smallest substantive domain other than the Unclear category, holding shares between 0.0% (2019) and 4.2% (2020) across the years. Housing & Planning (46 projects) declined from 18.2% in 2019 to a 2.5%–5.9% range thereafter. Among purposes, Risk Prediction / Early Identification (19 projects) never exceeds 2.5% in any year, and Service Interaction / Systems Analysis (24 projects) ranges from 0.0% (2019) to 3.9% (2026). Migration & Demographics shows a declining share, from 11.7% in 2020 to 3.8% in 2024 and 2.0% in 2026. Descriptive Monitoring, while the second-largest purpose overall, shows the clearest sustained decline in share, from 45.5% in 2019 to 23.5% in 2026.
