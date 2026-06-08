@@ -20,6 +20,8 @@ try:
 except ModuleNotFoundError:
     from institution_normalisation import parse_institutions
 
+from dashboard.data.deterministic import RECORD_LINKAGE_COL, load_register_properties
+
 # ---------------------------------------------------------------------------
 # Load data once at startup
 # ---------------------------------------------------------------------------
@@ -63,6 +65,37 @@ TOTAL_DATASET_REQUESTS = len(df_datasets)
 TOTAL_FLAGSHIP = df_flagship_projects["Project Row ID"].nunique() if len(df_flagship_projects) else 0
 TOTAL_FLAGSHIP_REQUESTS = len(df_flagship_requests) if len(df_flagship_requests) else 0
 YEAR_RANGE = f"{int(df_all['Year'].min())}–{int(df_all['Year'].max())}" if len(df_all) else ""
+
+_register_properties = load_register_properties(columns=[RECORD_LINKAGE_COL])
+if "Record ID" in df_all.columns and not _register_properties.empty:
+    _linkage_lookup = (
+        _register_properties
+        .drop_duplicates(subset=["Record ID"], keep="first")
+        .set_index("Record ID")[RECORD_LINKAGE_COL]
+    )
+    _record_linkage_values = (
+        df_all["Record ID"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .map(_linkage_lookup)
+        .fillna("")
+    )
+else:
+    _record_linkage_values = pd.Series("", index=df_all.index, dtype=object)
+
+CROSS_DOMAIN_LINKED_PROJECTS = int(
+    (_record_linkage_values == "Cross-domain record linkage").sum()
+)
+WITHIN_DOMAIN_LINKED_PROJECTS = int(
+    (_record_linkage_values == "Within-domain record linkage").sum()
+)
+RECORD_LINKED_PROJECTS = CROSS_DOMAIN_LINKED_PROJECTS + WITHIN_DOMAIN_LINKED_PROJECTS
+RECORD_LINKED_PROJECT_SHARE = (
+    RECORD_LINKED_PROJECTS / TOTAL_PROJECTS * 100
+    if TOTAL_PROJECTS
+    else 0.0
+)
 RETAINED_CONFLICTING_DUPLICATE_IDS = sorted(
     df_all.loc[df_all["Project ID"].duplicated(keep=False), "Project ID"].unique().tolist()
 )

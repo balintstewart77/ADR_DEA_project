@@ -65,6 +65,17 @@
     padding: 1.1rem 1.25rem;
     border-left: 4px solid var(--accent-color, #3366cc);
 }
+.stat-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+}
+.stat-icon {
+    color: var(--accent-color, #2c3e50);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+}
 .stat-number {
     font-size: 1.75rem;
     font-weight: 700;
