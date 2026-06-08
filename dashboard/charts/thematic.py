@@ -225,6 +225,87 @@ def make_domain_record_linkage_breakdown(
     return _apply_common(fig, height=height)
 
 
+def make_researcher_sector_cooccurrence(
+    matrix: pd.DataFrame,
+    excluded_count: int = 0,
+    height: int = 500,
+) -> go.Figure:
+    """Lower-triangle researcher-sector co-occurrence heatmap."""
+    fig = go.Figure()
+    if matrix.empty:
+        fig.add_annotation(
+            text=(
+                "Diagonal = projects with researchers from only that sector.<br>"
+                "Projects with unmapped (unclassified) organisations are excluded from this figure.<br>"
+                f"Excluded projects: {excluded_count:,}."
+            ),
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=-0.2,
+            showarrow=False,
+            xanchor="left",
+            font=dict(size=11, color="#7f8c8d"),
+        )
+        return _apply_common(fig, height=height)
+
+    sectors = list(matrix.index)
+    counts = matrix.loc[sectors, sectors].to_numpy(dtype=float)
+    lower_mask = np.tri(len(sectors), dtype=bool)
+    z = counts.copy()
+    z[~lower_mask] = np.nan
+    z_hi = np.nanmax(z) if np.isfinite(z).any() else 0
+
+    annotations = []
+    for i, row_sector in enumerate(sectors):
+        for j, col_sector in enumerate(sectors):
+            if not lower_mask[i][j] or not np.isfinite(z[i][j]):
+                continue
+            value = int(z[i][j])
+            if value == 0:
+                continue
+            annotations.append(dict(
+                x=col_sector,
+                y=row_sector,
+                text=str(value),
+                showarrow=False,
+                font=dict(size=12, color="white" if value > z_hi * 0.55 else "#2c3e50"),
+            ))
+
+    fig.add_trace(go.Heatmap(
+        z=z,
+        x=sectors,
+        y=sectors,
+        colorscale="Tealgrn",
+        showscale=True,
+        hoverongaps=False,
+        colorbar=dict(title="Projects"),
+        hovertemplate="<b>%{y}</b> × <b>%{x}</b><br>%{z:.0f} projects<extra></extra>",
+    ))
+    fig.update_layout(
+        title="Researcher Sector Co-occurrence",
+        annotations=annotations,
+        xaxis=dict(side="bottom", tickangle=-25, automargin=True),
+        yaxis=dict(autorange="reversed", automargin=True),
+        margin=dict(l=120, r=80, t=80, b=130),
+    )
+    fig.add_annotation(
+        text=(
+            "Diagonal = projects with researchers from only that sector.<br>"
+            "Projects with unmapped (unclassified) organisations are excluded from this figure.<br>"
+            f"Excluded projects: {excluded_count:,}."
+        ),
+        xref="paper",
+        yref="paper",
+        x=0,
+        y=-0.28,
+        showarrow=False,
+        xanchor="left",
+        font=dict(size=11, color="#7f8c8d"),
+    )
+    return _apply_common(fig, height=height)
+
+
 def make_cross_heatmap(
     df_cross: pd.DataFrame,
     row_col: str,

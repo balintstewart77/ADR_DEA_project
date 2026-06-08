@@ -16,6 +16,8 @@ from dashboard.data.thematic import (
     df_researcher_sector_totals,
     df_record_linkage_by_year,
     df_domain_record_linkage,
+    df_researcher_sector_cooccurrence,
+    RESEARCHER_SECTOR_EXCLUDED_COUNT,
 )
 from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
@@ -24,6 +26,7 @@ from dashboard.charts.thematic import (
     make_thematic_trend, make_thematic_totals_bar, make_cross_heatmap,
     make_domain_cooccurrence, make_compact_distribution_bar,
     make_record_linkage_trend, make_domain_record_linkage_breakdown,
+    make_researcher_sector_cooccurrence,
 )
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 
@@ -43,6 +46,7 @@ def register(app):
         Output("thematic-domain-cooccurrence", "figure"),
         Output("deterministic-record-linkage-trend", "figure"),
         Output("deterministic-domain-linkage-breakdown", "figure"),
+        Output("deterministic-researcher-sector-cooccurrence", "figure"),
         Output("deterministic-record-linkage-distribution", "figure"),
         Output("deterministic-collection-method-distribution", "figure"),
         Output("deterministic-temporal-structure-distribution", "figure"),
@@ -103,6 +107,10 @@ def register(app):
             df_domain_record_linkage,
             metric=metric_mode,
         )
+        researcher_sector_cooccurrence = make_researcher_sector_cooccurrence(
+            df_researcher_sector_cooccurrence,
+            excluded_count=RESEARCHER_SECTOR_EXCLUDED_COUNT,
+        )
         record_linkage_distribution = make_compact_distribution_bar(
             df_record_linkage_totals,
             "record_linkage",
@@ -146,6 +154,7 @@ def register(app):
             domain_cooccurrence,
             record_linkage_trend,
             domain_linkage_breakdown,
+            researcher_sector_cooccurrence,
             record_linkage_distribution,
             collection_method_distribution,
             temporal_structure_distribution,

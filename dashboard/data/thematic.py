@@ -23,6 +23,7 @@ from dashboard.data.keys import _project_id_key
 
 
 _DETERMINISTIC_ENRICHED_COLUMNS = DETERMINISTIC_FACET_COLUMNS
+RESEARCHER_SECTOR_HEATMAP_ORDER = ["academic", "government", "third-sector", "commercial"]
 
 
 def _filter_label_with_count(label: str, count: int) -> str:
@@ -183,6 +184,32 @@ def _domain_record_linkage_crosstab(df: pd.DataFrame) -> pd.DataFrame:
     ct = ct[linkage_order]
     ct = ct.loc[ct.sum(axis=1).sort_values(ascending=False, kind="stable").index]
     return ct.reset_index().rename(columns={"index": "domain"})
+
+
+def _researcher_sector_cooccurrence(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    order = RESEARCHER_SECTOR_HEATMAP_ORDER
+    matrix = pd.DataFrame(0, index=order, columns=order, dtype=int)
+    if "researcher_sectors" not in df.columns:
+        return matrix, 0
+
+    excluded_count = 0
+    real_sectors = set(order)
+    for value in df["researcher_sectors"].dropna():
+        sectors = {
+            sector
+            for sector in _split_semicolon_values(value)
+            if sector in real_sectors
+        }
+        if not sectors:
+            excluded_count += 1
+            continue
+        if len(sectors) == 1:
+            sector = next(iter(sectors))
+            matrix.loc[sector, sector] += 1
+        for first, second in combinations(sorted(sectors), 2):
+            matrix.loc[first, second] += 1
+            matrix.loc[second, first] += 1
+    return matrix, excluded_count
 
 
 def _count_substantive_domains(value):
@@ -498,6 +525,9 @@ def load_thematic_data(thematic_dir):
         )
         df_record_linkage_by_year = _record_linkage_by_year(df_thematic_projects)
         df_domain_record_linkage = _domain_record_linkage_crosstab(df_thematic_projects)
+        df_researcher_sector_cooccurrence, researcher_sector_excluded_count = (
+            _researcher_sector_cooccurrence(df_thematic_projects)
+        )
 
         return {
             "df_thematic_a": df_thematic_a,
@@ -516,6 +546,8 @@ def load_thematic_data(thematic_dir):
             "df_researcher_sector_totals": df_researcher_sector_totals,
             "df_record_linkage_by_year": df_record_linkage_by_year,
             "df_domain_record_linkage": df_domain_record_linkage,
+            "df_researcher_sector_cooccurrence": df_researcher_sector_cooccurrence,
+            "RESEARCHER_SECTOR_EXCLUDED_COUNT": researcher_sector_excluded_count,
             "THEMATIC_NARRATIVE": thematic_narrative,
             "THEMATIC_PROJECT_COUNT": thematic_project_count,
             "THEMATIC_TAGGED_COUNT": thematic_tagged_count,
@@ -547,6 +579,8 @@ def load_thematic_data(thematic_dir):
             "df_researcher_sector_totals": pd.DataFrame(),
             "df_record_linkage_by_year": pd.DataFrame(),
             "df_domain_record_linkage": pd.DataFrame(),
+            "df_researcher_sector_cooccurrence": pd.DataFrame(),
+            "RESEARCHER_SECTOR_EXCLUDED_COUNT": 0,
             "THEMATIC_NARRATIVE": "",
             "THEMATIC_PROJECT_COUNT": 0,
             "THEMATIC_TAGGED_COUNT": 0,
@@ -581,6 +615,8 @@ df_unit_totals = _thematic_data["df_unit_totals"]
 df_researcher_sector_totals = _thematic_data["df_researcher_sector_totals"]
 df_record_linkage_by_year = _thematic_data["df_record_linkage_by_year"]
 df_domain_record_linkage = _thematic_data["df_domain_record_linkage"]
+df_researcher_sector_cooccurrence = _thematic_data["df_researcher_sector_cooccurrence"]
+RESEARCHER_SECTOR_EXCLUDED_COUNT = _thematic_data["RESEARCHER_SECTOR_EXCLUDED_COUNT"]
 THEMATIC_NARRATIVE = _thematic_data["THEMATIC_NARRATIVE"]
 THEMATIC_PROJECT_COUNT = _thematic_data["THEMATIC_PROJECT_COUNT"]
 THEMATIC_TAGGED_COUNT = _thematic_data["THEMATIC_TAGGED_COUNT"]

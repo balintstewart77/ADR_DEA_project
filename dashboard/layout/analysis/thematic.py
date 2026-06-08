@@ -172,6 +172,7 @@ def _analyses_accordion():
                 [
                     _graph("deterministic-record-linkage-trend"),
                     _graph("deterministic-domain-linkage-breakdown"),
+                    _graph("deterministic-researcher-sector-cooccurrence"),
                     dbc.Row([
                         dbc.Col(_graph("deterministic-record-linkage-distribution"), lg=4, md=6),
                         dbc.Col(_graph("deterministic-collection-method-distribution"), lg=4, md=6),
