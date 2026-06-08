@@ -136,6 +136,7 @@ _ALIASES = {
     "department for transport": "Department for Transport (DfT)",
     "department for transport (dft)": "Department for Transport (DfT)",
     "dft": "Department for Transport (DfT)",
+    "defra": "Department for Environment, Food & Rural Affairs",
     "hmrc": "HM Revenue and Customs (HMRC)",
     "hm revenue & customs": "HM Revenue and Customs (HMRC)",
     "hm revenue and customs": "HM Revenue and Customs (HMRC)",
@@ -445,6 +446,12 @@ _ALIASES = {
 _APPROVED_ACRONYM_RENAMES = {
     "Department for Education": "Department for Education (DfE)",
     "Department for Work and Pensions": "Department for Work and Pensions (DWP)",
+    "Department for Business, Energy and Industrial Strategy": (
+        "Department for Business, Energy and Industrial Strategy (BEIS)"
+    ),
+    "Department for Environment, Food & Rural Affairs": (
+        "Department for Environment, Food & Rural Affairs (DEFRA)"
+    ),
     "Ministry of Justice": "Ministry of Justice (MoJ)",
     "Office for National Statistics": "Office for National Statistics (ONS)",
     "Financial Conduct Authority": "Financial Conduct Authority (FCA)",
@@ -566,11 +573,12 @@ _INSTITUTION_SECTORS = {
     "DASCROSE Limited": "commercial",
     "Department for Business and Trade": "government",
     "Department for Business and Trade (DBT)": "government",
-    "Department for Business, Energy and Industrial Strategy": "government",
+    "Department for Business, Energy and Industrial Strategy (BEIS)": "government",
     "Department for Business, Innovation and Skills": "government",
     "Department for Culture, Media and Sport": "government",
     "Department for Digital, Culture, Media and Sport": "government",
     "Department for Education (DfE)": "government",
+    "Department for Environment, Food & Rural Affairs (DEFRA)": "government",
     "Department for International Trade": "government",
     "Department for Levelling Up, Housing and Communities": "government",
     "Department for Levelling Up, Housing and Communities (DLUHC)": "government",

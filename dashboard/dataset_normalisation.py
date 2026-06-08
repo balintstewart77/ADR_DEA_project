@@ -82,6 +82,7 @@ PROVIDER_ALIASES = {
     "Department For Education": "Department for Education",
     "DfT": "Department for Transport (DfT)",
     "DBT": "Department for Business and Trade (DBT)",
+    "DEFRA": "Department for Environment, Food & Rural Affairs (DEFRA)",
     "DLUHC": "Department for Levelling Up, Housing and Communities (DLUHC)",
     "DWP": "Department for Work and Pensions (DWP)",
     "MOJ": "Ministry of Justice",
@@ -91,6 +92,7 @@ PROVIDER_ALIASES = {
     "Offcie for National Statistics": "Office for National Statistics",
     "Department for Business and Trade": "Department for Business and Trade (DBT)",
     "Department for Business, Energy & Industrial Strategy": "Department for Business, Energy and Industrial Strategy",
+    "Department for Environment, Food & Rural Affairs": "Department for Environment, Food & Rural Affairs (DEFRA)",
     "Department for Levelling Up, Housing & Communities": "Department for Levelling Up, Housing and Communities (DLUHC)",
     "Department for Levelling Up, Housing and Communities": "Department for Levelling Up, Housing and Communities (DLUHC)",
     "Department for Transport": "Department for Transport (DfT)",
@@ -119,6 +121,12 @@ PROVIDER_ALIASES = {
 APPROVED_PROVIDER_ACRONYM_RENAMES = {
     "Department for Education": "Department for Education (DfE)",
     "Department for Work and Pensions": "Department for Work and Pensions (DWP)",
+    "Department for Business, Energy and Industrial Strategy": (
+        "Department for Business, Energy and Industrial Strategy (BEIS)"
+    ),
+    "Department for Environment, Food & Rural Affairs": (
+        "Department for Environment, Food & Rural Affairs (DEFRA)"
+    ),
     "Ministry of Justice": "Ministry of Justice (MoJ)",
     "Office for National Statistics": "Office for National Statistics (ONS)",
     "Financial Conduct Authority": "Financial Conduct Authority (FCA)",
@@ -153,22 +161,29 @@ APPROVED_PROVIDER_ACRONYM_RENAMES = {
     "National Physical Laboratory": "National Physical Laboratory (NPL)",
 }
 
+PROVIDER_COMPONENT_RENAMES = {
+    "HM Revenue & Customs": "HM Revenue and Customs (HMRC)",
+    "HM Revenue and Customs": "HM Revenue and Customs (HMRC)",
+    "HMRC": "HM Revenue and Customs (HMRC)",
+}
+
 
 def _with_approved_provider_acronym(canonical: str) -> str:
     if canonical in APPROVED_PROVIDER_ACRONYM_RENAMES:
         return APPROVED_PROVIDER_ACRONYM_RENAMES[canonical]
 
     updated = canonical
-    for name, acronym_name in sorted(
-        APPROVED_PROVIDER_ACRONYM_RENAMES.items(),
-        key=lambda item: len(item[0]),
-        reverse=True,
-    ):
-        updated = re.sub(
-            rf"(?<![A-Za-z0-9]){re.escape(name)}(?!\s*\()",
-            acronym_name,
-            updated,
-        )
+    for rename_map in (APPROVED_PROVIDER_ACRONYM_RENAMES, PROVIDER_COMPONENT_RENAMES):
+        for name, acronym_name in sorted(
+            rename_map.items(),
+            key=lambda item: len(item[0]),
+            reverse=True,
+        ):
+            updated = re.sub(
+                rf"(?<![A-Za-z0-9(]){re.escape(name)}(?!\s*\()",
+                acronym_name,
+                updated,
+            )
     return updated
 
 
