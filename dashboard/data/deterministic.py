@@ -26,6 +26,25 @@ RECORD_LINKAGE_DISPLAY_LABELS = {
 }
 
 
+def display_deterministic_value(value) -> str:
+    """Display-only capitalisation for deterministic controlled-vocabulary values."""
+    text = "" if value is None else str(value).strip()
+    if not text or text == "—":
+        return text
+    return text[:1].upper() + text[1:]
+
+
+def display_deterministic_set(value) -> str:
+    """Display-only capitalisation for semicolon-separated deterministic values."""
+    text = "" if value is None else str(value)
+    parts = [
+        display_deterministic_value(part)
+        for part in text.split(";")
+        if part.strip()
+    ]
+    return "; ".join(parts)
+
+
 def _empty_register_properties(columns: list[str]) -> pd.DataFrame:
     return pd.DataFrame(columns=[REGISTER_PROPERTIES_KEY_COL, *columns])
 

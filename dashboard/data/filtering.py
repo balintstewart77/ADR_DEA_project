@@ -27,6 +27,7 @@ from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
     RECORD_LINKAGE_COL,
     RECORD_LINKAGE_DISPLAY_LABELS,
+    display_deterministic_set,
 )
 from dashboard.data.keys import _project_id_key, _title_key
 
@@ -229,7 +230,8 @@ def _format_record_linkage(series: pd.Series) -> pd.Series:
 
 
 def _format_deterministic_facet(series: pd.Series) -> pd.Series:
-    return series.fillna("").astype(str).str.strip().replace("", DERIVED_EMPTY_VALUE)
+    values = series.fillna("").astype(str).str.strip()
+    return values.apply(display_deterministic_set).replace("", DERIVED_EMPTY_VALUE)
 
 
 def _get_browse_display_df(search, dataset, provider, institution, tre) -> pd.DataFrame:

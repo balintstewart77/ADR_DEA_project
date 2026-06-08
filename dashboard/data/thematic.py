@@ -17,6 +17,7 @@ from dashboard.config import (
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
     RECORD_LINKAGE_DISPLAY_LABELS,
+    display_deterministic_value,
     load_register_properties,
 )
 from dashboard.data.keys import _project_id_key
@@ -80,7 +81,13 @@ def _semicolon_value_options(df: pd.DataFrame, column: str, all_label: str) -> l
     return (
         [{"label": all_label, "value": "ALL"}]
         + [
-            {"label": _filter_label_with_count(value, counts[value]), "value": value}
+            {
+                "label": _filter_label_with_count(
+                    display_deterministic_value(value),
+                    counts[value],
+                ),
+                "value": value,
+            }
             for value in sorted(counts)
         ]
     )
@@ -116,7 +123,13 @@ def _semicolon_value_totals(df: pd.DataFrame, source_col: str, output_col: str) 
     for values in df[source_col].dropna():
         counts.update(set(_split_semicolon_values(values)))
     return pd.DataFrame(
-        [{output_col: value, "count": int(counts[value])} for value in sorted(counts)],
+        [
+            {
+                output_col: display_deterministic_value(value),
+                "count": int(counts[value]),
+            }
+            for value in sorted(counts)
+        ],
         columns=[output_col, "count"],
     )
 
@@ -257,6 +270,21 @@ def _tag_series(df: pd.DataFrame) -> pd.Series:
     return pd.Series("", index=df.index, dtype=object)
 
 
+def _tag_domain_totals(
+    df: pd.DataFrame,
+    tag_series_values: pd.Series,
+    tag: str,
+) -> pd.DataFrame:
+    tag_mask = tag_series_values.apply(lambda value: tag in _split_semicolon_values(value))
+    tag_domain_counts: Counter = Counter()
+    for domains in df.loc[tag_mask, "substantive_domains"].dropna():
+        tag_domain_counts.update(_split_semicolon_values(domains))
+    return pd.DataFrame(
+        sorted(tag_domain_counts.items(), key=lambda kv: kv[1], reverse=True),
+        columns=["domain", "count"],
+    )
+
+
 def _domain_crosstab(df: pd.DataFrame, other_col: str, other_multi: bool, col_order) -> pd.DataFrame:
     """Substantive-domain x classification-value counts over ALL domains.
 
@@ -292,10 +320,10 @@ def _domain_crosstab(df: pd.DataFrame, other_col: str, other_multi: bool, col_or
 def _domain_cooccurrence(df: pd.DataFrame) -> pd.DataFrame:
     """Square domain x domain matrix of how often each pair co-occurs in a project.
 
-    The diagonal holds each domain's project total; off-diagonal cells hold the
-    number of projects carrying both domains. Domains are ordered by total
-    (descending). The "Unclear" fallback is excluded — it cannot co-occur with a
-    real domain by construction.
+    The diagonal holds projects whose domain set is exactly that domain.
+    Off-diagonal cells hold the number of projects carrying both domains.
+    Domains are ordered by total (descending). The "Unclear" fallback is
+    excluded because it cannot co-occur with a real domain by construction.
     """
     if "substantive_domains" not in df.columns:
         return pd.DataFrame()
@@ -309,10 +337,13 @@ def _domain_cooccurrence(df: pd.DataFrame) -> pd.DataFrame:
             project_domains.append(domains)
 
     totals: Counter = Counter()
+    solo_totals: Counter = Counter()
     pairs: Counter = Counter()
     for domains in project_domains:
         for domain in domains:
             totals[domain] += 1
+        if len(domains) == 1:
+            solo_totals[domains[0]] += 1
         for a, b in combinations(domains, 2):
             pairs[(a, b)] += 1
             pairs[(b, a)] += 1
@@ -322,9 +353,10 @@ def _domain_cooccurrence(df: pd.DataFrame) -> pd.DataFrame:
     order = [domain for domain, _ in totals.most_common()]
     matrix = pd.DataFrame(0, index=order, columns=order, dtype=int)
     for domain in order:
-        matrix.loc[domain, domain] = totals[domain]
+        matrix.loc[domain, domain] = solo_totals[domain]
     for (a, b), count in pairs.items():
         matrix.loc[a, b] = count
+    matrix.attrs["domain_totals"] = dict(totals)
     return matrix
 
 
@@ -488,14 +520,15 @@ def load_thematic_data(thematic_dir):
         else:
             df_thematic_tag_by_year = pd.DataFrame()
 
-        # Which domains the tagged projects fall in (where the equity lens applies).
-        _tag_domain_counts = {}
-        for domains in df_thematic_projects.loc[_tagged_mask, "substantive_domains"].dropna():
-            for domain in _split_semicolon_values(domains):
-                _tag_domain_counts[domain] = _tag_domain_counts.get(domain, 0) + 1
-        df_thematic_tag_by_domain = pd.DataFrame(
-            sorted(_tag_domain_counts.items(), key=lambda kv: kv[1], reverse=True),
-            columns=["domain", "count"],
+        df_thematic_covid_tag_by_domain = _tag_domain_totals(
+            df_thematic_projects,
+            _tag_series_values,
+            "COVID-19 & Pandemic",
+        )
+        df_thematic_demographic_tag_by_domain = _tag_domain_totals(
+            df_thematic_projects,
+            _tag_series_values,
+            "Demographic disparities / equity tag",
         )
         df_record_linkage_totals = _single_value_totals(
             df_thematic_projects,
@@ -537,7 +570,8 @@ def load_thematic_data(thematic_dir):
             "df_cross_domain_purpose": df_cross_domain_purpose,
             "df_thematic_projects": df_thematic_projects,
             "df_thematic_tag_by_year": df_thematic_tag_by_year,
-            "df_thematic_tag_by_domain": df_thematic_tag_by_domain,
+            "df_thematic_covid_tag_by_domain": df_thematic_covid_tag_by_domain,
+            "df_thematic_demographic_tag_by_domain": df_thematic_demographic_tag_by_domain,
             "df_domain_cooccurrence": df_domain_cooccurrence,
             "df_record_linkage_totals": df_record_linkage_totals,
             "df_collection_method_totals": df_collection_method_totals,
@@ -570,7 +604,8 @@ def load_thematic_data(thematic_dir):
             "df_cross_domain_purpose": pd.DataFrame(),
             "df_thematic_projects": pd.DataFrame(),
             "df_thematic_tag_by_year": pd.DataFrame(),
-            "df_thematic_tag_by_domain": pd.DataFrame(),
+            "df_thematic_covid_tag_by_domain": pd.DataFrame(),
+            "df_thematic_demographic_tag_by_domain": pd.DataFrame(),
             "df_domain_cooccurrence": pd.DataFrame(),
             "df_record_linkage_totals": pd.DataFrame(),
             "df_collection_method_totals": pd.DataFrame(),
@@ -606,7 +641,8 @@ df_thematic_c_totals = _thematic_data["df_thematic_c_totals"]
 df_cross_domain_purpose = _thematic_data["df_cross_domain_purpose"]
 df_thematic_projects = _thematic_data["df_thematic_projects"]
 df_thematic_tag_by_year = _thematic_data["df_thematic_tag_by_year"]
-df_thematic_tag_by_domain = _thematic_data["df_thematic_tag_by_domain"]
+df_thematic_covid_tag_by_domain = _thematic_data["df_thematic_covid_tag_by_domain"]
+df_thematic_demographic_tag_by_domain = _thematic_data["df_thematic_demographic_tag_by_domain"]
 df_domain_cooccurrence = _thematic_data["df_domain_cooccurrence"]
 df_record_linkage_totals = _thematic_data["df_record_linkage_totals"]
 df_collection_method_totals = _thematic_data["df_collection_method_totals"]

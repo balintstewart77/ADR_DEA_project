@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from dashboard.charts.template import CHART_HEIGHT, _apply_common, _annotate_partial_year
+from dashboard.data.deterministic import display_deterministic_value
 
 
 def make_thematic_trend(
@@ -106,7 +107,7 @@ def make_compact_distribution_bar(
         xaxis_title="Projects",
         yaxis_title="",
         showlegend=False,
-        margin=dict(l=130, r=28, t=72, b=54),
+        margin=dict(l=130, r=28, t=92, b=48),
     )
     if multi_count:
         fig.add_annotation(
@@ -114,9 +115,10 @@ def make_compact_distribution_bar(
             xref="paper",
             yref="paper",
             x=0,
-            y=-0.18,
+            y=1.08,
             showarrow=False,
             xanchor="left",
+            yanchor="bottom",
             font=dict(size=10, color="#7f8c8d"),
         )
     return _apply_common(fig, height=height)
@@ -232,24 +234,31 @@ def make_researcher_sector_cooccurrence(
 ) -> go.Figure:
     """Lower-triangle researcher-sector co-occurrence heatmap."""
     fig = go.Figure()
+    caption = (
+        "Diagonal = projects with researchers from only that sector.<br>"
+        "Projects with unmapped (unclassified) organisations are excluded from this figure.<br>"
+        f"Excluded projects: {excluded_count:,}."
+    )
     if matrix.empty:
+        fig.update_layout(
+            title="Researcher Sector Co-occurrence",
+            margin=dict(l=120, r=80, t=130, b=70),
+        )
         fig.add_annotation(
-            text=(
-                "Diagonal = projects with researchers from only that sector.<br>"
-                "Projects with unmapped (unclassified) organisations are excluded from this figure.<br>"
-                f"Excluded projects: {excluded_count:,}."
-            ),
+            text=caption,
             xref="paper",
             yref="paper",
             x=0,
-            y=-0.2,
+            y=1.12,
             showarrow=False,
             xanchor="left",
+            yanchor="bottom",
             font=dict(size=11, color="#7f8c8d"),
         )
         return _apply_common(fig, height=height)
 
     sectors = list(matrix.index)
+    display_sectors = [display_deterministic_value(sector) for sector in sectors]
     counts = matrix.loc[sectors, sectors].to_numpy(dtype=float)
     lower_mask = np.tri(len(sectors), dtype=bool)
     z = counts.copy()
@@ -265,8 +274,8 @@ def make_researcher_sector_cooccurrence(
             if value == 0:
                 continue
             annotations.append(dict(
-                x=col_sector,
-                y=row_sector,
+                x=display_deterministic_value(col_sector),
+                y=display_deterministic_value(row_sector),
                 text=str(value),
                 showarrow=False,
                 font=dict(size=12, color="white" if value > z_hi * 0.55 else "#2c3e50"),
@@ -274,8 +283,8 @@ def make_researcher_sector_cooccurrence(
 
     fig.add_trace(go.Heatmap(
         z=z,
-        x=sectors,
-        y=sectors,
+        x=display_sectors,
+        y=display_sectors,
         colorscale="Tealgrn",
         showscale=True,
         hoverongaps=False,
@@ -287,20 +296,17 @@ def make_researcher_sector_cooccurrence(
         annotations=annotations,
         xaxis=dict(side="bottom", tickangle=-25, automargin=True),
         yaxis=dict(autorange="reversed", automargin=True),
-        margin=dict(l=120, r=80, t=80, b=130),
+        margin=dict(l=120, r=80, t=130, b=70),
     )
     fig.add_annotation(
-        text=(
-            "Diagonal = projects with researchers from only that sector.<br>"
-            "Projects with unmapped (unclassified) organisations are excluded from this figure.<br>"
-            f"Excluded projects: {excluded_count:,}."
-        ),
+        text=caption,
         xref="paper",
         yref="paper",
         x=0,
-        y=-0.28,
+        y=1.12,
         showarrow=False,
         xanchor="left",
+        yanchor="bottom",
         font=dict(size=11, color="#7f8c8d"),
     )
     return _apply_common(fig, height=height)
@@ -378,11 +384,11 @@ def make_domain_cooccurrence(
 ) -> go.Figure:
     """Domain x domain co-occurrence heatmap.
 
-    ``cooc`` is a square matrix whose diagonal holds each domain's total and whose
-    off-diagonal cells hold the number of projects carrying both domains. The
-    diagonal is masked. ``metric`` ("count" | "pct") switches the off-diagonal
-    cells between the (symmetric) co-occurrence count and the row-wise share
-    P(column | row) = co-occurrences ÷ the row domain's total. The hover shows both.
+    ``cooc`` is a square matrix whose diagonal holds projects with only that
+    domain and whose off-diagonal cells hold the number of projects carrying both
+    domains. ``metric`` ("count" | "pct") switches cells between counts and the
+    row-wise share P(column | row), using total row-domain projects supplied in
+    ``cooc.attrs["domain_totals"]`` where available. The hover shows both.
     """
     if cooc.empty:
         return _apply_common(go.Figure(), height=height or 620)
@@ -391,46 +397,67 @@ def make_domain_cooccurrence(
         # tall enough that every domain row labels without Plotly thinning them
         height = 240 + 44 * len(domains)
     counts = cooc.to_numpy(dtype=float)
-    totals = np.diag(counts).copy()
+    domain_totals = cooc.attrs.get("domain_totals", {})
+    totals = np.array([
+        float(domain_totals.get(domain, counts[i].sum()))
+        for i, domain in enumerate(domains)
+    ])
     pct = np.divide(counts * 100, totals[:, None], out=np.zeros_like(counts), where=totals[:, None] != 0)
 
-    mask = np.eye(len(domains), dtype=bool)
-    disp_counts = counts.copy(); disp_counts[mask] = np.nan
-    disp_pct = pct.copy(); disp_pct[mask] = np.nan
-
     show_pct = metric == "pct"
-    z = disp_pct if show_pct else disp_counts
-    customdata = np.dstack([disp_counts, disp_pct])
+    z = pct if show_pct else counts
     z_hi = np.nanmax(z) if np.isfinite(z).any() else 0
 
     annotations = []
+    hovertext = []
     for i, yd in enumerate(domains):
+        hover_row = []
         for j, xd in enumerate(domains):
             val = z[i][j]
-            if i == j or not np.isfinite(val) or val == 0:
+            cell_count = counts[i][j]
+            cell_pct = pct[i][j]
+            if i == j:
+                hover_row.append(
+                    f"<b>{yd}</b><br>"
+                    f"{cell_count:.0f} projects with only this domain<br>"
+                    f"{cell_pct:.0f}% of {yd}"
+                )
+            else:
+                hover_row.append(
+                    f"<b>{yd}</b> + <b>{xd}</b><br>"
+                    f"{cell_count:.0f} projects carry both<br>"
+                    f"{cell_pct:.0f}% of {yd}"
+                )
+            if not np.isfinite(val) or val == 0:
                 continue
-            text = f"{disp_pct[i][j]:.0f}%" if show_pct else str(int(disp_counts[i][j]))
+            text = f"{cell_pct:.0f}%" if show_pct else str(int(cell_count))
             annotations.append(dict(
                 x=xd, y=yd, text=text, showarrow=False,
                 font=dict(size=10, color="white" if val > z_hi * 0.55 else "#2c3e50"),
             ))
+        hovertext.append(hover_row)
 
     fig = go.Figure(go.Heatmap(
-        z=z, x=domains, y=domains, customdata=customdata,
+        z=z, x=domains, y=domains, text=hovertext,
         colorscale=colorscale, showscale=True, hoverongaps=False,
         colorbar=dict(title="% of row domain" if show_pct else "Projects"),
-        hovertemplate=(
-            "<b>%{y}</b> + <b>%{x}</b><br>"
-            "%{customdata[0]:.0f} projects carry both<br>"
-            "%{customdata[1]:.0f}% of %{y}"
-            "<extra></extra>"
-        ),
+        hovertemplate="%{text}<extra></extra>",
     ))
     fig.update_layout(
         title="Domain Co-occurrence",
         annotations=annotations,
         xaxis=dict(side="bottom", tickangle=-35, automargin=True, tickmode="linear", tick0=0, dtick=1),
         yaxis=dict(autorange="reversed", tickmode="linear", tick0=0, dtick=1),
-        margin=dict(l=240, b=180),
+        margin=dict(l=240, t=90, b=220),
+    )
+    fig.add_annotation(
+        text="Diagonal = projects with only that domain.",
+        xref="paper",
+        yref="paper",
+        x=0,
+        y=-0.16,
+        showarrow=False,
+        xanchor="left",
+        font=dict(size=11, color="#7f8c8d"),
     )
     return _apply_common(fig, height=height)

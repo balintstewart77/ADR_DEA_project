@@ -7,7 +7,9 @@ from dashboard.data.thematic import (
     df_thematic_a, df_thematic_c,
     df_thematic_a_totals, df_thematic_c_totals,
     df_cross_domain_purpose,
-    df_thematic_tag_by_year, df_thematic_tag_by_domain,
+    df_thematic_tag_by_year,
+    df_thematic_covid_tag_by_domain,
+    df_thematic_demographic_tag_by_domain,
     df_domain_cooccurrence,
     df_record_linkage_totals,
     df_collection_method_totals,
@@ -42,7 +44,8 @@ def register(app):
         Output("thematic-purpose-totals", "figure"),
         Output("thematic-cross-domain-purpose", "figure"),
         Output("thematic-tag-trend", "figure"),
-        Output("thematic-tag-domain", "figure"),
+        Output("thematic-covid-tag-domain", "figure"),
+        Output("thematic-demographic-tag-domain", "figure"),
         Output("thematic-domain-cooccurrence", "figure"),
         Output("deterministic-record-linkage-trend", "figure"),
         Output("deterministic-domain-linkage-breakdown", "figure"),
@@ -52,18 +55,33 @@ def register(app):
         Output("deterministic-temporal-structure-distribution", "figure"),
         Output("deterministic-unit-distribution", "figure"),
         Output("deterministic-researcher-sector-distribution", "figure"),
-        Input("thematic-metric-toggle", "value"),
+        Input("thematic-domain-trend-metric", "value"),
+        Input("thematic-purpose-trend-metric", "value"),
+        Input("thematic-cross-domain-purpose-metric", "value"),
+        Input("thematic-tag-trend-metric", "value"),
+        Input("thematic-domain-cooccurrence-metric", "value"),
+        Input("deterministic-record-linkage-trend-metric", "value"),
+        Input("deterministic-domain-linkage-metric", "value"),
     )
-    def update_thematic_tab(metric_mode):
-        metric_col = "pct_of_projects" if metric_mode == "pct" else "count"
+    def update_thematic_tab(
+        domain_trend_metric,
+        purpose_trend_metric,
+        cross_domain_purpose_metric,
+        tag_trend_metric,
+        domain_cooccurrence_metric,
+        record_linkage_metric,
+        domain_linkage_metric,
+    ):
+        def metric_col(metric_mode):
+            return "pct_of_projects" if (metric_mode or "pct") == "pct" else "count"
 
         domain_trend = make_thematic_trend(
-            df_thematic_a, "domain", DOMAIN_COLOURS, metric_col,
+            df_thematic_a, "domain", DOMAIN_COLOURS, metric_col(domain_trend_metric),
             "Substantive Domains Over Time",
             partial_year_info=PARTIAL_YEAR_INFO,
         )
         purpose_trend = make_thematic_trend(
-            df_thematic_c, "purpose", PURPOSE_COLOURS, metric_col,
+            df_thematic_c, "purpose", PURPOSE_COLOURS, metric_col(purpose_trend_metric),
             "Analytical Purpose Over Time",
             height=CHART_HEIGHT,
             partial_year_info=PARTIAL_YEAR_INFO,
@@ -83,29 +101,36 @@ def register(app):
             "Substantive Domain × Analytical Purpose",
             colorscale=[[0, "#fef0ec"], [0.5, "#f4a582"], [1, "#d73027"]],
             height=560,
-            metric=metric_mode,
+            metric=cross_domain_purpose_metric or "pct",
         )
 
         tag_trend = make_thematic_trend(
-            df_thematic_tag_by_year, "tag", TAG_COLOURS, metric_col,
+            df_thematic_tag_by_year, "tag", TAG_COLOURS, metric_col(tag_trend_metric),
             "Cross-Cutting Tags Over Time",
             height=CHART_HEIGHT,
             partial_year_info=PARTIAL_YEAR_INFO,
         )
-        tag_domain = make_thematic_totals_bar(
-            df_thematic_tag_by_domain, "domain", DOMAIN_COLOURS,
-            "Tagged Projects by Domain", height=440,
+        covid_tag_domain = make_thematic_totals_bar(
+            df_thematic_covid_tag_by_domain, "domain", DOMAIN_COLOURS,
+            "COVID-19 & Pandemic by domain", height=440,
+        )
+        demographic_tag_domain = make_thematic_totals_bar(
+            df_thematic_demographic_tag_by_domain, "domain", DOMAIN_COLOURS,
+            "Demographic disparities by domain", height=440,
         )
 
-        domain_cooccurrence = make_domain_cooccurrence(df_domain_cooccurrence, metric=metric_mode)
+        domain_cooccurrence = make_domain_cooccurrence(
+            df_domain_cooccurrence,
+            metric=domain_cooccurrence_metric or "pct",
+        )
         record_linkage_trend = make_record_linkage_trend(
             df_record_linkage_by_year,
-            metric=metric_mode,
+            metric=record_linkage_metric or "pct",
             partial_year_info=PARTIAL_YEAR_INFO,
         )
         domain_linkage_breakdown = make_domain_record_linkage_breakdown(
             df_domain_record_linkage,
-            metric=metric_mode,
+            metric=domain_linkage_metric or "pct",
         )
         researcher_sector_cooccurrence = make_researcher_sector_cooccurrence(
             df_researcher_sector_cooccurrence,
@@ -150,7 +175,7 @@ def register(app):
             domain_trend, purpose_trend,
             domain_totals, purpose_totals,
             cross_purpose,
-            tag_trend, tag_domain,
+            tag_trend, covid_tag_domain, demographic_tag_domain,
             domain_cooccurrence,
             record_linkage_trend,
             domain_linkage_breakdown,

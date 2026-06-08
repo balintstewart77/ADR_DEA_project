@@ -42,6 +42,24 @@ def _graph(graph_id: str) -> html.Div:
     )
 
 
+def _metric_dropdown(dropdown_id: str) -> dbc.Row:
+    return dbc.Row([
+        dbc.Col([
+            html.Label("Metric", className="filter-label"),
+            dcc.Dropdown(
+                id=dropdown_id,
+                options=[
+                    {"label": "% of projects", "value": "pct"},
+                    {"label": "Project count", "value": "count"},
+                ],
+                value="pct",
+                clearable=False,
+                searchable=False,
+            ),
+        ], md=3),
+    ], className="mb-2 g-2")
+
+
 _thematic_methodology_md = f"""
 **Model:** Claude Opus 4.8 (`claude-opus-4-8`) via the Anthropic API with
 structured JSON output.
@@ -103,12 +121,14 @@ def _analyses_accordion():
                         "than 100% per year. Click a legend entry to show/hide individual domains.",
                         className="section-desc",
                     ),
+                    _metric_dropdown("thematic-domain-trend-metric"),
                     _graph("thematic-domain-trend"),
                     html.P(
                         "Projects may have up to two purposes, so percentages can sum to slightly "
                         "more than 100%.",
                         className="section-desc mt-3",
                     ),
+                    _metric_dropdown("thematic-purpose-trend-metric"),
                     _graph("thematic-purpose-trend"),
                 ],
                 title="Layer Trends Over Time",
@@ -125,10 +145,11 @@ def _analyses_accordion():
                     html.P(
                         "Substantive domains are multi-label, so each project is counted once per "
                         "domain it is assigned — column totals can therefore exceed the project count. "
-                        "All domains are shown. The metric toggle above switches the cells between "
+                        "All domains are shown. The metric control below switches the cells between "
                         "counts and each domain's row-wise percentage; the hover always shows both.",
                         className="section-desc",
                     ),
+                    _metric_dropdown("thematic-cross-domain-purpose-metric"),
                     _graph("thematic-cross-domain-purpose"),
                 ],
                 title="Cross-Layer Patterns",
@@ -138,15 +159,14 @@ def _analyses_accordion():
                     html.P(
                         "Substantive domains are multi-label, so a project can carry several. "
                         "This matrix counts how often each pair of domains appears together in "
-                        "the same project — which research areas are studied jointly. The "
-                        "diagonal (a domain with itself) is omitted and the \"Unclear\" fallback "
-                        "is excluded. In count mode the matrix is symmetric (projects carrying "
-                        "both domains); the metric toggle switches it to a row-wise share — of "
-                        "the row domain's projects, the percentage that also touch the column "
-                        "domain — which is directional, so the matrix is no longer symmetric. "
-                        "The hover shows both.",
+                        "the same project — which research areas are studied jointly. Diagonal "
+                        "cells count projects whose domain set is exactly that one domain. The "
+                        "\"Unclear\" fallback is excluded. In count mode the off-diagonal matrix "
+                        "is symmetric; the metric control below switches it to a row-wise share "
+                        "of the row domain's projects, which is directional. The hover shows both.",
                         className="section-desc",
                     ),
+                    _metric_dropdown("thematic-domain-cooccurrence-metric"),
                     _graph("thematic-domain-cooccurrence"),
                 ],
                 title="Domain Co-occurrence",
@@ -157,20 +177,24 @@ def _analyses_accordion():
                         f"Cross-cutting tags, orthogonal to the layers, mark projects whose "
                         f"analysis centres on a tag-defined lens or condition. At least one tag applies to "
                         f"{THEMATIC_TAGGED_COUNT:,} of {THEMATIC_PROJECT_COUNT:,} classified projects. "
-                        "The trend follows the metric toggle above; the bar shows which domains the "
-                        "tagged projects fall in.",
+                        "The trend has its own metric control; the domain bars below split the two "
+                        "active tags into separate charts.",
                         className="section-desc",
                     ),
+                    _metric_dropdown("thematic-tag-trend-metric"),
+                    _graph("thematic-tag-trend"),
                     dbc.Row([
-                        dbc.Col(_graph("thematic-tag-trend"), md=6),
-                        dbc.Col(_graph("thematic-tag-domain"), md=6),
+                        dbc.Col(_graph("thematic-covid-tag-domain"), md=6),
+                        dbc.Col(_graph("thematic-demographic-tag-domain"), md=6),
                     ], className="g-3"),
                 ],
                 title="Cross-Cutting Tags",
             ),
             dbc.AccordionItem(
                 [
+                    _metric_dropdown("deterministic-record-linkage-trend-metric"),
                     _graph("deterministic-record-linkage-trend"),
+                    _metric_dropdown("deterministic-domain-linkage-metric"),
                     _graph("deterministic-domain-linkage-breakdown"),
                     _graph("deterministic-researcher-sector-cooccurrence"),
                     dbc.Row([
@@ -408,10 +432,15 @@ def build_thematic_tab():
         children = [
             # Caveat banner
             dbc.Alert([
-                html.Strong("Experimental Analysis"),
-                " — Classifications below were generated by a large language model (Claude Opus). "
-                "They are based on project titles and dataset names only, and should be treated as "
-                "indicative rather than definitive. Ambiguous or terse titles may be misclassified.",
+                html.Strong("Enrichment scope"),
+                " — This section combines deterministic facets and LLM classifications. ",
+                html.Strong("Deterministic facets"),
+                " (record linkage, collection method, temporal structure, unit, and researcher sector) "
+                "are controlled-vocabulary lookups: exact and reproducible. ",
+                html.Strong("LLM classifications"),
+                " (substantive domain, analytical purpose, and cross-cutting tags) are inferred by "
+                "Claude Opus from project titles and dataset names only. They are indicative rather "
+                "than definitive, pending validation, and ambiguous or terse titles may be misclassified.",
             ], color="warning", className="mb-3 mt-2"),
 
             # Summary stats
@@ -444,22 +473,6 @@ def build_thematic_tab():
                     title="Analytical Narrative (LLM-Generated)",
                 ),
             ], start_collapsed=True, className="mb-4"),
-
-            # Metric toggle (drives the chart sections below)
-            dbc.Row([
-                dbc.Col([
-                    html.Label("Metric", className="filter-label"),
-                    dcc.Dropdown(
-                        id="thematic-metric-toggle",
-                        options=[
-                            {"label": "% of projects in year", "value": "pct"},
-                            {"label": "Absolute project count", "value": "count"},
-                        ],
-                        value="pct",
-                        clearable=False,
-                    ),
-                ], md=3),
-            ], className="mb-3 g-2"),
 
             html.P(
                 "Expand a section to view it — several can be open at once.",
