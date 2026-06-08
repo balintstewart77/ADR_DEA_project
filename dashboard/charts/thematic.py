@@ -171,6 +171,60 @@ def make_record_linkage_trend(
     return _apply_common(fig, height=height)
 
 
+def make_domain_record_linkage_breakdown(
+    df_cross: pd.DataFrame,
+    metric: str = "pct",
+    height: int = 560,
+) -> go.Figure:
+    """Stacked horizontal domain x record-linkage breakdown."""
+    fig = go.Figure()
+    linkage_order = ["No record linkage", "Within-domain", "Cross-domain"]
+    if df_cross.empty or "domain" not in df_cross.columns:
+        return _apply_common(fig, height=height)
+
+    value_cols = [col for col in linkage_order if col in df_cross.columns]
+    if not value_cols:
+        return _apply_common(fig, height=height)
+
+    work = df_cross.copy()
+    work["_total"] = work[value_cols].sum(axis=1)
+    work = work.sort_values("_total", ascending=True, kind="stable")
+    counts = work[value_cols].astype(float)
+    pct = counts.div(work["_total"].replace(0, np.nan), axis=0).fillna(0) * 100
+    colours = {
+        "No record linkage": "#8d99ae",
+        "Within-domain": "#2a9d8f",
+        "Cross-domain": "#e76f51",
+    }
+    for linkage in value_cols:
+        x = pct[linkage] if metric == "pct" else counts[linkage]
+        customdata = np.stack([counts[linkage], pct[linkage]], axis=-1)
+        fig.add_trace(go.Bar(
+            y=work["domain"],
+            x=x,
+            name=linkage,
+            orientation="h",
+            marker_color=colours.get(linkage, "#999999"),
+            customdata=customdata,
+            hovertemplate=(
+                f"<b>%{{y}}</b><br>{linkage}<br>"
+                "%{customdata[0]:.0f} projects<br>"
+                "%{customdata[1]:.1f}% of domain"
+                "<extra></extra>"
+            ),
+        ))
+
+    fig.update_layout(
+        title="Domain by Record Linkage",
+        xaxis_title="% of domain projects" if metric == "pct" else "Projects",
+        yaxis_title="",
+        barmode="stack",
+        xaxis=dict(range=[0, 100] if metric == "pct" else None),
+        margin=dict(l=230, r=80, t=80, b=48),
+    )
+    return _apply_common(fig, height=height)
+
+
 def make_cross_heatmap(
     df_cross: pd.DataFrame,
     row_col: str,
