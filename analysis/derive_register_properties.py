@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -212,6 +213,38 @@ def _key(value: object) -> str:
     return " ".join(str(value or "").split()).casefold()
 
 
+_TRAILING_ACRONYM_SUFFIX_RE = re.compile(r"^(?P<base>.+?)\s+\((?P<suffix>[^()]+)\)\s*$")
+
+
+def _looks_like_acronym_suffix(value: str) -> bool:
+    suffix = " ".join(value.split())
+    if not suffix or "," in suffix or len(suffix) > 24:
+        return False
+    if " " in suffix:
+        return all(re.fullmatch(r"[A-Z0-9&|./-]+", token) for token in suffix.split())
+    if not re.fullmatch(r"[A-Za-z0-9&|./-]+", suffix):
+        return False
+    return sum(1 for char in suffix if char.isupper()) >= 2
+
+
+def _strip_trailing_acronym_suffix(value: object) -> str:
+    text = " ".join(str(value or "").split())
+    match = _TRAILING_ACRONYM_SUFFIX_RE.match(text)
+    if not match:
+        return text
+    suffix = match.group("suffix")
+    if not _looks_like_acronym_suffix(suffix):
+        return text
+    return match.group("base").strip()
+
+
+def _organisation_match_keys(value: object) -> list[str]:
+    exact = _key(value)
+    stripped = _key(_strip_trailing_acronym_suffix(value))
+    keys = [exact, stripped]
+    return [item for i, item in enumerate(keys) if item and item not in keys[:i]]
+
+
 def _as_list(value: object) -> list:
     if value is None:
         return []
@@ -289,7 +322,8 @@ def build_indexes(reference: dict) -> ReferenceIndexes:
     for record in reference.get("organisations", []):
         values = [record["canonical"], *_as_list(record.get("aliases"))]
         for value in values:
-            _add_unique(organisation_by_key, _key(value), record, "organisation")
+            for key in _organisation_match_keys(value):
+                _add_unique(organisation_by_key, key, record, "organisation")
 
     linked_product_by_key: dict[str, list[dict]] = defaultdict(list)
     linked_product_order: dict[str, int] = {}
@@ -397,7 +431,11 @@ def lookup_dataset_record(canonical_dataset: str, indexes: ReferenceIndexes) -> 
 
 
 def lookup_organisation_record(institution: str, indexes: ReferenceIndexes) -> dict | None:
-    return indexes.organisation_by_key.get(_key(institution))
+    for key in _organisation_match_keys(institution):
+        record = indexes.organisation_by_key.get(key)
+        if record is not None:
+            return record
+    return None
 
 
 def match_linked_products(canonical_dataset: str, indexes: ReferenceIndexes) -> list[dict]:

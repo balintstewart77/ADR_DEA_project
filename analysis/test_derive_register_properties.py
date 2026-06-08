@@ -9,6 +9,7 @@ from analysis.derive_register_properties import (
     lookup_dataset_record,
     lookup_organisation_record,
     match_linked_products,
+    _organisation_match_keys,
 )
 
 
@@ -206,6 +207,67 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
                 record = lookup_organisation_record(organisation, self.indexes)
                 self.assertIsNotNone(record)
                 self.assertIn(sector, record["sectors"])
+
+    def test_researcher_sector_acronym_suffixes_match_plain_reference_keys(self):
+        cases = {
+            "University College London (UCL)": "academic",
+            "Institute for Fiscal Studies (IFS)": "third-sector",
+            "Office for National Statistics (ONS)": "government",
+            "King's College London (KCL)": "academic",
+            "National Institute for Economic and Social Research (NIESR)": "third-sector",
+            "Public Health Wales (PHW)": "government",
+            "London School of Hygiene and Tropical Medicine (LSHTM)": "academic",
+            "Competition and Markets Authority (CMA)": "government",
+            "Northern Ireland Statistics and Research Agency (NISRA)": "government",
+            "Massachusetts Institute of Technology (MIT)": "academic",
+            "Department for Business, Energy and Industrial Strategy (BEIS)": "government",
+            "Low Pay Commission (LPC)": "government",
+            "Department for Business and Trade (DBT)": "government",
+            "National Centre for Social Research (NatCen)": "third-sector",
+            "Intellectual Property Office (IPO)": "government",
+            "Department for Levelling Up, Housing and Communities (DLUHC)": "government",
+            "Public Health England (PHE)": "government",
+            "National Physical Laboratory (NPL)": "government",
+            "Chartered Institute of Personnel and Development (CIPD)": "third-sector",
+        }
+        for organisation, sector in cases.items():
+            with self.subTest(organisation=organisation):
+                record = lookup_organisation_record(organisation, self.indexes)
+                self.assertIsNotNone(record)
+                self.assertIn(sector, record["sectors"])
+
+    def test_organisation_acronym_suffix_normalisation_keeps_near_twins_distinct(self):
+        guarded_groups = [
+            [
+                "National Institute for Economic and Social Research (NIESR)",
+                "National Institute of Social and Economic Research",
+            ],
+            [
+                "Public Health England (PHE)",
+                "Office for Health Improvement and Disparities (OHID)",
+                "UK Health Security Agency",
+            ],
+            [
+                "Department for Business, Energy and Industrial Strategy (BEIS)",
+                "Department for Business and Trade (DBT)",
+            ],
+        ]
+        for group in guarded_groups:
+            normalised = {_organisation_match_keys(value)[-1] for value in group}
+            with self.subTest(group=group):
+                self.assertEqual(len(normalised), len(group))
+
+    def test_no_distinct_organisation_reference_records_share_match_keys(self):
+        key_to_canonical = {}
+        collisions = []
+        for record in self.reference.get("organisations", []):
+            canonical = record["canonical"]
+            for value in [canonical, *(record.get("aliases") or [])]:
+                for key in _organisation_match_keys(value):
+                    existing = key_to_canonical.setdefault(key, canonical)
+                    if existing != canonical:
+                        collisions.append((key, existing, canonical))
+        self.assertEqual(collisions, [])
 
 
 if __name__ == "__main__":
