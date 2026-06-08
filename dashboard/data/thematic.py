@@ -14,13 +14,14 @@ from dashboard.config import (
     PURPOSE_LABELS,
     _PROJECT_ID_KEY_COL,
 )
-from dashboard.data.deterministic import RECORD_LINKAGE_COL, load_register_properties
+from dashboard.data.deterministic import (
+    DETERMINISTIC_FACET_COLUMNS,
+    load_register_properties,
+)
 from dashboard.data.keys import _project_id_key
 
 
-_DETERMINISTIC_ENRICHED_COLUMNS = [
-    RECORD_LINKAGE_COL,
-]
+_DETERMINISTIC_ENRICHED_COLUMNS = DETERMINISTIC_FACET_COLUMNS
 
 
 def _filter_label_with_count(label: str, count: int) -> str:

@@ -24,6 +24,7 @@ from dashboard.data.registry import (
 )
 from dashboard.data.thematic import df_thematic_projects
 from dashboard.data.deterministic import (
+    DETERMINISTIC_FACET_COLUMNS,
     RECORD_LINKAGE_COL,
     RECORD_LINKAGE_DISPLAY_LABELS,
 )
@@ -227,6 +228,10 @@ def _format_record_linkage(series: pd.Series) -> pd.Series:
     return labels.where(labels.notna(), values).replace("", DERIVED_EMPTY_VALUE)
 
 
+def _format_deterministic_facet(series: pd.Series) -> pd.Series:
+    return series.fillna("").astype(str).str.strip().replace("", DERIVED_EMPTY_VALUE)
+
+
 def _get_browse_display_df(search, dataset, provider, institution, tre) -> pd.DataFrame:
     base = _apply_register_filters(
         df_all,
@@ -297,8 +302,13 @@ def _get_enriched_register_display_df(
     )
     display["Secure Research Service"] = display["Secure Research Service"].apply(_format_tre_provider)
     display["Accreditation Date"] = _format_display_dates(display["Accreditation Date"])
-    if RECORD_LINKAGE_COL in display.columns:
-        display[RECORD_LINKAGE_COL] = _format_record_linkage(display[RECORD_LINKAGE_COL])
+    for col in DETERMINISTIC_FACET_COLUMNS:
+        if col not in display.columns:
+            continue
+        if col == RECORD_LINKAGE_COL:
+            display[col] = _format_record_linkage(display[col])
+        else:
+            display[col] = _format_deterministic_facet(display[col])
 
     return display[_ENRICHED_REGISTER_DISPLAY_COLUMNS], count_text
 
