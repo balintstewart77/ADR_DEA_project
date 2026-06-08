@@ -111,7 +111,8 @@ analysis/opus_v_sonnet_comparison_analysis/
 analysis/outputs/
 analysis/outputs_examples_rc2/
 analysis/outputs_register_properties_tmp/
-analysis/outputs_deterministic_rc2/
+analysis/outputs_deterministic_rc2/*
+!analysis/outputs_deterministic_rc2/register_properties.csv
 analysis/outputs/instruction_layer_figures_report.md
 
 # --- Canonical results run (Opus 4.8, taxonomy dict-1.0-rc1) ---

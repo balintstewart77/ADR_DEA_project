@@ -53,6 +53,7 @@ ENRICHED_TABLE_STYLES = dict(
     },
     style_data_conditional=[
         {"if": {"row_index": "odd"}, "backgroundColor": "#fafbfc"},
+        {"if": {"column_id": "record_linkage"}, "backgroundColor": "#f5f8fa"},
         {"if": {"column_id": "substantive_domains"}, "backgroundColor": "#f5f8fa"},
         {"if": {"column_id": "substantive_domain_count"}, "backgroundColor": "#f5f8fa"},
         {"if": {"column_id": "analytical_purpose"}, "backgroundColor": "#f5f8fa"},

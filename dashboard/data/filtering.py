@@ -23,6 +23,10 @@ from dashboard.data.registry import (
     _format_tre_provider,
 )
 from dashboard.data.thematic import df_thematic_projects
+from dashboard.data.deterministic import (
+    RECORD_LINKAGE_COL,
+    RECORD_LINKAGE_DISPLAY_LABELS,
+)
 from dashboard.data.keys import _project_id_key, _title_key
 
 
@@ -217,6 +221,12 @@ def _format_display_dates(series: pd.Series) -> pd.Series:
     )
 
 
+def _format_record_linkage(series: pd.Series) -> pd.Series:
+    values = series.fillna("").astype(str).str.strip()
+    labels = values.map(RECORD_LINKAGE_DISPLAY_LABELS)
+    return labels.where(labels.notna(), values).replace("", DERIVED_EMPTY_VALUE)
+
+
 def _get_browse_display_df(search, dataset, provider, institution, tre) -> pd.DataFrame:
     base = _apply_register_filters(
         df_all,
@@ -287,6 +297,8 @@ def _get_enriched_register_display_df(
     )
     display["Secure Research Service"] = display["Secure Research Service"].apply(_format_tre_provider)
     display["Accreditation Date"] = _format_display_dates(display["Accreditation Date"])
+    if RECORD_LINKAGE_COL in display.columns:
+        display[RECORD_LINKAGE_COL] = _format_record_linkage(display[RECORD_LINKAGE_COL])
 
     return display[_ENRICHED_REGISTER_DISPLAY_COLUMNS], count_text
 

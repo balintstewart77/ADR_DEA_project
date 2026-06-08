@@ -303,6 +303,7 @@ def _analyses_accordion():
                                 {"name": f"{REGISTER_SOURCE_ICON} Datasets Used", "id": "Datasets Used"},
                                 {"name": f"{REGISTER_SOURCE_ICON} Processing environment", "id": "Secure Research Service"},
                                 {"name": f"{REGISTER_SOURCE_ICON} Accreditation Date", "id": "Accreditation Date"},
+                                {"name": f"{DERIVED_FIELD_ICON} Record Linkage", "id": "record_linkage"},
                                 {"name": f"{DERIVED_FIELD_ICON} Domains", "id": "substantive_domains"},
                                 {"name": f"{DERIVED_FIELD_ICON} Layer A domain count", "id": "substantive_domain_count"},
                                 {"name": f"{DERIVED_FIELD_ICON} Purpose", "id": "analytical_purpose"},

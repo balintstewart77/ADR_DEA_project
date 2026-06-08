@@ -14,7 +14,13 @@ from dashboard.config import (
     PURPOSE_LABELS,
     _PROJECT_ID_KEY_COL,
 )
+from dashboard.data.deterministic import RECORD_LINKAGE_COL, load_register_properties
 from dashboard.data.keys import _project_id_key
+
+
+_DETERMINISTIC_ENRICHED_COLUMNS = [
+    RECORD_LINKAGE_COL,
+]
 
 
 def _filter_label_with_count(label: str, count: int) -> str:
@@ -30,6 +36,31 @@ def _split_semicolon_values(value) -> list[str]:
 def _count_substantive_domains(value):
     domains = _split_semicolon_values(value)
     return len(domains) if domains else pd.NA
+
+
+def _merge_deterministic_facets(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+    base = df.copy()
+    for col in columns:
+        if col in base.columns:
+            base = base.drop(columns=col)
+
+    if "Record ID" not in base.columns:
+        for col in columns:
+            base[col] = ""
+        return base
+
+    properties = load_register_properties(columns=columns)
+    if properties.empty:
+        for col in columns:
+            base[col] = ""
+        return base
+
+    merged = base.merge(properties, on="Record ID", how="left")
+    for col in columns:
+        if col not in merged.columns:
+            merged[col] = ""
+        merged[col] = merged[col].fillna("").astype(str)
+    return merged
 
 
 def _domain_count_label(value: int) -> str:
@@ -129,6 +160,10 @@ def load_thematic_data(thematic_dir):
             thematic_narrative = _f.read()
         df_thematic_projects = pd.read_csv(
             os.path.join(thematic_dir, "layer_classifications.csv"), encoding="utf-8-sig",
+        )
+        df_thematic_projects = _merge_deterministic_facets(
+            df_thematic_projects,
+            _DETERMINISTIC_ENRICHED_COLUMNS,
         )
         df_thematic_projects[SUBSTANTIVE_DOMAIN_COUNT_COL] = (
             df_thematic_projects["substantive_domains"]
