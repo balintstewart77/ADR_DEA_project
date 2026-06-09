@@ -375,6 +375,10 @@ INVALID_DATASET_FRAGMENTS = {
     "bespoke - national council for voluntary organisations",
 }
 
+PROVIDER_PARSE_ARTEFACTS = {
+    "Survey, Census 2011 England and Wales",
+}
+
 COMMA_BEARING_DATASET_ALIASES = {
     re.compile(r"(?i)\blinked census,\s*hes and mortality data\b"): "Linked Census, HES and Mortality Data",
 }
@@ -1121,6 +1125,8 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
             if not _is_valid_dataset_fragment(dataset):
                 continue
             provider_name = normalise_provider_name(provider)
+            if provider_name in PROVIDER_PARSE_ARTEFACTS:
+                provider_name = "Unknown / Unspecified"
             if provider_name == "Unknown / Unspecified":
                 provider_name = infer_provider_name(secure_research_service)
             rows.append({

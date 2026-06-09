@@ -2254,3 +2254,573 @@ organisations:
     aliases: ["BOP Consulting"]
     sectors: ["commercial"]
     notes: "Private limited company / consultancy."
+  - canonical: "Ministry of Justice (MoJ)"
+    aliases: ["Ministry of Justice (MoJ)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "DfE, DWP and HMRC"
+    aliases: ["DfE, DWP and HMRC"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Composite of UK government departments/agencies."
+  - canonical: "Department for Education (DfE)"
+    aliases: ["Department for Education (DfE)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "NHS; DfE"
+    aliases: ["NHS; DfE"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Composite of NHS body and UK central government department."
+  - canonical: "Universities and Colleges Admissions Service (UCAS)"
+    aliases: ["Universities and Colleges Admissions Service (UCAS)"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent admissions service with charitable/non-profit status."
+  - canonical: "ONS / University of Oxford"
+    aliases: ["ONS / University of Oxford"]
+    sectors:
+      - "government"
+      - "academic"
+    notes: "Coverage sweep: Composite of ONS government body and a university."
+  - canonical: "ONS, HMRC"
+    aliases: ["ONS, HMRC"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Composite of UK government bodies."
+  - canonical: "Understanding Society"
+    aliases: ["Understanding Society"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: Study/data resource associated with ISER/University of Essex; not a legal organisation string."
+  - canonical: "Department for Environment, Food & Rural Affairs (DEFRA)"
+    aliases: ["Department for Environment, Food & Rural Affairs (DEFRA)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "Qualifications Wales, DfE, UCAS"
+    aliases: ["Qualifications Wales, DfE, UCAS"]
+    sectors:
+      - "government"
+      - "third-sector"
+    notes: "Coverage sweep: Composite of public bodies and UCAS."
+  - canonical: "Nursing and Midwifery Council"
+    aliases: ["Nursing and Midwifery Council"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Statutory professional regulator."
+  - canonical: "ONS / HMRC / Companies House"
+    aliases: ["ONS / HMRC / Companies House"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Composite of UK government bodies."
+  - canonical: "Department for Work and Pensions (DWP)"
+    aliases: ["Department for Work and Pensions (DWP)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "ONS, University of Oxford"
+    aliases: ["ONS, University of Oxford"]
+    sectors:
+      - "government"
+      - "academic"
+    notes: "Coverage sweep: Composite of ONS government body and a university."
+  - canonical: "Department for Transport (DfT)"
+    aliases: ["Department for Transport (DfT)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "NHS Digital"
+    aliases: ["NHS Digital"]
+    sectors: ["government"]
+    notes: "Coverage sweep: NHS public body."
+  - canonical: "NHS England"
+    aliases: ["NHS England"]
+    sectors: ["government"]
+    notes: "Coverage sweep: NHS public body."
+  - canonical: "Middlesex University"
+    aliases: ["Middlesex University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Office of Qualifications and Examinations Regulation (Ofqual)"
+    aliases: ["Office of Qualifications and Examinations Regulation (Ofqual)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK public regulator."
+  - canonical: "Ofqual and DfE"
+    aliases: ["Ofqual and DfE"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Composite of UK public regulator and government department."
+  - canonical: "ONS / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government"
+    aliases: ["ONS / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government"]
+    sectors:
+      - "government"
+      - "academic"
+    notes: "Coverage sweep: Composite of government bodies and a university."
+  - canonical: "ONS; University of Oxford; DHSC"
+    aliases: ["ONS; University of Oxford; DHSC"]
+    sectors:
+      - "government"
+      - "academic"
+    notes: "Coverage sweep: Composite of government bodies and a university."
+  - canonical: "Teesside University"
+    aliases: ["Teesside University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "UK Data Service"
+    aliases: ["UK Data Service"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: Academic-adjacent national data service; needs scheme decision."
+  - canonical: "University of Plymouth"
+    aliases: ["University of Plymouth"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Valuation Office Agency"
+    aliases: ["Valuation Office Agency"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK government agency."
+  - canonical: "Administrative Data Research Wales"
+    aliases: ["Administrative Data Research Wales"]
+    sectors: ["government"]
+    notes: "Coverage sweep: ADR Wales/public-sector data infrastructure per project scheme guidance."
+  - canonical: "Be the Business"
+    aliases: ["Be the Business"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Non-profit business support organisation."
+  - canonical: "Behavioural Insights Team"
+    aliases: ["Behavioural Insights Team"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Social-purpose company; commercial is closest legal-status fit."
+  - canonical: "Birkbeck, University of London"
+    aliases: ["Birkbeck, University of London"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Bournemouth University"
+    aliases: ["Bournemouth University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "British Psychological Society"
+    aliases: ["British Psychological Society"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Professional/learned society."
+  - canonical: "British Sociological Society"
+    aliases: ["British Sociological Society"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Professional/learned society."
+  - canonical: "Cambridge OCR"
+    aliases: ["Cambridge OCR"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Exam-board/assessment body connected to Cambridge; legal status needs review."
+  - canonical: "Cambridge Policy Consultants"
+    aliases: ["Cambridge Policy Consultants"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private consultancy."
+  - canonical: "Cancer Research UK"
+    aliases: ["Cancer Research UK"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Charity."
+  - canonical: "Cardiff and Vale University Health Board"
+    aliases: ["Cardiff and Vale University Health Board"]
+    sectors: ["government"]
+    notes: "Coverage sweep: NHS Wales public health board."
+  - canonical: "Cardiff Metropolitan University"
+    aliases: ["Cardiff Metropolitan University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Coventry University"
+    aliases: ["Coventry University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Cranfield University"
+    aliases: ["Cranfield University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Cyber Monitoring Centre"
+    aliases: ["Cyber Monitoring Centre"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Non-profit/industry body appears likely, but legal status needs review."
+  - canonical: "DASCROSE Limited"
+    aliases: ["DASCROSE Limited"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Limited company."
+  - canonical: "Department for Business, Innovation and Skills"
+    aliases: ["Department for Business, Innovation and Skills"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Former UK central government department."
+  - canonical: "Department for Culture, Media and Sport"
+    aliases: ["Department for Culture, Media and Sport"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "Department for Digital, Culture, Media and Sport"
+    aliases: ["Department for Digital, Culture, Media and Sport"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "Department for the Economy (Northern Ireland)"
+    aliases: ["Department for the Economy (Northern Ireland)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Northern Ireland government department."
+  - canonical: "DfE, DWP, HMRC and Scottish Government"
+    aliases: ["DfE, DWP, HMRC and Scottish Government"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Composite of UK/devolved government bodies."
+  - canonical: "Economic and Social Research Council"
+    aliases: ["Economic and Social Research Council"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UKRI research council/public body."
+  - canonical: "Ecorys UK"
+    aliases: ["Ecorys UK"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Emory University"
+    aliases: ["Emory University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Experian"
+    aliases: ["Experian"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Federal Reserve Bank of Philadelphia"
+    aliases: ["Federal Reserve Bank of Philadelphia"]
+    sectors: ["government"]
+    notes: "Coverage sweep: international/supranational public body folded into government for want of a dedicated category."
+  - canonical: "Federal Reserve Board of Governors"
+    aliases: ["Federal Reserve Board of Governors"]
+    sectors: ["government"]
+    notes: "Coverage sweep: international/supranational public body folded into government for want of a dedicated category."
+  - canonical: "Financial Conduct Authority (FCA)"
+    aliases: ["Financial Conduct Authority (FCA)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK statutory financial regulator."
+  - canonical: "Frazer-Nash Consultancy"
+    aliases: ["Frazer-Nash Consultancy"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Free University of Bozen-Bolzano"
+    aliases: ["Free University of Bozen-Bolzano"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Hackney Council"
+    aliases: ["Hackney Council"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Local authority."
+  - canonical: "Home Office"
+    aliases: ["Home Office"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK central government department."
+  - canonical: "ICF International"
+    aliases: ["ICF International"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "IFF Research"
+    aliases: ["IFF Research"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Ifo Institute for Economic Research"
+    aliases: ["Ifo Institute for Economic Research"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent economic research institute; legal category needs review."
+  - canonical: "Incomes Data Research"
+    aliases: ["Incomes Data Research"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Infact Systems Limited"
+    aliases: ["Infact Systems Limited"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Institute & Faculty of Actuaries"
+    aliases: ["Institute & Faculty of Actuaries"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Professional body."
+  - canonical: "Institute for Employment Studies (IES)"
+    aliases: ["Institute for Employment Studies (IES)"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent research institute."
+  - canonical: "Institute for Government (IfG)"
+    aliases: ["Institute for Government (IfG)"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent charity/think tank."
+  - canonical: "Institute for the Future of Work (IFOW)"
+    aliases: ["Institute for the Future of Work (IFOW)"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent research foundation/charity."
+  - canonical: "Institute of the Motor Industry"
+    aliases: ["Institute of the Motor Industry"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Professional body."
+  - canonical: "International Monetary Fund (IMF)"
+    aliases: ["International Monetary Fund (IMF)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: international/supranational public body folded into government for want of a dedicated category."
+  - canonical: "Joint Biosecurity Centre"
+    aliases: ["Joint Biosecurity Centre"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK public health/government body."
+  - canonical: "King's Fund"
+    aliases: ["King's Fund"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Health charity/think tank."
+  - canonical: "Knowledge Transfer Network"
+    aliases: ["Knowledge Transfer Network"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Innovate UK-linked innovation network; public-body adjacency needs review."
+  - canonical: "Lightcast"
+    aliases: ["Lightcast"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Liverpool City Region Combined Authority"
+    aliases: ["Liverpool City Region Combined Authority"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Combined authority."
+  - canonical: "London Borough of Redbridge"
+    aliases: ["London Borough of Redbridge"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Local authority."
+  - canonical: "Marie Curie"
+    aliases: ["Marie Curie"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Charity."
+  - canonical: "Methods Analytics"
+    aliases: ["Methods Analytics"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "National Infrastructure Commission"
+    aliases: ["National Infrastructure Commission"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK public body; no acronym suffix needed."
+  - canonical: "National Institute of Social and Economic Research"
+    aliases: ["National Institute of Social and Economic Research"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent research institute; distinct from NIESR."
+  - canonical: "National Records Scotland"
+    aliases: ["National Records Scotland"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Scottish government/statistical public body."
+  - canonical: "Netherlands Interdisciplinary Demographic Institute"
+    aliases: ["Netherlands Interdisciplinary Demographic Institute"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: Research institute affiliated with Dutch academic system; needs review."
+  - canonical: "Nevin Economic Research Institute"
+    aliases: ["Nevin Economic Research Institute"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent economic research institute."
+  - canonical: "Newcastle City Council"
+    aliases: ["Newcastle City Council"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Local authority."
+  - canonical: "NHS"
+    aliases: ["NHS"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Public health service body."
+  - canonical: "NHSD / University of Oxford"
+    aliases: ["NHSD / University of Oxford"]
+    sectors:
+      - "government"
+      - "academic"
+    notes: "Coverage sweep: Composite of NHS Digital and a university."
+  - canonical: "Northern Ireland Registrar General's Office"
+    aliases: ["Northern Ireland Registrar General's Office"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Public registration/statistical office."
+  - canonical: "Nuffield Foundation"
+    aliases: ["Nuffield Foundation"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Charitable foundation."
+  - canonical: "OECD"
+    aliases: ["OECD"]
+    sectors: ["government"]
+    notes: "Coverage sweep: international/supranational public body folded into government for want of a dedicated category."
+  - canonical: "Office for Health Improvement and Disparities (OHID)"
+    aliases: ["Office for Health Improvement and Disparities (OHID)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK public health/government body."
+  - canonical: "ONS. HMRC"
+    aliases: ["ONS. HMRC"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Composite of UK government bodies."
+  - canonical: "Pearson"
+    aliases: ["Pearson"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Pensions Policy Institute"
+    aliases: ["Pensions Policy Institute"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent research/charitable institute."
+  - canonical: "Perspective Economics"
+    aliases: ["Perspective Economics"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Public Health Scotland (PHS)"
+    aliases: ["Public Health Scotland (PHS)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Scottish public health body."
+  - canonical: "Publishers Association"
+    aliases: ["Publishers Association"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Trade/professional association."
+  - canonical: "Queen's University Belfast Management, School"
+    aliases: ["Queen's University Belfast Management, School"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Research Center in Applied Economics for Development CREAD - Algeria"
+    aliases: ["Research Center in Applied Economics for Development CREAD - Algeria"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: International research centre; academic is closest but needs review."
+  - canonical: "Saga City Research"
+    aliases: ["Saga City Research"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Likely foreign municipal/public body, but identity needs review."
+  - canonical: "ScaleUp Institute"
+    aliases: ["ScaleUp Institute"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Non-profit/private-sector research institute."
+  - canonical: "Sentencing Academy"
+    aliases: ["Sentencing Academy"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent legal research/education charity/body."
+  - canonical: "SGN"
+    aliases: ["SGN"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Sheffield Teaching Hospitals NHS Foundation Trust"
+    aliases: ["Sheffield Teaching Hospitals NHS Foundation Trust"]
+    sectors: ["government"]
+    notes: "Coverage sweep: NHS foundation trust."
+  - canonical: "Social Care Wales"
+    aliases: ["Social Care Wales"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Welsh public body."
+  - canonical: "Social Market Foundation"
+    aliases: ["Social Market Foundation"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent think tank/charity."
+  - canonical: "Social Mobility Commission (SMC)"
+    aliases: ["Social Mobility Commission (SMC)"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK public commission."
+  - canonical: "Stanford University"
+    aliases: ["Stanford University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "State of Life"
+    aliases: ["State of Life"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Stripe Partners"
+    aliases: ["Stripe Partners"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Swansea Bay University Health Board"
+    aliases: ["Swansea Bay University Health Board"]
+    sectors: ["government"]
+    notes: "Coverage sweep: NHS Wales public health board."
+  - canonical: "Technological University Dublin"
+    aliases: ["Technological University Dublin"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Tees Valley Combined Authority"
+    aliases: ["Tees Valley Combined Authority"]
+    sectors: ["government"]
+    notes: "Coverage sweep: Combined authority."
+  - canonical: "The Lesbian Project"
+    aliases: ["The Lesbian Project"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Civil-society advocacy organisation."
+  - canonical: "The Police Foundation"
+    aliases: ["The Police Foundation"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent policing charity/think tank."
+  - canonical: "The Young Foundation - Institute for Community Studies"
+    aliases: ["The Young Foundation - Institute for Community Studies"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Charity/research institute."
+  - canonical: "Trier University"
+    aliases: ["Trier University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "UK Export Finance"
+    aliases: ["UK Export Finance"]
+    sectors: ["government"]
+    notes: "Coverage sweep: UK government department/agency."
+  - canonical: "Umeå University"
+    aliases: ["Umeå University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Aberdeen"
+    aliases: ["University of Aberdeen"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Antwerp"
+    aliases: ["University of Antwerp"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of California"
+    aliases: ["University of California"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Florida"
+    aliases: ["University of Florida"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Greenwich"
+    aliases: ["University of Greenwich"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Illinois Urbana-Champaign"
+    aliases: ["University of Illinois Urbana-Champaign"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Lugano"
+    aliases: ["University of Lugano"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Portsmouth"
+    aliases: ["University of Portsmouth"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Roehampton"
+    aliases: ["University of Roehampton"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of South Wales"
+    aliases: ["University of South Wales"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Texas"
+    aliases: ["University of Texas"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of Texas at Austin"
+    aliases: ["University of Texas at Austin"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "University of the West of Scotland"
+    aliases: ["University of the West of Scotland"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Utrecht University"
+    aliases: ["Utrecht University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "Vanguard"
+    aliases: ["Vanguard"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Wavehill Limited"
+    aliases: ["Wavehill Limited"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Welsh Value in Health Centre"
+    aliases: ["Welsh Value in Health Centre"]
+    sectors: ["government"]
+    notes: "Coverage sweep: NHS Wales/public-health-adjacent centre; legal status needs review."
+  - canonical: "What Works for Children's Social Care"
+    aliases: ["What Works for Children's Social Care"]
+    sectors: ["third-sector"]
+    notes: "Coverage sweep: Independent What Works centre/charity-sector body."
+  - canonical: "World Bank open data"
+    aliases: ["World Bank open data"]
+    sectors: ["government"]
+    notes: "Coverage sweep: international/supranational public body folded into government for want of a dedicated category."
+  - canonical: "WPI Economics"
+    aliases: ["WPI Economics"]
+    sectors: ["commercial"]
+    notes: "Coverage sweep: Private company or consultancy."
+  - canonical: "Yale University"
+    aliases: ["Yale University"]
+    sectors: ["academic"]
+    notes: "Coverage sweep: University or university unit."
+  - canonical: "SAIL Databank"
+    aliases:
+      - "SAIL Databank"
+      - "SAIL Databank, Swansea University"
+    sectors: ["academic"]
+    notes: "Coverage sweep: SAIL Databank is treated as Swansea University-hosted data infrastructure and folded into the academic sector; the Swansea University spelling is an alias of the same entity."

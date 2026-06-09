@@ -1466,3 +1466,15 @@ additionally, a metadata artefact in its own right: a documented mapping of DEA
 register entities (datasets → linkage, collection method, temporal structure,
 unit; organisations → sector) to controlled properties, which ties to the project's broader
 metadata-interoperability aims.
+
+## Organisation sector coverage sweep (second pass)
+
+The bounded organisation-sector coverage sweep was applied to the known head of
+the unmapped list; the remaining one-off tail is retained as a documented
+limitation rather than chased to nominal 100% coverage. International and
+supranational public bodies (IMF, OECD, World Bank open data, and US Federal
+Reserve bodies) are folded into `government` for want of a dedicated category (these are only ~6 different projects, having a dedicated International / Other category didn't seem proportionate).
+`SAIL Databank` and `SAIL Databank, Swansea University` are aliased to one
+academic entity, since SAIL despite being a commercial infrastructure is based at a University. `Survey, Census 2011 England and Wales` was handled as a
+targeted dataset-provider parse residue; `Independent Researcher` and `OREC`
+remain honestly unclassified.
