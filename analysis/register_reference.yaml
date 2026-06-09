@@ -1,4 +1,4 @@
-reference_version: "0.4.1"
+reference_version: "0.4.5"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -67,6 +67,22 @@ dataset_collection_method_rule:
     - "Understanding Society and Millennium Cohort Study -> survey."
     - "LEO and ECHILD -> administrative: linked administrative products."
     - "Birth and death registrations -> administrative: vital-event registers."
+    - >
+      Census-based longitudinal linked-record datasets (e.g. ONS Longitudinal
+      Study) -> survey: classified by primary content, not assembly. Core records
+      from Census make the collection method survey; record linkage is a
+      structuring mechanism (creating longitudinal structure) and does not make
+      the dataset administrative; supplementary linked administrative records
+      (deaths, cancer registrations) do not change the primary collection method.
+      Record linkage by itself does not make a dataset administrative — the
+      collection method follows the source of the core content.
+  parked_schema_question: >
+    Should collection_method ever be multi-valued for genuinely mixed-source
+    products (e.g. Census-cored linked to admin health records)? Current policy:
+    single value by primary content; mixed nature documented in rationale text.
+    Parked for discussion with Jo alongside the CIS unit-rule (sampling-frame vs
+    lowest-grain) question. Do not change the single-label rule without that
+    discussion.
 
 dataset_temporal_structure_rule:
   rule: >
@@ -396,22 +412,6 @@ linked_products:
     component_datasets_verified: true
     component_datasets_source: "https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/administrative-data ; https://ons.metadata.works/browser/dataset/1408718/0"
     component_datasets_review_flag: "AD|ARC IDBR domain contribution needs external human review; Business & Productivity may be added later if IDBR is judged substantive. component_domains left unchanged (Environment & Agriculture, Migration & Demographics) for now."
-
-  - canonical: "Annual Survey of Hours and Earnings Longitudinal"
-    status: "standing"
-    available_from: null
-    discontinued_date: null
-    aliases:
-      - "Annual Survey of Hours and Earnings Longitudinal"
-    component_domains:
-      - "Labour Market & Employment"
-    notes: "WED component: ASHE longitudinal, within labour-market domain."
-    component_datasets:
-      - dataset: "Annual Survey of Hours and Earnings (ASHE) longitudinal records"
-        domain_reading: "Labour Market & Employment"
-        reason: "employee jobs, earnings and paid hours over time."
-    component_datasets_verified: true
-    component_datasets_source: "https://datacatalogue.adruk.org/browser/dataset/323/1"
 
   - canonical: "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
     status: "standing"
@@ -788,6 +788,7 @@ datasets:
       - "UK Household Longitudinal Study"
       - "BHPS"
       - "British Household Panel Survey"
+      - "Innovation Panel"
     collection_method: "survey"
     temporal_structure: "longitudinal"
     unit_of_observation: "household"
@@ -805,10 +806,11 @@ datasets:
     aliases:
       - "ONS Longitudinal Study (LS)"
       - "ONS Longitudinal Study 1971"
-    collection_method: "administrative"
+    collection_method: "survey"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Longitudinal study following persons over time."
+    notes: "Census-based longitudinal linked-record dataset: core records come from Census data (survey); the longitudinal structure is created through record linkage rather than repeated survey interviews. Collection method is classified by primary content (Census → survey); record linkage is a structuring mechanism, not a collection method, and the supplementary linked administrative life-event records (births, deaths, cancer registrations) do not change the primary collection method."
+    collection_method_source: "https://closer.ac.uk/study/ons-longitudinal-study/ ; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6469306/"
 
   - canonical: "ASHE"
     aliases:
@@ -857,7 +859,8 @@ datasets:
     collection_method: "survey"
     temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
-    notes: "ADR NI/NISRA linked dataset: ASHE 2011 for Northern Ireland linked to the 2011 Northern Ireland Census and Land & Property Services Capital Value data. Keep distinct from WED / ASHE-Census England and Wales linkage."
+    notes: "ADR NI/NISRA linked dataset: ASHE 2011 for Northern Ireland linked to the 2011 Northern Ireland Census and Land & Property Services Capital Value data. Keep distinct from WED / ASHE-Census England and Wales linkage. Temporal is cross-sectional: single-year (2011) linkage — ASHE 2011 × Census 2011 × Capital Value, delivered as one pre-linked static table (5,770 ASHE records); point-in-time, not longitudinal. Contrast with the multi-wave E&W WED ASHE-Census product (which is longitudinal because the ASHE side follows linked units across waves)."
+    temporal_source: "https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/earnings-and-employees"
 
   - canonical: "Longitudinal Education Outcomes (LEO)"
     aliases:
@@ -883,7 +886,8 @@ datasets:
     collection_method: "administrative"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Education/admissions administrative product."
+    notes: "Education/admissions administrative product. Temporal is longitudinal: follows individuals across education stages (school qualifications via Ofqual/NPD through to university admissions via UCAS), consistent with LEO/ECHILD/EOL/GUIE (all longitudinal education linkages)."
+    temporal_source: "https://www.gov.uk/government/publications/grading-and-admissions-data-for-england-grade-framework/grading-and-admissions-data-for-england-grade-user-guide"
 
   - canonical: "EOL"
     aliases:
@@ -900,7 +904,8 @@ datasets:
     collection_method: "administrative"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Family key from dataset_family_for for MoJ justice person/case extracts; individual is the pragmatic single-label unit."
+    notes: "Family key from dataset_family_for for MoJ justice person/case extracts; individual is the pragmatic single-label unit. Temporal is longitudinal: Data First enables analysis of 'user journeys, interactions, and outcomes across the justice system' following individuals/cases through court, prison, and probation records spanning 2011–2023."
+    temporal_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first"
 
   - canonical: "AD|ARC"
     aliases:
@@ -910,9 +915,10 @@ datasets:
       - "Bespoke Admin Data - Agricultural Research Collection Phase 2"
       - "Bespoke Admin Data: Agricultural Research Collection"
     collection_method: "administrative"
-    temporal_structure: "longitudinal"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
-    notes: "Judgement call: farm/agricultural holding treated as business unit despite individual and farm linkage."
+    notes: "Judgement call: farm/agricultural holding treated as business unit despite individual and farm linkage. Temporal is cross-sectional: AD|ARC is a single-period (2010–2011) linkage — 2011 Census of Population linked to 2010 EU Farm Structure Surveys, 2010 Rural Payments data, and IDBR — delivered as static individual-level and household-level tables. It is a cross-sectional snapshot of farming households at one period; longitudinal capability is a Phase-2 aspiration (updating datasets to build longitudinal capacity), not a current property. Classify by what the producer currently delivers, not what is planned/constructible (meta_principle) — parallel to base BSD."
+    temporal_source: "https://www.adruk.org/data-access/flagship-datasets/administrative-data-agricultural-research-collection-england-and-wales/ ; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10929467/"
 
   - canonical: "Growing Up in England (GUIE)"
     aliases:
@@ -924,7 +930,8 @@ datasets:
     collection_method: "administrative"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Education-Census linked product; person/child-level."
+    notes: "Education-Census linked product; person/child-level. Temporal is longitudinal: waves follow the same children (cohort aged 10–25 at 31 Aug 2011) over time; Wave-1 links education records from 2001-02 to 2014-15 to Census 2011; Wave-2 joins vulnerability measures to Wave-1 for the same matched individuals. Same unique pupil matching reference used across waves."
+    temporal_source: "https://www.ons.gov.uk/peoplepopulationandcommunity/educationandchildcare/methodologies/growingupinenglandguie"
 
   - canonical: "Death Registrations"
     aliases:
@@ -1063,9 +1070,10 @@ datasets:
     aliases:
       - "Business Structure Database (BSD)"
     collection_method: "administrative"
-    temporal_structure: "longitudinal"
+    temporal_structure: "cross-sectional"
     unit_of_observation: "business"
-    notes: "Business register/admin source; BSD is maintained as a longitudinal business database."
+    notes: "Base BSD is released as annual point-in-time snapshots of the IDBR; a longitudinal version is constructed by researchers linking annual snapshots, not delivered by the producer. Parallel to base ASHE (cross-sectional) vs ASHE Longitudinal. Separate products (LBD, LIDBR, BSD Longitudinal) provide true longitudinality; base BSD does not. Classify by producer design, not constructibility."
+    temporal_source: "https://www.enterpriseresearch.ac.uk/dataset/business-structure-database/ ; https://ons.metadata.works/browser/dataset/1279519/0"
 
   - canonical: "Business Structure Database Longitudinal"
     aliases:
@@ -1302,7 +1310,8 @@ datasets:
     collection_method: "survey"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Longitudinal survey of individual teachers and leaders."
+    notes: "Longitudinal survey of individual teachers and leaders. Temporal is longitudinal: DfE wave-1 technical report describes panel engagement and multi-wave design following the same teachers/leaders across waves (wave 1 carried out spring 2022)."
+    temporal_source: "https://www.gov.uk/government/publications/working-lives-of-teachers-and-leaders-wave-1"
 
   - canonical: "Survey of Innovation and Patent Use"
     aliases:
@@ -1403,6 +1412,7 @@ datasets:
   - canonical: "Crime Survey for England and Wales (CSEW)"
     aliases:
       - "Crime Survey for England and Wales (CSEW)"
+      - "Telephone-Operated Crime Survey for England and Wales"
     collection_method: "survey"
     temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
@@ -1420,6 +1430,7 @@ datasets:
     aliases:
       - "Living Costs and Food Survey (LCF)"
       - "Safeguarded Living Costs and Food Survey"
+      - "Expenditure and Food Survey"
     collection_method: "survey"
     temporal_structure: "cross-sectional"
     unit_of_observation: "household"
@@ -1456,7 +1467,7 @@ datasets:
     collection_method: "survey"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Family key from dataset_family_for for COVID-19 Infection Survey linked products; CIS is treated as longitudinal by design."
+    notes: "Family key from dataset_family_for for COVID-19 Infection Survey linked products; CIS is treated as longitudinal by design. Flagged in facet audit (household-sampled, individual records). Unit-rule treatment — sampling-frame vs lowest-grain — pending discussion with Jo; current value retained under the existing sampling-frame definition."
 
   - canonical: "COVID-19 Weekly Opinions Survey"
     aliases:
@@ -1481,15 +1492,18 @@ datasets:
     collection_method: "administrative"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Health administrative records."
+    notes: "Health administrative records. Temporal is longitudinal: HES follows patients through hospital episodes over time, with mortality records linked to capture subsequent death events; the linked product enables person-level health analysis across episodes and outcomes. Distinct from the Census-cored PHDA products (Linked Census/HES/Mortality) — PHRD alias 'HES and Mortality' is the non-Census variant where HES is the backbone, making it administrative."
+    temporal_source: "https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/linked-hes-ons-mortality-data"
 
   - canonical: "Linked Census, HES and Mortality Data"
     aliases:
       - "Linked Census, HES and Mortality Data"
-    collection_method: "administrative"
+    collection_method: "survey"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Linked Census, hospital, and mortality product; record-linkage facet captures the cross-domain Census-health structure."
+    notes: "ONS PHDA family: Census 2011 respondents form the base population, with HES hospital episodes, mortality records, and GP data linked onto each Census record. Temporal is longitudinal: the linkage enables person-level health analysis from Census 2011 forward through subsequent hospital episodes and death events. Collection method is survey: Census-cored linked-record product — primary content is the Census (survey); record linkage is a structuring mechanism, and the linked administrative mortality/health records (HES, death/mortality data) are supplementary linked sources that do not change the primary collection method. Same principle as the ONS Longitudinal Study."
+    temporal_source: "https://ons.metadata.works/browser/dataset?id=292"
+    collection_method_source: "https://ons.metadata.works/browser/dataset?id=292"
 
   - canonical: "Nursing and Midwifery Council Register linked to Census 2021"
     aliases:
@@ -1518,19 +1532,22 @@ datasets:
   - canonical: "Linked Census and Death Occurrences"
     aliases:
       - "Linked Census and Death Occurrences"
-    collection_method: "administrative"
+    collection_method: "survey"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
-    notes: "Person-level linked mortality and Census product."
+    notes: "ONS PHDA family (simpler linkage depth): Census forms the base population with death-occurrence records linked onto each Census record. Temporal is longitudinal: follows persons from Census enumeration to subsequent death events. Collection method is survey: Census-cored linked-record product — primary content is the Census (survey); record linkage is a structuring mechanism, and the linked administrative death-occurrence records are supplementary linked sources that do not change the primary collection method. Same principle as the ONS Longitudinal Study."
+    temporal_source: "https://ons.metadata.works/browser/dataset?id=292"
+    collection_method_source: "https://ons.metadata.works/browser/dataset?id=292"
 
   - canonical: "Consumer Prices Index"
     aliases:
       - "Consumer Prices Index"
       - "Retail Price Index"
-    collection_method: "administrative"
+    collection_method: "survey"
     temporal_structure: "cross-sectional"
     unit_of_observation: "area"
-    notes: "Aggregate price index with no unit-following panel; area is the closest available unit, and temporal structure is cross-sectional as a point-in-time aggregate release."
+    notes: "Aggregate price index with no unit-following panel; area is the closest available unit, and temporal structure is cross-sectional as a point-in-time aggregate release. Collection method is survey: CPI's primary collection is field price collection (local price survey of ~760 representative items across selected outlets), a survey-style collection; ONS QMI describes survey + administrative sources, with field collection the primary survey component. CPI also incorporates administrative/web-scraped supplements, but primary collection-by-design is survey. Aligns with PPI (survey)."
+    collection_method_source: "https://www.ons.gov.uk/economy/inflationandpriceindices/methodologies/consumerpriceinflationincludesall3indicescpihcpiandrpiqmi ; https://www.ons.gov.uk/economy/inflationandpriceindices/articles/consumerpriceindicesabriefguide/2017"
 
   - canonical: "Producer Price Index"
     aliases:
@@ -1550,6 +1567,43 @@ datasets:
     temporal_structure: "cross-sectional"
     unit_of_observation: "business"
     notes: "Aggregate economic stock series rather than a released unit-following panel; business is the closest available unit, and temporal structure is cross-sectional as a point-in-time aggregate release."
+
+  - canonical: "Children of the 2020s Longitudinal Study"
+    aliases:
+      - "Children of the 2020s Longitudinal Study"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "individual"
+    notes: "CLS birth-cohort study following individual cohort members (2020s births) over time; survey-based data collection across multiple waves."
+    temporal_source: "https://cls.ucl.ac.uk/cls-studies/children-of-the-2020s/"
+
+  - canonical: "International Passenger Survey"
+    aliases:
+      - "International Passenger Survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "individual"
+    notes: "ONS survey interviewing individual travellers at ports/airports; repeated cross-sectional design with no panel element."
+    collection_method_source: "https://www.ons.gov.uk/surveys/informationforhouseholdsandindividuals/householdandindividualsurveys/internationalpassengersurvey"
+
+  - canonical: "The Second Longitudinal Study of Young People in England"
+    aliases:
+      - "The Second Longitudinal Study of Young People in England"
+      - "LSYPE2"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "individual"
+    notes: "DfE/CLS panel study ('Our Future') following individual young people from age 13/14 across annual waves."
+    temporal_source: "https://cls.ucl.ac.uk/cls-studies/lsype2/"
+
+  - canonical: "Childcare and Early Years Survey of Parents"
+    aliases:
+      - "Childcare and Early Years Survey of Parents"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "individual"
+    notes: "DfE repeated cross-sectional survey; sampled/interviewed respondent is the individual parent. Content covers household childcare arrangements but unit is the respondent (individual), consistent with current sampling-frame rule."
+    collection_method_source: "https://www.gov.uk/government/collections/childcare-and-early-years-survey-of-parents"
 
 organisations:
   - canonical: "University College London"
