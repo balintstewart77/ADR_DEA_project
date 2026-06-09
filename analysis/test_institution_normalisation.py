@@ -54,7 +54,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
         self.assertEqual(
             institutions,
             [
-                "Department for Business, Energy and Industrial Strategy",
+                "Department for Business, Energy and Industrial Strategy (BEIS)",
                 "Department for Business, Innovation and Skills",
             ],
         )
@@ -127,7 +127,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
             [
                 "Queen's University Belfast",
                 "University of Bristol",
-                "University College London",
+                "University College London (UCL)",
             ],
         )
 
@@ -174,7 +174,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
             "Christine Farquharson Institute for\nFiscal Studies,\n"
             "Tom Waters, Institute for Fiscal Studies"
         )
-        self.assertEqual(institutions, ["Institute for Fiscal Studies"])
+        self.assertEqual(institutions, ["Institute for Fiscal Studies (IFS)"])
 
     def test_obvious_alias_variants_are_rolled_up(self):
         institutions = self.parse(
@@ -208,7 +208,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
                 "Health Foundation",
                 "Academy of Medical Sciences",
                 "London School of Economics and Political Science (LSE)",
-                "University College London",
+                "University College London (UCL)",
             ],
         )
 
@@ -283,7 +283,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
     def test_empty_canonical_aliases_do_not_prefix_delete_universities(self):
         for institution in [
             "University of Derby",
-            "University College London",
+            "University College London (UCL)",
             "University of Suffolk",
         ]:
             with self.subTest(institution=institution):
@@ -308,8 +308,8 @@ class InstitutionNormalisationTest(unittest.TestCase):
             [
                 "Equality and Human Rights Commission (EHRC)",
                 "National Foundation for Education Research (NFER)",
-                "King's College London",
-                "London School of Hygiene and Tropical Medicine",
+                "King's College London (KCL)",
+                "London School of Hygiene and Tropical Medicine (LSHTM)",
             ],
         )
 
@@ -325,7 +325,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
             institutions,
             [
                 "Equality and Human Rights Commission (EHRC)",
-                "Institute for Employment Studies",
+                "Institute for Employment Studies (IES)",
                 "Sentencing Academy",
                 "Teesside University",
                 "London School of Economics and Political Science (LSE)",
@@ -365,7 +365,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
             institutions,
             [
                 "City, University of London",
-                "University College London",
+                "University College London (UCL)",
                 "University of Cambridge",
                 "London School of Economics and Political Science (LSE)",
                 "University of Warwick",
@@ -380,7 +380,7 @@ class InstitutionNormalisationTest(unittest.TestCase):
         self.assertEqual(
             institutions,
             [
-                "King's College London",
+                "King's College London (KCL)",
                 "University of Leeds",
             ],
         )
@@ -414,6 +414,69 @@ class InstitutionNormalisationTest(unittest.TestCase):
                 "University of Warwick",
             ],
         )
+
+    def test_near_twin_and_distinct_organisations_remain_distinct(self):
+        niesr = describe_institution_normalisation(
+            "National Institute for Economic and Social Research"
+        )["institution"]
+        niser = describe_institution_normalisation(
+            "National Institute of Social and Economic Research"
+        )["institution"]
+        self.assertEqual(niesr, "National Institute for Economic and Social Research (NIESR)")
+        self.assertEqual(niser, "National Institute of Social and Economic Research")
+        self.assertNotEqual(niesr, niser)
+
+        public_health_orgs = [
+            describe_institution_normalisation("Public Health England")["institution"],
+            describe_institution_normalisation("Office for Health Improvement and Disparities")["institution"],
+            describe_institution_normalisation("UK Health Security Agency")["institution"],
+        ]
+        self.assertEqual(
+            public_health_orgs,
+            [
+                "Public Health England (PHE)",
+                "Office for Health Improvement and Disparities (OHID)",
+                "UK Health Security Agency",
+            ],
+        )
+        self.assertEqual(len(set(public_health_orgs)), len(public_health_orgs))
+
+        beis = describe_institution_normalisation(
+            "Department for Business, Energy and Industrial Strategy"
+        )["institution"]
+        dbt = describe_institution_normalisation("Department for Business and Trade")["institution"]
+        self.assertEqual(beis, "Department for Business, Energy and Industrial Strategy (BEIS)")
+        self.assertEqual(dbt, "Department for Business and Trade (DBT)")
+        self.assertNotEqual(beis, dbt)
+
+    def test_held_organisations_remain_without_acronym_suffixes(self):
+        for institution in [
+            "UK Space Agency",
+            "National Infrastructure Commission",
+            "Institute of Occupational Medicine",
+        ]:
+            with self.subTest(institution=institution):
+                self.assertEqual(
+                    describe_institution_normalisation(institution)["institution"],
+                    institution,
+                )
+
+    def test_acronym_agnostic_sector_matching(self):
+        cases = [
+            ("University College London", "University College London (UCL)", "academic"),
+            ("Institute for Fiscal Studies", "Institute for Fiscal Studies (IFS)", "third-sector"),
+            ("Office for National Statistics", "Office for National Statistics (ONS)", "government"),
+        ]
+        for plain, acronym, expected_sector in cases:
+            with self.subTest(plain=plain, acronym=acronym):
+                plain_meta = describe_institution_normalisation(plain)
+                acronym_meta = describe_institution_normalisation(acronym)
+                self.assertEqual(plain_meta["institution"], acronym)
+                self.assertEqual(acronym_meta["institution"], acronym)
+                self.assertEqual(plain_meta["institution_sector"], expected_sector)
+                self.assertEqual(acronym_meta["institution_sector"], expected_sector)
+                self.assertEqual(institution_sector_for(plain), expected_sector)
+                self.assertEqual(institution_sector_for(acronym), expected_sector)
 
     def test_sector_and_metadata_helpers_preserve_existing_parse_output(self):
         df = pd.DataFrame([
