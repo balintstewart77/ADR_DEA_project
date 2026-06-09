@@ -662,6 +662,7 @@ UNUSUAL_PUNCTUATION_RE = re.compile(r"[:;/]{2,}|[()]{2,}")
 def _repair_known_text_corruption(text: str) -> str:
     text = text.replace("\u00a0", " ")
     text = text.replace("\u00ad", "")
+    text = re.sub(r"\s*_x000D_\s*", " ", text, flags=re.IGNORECASE)
     text = text.replace("\u00c3\u008d \u00be", ";")
     text = text.replace("\u02dcLevelling Up\"", "\"Levelling Up\"")
     text = re.sub(r"\s*\u02dcBrain Drain\s*\u2122", " \"Brain Drain\"", text)
@@ -685,7 +686,7 @@ def _clean_title_text(raw: str) -> str:
 
 def _clean_datasets_text(raw: str) -> str:
     text = _repair_known_text_corruption(str(raw))
-    text = re.sub(r"_x000D_", " ", text)
+    text = re.sub(r"\s*_x000D_\s*", " ", text, flags=re.IGNORECASE)
     text = _decode_html_entities(text)
     text = re.sub(r"<[^>]+>", " ", text)
     text = text.replace("\r", "\n")

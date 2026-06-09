@@ -12,7 +12,7 @@ from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS, _ALL_INSTITUTION_OPTIONS, _ALL_TRE_OPTIONS,
 )
 from dashboard.data.thematic import (
-    THEMATIC_DATA_AVAILABLE, THEMATIC_NARRATIVE, THEMATIC_PROJECT_COUNT, THEMATIC_TAGGED_COUNT,
+    THEMATIC_DATA_AVAILABLE, THEMATIC_PROJECT_COUNT, THEMATIC_TAGGED_COUNT,
     _THEMATIC_DOMAIN_OPTIONS, _THEMATIC_DOMAIN_COUNT_OPTIONS,
     _THEMATIC_PURPOSE_OPTIONS, _THEMATIC_TAG_OPTIONS,
     _DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
@@ -115,6 +115,13 @@ def _analyses_accordion():
     return dbc.Accordion(
         [
             dbc.AccordionItem(
+                dbc.Row([
+                    dbc.Col(_graph("thematic-domain-totals"), md=6),
+                    dbc.Col(_graph("thematic-purpose-totals"), md=6),
+                ], className="g-3"),
+                title="Overall Distribution",
+            ),
+            dbc.AccordionItem(
                 [
                     html.P(
                         "Projects may belong to multiple domains, so percentages sum to more "
@@ -131,14 +138,7 @@ def _analyses_accordion():
                     _metric_dropdown("thematic-purpose-trend-metric"),
                     _graph("thematic-purpose-trend"),
                 ],
-                title="Layer Trends Over Time",
-            ),
-            dbc.AccordionItem(
-                dbc.Row([
-                    dbc.Col(_graph("thematic-domain-totals"), md=6),
-                    dbc.Col(_graph("thematic-purpose-totals"), md=6),
-                ], className="g-3"),
-                title="Overall Distribution",
+                title="Substantive domain and Analytical purpose trends over time",
             ),
             dbc.AccordionItem(
                 [
@@ -231,14 +231,14 @@ def _analyses_accordion():
                             ),
                         ], md=3),
                         dbc.Col([
-                            html.Label("Source organisation", className="filter-label"),
+                            html.Label("Dataset source organisation", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-provider-filter",
                                 options=_ALL_PROVIDER_OPTIONS,
                                 value="ALL",
                                 clearable=False,
                                 searchable=True,
-                                placeholder="All source organisations",
+                                placeholder="All dataset source organisations",
                             ),
                         ], md=2),
                         dbc.Col([
@@ -405,7 +405,7 @@ def _analyses_accordion():
                                 {"name": f"{DERIVED_FIELD_ICON} Unit of observation", "id": "dataset_units"},
                                 {"name": f"{DERIVED_FIELD_ICON} Researcher sector", "id": "researcher_sectors"},
                                 {"name": f"{DERIVED_FIELD_ICON} Domains", "id": "substantive_domains"},
-                                {"name": f"{DERIVED_FIELD_ICON} Layer A domain count", "id": "substantive_domain_count"},
+                                {"name": f"{DERIVED_FIELD_ICON} Substantive domain count", "id": "substantive_domain_count"},
                                 {"name": f"{DERIVED_FIELD_ICON} Purpose", "id": "analytical_purpose"},
                                 {"name": f"{DERIVED_FIELD_ICON} Cross-cutting tags", "id": "cross_cutting_tags"},
                                 {"name": f"{DERIVED_FIELD_ICON} Rationale", "id": "rationale"},
@@ -467,10 +467,6 @@ def build_thematic_tab():
                 dbc.AccordionItem(
                     dcc.Markdown(_thematic_layers_md, style=_MD_STYLE, className="taxonomy-defs"),
                     title="Layer Definitions",
-                ),
-                dbc.AccordionItem(
-                    dcc.Markdown(THEMATIC_NARRATIVE, style=_MD_STYLE),
-                    title="Analytical Narrative (LLM-Generated)",
                 ),
             ], start_collapsed=True, className="mb-4"),
 

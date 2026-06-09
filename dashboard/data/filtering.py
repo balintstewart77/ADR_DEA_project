@@ -150,6 +150,62 @@ def _merge_thematic_classifications(register_df: pd.DataFrame) -> pd.DataFrame:
     return merged
 
 
+def _merge_register_overlay(
+    left: pd.DataFrame,
+    right: pd.DataFrame,
+    merge_keys: list[str],
+    overlay_columns: list[str],
+) -> pd.DataFrame:
+    rename_map = {col: f"{col}__register" for col in overlay_columns}
+    right_overlay = (
+        right[merge_keys + overlay_columns]
+        .drop_duplicates(subset=merge_keys, keep="first")
+        .rename(columns=rename_map)
+    )
+    merged = left.merge(right_overlay, on=merge_keys, how="left")
+    for col, overlay_col in rename_map.items():
+        if overlay_col not in merged.columns:
+            continue
+        if col in merged.columns:
+            merged[col] = merged[overlay_col].where(merged[overlay_col].notna(), merged[col])
+        else:
+            merged[col] = merged[overlay_col]
+        merged = merged.drop(columns=overlay_col)
+    return merged
+
+
+def _overlay_clean_register_fields(source_df: pd.DataFrame, register_cols: list[str]) -> pd.DataFrame:
+    base = source_df.copy()
+    overlay_columns = [col for col in register_cols if col in df_all.columns]
+    if not overlay_columns:
+        return base
+
+    if "Record ID" in base.columns and "Record ID" in df_all.columns:
+        return _merge_register_overlay(
+            base,
+            df_all[["Record ID", *overlay_columns]].copy(),
+            ["Record ID"],
+            overlay_columns,
+        )
+
+    if "Project ID" not in base.columns or "Project ID" not in df_all.columns:
+        return base
+
+    left = base.copy()
+    right = df_all[["Project ID", *overlay_columns]].copy()
+    left[_MERGE_PROJECT_ID_KEY_COL] = left["Project ID"].apply(_project_id_key)
+    right[_MERGE_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
+    merge_keys = [_MERGE_PROJECT_ID_KEY_COL]
+
+    if "Title" in base.columns and "Title" in df_all.columns:
+        left[_MERGE_TITLE_KEY_COL] = left["Title"].apply(_title_key)
+        right[_MERGE_TITLE_KEY_COL] = df_all["Title"].apply(_title_key)
+        merge_keys.append(_MERGE_TITLE_KEY_COL)
+
+    merged = _merge_register_overlay(left, right, merge_keys, overlay_columns)
+    return merged.drop(columns=merge_keys, errors="ignore")
+
+
 def _ensure_enriched_register_columns(source_df: pd.DataFrame) -> pd.DataFrame:
     base = source_df.copy()
     register_cols = [
@@ -159,32 +215,7 @@ def _ensure_enriched_register_columns(source_df: pd.DataFrame) -> pd.DataFrame:
         "Secure Research Service",
         "Accreditation Date",
     ]
-    missing_register_cols = [
-        col for col in register_cols
-        if col not in base.columns
-    ]
-    if missing_register_cols:
-        left = base.copy()
-        right = df_all[missing_register_cols].copy()
-        left[_MERGE_PROJECT_ID_KEY_COL] = left["Project ID"].apply(_project_id_key)
-        right[_MERGE_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
-        merge_keys = [_MERGE_PROJECT_ID_KEY_COL]
-        if "Title" in base.columns and "Title" in df_all.columns:
-            left[_MERGE_TITLE_KEY_COL] = left["Title"].apply(_title_key)
-            right[_MERGE_TITLE_KEY_COL] = df_all["Title"].apply(_title_key)
-            merge_keys = [_MERGE_PROJECT_ID_KEY_COL, _MERGE_TITLE_KEY_COL]
-            missing_register_cols = [
-                col for col in missing_register_cols
-                if col != "Title"
-            ]
-            right = df_all[missing_register_cols].copy()
-            right[_MERGE_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
-            right[_MERGE_TITLE_KEY_COL] = df_all["Title"].apply(_title_key)
-        right = (
-            right[merge_keys + missing_register_cols]
-            .drop_duplicates(subset=merge_keys, keep="first")
-        )
-        base = left.merge(right, on=merge_keys, how="left").drop(columns=merge_keys)
+    base = _overlay_clean_register_fields(base, register_cols)
 
     if any(col not in base.columns for col in _ENRICHED_DERIVED_COLUMNS):
         base = _merge_thematic_classifications(base)

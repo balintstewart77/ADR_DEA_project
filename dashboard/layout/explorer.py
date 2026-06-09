@@ -43,14 +43,14 @@ def build_explorer_tab():
                 ),
             ], md=3),
             dbc.Col([
-                html.Label("Source organisation", className="filter-label"),
+                html.Label("Dataset source organisation", className="filter-label"),
                 dcc.Dropdown(
                     id="browse-provider-filter",
                     options=_ALL_PROVIDER_OPTIONS,
                     value="ALL",
                     clearable=False,
                     searchable=True,
-                    placeholder="All source organisations",
+                    placeholder="All dataset source organisations",
                 ),
             ], md=3),
         ], className="mb-2 g-2"),

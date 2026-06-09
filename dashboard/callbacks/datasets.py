@@ -1,23 +1,23 @@
 """Dataset Demand callbacks."""
 
+from textwrap import wrap
+
 import pandas as pd
 import plotly.express as px
 from dash import Input, Output
 
-from dashboard.config import PRIMARY_BAR, FLAGSHIP_COLLECTIONS
+from dashboard.config import PRIMARY_BAR
 from dashboard.charts.template import _apply_common, _annotate_partial_year
 from dashboard.data.registry import df_datasets, PARTIAL_YEAR_INFO
 
 
-# Build a set of flagship dataset names (normalised) for optional exclusion
-_FLAGSHIP_KW_LOWER = []
-for kws in FLAGSHIP_COLLECTIONS.values():
-    _FLAGSHIP_KW_LOWER.extend(kw.lower() for kw in kws)
-
-
-def _is_flagship_dataset(name: str) -> bool:
-    s = name.lower()
-    return any(kw in s for kw in _FLAGSHIP_KW_LOWER)
+def _wrap_axis_label(value, width=36):
+    text = " ".join(str(value or "").split())
+    if len(text) <= width:
+        return text
+    return "<br>".join(
+        wrap(text, width=width, break_long_words=False, break_on_hyphens=False)
+    )
 
 
 def register(app):
@@ -38,15 +38,11 @@ def register(app):
         Input("datasets-topn-preset", "value"),
         Input("datasets-topn-custom", "value"),
         Input("datasets-provider-filter", "value"),
-        Input("datasets-exclude-flagship", "value"),
     )
-    def update_datasets_tab(preset, custom, provider, exclude_flagship):
+    def update_datasets_tab(preset, custom, provider):
         top_n = int(custom) if preset == -1 and custom else (preset if preset != -1 else 10)
         top_n = max(1, int(top_n))
         sub = df_datasets.copy()
-
-        if exclude_flagship and "yes" in exclude_flagship:
-            sub = sub[~sub["dataset"].apply(_is_flagship_dataset)]
 
         if provider and provider != "ALL":
             sub = sub[sub["provider"] == provider]
@@ -133,26 +129,28 @@ def register(app):
                 ignore_index=True,
             )
         prov_plot = prov_counts.sort_values("Projects", ascending=True, kind="stable")
+        prov_plot["provider_label"] = prov_plot["provider"].apply(_wrap_axis_label)
         fig_prov = px.bar(
             prov_plot,
             x="Projects",
-            y="provider",
+            y="provider_label",
             orientation="h",
-            title="Projects by Source organisation",
-            labels={"provider": "", "Projects": "Distinct projects"},
+            title="Projects by Dataset source organisation",
+            labels={"provider_label": "", "Projects": "Distinct projects"},
             color_discrete_sequence=[PRIMARY_BAR],
+            custom_data=["provider"],
         )
         fig_prov.update_traces(
             marker_line_width=0,
             text=prov_plot["Projects"],
             textposition="outside",
             cliponaxis=False,
-            hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
+            hovertemplate="<b>%{customdata[0]}</b><br>%{x} projects<extra></extra>",
         )
         fig_prov.update_layout(
             showlegend=False,
-            margin=dict(l=260, r=48, t=56, b=48),
-            yaxis_tickfont_size=10,
+            margin=dict(l=300, r=64, t=64, b=48),
+            yaxis=dict(automargin=True, tickfont=dict(size=10)),
         )
         _apply_common(fig_prov, height=max(420, len(prov_plot) * 26))
 

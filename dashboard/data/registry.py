@@ -130,7 +130,7 @@ _provider_project_counts = (
     .groupby("provider")["Project ID"].nunique()
 )
 _ALL_PROVIDER_OPTIONS = (
-    [{"label": "All source organisations", "value": "ALL"}]
+    [{"label": "All dataset source organisations", "value": "ALL"}]
     + [
         {"label": f"{p}  ({n} {'project' if n == 1 else 'projects'})", "value": p}
         for p in sorted(df_datasets["provider"].unique()) if p

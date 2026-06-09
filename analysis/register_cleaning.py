@@ -116,10 +116,21 @@ def _normalise_duplicate_text(value) -> str:
     if pd.isna(value):
         return ""
     text = str(value)
-    text = text.replace("_x000D_", " ").replace("\u00a0", " ")
+    text = re.sub(r"\s*_x000D_\s*", " ", text, flags=re.IGNORECASE)
+    text = text.replace("\r", " ").replace("\n", " ").replace("\u00a0", " ")
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip().casefold()
+
+
+def _clean_single_line_register_text(value):
+    if pd.isna(value):
+        return value
+    text = str(value)
+    text = re.sub(r"\s*_x000D_\s*", " ", text, flags=re.IGNORECASE)
+    text = text.replace("\r", " ").replace("\n", " ").replace("\u00a0", " ")
+    text = re.sub(r"<[^>]+>", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _normalise_title_key(value) -> str:
@@ -214,7 +225,9 @@ def _split_researcher_entries(value) -> list[str]:
     if pd.isna(value):
         return []
     text = str(value)
-    text = text.replace("_x000D_", "\n").replace("\r", "\n")
+    text = re.sub(r"\s*_x000D_\s*(?=,)", " ", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s*_x000D_\s*", "\n", text, flags=re.IGNORECASE)
+    text = text.replace("\r", "\n")
     text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
     text = re.sub(r"<[^>]+>", " ", text)
     text = text.replace("\u00a0", " ")
@@ -223,6 +236,21 @@ def _split_researcher_entries(value) -> list[str]:
         for line in text.split("\n")
         if re.sub(r"\s+", " ", line).strip()
     ]
+
+
+def _clean_researcher_text(value):
+    if pd.isna(value):
+        return value
+    text = str(value)
+    text = re.sub(r"\s*_x000D_\s*(?=,)", " ", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s*_x000D_\s*", "\n", text, flags=re.IGNORECASE)
+    text = text.replace("\r", "\n")
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = text.replace("\u00a0", " ")
+    text = re.sub(r"[ \t\f\v]*\n[ \t\f\v]*", "\n", text)
+    text = re.sub(r"\n{2,}", "\n", text)
+    return "\n".join(line.strip() for line in text.split("\n") if line.strip())
 
 
 def _merge_researcher_values(values: pd.Series) -> str:
@@ -444,9 +472,13 @@ def clean_register_dataframe(
     duplicate_result = apply_duplicate_policy(df, review_file=review_file, stats=stats, verbose=verbose)
     df = assign_record_ids(duplicate_result.dataframe)
     df["Title"] = df["Title"].apply(_clean_title_text)
+    df["Researchers"] = df["Researchers"].apply(_clean_researcher_text)
     df["Datasets Used"] = df["Datasets Used"].apply(
         lambda value: _clean_datasets_text(value) if isinstance(value, str) and value.strip() else value
     )
+    for col in ("Legal Basis", "Secure Research Service"):
+        if col in df.columns:
+            df[col] = df[col].apply(_clean_single_line_register_text)
     df = add_time_fields(df, include_quarter_date=include_quarter_date)
     if include_project_row_id:
         df["Project Row ID"] = [f"proj-{i:04d}" for i in range(len(df))]

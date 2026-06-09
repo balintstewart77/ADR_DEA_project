@@ -89,9 +89,9 @@ current deterministic record-linkage and component-domain data.
 
 The "Datasets Used" free-text field is parsed into individual dataset entries:
 
-1. **Split by newline** - each line typically represents one source organisation
-2. **Split by colon** - separates the source organisation from the dataset list
-3. **Split by comma and ampersand** - separates individual datasets within a source organisation
+1. **Split by newline** - each line typically represents one dataset source organisation
+2. **Split by colon** - separates the dataset source organisation from the dataset list
+3. **Split by comma and ampersand** - separates individual datasets within a dataset source organisation
 4. **Geographic suffixes stripped** - e.g. "- UK", "- England and Wales" are removed for grouping
 5. **Name aliases applied** - variant names are mapped to canonical labels
    (e.g. "LEO via SRS Iteration 1 Standard Extract" -> "Longitudinal Education Outcomes")
@@ -118,7 +118,7 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 ### Limitations and Caveats
 
 - **Dataset parsing** splits on commas and ampersands, which can incorrectly
-  break source organisation names that contain these characters
+  break dataset source organisation names that contain these characters
   (e.g. "Department for Business, Energy & Industrial Strategy").
 - **Duplicate handling** removes exact duplicates and same-ID/same-title
   duplicates, but retains duplicate IDs where the titles differ.
@@ -152,8 +152,7 @@ Classification is performed by Claude (claude-opus-4-8) using structured output
 via the Anthropic API. Labels follow the project taxonomy data dictionary, and
 results are cached locally to avoid re-classification. Record-linkage properties
 are no longer classified by the LLM; they are derived deterministically from the
-register reference layer. A narrative summary is auto-generated from the
-aggregate statistics.
+register reference layer.
 
 **Note:** Classification is based on both project titles and datasets used.
 These fields may not fully convey the research methodology or the full scope of data linkage.

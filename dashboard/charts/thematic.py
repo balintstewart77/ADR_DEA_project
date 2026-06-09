@@ -167,7 +167,14 @@ def make_record_linkage_trend(
         yaxis_title="% of projects" if metric == "pct" else "Projects",
         xaxis_dtick=1,
         yaxis=dict(range=[0, 100] if metric == "pct" else None),
-        margin=dict(r=160),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.03,
+            xanchor="left",
+            x=0,
+        ),
+        margin=dict(r=160, t=112, b=56),
     )
     _annotate_partial_year(fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info)
     return _apply_common(fig, height=height)
@@ -222,7 +229,14 @@ def make_domain_record_linkage_breakdown(
         yaxis_title="",
         barmode="stack",
         xaxis=dict(range=[0, 100] if metric == "pct" else None),
-        margin=dict(l=230, r=80, t=80, b=48),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.03,
+            xanchor="left",
+            x=0,
+        ),
+        margin=dict(l=230, r=80, t=112, b=56),
     )
     return _apply_common(fig, height=height)
 
@@ -448,16 +462,17 @@ def make_domain_cooccurrence(
         annotations=annotations,
         xaxis=dict(side="bottom", tickangle=-35, automargin=True, tickmode="linear", tick0=0, dtick=1),
         yaxis=dict(autorange="reversed", tickmode="linear", tick0=0, dtick=1),
-        margin=dict(l=240, t=90, b=220),
+        margin=dict(l=240, t=132, b=190),
     )
     fig.add_annotation(
         text="Diagonal = projects with only that domain.",
         xref="paper",
         yref="paper",
         x=0,
-        y=-0.16,
+        y=1.10,
         showarrow=False,
         xanchor="left",
+        yanchor="bottom",
         font=dict(size=11, color="#7f8c8d"),
     )
     return _apply_common(fig, height=height)

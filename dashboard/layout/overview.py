@@ -9,7 +9,7 @@ from dashboard.charts.template import CHART_CONFIG
 from dashboard.config import FEEDBACK_EMAIL_URL, SOURCE_URL
 from dashboard.data.registry import (
     df_all, PARTIAL_YEAR_INFO,
-    TOTAL_PROJECTS, RECORD_LINKED_PROJECT_SHARE,
+    TOTAL_PROJECTS,
     CROSS_DOMAIN_LINKED_PROJECTS, WITHIN_DOMAIN_LINKED_PROJECTS,
     YEAR_RANGE,
 )
@@ -17,11 +17,18 @@ from dashboard.data.registry import (
 
 def build_stat_cards():
     return dbc.Row([
-        stat_card(f"{TOTAL_PROJECTS:,}", "Total DEA projects", "#3366cc", icon="\U0001f4c1"),
-        stat_card(f"{RECORD_LINKED_PROJECT_SHARE:.1f}%", "% using record linkage", "#2a9d8f", icon="%"),
-        stat_card(f"{CROSS_DOMAIN_LINKED_PROJECTS:,}", "Cross-domain linked", "#e76f51", icon="\u2194"),
-        stat_card(f"{WITHIN_DOMAIN_LINKED_PROJECTS:,}", "Within-domain linked", "#109618", icon="\u21c4"),
-        stat_card(YEAR_RANGE, "Year range", "#0099c6", icon="\U0001f4c5"),
+        stat_card(f"{TOTAL_PROJECTS:,}", "Total DEA projects", "#3366cc"),
+        stat_card(
+            f"{CROSS_DOMAIN_LINKED_PROJECTS:,}",
+            "Projects using cross-domain linkage",
+            "#e76f51",
+        ),
+        stat_card(
+            f"{WITHIN_DOMAIN_LINKED_PROJECTS:,}",
+            "Projects using within-domain linkage",
+            "#109618",
+        ),
+        stat_card(YEAR_RANGE, "Year range", "#0099c6"),
     ], className="mb-4 g-3")
 
 

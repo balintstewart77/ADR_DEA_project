@@ -48,6 +48,18 @@ class RegisterCleaningTests(unittest.TestCase):
         rows = self.df[self.df["Project ID"].astype(str).eq("2020/030")]
         self.assertEqual(set(rows["Record ID"].astype(str)), {"2020/030/a", "2020/030/b"})
 
+    def test_escaped_carriage_return_artifacts_are_removed(self):
+        text_values = self.df.select_dtypes(include=["object"]).fillna("").astype(str)
+        combined = "\n".join(text_values.stack().tolist())
+        self.assertNotIn("_x000D_", combined)
+        self.assertNotIn("\r", combined)
+
+        row = self.df[self.df["Project ID"].astype(str).eq("2026/002")].iloc[0]
+        researchers = row["Researchers"]
+        self.assertIn("Hannah Slevin, University of Manchester", researchers)
+        self.assertIn("Katie Harron, University College London", researchers)
+        self.assertNotIn("_x000D_", researchers)
+
 
 if __name__ == "__main__":
     unittest.main()

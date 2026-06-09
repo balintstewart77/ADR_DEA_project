@@ -10,7 +10,7 @@ from dashboard.data.registry import _ALL_PROVIDER_OPTIONS
 def build_datasets_tab():
     return dbc.Tab(label="Dataset Demand", tab_id="tab-datasets", children=[
         html.P(
-            "Explore which datasets are used most, how demand changes over time, and which source organisations are most represented.",
+            "Explore which datasets are used most, how demand changes over time, and which dataset source organisations are most represented.",
             className="section-desc",
         ),
         dbc.Row([
@@ -39,7 +39,7 @@ def build_datasets_tab():
                 ], style={"display": "flex", "alignItems": "center"}),
             ], md=3),
             dbc.Col([
-                html.Label("Source organisation", className="filter-label"),
+                html.Label("Dataset source organisation", className="filter-label"),
                 dcc.Dropdown(
                     id="datasets-provider-filter",
                     options=_ALL_PROVIDER_OPTIONS,
@@ -47,15 +47,6 @@ def build_datasets_tab():
                     clearable=False,
                 ),
             ], md=4),
-            dbc.Col([
-                html.Label("Exclude cross-domain linked datasets", className="filter-label"),
-                dcc.Checklist(
-                    id="datasets-exclude-flagship",
-                    options=[{"label": " Exclude cross-domain linked", "value": "yes"}],
-                    value=[],
-                    className="pt-1",
-                ),
-            ], md=3),
         ], className="mb-3 g-2"),
         dbc.Row([
             dbc.Col(
