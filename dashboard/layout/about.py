@@ -141,9 +141,9 @@ A separate analysis script (`llm_theme_analysis_v3.py`) classifies each project
 from its title and datasets using substantive domains, analytical purpose, and
 cross-cutting tags:
 
-- **Layer A - Substantive Domain** (1 or more from the active domain set, e.g. "Education &
+- **Substantive Domain** (1 or more from the active domain set, e.g. "Education &
   Skills", "Health & Social Care", "Crime & Justice")
-- **Layer C - Analytical Purpose** (1 or 2, e.g. "Policy Evaluation",
+- **Analytical Purpose** (1 or 2, e.g. "Policy Evaluation",
   "Descriptive Monitoring", "Life-Course Analysis")
 - **Cross-cutting tags** - flags projects centred on COVID-19/pandemic framing,
   demographic disparities, or equity

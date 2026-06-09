@@ -7,6 +7,7 @@ from dashboard.charts.template import CHART_CONFIG
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
 from dashboard import taxonomy
+from dashboard import reference_definitions
 from dashboard.config import REGISTER_SOURCE_ICON, DERIVED_FIELD_ICON
 from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS, _ALL_INSTITUTION_OPTIONS, _ALL_TRE_OPTIONS,
@@ -60,6 +61,53 @@ def _metric_dropdown(dropdown_id: str) -> dbc.Row:
     ], className="mb-2 g-2")
 
 
+def _definition_detail(detail: dict) -> html.Div:
+    content = detail["content"]
+    if isinstance(content, list):
+        body = html.Ul([html.Li(item) for item in content], className="mb-0")
+    else:
+        body = dcc.Markdown(content, style=_MD_STYLE)
+    return html.Div([
+        html.Strong(detail["title"]),
+        body,
+    ], className="mb-2")
+
+
+def _deterministic_facet_definition(facet: dict) -> html.Div:
+    return html.Div([
+        html.H5(facet["name"], className="mb-1"),
+        html.P([
+            html.Strong("Values: "),
+            ", ".join(facet["values"]),
+        ], className="text-muted small mb-2"),
+        dcc.Markdown(f"**Rule:** {facet['rule']}", style=_MD_STYLE),
+        html.Details([
+            html.Summary("Worked edge cases and secondary rules"),
+            html.Div(
+                [_definition_detail(detail) for detail in facet["details"]],
+                className="mt-2",
+            ),
+        ], className="mb-3"),
+    ], className="mb-3")
+
+
+def _deterministic_definitions_section() -> html.Div:
+    return html.Div([
+        html.P(
+            "These facets are derived deterministically from the register via fixed rules — "
+            "exact, reproducible, auditable. The rules below are read from "
+            "analysis/register_reference.yaml.",
+            className="section-desc",
+        ),
+        dcc.Markdown(reference_definitions.meta_principle(), style=_MD_STYLE),
+        html.Hr(),
+        *[
+            _deterministic_facet_definition(facet)
+            for facet in reference_definitions.deterministic_facets()
+        ],
+    ])
+
+
 _thematic_methodology_md = f"""
 **Model:** Claude Opus 4.8 (`claude-opus-4-8`) via the Anthropic API with
 structured JSON output.
@@ -83,13 +131,16 @@ the entire register a second time and comparing the two passes.
 """
 
 _thematic_layers_md = f"""
-#### Layer A — Substantive Domain (1 or more per project)
+These classifications are LLM-inferred from project titles and dataset names.
+They are indicative rather than definitive, pending validation.
+
+#### Substantive Domain (1 or more per project)
 
 What the project is about. Assigned from the datasets and research question:
 
 {_md_table(taxonomy.LAYER_A_DOMAIN)}
 
-#### Layer C — Analytical Purpose (1 or 2 per project)
+#### Analytical Purpose (1 or 2 per project)
 
 What analytical purpose the project serves:
 
@@ -97,7 +148,7 @@ What analytical purpose the project serves:
 
 &nbsp;
 
-#### Cross-Cutting Tag (zero or more, orthogonal to the layers)
+#### Cross-Cutting Tag (zero or more, orthogonal to the classifications)
 
 {_md_table(taxonomy.LAYER_CROSS_CUTTING_TAG)}
 """
@@ -466,7 +517,11 @@ def build_thematic_tab():
                 ),
                 dbc.AccordionItem(
                     dcc.Markdown(_thematic_layers_md, style=_MD_STYLE, className="taxonomy-defs"),
-                    title="Layer Definitions",
+                    title="Classification definitions",
+                ),
+                dbc.AccordionItem(
+                    _deterministic_definitions_section(),
+                    title="Deterministic facet definitions",
                 ),
             ], start_collapsed=True, className="mb-4"),
 

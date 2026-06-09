@@ -288,8 +288,9 @@ def _tag_domain_totals(
 def _domain_crosstab(df: pd.DataFrame, other_col: str, other_multi: bool, col_order) -> pd.DataFrame:
     """Substantive-domain x classification-value counts over ALL domains.
 
-    Layer A is non-hierarchical, so a project is counted once per assigned domain
-    (column totals can exceed the project count). Returns a frame whose first
+    Substantive domain is non-hierarchical, so a project is counted once per
+    assigned domain (column totals can exceed the project count). Returns a
+    frame whose first
     column is ``domain`` with the remaining columns holding counts — the shape
     ``make_cross_heatmap`` expects. Rows are ordered by total descending; columns
     follow taxonomy order where known.
