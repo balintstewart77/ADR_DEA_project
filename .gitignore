@@ -15,6 +15,7 @@ requirements-mac.txt
 # Data
 data/*
 !data/register_manifest.json
+!data/release_pointers.json
 !data/dea_accredited_projects.csv
 !data/dea_accredited_projects_*.csv
 !data/dea_accredited_projects_*.xlsx
@@ -106,6 +107,10 @@ analysis/Figures_and_Tables.ipynb
 
 # --- Provenance artefacts ---
 analysis/provenance/
+
+# --- Refresh-pipeline classification runs: track dashboard-consumed files,
+# ignore the regenerable inspection CSV (the cache is ignored globally) ---
+analysis/outputs_classified_*/all_projects_classified.csv
 
 # --- Local comparison-analysis artefacts ---
 analysis/opus_v_sonnet_comparison_analysis/

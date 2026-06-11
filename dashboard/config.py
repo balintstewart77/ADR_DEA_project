@@ -1,3 +1,4 @@
+import json
 import os
 from collections import namedtuple
 
@@ -158,10 +159,36 @@ FEEDBACK_EMAIL_URL = (
 )
 SOURCE_URL = "https://github.com/balintstewart77/ADR_DEA_project"
 
-# Where the dashboard READS the frozen classification outputs (the results run).
-CLASSIFICATION_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v4_8_rc2")
+# Where the dashboard READS the frozen classification outputs (the results
+# run). The pointers live in data/release_pointers.json so a register refresh
+# can publish a new classification run without code changes; the defaults
+# below apply when the file is missing or unreadable.
+_PROJECT_ROOT = os.path.normpath(os.path.join(_PACKAGE_DIR, ".."))
+_RELEASE_POINTERS_PATH = os.path.join(_PROJECT_ROOT, "data", "release_pointers.json")
+_DEFAULT_RELEASE_POINTERS = {
+    "classification_dir": "analysis/outputs_v4_8_rc2",
+    "register_properties_csv": "analysis/outputs_deterministic_rc2/register_properties.csv",
+}
+
+
+def _load_release_pointers(path=_RELEASE_POINTERS_PATH) -> dict:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            loaded = json.load(f)
+        return {**_DEFAULT_RELEASE_POINTERS, **{
+            key: value for key, value in loaded.items()
+            if isinstance(value, str) and value.strip()
+        }}
+    except (OSError, ValueError):
+        return dict(_DEFAULT_RELEASE_POINTERS)
+
+
+_RELEASE_POINTERS = _load_release_pointers()
+CLASSIFICATION_DIR = os.path.join(
+    _PROJECT_ROOT, *_RELEASE_POINTERS["classification_dir"].split("/")
+)
 REGISTER_PROPERTIES_CSV = os.path.join(
-    _PACKAGE_DIR, "..", "analysis", "outputs_deterministic_rc2", "register_properties.csv"
+    _PROJECT_ROOT, *_RELEASE_POINTERS["register_properties_csv"].split("/")
 )
 # Where register cleaning WRITES its duplicate-review diagnostic at startup.
 # Kept separate from CLASSIFICATION_DIR so the live app never writes into the
