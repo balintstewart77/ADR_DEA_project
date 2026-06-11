@@ -1478,3 +1478,55 @@ Reserve bodies) are folded into `government` for want of a dedicated category (t
 academic entity, since SAIL despite being a commercial infrastructure is based at a University. `Survey, Census 2011 England and Wales` was handled as a
 targeted dataset-provider parse residue; `Independent Researcher` and `OREC`
 remain honestly unclassified.
+
+# Methods log — content-stable Record IDs and classification cache fingerprints (2026-06-11)
+
+## Why
+
+Record IDs disambiguate duplicate Project IDs with letter suffixes
+(`2020/030/a`, `/b`). The suffixes were previously assigned by row position in
+the source extract, so a register re-publication that merely reordered rows
+would silently re-letter records and mis-join every artefact keyed on Record
+ID: the deterministic facets in `register_properties.csv` and the LLM
+classification cache. With automatic register updates planned, positional
+assignment was the main silent-corruption risk.
+
+## Change 1 — content-derived suffix assignment
+
+`assign_record_ids` now orders duplicate-group members by content
+(accreditation date, then normalised title, datasets, researchers, with the
+remaining columns as a deterministic tiebreak) rather than by file position.
+The same rows receive the same Record IDs in any input order. On the
+2026-03-25 register this re-lettered three pairs (2020/030, 2023/211,
+2024/014); `analysis/migrate_record_id_stability.py` relabelled the existing
+`layer_classifications.csv` artefacts by content match (Project ID + Title)
+and verified `register_properties.csv` against a fresh derivation. The
+migration is idempotent and reports rather than guesses when content cannot be
+matched.
+
+## Change 2 — classification cache fingerprints (cache schema v6)
+
+LLM cache entries were previously reused on Record ID alone, so a register
+correction to a project's title or datasets would silently reuse the stale
+classification. Each cache entry now stores a fingerprint (SHA-256, first 16
+hex chars) of the exact prompt inputs — sanitised title plus summarised
+datasets — and `classify_all` re-classifies on mismatch. Because the cache is
+local-only, `analysis/rebuild_llm_cache.py` reconstructs a fingerprinted cache
+from any published `layer_classifications.csv`, so a register refresh pays API
+calls only for new or genuinely changed projects. Rebuilding from the rc2
+outputs covers 1,258 of 1,272 current projects; the 14 stale entries are the
+Tier-2 merge groups whose merged dataset text changed after the rc2 run — the
+fingerprint catching exactly the class of drift it exists to catch.
+
+## Regeneration of register_properties.csv
+
+Verifying the migration surfaced that the committed `register_properties.csv`
+predated the 0.4.2–0.4.5 reference revisions: 272 project rows carried stale
+facets (208 temporal-structure cells, 72 collection-method cells, 9 unit
+cells — the base-ASHE-style cross-sectional calls and the
+classified-by-primary-content survey reclassifications documented above; the
+only record-linkage changes were the 2020/030 relabelled pair, leaving
+headline linkage counts unchanged at 274 cross-domain / 121 within-domain).
+The file was regenerated under reference 0.4.6; the regeneration report's
+built-in temporal-delta and edge-case checks all pass
+(`analysis/outputs/instruction_stable_record_id_regen_report.md`).

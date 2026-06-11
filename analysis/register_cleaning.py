@@ -460,6 +460,42 @@ def _update_duplicate_stats(stats: dict, result: DuplicatePolicyResult) -> None:
     stats["after_filters"] = len(result.dataframe)
 
 
+_RECORD_ID_PRIMARY_KEY_COLUMNS = ("Accreditation Date", "Title", "Datasets Used", "Researchers")
+
+
+def _record_suffix(rank: int) -> str:
+    """0 -> a, 1 -> b, ... 25 -> z, 26 -> aa."""
+    rank += 1
+    letters = ""
+    while rank:
+        rank, rem = divmod(rank - 1, 26)
+        letters = chr(ord("a") + rem) + letters
+    return letters
+
+
+def _record_id_sort_key(row: pd.Series) -> tuple:
+    """Content-derived ordering key for duplicate-ID suffix assignment.
+
+    Suffixes must not depend on row position in the source file: a register
+    re-publication that reorders rows would otherwise silently re-letter
+    Record IDs and mis-join every artefact keyed on them (deterministic
+    facets, LLM classifications). Date/title/datasets/researchers decide the
+    order; remaining columns are a deterministic tiebreak.
+    """
+    primary = tuple(
+        _normalise_date_key(row.get(col))
+        if col == "Accreditation Date"
+        else _normalise_duplicate_text(row.get(col))
+        for col in _RECORD_ID_PRIMARY_KEY_COLUMNS
+    )
+    tiebreak = tuple(
+        _normalise_duplicate_text(value)
+        for col, value in sorted(row.items(), key=lambda item: str(item[0]))
+        if col not in _RECORD_ID_PRIMARY_KEY_COLUMNS
+    )
+    return primary + tiebreak
+
+
 def assign_record_ids(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     out["Project ID"] = (
@@ -473,8 +509,9 @@ def assign_record_ids(df: pd.DataFrame) -> pd.DataFrame:
     out["Record ID"] = out["Project ID"]
     if duplicated_ids.any():
         for pid, grp in out.loc[duplicated_ids].groupby("Project ID", sort=False):
-            for i, idx in enumerate(grp.index):
-                out.loc[idx, "Record ID"] = f"{pid}/{chr(ord('a') + i)}"
+            ranked = sorted(grp.index, key=lambda idx: _record_id_sort_key(out.loc[idx]))
+            for rank, idx in enumerate(ranked):
+                out.loc[idx, "Record ID"] = f"{pid}/{_record_suffix(rank)}"
     return out
 
 

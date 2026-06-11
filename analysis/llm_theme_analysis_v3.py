@@ -44,6 +44,7 @@ Outputs (written to analysis/outputs_v3/):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -96,7 +97,9 @@ _make_console_output_safe()
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs_v3")
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
-CACHE_SCHEMA_VERSION = 5
+# v6: entries carry a "fingerprint" of the prompt inputs so register content
+# changes invalidate per-project rather than being silently reused.
+CACHE_SCHEMA_VERSION = 6
 PROMPT_VERSION = "dict-1.0-rc2"
 
 MODEL      = "claude-opus-4-8"
@@ -452,7 +455,12 @@ def load_cache(cache_path: str) -> dict:
             return {}
         meta = raw.get("__meta__", {})
         if meta.get("cache_schema_version") != CACHE_SCHEMA_VERSION:
-            print("[cache] Schema version mismatch - invalidating cache")
+            print(
+                "[cache] Schema version mismatch - invalidating cache. "
+                "To upgrade a pre-v6 cache (or rebuild one from a previous "
+                "layer_classifications.csv) without re-classifying, run: "
+                "python -m analysis.rebuild_llm_cache"
+            )
             return {}
         if meta.get("prompt_version") != PROMPT_VERSION:
             print(f"[cache] Prompt version changed ({meta.get('prompt_version')} -> {PROMPT_VERSION}) "
@@ -516,6 +524,17 @@ def _summarise_datasets(raw: str, max_chars: int = 600) -> str:
         text = text[:max_chars] + "..."
     text = _sanitise_prompt_text(text)
     return text
+
+
+def _classification_fingerprint(prompt_title: str, prompt_datasets: str) -> str:
+    """Hash of the exact prompt inputs for a project.
+
+    Stored on each cache entry; a mismatch means the register content behind a
+    Record ID changed since classification, so the entry must not be reused.
+    """
+    payload = f"{prompt_title}\n{prompt_datasets}"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
 
 def _build_projects_block(projects: list[dict]) -> str:
     numbered = "\n".join(
@@ -766,18 +785,36 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
     valid_ids = set(df["Record ID"].astype(str))
     cache = {k: v for k, v in cache.items() if k in valid_ids}
 
-    to_classify = [
-        {
-            "id": str(row["Record ID"]),
+    to_classify = []
+    stale_count = 0
+    for _, row in df.iterrows():
+        record_id = str(row["Record ID"])
+        prompt_title = _sanitise_prompt_text(row["Title"])
+        prompt_datasets = _summarise_datasets(row.get("Datasets Used", ""))
+        fingerprint = _classification_fingerprint(prompt_title, prompt_datasets)
+        cached = cache.get(record_id)
+        if cached is not None and cached.get("fingerprint") == fingerprint:
+            continue
+        if cached is not None:
+            stale_count += 1
+        to_classify.append({
+            "id": record_id,
             "title": row["Title"],
-            "prompt_title": _sanitise_prompt_text(row["Title"]),
-            "prompt_datasets": _summarise_datasets(row.get("Datasets Used", "")),
-        }
-        for _, row in df.iterrows()
-        if str(row["Record ID"]) not in cache
-    ]
+            "prompt_title": prompt_title,
+            "prompt_datasets": prompt_datasets,
+            "fingerprint": fingerprint,
+        })
 
-    print(f"[llm] {len(cache):,} projects cached; {len(to_classify):,} to classify")
+    print(
+        f"[llm] {len(df) - len(to_classify):,} projects cached; "
+        f"{len(to_classify):,} to classify"
+        + (
+            f" (including {stale_count} stale cache entries whose register "
+            f"content changed)"
+            if stale_count
+            else ""
+        )
+    )
 
     if to_classify:
         failed_batches = []
@@ -797,6 +834,10 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
             for attempt in range(1, MAX_RETRIES + 1):
                 try:
                     results = classify_batch(client, batch)
+                    for project in batch:
+                        entry = results.get(project["id"])
+                        if entry is not None:
+                            entry["fingerprint"] = project["fingerprint"]
                     cache.update(results)
                     save_cache(cache, CACHE_FILE)
                     break
