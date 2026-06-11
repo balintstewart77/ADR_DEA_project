@@ -9,6 +9,7 @@ from analysis.derive_register_properties import (
     lookup_dataset_record,
     lookup_organisation_record,
     match_linked_products,
+    project_linkage_span,
     _organisation_match_keys,
 )
 
@@ -20,10 +21,12 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
         cls.indexes = build_indexes(cls.reference)
 
     def span_for_dataset(self, dataset: str) -> str:
-        domains = set()
-        for product in match_linked_products(dataset, self.indexes):
-            domains.update(product["component_domains"])
-        return linkage_span_for_domains(domains)
+        # Per-product aggregation (reference 0.4.8): the span is the maximum of
+        # the matched products' own spans, never a union of their domains.
+        return project_linkage_span(
+            linkage_span_for_domains(product["component_domains"])
+            for product in match_linked_products(dataset, self.indexes)
+        )
 
     def test_linked_products_derive_expected_spans(self):
         cases = {

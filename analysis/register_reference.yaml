@@ -1,4 +1,4 @@
-reference_version: "0.4.7"
+reference_version: "0.4.8"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -27,7 +27,13 @@ linked_products_rule:
     product whose component-domain union contains one domain is within-domain;
     a product whose union contains two or more domains is cross-domain.
     linkage_span is derived from component_domains and is never stored in this
-    reference.
+    reference. A project's record_linkage takes the maximum span of its
+    individually matched products: cross-domain when at least one matched
+    product is itself cross-domain, within-domain when products matched but
+    none is cross-domain. Using several single-domain products from different
+    domains is NOT cross-domain linkage; the span is a property of each linked
+    product, never a union across the project's portfolio (per-product
+    aggregation, reference 0.4.8).
   lens_vs_object_rule: >
     A linked component contributes the "Migration & Demographics" domain only
     when the dataset's substantive origin is population or demography, such as

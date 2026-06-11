@@ -456,6 +456,22 @@ def linkage_span_for_domains(component_domains: Iterable[str]) -> str:
     return "Cross-domain record linkage"
 
 
+def project_linkage_span(product_spans: Iterable[str]) -> str:
+    """Aggregate per-product spans to the project level (reference 0.4.8).
+
+    A project is cross-domain only when at least one matched product is itself
+    a cross-domain linkage. Using several single-domain products from different
+    domains is NOT cross-domain linkage: the span is a property of each linked
+    product, never a union across the project's portfolio.
+    """
+    spans = set(product_spans)
+    if "Cross-domain record linkage" in spans:
+        return "Cross-domain record linkage"
+    if "Within-domain record linkage" in spans:
+        return "Within-domain record linkage"
+    return "No record linkage"
+
+
 def _register_with_record_ids_for_parsers(df: pd.DataFrame) -> pd.DataFrame:
     parser_df = df.copy()
     parser_df["Project ID"] = parser_df["Record ID"]
@@ -490,11 +506,15 @@ def derive_properties(
 
         matched_product_names: list[str] = []
         component_domains: set[str] = set()
+        product_spans: list[str] = []
         for dataset in project_datasets:
             for product in match_linked_products(dataset, indexes):
                 product_name = product["canonical"]
                 if product_name not in matched_product_names:
                     matched_product_names.append(product_name)
+                    product_spans.append(
+                        linkage_span_for_domains(_as_list(product.get("component_domains")))
+                    )
                 component_domains.update(_as_list(product.get("component_domains")))
 
         collection_methods: set[str] = set()
@@ -520,7 +540,7 @@ def derive_properties(
 
         rows.append({
             "Record ID": record_id,
-            "record_linkage": linkage_span_for_domains(component_domains),
+            "record_linkage": project_linkage_span(product_spans),
             "matched_products": _join(
                 matched_product_names,
                 [record["canonical"] for record in indexes.reference.get("linked_products", [])],
@@ -753,18 +773,19 @@ def _edge_linkage_checks(indexes: ReferenceIndexes) -> list[dict[str, str]]:
         ("MoJ Data First Crown Court Defendant Case Level", "Within-domain record linkage"),
         ("Administrative Data | Agricultural Research Collection (AD|ARC)", "Cross-domain record linkage"),
         ("Growing Up in England Wave 1 (GUIE)", "Cross-domain record linkage"),
-        ("Annual Survey of Hours and Earnings Longitudinal", "Within-domain record linkage"),
+        # ASHE Longitudinal is not a linked product (human-adjudicated, 0.4.4).
+        ("Annual Survey of Hours and Earnings Longitudinal", "No record linkage"),
         ("Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment", "Within-domain record linkage"),
         ("Annual Survey of Hours and Earnings linked to Census 2011", "Cross-domain record linkage"),
         ("Annual Business Survey (ABS)", "No record linkage"),
     ]
     rows = []
     for dataset, expected in cases:
-        domains: set[str] = set()
         products = match_linked_products(dataset, indexes)
-        for product in products:
-            domains.update(_as_list(product.get("component_domains")))
-        span = linkage_span_for_domains(domains)
+        span = project_linkage_span(
+            linkage_span_for_domains(_as_list(product.get("component_domains")))
+            for product in products
+        )
         rows.append({
             "Dataset": dataset,
             "Products": "; ".join(product["canonical"] for product in products),

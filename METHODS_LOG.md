@@ -1655,3 +1655,38 @@ reverse. Every adjudication now carries a defending regression test so the
 suite fails loudly if one is undone, and any future reference-vs-test
 disagreement must be resolved by checking the adjudication record (METHODS_LOG
 and the instruction reports), not by editing whichever side is easier.
+
+# Methods log — cross-domain redefinition: per-product span aggregation (2026-06-11, reference 0.4.8)
+
+## Change
+
+A project's record_linkage was previously derived by unioning component
+domains across ALL linked products matched in the project, so a project using
+two single-domain products from different domains (e.g. a justice extract
+plus a labour-market linkage) classified as cross-domain even though neither
+product is itself a cross-domain linkage. Under 0.4.8 the span is a property
+of each linked product, never a union across the project's portfolio: a
+project is cross-domain only when at least one matched product is itself
+cross-domain, within-domain when products matched but none is cross-domain.
+
+Implementation: new project_linkage_span() in derive_register_properties.py,
+used by derive_properties() and the derive report's edge-linkage verification
+table (whose stale pre-0.4.4 ASHE Longitudinal expectation was also corrected
+to "No record linkage"). The linked_products_rule wording in
+register_reference.yaml now states the project-level aggregation explicitly.
+The placeholder test in test_adjudicated_decisions.py is enabled: two
+single-domain products -> within-domain; one multi-domain product ->
+cross-domain; no products -> no linkage.
+
+## Impact on the 20260601 register (1,309 rows)
+
+Zero rows changed: headlines stay 279 cross / 91 within (28.3% linked), and
+the regenerated register_properties.csv is byte-identical on every column.
+This was verified independently of the implementation by recomputing both
+semantics from matched_products: 20 linked products (9 single-domain, 11
+multi-domain), only 8 projects match two or more products, and in none of
+them do the union and per-product semantics disagree. The 0.4.7 ASHE
+Longitudinal removal had already eliminated the main source of
+union-of-single-domain-products projects. The redefinition therefore changes
+future behaviour (and the rule's stated semantics) without altering current
+outputs.

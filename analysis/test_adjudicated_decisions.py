@@ -22,6 +22,7 @@ from analysis.derive_register_properties import (
     lookup_dataset_record,
     lookup_organisation_record,
     match_linked_products,
+    project_linkage_span,
 )
 
 
@@ -220,15 +221,28 @@ class AdjudicatedDecisionsTest(unittest.TestCase):
                 self.assertIsNotNone(record, f"{canonical!r} not found")
                 self.assertEqual(record["sectors"], ["government"])
 
-    # 14. Cross-domain redefinition (per-product span instead of project-union
-    # aggregation). NOT YET IMPLEMENTED: derive_properties still unions
-    # component domains across all matched products before deriving the span.
-    # When the redefinition lands, remove the skip and assert: two
-    # single-domain products from different domains -> within-domain; one
-    # multi-domain product -> cross-domain.
-    @unittest.skip("cross-domain redefinition (per-product span) not yet implemented")
+    # 14. Cross-domain redefinition (human-adjudicated; implemented at
+    # reference 0.4.8): a project's span is the maximum of its individually
+    # matched products' spans, never the union of domains across the project's
+    # portfolio. Two single-domain products from different domains -> within-
+    # domain; one multi-domain product -> cross-domain.
     def test_cross_domain_span_is_per_product(self):
-        pass
+        single_domain_spans = [
+            linkage_span_for_domains(["Crime & Justice"]),
+            linkage_span_for_domains(["Labour Market & Employment"]),
+        ]
+        self.assertEqual(
+            project_linkage_span(single_domain_spans),
+            "Within-domain record linkage",
+        )
+        multi_domain_span = linkage_span_for_domains(
+            ["Education & Skills", "Health & Social Care"]
+        )
+        self.assertEqual(
+            project_linkage_span([multi_domain_span]),
+            "Cross-domain record linkage",
+        )
+        self.assertEqual(project_linkage_span([]), "No record linkage")
 
 
 if __name__ == "__main__":
