@@ -1530,3 +1530,69 @@ headline linkage counts unchanged at 274 cross-domain / 121 within-domain).
 The file was regenerated under reference 0.4.6; the regeneration report's
 built-in temporal-delta and edge-case checks all pass
 (`analysis/outputs/instruction_stable_record_id_regen_report.md`).
+
+# Methods log — one-command refresh pipeline and release pointers (2026-06-11)
+
+## Why
+
+Refreshing the data previously meant running three scripts by hand
+(fetch, derive, classify) and eyeballing their output; the dashboard's read
+paths were hard-coded constants, so publishing a new classification run
+required a code change. With UKSA now updating the register regularly, the
+refresh needed to be a single gated command that a scheduled CI job can run.
+
+## The pipeline (`analysis/refresh_pipeline.py`)
+
+`python -m analysis.refresh_pipeline` chains fetch → diff → derive →
+(optional) classify → validation gates and writes tracked reports to
+`analysis/outputs_refresh/<version>/`:
+
+- `register_diff.md` — new/removed/content-changed projects by Record ID,
+  comparing Title, Datasets Used, Researchers, and Secure Research Service
+  after duplicate-policy text normalisation (whitespace/case changes are not
+  flagged).
+- `review_required.md` — the curation queue: every unmatched organisation and
+  the top-30 unmatched datasets from the derive coverage stats, for
+  `register_reference.yaml` follow-up.
+- `derive_report.md`, `refresh_summary.md`, plus a stable copy at
+  `analysis/outputs_refresh/latest_summary.md` (used as the CI PR body).
+
+The validation gate requires the Record ID set in
+`register_properties.csv` (and `layer_classifications.csv` when --classify
+ran) to exactly equal the cleaned register's Record ID set; any mismatch
+exits 2 and the dashboard pointer is not updated. The no-change path exits 0
+without writing anything (fetch idempotence via the manifest sha256).
+
+Classification (--classify) seeds a fingerprinted cache from the currently
+published `layer_classifications.csv` (so only new/changed projects hit the
+API), writes to `analysis/outputs_classified_<version>/`, and on gate success
+repoints the dashboard.
+
+## Release pointers (`data/release_pointers.json`)
+
+The dashboard's two frozen read paths (`CLASSIFICATION_DIR`,
+`REGISTER_PROPERTIES_CSV` in `dashboard/config.py`) now resolve from
+`data/release_pointers.json`, with the previous hard-coded paths kept as
+in-code defaults when the file is missing or unreadable. A refresh can
+therefore publish a new classification run by editing one JSON file.
+
+## Scheduled CI (`.github/workflows/register-refresh.yml`)
+
+Weekly (Mondays 07:00 UTC) plus manual dispatch: runs the pipeline, runs the
+full test suite, and opens a pull request (peter-evans/create-pull-request)
+whose body is `latest_summary.md`. No register change → no PR. The LLM step
+is deliberately excluded from CI: it spends API credit and the curation queue
+should be reviewed first; the workflow header documents the local follow-up
+command.
+
+## Verification
+
+- Live run on 2026-06-11: fetch correctly reported "no change" against
+  current version 20260601 (sha256 abd65ff9...) and exited 0.
+- `--skip-fetch --force` run: diff vs baseline 20260325 reproduced the known
+  June delta (38 new, 1 removed, 1 title change), derive coverage 3,229/3,337
+  dataset and 1,831/1,842 organisation mentions, all gates passed, reports
+  written.
+- 15 new tests in `analysis/test_refresh_pipeline.py` (diff builder,
+  normalisation behaviour, gates, pointer fallback, committed-pointer target
+  existence); full suite 117 tests + 413 subtests passing.

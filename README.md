@@ -99,7 +99,27 @@ Use cases:
 
 ## Refreshing The Data
 
-Typical workflow:
+One command runs the whole flow — fetch, diff against the previous version,
+deterministic facet derivation, and validation gates — and writes reports
+(register diff, curation queue, refresh summary) to
+`analysis/outputs_refresh/<version>/`:
+
+```bash
+python -m analysis.refresh_pipeline
+```
+
+It exits cleanly when the published register has not changed. Add
+`--classify` (with `ANTHROPIC_API_KEY` set) to also run incremental LLM
+classification for new/changed projects and repoint the dashboard at the new
+run via `data/release_pointers.json`. Use `--skip-fetch --force` to re-run
+the downstream steps on the current data.
+
+A scheduled GitHub Actions workflow
+(`.github/workflows/register-refresh.yml`) runs the same pipeline weekly and
+opens a pull request when a new register version is published; classification
+is left as a local follow-up after the curation queue has been reviewed.
+
+The individual steps remain available:
 
 1. Fetch the latest register (downloads, validates the schema, saves dated
    files into `data/`, and updates `data/register_manifest.json` — the single
@@ -139,5 +159,6 @@ Typical workflow:
 ## Main Entry Points
 
 - Run the dashboard: [`dashboard/app.py`](/C:/Users/balin/Desktop/ADR_DEA_project/dashboard/app.py)
-- Refresh the source data: [`scrape/fetch_register.py`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape/fetch_register.py)
+- Refresh the data end to end: `python -m analysis.refresh_pipeline` ([`analysis/refresh_pipeline.py`](/C:/Users/balin/Desktop/ADR_DEA_project/analysis/refresh_pipeline.py))
+- Fetch the source data only: [`scrape/fetch_register.py`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape/fetch_register.py)
 - Regenerate thematic outputs: [`analysis/llm_theme_analysis_v3.py`](/C:/Users/balin/Desktop/ADR_DEA_project/analysis/llm_theme_analysis_v3.py)

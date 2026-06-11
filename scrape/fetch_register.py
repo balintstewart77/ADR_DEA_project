@@ -243,6 +243,109 @@ def _csv_bytes(df: pd.DataFrame) -> bytes:
     return buffer.getvalue().encode("utf-8-sig")
 
 
+def run_fetch(
+    *,
+    page_url: str = PAGE_URL,
+    url: str | None = None,
+    data_dir: str = DATA_DIR,
+    version: str | None = None,
+    allow_shrink: bool = False,
+    set_current: bool = True,
+    use_selenium: bool = False,
+    dry_run: bool = False,
+) -> dict:
+    """Fetch/validate/register the latest register.
+
+    Returns a result dict with ``status`` in {"fetched", "no-change",
+    "invalid", "dry-run"} plus ``version``, ``previous_version``, ``rows``,
+    ``source_url`` and (when invalid) ``problems``. Used by the CLI below and
+    by analysis/refresh_pipeline.py.
+    """
+    if url:
+        xlsx_url, source_date = url, parse_url_date(url)
+    else:
+        print(f"Discovering register link on {page_url}")
+        html = fetch_page_html(page_url, use_selenium=use_selenium)
+        urls = find_xlsx_urls(html)
+        xlsx_url, source_date = select_register_url(urls)
+    print(f"Register file: {xlsx_url}")
+    print(f"Source date:   {source_date or 'unknown'}")
+
+    xlsx_bytes = download_bytes(xlsx_url)
+    print(f"Downloaded {len(xlsx_bytes):,} bytes")
+    df = xlsx_to_dataframe(xlsx_bytes)
+    print(f"Parsed {len(df):,} rows, columns: {list(df.columns)}")
+
+    manifest = load_manifest(data_dir)
+    current_record = None
+    if manifest is not None:
+        current_record = next(
+            (r for r in manifest["versions"] if r["version"] == manifest["current"]),
+            None,
+        )
+    previous_version = current_record["version"] if current_record else None
+
+    result = {
+        "source_url": xlsx_url,
+        "rows": len(df),
+        "previous_version": previous_version,
+        "version": None,
+        "problems": [],
+    }
+
+    min_rows = None
+    if current_record is not None and not allow_shrink:
+        min_rows = current_record.get("row_count")
+    problems = validate_register_dataframe(df, min_rows=min_rows)
+    if problems:
+        for problem in problems:
+            print(f"[invalid] {problem}")
+        print("Nothing written.")
+        return {**result, "status": "invalid", "problems": problems}
+
+    csv_bytes = _csv_bytes(df)
+    csv_sha = hashlib.sha256(csv_bytes).hexdigest()
+    if current_record is not None and csv_sha == current_record.get("sha256_csv"):
+        print(
+            f"No change: register matches current version "
+            f"{current_record['version']} (sha256 {csv_sha[:12]}...)"
+        )
+        return {**result, "status": "no-change", "version": previous_version}
+
+    resolved_version = version or (source_date or date.today()).strftime("%Y%m%d")
+    xlsx_name = f"dea_accredited_projects_{resolved_version}.xlsx"
+    csv_name = f"dea_accredited_projects_{resolved_version}.csv"
+
+    if dry_run:
+        print(f"[dry run] would write {xlsx_name} and {csv_name} "
+              f"({len(df):,} rows) and register version {resolved_version}"
+              + (" as current" if set_current else ""))
+        return {**result, "status": "dry-run", "version": resolved_version}
+
+    os.makedirs(data_dir, exist_ok=True)
+    with open(os.path.join(data_dir, xlsx_name), "wb") as f:
+        f.write(xlsx_bytes)
+    with open(os.path.join(data_dir, csv_name), "wb") as f:
+        f.write(csv_bytes)
+    print(f"Saved {xlsx_name} and {csv_name}")
+
+    record = add_version(
+        csv_name,
+        data_dir=data_dir,
+        xlsx_path=xlsx_name,
+        source_url=xlsx_url,
+        version=resolved_version,
+        retrieved_at=datetime.now().date().isoformat(),
+        notes=f"Fetched by scrape/fetch_register.py; source date {source_date or 'unknown'}",
+        set_current=set_current,
+    )
+    print(
+        f"Registered version {record['version']} ({record['row_count']:,} rows)"
+        + ("; manifest 'current' updated" if set_current else "")
+    )
+    return {**result, "status": "fetched", "version": resolved_version}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Fetch the latest UKSA DEA register")
     parser.add_argument("--page-url", default=PAGE_URL)
@@ -259,80 +362,17 @@ def main() -> int:
                         help="Validate and report; write nothing")
     args = parser.parse_args()
 
-    if args.url:
-        xlsx_url, source_date = args.url, parse_url_date(args.url)
-    else:
-        print(f"Discovering register link on {args.page_url}")
-        html = fetch_page_html(args.page_url, use_selenium=args.selenium)
-        urls = find_xlsx_urls(html)
-        xlsx_url, source_date = select_register_url(urls)
-    print(f"Register file: {xlsx_url}")
-    print(f"Source date:   {source_date or 'unknown'}")
-
-    xlsx_bytes = download_bytes(xlsx_url)
-    print(f"Downloaded {len(xlsx_bytes):,} bytes")
-    df = xlsx_to_dataframe(xlsx_bytes)
-    print(f"Parsed {len(df):,} rows, columns: {list(df.columns)}")
-
-    manifest = load_manifest(args.data_dir)
-    current_record = None
-    if manifest is not None:
-        current_record = next(
-            (r for r in manifest["versions"] if r["version"] == manifest["current"]),
-            None,
-        )
-
-    min_rows = None
-    if current_record is not None and not args.allow_shrink:
-        min_rows = current_record.get("row_count")
-    problems = validate_register_dataframe(df, min_rows=min_rows)
-    if problems:
-        for problem in problems:
-            print(f"[invalid] {problem}")
-        print("Nothing written.")
-        return 2
-
-    csv_bytes = _csv_bytes(df)
-    csv_sha = hashlib.sha256(csv_bytes).hexdigest()
-    if current_record is not None and csv_sha == current_record.get("sha256_csv"):
-        print(
-            f"No change: register matches current version "
-            f"{current_record['version']} (sha256 {csv_sha[:12]}...)"
-        )
-        return 0
-
-    version = args.version or (source_date or date.today()).strftime("%Y%m%d")
-    xlsx_name = f"dea_accredited_projects_{version}.xlsx"
-    csv_name = f"dea_accredited_projects_{version}.csv"
-
-    if args.dry_run:
-        print(f"[dry run] would write {xlsx_name} and {csv_name} "
-              f"({len(df):,} rows) and register version {version}"
-              + ("" if args.no_set_current else " as current"))
-        return 0
-
-    os.makedirs(args.data_dir, exist_ok=True)
-    with open(os.path.join(args.data_dir, xlsx_name), "wb") as f:
-        f.write(xlsx_bytes)
-    with open(os.path.join(args.data_dir, csv_name), "wb") as f:
-        f.write(csv_bytes)
-    print(f"Saved {xlsx_name} and {csv_name}")
-
-    record = add_version(
-        csv_name,
+    result = run_fetch(
+        page_url=args.page_url,
+        url=args.url,
         data_dir=args.data_dir,
-        xlsx_path=xlsx_name,
-        source_url=xlsx_url,
-        version=version,
-        retrieved_at=datetime.now().date().isoformat(),
-        notes=f"Fetched by scrape/fetch_register.py; source date {source_date or 'unknown'}",
+        version=args.version,
+        allow_shrink=args.allow_shrink,
         set_current=not args.no_set_current,
+        use_selenium=args.selenium,
+        dry_run=args.dry_run,
     )
-    print(
-        f"Registered version {record['version']} ({record['row_count']:,} rows)"
-        + ("" if args.no_set_current else "; manifest 'current' updated")
-    )
-    return 0
+    return 2 if result["status"] == "invalid" else 0
 
 
 if __name__ == "__main__":

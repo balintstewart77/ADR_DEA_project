@@ -1,0 +1,67 @@
+# Scheduled register refresh: fetch the latest UKSA register, diff it against
+# the current version, regenerate the deterministic facets, and open a pull
+# request with the updated data and reports. When the published register has
+# not changed the pipeline exits cleanly and no PR is created.
+#
+# LLM classification is NOT run here (it needs an API key and human review of
+# the curation queue first); after merging, run locally:
+#   python -m analysis.refresh_pipeline --skip-fetch --force --classify
+
+name: Register refresh
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dashboard.txt
+            requirements-scrape.txt
+            requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dashboard.txt -r requirements-scrape.txt -r requirements-dev.txt
+
+      - name: Run refresh pipeline
+        run: python -m analysis.refresh_pipeline
+
+      - name: Run test suite
+        run: python -m pytest analysis -q
+
+      - name: Read register version for the PR title
+        id: version
+        run: |
+          version=$(python -c "from analysis.register_manifest import load_manifest; print(load_manifest()['current'])")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: register-refresh/${{ steps.version.outputs.version }}
+          title: "Ingest register version ${{ steps.version.outputs.version }}"
+          commit-message: |
+            Ingest register version ${{ steps.version.outputs.version }}; regenerate deterministic facets
+
+            Automated refresh via .github/workflows/register-refresh.yml
+          body-path: analysis/outputs_refresh/latest_summary.md
+          add-paths: |
+            data/
+            analysis/outputs_refresh/
+            analysis/outputs_deterministic_rc2/register_properties.csv
+          delete-branch: true
