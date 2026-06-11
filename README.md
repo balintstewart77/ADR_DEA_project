@@ -101,18 +101,33 @@ Use cases:
 
 Typical workflow:
 
-1. Refresh the source register using a script in [`scrape`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape).
-2. Save the updated extract into [`data`](/C:/Users/balin/Desktop/ADR_DEA_project/data).
-3. Register the new extract in the data manifest (this is what the dashboard
-   and analysis scripts load — no code changes needed):
+1. Fetch the latest register (downloads, validates the schema, saves dated
+   files into `data/`, and updates `data/register_manifest.json` — the single
+   source of truth the dashboard and analysis scripts load from):
 
    ```bash
-   python -m analysis.register_manifest add data/dea_accredited_projects_YYYYMMDD.csv \
-       --xlsx data/dea_accredited_projects_YYYYMMDD.xlsx --source-url <download url>
+   python scrape/fetch_register.py
    ```
 
-4. Run any analysis scripts needed to regenerate derived outputs.
-5. Start the dashboard and confirm the updated data date and views render as expected.
+   The fetch is idempotent: if the published register has not changed it
+   reports "no change" and writes nothing. Use `--dry-run` to preview.
+
+2. Regenerate the deterministic facets and review any newly unmatched
+   datasets/organisations it reports:
+
+   ```bash
+   python -m analysis.derive_register_properties
+   ```
+
+3. Classify new/changed projects (incremental — cached classifications are
+   reused; `analysis/rebuild_llm_cache.py` can rebuild the cache from a
+   previous `layer_classifications.csv` if it is missing):
+
+   ```bash
+   python analysis/llm_theme_analysis_v3.py
+   ```
+
+4. Start the dashboard and confirm the updated data date and views render as expected.
 
 ## Limitations
 
@@ -124,5 +139,5 @@ Typical workflow:
 ## Main Entry Points
 
 - Run the dashboard: [`dashboard/app.py`](/C:/Users/balin/Desktop/ADR_DEA_project/dashboard/app.py)
-- Refresh the source data: [`scrape/scraper_20260325.py`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape/scraper_20260325.py)
+- Refresh the source data: [`scrape/fetch_register.py`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape/fetch_register.py)
 - Regenerate thematic outputs: [`analysis/llm_theme_analysis_v3.py`](/C:/Users/balin/Desktop/ADR_DEA_project/analysis/llm_theme_analysis_v3.py)

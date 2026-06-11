@@ -2,4 +2,6 @@
 openpyxl
 pandas
 requests
+# Selenium is only needed for the --selenium fallback of scrape/fetch_register.py
+# (the UKSA page currently renders statically and plain requests suffices).
 selenium

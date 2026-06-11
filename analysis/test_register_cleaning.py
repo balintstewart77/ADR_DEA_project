@@ -5,10 +5,15 @@ from analysis.register_cleaning import clean_register_dataframe, load_raw_regist
 
 
 class RegisterCleaningTests(unittest.TestCase):
+    # Pinned to the 2026-03-25 register: these are fixture-based regression
+    # tests for the duplicate policy, so they must not float with the
+    # manifest's current version.
+    REGISTER_VERSION = "20260325"
+
     @classmethod
     def setUpClass(cls):
         cls._tmp = tempfile.TemporaryDirectory()
-        raw, _source_file = load_raw_register()
+        raw, _source_file = load_raw_register(version=cls.REGISTER_VERSION)
         cls.df, cls.stats = clean_register_dataframe(raw, output_dir=cls._tmp.name, verbose=False)
 
     @classmethod
