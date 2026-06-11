@@ -1,4 +1,4 @@
-reference_version: "0.4.5"
+reference_version: "0.4.6"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -412,6 +412,22 @@ linked_products:
     component_datasets_verified: true
     component_datasets_source: "https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/administrative-data ; https://ons.metadata.works/browser/dataset/1408718/0"
     component_datasets_review_flag: "AD|ARC IDBR domain contribution needs external human review; Business & Productivity may be added later if IDBR is judged substantive. component_domains left unchanged (Environment & Agriculture, Migration & Demographics) for now."
+
+  - canonical: "Annual Survey of Hours and Earnings Longitudinal"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    aliases:
+      - "Annual Survey of Hours and Earnings Longitudinal"
+    component_domains:
+      - "Labour Market & Employment"
+    notes: "WED component: ASHE longitudinal, within labour-market domain."
+    component_datasets:
+      - dataset: "Annual Survey of Hours and Earnings (ASHE) longitudinal records"
+        domain_reading: "Labour Market & Employment"
+        reason: "employee jobs, earnings and paid hours over time."
+    component_datasets_verified: true
+    component_datasets_source: "https://datacatalogue.adruk.org/browser/dataset/323/1"
 
   - canonical: "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
     status: "standing"

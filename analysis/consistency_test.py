@@ -21,7 +21,10 @@ import time
 import numpy as np
 import pandas as pd
 
-import anthropic
+try:
+    import anthropic
+except ImportError:  # optional dependency: only needed to run live trials
+    anthropic = None
 
 # Import shared functions from the main classification script
 from llm_theme_analysis_v3 import (
@@ -323,6 +326,10 @@ def main():
         print("Use --report-only to compute metrics from existing trial files.")
         return
 
+    if anthropic is None:
+        print("The 'anthropic' package is not installed. Install it with:")
+        print("  pip install -r requirements-llm.txt")
+        return
     client = anthropic.Anthropic(api_key=api_key)
 
     # Load data and select sample

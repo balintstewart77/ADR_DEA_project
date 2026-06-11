@@ -67,7 +67,10 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
                     self.assertIsNone(product["discontinued_date"])
 
     def test_dataset_reference_uses_split_collection_schema(self):
-        self.assertEqual(self.reference["reference_version"], "0.4.1")
+        # The split collection schema arrived in 0.4.1; later revisions must
+        # keep it, so assert a minimum version rather than pinning one.
+        version = tuple(int(part) for part in self.reference["reference_version"].split("."))
+        self.assertGreaterEqual(version, (0, 4, 1))
         for dataset in self.reference["datasets"]:
             with self.subTest(dataset=dataset["canonical"]):
                 self.assertNotIn("collection_type", dataset)
@@ -114,12 +117,14 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Census 2011": ("survey", "cross-sectional", "individual"),
             "Understanding Society": ("survey", "longitudinal", "household"),
             "Millennium Cohort Study": ("survey", "longitudinal", "individual"),
-            "ONS Longitudinal Study (LS)": ("administrative", "longitudinal", "individual"),
+            # Census-cored linked-record datasets are survey by primary
+            # content (reference 0.4.5 collection-method edge-case rule).
+            "ONS Longitudinal Study (LS)": ("survey", "longitudinal", "individual"),
             "Annual Survey of Hours and Earnings (ASHE)": ("survey", "cross-sectional", "individual"),
             "Annual Survey of Hours and Earnings Longitudinal": ("survey", "longitudinal", "individual"),
             "Longitudinal Education Outcomes (LEO)": ("administrative", "longitudinal", "individual"),
             "Education and Child Health Insights from Linked Data (ECHILD)": ("administrative", "longitudinal", "individual"),
-            "Linked Census, HES and Mortality Data": ("administrative", "longitudinal", "individual"),
+            "Linked Census, HES and Mortality Data": ("survey", "longitudinal", "individual"),
             "Public Health Research Database": ("administrative", "longitudinal", "individual"),
             "Earnings and Employees Study": ("survey", "cross-sectional", "individual"),
             "EOL": ("administrative", "longitudinal", "individual"),
@@ -148,7 +153,9 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Monthly Production Inquiry": ("survey", "cross-sectional", "business"),
             "Effects of Tax and Benefits": ("survey", "cross-sectional", "household"),
             "UK Gross Value Added": ("administrative", "cross-sectional", "area"),
-            "Consumer Prices Index": ("administrative", "cross-sectional", "area"),
+            # CPI's primary collection is field price collection (survey),
+            # per the sourced note in the reference; aligns with PPI.
+            "Consumer Prices Index": ("survey", "cross-sectional", "area"),
             "Producer Price Index": ("survey", "cross-sectional", "business"),
             "Capital Stock Dataset": ("administrative", "cross-sectional", "business"),
             "Capital Stock 2014": ("administrative", "cross-sectional", "business"),

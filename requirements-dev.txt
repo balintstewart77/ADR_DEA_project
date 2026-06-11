@@ -1,4 +1,8 @@
 # Optional notebook and interactive development dependencies.
+pytest
+# Needed to import/test the LLM classification module without the full
+# requirements-llm.txt stack (anthropic itself is optional at import time).
+pydantic
 ipykernel
 ipython
 jupyter_client

@@ -54,15 +54,27 @@ import time
 from functools import lru_cache
 from pathlib import Path
 
-import anthropic
+try:
+    import anthropic
+except ImportError:  # optional dependency: only needed to run classification
+    anthropic = None
 import pandas as pd
 import yaml
 from pydantic import BaseModel, Field, field_validator
 
+
+def _require_anthropic():
+    if anthropic is None:
+        raise ImportError(
+            "The 'anthropic' package is required to run LLM classification. "
+            "Install it with: pip install -r requirements-llm.txt"
+        )
+    return anthropic
+
 try:
-    from analysis.register_cleaning import CANDIDATE_FILES, DATA_DIR, clean_register_dataframe, load_raw_register
+    from analysis.register_cleaning import DATA_DIR, clean_register_dataframe, load_raw_register
 except ModuleNotFoundError:
-    from register_cleaning import CANDIDATE_FILES, DATA_DIR, clean_register_dataframe, load_raw_register  # type: ignore
+    from register_cleaning import DATA_DIR, clean_register_dataframe, load_raw_register  # type: ignore
 
 
 def _make_console_output_safe() -> None:
@@ -404,7 +416,7 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
 
 
 def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
-    df_raw, _source_file = load_raw_register(data_dir, CANDIDATE_FILES)
+    df_raw, _source_file = load_raw_register(data_dir)
     df, _stats = clean_register_dataframe(df_raw, output_dir=OUTPUT_DIR)
     return df
 
@@ -1129,7 +1141,7 @@ if __name__ == "__main__":
             "Set it with:  set ANTHROPIC_API_KEY=sk-ant-..."
         )
 
-    client = anthropic.Anthropic(api_key=api_key)
+    client = _require_anthropic().Anthropic(api_key=api_key)
 
     # Load data
     df = load_data()
