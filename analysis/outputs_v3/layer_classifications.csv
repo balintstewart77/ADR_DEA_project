@@ -428,7 +428,7 @@ Statistics and Registration Services Act 2007 (SRSA) - Approved Researcher Gatew
 Office for National Statistics / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government: Covid-19 Infection Survey linked with VOA and EPC data  
 Office for National Statistics / University of Oxford: Covid-19 Infection Survey with National Immunisation Management Service, Covid-19 Infection Survey linked with Death Occurrences England and Wales 
 Office for National Statistics / NHSD / University of Oxford: COVID-19 Infection Survey linked with Public Health Research Database  ",Office for National Statistics Secure Research Service,2020-04-28,2020/027,2020,2020Q2,Q2 2020,COVID-19 & Pandemic; Health & Social Care,Cross-Domain Linkage,Descriptive Monitoring; Outcome Tracking,COVID-19 & Pandemic
-2020/030,Occupational mobility: evidence from England and Wales,"Maria Ventura, London School of Economics and Political Science",Digital Economy Act (2017) ,Office for National Statistics: Longitudinal Study ,Office for National Statistics Secure Research Service,2020-05-29,2020/030/a,2020,2020Q2,Q2 2020,Labour Market & Employment,Single-Dataset,Life-Course / Trajectory Analysis,Labour Market & Employment
+2020/030,Occupational mobility: evidence from England and Wales,"Maria Ventura, London School of Economics and Political Science",Digital Economy Act (2017) ,Office for National Statistics: Longitudinal Study ,Office for National Statistics Secure Research Service,2020-05-29,2020/030/b,2020,2020Q2,Q2 2020,Labour Market & Employment,Single-Dataset,Life-Course / Trajectory Analysis,Labour Market & Employment
 2020/048,"ESCoE Project 2.9: Using Firm-Level Surveys to Understand Industrial and Regional Capacity, Investment, Productivity and Output Growth","Paul Mizen, University of Nottingham
 Kevin Lee, University of Nottingham
 Michael Mahony, University of Nottingham
@@ -462,7 +462,7 @@ Department for Business, Energy and Industrial Strategy: Community Innovation Su
 Haoran Sun, Durham University
 ",Digital Economy Act (2017) ,"Office for National Statistics: Annual Respondents Database, Annual Business Survey, Business Structure Database, Business Expenditure on Research and Development  
 Department for Business, Energy and Industrial Strategy: UK Innovation Survey ",UK Data Service,2020-05-29,2020/029,2020,2020Q2,Q2 2020,Business & Productivity,Within-Domain Linkage,Policy Evaluation / Impact Analysis,Business & Productivity
-2020/030,Examining the relationship between engaging in design and exporting,"Xiaoxiao Yu, University of Manchester",Digital Economy Act (2017) ,"Department for Business, Energy and Industrial Strategy: UK Innovation Survey ",UK Data Service,2020-05-29,2020/030/b,2020,2020Q2,Q2 2020,Business & Productivity,Single-Dataset,Outcome Tracking,Business & Productivity
+2020/030,Examining the relationship between engaging in design and exporting,"Xiaoxiao Yu, University of Manchester",Digital Economy Act (2017) ,"Department for Business, Energy and Industrial Strategy: UK Innovation Survey ",UK Data Service,2020-05-29,2020/030/a,2020,2020Q2,Q2 2020,Business & Productivity,Single-Dataset,Outcome Tracking,Business & Productivity
 2020/033,Education and Identity,"Andrew McKendrick, 
 Lancaster University
 Maria Navarro Paniagua, Lancaster University
@@ -3496,7 +3496,7 @@ Robert Minton, Federal Reserve Board of Governors",Digital Economy Act (2017),Ba
 2023/211,ESCoE: Local Consumption and National Sustainable Well-being,"Peter Levell, Institute for Fiscal Studies
 Martin Weale, King's College London
 Lars Nesheim, University College London",Digital Economy Act (2017),"Office for National Statistics: Annual Population Survey - UK, Labour Force Survey Person - UK, Living Costs and Food Survey - UK
-Institute for Economic and Social Research: Understanding Society - UK",Office for National Statistics Secure Research Service,2023-09-27,2023/211/a,2023,2023Q3,Q3 2023,"Poverty, Inequality & Living Standards",Within-Domain Linkage,Descriptive Monitoring,"Poverty, Inequality & Living Standards"
+Institute for Economic and Social Research: Understanding Society - UK",Office for National Statistics Secure Research Service,2023-09-27,2023/211/b,2023,2023Q3,Q3 2023,"Poverty, Inequality & Living Standards",Within-Domain Linkage,Descriptive Monitoring,"Poverty, Inequality & Living Standards"
 2023/288,Evaluation of the Made Smarter Adoption Programme,"Scott Carter, IPSOS MORI
 Lucas Haynes, IPSOS MORI
 Chris Hale, IPSOS MORI
@@ -3558,7 +3558,7 @@ DBT: UK Innovation Survey",Office for National Statistics Secure Research Servic
 Martin Weale, University of London - Kings College
 Lars Nesheim, University College London
 Gautam Vyas, Institute for Fiscal Studies",Digital Economy Act (2017),"Office for National Statistics: Annual Population Survey - UK, Labour Force Survey Person - UK, Living Costs and Food Survey - UK
-Institute for Economic and Social Research: Understanding Society - UK",Office for National Statistics Secure Research Service,2023-09-27,2023/211/b,2023,2023Q3,Q3 2023,"Poverty, Inequality & Living Standards",Cross-Domain Linkage,Descriptive Monitoring,"Poverty, Inequality & Living Standards"
+Institute for Economic and Social Research: Understanding Society - UK",Office for National Statistics Secure Research Service,2023-09-27,2023/211/a,2023,2023Q3,Q3 2023,"Poverty, Inequality & Living Standards",Cross-Domain Linkage,Descriptive Monitoring,"Poverty, Inequality & Living Standards"
 2023/242,Coastal Erosion and Floods and the wellbeing of communities,"Naike Santangelo, Simetrica
 Edward Dallas, Simetrica
 Eleni Mataragka, Simetrica
@@ -3951,7 +3951,7 @@ Mairi Spowage, University of Strathclyde",Digital Economy Act (2017),"Office for
 Alexandros Alexiou, The University of Liverpool
 Frank de Vocht, University of Bristol",Digital Economy Act (2017),Office for National Statistics: Annual Population Survey - UK,Office for National Statistics Secure Research Service,2024-07-05,2024/106,2024,2024Q3,Q3 2024,Housing & Planning; Health & Social Care,Single-Dataset,Policy Evaluation / Impact Analysis,Housing & Planning
 2024/136,"Unpacking returns to vocational education in England: the role of skills, labour market sorting and mobility","Guglielmo Ventura, The London School of Economics and Political Science",Digital Economy Act (2017),"DfE, DWP and HMRC: Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England",Office for National Statistics Secure Research Service,2024-07-18,2024/136,2024,2024Q3,Q3 2024,Education & Skills; Labour Market & Employment,Cross-Domain Linkage,Outcome Tracking,Education & Skills
-2024/014,The impact of youth centres on crime,"Carmen Villa Llera, University of Warwick",Digital Economy Act (2017),Department For Education: Bespoke National Pupil Database extract,Office for National Statistics Secure Research Service,2024-07-15,2024/014/a,2024,2024Q3,Q3 2024,Crime & Justice; Education & Skills,Single-Dataset,Policy Evaluation / Impact Analysis,Crime & Justice
+2024/014,The impact of youth centres on crime,"Carmen Villa Llera, University of Warwick",Digital Economy Act (2017),Department For Education: Bespoke National Pupil Database extract,Office for National Statistics Secure Research Service,2024-07-15,2024/014/b,2024,2024Q3,Q3 2024,Crime & Justice; Education & Skills,Single-Dataset,Policy Evaluation / Impact Analysis,Crime & Justice
 2024/142,Skills Shortages in the United Kingdom,"Ilhan Guner, The University of Kent",Digital Economy Act (2017),Department For Education: Employer Skills Survey and Investment in Training - UK,Office for National Statistics Secure Research Service,2024-07-22,2024/142,2024,2024Q3,Q3 2024,Labour Market & Employment; Education & Skills,Single-Dataset,Descriptive Monitoring,Labour Market & Employment
 2024/131,A comparison of the analytical outputs from the ONS Online Time Use Study (OTUS) and Extended Light Digital Diary Instrument (ELiDDI) to understand differences in the data collection methods.,"Jonathan Gershuny, University College London",Digital Economy Act (2017),Office for National Statistics: Online Time Use Survey - Great Britain,Office for National Statistics Secure Research Service,2024-07-22,2024/131,2024,2024Q3,Q3 2024,Data Infrastructure & Methodology,Single-Dataset,Methodological / Infrastructure Research,Data Infrastructure & Methodology
 2024/121,Explaining “Unexplained” Grade Inflation in the UK’s Universities,"Matt Dickson, University of Bath
@@ -4205,7 +4205,7 @@ Natasha Wilson, Tees Valley Combined Authority
 Joanne Noble, Teeside University",Digital Economy Act (2017),"Office for National Statistics: Labour Force Survey, Annual Population Survey",Integrated Data Service,2024-01-08,2023/291,2024,2024Q1,Q1 2024,Labour Market & Employment,Within-Domain Linkage,Descriptive Monitoring,Labour Market & Employment
 2024/014,Public services and youth crime  (previously 'Gangs and social housing'),"Carmen Villa Llera, University of Warwick
 Marta Santamaria, University of Warwick
-",Digital Economy Act (2017),Office for National Statistics: Crime Survey for England and Wales,UK Data Service,2024-07-15,2024/014/b,2024,2024Q3,Q3 2024,Crime & Justice,Single-Dataset,Service Interaction / Systems Analysis,Crime & Justice
+",Digital Economy Act (2017),Office for National Statistics: Crime Survey for England and Wales,UK Data Service,2024-07-15,2024/014/a,2024,2024Q3,Q3 2024,Crime & Justice,Single-Dataset,Service Interaction / Systems Analysis,Crime & Justice
 2024/063,Exploring associations between sociodemographic and environmental (neighbourhood) determinants and cardiovascular disease risk in Wales,"Jack Brown, Queen Mary University of London
 Jianhua Wu, Queen Mary University of London
 Paris Baptiste, Queen Mary University of London",Digital Economy Act (2017),SAIL Databank Databank: Census 2021,SAIL Databank,2024-06-13,2024/063,2024,2024Q2,Q2 2024,Health & Social Care; Environment & Agriculture,Single-Dataset,Risk Prediction / Early Identification,Health & Social Care
