@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current": "20260325",
+  "current": "20260601",
   "versions": [
     {
       "version": "20260325",
@@ -11,6 +11,16 @@
       "sha256_csv": "56d148ea3e17cb8fdbe21fb6b70636dbf91c2642e9282e51c85932dd6ade5aac",
       "row_count": 1413,
       "notes": "Source URL is the UKSA register page; exact xlsx link discovered at scrape time"
+    },
+    {
+      "version": "20260601",
+      "csv": "dea_accredited_projects_20260601.csv",
+      "xlsx": "dea_accredited_projects_20260601.xlsx",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "retrieved_at": "2026-06-11",
+      "sha256_csv": "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d",
+      "row_count": 1450,
+      "notes": "Fetched by scrape/fetch_register.py; source date 2026-06-01"
     },
     {
       "version": "legacy",
