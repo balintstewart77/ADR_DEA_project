@@ -35,7 +35,11 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "MoJ Data First Crown Court Defendant Case Level": "Within-domain record linkage",
             "Administrative Data | Agricultural Research Collection (AD|ARC)": "Cross-domain record linkage",
             "Growing Up in England Wave 1 (GUIE)": "Cross-domain record linkage",
-            "Annual Survey of Hours and Earnings Longitudinal": "Within-domain record linkage",
+            # ASHE Longitudinal is a longitudinally-weighted single dataset, not
+            # a record linkage (human-adjudicated removal, reference 0.4.4; see
+            # test_adjudicated_decisions.py). A stale "Within-domain" expectation
+            # here once caused the entry to be wrongly restored to the reference.
+            "Annual Survey of Hours and Earnings Longitudinal": "No record linkage",
             "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment": "Within-domain record linkage",
             "Annual Survey of Hours and Earnings linked to Census 2011": "Cross-domain record linkage",
             "ONS Longitudinal Study (LS)": "Cross-domain record linkage",

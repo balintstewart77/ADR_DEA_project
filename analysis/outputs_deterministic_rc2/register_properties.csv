@@ -220,7 +220,7 @@
 2021/077,No record linkage,,,survey,cross-sectional,area,academic
 2021/078,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2021/079,No record linkage,,,survey; administrative,cross-sectional,individual; business,commercial
-2021/080,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,longitudinal,individual,third-sector
+2021/080,No record linkage,,,survey,longitudinal,individual,third-sector
 2021/081,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,academic
 2021/082,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2021/083,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
@@ -233,7 +233,7 @@
 2021/091,No record linkage,,,survey,cross-sectional,business,academic
 2021/092,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,government; commercial
 2021/093,No record linkage,,,survey,cross-sectional,business,academic
-2021/094,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2021/094,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2021/095,No record linkage,,,survey,cross-sectional; longitudinal,individual; household; business,academic
 2021/096,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2021/097,No record linkage,,,survey,cross-sectional,individual,academic
@@ -278,7 +278,7 @@
 2021/143,No record linkage,,,survey,cross-sectional,individual; business,academic
 2021/145,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2021/146,No record linkage,,,administrative,cross-sectional,business,academic; commercial
-2021/147,Cross-domain record linkage,Annual Survey of Hours and Earnings Longitudinal; Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic; third-sector
+2021/147,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic; third-sector
 2021/149,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,individual; business,commercial
 2021/150,No record linkage,,,survey,longitudinal,household,third-sector
 2021/151,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; household; business; area,academic; third-sector
@@ -372,22 +372,22 @@
 2022/059,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,government
 2022/060,No record linkage,,,survey; administrative,cross-sectional,individual; business,commercial
 2022/061,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
-2022/062,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2022/062,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2022/063,Cross-domain record linkage,Growing Up in England (GUIE),Education & Skills; Migration & Demographics,administrative,longitudinal,individual,government
 2022/064,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2022/065,No record linkage,,,survey; administrative,cross-sectional,business,commercial
 2022/066,No record linkage,,,survey,cross-sectional,individual; business,academic
-2022/069,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic; government
+2022/069,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic; government
 2022/070,No record linkage,,,survey,cross-sectional,business,government; third-sector
 2022/071,No record linkage,,,,,,academic
 2022/072,No record linkage,,,,,,academic
 2022/073,Cross-domain record linkage,Growing Up in England (GUIE),Education & Skills; Migration & Demographics,administrative,longitudinal,individual,commercial
 2022/075,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
 2022/076,No record linkage,,,survey,cross-sectional,business,commercial
-2022/077,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,longitudinal,individual,commercial
+2022/077,No record linkage,,,survey,longitudinal,individual,commercial
 2022/078,No record linkage,,,survey,cross-sectional,individual,commercial
 2022/079,No record linkage,,,survey,cross-sectional,household,academic
-2022/081,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,academic; government; third-sector
+2022/081,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic; government; third-sector
 2022/082,No record linkage,,,survey,longitudinal,business,academic
 2022/083,No record linkage,,,survey; administrative,cross-sectional,individual; business,government
 2022/084,No record linkage,,,survey,cross-sectional,household,government
@@ -497,10 +497,10 @@
 2022/191,No record linkage,,,survey,cross-sectional,individual,academic
 2022/192,No record linkage,,,administrative,cross-sectional,individual,academic
 2022/193,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
-2022/194,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2022/194,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2022/195,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic; third-sector
 2022/196,No record linkage,,,administrative,cross-sectional,household,third-sector
-2022/197,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,academic; third-sector
+2022/197,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic; third-sector
 2022/198,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
 2022/203,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,government; third-sector
 2022/204,Within-domain record linkage,COVID-19 Infection Survey linked to NHS Test and Trace - England; Covid-19 Schools Infection Survey linked with Test and Trace,Health & Social Care,survey,longitudinal,individual,academic
@@ -530,8 +530,8 @@
 2023/023,No record linkage,,,administrative,cross-sectional,business,academic
 2023/024,No record linkage,,,survey; administrative,cross-sectional,business,academic
 2023/026,No record linkage,,,administrative,cross-sectional,individual,government
-2023/027,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,longitudinal,individual,third-sector
-2023/028,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2023/027,No record linkage,,,survey,longitudinal,individual,third-sector
+2023/028,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2023/029,No record linkage,,,survey,cross-sectional,individual,academic
 2023/030,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic; government
 2023/031,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic; government; commercial
@@ -573,13 +573,13 @@
 2023/068,No record linkage,,,survey,cross-sectional,household,academic
 2023/069,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,individual; business,academic
 2023/070,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011; Linked Trade-in-Goods/IDBR,Labour Market & Employment; Business & Productivity; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic
-2023/071,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; business,academic
+2023/071,No record linkage,,,survey,cross-sectional; longitudinal,individual; business,academic
 2023/072,No record linkage,,,,,,academic
 2023/073,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
 2023/074,No record linkage,,,survey,cross-sectional,business,third-sector
 2023/075,No record linkage,,,survey,cross-sectional,business,commercial
 2023/076,Cross-domain record linkage,Administrative Data | Agricultural Research Collection (AD|ARC),Migration & Demographics; Environment & Agriculture,administrative,cross-sectional,business,academic; government
-2023/077,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,academic
+2023/077,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2023/078,Cross-domain record linkage,2011 Census linked to Benefits and Income - England and Wales,Labour Market & Employment; Migration & Demographics,survey,cross-sectional,individual,academic
 2023/079,No record linkage,,,administrative,longitudinal,business,commercial
 2023/080,No record linkage,,,administrative,cross-sectional,individual,academic
@@ -599,7 +599,7 @@
 2023/106,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey,longitudinal,individual,academic
 2023/110,Within-domain record linkage,EOL,Education & Skills,administrative,longitudinal,individual,academic
 2023/113,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
-2023/114,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2023/114,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2023/116,No record linkage,,,survey,cross-sectional,individual; business,academic
 2023/125,No record linkage,,,survey,cross-sectional,individual,academic
 2023/132,No record linkage,,,survey; administrative,cross-sectional,business,academic
@@ -636,7 +636,7 @@
 2023/203,No record linkage,,,survey; administrative,cross-sectional,individual; business,commercial
 2023/204,No record linkage,,,survey,cross-sectional,business,academic
 2023/205,Cross-domain record linkage,Growing Up in England (GUIE),Education & Skills; Migration & Demographics,administrative,cross-sectional; longitudinal,individual,academic
-2023/206,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,longitudinal,individual,third-sector
+2023/206,No record linkage,,,survey,longitudinal,individual,third-sector
 2023/207,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; household; business,commercial
 2023/209,No record linkage,,,survey,longitudinal,household,third-sector
 2023/210,No record linkage,,,survey,cross-sectional,individual,academic
@@ -673,13 +673,13 @@
 2023/256,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2023/259,No record linkage,,,survey,longitudinal,business,academic
 2023/260,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
-2023/261,Cross-domain record linkage,Annual Survey of Hours and Earnings Longitudinal; COVID-19 Infection Survey linked to Combined Vaccination - UK,Health & Social Care; Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; household; business; area,government
+2023/261,Within-domain record linkage,COVID-19 Infection Survey linked to Combined Vaccination - UK,Health & Social Care,survey; administrative,cross-sectional; longitudinal,individual; household; business; area,government
 2023/262,No record linkage,,,survey,cross-sectional,individual,commercial
 2023/263,No record linkage,,,survey,cross-sectional,individual,government
 2023/268,No record linkage,,,survey; administrative,cross-sectional,individual,academic
 2023/269,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2023/270,No record linkage,,,survey,cross-sectional,business,government
-2023/271,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,government
+2023/271,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,government
 2023/272,Cross-domain record linkage,2011 Census linked to Benefits and Income - England and Wales,Labour Market & Employment; Migration & Demographics,survey,cross-sectional,individual,academic; government
 2023/273,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,academic
 2023/274,No record linkage,,,survey,cross-sectional,individual,academic
@@ -703,7 +703,7 @@
 2023/294,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2023/295,No record linkage,,,survey; administrative,cross-sectional,business,government
 2023/296,No record linkage,,,survey,cross-sectional,business,academic
-2023/297,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2023/297,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2023/298,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,government
 2023/299,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2023/300,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
@@ -715,7 +715,7 @@
 2023/308,No record linkage,,,survey,cross-sectional,individual,academic
 2023/309,No record linkage,,,survey,longitudinal,household,academic
 2023/310,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,third-sector
-2023/311,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; household,academic
+2023/311,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2023/312,No record linkage,,,survey,cross-sectional,individual,academic
 2023/313,No record linkage,,,survey,cross-sectional,individual,academic
 2024/001,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
@@ -740,14 +740,14 @@
 2024/019,No record linkage,,,survey,cross-sectional,individual,academic
 2024/020,No record linkage,,,survey,cross-sectional,business,academic
 2024/021,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,third-sector
-2024/022,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,longitudinal,individual,academic
+2024/022,No record linkage,,,survey,longitudinal,individual,academic
 2024/023,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2024/024,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2024/025,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2024/026,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,business,academic
 2024/027,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2024/028,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
-2024/029,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; household,academic
+2024/029,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2024/030,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2024/031,No record linkage,,,survey,cross-sectional,individual,commercial
 2024/032,No record linkage,,,survey; administrative,cross-sectional,business,government
@@ -786,7 +786,7 @@
 2024/066,No record linkage,,,survey,cross-sectional,individual,academic
 2024/067,No record linkage,,,survey,cross-sectional,individual,academic
 2024/068,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
-2024/070,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business; area,academic; government
+2024/070,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business; area,academic; government
 2024/071,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic; commercial
 2024/072,No record linkage,,,administrative,cross-sectional,business,government; third-sector; commercial
 2024/073,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic; third-sector
@@ -794,7 +794,7 @@
 2024/075,No record linkage,,,survey; administrative,cross-sectional,business,academic
 2024/076,No record linkage,,,survey,cross-sectional,individual,academic
 2024/077,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey,longitudinal,individual,academic
-2024/078,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; business,academic
+2024/078,No record linkage,,,survey,cross-sectional; longitudinal,individual; business,academic
 2024/079,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2024/080,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,commercial
 2024/081,No record linkage,,,survey; administrative,cross-sectional,individual; business,commercial
@@ -813,7 +813,7 @@
 2024/095/a,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2024/095/b,No record linkage,,,survey,cross-sectional,individual,academic; government
 2024/096,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional; longitudinal,individual; business,academic; government; third-sector
-2024/097,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2024/097,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2024/098,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
 2024/099,No record linkage,,,survey,cross-sectional,individual,academic
 2024/100,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
@@ -827,7 +827,7 @@
 2024/109,No record linkage,,,survey,cross-sectional,individual,government
 2024/110,No record linkage,,,survey,cross-sectional,individual,academic
 2024/113,No record linkage,,,survey,cross-sectional,individual,academic
-2024/115,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,commercial
+2024/115,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,commercial
 2024/116,No record linkage,,,administrative,cross-sectional,business,commercial
 2024/117,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2024/118,No record linkage,,,survey,cross-sectional,individual,academic
@@ -838,7 +838,7 @@
 2024/123,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,third-sector
 2024/124,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,third-sector
 2024/125,No record linkage,,,survey,cross-sectional,individual,academic
-2024/126,Cross-domain record linkage,Annual Survey of Hours and Earnings Longitudinal; Linked Trade-in-Goods/IDBR,Labour Market & Employment; Business & Productivity,survey; administrative,cross-sectional; longitudinal,individual; business,academic
+2024/126,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2024/127,No record linkage,,,survey; administrative,cross-sectional,individual,academic
 2024/128,No record linkage,,,survey,cross-sectional,individual,academic
 2024/129,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey,cross-sectional; longitudinal,individual; household,third-sector
@@ -990,7 +990,7 @@
 2025/030,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2025/031,No record linkage,,,administrative,cross-sectional,individual,third-sector
 2025/032,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
-2025/033,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; business,academic
+2025/033,No record linkage,,,survey,cross-sectional; longitudinal,individual; business,academic
 2025/034,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
 2025/035,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,government
 2025/036,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
@@ -1013,7 +1013,7 @@
 2025/053,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,individual; business,academic
 2025/054,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey,longitudinal,individual,academic
 2025/055,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
-2025/056,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,academic
+2025/056,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2025/057,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,commercial
 2025/058,No record linkage,,,survey,longitudinal,business,academic
 2025/059,No record linkage,,,administrative,cross-sectional,business,commercial
@@ -1030,7 +1030,7 @@
 2025/070,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2025/071,No record linkage,,,survey; administrative,cross-sectional,individual,government
 2025/072,No record linkage,,,survey,cross-sectional,individual,third-sector
-2025/073,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal; Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,longitudinal,individual,academic
+2025/073,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,longitudinal,individual,academic
 2025/074,Cross-domain record linkage,Growing Up in England (GUIE),Education & Skills; Migration & Demographics,administrative,longitudinal,individual,academic
 2025/075,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,government
 2025/076,No record linkage,,,survey,cross-sectional,individual,academic
@@ -1057,7 +1057,7 @@
 2025/097,No record linkage,,,survey,cross-sectional,business,academic
 2025/098,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
 2025/099,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
-2025/100,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; household; business,academic
+2025/100,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; household; business,academic
 2025/101,No record linkage,,,survey,cross-sectional,individual,academic
 2025/102,No record linkage,,,survey,cross-sectional,business,academic
 2025/103,No record linkage,,,administrative,cross-sectional,individual,academic
@@ -1114,9 +1114,9 @@
 2025/154,Within-domain record linkage,GRading and Admissions Data England (GRADE),Education & Skills,administrative,longitudinal,individual,commercial
 2025/155,No record linkage,,,survey,cross-sectional,individual,academic
 2025/156,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
-2025/157,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal; Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,longitudinal,individual,academic
+2025/157,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,longitudinal,individual,academic
 2025/158,No record linkage,,,survey,cross-sectional,individual,academic
-2025/159,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; household,academic
+2025/159,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2025/160,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey,longitudinal,individual,academic
 2025/161,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2025/162,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
@@ -1127,7 +1127,7 @@
 2025/167,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,third-sector
 2025/168,No record linkage,,,survey,cross-sectional,individual,third-sector
 2025/169,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
-2025/170,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic
+2025/170,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
 2025/171,No record linkage,,,administrative,cross-sectional,individual,academic
 2025/172,No record linkage,,,survey; administrative,cross-sectional,individual,academic
 2025/173,No record linkage,,,survey,cross-sectional,individual; business,academic
@@ -1145,7 +1145,7 @@
 2025/186,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic; government
 2025/187,No record linkage,,,survey; administrative,cross-sectional,individual; business,commercial
 2025/188,No record linkage,,,survey,cross-sectional,individual,academic; government
-2025/189,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; business,academic
+2025/189,No record linkage,,,survey,cross-sectional; longitudinal,individual; business,academic
 2025/190,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2025/191,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2025/192,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
@@ -1158,8 +1158,8 @@
 2025/199,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
 2025/200,No record linkage,,,survey,cross-sectional,individual,academic; government
 2025/201,No record linkage,,,survey,cross-sectional,individual,government
-2025/202,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,academic
-2025/203,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,academic
+2025/202,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic
+2025/203,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2025/205,No record linkage,,,survey,cross-sectional,individual,government
 2025/206,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey,cross-sectional; longitudinal,individual; business,academic
 2025/207,No record linkage,,,survey; administrative,cross-sectional,individual; area,academic; third-sector
@@ -1175,7 +1175,7 @@
 2025/217,No record linkage,,,survey,cross-sectional,individual,academic
 2025/218,Within-domain record linkage,GRading and Admissions Data England (GRADE),Education & Skills,administrative,longitudinal,individual,academic; third-sector
 2025/219,No record linkage,,,survey,cross-sectional,business,academic
-2025/220,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,third-sector
+2025/220,No record linkage,,,survey,cross-sectional; longitudinal,individual,third-sector
 2025/221,No record linkage,,,survey,cross-sectional; longitudinal,business,academic
 2025/222,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,academic
 2025/223,No record linkage,,,survey,cross-sectional,individual,commercial
@@ -1183,7 +1183,7 @@
 2025/225,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD); Annual Survey of Hours and Earnings linked to Census 2011,Education & Skills; Health & Social Care; Labour Market & Employment; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; household; business; area,academic
 2025/226,No record linkage,,,administrative,cross-sectional; longitudinal,business,academic
 2025/227,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
-2025/228,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey; administrative,cross-sectional; longitudinal,individual; business,commercial
+2025/228,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,commercial
 2025/229,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2025/230,No record linkage,,,survey,longitudinal,individual,third-sector
 2025/231,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
@@ -1200,7 +1200,7 @@
 2025/242,No record linkage,,,survey; administrative,cross-sectional,individual,government
 2025/243,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2025/244,No record linkage,,,survey,cross-sectional,individual,third-sector
-2025/245,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,longitudinal,individual,academic
+2025/245,No record linkage,,,survey,longitudinal,individual,academic
 2025/246,No record linkage,,,survey,cross-sectional,individual,academic
 2025/247,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,third-sector
 2025/248,No record linkage,,,survey,cross-sectional,business,unclassified
@@ -1209,7 +1209,7 @@
 2025/251,No record linkage,,,survey,cross-sectional,business,academic
 2025/252,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,academic
 2025/254,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic; third-sector
-2025/255,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,government
+2025/255,No record linkage,,,survey,cross-sectional; longitudinal,individual,government
 2025/256,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
 2025/257,No record linkage,,,survey,cross-sectional,individual,academic
 2025/258,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
@@ -1248,7 +1248,7 @@
 2026/024,No record linkage,,,administrative,cross-sectional,business,government
 2026/025,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic; third-sector
 2026/026,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,unclassified
-2026/027,Within-domain record linkage,Annual Survey of Hours and Earnings Longitudinal; Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic; third-sector
+2026/027,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,academic; third-sector
 2026/028,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
 2026/029,No record linkage,,,survey; administrative,cross-sectional,business,commercial; unclassified
 2026/030,No record linkage,,,administrative,cross-sectional,individual,academic; third-sector

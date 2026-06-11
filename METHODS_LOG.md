@@ -1596,3 +1596,62 @@ command.
 - 15 new tests in `analysis/test_refresh_pipeline.py` (diff builder,
   normalisation behaviour, gates, pointer fallback, committed-pointer target
   existence); full suite 117 tests + 413 subtests passing.
+
+# Methods log — ASHE Longitudinal restoration reverted; adjudications defended by tests (2026-06-11, reference 0.4.7)
+
+## What happened
+
+The test-suite repair (commit 9036e80, reference 0.4.6) restored "Annual
+Survey of Hours and Earnings Longitudinal" to linked_products, treating its
+earlier deletion as an accidental regression. The deletion was in fact the
+human-adjudicated 0.4.4 linked-products review ruling: ASHE Longitudinal is a
+longitudinally-weighted single dataset (its sole component is itself), not a
+record linkage. The reversion happened because stale tests still encoded the
+pre-adjudication expectation ("Within-domain record linkage"), and the
+reference data was edited to satisfy the tests — reconciling in the wrong
+direction.
+
+## Changes (reference 0.4.7)
+
+- Re-applied the 0.4.4 removal: ASHE Longitudinal is out of linked_products
+  again. Its dataset facet record (survey / longitudinal / individual) and
+  the genuine linkages (ASHE-Census 2011, ASHE-PAYE/SA) are untouched. The
+  restoration diff (91d620b -> 9036e80) was exactly the version bump plus the
+  entry, so the removal restores the adjudicated state precisely.
+- Impact on the 20260601 register (1,309 rows): 281 cross / 124 within
+  (30.9% linked) -> 279 cross / 91 within (28.3%). Exactly the 41 projects
+  matching ASHE Longitudinal changed (35 within -> no-linkage, 2 cross ->
+  within, 4 products-shortened with span unchanged); zero unrelated drift.
+  The pre-June adjudication was 272/88/28.3% — the June ingest's 38 new
+  projects account for the absolute differences.
+- New regression module analysis/test_adjudicated_decisions.py (16 tests + 1
+  skipped placeholder) defends every adjudicated decision: the ASHE removal,
+  BSD/CPI/ONS LS/AD|ARC/#12-#13/EES facet rulings, the CIS parked unit
+  decision (including the pending-Jo flag text), the parked schema question,
+  the 0.4.5 unclassified-dataset rulings, and the SAIL/international-bodies
+  sector calls. Each test names its adjudication and warns that a failure
+  means a deliberate decision has been undone.
+- The stale assertion in test_derive_register_properties.py now expects
+  "No record linkage" for an ASHE Longitudinal mention, with a comment naming
+  the adjudication. A suite-wide audit found no other pre-adjudication
+  expectations.
+
+## Version reconciliation
+
+0.4.2-0.4.5 were bundled into commit 91d620b ("0.4.5"); the erroneous
+restoration consumed 0.4.6; this correction takes 0.4.7. The cross-domain
+redefinition (per-product span instead of project-union aggregation) is NOT
+yet implemented — the linked_products_rule wording is already per-product but
+derive_properties still unions component domains across a project's matched
+products. It takes a fresh version number when it lands, and the skipped
+placeholder test in test_adjudicated_decisions.py gets enabled with it.
+
+## Lesson
+
+A stale test caused a data reversion: the suite encoded a pre-adjudication
+expectation, and reference data was edited to satisfy it. Adjudicated
+decisions are ground truth — tests and code conform to them, never the
+reverse. Every adjudication now carries a defending regression test so the
+suite fails loudly if one is undone, and any future reference-vs-test
+disagreement must be resolved by checking the adjudication record (METHODS_LOG
+and the instruction reports), not by editing whichever side is easier.
