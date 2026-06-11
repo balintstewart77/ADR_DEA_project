@@ -98,6 +98,23 @@ class ReviewRequiredMarkdownTest(unittest.TestCase):
         self.assertIn("- Mystery Dataset (2 mentions)", text)
         self.assertIn("- Anna Freud Centre (1 mention)", text)
 
+    def test_known_unclassifiable_residuals_are_excluded_from_action_list(self):
+        coverage = {
+            "dataset_mentions_matched": 12,
+            "dataset_mentions_total": 12,
+            "organisation_mentions_matched": 4,
+            "organisation_mentions_total": 6,
+            "dataset_unmatched_counts": {},
+            "organisation_unmatched_counts": {
+                "Calver Pang": 1,
+                "Genuinely New Org": 1,
+            },
+        }
+        text = review_required_markdown(coverage, {"Calver Pang", "OREC"})
+        self.assertIn("- Known residuals (adjudicated unclassifiable, no action): 1", text)
+        self.assertIn("- Genuinely New Org (1 mention)", text)
+        self.assertNotIn("- Calver Pang", text)
+
     def test_empty_queues_render_none(self):
         coverage = {
             "dataset_mentions_matched": 12,

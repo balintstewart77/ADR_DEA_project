@@ -53,7 +53,11 @@ from analysis.register_cleaning import (  # noqa: E402
     load_raw_register,
 )
 from analysis.register_manifest import load_manifest  # noqa: E402
-from analysis.derive_register_properties import run as derive_run  # noqa: E402
+from analysis.derive_register_properties import (  # noqa: E402
+    REFERENCE_PATH,
+    load_reference,
+    run as derive_run,
+)
 from analysis.rebuild_llm_cache import build_cache_entries, write_cache  # noqa: E402
 
 ANALYSIS_DIR = PROJECT_ROOT / "analysis"
@@ -136,16 +140,37 @@ def diff_markdown(diff: dict, old_version: str, new_version: str) -> str:
     return "\n".join(lines)
 
 
-def review_required_markdown(coverage: dict) -> str:
-    """Curation queue: unmatched datasets/organisations from the derive run."""
+def known_unclassifiable_organisations() -> set[str]:
+    """Adjudicated honest residuals from the reference (see the YAML comment)."""
+    reference = load_reference(REFERENCE_PATH)
+    return set(reference.get("known_unclassifiable_organisations") or [])
+
+
+def review_required_markdown(coverage: dict, known_unclassifiable: set[str] | None = None) -> str:
+    """Curation queue: unmatched datasets/organisations from the derive run.
+
+    Strings in known_unclassifiable (adjudicated honest residuals, e.g. person
+    names with no institution) are excluded from the action list and reported
+    as a count, so the queue only surfaces genuinely-new unknowns.
+    """
+    known_unclassifiable = known_unclassifiable or set()
     lines = ["# Review required: reference-layer coverage gaps", ""]
     dataset_unmatched = coverage.get("dataset_unmatched_counts") or {}
     org_unmatched = coverage.get("organisation_unmatched_counts") or {}
+    known_residuals = {
+        name: count for name, count in org_unmatched.items()
+        if name in known_unclassifiable
+    }
+    org_unmatched = {
+        name: count for name, count in org_unmatched.items()
+        if name not in known_unclassifiable
+    }
     lines += [
         f"- Dataset mentions matched: {coverage['dataset_mentions_matched']:,}"
         f"/{coverage['dataset_mentions_total']:,}",
         f"- Organisation mentions matched: {coverage['organisation_mentions_matched']:,}"
         f"/{coverage['organisation_mentions_total']:,}",
+        f"- Known residuals (adjudicated unclassifiable, no action): {len(known_residuals)}",
         "",
         "## Unmatched organisations (add to register_reference.yaml or alias maps)",
         "",
@@ -342,7 +367,8 @@ def main() -> int:
         report_path=(report_dir / "derive_report.md").resolve()
     )
     (report_dir / "review_required.md").write_text(
-        review_required_markdown(coverage), encoding="utf-8"
+        review_required_markdown(coverage, known_unclassifiable_organisations()),
+        encoding="utf-8",
     )
     summary += [
         f"- Dataset coverage: {coverage['dataset_mentions_matched']:,}"

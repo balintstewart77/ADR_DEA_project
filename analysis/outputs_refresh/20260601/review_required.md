@@ -1,21 +1,12 @@
 # Review required: reference-layer coverage gaps
 
-- Dataset mentions matched: 3,229/3,337
-- Organisation mentions matched: 1,831/1,842
+- Dataset mentions matched: 3,231/3,337
+- Organisation mentions matched: 1,839/1,842
+- Known residuals (adjudicated unclassifiable, no action): 3
 
 ## Unmatched organisations (add to register_reference.yaml or alias maps)
 
-- Independent Researcher (1 mention)
-- OREC (1 mention)
-- Reading University Ministry of National Education, Republic of Turkiye (1 mention)
-- York Univeristy (1 mention)
-- York University (1 mention)
-- Calver Pang (1 mention)
-- Oxford Brookes University (1 mention)
-- Manchester University (1 mention)
-- Alison Sizer, University College London (1 mention)
-- Sheffield University (1 mention)
-- Anna Freud Centre (1 mention)
+- (none)
 
 ## Unmatched datasets (top 30 by mentions)
 
@@ -23,7 +14,6 @@
 - Firm Productivity (3 mentions)
 - Employment Creation and Survival (3 mentions)
 - Foreign Direct Investment Index (2 mentions)
-- Northern Ireland Annual Business Inquiry (NIABI) (2 mentions)
 - Financial Assets and Liabilities Survey (1 mention)
 - Investment in Intangible Assets (1 mention)
 - Small Business Survey Longitudinal (1 mention)
@@ -49,4 +39,5 @@
 - National Travel Survey England (1 mention)
 - UK Gross Value Added for lower layer super output areas (1 mention)
 - Skills and Employment Surveys Series (1 mention)
-- ... and 70 more
+- NI Annual Business Inquiry (1 mention)
+- ... and 69 more

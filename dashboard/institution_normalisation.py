@@ -298,6 +298,11 @@ _ALIASES = {
     "kings college london": "King's College London",
     "king's college london": "King's College London",
     "king's college london dimitris vallis, king's college london": "King's College London",
+    # Parser residue (2026/085): a preceding "Name ," line with no institution
+    # merges this researcher's "Name, Institution" pair into one fragment. The
+    # person is not an organisation; the whole string resolves to the
+    # institution.
+    "alison sizer, university college london": "University College London",
     "london school of economics": "London School of Economics and Political Science (LSE)",
     "london school of economics and political science": "London School of Economics and Political Science (LSE)",
     "london school of economics & political science": "London School of Economics and Political Science (LSE)",
@@ -306,10 +311,17 @@ _ALIASES = {
     "the london school of economics": "London School of Economics and Political Science (LSE)",
     "london school of hygiene and tropical medicine rochelle schneider dos": "London School of Hygiene and Tropical Medicine",
     "the university of manchester": "University of Manchester",
+    "manchester university": "University of Manchester",
     "the university of sheffield": "University of Sheffield",
+    "sheffield university": "University of Sheffield",
     "the university of edinburgh": "University of Edinburgh",
     "the university of warwick": "University of Warwick",
     "the university of york": "University of York",
+    "york university": "University of York",
+    # Preserves a register source typo (2026/065): the alias map's job is to
+    # catch what the register actually says.
+    "york univeristy": "University of York",
+    "reading university": "University of Reading",
     "the university of nottingham": "University of Nottingham",
     "the university of liverpool": "University of Liverpool",
     "the university of westminster": "University of Westminster",
@@ -492,6 +504,14 @@ def _with_approved_acronym(canonical: str) -> str:
 
 
 _COMPOUND_INSTITUTION_SPLITS = {
+    # Parser residue (2026/061): two affiliations on consecutive register lines
+    # ("Steven Jacob Bosworth, Reading University" / "Ministry of National
+    # Education, Republic of Turkiye") merge because the "...University" tail
+    # absorbs the next line. Both real entities are kept.
+    "reading university ministry of national education, republic of turkiye": [
+        "University of Reading",
+        "Ministry of National Education, Republic of Türkiye",
+    ],
     "health foundation/ academy of medical sciences": [
         "Health Foundation",
         "Academy of Medical Sciences",
@@ -523,6 +543,7 @@ _COMPOUND_INSTITUTION_SPLITS = {
 }
 
 _PARSER_CLEANUP_ALIAS_KEYS = {
+    "alison sizer, university college london",
     "cristina sechel",
     "independent research",
     "king's college london dimitris vallis, king's college london",
@@ -540,6 +561,9 @@ _INSTITUTION_SECTORS = {
     "Agri-Food and Biosciences Institute": "government",
     "Alan Turing Institute": "third-sector",
     "Alma Economics": "commercial",
+    # Anna Freud National Centre for Children and Families (registered
+    # children's mental-health charity); register uses the short form.
+    "Anna Freud Centre": "third-sector",
     "AQA Education": "third-sector",
     "ARUP": "commercial",
     "Aston University": "academic",
@@ -660,6 +684,8 @@ _INSTITUTION_SECTORS = {
     "Methods Analytics": "commercial",
     "Middlesex University": "academic",
     "Ministry of Justice (MoJ)": "government",
+    # International public body, folded into government like IMF/OECD.
+    "Ministry of National Education, Republic of Türkiye": "government",
     "MIME Consulting Ltd": "commercial",
     "Municipal & General (M&G)": "commercial",
     "National Centre for Social Research (NatCen)": "third-sector",
@@ -687,6 +713,8 @@ _INSTITUTION_SECTORS = {
     "OFSTED": "government",
     "HM Treasury": "government",
     "Low Pay Commission (LPC)": "government",
+    # Distinct institution from University of Oxford (shared city name only).
+    "Oxford Brookes University": "academic",
     "Oxford Economics Ltd": "commercial",
     "Oxford Economics": "commercial",
     "PA Consulting": "commercial",

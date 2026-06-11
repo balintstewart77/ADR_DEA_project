@@ -221,6 +221,52 @@ class AdjudicatedDecisionsTest(unittest.TestCase):
                 self.assertIsNotNone(record, f"{canonical!r} not found")
                 self.assertEqual(record["sectors"], ["government"])
 
+    # 15. June 2026 organisation rulings (human-adjudicated, reference 0.4.9):
+    # Oxford Brookes academic (distinct from University of Oxford), Anna Freud
+    # Centre third-sector (registered charity), Turkish education ministry
+    # folded into government like IMF/OECD.
+    def test_june_2026_organisation_rulings(self):
+        cases = {
+            "Oxford Brookes University": ["academic"],
+            "Anna Freud Centre": ["third-sector"],
+            "Ministry of National Education, Republic of Türkiye": ["government"],
+        }
+        for canonical, sectors in cases.items():
+            with self.subTest(organisation=canonical):
+                record = lookup_organisation_record(canonical, self.indexes)
+                self.assertIsNotNone(record, f"{canonical!r} not found")
+                self.assertEqual(record["sectors"], sectors)
+        brookes = lookup_organisation_record("Oxford Brookes University", self.indexes)
+        oxford = lookup_organisation_record("University of Oxford", self.indexes)
+        self.assertNotEqual(brookes["canonical"], oxford["canonical"])
+        # Dataset alias from the same ruling: the acronym-suffixed register
+        # form inherits the existing Annual Business Inquiry facets.
+        niabi = lookup_dataset_record(
+            "Northern Ireland Annual Business Inquiry (NIABI)", self.indexes
+        )
+        self.assertIsNotNone(niabi)
+        self.assertEqual(niabi["canonical"], "Annual Business Inquiry")
+        self.assertEqual(
+            (niabi["collection_method"], niabi["temporal_structure"],
+             niabi["unit_of_observation"]),
+            ("survey", "cross-sectional", "business"),
+        )
+
+    # 16. Known-unclassifiable residuals (human-adjudicated): person names and
+    # unresolvable strings are honestly unclassified, never classified as
+    # organisations; the list only suppresses them from the review queue.
+    def test_known_unclassifiable_residuals(self):
+        known = set(self.reference.get("known_unclassifiable_organisations") or [])
+        self.assertLessEqual(
+            {"Independent Researcher", "OREC", "Calver Pang"}, known
+        )
+        for name in known:
+            with self.subTest(residual=name):
+                self.assertIsNone(
+                    lookup_organisation_record(name, self.indexes),
+                    f"{name!r} must stay unclassified, not become an organisation",
+                )
+
     # 14. Cross-domain redefinition (human-adjudicated; implemented at
     # reference 0.4.8): a project's span is the maximum of its individually
     # matched products' spans, never the union of domains across the project's

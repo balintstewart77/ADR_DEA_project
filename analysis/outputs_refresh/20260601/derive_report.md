@@ -2,7 +2,7 @@
 
 ## Scope
 
-Reference version `0.4.6` was applied to 1,309 cleaned DEA register records. Output CSV: `analysis/outputs_deterministic_rc2/register_properties.csv`.
+Reference version `0.4.9` was applied to 1,309 cleaned DEA register records. Output CSV: `analysis/outputs_deterministic_rc2/register_properties.csv`.
 
 This run is deterministic and uses no LLM calls.
 
@@ -16,7 +16,7 @@ Researcher organisations are parsed with `dashboard.institution_normalisation.pa
 
 ## Record linkage
 
-Record linkage is derived from linked-product component domains. A product with components from no recognised linked product is "No record linkage"; a product whose component-domain union contains one domain is within-domain; a product whose union contains two or more domains is cross-domain. linkage_span is derived from component_domains and is never stored in this reference.
+Record linkage is derived from linked-product component domains. A product with components from no recognised linked product is "No record linkage"; a product whose component-domain union contains one domain is within-domain; a product whose union contains two or more domains is cross-domain. linkage_span is derived from component_domains and is never stored in this reference. A project's record_linkage takes the maximum span of its individually matched products: cross-domain when at least one matched product is itself cross-domain, within-domain when products matched but none is cross-domain. Using several single-domain products from different domains is NOT cross-domain linkage; the span is a property of each linked product, never a union across the project's portfolio (per-product aggregation, reference 0.4.8).
 
 
 A linked component contributes the "Migration & Demographics" domain only when the dataset's substantive origin is population or demography, such as Census as a population source, not when a dataset merely carries demographic fields. NPD ethnicity or free-school-meal attributes are attributes of education records, not a separate demographic component.
@@ -24,9 +24,9 @@ A linked component contributes the "Migration & Demographics" domain only when t
 
 | Record linkage span | Count |
 |---|---:|
-| No record linkage | 904 |
-| Within-domain record linkage | 124 |
-| Cross-domain record linkage | 281 |
+| No record linkage | 939 |
+| Within-domain record linkage | 91 |
+| Cross-domain record linkage | 279 |
 
 ### Linkage edge checks
 
@@ -39,7 +39,7 @@ A linked component contributes the "Migration & Demographics" domain only when t
 | MoJ Data First Crown Court Defendant Case Level | MoJ Data First | Within-domain record linkage | Within-domain record linkage | True |
 | Administrative Data \| Agricultural Research Collection (AD\|ARC) | Administrative Data \| Agricultural Research Collection (AD\|ARC) | Cross-domain record linkage | Cross-domain record linkage | True |
 | Growing Up in England Wave 1 (GUIE) | Growing Up in England (GUIE) | Cross-domain record linkage | Cross-domain record linkage | True |
-| Annual Survey of Hours and Earnings Longitudinal | Annual Survey of Hours and Earnings Longitudinal | Within-domain record linkage | Within-domain record linkage | True |
+| Annual Survey of Hours and Earnings Longitudinal |  | No record linkage | No record linkage | True |
 | Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment | Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment | Within-domain record linkage | Within-domain record linkage | True |
 | Annual Survey of Hours and Earnings linked to Census 2011 | Annual Survey of Hours and Earnings linked to Census 2011 | Cross-domain record linkage | Cross-domain record linkage | True |
 | Annual Business Survey (ABS) |  | No record linkage | No record linkage | True |
@@ -54,10 +54,10 @@ ASHE is survey by design even though sampled from PAYE administrative records, b
 
 | Project collection-method set | Count |
 |---|---:|
-| survey | 674 |
+| survey | 675 |
 | administrative | 325 |
 | survey; administrative | 289 |
-| (none matched) | 21 |
+| (none matched) | 20 |
 
 ## Dataset Temporal Structure
 
@@ -75,19 +75,19 @@ The former cohort category is retired because it conflated collection method wit
 
 | Project temporal-structure set | Count |
 |---|---:|
-| cross-sectional | 704 |
+| cross-sectional | 705 |
 | longitudinal | 345 |
 | cross-sectional; longitudinal | 239 |
-| (none matched) | 21 |
+| (none matched) | 20 |
 
 ### Temporal distribution delta from 0.4.0
 
 | Project temporal-structure set | 0.4.0 | 0.4.1 | Delta |
 |---|---|---|---|
-| cross-sectional | 485 | 704 | +219 |
+| cross-sectional | 485 | 705 | +220 |
 | longitudinal | 387 | 345 | -42 |
 | cross-sectional; longitudinal | 378 | 239 | -139 |
-| (none matched) | 22 | 21 | -1 |
+| (none matched) | 22 | 20 | -2 |
 
 ### Reclassified aggregate-indicator datasets
 
@@ -132,12 +132,12 @@ Census appears in three facets as survey, individual, and Migration & Demographi
 | Project unit set | Count |
 |---|---:|
 | individual | 706 |
-| business | 240 |
+| business | 241 |
 | individual; business | 165 |
 | individual; household | 66 |
 | household | 45 |
 | individual; household; business | 33 |
-| (none matched) | 21 |
+| (none matched) | 20 |
 | household; business | 12 |
 | individual; household; business; area | 6 |
 | area | 3 |
@@ -183,14 +183,14 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 
 | Project researcher-sector set | Count |
 |---|---:|
-| academic | 809 |
+| academic | 813 |
 | commercial | 115 |
-| third-sector | 104 |
+| third-sector | 105 |
 | government | 98 |
-| academic; government | 64 |
-| academic; third-sector | 52 |
-| unclassified | 16 |
+| academic; government | 65 |
+| academic; third-sector | 53 |
 | academic; commercial | 14 |
+| unclassified | 11 |
 | government; commercial | 10 |
 | academic; government; third-sector | 7 |
 | academic; government; commercial | 5 |
@@ -201,8 +201,6 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 | academic; government; unclassified | 1 |
 | commercial; unclassified | 1 |
 | academic; third-sector; commercial | 1 |
-| academic; third-sector; unclassified | 1 |
-| academic; unclassified | 1 |
 
 ### Sector edge checks
 
@@ -223,9 +221,9 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 
 ## Coverage and unmatched tail
 
-Dataset reference coverage: 3,229/3,337 project-dataset mentions (96.8%), 239/339 unique canonical datasets.
+Dataset reference coverage: 3,231/3,337 project-dataset mentions (96.8%), 240/339 unique canonical datasets.
 
-Organisation reference coverage: 1,831/1,842 project-organisation mentions (99.4%), 275/286 unique canonical organisations.
+Organisation reference coverage: 1,839/1,842 project-organisation mentions (99.8%), 278/281 unique canonical organisations.
 
 Largest unmatched datasets:
 
@@ -235,7 +233,6 @@ Largest unmatched datasets:
 | Firm Productivity | 3 |
 | Employment Creation and Survival | 3 |
 | Foreign Direct Investment Index | 2 |
-| Northern Ireland Annual Business Inquiry (NIABI) | 2 |
 | Financial Assets and Liabilities Survey | 1 |
 | Investment in Intangible Assets | 1 |
 | Small Business Survey Longitudinal | 1 |
@@ -256,6 +253,7 @@ Largest unmatched datasets:
 | Workplace Employee Relations Survey | 1 |
 | Secure Census 2011 Scotland | 1 |
 | Northern Ireland School Leavers Survey | 1 |
+| Northern Ireland Exams Database | 1 |
 
 Largest unmatched organisations:
 
@@ -263,15 +261,7 @@ Largest unmatched organisations:
 |---|---:|
 | Independent Researcher | 1 |
 | OREC | 1 |
-| Reading University Ministry of National Education, Republic of Turkiye | 1 |
-| York Univeristy | 1 |
-| York University | 1 |
 | Calver Pang | 1 |
-| Oxford Brookes University | 1 |
-| Manchester University | 1 |
-| Alison Sizer, University College London | 1 |
-| Sheffield University | 1 |
-| Anna Freud Centre | 1 |
 
 ### Deliberate non-mappings and manual-review dataset names
 
@@ -334,7 +324,7 @@ Largest unmatched organisations:
 - Cross-table validation passed during reference load: every linked product resolves to a dataset facet record.
 - `PROMPT_VERSION` is not read or changed by this deterministic derivation; no LLM classification is run.
 - The rc1 output prefixes are checked below from git status.
-- Reference version is `0.4.6`.
+- Reference version is `0.4.9`.
 
 ## Manifests and rc1
 

@@ -1,13 +1,13 @@
 {
-  "created_at_utc": "2026-06-11T10:42:57.472084+00:00",
+  "created_at_utc": "2026-06-11T16:37:41.498458+00:00",
   "deterministic_output_dir": "analysis/outputs_deterministic_rc2",
   "git": {
-    "commit": "4cea75be4caa2daf3b2258ae8e37af89ebffc52b",
+    "commit": "b6a713847df4d1300c6fe831e19129bfdeef47cd",
     "dirty": true,
-    "status_porcelain": "M .gitignore\n M dashboard/config.py\n M scrape/fetch_register.py\n?? analysis/outputs_refresh/\n?? analysis/refresh_pipeline.py\n?? data/release_pointers.json"
+    "status_porcelain": "M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/refresh_pipeline.py\n M analysis/register_reference.yaml\n M dashboard/institution_normalisation.py"
   },
   "model": null,
-  "reference_table_version": "0.4.6",
+  "reference_table_version": "0.4.9",
   "report_file": "analysis/outputs_refresh/20260601/derive_report.md",
   "run_type": "deterministic_properties_report",
   "source_file": "dea_accredited_projects_20260601.csv"

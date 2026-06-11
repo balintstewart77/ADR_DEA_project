@@ -415,7 +415,64 @@ class InstitutionNormalisationTest(unittest.TestCase):
             ],
         )
 
+    def test_june_2026_register_strings_resolve_to_canonicals(self):
+        # June 2026 ingest fixes. "York Univeristy" preserves the register's
+        # own typo (2026/065); both York forms are the UK institution.
+        institutions = self.parse(
+            "Suzanna Nesom, York Univeristy\n"
+            "Emma Tominey, York University\n"
+            "Joseph Quinlan Peck, Manchester University\n"
+            "Mark Taylor, Sheffield University\n"
+            "Huan Yang, Oxford Brookes University\n"
+            "Paula Oliveira, Anna Freud Centre"
+        )
+        self.assertEqual(
+            institutions,
+            [
+                "University of York",
+                "University of Manchester",
+                "University of Sheffield",
+                "Oxford Brookes University",
+                "Anna Freud Centre",
+            ],
+        )
+
+    def test_june_2026_merged_line_residue_resolves_without_person_orgs(self):
+        # 2026/085: a "Name ," line with no institution merges the next
+        # researcher's "Name, Institution" pair into one fragment; the alias
+        # resolves it to the institution, never the person.
+        merged = self.parse(
+            "John Tomkinson ,\n"
+            "Alison Sizer, University College London"
+        )
+        self.assertEqual(merged, ["University College London (UCL)"])
+
+        # 2026/061: two affiliations on consecutive lines merge because the
+        # "...University" tail absorbs the next line; the compound split keeps
+        # both real entities.
+        mash_up = self.parse(
+            "Steven Jacob Bosworth, Reading University\n"
+            "Ministry of National Education, Republic of Turkiye"
+        )
+        self.assertEqual(
+            mash_up,
+            [
+                "University of Reading",
+                "Ministry of National Education, Republic of Türkiye",
+            ],
+        )
+
     def test_near_twin_and_distinct_organisations_remain_distinct(self):
+        # Oxford Brookes University and University of Oxford are different
+        # institutions sharing a city name; the normalisation (including the
+        # "Oxford University" alias) must never collapse them.
+        brookes = describe_institution_normalisation("Oxford Brookes University")
+        oxford = describe_institution_normalisation("Oxford University")
+        self.assertEqual(brookes["institution"], "Oxford Brookes University")
+        self.assertEqual(oxford["institution"], "University of Oxford")
+        self.assertNotEqual(brookes["institution"], oxford["institution"])
+        self.assertEqual(brookes["institution_sector"], "academic")
+
         niesr = describe_institution_normalisation(
             "National Institute for Economic and Social Research"
         )["institution"]

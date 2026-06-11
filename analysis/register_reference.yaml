@@ -1,4 +1,4 @@
-reference_version: "0.4.8"
+reference_version: "0.4.9"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -973,6 +973,7 @@ datasets:
     aliases:
       - "Annual Business Inquiry"
       - "Northern Ireland Annual Business Inquiry"
+      - "Northern Ireland Annual Business Inquiry (NIABI)"
     collection_method: "survey"
     temporal_structure: "cross-sectional"
     unit_of_observation: "business"
@@ -1611,6 +1612,20 @@ datasets:
     notes: "DfE repeated cross-sectional survey; sampled/interviewed respondent is the individual parent. Content covers household childcare arrangements but unit is the respondent (individual), consistent with current sampling-frame rule."
     collection_method_source: "https://www.gov.uk/government/collections/childcare-and-early-years-survey-of-parents"
 
+# Deliberately-unclassified register strings, adjudicated as honest residuals:
+# they are not organisations (person names) or carry no resolvable identity.
+# The review-queue generator excludes them from the action list (reporting a
+# "known residuals" count instead) so the queue only surfaces genuinely-new
+# unknowns. Listing here is NOT a classification - the mentions stay
+# unclassified in the derivation.
+known_unclassifiable_organisations:
+  - "Independent Researcher"
+  - "OREC"
+  # Person name listed alone in the register's researcher field (2026/075,
+  # "Louis Boyce,\nCalver Pang" - no institution given). People are not
+  # organisations; the mention stays honestly unclassified.
+  - "Calver Pang"
+
 organisations:
   - canonical: "University College London"
     aliases: ["UCL", "University College London"]
@@ -1635,13 +1650,28 @@ organisations:
   - canonical: "University of Oxford"
     aliases: ["University of Oxford", "Oxford University", "University of Oxford - Sociology"]
     sectors: ["academic"]
-    notes: "UK HEI."
+    notes: "UK HEI. Distinct from Oxford Brookes University (shared city name only)."
+  - canonical: "Oxford Brookes University"
+    aliases: ["Oxford Brookes University"]
+    sectors: ["academic"]
+    notes: "UK HEI. Distinct from University of Oxford - different institutions sharing a city name; the normalisation must never collapse them."
+    sector_source: "https://www.brookes.ac.uk/about-brookes/"
+  - canonical: "Anna Freud Centre"
+    aliases: ["Anna Freud Centre"]
+    sectors: ["third-sector"]
+    notes: "Anna Freud National Centre for Children and Families: children's mental-health registered charity. Register uses the short form, kept as canonical."
+    sector_source: "https://www.annafreud.org/about-us/"
+  - canonical: "Ministry of National Education, Republic of Türkiye"
+    aliases: ["Ministry of National Education, Republic of Türkiye", "Ministry of National Education, Republic of Turkiye"]
+    sectors: ["government"]
+    notes: "International public body, folded into the government sector under the same policy as IMF/OECD/World Bank. Register spelling 'Turkiye' (2026/061) kept as an alias."
+    sector_source: "https://www.meb.gov.tr/"
   - canonical: "Office for National Statistics"
     aliases: ["Office for National Statistics", "ONS"]
     sectors: ["government"]
     notes: "Public body."
   - canonical: "University of Manchester"
-    aliases: ["University of Manchester"]
+    aliases: ["University of Manchester", "Manchester University"]
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "University of Warwick"
@@ -1671,7 +1701,7 @@ organisations:
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "University of Sheffield"
-    aliases: ["University of Sheffield"]
+    aliases: ["University of Sheffield", "Sheffield University"]
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "University of Bristol"
@@ -1799,11 +1829,13 @@ organisations:
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "University of Reading"
-    aliases: ["University of Reading"]
+    aliases: ["University of Reading", "Reading University"]
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "University of York"
-    aliases: ["University of York"]
+    # "York Univeristy" preserves a register source typo (2026/065); both
+    # June forms are the UK institution, not York University Toronto.
+    aliases: ["University of York", "York University", "York Univeristy"]
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "University of Durham"

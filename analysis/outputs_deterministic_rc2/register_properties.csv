@@ -1278,12 +1278,12 @@
 2026/058,No record linkage,,,survey,cross-sectional,business,academic
 2026/059,No record linkage,,,survey; administrative,cross-sectional,business,academic
 2026/060,No record linkage,,,survey; administrative,cross-sectional,business,academic
-2026/061,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,longitudinal,individual,unclassified
+2026/061,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,longitudinal,individual,academic; government
 2026/062,No record linkage,,,survey,cross-sectional,individual,academic
 2026/063,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,business,academic; third-sector
 2026/064,No record linkage,,,survey,cross-sectional,individual,academic
-2026/065,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic; third-sector; unclassified
-2026/066,No record linkage,,,,,,academic
+2026/065,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic; third-sector
+2026/066,No record linkage,,,survey,cross-sectional,business,academic
 2026/067,No record linkage,,,survey,cross-sectional,individual; household,academic
 2026/068,No record linkage,,,administrative,longitudinal,business,third-sector
 2026/069,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,third-sector
@@ -1295,16 +1295,16 @@
 2026/075,No record linkage,,,administrative,cross-sectional,individual,unclassified
 2026/076,No record linkage,,,survey,cross-sectional,individual,academic; third-sector
 2026/077,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,individual; business,academic
-2026/078,No record linkage,,,survey,cross-sectional,business,academic; unclassified
+2026/078,No record linkage,,,survey,cross-sectional,business,academic
 2026/079,No record linkage,,,administrative,longitudinal,business,third-sector
 2026/080,No record linkage,,,survey,cross-sectional,individual,academic; third-sector
 2026/081,No record linkage,,,survey,cross-sectional,business,academic
 2026/082,No record linkage,,,survey,cross-sectional,individual,government
-2026/083,No record linkage,,,survey,cross-sectional,individual; business,unclassified
+2026/083,No record linkage,,,survey,cross-sectional,individual; business,academic
 2026/084,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,commercial
-2026/085,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,unclassified
-2026/086,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,unclassified
+2026/085,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
+2026/086,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2026/087,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Education & Skills; Labour Market & Employment,administrative,longitudinal,individual,academic
-2026/088,No record linkage,,,,,,unclassified
+2026/088,No record linkage,,,,,,third-sector
 2026/089,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2026/090,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,academic

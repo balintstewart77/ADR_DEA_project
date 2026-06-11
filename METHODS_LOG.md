@@ -1690,3 +1690,57 @@ Longitudinal removal had already eliminated the main source of
 union-of-single-domain-products projects. The redefinition therefore changes
 future behaviour (and the rule's stated semantics) without altering current
 outputs.
+
+# Methods log — June 2026 unmatched organisations resolved (2026-06-11, reference 0.4.9)
+
+## What
+
+The June ingest's review queue carried 11 unmatched organisations and one
+unmatched dataset variant. All are now resolved:
+
+- New classifications (sector + source): Oxford Brookes University ->
+  academic (brookes.ac.uk; explicitly distinct from University of Oxford —
+  near-twin guard added to the normalisation tests); Anna Freud Centre ->
+  third-sector (annafreud.org; short register form kept as canonical);
+  Ministry of National Education, Republic of Türkiye -> government
+  (meb.gov.tr; international public body folded into government per the
+  IMF/OECD policy).
+- Alias additions inheriting existing sectors: York University and the
+  register's own "York Univeristy" typo -> University of York (raw row
+  2026/065 is unambiguously the UK institution); Manchester University ->
+  University of Manchester; Sheffield University -> University of Sheffield;
+  Reading University -> University of Reading. Added at both the parse layer
+  (dashboard display canonicalisation) and the reference layer (adjudication
+  record).
+- Parse residue, fixed targetedly with a before/after org-set safety diff
+  (exactly the 6 intended strings changed, no real org dropped):
+  "Alison Sizer, University College London" (a preceding institution-less
+  "Name ," line merges the next line) -> aliased whole to UCL via the
+  established parser-cleanup mechanism; the 2026/061 mash-up (two
+  affiliations absorbed into one fragment by the "...University" continuation
+  heuristic) -> compound split keeping BOTH University of Reading and the
+  Turkish ministry.
+- "Calver Pang" (2026/075): the register lists researcher names with no
+  institution. People are not organisations — the mention stays honestly
+  unclassified.
+- Dataset: "Northern Ireland Annual Business Inquiry (NIABI)" aliased to the
+  existing Annual Business Inquiry record (survey/cross-sectional/business
+  inherited; both mentions now match).
+
+## Queue hygiene
+
+New known_unclassifiable_organisations list in register_reference.yaml
+(Independent Researcher, OREC, Calver Pang): adjudicated honest residuals the
+review-queue generator now excludes from the action list, reporting a
+"known residuals: N" count instead. Listing is not a classification; the
+mentions stay unclassified in the derivation.
+
+## Impact
+
+Organisation coverage 1,831 -> 1,839 of 1,842 mentions (99.4% -> 99.8%); the
+remaining 3 are exactly the known residuals, and the regenerated queue's
+unmatched-organisation action list is empty. Dataset coverage 3,229 -> 3,231.
+register_properties.csv changes fully attributed: researcher_sectors on 7
+rows (sector deltas: academic +6, government +1, third-sector +1) and the
+NIABI facets on 2026/066. Full suite 139 passed + 432 subtests; new
+adjudications defended in test_adjudicated_decisions.py.
