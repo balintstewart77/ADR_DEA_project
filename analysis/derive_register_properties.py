@@ -15,12 +15,12 @@ import pandas as pd
 import yaml
 
 try:
-    from analysis.register_cleaning import CANDIDATE_FILES, DATA_DIR, load_clean_register
+    from analysis.register_cleaning import DATA_DIR, load_clean_register
     from analysis.run_manifest import git_state, write_manifest
 except ModuleNotFoundError:
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(PROJECT_ROOT))
-    from analysis.register_cleaning import CANDIDATE_FILES, DATA_DIR, load_clean_register  # type: ignore
+    from analysis.register_cleaning import DATA_DIR, load_clean_register  # type: ignore
     from analysis.run_manifest import git_state, write_manifest  # type: ignore
 
 from dashboard.dataset_normalisation import dataset_family_for, normalise_dataset_name, parse_datasets
@@ -1151,7 +1151,6 @@ def run(
 
     df, cleaning_stats, source_file = load_clean_register(
         DATA_DIR,
-        candidate_files=CANDIDATE_FILES,
         output_dir=str(output_dir),
         include_quarter_date=True,
         verbose=False,

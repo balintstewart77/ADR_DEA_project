@@ -4,7 +4,6 @@ import pandas as pd
 
 from dashboard.config import (
     DATA_DIR,
-    CANDIDATE_FILES,
     FLAGSHIP_COLLECTIONS,
     CLEANING_OUTPUT_DIR,
 )
@@ -17,7 +16,7 @@ except ModuleNotFoundError:
 
 
 def load_raw(data_dir=DATA_DIR):
-    return load_raw_register(data_dir, CANDIDATE_FILES)
+    return load_raw_register(data_dir)
 
 
 def classify_collection(datasets_str: str) -> list[str]:

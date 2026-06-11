@@ -12,15 +12,14 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
 
 from institution_normalisation import parse_institutions  # noqa: E402
 
+sys.path.insert(0, PROJECT_ROOT)
+from analysis.register_cleaning import load_raw_register  # noqa: E402
+
 
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "analysis", "outputs_v3")
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, "institution_review_candidates.csv")
 OUTPUT_MD = os.path.join(OUTPUT_DIR, "institution_review_candidates.md")
 
-CANDIDATE_FILES = [
-    "dea_accredited_projects_20260325.csv",
-    "dea_accredited_projects.csv",
-]
 KNOWN_VALID_INSTITUTIONS = {
     "National Centre for Social Research",
     "PwC LLP",
@@ -29,14 +28,10 @@ KNOWN_VALID_INSTITUTIONS = {
 
 def load_projects() -> pd.DataFrame:
     data_dir = os.path.join(PROJECT_ROOT, "data")
-    for name in CANDIDATE_FILES:
-        path = os.path.join(data_dir, name)
-        if os.path.exists(path):
-            df = pd.read_csv(path, encoding="utf-8-sig")
-            df["Accreditation Date"] = pd.to_datetime(df["Accreditation Date"], errors="coerce")
-            df["Year"] = df["Accreditation Date"].dt.year.fillna(0).astype(int)
-            return df
-    raise FileNotFoundError("No DEA projects CSV found in data/")
+    df, _source_file = load_raw_register(data_dir)
+    df["Accreditation Date"] = pd.to_datetime(df["Accreditation Date"], errors="coerce")
+    df["Year"] = df["Accreditation Date"].dt.year.fillna(0).astype(int)
+    return df
 
 
 def find_near_duplicates(counts: pd.Series) -> dict[str, list[str]]:

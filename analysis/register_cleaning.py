@@ -20,6 +20,9 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs_v3")
 
+# Legacy fallback used only when data/register_manifest.json is absent.
+# The manifest is the single source of truth for which extract to load;
+# add new register versions with: python -m analysis.register_manifest add ...
 CANDIDATE_FILES = [
     "dea_accredited_projects_20260325.csv",
     "dea_accredited_projects.csv",
@@ -72,8 +75,37 @@ class DuplicatePolicyResult:
 
 def load_raw_register(
     data_dir: str = DATA_DIR,
-    candidate_files: Iterable[str] = CANDIDATE_FILES,
+    candidate_files: Iterable[str] | None = None,
+    *,
+    version: str = "current",
 ) -> tuple[pd.DataFrame, str]:
+    """Load a raw register extract.
+
+    Resolution order:
+    1. ``candidate_files``, when passed explicitly (back-compat / tests).
+    2. ``data/register_manifest.json`` — the ``version`` argument selects a
+       manifest version ("current" by default).
+    3. The legacy ``CANDIDATE_FILES`` list, when no manifest exists.
+    """
+    if candidate_files is None:
+        try:
+            from analysis.register_manifest import resolve_register_csv
+        except ModuleNotFoundError:
+            from register_manifest import resolve_register_csv  # type: ignore
+        try:
+            path, record = resolve_register_csv(data_dir, version)
+        except FileNotFoundError:
+            if version != "current":
+                raise  # an explicit version request must not fall back silently
+            candidate_files = CANDIDATE_FILES
+        else:
+            df = pd.read_csv(path, encoding="utf-8-sig")
+            print(
+                f"[data] Loaded {len(df):,} rows from {record['csv']} "
+                f"(register version {record['version']})"
+            )
+            return df, record["csv"]
+
     for fname in candidate_files:
         path = os.path.join(data_dir, fname)
         if os.path.exists(path):
@@ -489,7 +521,7 @@ def clean_register_dataframe(
 def load_clean_register(
     data_dir: str = DATA_DIR,
     *,
-    candidate_files: Iterable[str] = CANDIDATE_FILES,
+    candidate_files: Iterable[str] | None = None,
     output_dir: str = OUTPUT_DIR,
     include_quarter_date: bool = False,
     include_project_row_id: bool = False,

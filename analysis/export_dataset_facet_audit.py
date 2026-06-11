@@ -23,7 +23,7 @@ from analysis.derive_register_properties import (
     parse_register_entities,
     REFERENCE_PATH,
 )
-from analysis.register_cleaning import CANDIDATE_FILES, DATA_DIR, load_clean_register
+from analysis.register_cleaning import DATA_DIR, load_clean_register
 
 OUTPUT_CSV = Path(__file__).resolve().parent / "outputs" / "dataset_facet_audit_export.csv"
 
@@ -48,7 +48,7 @@ def main() -> None:
     reference = load_reference(REFERENCE_PATH)
     indexes = build_indexes(reference)
 
-    df_clean, _, _ = load_clean_register(DATA_DIR, candidate_files=CANDIDATE_FILES, include_quarter_date=True)
+    df_clean, _, _ = load_clean_register(DATA_DIR, include_quarter_date=True)
     datasets_df, _ = parse_register_entities(df_clean)
 
     mention_counts: Counter[str] = Counter(datasets_df["dataset"].astype(str))

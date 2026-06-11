@@ -10,11 +10,6 @@ _PACKAGE_DIR = os.path.dirname(__file__)
 
 DATA_DIR = os.path.join(_PACKAGE_DIR, "..", "data")
 
-CANDIDATE_FILES = [
-    "dea_accredited_projects_20260325.csv",
-    "dea_accredited_projects.csv",
-]
-
 FLAGSHIP_COLLECTIONS = {
     "Data First": [
         "moj data first",

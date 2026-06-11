@@ -103,8 +103,16 @@ Typical workflow:
 
 1. Refresh the source register using a script in [`scrape`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape).
 2. Save the updated extract into [`data`](/C:/Users/balin/Desktop/ADR_DEA_project/data).
-3. Run any analysis scripts needed to regenerate derived outputs.
-4. Start the dashboard and confirm the updated data date and views render as expected.
+3. Register the new extract in the data manifest (this is what the dashboard
+   and analysis scripts load — no code changes needed):
+
+   ```bash
+   python -m analysis.register_manifest add data/dea_accredited_projects_YYYYMMDD.csv \
+       --xlsx data/dea_accredited_projects_YYYYMMDD.xlsx --source-url <download url>
+   ```
+
+4. Run any analysis scripts needed to regenerate derived outputs.
+5. Start the dashboard and confirm the updated data date and views render as expected.
 
 ## Limitations
 

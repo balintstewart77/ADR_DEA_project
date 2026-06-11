@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "current": "20260325",
+  "versions": [
+    {
+      "version": "20260325",
+      "csv": "dea_accredited_projects_20260325.csv",
+      "xlsx": "dea_accredited_projects_20260325.xlsx",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/digitaleconomyact-research-statistics/better-useofdata-for-research-information-for-researchers/list-of-accredited-researchers-and-research-projects-under-the-research-strand-of-the-digital-economy-act/",
+      "retrieved_at": "2026-03-25",
+      "sha256_csv": "56d148ea3e17cb8fdbe21fb6b70636dbf91c2642e9282e51c85932dd6ade5aac",
+      "row_count": 1413,
+      "notes": "Source URL is the UKSA register page; exact xlsx link discovered at scrape time"
+    },
+    {
+      "version": "legacy",
+      "csv": "dea_accredited_projects.csv",
+      "xlsx": null,
+      "source_url": null,
+      "retrieved_at": "2025-05-20",
+      "sha256_csv": "ce3eab8a0eb5bd560187f8fb0aee01c38611cecce23f843e064c46d5abe84040",
+      "row_count": 1153,
+      "notes": "Pre-March-2026 HTML-table scrape; retained as fallback only"
+    }
+  ]
+}
