@@ -290,6 +290,55 @@ class AdjudicatedDecisionsTest(unittest.TestCase):
         )
         self.assertEqual(project_linkage_span([]), "No record linkage")
 
+    # 9. Availability "available-by" rule (human-adjudicated, June 2026
+    # availability-dates apply; review table:
+    # analysis/outputs/linked_product_availability_review.csv). Availability is
+    # the EARLIEST evidence-consistent date and first accredited use is a hard
+    # upper bound on it: documented dates that postdate first register use
+    # record something else (cataloguing/announcement) and were bounded to
+    # first use instead. Any future availability_date later than observed
+    # first use violates the adjudicated rule and must fail here.
+    def test_availability_dates_never_postdate_first_register_use(self):
+        from dashboard.data.uptake import (
+            DF_PRODUCT_PROJECTS,
+            LINKED_PRODUCTS,
+            _availability_to_timestamp,
+        )
+
+        valid_bases = {"documented", "bounded_by_first_use", "pre_register_window"}
+        first_seen = DF_PRODUCT_PROJECTS.groupby("product")["quarter_date"].min()
+        for product in LINKED_PRODUCTS:
+            canonical = product["canonical"]
+            with self.subTest(product=canonical):
+                date = product["curated_date"]
+                self.assertIsNotNone(
+                    date, f"{canonical!r} has no parseable availability_date"
+                )
+                self.assertIn(
+                    product["availability_basis"],
+                    valid_bases,
+                    f"{canonical!r} has invalid availability_basis",
+                )
+                seen = first_seen.get(canonical)
+                if seen is None:
+                    continue  # product never used in the register: no bound to check
+                self.assertLessEqual(
+                    date,
+                    seen,
+                    f"{canonical!r} availability_date {date.date()} postdates "
+                    f"first register use {seen.date()} - violates the "
+                    "adjudicated available-by rule",
+                )
+        # The rule's worked example: the WED announcement (2022-Q3) postdates
+        # first register use of ASHE-Census 2011 (2020 Q2), so the recorded
+        # availability is the first-use bound, not the announcement.
+        by_canonical = {p["canonical"]: p for p in LINKED_PRODUCTS}
+        ashe_census = by_canonical["Annual Survey of Hours and Earnings linked to Census 2011"]
+        self.assertEqual(ashe_census["availability_basis"], "bounded_by_first_use")
+        self.assertEqual(
+            ashe_census["curated_date"], _availability_to_timestamp("2020-Q2")
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1782,3 +1782,43 @@ Labour Market & Employment, a substantive domain flip) and 2023/114 (domain
 order swap that flips primary_domain). The genuine title change (2024/119)
 moved Descriptive Monitoring -> Service Interaction / Systems Analysis,
 a plausible response to the new "help-seeking" framing.
+
+# Methods log — linked-product availability dates applied under the available-by rule (2026-06-12, reference 0.5.0)
+
+## Change
+
+Applied availability metadata to all 20 linked_products in
+register_reference.yaml from the adjudicated review table
+(analysis/outputs/linked_product_availability_review.csv): availability_date,
+availability_basis (documented | bounded_by_first_use | pre_register_window),
+availability_source, and availability_note. The adjudicated rule records
+availability as "available by [date]" — the EARLIEST evidence-consistent
+date. Where a documented release/announcement date precedes (or matches)
+first register use, it is recorded as documented (10 products, plus the ONS
+Longitudinal Study's pre-register-window 1974). Where the documented date
+POSTDATES first accredited use, the documented date records something else —
+formal cataloguing or a programme announcement — so availability is bounded
+by first register use (9 products), with the documented date and source
+preserved in the note.
+
+## Finding
+
+Formal cataloguing/announcement dates systematically lag actual research
+availability. ASHE linked to Census 2011 is the clearest case: the WED
+announcement is 8 Sep 2022, but the register shows accredited use from
+2020 Q2 — the announcement date is falsified as an availability date by
+observed use. The five COVID-19 Infection Survey linkages repeat the pattern:
+their static catalogue deposits (2022-2023) postdate in-pandemic research use
+by up to three years. First accredited use is therefore a hard upper bound on
+availability; no availability_date may ever be recorded later than observed
+first use. This bound is now encoded as a permanent invariant test in
+test_adjudicated_decisions.py
+(test_availability_dates_never_postdate_first_register_use).
+
+## Lag semantics
+
+The uptake section's lag column (availability -> first accredited use) fills
+only for documented and pre-register-window dates, where the gap is a real
+observation. For bounded dates the gap is unobservable (availability <= first
+use) and displays "n/a (bounded)" — never 0, which would be false precision
+manufactured by the rule itself.

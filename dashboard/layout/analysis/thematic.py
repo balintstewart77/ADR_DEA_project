@@ -2,6 +2,7 @@
 
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
+import pandas as pd
 
 from dashboard.charts.template import CHART_CONFIG
 from dashboard.components.stat_card import stat_card
@@ -183,33 +184,47 @@ _enriched_register_desc = (
 )
 
 
+_AVAILABILITY_BASIS_DISPLAY = {
+    "documented": "documented",
+    "bounded_by_first_use": "bounded by first use",
+    "pre_register_window": "pre-register window",
+    "proxy": "first register appearance",
+}
+
+
 def _adoption_summary_table() -> dash_table.DataTable:
     """Static per-product adoption summary (deterministic).
 
-    The lag column is only populated where a CURATED availability date exists —
-    lag against the first-appearance proxy would be tautologically zero.
+    Lag follows the adjudicated available-by rule: observable only for
+    documented / pre-register-window dates. Bounded dates (availability is an
+    upper bound from first register use) show "n/a (bounded)" — a 0 here would
+    be false precision manufactured by the rule itself.
     """
     display = PRODUCT_SUMMARY.copy()
     display["availability_display"] = display.apply(
         lambda row: (
-            f"{row['availability']} (curated)"
-            if row["availability_basis"] == "available"
-            else f"{row['availability']} (first register appearance)"
+            f"{row['availability']} "
+            f"({_AVAILABILITY_BASIS_DISPLAY.get(row['basis'], row['basis'])})"
         ),
         axis=1,
     )
-    display["lag_display"] = display["lag_years"].map(
-        lambda v: "—" if v is None else f"{v:.1f}"
+    display["lag_display"] = display.apply(
+        lambda row: (
+            "n/a (bounded)" if row["basis"] == "bounded_by_first_use"
+            else "—" if pd.isna(row["lag_years"])
+            else f"{row['lag_years']:.1f}"
+        ),
+        axis=1,
     )
     display["rate_display"] = display["projects_per_exposure_year"].map(
-        lambda v: "—" if v is None else f"{v:.1f}"
+        lambda v: "—" if pd.isna(v) else f"{v:.1f}"
     )
     columns = [
         {"name": "Linked product", "id": "product"},
         {"name": "Linkage span", "id": "linkage_span"},
         {"name": "Availability", "id": "availability_display"},
         {"name": "First accredited use", "id": "first_use"},
-        {"name": "Lag (years, curated only)", "id": "lag_display"},
+        {"name": "Lag (years)", "id": "lag_display"},
         {"name": "Total projects", "id": "total_projects"},
         {"name": "Projects / exposure-year", "id": "rate_display"},
     ]
@@ -263,19 +278,21 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
             _graph("uptake-adoption-curves"),
             html.P(
                 "The record-linkage trend below carries vertical markers for when each of the "
-                "top products became available: a curated availability date from the reference "
-                "where one exists (labelled \"available\"), otherwise the product's first "
-                "appearance in the register (labelled \"first register appearance\" — a proxy).",
+                "top products became available, from the curated availability dates in the "
+                "reference: \"available\" marks a documented release date; \"available by\" "
+                "marks a date bounded by the product's first accredited use in the register "
+                "(availability can only be earlier, never later).",
                 className="section-desc mt-3",
             ),
             _metric_dropdown("uptake-linkage-trend-metric"),
             _graph("uptake-linkage-availability-trend"),
             html.H6("Adoption summary", className="mt-3"),
             html.P(
-                "Availability shows the curated date where the reference records one, otherwise "
-                "the product's first register appearance. The lag column compares first accredited "
-                "use against curated availability only — lag against the first-appearance proxy "
-                "is tautological, so it is left blank.",
+                "Availability follows the available-by rule: a documented release date where "
+                "one exists, otherwise bounded by the product's first accredited use (the "
+                "earliest evidence-consistent date). Lag fills only where availability is "
+                "documented or pre-window — for bounded dates the gap is unobservable, shown "
+                "as \"n/a (bounded)\" rather than a false zero.",
                 className="section-desc",
             ),
             html.Div(_adoption_summary_table(), className="dea-table mb-2"),

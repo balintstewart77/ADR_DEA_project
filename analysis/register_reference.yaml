@@ -1,4 +1,4 @@
-reference_version: "0.4.9"
+reference_version: "0.5.0"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -243,6 +243,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2021-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2021 Q2). Formally announced in the ONS SRS 15 July 2021 (LEO I1SE): https://www.adruk.org/news-publications/news-blogs/the-longitudinal-education-outcomes-leo-dataset-is-now-available-in-the-ons-secure-research-service-426/ . Earlier bespoke DfE pilot route 2018-2019 (non-SRS): https://www.gov.uk/guidance/apply-to-join-dfes-longitudinal-education-outcomes-leo-pilot"
     aliases:
       - "LEO"
       - "Longitudinal Education Outcomes (LEO)"
@@ -267,6 +271,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2021"
+    availability_basis: "documented"
+    availability_source: "https://academic.oup.com/ije/article/51/1/17/6425590 ; https://www.echild.ac.uk/data-access"
+    availability_note: "ECHILD database created Nov 2020; available to accredited researchers from 2021 by application to DfE/NHS Digital, accessed in ONS SRS (IJE Data Resource Profile)."
     aliases:
       - "Education and Child Health Insights from Linked Data (ECHILD)"
       - "Education and Child Health Insights from Linked Data"
@@ -291,6 +299,10 @@ linked_products:
     status: "discontinued"
     available_from: null
     discontinued_date: null
+    availability_date: "2020"
+    availability_basis: "documented"
+    availability_source: "https://dataarchitecture.blog.gov.uk/2022/02/17/the-public-health-data-asset-phda-when-collaboration-meets-innovation/ ; https://academic.oup.com/ije/article/53/1/dyad194/7515227"
+    availability_note: "ONS Public Health Data Asset family: 2011 Census linked to HES and death registrations, assembled at the start of the COVID-19 pandemic (2020) for approved COVID-19 research."
     aliases:
       - "Linked Census, HES and Mortality Data"
       - "Linked Census and death occurrences"
@@ -317,6 +329,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2021"
+    availability_basis: "documented"
+    availability_source: "https://www.gov.uk/government/publications/grading-and-admissions-data-for-england-grade-framework/grading-and-admissions-data-for-england-grade-user-guide"
+    availability_note: "GRADE user guide (GOV.UK): the GRADE dataset was first released in 2021 covering 2017-2020; re-released 2024 adding 2021-2022."
     aliases:
       - "GRading and Admissions Data England (GRADE)"
       - "GRading and Admissions Data England"
@@ -341,6 +357,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2020-Q2"
+    availability_basis: "documented"
+    availability_source: "https://www.adruk.org/news-publications/news-blogs/magistrates-court-dataset-is-first-product-of-data-first-programme-available-to-researchers-241/ ; https://www.adruk.org/news-publications/news-blogs/crown-court-dataset-becomes-second-output-available-to-researchers-as-result-of-data-first-268/"
+    availability_note: "First Data First product: magistrates' court dataset deposited in ONS SRS 30 June 2020; Crown Court dataset followed 11 Aug 2020."
     aliases:
       - "MoJ Data First Crown Court Defendant"
       - "MoJ Data First Crown Court Defendant Case Level"
@@ -395,6 +415,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2022-Q3"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2022 Q3). No dated public availability announcement found: adarc.ac.uk availability news is undated (https://adarc.ac.uk/adarc-research-ready-datasets-now-available-in-england-and-wales/); ADR UK annual report 2023-24 lists AD|ARC England and Wales among new and emerging datasets (https://reports.adruk.org/annual-report-2023-2024/our-data/new-and-emerging-datasets/administrative-data-agricultural-research-collection-england-and-wales/)."
     aliases:
       - "AD|ARC"
       - "Administrative Data | Agricultural Research Collection (AD|ARC)"
@@ -423,6 +447,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2024-Q3"
+    availability_basis: "documented"
+    availability_source: "https://www.adruk.org/news-publications/news-blogs/labour-market-dataset-will-enable-greater-insight-into-employment-inequalities/"
+    availability_note: "ADR UK announcement 24 Sep 2024: ASHE linked to PAYE and Self-Assessment available for accredited researchers (England, Scotland and Wales)."
     aliases:
       - "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
     component_domains:
@@ -445,6 +473,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2020-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2020 Q2). Formally announced by ADR UK / Wage and Employment Dynamics 8 Sep 2022: https://www.adruk.org/news-publications/news-blogs/new-linked-dataset-available-to-provide-insights-into-earnings-and-employment-in-england-and-wales/ - the register's first-use date falsifies the announcement date as availability; an earlier release evidently existed."
     aliases:
       - "ASHE-linked"
       - "Annual Survey of Hours and Earnings linked to Census 2011"
@@ -467,6 +499,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2021-Q3"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2021 Q3). Formally catalogued 1 Dec 2021 (NISRA metadata distribution release): https://nisra.metadata.works/browser/dataset/8496 ; ADR UK news: https://www.adruk.org/news-publications/news-blogs/earnings-and-employees-study-ees-2011-dataset-available-within-the-adr-northern-ireland-478/"
     aliases:
       - "Earnings and Employees Study"
       - "Linked NI Census-ASHE"
@@ -492,6 +528,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2020-Q4"
+    availability_basis: "documented"
+    availability_source: "https://www.adruk.org/news-publications/news-blogs/first-analysis-of-growing-up-in-england-dataset-provides-insight-into-educational-attainment-and-household-composition-259/ ; https://www.adruk.org/news-publications/news-blogs/growing-up-in-england-dataset-now-available-to-provide-better-understanding-of-vulnerable-childrens-outcomes/"
+    availability_note: "ADR UK news 30 Jul 2020: GUIE Wave 1 expected into ONS SRS late 2020; full linked dataset announced available 29 Jun 2022."
     aliases:
       - "GUIE"
       - "Growing Up in England Wave 1 (GUIE)"
@@ -516,6 +556,10 @@ linked_products:
     status: "standing"
     available_from: 1974
     discontinued_date: null
+    availability_date: "1974"
+    availability_basis: "pre_register_window"
+    availability_source: "https://www.ons.gov.uk/aboutus/whatwedo/paidservices/longitudinalstudyls"
+    availability_note: "Pre-register-window: the study originates from the 1971 Census and was created after that census (existing curated available_from retained)."
     aliases:
       - "ONS Longitudinal Study"
       - "ONS Longitudinal Study (LS)"
@@ -553,6 +597,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2020-Q2"
+    availability_basis: "documented"
+    availability_source: "https://datasciencecampus.ons.gov.uk/the-use-of-microdata-for-firm-level-analysis-of-preference-tariff-utilisation-in-the-uk-technical-report/"
+    availability_note: "ONS Data Science Campus technical report: HMRC trade-in-goods linked to IDBR made available June 2020 (2005-2016 coverage), updated Aug 2022. The ADR catalogue's current distribution release (24 Jul 2024) is a later version."
     aliases:
       - "Linked Trade-in-Goods/IDBR"
       - "Linked Trade-in-Goods/IDBR - UK"
@@ -580,6 +628,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2022-Q3"
+    availability_basis: "documented"
+    availability_source: "https://ons.metadata.works/browser/dataset/213775/0"
+    availability_note: "ONS SRS metadata catalogue: release date 7 September 2022."
     aliases:
       - "2011 Census linked to Benefits and Income - England and Wales"
     component_domains:
@@ -606,6 +658,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2024-Q3"
+    availability_basis: "documented"
+    availability_source: "https://www.adruk.org/news-publications/news-blogs/new-dataset-available-for-policy-relevant-research-into-the-nursing-and-midwifery-professions/"
+    availability_note: "ADR UK announcement 25 Jul 2024: NMC register linked to Census 2021 available via the Integrated Data Service."
     aliases:
       - "Nursing and Midwifery Council Register - UK Linked to Census 2021"
     component_domains:
@@ -626,6 +682,10 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
+    availability_date: "2023-Q1"
+    availability_basis: "documented"
+    availability_source: "https://www.adruk.org/data-access/flagship-datasets/education-outcomes-linkage-2018/19/ ; https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/education-outcomes"
+    availability_note: "ADR NI Education Outcomes Linkage initiative launched March 2023 (first phase, 2018/19 data); second phase (2018/19-2021/22) released October 2024."
     aliases:
       - "EOL"
       - "EOL Dataset (2015-2022)"
@@ -652,6 +712,10 @@ linked_products:
     status: "discontinued"
     available_from: null
     discontinued_date: null
+    availability_date: "2022-Q4"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2022 Q4). Static catalogue release 28 Mar 2023: https://ons.metadata.works/browser/dataset/163402/0 - in-pandemic linked versions were accessible before the final static deposit."
     aliases:
       - "COVID-19 Infection Survey linked to NHS Test and Trace - England"
       - "Covid-19 Infection Survey linked to NHS Test and Trace"
@@ -675,6 +739,10 @@ linked_products:
     status: "discontinued"
     available_from: null
     discontinued_date: null
+    availability_date: "2021-Q1"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2021 Q1). Static catalogue release 31 Mar 2023: https://ons.metadata.works/browser/dataset/306/0 - earlier in-pandemic versions existed."
     aliases:
       - "COVID-19 Infection Survey linked to Combined Vaccination - UK"
       - "Covid-19 Infection Survey linked with Combined Vaccination Dataset"
@@ -699,6 +767,10 @@ linked_products:
     status: "discontinued"
     available_from: null
     discontinued_date: null
+    availability_date: "2020-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2020 Q2). Catalogue release 18 Dec 2023: https://ons.metadata.works/browser/dataset/344644/0 - the static deposit clearly postdates first research use."
     aliases:
       - "COVID-19 Infection Survey linked to Mortality - England and Wales ONS"
       - "Covid-19 Infection Survey linked with Death Occurrences England and Wales Office for National Statistics /"
@@ -719,6 +791,10 @@ linked_products:
     status: "discontinued"
     available_from: null
     discontinued_date: null
+    availability_date: "2020-Q1"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2020 Q1). Catalogue release 5 Aug 2022: https://ons.metadata.works/browser/dataset/187279/0 - register first use predates even the survey period (Nov 2020 - Jul 2021), a register-side anomaly noted at review."
     aliases:
       - "Covid-19 Schools Infection Survey linked with Test and Trace"
       - "COVID-19 Schools Infection Survey linked with Test and Trace - England"
@@ -740,6 +816,10 @@ linked_products:
     status: "discontinued"
     available_from: null
     discontinued_date: null
+    availability_date: "2020-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: "Bounded by first register use (2020 Q2). Catalogue distribution release 31 Mar 2023: https://ons.metadata.works/browser/dataset/290"
     aliases:
       - "Covid-19 Infection Survey linked with VOA and EPC data"
       - "COVID-19 Infection Survey linked to VOA and EPC - England and Wales Office for National Statistics"

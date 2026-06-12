@@ -115,6 +115,9 @@ for _record in _reference_indexes.reference.get("linked_products", []):
         "is_cross_domain": len(_domains) >= 2,
         "curated_raw": _curated_raw,
         "curated_date": _availability_to_timestamp(_curated_raw),
+        # available-by rule (adjudicated): documented | bounded_by_first_use |
+        # pre_register_window; empty when no curated date exists (proxy).
+        "availability_basis": str(_record.get("availability_basis") or ""),
         "availability_source": _record.get("availability_source", ""),
     })
 
@@ -215,23 +218,40 @@ def _product_by_year() -> pd.DataFrame:
 
 DF_PRODUCT_BY_YEAR = _product_by_year()
 
+# Honest annotation/table wording per availability basis: a documented date is
+# a real release date ("available"); a bounded date is only an upper bound from
+# observed register use ("available by").
+_ANNOTATION_BASIS_LABELS = {
+    "documented": "available",
+    "bounded_by_first_use": "available by",
+    "pre_register_window": "available",
+}
+
 
 def product_summary_table() -> pd.DataFrame:
     """Per-product availability, first accredited use, lag and demand rate.
 
-    Lag is only computed against a CURATED availability date — lag against the
-    first-appearance proxy would be tautologically zero, so it is omitted.
+    Lag follows the adjudicated available-by rule: it is only observable for
+    documented or pre-register-window availability dates. For dates bounded by
+    first register use, availability <= first use with an unknown gap — the
+    lag column stays unset (rendered "n/a (bounded)"), never a false zero. A
+    proxy (no curated date) likewise gets no lag.
     """
     first_seen = DF_PRODUCT_PROJECTS.groupby("product")["quarter_date"].min()
     rows = []
     for product in LINKED_PRODUCTS:
         canonical = product["canonical"]
         curated = product["curated_date"]
+        basis = product["availability_basis"] if curated is not None else "proxy"
         seen = first_seen.get(canonical, pd.NaT)
         availability = curated if curated is not None else seen
         exposure = _exposure_years(availability) if not pd.isna(availability) else 0.0
         total = int(PRODUCT_TOTALS.get(canonical, 0))
-        if curated is not None and not pd.isna(seen):
+        if (
+            basis in ("documented", "pre_register_window")
+            and curated is not None
+            and not pd.isna(seen)
+        ):
             lag_years = round((seen - curated).days / 365.25, 1)
         else:
             lag_years = None
@@ -242,8 +262,9 @@ def product_summary_table() -> pd.DataFrame:
             "availability": (
                 str(product["curated_raw"]) if curated is not None else _quarter_label(seen)
             ),
-            "availability_basis": (
-                "available" if curated is not None else "first register appearance"
+            "basis": basis,
+            "availability_basis": _ANNOTATION_BASIS_LABELS.get(
+                basis, "first register appearance"
             ),
             "availability_date": availability,
             "first_use": _quarter_label(seen),
