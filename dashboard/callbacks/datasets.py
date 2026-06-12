@@ -9,6 +9,7 @@ from dash import Input, Output
 from dashboard.config import PRIMARY_BAR
 from dashboard.charts.template import _apply_common, _annotate_partial_year
 from dashboard.data.registry import df_datasets, PARTIAL_YEAR_INFO
+from dashboard.data.uptake import DATASET_EXPOSURE
 
 
 def _wrap_axis_label(value, width=36):
@@ -38,8 +39,9 @@ def register(app):
         Input("datasets-topn-preset", "value"),
         Input("datasets-topn-custom", "value"),
         Input("datasets-provider-filter", "value"),
+        Input("datasets-topn-metric", "value"),
     )
-    def update_datasets_tab(preset, custom, provider):
+    def update_datasets_tab(preset, custom, provider, topn_metric):
         top_n = int(custom) if preset == -1 and custom else (preset if preset != -1 else 10)
         top_n = max(1, int(top_n))
         sub = df_datasets.copy()
@@ -53,23 +55,55 @@ def register(app):
             .nunique()
             .reset_index()
             .rename(columns={"Project ID": "Projects"})
-            .sort_values("Projects", ascending=True)
-            .tail(top_n)
         )
-        fig_top = px.bar(
-            dataset_counts, x="Projects", y="dataset", orientation="h",
-            title=f"Top {top_n} Most-Requested Datasets",
-            labels={"dataset": "", "Projects": "Distinct projects"},
-            color_discrete_sequence=[PRIMARY_BAR],
-        )
+        if (topn_metric or "count") == "rate":
+            # Demand normalised by exposure WITHIN the register window (years
+            # from max(availability, window start) to the latest register date,
+            # current year fractional) — never by raw dataset age.
+            exposure = DATASET_EXPOSURE.reindex(dataset_counts["dataset"])
+            dataset_counts["exposure_years"] = exposure["exposure_years"].to_numpy()
+            dataset_counts["availability_basis"] = exposure["availability_basis"].to_numpy()
+            dataset_counts["Rate"] = (
+                dataset_counts["Projects"] / dataset_counts["exposure_years"].replace(0, pd.NA)
+            ).astype(float).round(2)
+            dataset_counts = (
+                dataset_counts.dropna(subset=["Rate"])
+                .sort_values("Rate", ascending=True, kind="stable")
+                .tail(top_n)
+            )
+            fig_top = px.bar(
+                dataset_counts, x="Rate", y="dataset", orientation="h",
+                title=f"Top {top_n} Datasets by Demand Rate (per year available)",
+                labels={"dataset": "", "Rate": "Distinct projects per year available"},
+                color_discrete_sequence=[PRIMARY_BAR],
+                custom_data=["Projects", "exposure_years", "availability_basis"],
+            )
+            fig_top.update_traces(
+                marker_line_width=0,
+                hovertemplate=(
+                    "<b>%{y}</b><br>%{x:.2f} projects per year available<br>"
+                    "%{customdata[0]} projects over %{customdata[1]:.1f} exposure years<br>"
+                    "availability basis: %{customdata[2]}<extra></extra>"
+                ),
+            )
+        else:
+            dataset_counts = (
+                dataset_counts.sort_values("Projects", ascending=True).tail(top_n)
+            )
+            fig_top = px.bar(
+                dataset_counts, x="Projects", y="dataset", orientation="h",
+                title=f"Top {top_n} Most-Requested Datasets",
+                labels={"dataset": "", "Projects": "Distinct projects"},
+                color_discrete_sequence=[PRIMARY_BAR],
+            )
+            fig_top.update_traces(
+                marker_line_width=0,
+                hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
+            )
         fig_top.update_layout(
             showlegend=False,
             margin=dict(l=320),
             yaxis_tickfont_size=11,
-        )
-        fig_top.update_traces(
-            marker_line_width=0,
-            hovertemplate="<b>%{y}</b><br>%{x} projects<extra></extra>",
         )
         _apply_common(fig_top, height=max(400, top_n * 22))
 

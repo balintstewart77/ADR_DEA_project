@@ -47,6 +47,19 @@ def build_datasets_tab():
                     clearable=False,
                 ),
             ], md=4),
+            dbc.Col([
+                html.Label("Metric", className="filter-label"),
+                dcc.Dropdown(
+                    id="datasets-topn-metric",
+                    options=[
+                        {"label": "Total projects", "value": "count"},
+                        {"label": "Projects per year available", "value": "rate"},
+                    ],
+                    value="count",
+                    clearable=False,
+                    searchable=False,
+                ),
+            ], md=3),
         ], className="mb-3 g-2"),
         dbc.Row([
             dbc.Col(
@@ -54,6 +67,15 @@ def build_datasets_tab():
                 width=12,
             ),
         ]),
+        html.P(
+            "\"Projects per year available\" divides each dataset's distinct-project count by its "
+            "exposure within the register window: the years from max(availability date, 2019-01-01) "
+            "to the latest register date, with the partial current year counted fractionally. "
+            "Availability defaults to the dataset's first appearance in the register (a proxy); "
+            "curated availability dates from the reference override the proxy where present. "
+            "Datasets available before 2019 get the full window as exposure.",
+            className="section-desc text-muted small",
+        ),
         dbc.Row([
             dbc.Col(
                 html.Div(dcc.Graph(id="datasets-trend-chart", config=CHART_CONFIG), className="chart-wrapper"),
