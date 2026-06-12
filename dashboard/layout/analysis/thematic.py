@@ -5,7 +5,8 @@ import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG
 from dashboard.components.stat_card import stat_card
-from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
+from dashboard.components.table_styles import BROWSE_TABLE_STYLES, ENRICHED_TABLE_STYLES
+from dashboard.data.uptake import PRODUCT_SUMMARY
 from dashboard import taxonomy
 from dashboard import reference_definitions
 from dashboard.config import REGISTER_SOURCE_ICON, DERIVED_FIELD_ICON
@@ -162,6 +163,107 @@ _enriched_register_desc = (
 )
 
 
+def _adoption_summary_table() -> dash_table.DataTable:
+    """Static per-product adoption summary (deterministic).
+
+    The lag column is only populated where a CURATED availability date exists —
+    lag against the first-appearance proxy would be tautologically zero.
+    """
+    display = PRODUCT_SUMMARY.copy()
+    display["availability_display"] = display.apply(
+        lambda row: (
+            f"{row['availability']} (curated)"
+            if row["availability_basis"] == "available"
+            else f"{row['availability']} (first register appearance)"
+        ),
+        axis=1,
+    )
+    display["lag_display"] = display["lag_years"].map(
+        lambda v: "—" if v is None else f"{v:.1f}"
+    )
+    display["rate_display"] = display["projects_per_exposure_year"].map(
+        lambda v: "—" if v is None else f"{v:.1f}"
+    )
+    columns = [
+        {"name": "Linked product", "id": "product"},
+        {"name": "Linkage span", "id": "linkage_span"},
+        {"name": "Availability", "id": "availability_display"},
+        {"name": "First accredited use", "id": "first_use"},
+        {"name": "Lag (years, curated only)", "id": "lag_display"},
+        {"name": "Total projects", "id": "total_projects"},
+        {"name": "Projects / exposure-year", "id": "rate_display"},
+    ]
+    return dash_table.DataTable(
+        data=display[[c["id"] for c in columns]].to_dict("records"),
+        columns=columns,
+        sort_action="native",
+        page_size=20,
+        **BROWSE_TABLE_STYLES,
+    )
+
+
+def _uptake_accordion_item() -> dbc.AccordionItem:
+    return dbc.AccordionItem(
+        [
+            html.P(
+                "Derived deterministically from the register and the named linked-product "
+                "catalogue in analysis/register_reference.yaml — exact, reproducible, auditable.",
+                className="section-desc",
+            ),
+            dbc.Row([
+                dbc.Col([
+                    html.Label("Show top N products", className="filter-label"),
+                    dcc.Dropdown(
+                        id="uptake-adoption-topn",
+                        options=[
+                            {"label": "3", "value": 3},
+                            {"label": "6", "value": 6},
+                            {"label": "10", "value": 10},
+                            {"label": "All 20", "value": 20},
+                        ],
+                        value=6,
+                        clearable=False,
+                        searchable=False,
+                    ),
+                ], md=3),
+                dbc.Col([
+                    html.Label("Metric", className="filter-label"),
+                    dcc.Dropdown(
+                        id="uptake-adoption-metric",
+                        options=[
+                            {"label": "Project count", "value": "count"},
+                            {"label": "% of year's projects", "value": "pct"},
+                        ],
+                        value="count",
+                        clearable=False,
+                        searchable=False,
+                    ),
+                ], md=3),
+            ], className="mb-2 g-2"),
+            _graph("uptake-adoption-curves"),
+            html.P(
+                "The record-linkage trend below carries vertical markers for when each of the "
+                "top products became available: a curated availability date from the reference "
+                "where one exists (labelled \"available\"), otherwise the product's first "
+                "appearance in the register (labelled \"first register appearance\" — a proxy).",
+                className="section-desc mt-3",
+            ),
+            _metric_dropdown("uptake-linkage-trend-metric"),
+            _graph("uptake-linkage-availability-trend"),
+            html.H6("Adoption summary", className="mt-3"),
+            html.P(
+                "Availability shows the curated date where the reference records one, otherwise "
+                "the product's first register appearance. The lag column compares first accredited "
+                "use against curated availability only — lag against the first-appearance proxy "
+                "is tautological, so it is left blank.",
+                className="section-desc",
+            ),
+            html.Div(_adoption_summary_table(), className="dea-table mb-2"),
+        ],
+        title="Linked data uptake",
+    )
+
+
 def _analyses_accordion():
     return dbc.Accordion(
         [
@@ -258,6 +360,7 @@ def _analyses_accordion():
                 ],
                 title="Record linkage & data structure",
             ),
+            _uptake_accordion_item(),
             dbc.AccordionItem(
                 [
                     html.P(_enriched_register_desc, className="section-desc"),
