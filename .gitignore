@@ -108,9 +108,15 @@ analysis/Figures_and_Tables.ipynb
 # --- Provenance artefacts ---
 analysis/provenance/
 
-# --- Refresh-pipeline classification runs: track dashboard-consumed files,
-# ignore the regenerable inspection CSV (the cache is ignored globally) ---
+# --- Refresh-pipeline classification runs: track dashboard-consumed files
+# (layer_classifications, layer a/c by_year + totals, layer_summary), same
+# policy as the rc2 frozen run. Cross-domain heatmaps are derived in-app, the
+# inspection CSV is regenerable, quality/run.log are transient, and the cache
+# is ignored globally ---
 analysis/outputs_classified_*/all_projects_classified.csv
+analysis/outputs_classified_*/cross_domain_purpose.csv
+analysis/outputs_classified_*/quality/
+analysis/outputs_classified_*/run.log
 
 # --- Local comparison-analysis artefacts ---
 analysis/opus_v_sonnet_comparison_analysis/

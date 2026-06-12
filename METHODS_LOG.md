@@ -1744,3 +1744,41 @@ register_properties.csv changes fully attributed: researcher_sectors on 7
 rows (sector deltas: academic +6, government +1, third-sector +1) and the
 NIABI facets on 2026/066. Full suite 139 passed + 432 subtests; new
 adjudications defended in test_adjudicated_decisions.py.
+
+# Methods log — June 2026 incremental classification run (2026-06-12)
+
+## Run
+
+First production use of the fingerprinted-cache incremental path: against the
+1,309-project June register, the seeded rc2 cache served 1,256 entries and
+exactly 53 went to the API (38 new projects + 15 fingerprint-changed: the one
+genuine title change, 2024/119, plus 14 Tier-2 merge groups whose merged
+dataset text gained acronym-suffixed organisation names). Canonical config
+unchanged from rc2 (claude-opus-4-8, dict-1.0-rc2 prompt, temperature 0,
+structured output, cache schema v6). Output set:
+analysis/outputs_classified_20260601/ — a NEW directory; the rc1/rc2 frozen
+runs are untouched. The dashboard pointer moved via
+data/release_pointers.json after the Record-ID-set-equality gate passed.
+
+## Validation
+
+1,309 rows, Record ID set equal to the deterministic layer, zero duplicate
+IDs, zero invalid dict-1.0-rc2 labels, primary-domain first-element
+convention holds, and the layer_a/c totals and by-year aggregates recompute
+exactly from row data (1,789 domain / 1,364 purpose mentions). The 4
+"Unclear from Register Entry" projects in the totals are all cached rc2
+entries (opaque programme titles / missing datasets) — the 53-entry June
+cohort contributed none. Cohort label distribution skews Labour
+Market/Business/Policy Evaluation, consistent with an economics-heavy
+intake; no anomaly.
+
+## Re-classification stability (the 15 refreshed entries)
+
+8/15 fully stable. Of the 14 whose prompt inputs changed only cosmetically,
+6 moved at least one field — mostly adjacent purpose rungs
+(Descriptive/Outcome/Policy Evaluation), the known temperature-0 re-run
+variance. Two flagged for review: 2024/060 (Migration & Demographics ->
+Labour Market & Employment, a substantive domain flip) and 2023/114 (domain
+order swap that flips primary_domain). The genuine title change (2024/119)
+moved Descriptive Monitoring -> Service Interaction / Systems Analysis,
+a plausible response to the new "help-seeking" framing.

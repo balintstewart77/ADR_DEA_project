@@ -1,6 +1,6 @@
 # Register refresh: version 20260601
 
-- Run at: 2026-06-11T17:37:34
+- Run at: 2026-06-12T07:39:15
 - Fetch status: skipped
 - Baseline version: 20260325
 
@@ -12,6 +12,7 @@
 - Dataset coverage: 3,231/3,337
 - Organisation coverage: 1,839/1,842
 - Curation queue: review_required.md
-- Classification: skipped (run with --classify to update the enriched/thematic views for new projects)
+- Classification run: outputs_classified_20260601
+- Dashboard pointer updated to the new classification run
 
 All validation gates passed.
