@@ -108,6 +108,7 @@ for _record in _reference_indexes.reference.get("linked_products", []):
     _curated_raw = _record.get("availability_date", None)
     if _curated_raw is None:
         _curated_raw = _record.get("available_from", None)
+    _announced_raw = _record.get("availability_announced", None)
     LINKED_PRODUCTS.append({
         "canonical": _record["canonical"],
         "short": product_short_label(_record["canonical"]),
@@ -115,10 +116,15 @@ for _record in _reference_indexes.reference.get("linked_products", []):
         "is_cross_domain": len(_domains) >= 2,
         "curated_raw": _curated_raw,
         "curated_date": _availability_to_timestamp(_curated_raw),
-        # available-by rule (adjudicated): documented | bounded_by_first_use |
+        # available-by rule (adjudicated, refined 0.5.1): documented_accessible
+        # (source evidences actual SRS/DEA access) | announced (source
+        # evidences existence only — availability bounded by first use, the
+        # announcement kept separately) | bounded_by_first_use |
         # pre_register_window; empty when no curated date exists (proxy).
         "availability_basis": str(_record.get("availability_basis") or ""),
         "availability_source": _record.get("availability_source", ""),
+        "announced_raw": _announced_raw,
+        "announced_date": _availability_to_timestamp(_announced_raw),
     })
 
 # Domain pairs covered by an existing linked product: every pair within a
@@ -218,24 +224,30 @@ def _product_by_year() -> pd.DataFrame:
 
 DF_PRODUCT_BY_YEAR = _product_by_year()
 
-# Honest annotation/table wording per availability basis: a documented date is
-# a real release date ("available"); a bounded date is only an upper bound from
-# observed register use ("available by").
+# Honest annotation/table wording per availability basis: a documented-
+# accessible date is a real access date ("available"); announced and bounded
+# dates are only upper bounds from observed register use ("available by").
 _ANNOTATION_BASIS_LABELS = {
-    "documented": "available",
+    "documented_accessible": "available",
+    "announced": "available by",
     "bounded_by_first_use": "available by",
     "pre_register_window": "available",
 }
 
 
 def product_summary_table() -> pd.DataFrame:
-    """Per-product availability, first accredited use, lag and demand rate.
+    """Per-product availability, first accredited use, lags and demand rate.
 
-    Lag follows the adjudicated available-by rule: it is only observable for
-    documented or pre-register-window availability dates. For dates bounded by
-    first register use, availability <= first use with an unknown gap — the
-    lag column stays unset (rendered "n/a (bounded)"), never a false zero. A
-    proxy (no curated date) likewise gets no lag.
+    Two DISTINCT lag quantities, never conflated:
+
+    - adoption lag (availability -> first DEA use): observable only for
+      documented_accessible or pre_register_window dates. For announced or
+      bounded dates, availability <= first use with an unknown gap — the
+      column stays unset (rendered "n/a (bounded)"), never a false zero.
+    - delivery/governance lag (announcement -> first DEA-route use): only for
+      announced rows, measuring how long after an announcement the asset first
+      shows DEA-gateway use. NOT adoption lag — ECHILD's ~3.5y here is a
+      governance delay, not slow researcher uptake.
     """
     first_seen = DF_PRODUCT_PROJECTS.groupby("product")["quarter_date"].min()
     rows = []
@@ -248,13 +260,18 @@ def product_summary_table() -> pd.DataFrame:
         exposure = _exposure_years(availability) if not pd.isna(availability) else 0.0
         total = int(PRODUCT_TOTALS.get(canonical, 0))
         if (
-            basis in ("documented", "pre_register_window")
+            basis in ("documented_accessible", "pre_register_window")
             and curated is not None
             and not pd.isna(seen)
         ):
             lag_years = round((seen - curated).days / 365.25, 1)
         else:
             lag_years = None
+        announced_date = product["announced_date"]
+        if basis == "announced" and announced_date is not None and not pd.isna(seen):
+            delivery_lag_years = round((seen - announced_date).days / 365.25, 1)
+        else:
+            delivery_lag_years = None
         rows.append({
             "product": canonical,
             "short": product["short"],
@@ -267,8 +284,11 @@ def product_summary_table() -> pd.DataFrame:
                 basis, "first register appearance"
             ),
             "availability_date": availability,
+            "announced": str(product["announced_raw"]) if announced_date is not None else "",
             "first_use": _quarter_label(seen),
             "lag_years": lag_years,
+            "delivery_lag_years": delivery_lag_years,
+            "exposure_years": round(exposure, 1),
             "total_projects": total,
             "projects_per_exposure_year": round(total / exposure, 1) if exposure else None,
         })

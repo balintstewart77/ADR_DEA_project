@@ -1,4 +1,4 @@
-reference_version: "0.5.0"
+reference_version: "0.5.1"
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -271,10 +271,12 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
-    availability_date: "2021"
-    availability_basis: "documented"
-    availability_source: "https://academic.oup.com/ije/article/51/1/17/6425590 ; https://www.echild.ac.uk/data-access"
-    availability_note: "ECHILD database created Nov 2020; available to accredited researchers from 2021 by application to DfE/NHS Digital, accessed in ONS SRS (IJE Data Resource Profile)."
+    availability_date: "2024-Q3"
+    availability_basis: "announced"
+    availability_source: null
+    availability_announced: "2021"
+    availability_announced_source: "https://academic.oup.com/ije/article/51/1/17/6425590 ; https://www.echild.ac.uk/data-access"
+    availability_note: "Announced/published 2021 (IJE Data Resource Profile; database created Nov 2020) but DEA/SRS-route accessibility is bounded by first register use (2024 Q3). Governance context (Balint, ex-ADR UK; recorded as context, not asserted fact): the linkage was built by UCL; a data-governance dispute over health data owners' consent to entry into the ONS SRS (SRS entry was a funding condition) delayed DEA-route access for years; it is unclear whether 2021-2024 ECHILD projects used UCL's own infrastructure under a different legal gateway (not captured in this register) or whether no research access existed in that period."
     aliases:
       - "Education and Child Health Insights from Linked Data (ECHILD)"
       - "Education and Child Health Insights from Linked Data"
@@ -299,10 +301,12 @@ linked_products:
     status: "discontinued"
     available_from: null
     discontinued_date: null
-    availability_date: "2020"
-    availability_basis: "documented"
-    availability_source: "https://dataarchitecture.blog.gov.uk/2022/02/17/the-public-health-data-asset-phda-when-collaboration-meets-innovation/ ; https://academic.oup.com/ije/article/53/1/dyad194/7515227"
-    availability_note: "ONS Public Health Data Asset family: 2011 Census linked to HES and death registrations, assembled at the start of the COVID-19 pandemic (2020) for approved COVID-19 research."
+    availability_date: "2020-Q3"
+    availability_basis: "announced"
+    availability_source: null
+    availability_announced: "2020"
+    availability_announced_source: "https://dataarchitecture.blog.gov.uk/2022/02/17/the-public-health-data-asset-phda-when-collaboration-meets-innovation/ ; https://academic.oup.com/ije/article/53/1/dyad194/7515227"
+    availability_note: "Sources evidence the Public Health Data Asset family's creation at the start of the COVID-19 pandemic (2020) for approved analysis, not DEA/SRS researcher accessibility. Availability bounded by first register use (2020 Q3)."
     aliases:
       - "Linked Census, HES and Mortality Data"
       - "Linked Census and death occurrences"
@@ -329,10 +333,12 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
-    availability_date: "2021"
-    availability_basis: "documented"
-    availability_source: "https://www.gov.uk/government/publications/grading-and-admissions-data-for-england-grade-framework/grading-and-admissions-data-for-england-grade-user-guide"
-    availability_note: "GRADE user guide (GOV.UK): the GRADE dataset was first released in 2021 covering 2017-2020; re-released 2024 adding 2021-2022."
+    availability_date: "2024-Q3"
+    availability_basis: "announced"
+    availability_source: null
+    availability_announced: "2021"
+    availability_announced_source: "https://www.gov.uk/government/publications/grading-and-admissions-data-for-england-grade-framework/grading-and-admissions-data-for-england-grade-user-guide"
+    availability_note: "The user guide records a 2021 first release of the GRADE dataset (2017-2020 coverage; re-released 2024 adding 2021-2022), but publication of framework documentation does not evidence SRS accessibility at that date. Same crisis-era origin as ECHILD; DEA-route availability bounded by first register use (2024 Q3)."
     aliases:
       - "GRading and Admissions Data England (GRADE)"
       - "GRading and Admissions Data England"
@@ -358,7 +364,7 @@ linked_products:
     available_from: null
     discontinued_date: null
     availability_date: "2020-Q2"
-    availability_basis: "documented"
+    availability_basis: "documented_accessible"
     availability_source: "https://www.adruk.org/news-publications/news-blogs/magistrates-court-dataset-is-first-product-of-data-first-programme-available-to-researchers-241/ ; https://www.adruk.org/news-publications/news-blogs/crown-court-dataset-becomes-second-output-available-to-researchers-as-result-of-data-first-268/"
     availability_note: "First Data First product: magistrates' court dataset deposited in ONS SRS 30 June 2020; Crown Court dataset followed 11 Aug 2020."
     aliases:
@@ -448,7 +454,7 @@ linked_products:
     available_from: null
     discontinued_date: null
     availability_date: "2024-Q3"
-    availability_basis: "documented"
+    availability_basis: "documented_accessible"
     availability_source: "https://www.adruk.org/news-publications/news-blogs/labour-market-dataset-will-enable-greater-insight-into-employment-inequalities/"
     availability_note: "ADR UK announcement 24 Sep 2024: ASHE linked to PAYE and Self-Assessment available for accredited researchers (England, Scotland and Wales)."
     aliases:
@@ -528,10 +534,12 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
-    availability_date: "2020-Q4"
-    availability_basis: "documented"
-    availability_source: "https://www.adruk.org/news-publications/news-blogs/first-analysis-of-growing-up-in-england-dataset-provides-insight-into-educational-attainment-and-household-composition-259/ ; https://www.adruk.org/news-publications/news-blogs/growing-up-in-england-dataset-now-available-to-provide-better-understanding-of-vulnerable-childrens-outcomes/"
-    availability_note: "ADR UK news 30 Jul 2020: GUIE Wave 1 expected into ONS SRS late 2020; full linked dataset announced available 29 Jun 2022."
+    availability_date: "2021-Q4"
+    availability_basis: "announced"
+    availability_source: null
+    availability_announced: "2020-Q4"
+    availability_announced_source: "https://www.adruk.org/news-publications/news-blogs/first-analysis-of-growing-up-in-england-dataset-provides-insight-into-educational-attainment-and-household-composition-259/ ; https://www.adruk.org/news-publications/news-blogs/growing-up-in-england-dataset-now-available-to-provide-better-understanding-of-vulnerable-childrens-outcomes/"
+    availability_note: "ADR UK news 30 Jul 2020 records Wave 1 as EXPECTED into the ONS SRS late 2020 - an expectation, not evidenced delivery; the full linked dataset was announced available 29 Jun 2022. Availability bounded by first register use (2021 Q4)."
     aliases:
       - "GUIE"
       - "Growing Up in England Wave 1 (GUIE)"
@@ -598,7 +606,7 @@ linked_products:
     available_from: null
     discontinued_date: null
     availability_date: "2020-Q2"
-    availability_basis: "documented"
+    availability_basis: "documented_accessible"
     availability_source: "https://datasciencecampus.ons.gov.uk/the-use-of-microdata-for-firm-level-analysis-of-preference-tariff-utilisation-in-the-uk-technical-report/"
     availability_note: "ONS Data Science Campus technical report: HMRC trade-in-goods linked to IDBR made available June 2020 (2005-2016 coverage), updated Aug 2022. The ADR catalogue's current distribution release (24 Jul 2024) is a later version."
     aliases:
@@ -629,7 +637,7 @@ linked_products:
     available_from: null
     discontinued_date: null
     availability_date: "2022-Q3"
-    availability_basis: "documented"
+    availability_basis: "documented_accessible"
     availability_source: "https://ons.metadata.works/browser/dataset/213775/0"
     availability_note: "ONS SRS metadata catalogue: release date 7 September 2022."
     aliases:
@@ -659,7 +667,7 @@ linked_products:
     available_from: null
     discontinued_date: null
     availability_date: "2024-Q3"
-    availability_basis: "documented"
+    availability_basis: "documented_accessible"
     availability_source: "https://www.adruk.org/news-publications/news-blogs/new-dataset-available-for-policy-relevant-research-into-the-nursing-and-midwifery-professions/"
     availability_note: "ADR UK announcement 25 Jul 2024: NMC register linked to Census 2021 available via the Integrated Data Service."
     aliases:
@@ -682,10 +690,12 @@ linked_products:
     status: "standing"
     available_from: null
     discontinued_date: null
-    availability_date: "2023-Q1"
-    availability_basis: "documented"
-    availability_source: "https://www.adruk.org/data-access/flagship-datasets/education-outcomes-linkage-2018/19/ ; https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/education-outcomes"
-    availability_note: "ADR NI Education Outcomes Linkage initiative launched March 2023 (first phase, 2018/19 data); second phase (2018/19-2021/22) released October 2024."
+    availability_date: "2023-Q3"
+    availability_basis: "announced"
+    availability_source: null
+    availability_announced: "2023-Q1"
+    availability_announced_source: "https://www.adruk.org/data-access/flagship-datasets/education-outcomes-linkage-2018/19/ ; https://www.nisra.gov.uk/support/administrative-data-research-northern-ireland-adr-ni-themed-datasets/education-outcomes"
+    availability_note: "March 2023 records the ADR NI initiative LAUNCH (first phase, 2018/19 data); a launch does not evidence researcher accessibility. Second phase released October 2024. Availability bounded by first register use (2023 Q3)."
     aliases:
       - "EOL"
       - "EOL Dataset (2015-2022)"

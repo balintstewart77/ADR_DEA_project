@@ -73,7 +73,9 @@ def build_datasets_tab():
             "to the latest register date, with the partial current year counted fractionally. "
             "Availability defaults to the dataset's first appearance in the register (a proxy); "
             "curated availability dates from the reference override the proxy where present. "
-            "Datasets available before 2019 get the full window as exposure.",
+            "Datasets available before 2019 get the full window as exposure. The hover shows "
+            "each dataset's exposure years — rates over short exposures are initial-adoption "
+            "rates, not sustained demand.",
             className="section-desc text-muted small",
         ),
         dbc.Row([

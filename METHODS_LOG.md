@@ -1822,3 +1822,50 @@ only for documented and pre-register-window dates, where the gap is a real
 observation. For bounded dates the gap is unobservable (availability <= first
 use) and displays "n/a (bounded)" — never 0, which would be false precision
 manufactured by the rule itself.
+
+# Methods log — availability basis refined: announced vs documented-accessible (2026-06-12, reference 0.5.1)
+
+## Change
+
+Human domain knowledge (Balint, ex-ADR UK) corrected a conceptual gap in the
+0.5.0 availability scheme: some "documented" dates are ANNOUNCEMENTS — they
+evidence an asset's existence or launch, not actual DEA/SRS research
+accessibility. The basis taxonomy is now documented_accessible (source
+evidences actual SRS/DEA access: deposit record, catalogue entry with access
+provisions, apply-to-access guidance) | announced (source evidences existence
+only; availability bounded by first register use, the announcement preserved
+in availability_announced / availability_announced_source) |
+bounded_by_first_use | pre_register_window. Audit of the ten 0.5.0
+"documented" rows, demotion being the safe direction: five kept
+documented_accessible (MoJ Data First — explicit SRS deposit; ASHE-PAYE/SA and
+NMC-Census 2021 — apply-to-access announcements; Trade-in-Goods/IDBR —
+researcher-authored report of SRS availability; Census-Benefits/Income — SRS
+catalogue entry) and five demoted to announced (ECHILD, GRADE,
+Census-HES-Mortality/PHDA, GUIE, EOL — publication, user guide, creation blog,
+"expected" delivery, initiative launch respectively).
+
+## The ECHILD correction (the proven case)
+
+ECHILD was announced/published in 2021, but a data-governance dispute (health
+data owners vs entry into the ONS SRS, which was a funding condition; linkage
+built by UCL) delayed DEA-route access for years — first register use 2024 Q3.
+Its former "3.5y adoption lag" is a GOVERNANCE/DELIVERY lag, and its
+2021-based exposure unfairly deflated its demand rate (21.5 -> 7.6/yr at
+0.5.0; now restored to 21.5/yr over 1.9 exposure-years). It is unclear whether
+2021-2024 ECHILD projects used UCL's own infrastructure under a different
+legal gateway (not captured in this register) or whether no research access
+existed — recorded in the reference note as context with that uncertainty
+intact, not as asserted fact. The summary table now carries two distinct
+quantities: adoption lag (availability -> first DEA use; only for
+documented_accessible / pre-window) and delivery/governance lag (announcement
+-> first DEA-route use; only for announced rows) — never conflated.
+
+## Register-coverage caveat
+
+The register observes DEA-gateway use only: assets accessible via other legal
+gateways have demand invisible to this instrument, so all uptake findings are
+DEA-route uptake (ECHILD is the worked example). Stated in the dashboard's
+Linked data uptake section intro and here. Exposure years are now shown
+wherever a rate is shown; rates over short exposures are initial-adoption
+rates, not sustained demand. The availability <= first-register-use invariant
+is unchanged and still enforced by test_adjudicated_decisions.

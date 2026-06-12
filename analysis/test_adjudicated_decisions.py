@@ -305,7 +305,16 @@ class AdjudicatedDecisionsTest(unittest.TestCase):
             _availability_to_timestamp,
         )
 
-        valid_bases = {"documented", "bounded_by_first_use", "pre_register_window"}
+        # Basis taxonomy refined at 0.5.1 (human-adjudicated, Balint/ex-ADR UK,
+        # ECHILD correction): "documented" split into documented_accessible
+        # (source evidences actual SRS/DEA access) and announced (source
+        # evidences existence only; availability bounded by first use).
+        valid_bases = {
+            "documented_accessible",
+            "announced",
+            "bounded_by_first_use",
+            "pre_register_window",
+        }
         first_seen = DF_PRODUCT_PROJECTS.groupby("product")["quarter_date"].min()
         for product in LINKED_PRODUCTS:
             canonical = product["canonical"]
@@ -338,6 +347,17 @@ class AdjudicatedDecisionsTest(unittest.TestCase):
         self.assertEqual(
             ashe_census["curated_date"], _availability_to_timestamp("2020-Q2")
         )
+        # ECHILD correction (0.5.1, human domain knowledge): the 2021 IJE
+        # publication is an ANNOUNCEMENT, not evidence of DEA/SRS access — a
+        # governance dispute delayed DEA-route availability, so it is bounded
+        # at first register use (2024 Q3) with the announcement kept apart.
+        # Its 2021->2024 gap is a delivery/governance lag, never adoption lag.
+        echild = by_canonical[
+            "Education and Child Health Insights from Linked Data (ECHILD)"
+        ]
+        self.assertEqual(echild["availability_basis"], "announced")
+        self.assertEqual(echild["curated_date"], _availability_to_timestamp("2024-Q3"))
+        self.assertEqual(echild["announced_date"], _availability_to_timestamp("2021"))
 
 
 if __name__ == "__main__":

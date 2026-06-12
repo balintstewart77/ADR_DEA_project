@@ -185,7 +185,7 @@ _enriched_register_desc = (
 
 
 _AVAILABILITY_BASIS_DISPLAY = {
-    "documented": "documented",
+    "documented_accessible": "documented accessible",
     "bounded_by_first_use": "bounded by first use",
     "pre_register_window": "pre-register window",
     "proxy": "first register appearance",
@@ -195,26 +195,35 @@ _AVAILABILITY_BASIS_DISPLAY = {
 def _adoption_summary_table() -> dash_table.DataTable:
     """Static per-product adoption summary (deterministic).
 
-    Lag follows the adjudicated available-by rule: observable only for
-    documented / pre-register-window dates. Bounded dates (availability is an
-    upper bound from first register use) show "n/a (bounded)" — a 0 here would
-    be false precision manufactured by the rule itself.
+    Two distinct lag columns, never conflated: adoption lag (availability ->
+    first DEA use) renders only for documented-accessible / pre-window dates —
+    announced and bounded rows show "n/a (bounded)", never a manufactured 0.
+    Delivery/governance lag (announcement -> first DEA-route use) renders only
+    for announced rows. Exposure years sit beside every rate.
     """
     display = PRODUCT_SUMMARY.copy()
     display["availability_display"] = display.apply(
         lambda row: (
-            f"{row['availability']} "
-            f"({_AVAILABILITY_BASIS_DISPLAY.get(row['basis'], row['basis'])})"
+            f"{row['availability']} (bounded; announced {row['announced']})"
+            if row["basis"] == "announced"
+            else f"{row['availability']} "
+                 f"({_AVAILABILITY_BASIS_DISPLAY.get(row['basis'], row['basis'])})"
         ),
         axis=1,
     )
     display["lag_display"] = display.apply(
         lambda row: (
-            "n/a (bounded)" if row["basis"] == "bounded_by_first_use"
+            "n/a (bounded)" if row["basis"] in ("announced", "bounded_by_first_use")
             else "—" if pd.isna(row["lag_years"])
             else f"{row['lag_years']:.1f}"
         ),
         axis=1,
+    )
+    display["delivery_display"] = display["delivery_lag_years"].map(
+        lambda v: "—" if pd.isna(v) else f"{v:.1f}"
+    )
+    display["exposure_display"] = display["exposure_years"].map(
+        lambda v: "—" if pd.isna(v) else f"{v:.1f}"
     )
     display["rate_display"] = display["projects_per_exposure_year"].map(
         lambda v: "—" if pd.isna(v) else f"{v:.1f}"
@@ -224,7 +233,9 @@ def _adoption_summary_table() -> dash_table.DataTable:
         {"name": "Linkage span", "id": "linkage_span"},
         {"name": "Availability", "id": "availability_display"},
         {"name": "First accredited use", "id": "first_use"},
-        {"name": "Lag (years)", "id": "lag_display"},
+        {"name": "Adoption lag (years)", "id": "lag_display"},
+        {"name": "Announcement → first DEA-route use (years)", "id": "delivery_display"},
+        {"name": "Exposure (years)", "id": "exposure_display"},
         {"name": "Total projects", "id": "total_projects"},
         {"name": "Projects / exposure-year", "id": "rate_display"},
     ]
@@ -242,7 +253,10 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
         [
             html.P(
                 "Derived deterministically from the register and the named linked-product "
-                "catalogue in analysis/register_reference.yaml — exact, reproducible, auditable.",
+                "catalogue in analysis/register_reference.yaml — exact, reproducible, auditable. "
+                "The register observes DEA-gateway use only: assets accessible via other legal "
+                "gateways have demand invisible to this instrument, so all uptake findings here "
+                "are DEA-route uptake.",
                 className="section-desc",
             ),
             dbc.Row([
@@ -288,11 +302,14 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
             _graph("uptake-linkage-availability-trend"),
             html.H6("Adoption summary", className="mt-3"),
             html.P(
-                "Availability follows the available-by rule: a documented release date where "
-                "one exists, otherwise bounded by the product's first accredited use (the "
-                "earliest evidence-consistent date). Lag fills only where availability is "
-                "documented or pre-window — for bounded dates the gap is unobservable, shown "
-                "as \"n/a (bounded)\" rather than a false zero.",
+                "Availability follows the available-by rule: a date is recorded as accessible "
+                "only where the source evidences actual SRS/DEA access; announcement-only "
+                "sources bound availability by first register use instead, with the "
+                "announcement kept separately. Adoption lag (availability → first DEA use) and "
+                "delivery/governance lag (announcement → first DEA-route use) are different "
+                "quantities and shown in separate columns — bounded and announced rows show "
+                "adoption lag as \"n/a (bounded)\" rather than a false zero. Rates over short "
+                "exposures are initial-adoption rates, not sustained demand.",
                 className="section-desc",
             ),
             html.Div(_adoption_summary_table(), className="dea-table mb-2"),
