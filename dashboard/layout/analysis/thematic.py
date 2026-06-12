@@ -416,6 +416,17 @@ def _analyses_accordion():
                         dbc.Col(_graph("deterministic-unit-distribution"), lg=4, md=6),
                         dbc.Col(_graph("deterministic-researcher-sector-distribution"), lg=4, md=6),
                     ], className="g-3"),
+                    html.P(
+                        "The trends below recompute each year's share from the per-project "
+                        "facets — is the administrative-data transition happening? Multi-count: "
+                        "a project using both survey and administrative data counts in both "
+                        "lines (likewise for temporal structure), so shares can sum past 100%.",
+                        className="section-desc mt-3",
+                    ),
+                    _metric_dropdown("deterministic-collection-method-trend-metric"),
+                    _graph("deterministic-collection-method-trend"),
+                    _metric_dropdown("deterministic-temporal-structure-trend-metric"),
+                    _graph("deterministic-temporal-structure-trend"),
                 ],
                 title="Record linkage & data structure",
             ),

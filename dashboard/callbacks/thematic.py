@@ -18,6 +18,8 @@ from dashboard.data.thematic import (
     df_unit_totals,
     df_researcher_sector_totals,
     df_record_linkage_by_year,
+    df_collection_method_by_year,
+    df_temporal_structure_by_year,
     df_domain_record_linkage,
     df_researcher_sector_cooccurrence,
     RESEARCHER_SECTOR_EXCLUDED_COUNT,
@@ -216,6 +218,49 @@ def register(app):
             df_record_linkage_by_year,
             metric=metric or "pct",
             partial_year_info=PARTIAL_YEAR_INFO,
+        )
+
+    _MULTI_COUNT_NOTE = "Multi-count: a project carrying both values counts in both lines."
+
+    def _facet_trend_figure(df_by_year, category_col, colours, metric, title):
+        fig = make_thematic_trend(
+            df_by_year, category_col, colours, metric_col(metric), title,
+            height=CHART_HEIGHT,
+            partial_year_info=PARTIAL_YEAR_INFO,
+        )
+        fig.add_annotation(
+            text=_MULTI_COUNT_NOTE,
+            xref="paper", yref="paper",
+            x=0, y=1.07, showarrow=False,
+            xanchor="left", yanchor="bottom",
+            font=dict(size=10, color="#7f8c8d"),
+        )
+        return fig
+
+    @app.callback(
+        Output("deterministic-collection-method-trend", "figure"),
+        Input("deterministic-collection-method-trend-metric", "value"),
+    )
+    def update_collection_method_trend(metric):
+        return _facet_trend_figure(
+            df_collection_method_by_year,
+            "collection_method",
+            {"Survey": "#e76f51", "Administrative": "#2a9d8f"},
+            metric,
+            "Collection Method Over Time",
+        )
+
+    @app.callback(
+        Output("deterministic-temporal-structure-trend", "figure"),
+        Input("deterministic-temporal-structure-trend-metric", "value"),
+    )
+    def update_temporal_structure_trend(metric):
+        return _facet_trend_figure(
+            df_temporal_structure_by_year,
+            "temporal_structure",
+            {"Cross-sectional": "#f4a261", "Longitudinal": "#6a3d9a"},
+            metric,
+            "Temporal Structure Over Time",
         )
 
     @app.callback(

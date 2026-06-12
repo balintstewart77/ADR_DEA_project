@@ -134,6 +134,50 @@ def _semicolon_value_totals(df: pd.DataFrame, source_col: str, output_col: str) 
     )
 
 
+def _facet_values_by_year(df: pd.DataFrame, source_col: str, output_col: str) -> pd.DataFrame:
+    """Yearly counts/shares for a semicolon multi-value deterministic facet.
+
+    Multi-count: a project carrying both values (e.g. survey AND administrative
+    data) counts under both, so shares can sum past 100%. The denominator is
+    each year's classified-project total. Explicit zeros so dips show.
+    """
+    columns = ["Year", output_col, "count", "total", "pct_of_projects"]
+    if "Year" not in df.columns or source_col not in df.columns:
+        return pd.DataFrame(columns=columns)
+
+    work = df[["Year", source_col]].copy()
+    work["Year"] = pd.to_numeric(work["Year"], errors="coerce")
+    work = work[work["Year"].notna()]
+    if work.empty:
+        return pd.DataFrame(columns=columns)
+    work["Year"] = work["Year"].astype(int)
+    work["_values"] = work[source_col].apply(
+        lambda v: sorted({
+            display_deterministic_value(part)
+            for part in _split_semicolon_values(v)
+        })
+    )
+
+    years = sorted(work["Year"].unique())
+    totals = work.groupby("Year").size()
+    values = sorted({value for parts in work["_values"] for value in parts})
+    exploded = work.explode("_values").dropna(subset=["_values"])
+    grouped = exploded.groupby(["Year", "_values"]).size()
+    rows = []
+    for value in values:
+        for year in years:
+            total = int(totals.get(year, 0))
+            count = int(grouped.get((year, value), 0))
+            rows.append({
+                "Year": year,
+                output_col: value,
+                "count": count,
+                "total": total,
+                "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+            })
+    return pd.DataFrame(rows, columns=columns)
+
+
 def _record_linkage_by_year(df: pd.DataFrame) -> pd.DataFrame:
     columns = ["Year", "record_linkage", "count", "total", "pct_of_projects"]
     if "Year" not in df.columns or "record_linkage" not in df.columns:
@@ -588,6 +632,12 @@ def load_thematic_data(thematic_dir):
             "researcher_sector",
         )
         df_record_linkage_by_year = _record_linkage_by_year(df_thematic_projects)
+        df_collection_method_by_year = _facet_values_by_year(
+            df_thematic_projects, "dataset_collection_methods", "collection_method",
+        )
+        df_temporal_structure_by_year = _facet_values_by_year(
+            df_thematic_projects, "dataset_temporal_structures", "temporal_structure",
+        )
         df_domain_record_linkage = _domain_record_linkage_crosstab(df_thematic_projects)
         df_researcher_sector_cooccurrence, researcher_sector_excluded_count = (
             _researcher_sector_cooccurrence(df_thematic_projects)
@@ -612,6 +662,8 @@ def load_thematic_data(thematic_dir):
             "df_unit_totals": df_unit_totals,
             "df_researcher_sector_totals": df_researcher_sector_totals,
             "df_record_linkage_by_year": df_record_linkage_by_year,
+            "df_collection_method_by_year": df_collection_method_by_year,
+            "df_temporal_structure_by_year": df_temporal_structure_by_year,
             "df_domain_record_linkage": df_domain_record_linkage,
             "df_researcher_sector_cooccurrence": df_researcher_sector_cooccurrence,
             "RESEARCHER_SECTOR_EXCLUDED_COUNT": researcher_sector_excluded_count,
@@ -648,6 +700,8 @@ def load_thematic_data(thematic_dir):
             "df_unit_totals": pd.DataFrame(),
             "df_researcher_sector_totals": pd.DataFrame(),
             "df_record_linkage_by_year": pd.DataFrame(),
+            "df_collection_method_by_year": pd.DataFrame(),
+            "df_temporal_structure_by_year": pd.DataFrame(),
             "df_domain_record_linkage": pd.DataFrame(),
             "df_researcher_sector_cooccurrence": pd.DataFrame(),
             "RESEARCHER_SECTOR_EXCLUDED_COUNT": 0,
@@ -687,6 +741,8 @@ df_temporal_structure_totals = _thematic_data["df_temporal_structure_totals"]
 df_unit_totals = _thematic_data["df_unit_totals"]
 df_researcher_sector_totals = _thematic_data["df_researcher_sector_totals"]
 df_record_linkage_by_year = _thematic_data["df_record_linkage_by_year"]
+df_collection_method_by_year = _thematic_data["df_collection_method_by_year"]
+df_temporal_structure_by_year = _thematic_data["df_temporal_structure_by_year"]
 df_domain_record_linkage = _thematic_data["df_domain_record_linkage"]
 df_researcher_sector_cooccurrence = _thematic_data["df_researcher_sector_cooccurrence"]
 RESEARCHER_SECTOR_EXCLUDED_COUNT = _thematic_data["RESEARCHER_SECTOR_EXCLUDED_COUNT"]
