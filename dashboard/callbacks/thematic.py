@@ -26,7 +26,8 @@ from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
 from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
-    make_thematic_trend, make_thematic_totals_bar, make_cross_heatmap,
+    make_thematic_trend, make_thematic_totals_bar, make_tag_domain_bar,
+    make_cross_heatmap,
     make_domain_cooccurrence, make_latent_demand_cooccurrence,
     make_compact_distribution_bar,
     make_record_linkage_trend, make_domain_record_linkage_breakdown,
@@ -43,8 +44,6 @@ def register(app):
     @app.callback(
         Output("thematic-domain-totals", "figure"),
         Output("thematic-purpose-totals", "figure"),
-        Output("thematic-covid-tag-domain", "figure"),
-        Output("thematic-demographic-tag-domain", "figure"),
         Output("deterministic-researcher-sector-cooccurrence", "figure"),
         Output("deterministic-record-linkage-distribution", "figure"),
         Output("deterministic-collection-method-distribution", "figure"),
@@ -61,14 +60,6 @@ def register(app):
         purpose_totals = make_thematic_totals_bar(
             df_thematic_c_totals, "purpose", PURPOSE_COLOURS,
             "Projects by Purpose", height=380,
-        )
-        covid_tag_domain = make_thematic_totals_bar(
-            df_thematic_covid_tag_by_domain, "domain", DOMAIN_COLOURS,
-            "COVID-19 & Pandemic by domain", height=440,
-        )
-        demographic_tag_domain = make_thematic_totals_bar(
-            df_thematic_demographic_tag_by_domain, "domain", DOMAIN_COLOURS,
-            "Demographic disparities by domain", height=440,
         )
 
         researcher_sector_cooccurrence = make_researcher_sector_cooccurrence(
@@ -112,7 +103,6 @@ def register(app):
 
         return (
             domain_totals, purpose_totals,
-            covid_tag_domain, demographic_tag_domain,
             researcher_sector_cooccurrence,
             record_linkage_distribution,
             collection_method_distribution,
@@ -123,6 +113,30 @@ def register(app):
 
     def metric_col(metric_mode):
         return "pct_of_projects" if (metric_mode or "pct") == "pct" else "count"
+
+    # Tag-by-domain bars have independent per-figure metric controls
+    # (count vs % of the domain's classified projects).
+    @app.callback(
+        Output("thematic-covid-tag-domain", "figure"),
+        Input("thematic-covid-tag-domain-metric", "value"),
+    )
+    def update_covid_tag_domain(metric):
+        return make_tag_domain_bar(
+            df_thematic_covid_tag_by_domain, DOMAIN_COLOURS,
+            "COVID-19 & Pandemic by domain",
+            metric=metric or "count",
+        )
+
+    @app.callback(
+        Output("thematic-demographic-tag-domain", "figure"),
+        Input("thematic-demographic-tag-domain-metric", "value"),
+    )
+    def update_demographic_tag_domain(metric):
+        return make_tag_domain_bar(
+            df_thematic_demographic_tag_by_domain, DOMAIN_COLOURS,
+            "Demographic disparities by domain",
+            metric=metric or "count",
+        )
 
     @app.callback(
         Output("thematic-domain-trend", "figure"),

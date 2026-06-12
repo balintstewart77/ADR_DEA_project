@@ -275,13 +275,31 @@ def _tag_domain_totals(
     tag_series_values: pd.Series,
     tag: str,
 ) -> pd.DataFrame:
+    """Tagged projects per domain, with each domain's project count as the
+    normalising denominator (% = tagged projects in domain / projects in domain)."""
     tag_mask = tag_series_values.apply(lambda value: tag in _split_semicolon_values(value))
     tag_domain_counts: Counter = Counter()
     for domains in df.loc[tag_mask, "substantive_domains"].dropna():
-        tag_domain_counts.update(_split_semicolon_values(domains))
+        tag_domain_counts.update(set(_split_semicolon_values(domains)))
+    domain_totals: Counter = Counter()
+    for domains in df["substantive_domains"].dropna():
+        domain_totals.update(set(_split_semicolon_values(domains)))
     return pd.DataFrame(
-        sorted(tag_domain_counts.items(), key=lambda kv: kv[1], reverse=True),
-        columns=["domain", "count"],
+        [
+            {
+                "domain": domain,
+                "count": count,
+                "domain_total": domain_totals.get(domain, 0),
+                "pct_of_domain": (
+                    round(count / domain_totals[domain] * 100, 1)
+                    if domain_totals.get(domain) else 0.0
+                ),
+            }
+            for domain, count in sorted(
+                tag_domain_counts.items(), key=lambda kv: kv[1], reverse=True
+            )
+        ],
+        columns=["domain", "count", "domain_total", "pct_of_domain"],
     )
 
 

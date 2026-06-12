@@ -78,6 +78,50 @@ def make_thematic_totals_bar(
     return _apply_common(fig, height=height)
 
 
+def make_tag_domain_bar(
+    df_totals: pd.DataFrame,
+    colour_map: dict,
+    title: str,
+    metric: str = "count",
+    height: int = 440,
+) -> go.Figure:
+    """Tagged-projects-by-domain bar with count / %-of-domain metric.
+
+    The percentage denominator is the number of classified projects carrying
+    that domain, so large domains stop dominating purely through size. The
+    hover always shows both readings.
+    """
+    fig = go.Figure()
+    if df_totals.empty or "domain" not in df_totals.columns:
+        return _apply_common(fig, height=height)
+    show_pct = metric == "pct"
+    value_col = "pct_of_domain" if show_pct else "count"
+    df_sorted = df_totals.sort_values(value_col, ascending=True, kind="stable")
+    colours = [colour_map.get(domain, "#999") for domain in df_sorted["domain"]]
+    customdata = df_sorted[["count", "domain_total", "pct_of_domain"]].to_numpy()
+    fig.add_trace(go.Bar(
+        y=df_sorted["domain"],
+        x=df_sorted[value_col],
+        orientation="h",
+        marker_color=colours,
+        marker_line_width=0,
+        customdata=customdata,
+        hovertemplate=(
+            "<b>%{y}</b><br>"
+            "%{customdata[0]} tagged projects of %{customdata[1]} in domain<br>"
+            "%{customdata[2]:.1f}% of domain's projects"
+            "<extra></extra>"
+        ),
+    ))
+    fig.update_layout(
+        title=title,
+        xaxis_title="% of domain's projects" if show_pct else "Projects",
+        yaxis_title="",
+        margin=dict(l=220),
+    )
+    return _apply_common(fig, height=height)
+
+
 def make_compact_distribution_bar(
     df_totals: pd.DataFrame,
     category_col: str,

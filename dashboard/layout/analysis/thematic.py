@@ -63,6 +63,25 @@ def _metric_dropdown(dropdown_id: str) -> dbc.Row:
     ], className="mb-2 g-2")
 
 
+def _domain_share_dropdown(dropdown_id: str) -> dbc.Row:
+    """Count vs %-of-domain metric control for the tag-by-domain bars."""
+    return dbc.Row([
+        dbc.Col([
+            html.Label("Metric", className="filter-label"),
+            dcc.Dropdown(
+                id=dropdown_id,
+                options=[
+                    {"label": "Project count", "value": "count"},
+                    {"label": "% of domain's projects", "value": "pct"},
+                ],
+                value="count",
+                clearable=False,
+                searchable=False,
+            ),
+        ], md=6),
+    ], className="mb-2 g-2")
+
+
 def _definition_detail(detail: dict) -> html.Div:
     content = detail["content"]
     if isinstance(content, list):
@@ -365,9 +384,21 @@ def _analyses_accordion():
                     _metric_dropdown("thematic-tag-trend-metric"),
                     _graph("thematic-tag-trend"),
                     dbc.Row([
-                        dbc.Col(_graph("thematic-covid-tag-domain"), md=6),
-                        dbc.Col(_graph("thematic-demographic-tag-domain"), md=6),
+                        dbc.Col([
+                            _domain_share_dropdown("thematic-covid-tag-domain-metric"),
+                            _graph("thematic-covid-tag-domain"),
+                        ], md=6),
+                        dbc.Col([
+                            _domain_share_dropdown("thematic-demographic-tag-domain-metric"),
+                            _graph("thematic-demographic-tag-domain"),
+                        ], md=6),
                     ], className="g-3"),
+                    html.P(
+                        "\"% of domain's projects\" divides each bar by the number of classified "
+                        "projects carrying that domain, so large domains stop dominating purely "
+                        "through size. Each chart's metric control is independent.",
+                        className="section-desc text-muted small mt-2",
+                    ),
                 ],
                 title="Cross-Cutting Tags",
             ),
