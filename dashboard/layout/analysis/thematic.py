@@ -15,6 +15,7 @@ from dashboard.data.registry import (
 )
 from dashboard.data.thematic import (
     THEMATIC_DATA_AVAILABLE, THEMATIC_PROJECT_COUNT, THEMATIC_TAGGED_COUNT,
+    LATENT_NO_LINKAGE_COUNT,
     _THEMATIC_DOMAIN_OPTIONS, _THEMATIC_DOMAIN_COUNT_OPTIONS,
     _THEMATIC_PURPOSE_OPTIONS, _THEMATIC_TAG_OPTIONS,
     _DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
@@ -264,6 +265,33 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
     )
 
 
+def _latent_demand_accordion_item() -> dbc.AccordionItem:
+    return dbc.AccordionItem(
+        [
+            dbc.Alert([
+                html.Strong("Indicative — mixed analytical layers."),
+                " This is the dashboard's first deliberately mixed-layer figure: substantive "
+                "domains are LLM-inferred (unvalidated, pending validation), while the "
+                "no-record-linkage filter is deterministic. Treat the cell values as "
+                "indicative rather than definitive.",
+            ], color="warning", className="mb-3"),
+            html.P(
+                f"Domain co-occurrence computed ONLY over the {LATENT_NO_LINKAGE_COUNT:,} "
+                "classified projects with no record linkage — researchers combining domains "
+                "without using any linked product. Circled cells mark domain pairs already "
+                "served by an existing linked product (the pair is contained in some product's "
+                "component domains). Reading: a heavy unserved cell suggests latent demand for "
+                "a new cross-domain asset; a heavy served cell suggests an awareness gap or "
+                "deliberate non-use of the existing product.",
+                className="section-desc",
+            ),
+            _metric_dropdown("thematic-latent-demand-metric"),
+            _graph("thematic-latent-demand"),
+        ],
+        title="Latent cross-domain demand (indicative)",
+    )
+
+
 def _analyses_accordion():
     return dbc.Accordion(
         [
@@ -361,6 +389,7 @@ def _analyses_accordion():
                 title="Record linkage & data structure",
             ),
             _uptake_accordion_item(),
+            _latent_demand_accordion_item(),
             dbc.AccordionItem(
                 [
                     html.P(_enriched_register_desc, className="section-desc"),

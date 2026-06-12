@@ -11,6 +11,7 @@ from dashboard.data.thematic import (
     df_thematic_covid_tag_by_domain,
     df_thematic_demographic_tag_by_domain,
     df_domain_cooccurrence,
+    df_latent_demand_cooccurrence,
     df_record_linkage_totals,
     df_collection_method_totals,
     df_temporal_structure_totals,
@@ -26,11 +27,13 @@ from dashboard.data.filtering import _get_enriched_register_display_df, _csv_dat
 from dashboard.charts.template import CHART_HEIGHT
 from dashboard.charts.thematic import (
     make_thematic_trend, make_thematic_totals_bar, make_cross_heatmap,
-    make_domain_cooccurrence, make_compact_distribution_bar,
+    make_domain_cooccurrence, make_latent_demand_cooccurrence,
+    make_compact_distribution_bar,
     make_record_linkage_trend, make_domain_record_linkage_breakdown,
     make_researcher_sector_cooccurrence,
 )
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
+from dashboard.data.uptake import SERVED_DOMAIN_PAIRS
 
 
 def register(app):
@@ -176,6 +179,17 @@ def register(app):
     def update_domain_cooccurrence(metric):
         return make_domain_cooccurrence(
             df_domain_cooccurrence,
+            metric=metric or "pct",
+        )
+
+    @app.callback(
+        Output("thematic-latent-demand", "figure"),
+        Input("thematic-latent-demand-metric", "value"),
+    )
+    def update_latent_demand(metric):
+        return make_latent_demand_cooccurrence(
+            df_latent_demand_cooccurrence,
+            SERVED_DOMAIN_PAIRS,
             metric=metric or "pct",
         )
 

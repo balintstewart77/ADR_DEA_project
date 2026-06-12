@@ -326,6 +326,113 @@ def make_researcher_sector_cooccurrence(
     return _apply_common(fig, height=height)
 
 
+def make_latent_demand_cooccurrence(
+    cooc: pd.DataFrame,
+    served_pairs: frozenset,
+    metric: str = "count",
+    height: int | None = None,
+) -> go.Figure:
+    """Domain co-occurrence over NO-LINKAGE projects, with served-pair overlay.
+
+    MIXED-LAYER figure: domains are LLM-inferred (unvalidated), the no-linkage
+    filter is deterministic. ``served_pairs`` is a set of frozenset domain
+    pairs covered by an existing linked product's component domains; those
+    cells get an open-circle marker. The diagonal (single-domain projects) is
+    excluded — the object of interest is pairs. ``metric`` mirrors
+    ``make_domain_cooccurrence``: counts or row-wise share P(column | row).
+    """
+    if cooc.empty:
+        return _apply_common(go.Figure(), height=height or 620)
+    domains = list(cooc.index)
+    if height is None:
+        height = 240 + 44 * len(domains)
+    counts = cooc.to_numpy(dtype=float).copy()
+    np.fill_diagonal(counts, np.nan)
+    domain_totals = cooc.attrs.get("domain_totals", {})
+    totals = np.array([
+        float(domain_totals.get(domain, np.nansum(counts[i])))
+        for i, domain in enumerate(domains)
+    ])
+    pct = np.divide(counts * 100, totals[:, None], out=np.full_like(counts, np.nan), where=totals[:, None] != 0)
+
+    show_pct = metric == "pct"
+    z = pct if show_pct else counts
+    z_hi = np.nanmax(z) if np.isfinite(z).any() else 0
+
+    annotations = []
+    hovertext = []
+    served_x, served_y = [], []
+    for i, yd in enumerate(domains):
+        hover_row = []
+        for j, xd in enumerate(domains):
+            if i == j:
+                hover_row.append(f"<b>{yd}</b><br>Diagonal excluded - pairs only")
+                continue
+            served = frozenset((yd, xd)) in served_pairs
+            if served:
+                served_x.append(xd)
+                served_y.append(yd)
+            cell_count = counts[i][j]
+            cell_pct = pct[i][j]
+            served_note = (
+                "Served by an existing linked product"
+                if served else "Not served by any linked product"
+            )
+            hover_row.append(
+                f"<b>{yd}</b> + <b>{xd}</b><br>"
+                f"{cell_count:.0f} no-linkage projects carry both<br>"
+                f"{cell_pct:.0f}% of {yd}<br>{served_note}"
+            )
+            val = z[i][j]
+            if not np.isfinite(val) or val == 0:
+                continue
+            text = f"{cell_pct:.0f}%" if show_pct else str(int(cell_count))
+            annotations.append(dict(
+                x=xd, y=yd, text=text, showarrow=False,
+                font=dict(size=10, color="white" if val > z_hi * 0.55 else "#2c3e50"),
+            ))
+        hovertext.append(hover_row)
+
+    fig = go.Figure(go.Heatmap(
+        z=z, x=domains, y=domains, text=hovertext,
+        colorscale="Purples", showscale=True, hoverongaps=False,
+        colorbar=dict(title="% of row domain" if show_pct else "Projects"),
+        hovertemplate="%{text}<extra></extra>",
+    ))
+    fig.add_trace(go.Scatter(
+        x=served_x, y=served_y,
+        mode="markers",
+        marker=dict(symbol="circle-open", size=14, color="#e76f51", line_width=2),
+        name="Pair served by an existing linked product",
+        hoverinfo="skip",
+        showlegend=True,
+    ))
+    fig.update_layout(
+        title="Latent Cross-Domain Demand (projects without record linkage)",
+        annotations=annotations,
+        xaxis=dict(side="bottom", tickangle=-35, automargin=True, tickmode="linear", tick0=0, dtick=1),
+        yaxis=dict(autorange="reversed", tickmode="linear", tick0=0, dtick=1),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom", y=1.10,
+            xanchor="left", x=0,
+        ),
+        margin=dict(l=240, t=150, b=190),
+    )
+    fig.add_annotation(
+        text="Diagonal (single-domain projects) excluded — the object of interest is domain pairs.",
+        xref="paper",
+        yref="paper",
+        x=0,
+        y=1.06,
+        showarrow=False,
+        xanchor="left",
+        yanchor="bottom",
+        font=dict(size=11, color="#7f8c8d"),
+    )
+    return _apply_common(fig, height=height)
+
+
 def make_cross_heatmap(
     df_cross: pd.DataFrame,
     row_col: str,

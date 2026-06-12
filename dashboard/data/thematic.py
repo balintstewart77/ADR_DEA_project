@@ -394,6 +394,18 @@ def load_thematic_data(thematic_dir):
         # How often pairs of substantive domains co-occur in the same project.
         df_domain_cooccurrence = _domain_cooccurrence(df_thematic_projects)
 
+        # Latent demand: domain co-occurrence over projects WITHOUT record
+        # linkage — researchers combining domains without any linked product.
+        # MIXED-LAYER: LLM-inferred domains crossed with deterministic linkage.
+        _no_linkage_mask = (
+            df_thematic_projects["record_linkage"].fillna("").astype(str).str.strip()
+            == "No record linkage"
+        ) if "record_linkage" in df_thematic_projects.columns else pd.Series(False, index=df_thematic_projects.index)
+        df_latent_demand_cooccurrence = _domain_cooccurrence(
+            df_thematic_projects[_no_linkage_mask]
+        )
+        latent_no_linkage_count = int(_no_linkage_mask.sum())
+
         # Apply project-id keying on df_thematic_projects
         if "Project ID" in df_thematic_projects.columns:
             df_thematic_projects[_PROJECT_ID_KEY_COL] = df_thematic_projects["Project ID"].apply(_project_id_key)
@@ -574,6 +586,8 @@ def load_thematic_data(thematic_dir):
             "df_thematic_covid_tag_by_domain": df_thematic_covid_tag_by_domain,
             "df_thematic_demographic_tag_by_domain": df_thematic_demographic_tag_by_domain,
             "df_domain_cooccurrence": df_domain_cooccurrence,
+            "df_latent_demand_cooccurrence": df_latent_demand_cooccurrence,
+            "LATENT_NO_LINKAGE_COUNT": latent_no_linkage_count,
             "df_record_linkage_totals": df_record_linkage_totals,
             "df_collection_method_totals": df_collection_method_totals,
             "df_temporal_structure_totals": df_temporal_structure_totals,
@@ -608,6 +622,8 @@ def load_thematic_data(thematic_dir):
             "df_thematic_covid_tag_by_domain": pd.DataFrame(),
             "df_thematic_demographic_tag_by_domain": pd.DataFrame(),
             "df_domain_cooccurrence": pd.DataFrame(),
+            "df_latent_demand_cooccurrence": pd.DataFrame(),
+            "LATENT_NO_LINKAGE_COUNT": 0,
             "df_record_linkage_totals": pd.DataFrame(),
             "df_collection_method_totals": pd.DataFrame(),
             "df_temporal_structure_totals": pd.DataFrame(),
@@ -645,6 +661,8 @@ df_thematic_tag_by_year = _thematic_data["df_thematic_tag_by_year"]
 df_thematic_covid_tag_by_domain = _thematic_data["df_thematic_covid_tag_by_domain"]
 df_thematic_demographic_tag_by_domain = _thematic_data["df_thematic_demographic_tag_by_domain"]
 df_domain_cooccurrence = _thematic_data["df_domain_cooccurrence"]
+df_latent_demand_cooccurrence = _thematic_data["df_latent_demand_cooccurrence"]
+LATENT_NO_LINKAGE_COUNT = _thematic_data["LATENT_NO_LINKAGE_COUNT"]
 df_record_linkage_totals = _thematic_data["df_record_linkage_totals"]
 df_collection_method_totals = _thematic_data["df_collection_method_totals"]
 df_temporal_structure_totals = _thematic_data["df_temporal_structure_totals"]
