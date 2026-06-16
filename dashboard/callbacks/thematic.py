@@ -18,6 +18,7 @@ from dashboard.data.thematic import (
     df_unit_totals,
     df_researcher_sector_totals,
     df_record_linkage_by_year,
+    df_record_linkage_by_quarter,
     df_collection_method_by_year,
     df_temporal_structure_by_year,
     df_unit_by_year,
@@ -213,11 +214,19 @@ def register(app):
     @app.callback(
         Output("deterministic-record-linkage-trend", "figure"),
         Input("deterministic-record-linkage-trend-metric", "value"),
+        Input("deterministic-record-linkage-trend-granularity", "value"),
     )
-    def update_record_linkage_trend(metric):
+    def update_record_linkage_trend(metric, granularity):
+        selected_granularity = granularity or "year"
+        source = (
+            df_record_linkage_by_quarter
+            if selected_granularity == "quarter"
+            else df_record_linkage_by_year
+        )
         return make_record_linkage_trend(
-            df_record_linkage_by_year,
+            source,
             metric=metric or "pct",
+            granularity=selected_granularity,
             partial_year_info=PARTIAL_YEAR_INFO,
         )
 

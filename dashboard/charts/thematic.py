@@ -94,6 +94,11 @@ def make_tag_domain_bar(
     fig = go.Figure()
     if df_totals.empty or "domain" not in df_totals.columns:
         return _apply_common(fig, height=height)
+    df_totals = df_totals[
+        df_totals["domain"].fillna("").astype(str) != "Unclear from Register Entry"
+    ].copy()
+    if df_totals.empty:
+        return _apply_common(fig, height=height)
     show_pct = metric == "pct"
     value_col = "pct_of_domain" if show_pct else "count"
     df_sorted = df_totals.sort_values(value_col, ascending=True, kind="stable")
@@ -117,7 +122,18 @@ def make_tag_domain_bar(
         title=title,
         xaxis_title="% of domain's projects" if show_pct else "Projects",
         yaxis_title="",
-        margin=dict(l=220),
+        margin=dict(l=220, b=80),
+    )
+    fig.add_annotation(
+        text="Excludes 'Unclear from Register Entry' (n=4 projects); its small size distorts percentage views.",
+        xref="paper",
+        yref="paper",
+        x=0,
+        y=-0.18,
+        showarrow=False,
+        xanchor="left",
+        yanchor="top",
+        font=dict(size=10, color="#7f8c8d"),
     )
     return _apply_common(fig, height=height)
 
@@ -172,14 +188,28 @@ def make_record_linkage_trend(
     df_by_year: pd.DataFrame,
     metric: str = "pct",
     height: int = 360,
+    granularity: str = "year",
     partial_year_info=None,
 ) -> go.Figure:
-    """Stacked area trend for record-linkage span by year."""
+    """Stacked area trend for record-linkage span by year or quarter."""
     fig = go.Figure()
     if df_by_year.empty:
         return _apply_common(fig, height=height)
 
     metric_col = "pct_of_projects" if metric == "pct" else "count"
+    is_quarter = granularity == "quarter" and "period_label" in df_by_year.columns
+    x_col = "period_label" if is_quarter else "Year"
+    sort_cols = ["period_date"] if is_quarter and "period_date" in df_by_year.columns else ["Year"]
+    period_axis_title = "Quarter" if is_quarter else "Year"
+    category_order = []
+    if is_quarter:
+        category_order = (
+            df_by_year[["period_label", "period_date"]]
+            .drop_duplicates()
+            .sort_values("period_date", kind="stable")["period_label"]
+            .astype(str)
+            .tolist()
+        )
     linkage_order = ["No record linkage", "Within-domain", "Cross-domain"]
     colours = {
         "No record linkage": "#8d99ae",
@@ -187,11 +217,11 @@ def make_record_linkage_trend(
         "Cross-domain": "#e76f51",
     }
     for linkage in linkage_order:
-        sub = df_by_year[df_by_year["record_linkage"] == linkage].sort_values("Year")
+        sub = df_by_year[df_by_year["record_linkage"] == linkage].sort_values(sort_cols)
         if sub.empty:
             continue
         fig.add_trace(go.Scatter(
-            x=sub["Year"],
+            x=sub[x_col],
             y=sub[metric_col],
             name=linkage,
             mode="lines",
@@ -207,9 +237,15 @@ def make_record_linkage_trend(
 
     fig.update_layout(
         title="Record Linkage Over Time",
-        xaxis_title="Year",
+        xaxis_title=period_axis_title,
         yaxis_title="% of projects" if metric == "pct" else "Projects",
-        xaxis_dtick=1,
+        xaxis=dict(
+            dtick=1 if not is_quarter else None,
+            type="category" if is_quarter else None,
+            categoryorder="array" if category_order else None,
+            categoryarray=category_order if category_order else None,
+            tickangle=-35 if is_quarter else 0,
+        ),
         yaxis=dict(range=[0, 100] if metric == "pct" else None),
         legend=dict(
             orientation="h",
@@ -220,7 +256,32 @@ def make_record_linkage_trend(
         ),
         margin=dict(r=160, t=112, b=56),
     )
-    _annotate_partial_year(fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info)
+    if is_quarter and category_order:
+        latest = category_order[-1]
+        fig.add_annotation(
+            x=latest,
+            y=1,
+            yref="paper",
+            text="latest quarter provisional — publication lag",
+            showarrow=True,
+            arrowhead=2,
+            ax=0,
+            ay=-34,
+            font=dict(size=10, color="#7f8c8d"),
+        )
+        fig.add_annotation(
+            text="Latest quarter provisional — publication lag.",
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=1.12,
+            showarrow=False,
+            xanchor="left",
+            yanchor="bottom",
+            font=dict(size=10, color="#7f8c8d"),
+        )
+    else:
+        _annotate_partial_year(fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info)
     return _apply_common(fig, height=height)
 
 
@@ -405,7 +466,8 @@ def make_latent_demand_cooccurrence(
 
     annotations = []
     hovertext = []
-    served_shapes = []
+    served_marker_x = []
+    served_marker_y = []
     for i, yd in enumerate(domains):
         hover_row = []
         for j, xd in enumerate(domains):
@@ -414,18 +476,8 @@ def make_latent_demand_cooccurrence(
                 continue
             served = frozenset((yd, xd)) in served_pairs
             if served:
-                served_shapes.append(dict(
-                    type="rect",
-                    xref="x",
-                    yref="y",
-                    x0=j - 0.5,
-                    x1=j + 0.5,
-                    y0=i - 0.5,
-                    y1=i + 0.5,
-                    line=dict(color="#e76f51", width=2.2),
-                    fillcolor="rgba(0,0,0,0)",
-                    layer="above",
-                ))
+                served_marker_x.append(j + 0.32)
+                served_marker_y.append(i)
             cell_count = counts[i][j]
             cell_pct = pct[i][j]
             served_note = (
@@ -454,17 +506,22 @@ def make_latent_demand_cooccurrence(
         hovertemplate="%{text}<extra></extra>",
     ))
     fig.add_trace(go.Scatter(
-        x=[None], y=[None],
+        x=served_marker_x,
+        y=served_marker_y,
         mode="markers",
-        marker=dict(symbol="square-open", size=13, color="#e76f51", line_width=2),
-        name="Outlined = domain-pair served by an existing linked product",
+        marker=dict(
+            symbol="circle",
+            size=9,
+            color="#00bcd4",
+            line=dict(color="#12343b", width=1.4),
+        ),
+        name="● = domain-pair served by an existing linked product",
         hoverinfo="skip",
         showlegend=True,
     ))
     fig.update_layout(
         title="Latent Cross-Domain Demand (projects without record linkage)",
         annotations=annotations,
-        shapes=served_shapes,
         xaxis=dict(
             side="bottom",
             tickangle=-35,
@@ -472,12 +529,13 @@ def make_latent_demand_cooccurrence(
             tickmode="array",
             tickvals=list(range(len(domains))),
             ticktext=domains,
+            range=[-0.5, len(domains) - 0.5],
         ),
         yaxis=dict(
-            autorange="reversed",
             tickmode="array",
             tickvals=list(range(len(domains))),
             ticktext=domains,
+            range=[len(domains) - 0.5, -0.5],
         ),
         legend=dict(
             orientation="h",

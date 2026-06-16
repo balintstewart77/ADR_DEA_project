@@ -214,6 +214,64 @@ def _record_linkage_by_year(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=columns)
 
 
+def _record_linkage_by_quarter(df: pd.DataFrame) -> pd.DataFrame:
+    columns = [
+        "Year", "Quarter", "period_date", "period_label",
+        "record_linkage", "count", "total", "pct_of_projects",
+    ]
+    required = {"Year", "Quarter", "record_linkage"}
+    if not required.issubset(df.columns):
+        return pd.DataFrame(columns=columns)
+
+    work = df[["Year", "Quarter", "record_linkage"]].copy()
+    work["Year"] = pd.to_numeric(work["Year"], errors="coerce")
+    work["Quarter"] = work["Quarter"].fillna("").astype(str).str.strip()
+    work["record_linkage"] = (
+        work["record_linkage"].fillna("").astype(str).str.strip().apply(_display_record_linkage)
+    )
+    work = work[
+        work["Year"].notna()
+        & (work["Quarter"] != "")
+        & (work["record_linkage"] != "")
+    ].copy()
+    if work.empty:
+        return pd.DataFrame(columns=columns)
+
+    periods = pd.PeriodIndex(work["Quarter"], freq="Q")
+    work["Year"] = work["Year"].astype(int)
+    work["period_date"] = periods.start_time
+    work["period_label"] = [f"{period.year} Q{period.quarter}" for period in periods]
+    period_order = (
+        work[["Quarter", "period_date", "period_label", "Year"]]
+        .drop_duplicates()
+        .sort_values("period_date", kind="stable")
+    )
+    linkage_order = [
+        value
+        for value in ["No record linkage", "Within-domain", "Cross-domain"]
+        if value in set(work["record_linkage"])
+    ]
+    grouped = work.groupby(["Quarter", "record_linkage"]).size()
+    totals = work.groupby("Quarter").size()
+    rows = []
+    for _, period in period_order.iterrows():
+        quarter = period["Quarter"]
+        total = int(totals.get(quarter, 0))
+        for linkage in linkage_order:
+            count = int(grouped.get((quarter, linkage), 0))
+            rows.append({
+                "Year": int(period["Year"]),
+                "Quarter": quarter,
+                "period_date": period["period_date"],
+                "period_label": period["period_label"],
+                "record_linkage": linkage,
+                "count": count,
+                "total": total,
+                "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+            })
+    return pd.DataFrame(rows, columns=columns)
+
+
 def _domain_record_linkage_crosstab(df: pd.DataFrame) -> pd.DataFrame:
     linkage_order = ["No record linkage", "Within-domain", "Cross-domain"]
     columns = ["domain", *linkage_order]
@@ -632,6 +690,7 @@ def load_thematic_data(thematic_dir):
             "researcher_sector",
         )
         df_record_linkage_by_year = _record_linkage_by_year(df_thematic_projects)
+        df_record_linkage_by_quarter = _record_linkage_by_quarter(df_thematic_projects)
         df_collection_method_by_year = _facet_values_by_year(
             df_thematic_projects, "dataset_collection_methods", "collection_method",
         )
@@ -665,6 +724,7 @@ def load_thematic_data(thematic_dir):
             "df_unit_totals": df_unit_totals,
             "df_researcher_sector_totals": df_researcher_sector_totals,
             "df_record_linkage_by_year": df_record_linkage_by_year,
+            "df_record_linkage_by_quarter": df_record_linkage_by_quarter,
             "df_collection_method_by_year": df_collection_method_by_year,
             "df_temporal_structure_by_year": df_temporal_structure_by_year,
             "df_unit_by_year": df_unit_by_year,
@@ -704,6 +764,7 @@ def load_thematic_data(thematic_dir):
             "df_unit_totals": pd.DataFrame(),
             "df_researcher_sector_totals": pd.DataFrame(),
             "df_record_linkage_by_year": pd.DataFrame(),
+            "df_record_linkage_by_quarter": pd.DataFrame(),
             "df_collection_method_by_year": pd.DataFrame(),
             "df_temporal_structure_by_year": pd.DataFrame(),
             "df_unit_by_year": pd.DataFrame(),
@@ -746,6 +807,7 @@ df_temporal_structure_totals = _thematic_data["df_temporal_structure_totals"]
 df_unit_totals = _thematic_data["df_unit_totals"]
 df_researcher_sector_totals = _thematic_data["df_researcher_sector_totals"]
 df_record_linkage_by_year = _thematic_data["df_record_linkage_by_year"]
+df_record_linkage_by_quarter = _thematic_data["df_record_linkage_by_quarter"]
 df_collection_method_by_year = _thematic_data["df_collection_method_by_year"]
 df_temporal_structure_by_year = _thematic_data["df_temporal_structure_by_year"]
 df_unit_by_year = _thematic_data["df_unit_by_year"]

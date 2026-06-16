@@ -8,7 +8,12 @@ from dashboard.charts.template import CHART_CONFIG, CHART_HEIGHT
 from dashboard.charts.uptake import make_exposure_rate_bar
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import BROWSE_TABLE_STYLES, ENRICHED_TABLE_STYLES
-from dashboard.data.uptake import PRODUCT_SUMMARY
+from dashboard.data.uptake import (
+    FLAGSHIP_PRODUCTS,
+    OTHER_PRODUCTS,
+    PRODUCT_SELECTION_OPTIONS,
+    PRODUCT_SUMMARY,
+)
 from dashboard import taxonomy
 from dashboard import reference_definitions
 from dashboard.config import REGISTER_SOURCE_ICON, DERIVED_FIELD_ICON
@@ -308,6 +313,8 @@ def _adoption_summary_table() -> dash_table.DataTable:
 
 
 def _uptake_accordion_item() -> dbc.AccordionItem:
+    flagship_count = len(FLAGSHIP_PRODUCTS)
+    other_count = len(OTHER_PRODUCTS)
     return dbc.AccordionItem(
         [
             html.P(
@@ -319,8 +326,9 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                 className="section-desc",
             ),
             html.P(
-                "ADR England flagship collections shown individually; all other linked datasets "
-                "aggregated. Lines begin at each dataset's availability. DEA-gateway use only.",
+                "ADR England flagship datasets are selected by default. Other linked datasets "
+                "can be added as a group or chosen individually. Lines begin at each dataset's "
+                "availability. DEA-gateway use only.",
                 className="section-desc text-muted",
             ),
             dbc.Row([
@@ -351,19 +359,37 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                     ),
                 ], md=3),
                 dbc.Col([
-                    html.Label("Display", className="filter-label"),
+                    html.Label("Dataset groups", className="filter-label"),
                     dcc.Checklist(
-                        id="uptake-adoption-display-options",
+                        id="uptake-adoption-group-toggles",
                         options=[
-                            {"label": "Show ADR England flagship lines", "value": "show_flagships"},
-                            {"label": "Break out Other linked datasets", "value": "breakout_other"},
+                            {
+                                "label": f"Show ADR England flagship datasets ({flagship_count})",
+                                "value": "flagship",
+                            },
+                            {
+                                "label": f"Show Other linked datasets ({other_count})",
+                                "value": "other",
+                            },
                         ],
-                        value=["show_flagships"],
+                        value=["flagship"],
                         inline=False,
                         inputStyle={"marginRight": "0.35rem"},
                         labelStyle={"display": "block", "fontSize": "0.88rem", "lineHeight": "1.55"},
                     ),
                 ], md=4),
+                dbc.Col([
+                    html.Label("Datasets shown", className="filter-label"),
+                    dcc.Dropdown(
+                        id="uptake-adoption-products",
+                        options=PRODUCT_SELECTION_OPTIONS,
+                        value=FLAGSHIP_PRODUCTS,
+                        multi=True,
+                        clearable=True,
+                        searchable=True,
+                        placeholder="Choose linked datasets",
+                    ),
+                ], md=12),
             ], className="mb-2 g-2"),
             _graph("uptake-adoption-curves", height=UPTAKE_CURVES_HEIGHT),
             html.H6("Adoption summary", className="mt-3"),
@@ -378,8 +404,8 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                 "exposures are initial-adoption rates, not sustained demand.",
                 className="section-desc",
             ),
-            dbc.Row([
-                dbc.Col(
+            html.Div(
+                [
                     dcc.Graph(
                         id="uptake-exposure-rate-bar",
                         figure=make_exposure_rate_bar(PRODUCT_SUMMARY),
@@ -387,13 +413,10 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                         responsive=True,
                         style={"height": f"{UPTAKE_EXPOSURE_BAR_HEIGHT}px"},
                     ),
-                    lg=5,
-                ),
-                dbc.Col(
                     html.Div(_adoption_summary_table(), className="dea-table mb-2"),
-                    lg=7,
-                ),
-            ], className="g-3"),
+                ],
+                className="g-3",
+            ),
         ],
         title="Linked data uptake",
     )
@@ -412,7 +435,7 @@ def _latent_demand_accordion_item() -> dbc.AccordionItem:
             html.P(
                 f"Domain co-occurrence computed ONLY over the {LATENT_NO_LINKAGE_COUNT:,} "
                 "classified projects with no record linkage — researchers combining domains "
-                "without using any linked product. Outlined cells mark domain pairs already "
+                "without using any linked product. Dot-marked cells indicate domain pairs already "
                 "served by an existing linked product (the pair is contained in some product's "
                 "component domains). Reading: a heavy unserved cell suggests latent demand for "
                 "a new cross-domain asset; a heavy served cell suggests an awareness gap or "
@@ -539,6 +562,21 @@ def _analyses_accordion():
                         ),
                     ], className="g-3"),
                     _metric_dropdown("deterministic-record-linkage-trend-metric"),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Label("Granularity", className="filter-label"),
+                            dcc.Dropdown(
+                                id="deterministic-record-linkage-trend-granularity",
+                                options=[
+                                    {"label": "Year", "value": "year"},
+                                    {"label": "Quarter", "value": "quarter"},
+                                ],
+                                value="year",
+                                clearable=False,
+                                searchable=False,
+                            ),
+                        ], md=3),
+                    ], className="mb-2 g-2"),
                     _graph(
                         "deterministic-record-linkage-trend",
                         height=RECORD_LINKAGE_TREND_HEIGHT,

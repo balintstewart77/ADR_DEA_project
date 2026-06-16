@@ -232,6 +232,25 @@ PRODUCT_METADATA = pd.DataFrame([
     for product in LINKED_PRODUCTS
 ])
 
+FLAGSHIP_PRODUCTS = [
+    product["canonical"]
+    for product in LINKED_PRODUCTS
+    if product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION
+]
+OTHER_PRODUCTS = [
+    product["canonical"]
+    for product in LINKED_PRODUCTS
+    if product["flagship_collection"] != ADR_ENGLAND_FLAGSHIP_COLLECTION
+]
+ALL_PRODUCT_SELECTION = [*FLAGSHIP_PRODUCTS, *OTHER_PRODUCTS]
+PRODUCT_SELECTION_OPTIONS = [
+    {
+        "label": f"{product['short']} — {product['canonical']}",
+        "value": product["canonical"],
+    }
+    for product in LINKED_PRODUCTS
+]
+
 
 def _product_availability_date(product: str) -> pd.Timestamp | None:
     record = _linked_product_by_canonical.get(product)
@@ -331,15 +350,9 @@ def _with_product_metadata(frame: pd.DataFrame) -> pd.DataFrame:
 def adoption_curve_table(
     granularity: str = "year",
     *,
-    show_flagships: bool = True,
-    break_out_other: bool = False,
+    selected_products: list[str] | None = None,
 ) -> pd.DataFrame:
-    """Grouped adoption-curve rows for the linked-data uptake chart.
-
-    ADR England flagship products are shown individually by default. Non-
-    flagship linked products are summed into a single "Other linked datasets"
-    line unless the caller requests a constituent-line breakout.
-    """
+    """Per-product adoption-curve rows for selected linked products."""
     source = DF_PRODUCT_BY_QUARTER if granularity == "quarter" else DF_PRODUCT_BY_YEAR
     if source.empty:
         return pd.DataFrame(columns=[
@@ -348,49 +361,24 @@ def adoption_curve_table(
             "total", "pct_of_projects",
         ])
     work = _with_product_metadata(source)
-    rows = []
-    if show_flagships:
-        flagship = work[work["is_adr_england_flagship"]].copy()
-        if not flagship.empty:
-            flagship["line_id"] = flagship["product"]
-            flagship["line_label"] = flagship["short"]
-            flagship["line_group"] = "ADR England flagship"
-            flagship["line_linkage_span"] = flagship["linkage_span"]
-            rows.append(flagship)
-
-    other = work[~work["is_adr_england_flagship"]].copy()
-    if not other.empty:
-        if break_out_other:
-            other["line_id"] = other["product"]
-            other["line_label"] = other["short"]
-            other["line_group"] = OTHER_LINKED_DATASETS_LABEL
-            other["line_linkage_span"] = other["linkage_span"]
-            rows.append(other)
-        else:
-            group_cols = ["period_date", "period_label", "Year"]
-            if "quarter_date" in other.columns:
-                group_cols.append("quarter_date")
-            grouped = (
-                other.groupby(group_cols, as_index=False, sort=True)
-                .agg(count=("count", "sum"), total=("total", "first"))
-            )
-            grouped["pct_of_projects"] = (
-                grouped["count"] / grouped["total"].replace(0, pd.NA) * 100
-            ).fillna(0).round(1)
-            grouped["product"] = OTHER_LINKED_DATASETS_LABEL
-            grouped["line_id"] = OTHER_LINKED_DATASETS_LABEL
-            grouped["line_label"] = OTHER_LINKED_DATASETS_LABEL
-            grouped["line_group"] = OTHER_LINKED_DATASETS_LABEL
-            grouped["line_linkage_span"] = "Mixed"
-            rows.append(grouped)
-
-    if not rows:
+    selected = list(dict.fromkeys(selected_products or []))
+    if not selected:
         return pd.DataFrame(columns=[
             "line_id", "line_label", "line_group", "line_linkage_span",
             "product", "period_date", "period_label", "Year", "count",
             "total", "pct_of_projects",
         ])
-    result = pd.concat(rows, ignore_index=True, sort=False)
+    result = work[work["product"].isin(selected)].copy()
+    if result.empty:
+        return pd.DataFrame(columns=[
+            "line_id", "line_label", "line_group", "line_linkage_span",
+            "product", "period_date", "period_label", "Year", "count",
+            "total", "pct_of_projects",
+        ])
+    result["line_id"] = result["product"]
+    result["line_label"] = result["short"]
+    result["line_group"] = result["flagship_group"]
+    result["line_linkage_span"] = result["linkage_span"]
     sort_cols = [col for col in ["line_group", "line_label", "period_date"] if col in result.columns]
     return result.sort_values(sort_cols, kind="stable").reset_index(drop=True)
 

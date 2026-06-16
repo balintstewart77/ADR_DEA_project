@@ -18,7 +18,10 @@ from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 from dashboard.data import thematic as thematic_data
 from dashboard.data.registry import PARTIAL_YEAR_INFO
 from dashboard.data.uptake import (
+    ALL_PRODUCT_SELECTION,
+    FLAGSHIP_PRODUCTS,
     OTHER_LINKED_DATASETS_LABEL,
+    OTHER_PRODUCTS,
     SERVED_DOMAIN_PAIRS,
     adoption_curve_table,
 )
@@ -224,16 +227,15 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
     def test_uptake_adoption_toggle_renders_both_metrics_and_granularities(self):
         for granularity in ("year", "quarter"):
             for metric in ("pct", "count"):
-                for break_out_other in (False, True):
+                for selected_products in (FLAGSHIP_PRODUCTS, OTHER_PRODUCTS, ALL_PRODUCT_SELECTION, []):
                     with self.subTest(
                         metric=metric,
                         granularity=granularity,
-                        break_out_other=break_out_other,
+                        selected=len(selected_products),
                     ):
                         frame = adoption_curve_table(
                             granularity,
-                            show_flagships=True,
-                            break_out_other=break_out_other,
+                            selected_products=selected_products,
                         )
                         fig = make_adoption_curves(
                             frame,
@@ -246,19 +248,22 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                             EXPECTED_TOGGLE_GRAPH_HEIGHTS["uptake-adoption-curves"],
                         )
                         payload = fig.to_plotly_json()
-                        expected_order = (
-                            frame[["period_label", "period_date"]]
-                            .drop_duplicates()
-                            .sort_values("period_date", kind="stable")["period_label"]
-                            .astype(str)
-                            .tolist()
-                        )
-                        self.assertEqual(
-                            list(payload["layout"]["xaxis"]["categoryarray"]),
-                            expected_order,
-                        )
+                        if frame.empty:
+                            self.assertNotIn("categoryarray", payload["layout"].get("xaxis", {}))
+                        else:
+                            expected_order = (
+                                frame[["period_label", "period_date"]]
+                                .drop_duplicates()
+                                .sort_values("period_date", kind="stable")["period_label"]
+                                .astype(str)
+                                .tolist()
+                            )
+                            self.assertEqual(
+                                list(payload["layout"]["xaxis"]["categoryarray"]),
+                                expected_order,
+                            )
 
-    def test_uptake_adoption_default_groups_flagships_and_aggregates_other(self):
+    def test_uptake_adoption_selects_individual_products_without_other_aggregate(self):
         expected_flagship_products = {
             "Longitudinal Education Outcomes (LEO)",
             "Education and Child Health Insights from Linked Data (ECHILD)",
@@ -274,27 +279,67 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             "EOL",
         }
 
-        default = adoption_curve_table("year", show_flagships=True, break_out_other=False)
+        default = adoption_curve_table("year", selected_products=FLAGSHIP_PRODUCTS)
         default_lines = set(default["line_id"].dropna().unique())
-        self.assertEqual(default_lines, expected_flagship_products | {OTHER_LINKED_DATASETS_LABEL})
+        self.assertEqual(default_lines, expected_flagship_products)
         self.assertTrue(non_england_flagships.isdisjoint(default_lines))
-        self.assertEqual(
-            set(default.loc[
-                default["line_id"] == OTHER_LINKED_DATASETS_LABEL,
-                "line_group",
-            ].unique()),
-            {OTHER_LINKED_DATASETS_LABEL},
-        )
 
-        breakout = adoption_curve_table("year", show_flagships=True, break_out_other=True)
-        breakout_lines = set(breakout["line_id"].dropna().unique())
-        self.assertTrue(expected_flagship_products.issubset(breakout_lines))
-        self.assertTrue(non_england_flagships.issubset(breakout_lines))
-        self.assertNotIn(OTHER_LINKED_DATASETS_LABEL, breakout_lines)
+        all_selected = adoption_curve_table("year", selected_products=ALL_PRODUCT_SELECTION)
+        all_lines = set(all_selected["line_id"].dropna().unique())
+        self.assertTrue(expected_flagship_products.issubset(all_lines))
+        self.assertTrue(non_england_flagships.issubset(all_lines))
+        self.assertNotIn(OTHER_LINKED_DATASETS_LABEL, all_lines)
         for product in non_england_flagships:
             with self.subTest(other_product=product):
-                groups = set(breakout.loc[breakout["line_id"] == product, "line_group"].unique())
+                groups = set(all_selected.loc[all_selected["line_id"] == product, "line_group"].unique())
                 self.assertEqual(groups, {OTHER_LINKED_DATASETS_LABEL})
+
+    def test_record_linkage_quarterly_trend_has_height_and_provisional_flag(self):
+        frame = thematic_data.df_record_linkage_by_quarter
+        fig = make_record_linkage_trend(
+            frame,
+            metric="pct",
+            granularity="quarter",
+            partial_year_info=PARTIAL_YEAR_INFO,
+        )
+        self._assert_serialises(
+            fig,
+            EXPECTED_TOGGLE_GRAPH_HEIGHTS["deterministic-record-linkage-trend"],
+        )
+        payload = fig.to_plotly_json()
+        expected_order = (
+            frame[["period_label", "period_date"]]
+            .drop_duplicates()
+            .sort_values("period_date", kind="stable")["period_label"]
+            .astype(str)
+            .tolist()
+        )
+        self.assertEqual(list(payload["layout"]["xaxis"]["categoryarray"]), expected_order)
+        annotation_text = " ".join(
+            str(annotation.get("text", ""))
+            for annotation in payload["layout"].get("annotations", [])
+        )
+        self.assertIn("latest quarter provisional", annotation_text)
+
+    def test_tag_domain_bars_exclude_unclear_display_only(self):
+        self.assertIn(
+            "Unclear from Register Entry",
+            set(thematic_data.df_thematic_covid_tag_by_domain["domain"]),
+        )
+        fig = make_tag_domain_bar(
+            thematic_data.df_thematic_covid_tag_by_domain,
+            DOMAIN_COLOURS,
+            "COVID-19 & Pandemic by domain",
+            metric="pct",
+        )
+        payload = fig.to_plotly_json()
+        y_values = list(payload["data"][0]["y"])
+        self.assertNotIn("Unclear from Register Entry", y_values)
+        annotation_text = " ".join(
+            str(annotation.get("text", ""))
+            for annotation in payload["layout"].get("annotations", [])
+        )
+        self.assertIn("Excludes 'Unclear from Register Entry' (n=4 projects)", annotation_text)
 
     def test_toggle_graph_components_have_fixed_render_height(self):
         # Collapse-on-re-render regression: the dcc.Graph container itself must
@@ -342,7 +387,10 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             "thematic-tag-trend.figure": {"thematic-tag-trend-metric.value"},
             "thematic-covid-tag-domain.figure": {"thematic-covid-tag-domain-metric.value"},
             "thematic-demographic-tag-domain.figure": {"thematic-demographic-tag-domain-metric.value"},
-            "deterministic-record-linkage-trend.figure": {"deterministic-record-linkage-trend-metric.value"},
+            "deterministic-record-linkage-trend.figure": {
+                "deterministic-record-linkage-trend-metric.value",
+                "deterministic-record-linkage-trend-granularity.value",
+            },
             "deterministic-domain-linkage-breakdown.figure": {"deterministic-domain-linkage-metric.value"},
             "deterministic-collection-method-trend.figure": {"deterministic-collection-method-trend-metric.value"},
             "deterministic-temporal-structure-trend.figure": {"deterministic-temporal-structure-trend-metric.value"},
@@ -351,7 +399,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             "uptake-adoption-curves.figure": {
                 "uptake-adoption-metric.value",
                 "uptake-adoption-granularity.value",
-                "uptake-adoption-display-options.value",
+                "uptake-adoption-products.value",
             },
         }
         callback_by_output = {}

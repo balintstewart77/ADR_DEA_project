@@ -55,12 +55,7 @@ def make_adoption_curves(
         span = str(sub["line_linkage_span"].iloc[0])
         label = str(sub["line_label"].iloc[0])
         group = str(sub["line_group"].iloc[0])
-        if group == "ADR England flagship":
-            name = label
-        elif label == "Other linked datasets":
-            name = label
-        else:
-            name = f"{label} (other)"
+        name = label if group == "ADR England flagship" else f"{label} (other)"
         dash = "solid" if span == "Cross-domain" else "dash" if span == "Within-domain" else "dot"
         fig.add_trace(go.Scatter(
             x=sub[x_col], y=sub[metric_col],
@@ -103,9 +98,8 @@ def make_adoption_curves(
     )
     fig.add_annotation(
         text=(
-            "ADR England flagship collections shown individually; all other linked datasets "
-            "aggregated. Lines begin at each dataset's availability. DEA-gateway use only. "
-            "Solid = cross-domain; dashed = within-domain; dotted = mixed aggregate."
+            "Selected linked datasets shown individually. Lines begin at each dataset's "
+            "availability. DEA-gateway use only. Solid = cross-domain; dashed = within-domain."
         ),
         xref="paper", yref="paper",
         x=0, y=1.07, showarrow=False,
