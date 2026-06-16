@@ -638,6 +638,9 @@ def load_thematic_data(thematic_dir):
         df_temporal_structure_by_year = _facet_values_by_year(
             df_thematic_projects, "dataset_temporal_structures", "temporal_structure",
         )
+        df_unit_by_year = _facet_values_by_year(
+            df_thematic_projects, "dataset_units", "unit_of_observation",
+        )
         df_domain_record_linkage = _domain_record_linkage_crosstab(df_thematic_projects)
         df_researcher_sector_cooccurrence, researcher_sector_excluded_count = (
             _researcher_sector_cooccurrence(df_thematic_projects)
@@ -664,6 +667,7 @@ def load_thematic_data(thematic_dir):
             "df_record_linkage_by_year": df_record_linkage_by_year,
             "df_collection_method_by_year": df_collection_method_by_year,
             "df_temporal_structure_by_year": df_temporal_structure_by_year,
+            "df_unit_by_year": df_unit_by_year,
             "df_domain_record_linkage": df_domain_record_linkage,
             "df_researcher_sector_cooccurrence": df_researcher_sector_cooccurrence,
             "RESEARCHER_SECTOR_EXCLUDED_COUNT": researcher_sector_excluded_count,
@@ -702,6 +706,7 @@ def load_thematic_data(thematic_dir):
             "df_record_linkage_by_year": pd.DataFrame(),
             "df_collection_method_by_year": pd.DataFrame(),
             "df_temporal_structure_by_year": pd.DataFrame(),
+            "df_unit_by_year": pd.DataFrame(),
             "df_domain_record_linkage": pd.DataFrame(),
             "df_researcher_sector_cooccurrence": pd.DataFrame(),
             "RESEARCHER_SECTOR_EXCLUDED_COUNT": 0,
@@ -743,6 +748,7 @@ df_researcher_sector_totals = _thematic_data["df_researcher_sector_totals"]
 df_record_linkage_by_year = _thematic_data["df_record_linkage_by_year"]
 df_collection_method_by_year = _thematic_data["df_collection_method_by_year"]
 df_temporal_structure_by_year = _thematic_data["df_temporal_structure_by_year"]
+df_unit_by_year = _thematic_data["df_unit_by_year"]
 df_domain_record_linkage = _thematic_data["df_domain_record_linkage"]
 df_researcher_sector_cooccurrence = _thematic_data["df_researcher_sector_cooccurrence"]
 RESEARCHER_SECTOR_EXCLUDED_COUNT = _thematic_data["RESEARCHER_SECTOR_EXCLUDED_COUNT"]

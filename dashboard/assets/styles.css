@@ -358,6 +358,13 @@
     width: 100%;
     border-collapse: collapse;
 }
+.taxonomy-defs h4 {
+    margin-top: 1.75rem;
+    margin-bottom: 0.85rem;
+}
+.taxonomy-defs h4:first-child {
+    margin-top: 0;
+}
 .taxonomy-defs th,
 .taxonomy-defs td {
     padding: 0.45rem 0;
@@ -370,6 +377,25 @@
     padding-right: 2.5rem;
     font-weight: 600;
     color: #2c3e50;
+}
+.deterministic-defs details,
+.deterministic-defs details p,
+.deterministic-defs details li {
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+.deterministic-defs summary {
+    cursor: pointer;
+    color: #2c3e50;
+    font-weight: 600;
+}
+.subsection-heading {
+    margin-top: 1.75rem;
+    margin-bottom: 0.85rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e3ebf3;
+    color: #2c3e50;
+    font-weight: 700;
 }
 
 /* Page background */

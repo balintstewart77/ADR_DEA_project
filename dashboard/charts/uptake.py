@@ -15,48 +15,73 @@ _PRODUCT_PALETTE = [
 
 
 def make_adoption_curves(
-    df_product_by_year: pd.DataFrame,
-    products: list[str],
-    short_by_product: dict[str, str],
-    span_by_product: dict[str, str],
+    df_adoption: pd.DataFrame,
     metric: str = "count",
+    granularity: str = "year",
     height: int = 460,
     partial_year_info=None,
 ) -> go.Figure:
-    """Per-product adoption curves: projects per year for each linked product.
+    """Per-product adoption curves for each linked product.
 
     Cross-domain products draw solid, within-domain dashed, so the two kinds
-    stay distinguishable however many products are selected.
+    stay distinguishable however many products are selected. The data frame is
+    already clipped so each product starts at its availability period.
     """
     fig = go.Figure()
+    if df_adoption.empty:
+        return _apply_common(fig, height=height)
     metric_col = "pct_of_projects" if metric == "pct" else "count"
-    for i, product in enumerate(products):
-        sub = df_product_by_year[df_product_by_year["product"] == product].sort_values("Year")
+    x_col = "period_label" if "period_label" in df_adoption.columns else "Year"
+    period_label = "Quarter" if granularity == "quarter" else "Year"
+    share_label = "% of quarter's projects" if granularity == "quarter" else "% of year's projects"
+    line_ids = list(dict.fromkeys(df_adoption["line_id"].dropna().astype(str)))
+    for i, line_id in enumerate(line_ids):
+        sort_cols = [
+            col for col in ["period_date", "Year", "period_label"]
+            if col in df_adoption.columns
+        ]
+        sub = df_adoption[df_adoption["line_id"].astype(str) == line_id].sort_values(sort_cols)
         if sub.empty:
             continue
-        span = span_by_product.get(product, "Within-domain")
-        short = short_by_product.get(product, product)
+        span = str(sub["line_linkage_span"].iloc[0])
+        label = str(sub["line_label"].iloc[0])
+        group = str(sub["line_group"].iloc[0])
+        if group == "ADR England flagship":
+            name = label
+        elif label == "Other linked datasets":
+            name = label
+        else:
+            name = f"{label} (other)"
+        dash = "solid" if span == "Cross-domain" else "dash" if span == "Within-domain" else "dot"
         fig.add_trace(go.Scatter(
-            x=sub["Year"], y=sub[metric_col],
+            x=sub[x_col], y=sub[metric_col],
             mode="lines+markers",
-            name=f"{short} ({span.lower()})",
+            name=name,
             line=dict(
                 color=_PRODUCT_PALETTE[i % len(_PRODUCT_PALETTE)],
                 width=2.5,
-                dash="solid" if span == "Cross-domain" else "dash",
+                dash=dash,
             ),
             marker=dict(size=6),
+            customdata=sub[["line_group", "line_linkage_span"]].to_numpy(),
             hovertemplate=(
-                f"<b>{product}</b><br>{span} product<br>%{{x}}<br>"
-                + ("%{y:.1f}% of year's projects" if metric == "pct" else "%{y} projects")
+                f"<b>{name}</b><br>"
+                "%{customdata[0]}<br>"
+                "%{customdata[1]} linked product span<br>"
+                "%{x}<br>"
+                + (f"%{{y:.1f}}{share_label}" if metric == "pct" else "%{y} projects")
                 + "<extra></extra>"
             ),
         ))
     fig.update_layout(
         title="Linked-Product Adoption Curves",
-        xaxis_title="Year",
-        yaxis_title="% of year's projects" if metric == "pct" else "Projects",
-        xaxis_dtick=1,
+        xaxis_title=period_label,
+        yaxis_title=share_label if metric == "pct" else "Projects",
+        xaxis=dict(
+            dtick=1 if granularity == "year" else None,
+            tickangle=-35 if granularity == "quarter" else 0,
+            type="category" if x_col == "period_label" else None,
+        ),
         legend=dict(
             orientation="v",
             yanchor="top", y=1,
@@ -66,14 +91,75 @@ def make_adoption_curves(
         margin=dict(r=240, t=96),
     )
     fig.add_annotation(
-        text="Solid = cross-domain product; dashed = within-domain product.",
+        text=(
+            "ADR England flagship collections shown individually; all other linked datasets "
+            "aggregated. Lines begin at each dataset's availability. DEA-gateway use only. "
+            "Solid = cross-domain; dashed = within-domain; dotted = mixed aggregate."
+        ),
         xref="paper", yref="paper",
         x=0, y=1.07, showarrow=False,
         xanchor="left", yanchor="bottom",
         font=dict(size=10, color="#7f8c8d"),
     )
-    _annotate_partial_year(
-        fig, years=df_product_by_year["Year"].unique(), partial_year_info=partial_year_info,
+    if granularity == "year" and "Year" in df_adoption.columns:
+        _annotate_partial_year(
+            fig, years=df_adoption["Year"].unique(), partial_year_info=partial_year_info,
+        )
+    return _apply_common(fig, height=height)
+
+
+def make_exposure_rate_bar(
+    product_summary: pd.DataFrame,
+    height: int = 520,
+) -> go.Figure:
+    """Projects per exposure-year by linked product, with exposure shown."""
+    fig = go.Figure()
+    if product_summary.empty:
+        return _apply_common(fig, height=height)
+    work = product_summary.copy()
+    work = work[work["projects_per_exposure_year"].notna()].copy()
+    if work.empty:
+        return _apply_common(fig, height=height)
+    work = work.sort_values("projects_per_exposure_year", ascending=True, kind="stable")
+    colours = work["is_adr_england_flagship"].map({
+        True: "#2a9d8f",
+        False: "#8d99ae",
+    }).tolist()
+    fig.add_trace(go.Bar(
+        y=work["short"],
+        x=work["projects_per_exposure_year"],
+        orientation="h",
+        marker_color=colours,
+        text=work["projects_per_exposure_year"].map(lambda value: f"{value:.1f}"),
+        textposition="outside",
+        cliponaxis=False,
+        customdata=work[["product", "flagship_group", "total_projects", "exposure_years"]].to_numpy(),
+        hovertemplate=(
+            "<b>%{customdata[0]}</b><br>"
+            "%{customdata[1]}<br>"
+            "%{x:.1f} projects per exposure-year<br>"
+            "%{customdata[2]} total projects<br>"
+            "%{customdata[3]:.1f} exposure years"
+            "<extra></extra>"
+        ),
+    ))
+    fig.update_layout(
+        title="Projects per Exposure-Year",
+        xaxis_title="Projects per exposure-year",
+        yaxis_title="",
+        showlegend=False,
+        margin=dict(l=150, r=60, t=92, b=56),
+    )
+    fig.add_annotation(
+        text=(
+            "Teal = ADR England flagship; grey = Other linked datasets. "
+            "Exposure-years are counted from availability within the register window; "
+            "short exposures are initial-adoption rates."
+        ),
+        xref="paper", yref="paper",
+        x=0, y=1.08, showarrow=False,
+        xanchor="left", yanchor="bottom",
+        font=dict(size=10, color="#7f8c8d"),
     )
     return _apply_common(fig, height=height)
 

@@ -359,6 +359,50 @@ class AdjudicatedDecisionsTest(unittest.TestCase):
         self.assertEqual(echild["curated_date"], _availability_to_timestamp("2024-Q3"))
         self.assertEqual(echild["announced_date"], _availability_to_timestamp("2021"))
 
+    # 17. ADR England flagship membership is human-adjudicated for dashboard
+    # uptake grouping. This is intentionally the England collection, not the
+    # full UK-wide ADR UK flagship catalogue: NI/Scotland/Wales flagships remain
+    # genuine flagships but are grouped under "Other linked datasets" here.
+    def test_adr_england_flagship_membership_is_curated(self):
+        expected_flagship_products = {
+            "Longitudinal Education Outcomes (LEO)",
+            "Education and Child Health Insights from Linked Data (ECHILD)",
+            "MoJ Data First",
+            "Growing Up in England (GUIE)",
+            "GRading and Admissions Data England (GRADE)",
+            "Administrative Data | Agricultural Research Collection (AD|ARC)",
+            "Annual Survey of Hours and Earnings linked to Census 2011",
+            "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment",
+        }
+        expected_non_england_flagships = {
+            "Earnings and Employees Study (EES) 2011 - Northern Ireland",
+            "EOL",
+        }
+        source = self.reference["adr_england_flagship_source"]
+        note = self.reference["adr_england_flagship_note"]
+        self.assertEqual(source, "https://www.adruk.org/data-access/flagship-datasets/")
+        self.assertIn("ADR *England* collection specifically", note)
+        self.assertIn("They appear in 'Other linked datasets'.", note)
+
+        flagged = {
+            canonical
+            for canonical, product in self.linked_products.items()
+            if product.get("flagship_collection") == "ADR England"
+        }
+        self.assertEqual(flagged, expected_flagship_products)
+        for canonical in expected_flagship_products:
+            with self.subTest(flagship=canonical):
+                product = self.linked_products[canonical]
+                self.assertEqual(product.get("flagship_collection"), "ADR England")
+                self.assertEqual(product.get("flagship_source"), source)
+                self.assertEqual(product.get("flagship_note"), note)
+        for canonical in expected_non_england_flagships:
+            with self.subTest(non_england_flagship=canonical):
+                self.assertNotEqual(
+                    self.linked_products[canonical].get("flagship_collection"),
+                    "ADR England",
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

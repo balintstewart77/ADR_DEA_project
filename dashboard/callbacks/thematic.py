@@ -20,6 +20,7 @@ from dashboard.data.thematic import (
     df_record_linkage_by_year,
     df_collection_method_by_year,
     df_temporal_structure_by_year,
+    df_unit_by_year,
     df_domain_record_linkage,
     df_researcher_sector_cooccurrence,
     RESEARCHER_SECTOR_EXCLUDED_COUNT,
@@ -261,6 +262,24 @@ def register(app):
             {"Cross-sectional": "#f4a261", "Longitudinal": "#6a3d9a"},
             metric,
             "Temporal Structure Over Time",
+        )
+
+    @app.callback(
+        Output("deterministic-unit-trend", "figure"),
+        Input("deterministic-unit-trend-metric", "value"),
+    )
+    def update_unit_trend(metric):
+        return _facet_trend_figure(
+            df_unit_by_year,
+            "unit_of_observation",
+            {
+                "Individual": "#2a9d8f",
+                "Household": "#e9c46a",
+                "Business": "#264653",
+                "Area": "#e76f51",
+            },
+            metric,
+            "Unit of Observation Over Time",
         )
 
     @app.callback(

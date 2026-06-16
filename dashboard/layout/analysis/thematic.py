@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 
 from dashboard.charts.template import CHART_CONFIG
+from dashboard.charts.uptake import make_exposure_rate_bar
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import BROWSE_TABLE_STYLES, ENRICHED_TABLE_STYLES
 from dashboard.data.uptake import PRODUCT_SUMMARY
@@ -26,7 +27,7 @@ from dashboard.data.thematic import (
     _DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
 )
 
-_MD_STYLE = {"fontSize": "0.85rem", "lineHeight": "1.6"}
+_MD_STYLE = {"fontSize": "0.88rem", "lineHeight": "1.6"}
 
 
 def _md_table(layer: str) -> str:
@@ -127,7 +128,53 @@ def _deterministic_definitions_section() -> html.Div:
             _deterministic_facet_definition(facet)
             for facet in reference_definitions.deterministic_facets()
         ],
-    ])
+    ], className="deterministic-defs")
+
+
+_glossary_md = """
+| Acronym | Full term |
+|---|---|
+| ADR | Administrative Data Research |
+| ADR UK | Administrative Data Research UK |
+| AD\\|ARC | Administrative Data \\| Agricultural Research Collection |
+| ALB | Arm's-length body |
+| API | Application programming interface |
+| ASHE | Annual Survey of Hours and Earnings |
+| BSD | Business Structure Database |
+| CPI | Consumer Prices Index |
+| DEA | Digital Economy Act |
+| DfE | Department for Education |
+| DWP | Department for Work and Pensions |
+| ECHILD | Education and Child Health Insights from Linked Data |
+| EES | Earnings and Employees Study |
+| EOL | Education Outcomes Linkage |
+| GRADE | Grading and Admissions Data for England |
+| GVA | Gross Value Added |
+| GUIE | Growing Up in England |
+| HES | Hospital Episode Statistics |
+| HEI | Higher education institution |
+| HMRC | HM Revenue and Customs |
+| IDBR | Inter-Departmental Business Register |
+| ILR | Individualised Learner Record |
+| LEO | Longitudinal Education Outcomes |
+| LLM | Large language model |
+| LS | Longitudinal Study |
+| MoJ | Ministry of Justice |
+| NDPB | Non-departmental public body |
+| NHS | National Health Service |
+| NINo | National Insurance number |
+| NISRA | Northern Ireland Statistics and Research Agency |
+| NMC | Nursing and Midwifery Council |
+| NPD | National Pupil Database |
+| ONS | Office for National Statistics |
+| PAYE | Pay As You Earn |
+| PHDA | Public Health Data Asset |
+| PPI | Producer Price Index |
+| SRS | Secure Research Service |
+| UCAS | Universities and Colleges Admissions Service |
+| VOA | Valuation Office Agency |
+| WED | Wage and Employment Dynamics programme; its datasets are named individually, e.g. ASHE linked to Census or PAYE/Self-Assessment. |
+"""
 
 
 _thematic_methodology_md = f"""
@@ -167,8 +214,6 @@ What the project is about. Assigned from the datasets and research question:
 What analytical purpose the project serves:
 
 {_md_table(taxonomy.LAYER_C_PURPOSE)}
-
-&nbsp;
 
 #### Cross-Cutting Tag (zero or more, orthogonal to the classifications)
 
@@ -222,25 +267,22 @@ def _adoption_summary_table() -> dash_table.DataTable:
     display["delivery_display"] = display["delivery_lag_years"].map(
         lambda v: "—" if pd.isna(v) else f"{v:.1f}"
     )
-    display["exposure_display"] = display["exposure_years"].map(
-        lambda v: "—" if pd.isna(v) else f"{v:.1f}"
-    )
-    display["rate_display"] = display["projects_per_exposure_year"].map(
-        lambda v: "—" if pd.isna(v) else f"{v:.1f}"
-    )
     columns = [
         {"name": "Linked product", "id": "product"},
+        {"name": "Flagship grouping", "id": "flagship_group"},
         {"name": "Linkage span", "id": "linkage_span"},
         {"name": "Availability", "id": "availability_display"},
         {"name": "First accredited use", "id": "first_use"},
         {"name": "Adoption lag (years)", "id": "lag_display"},
         {"name": "Announcement → first DEA-route use (years)", "id": "delivery_display"},
-        {"name": "Exposure (years)", "id": "exposure_display"},
-        {"name": "Total projects", "id": "total_projects"},
-        {"name": "Projects / exposure-year", "id": "rate_display"},
+        {"name": "Exposure (years)", "id": "exposure_years", "type": "numeric"},
+        {"name": "Total projects", "id": "total_projects", "type": "numeric"},
+        {"name": "Projects / exposure-year", "id": "projects_per_exposure_year", "type": "numeric"},
     ]
+    table_cols = [c["id"] for c in columns]
+    table_data = display[table_cols].astype(object).where(pd.notna(display[table_cols]), None)
     return dash_table.DataTable(
-        data=display[[c["id"] for c in columns]].to_dict("records"),
+        data=table_data.to_dict("records"),
         columns=columns,
         sort_action="native",
         page_size=20,
@@ -259,47 +301,54 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                 "are DEA-route uptake.",
                 className="section-desc",
             ),
+            html.P(
+                "ADR England flagship collections shown individually; all other linked datasets "
+                "aggregated. Lines begin at each dataset's availability. DEA-gateway use only.",
+                className="section-desc text-muted",
+            ),
             dbc.Row([
-                dbc.Col([
-                    html.Label("Show top N products", className="filter-label"),
-                    dcc.Dropdown(
-                        id="uptake-adoption-topn",
-                        options=[
-                            {"label": "3", "value": 3},
-                            {"label": "6", "value": 6},
-                            {"label": "10", "value": 10},
-                            {"label": "All 20", "value": 20},
-                        ],
-                        value=6,
-                        clearable=False,
-                        searchable=False,
-                    ),
-                ], md=3),
                 dbc.Col([
                     html.Label("Metric", className="filter-label"),
                     dcc.Dropdown(
                         id="uptake-adoption-metric",
                         options=[
                             {"label": "Project count", "value": "count"},
-                            {"label": "% of year's projects", "value": "pct"},
+                            {"label": "% of period's projects", "value": "pct"},
                         ],
                         value="count",
                         clearable=False,
                         searchable=False,
                     ),
                 ], md=3),
+                dbc.Col([
+                    html.Label("Granularity", className="filter-label"),
+                    dcc.Dropdown(
+                        id="uptake-adoption-granularity",
+                        options=[
+                            {"label": "Year", "value": "year"},
+                            {"label": "Quarter", "value": "quarter"},
+                        ],
+                        value="year",
+                        clearable=False,
+                        searchable=False,
+                    ),
+                ], md=3),
+                dbc.Col([
+                    html.Label("Display", className="filter-label"),
+                    dcc.Checklist(
+                        id="uptake-adoption-display-options",
+                        options=[
+                            {"label": "Show ADR England flagship lines", "value": "show_flagships"},
+                            {"label": "Break out Other linked datasets", "value": "breakout_other"},
+                        ],
+                        value=["show_flagships"],
+                        inline=False,
+                        inputStyle={"marginRight": "0.35rem"},
+                        labelStyle={"display": "block", "fontSize": "0.88rem", "lineHeight": "1.55"},
+                    ),
+                ], md=4),
             ], className="mb-2 g-2"),
             _graph("uptake-adoption-curves"),
-            html.P(
-                "The record-linkage trend below carries vertical markers for when each of the "
-                "top products became available, from the curated availability dates in the "
-                "reference: \"available\" marks a documented release date; \"available by\" "
-                "marks a date bounded by the product's first accredited use in the register "
-                "(availability can only be earlier, never later).",
-                className="section-desc mt-3",
-            ),
-            _metric_dropdown("uptake-linkage-trend-metric"),
-            _graph("uptake-linkage-availability-trend"),
             html.H6("Adoption summary", className="mt-3"),
             html.P(
                 "Availability follows the available-by rule: a date is recorded as accessible "
@@ -312,7 +361,21 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                 "exposures are initial-adoption rates, not sustained demand.",
                 className="section-desc",
             ),
-            html.Div(_adoption_summary_table(), className="dea-table mb-2"),
+            dbc.Row([
+                dbc.Col(
+                    dcc.Graph(
+                        id="uptake-exposure-rate-bar",
+                        figure=make_exposure_rate_bar(PRODUCT_SUMMARY),
+                        config=CHART_CONFIG,
+                        responsive=True,
+                    ),
+                    lg=5,
+                ),
+                dbc.Col(
+                    html.Div(_adoption_summary_table(), className="dea-table mb-2"),
+                    lg=7,
+                ),
+            ], className="g-3"),
         ],
         title="Linked data uptake",
     )
@@ -331,7 +394,7 @@ def _latent_demand_accordion_item() -> dbc.AccordionItem:
             html.P(
                 f"Domain co-occurrence computed ONLY over the {LATENT_NO_LINKAGE_COUNT:,} "
                 "classified projects with no record linkage — researchers combining domains "
-                "without using any linked product. Circled cells mark domain pairs already "
+                "without using any linked product. Outlined cells mark domain pairs already "
                 "served by an existing linked product (the pair is contained in some product's "
                 "component domains). Reading: a heavy unserved cell suggests latent demand for "
                 "a new cross-domain asset; a heavy served cell suggests an awareness gap or "
@@ -386,7 +449,7 @@ def _analyses_accordion():
                     _metric_dropdown("thematic-cross-domain-purpose-metric"),
                     _graph("thematic-cross-domain-purpose"),
                 ],
-                title="Cross-Layer Patterns",
+                title="Domain × Purpose breakdown",
             ),
             dbc.AccordionItem(
                 [
@@ -438,23 +501,43 @@ def _analyses_accordion():
             ),
             dbc.AccordionItem(
                 [
+                    html.P(
+                        "These deterministic facets are exact, reproducible lookups derived "
+                        "from the register and analysis/register_reference.yaml.",
+                        className="section-desc",
+                    ),
+                    html.H5("Record linkage", className="subsection-heading"),
+                    dbc.Row([
+                        dbc.Col(_graph("deterministic-record-linkage-distribution"), lg=4, md=6),
+                    ], className="g-3"),
                     _metric_dropdown("deterministic-record-linkage-trend-metric"),
                     _graph("deterministic-record-linkage-trend"),
                     _metric_dropdown("deterministic-domain-linkage-metric"),
                     _graph("deterministic-domain-linkage-breakdown"),
-                    _graph("deterministic-researcher-sector-cooccurrence"),
+
+                    html.H5("Researcher sector", className="subsection-heading"),
                     dbc.Row([
-                        dbc.Col(_graph("deterministic-record-linkage-distribution"), lg=4, md=6),
-                        dbc.Col(_graph("deterministic-collection-method-distribution"), lg=4, md=6),
-                        dbc.Col(_graph("deterministic-temporal-structure-distribution"), lg=4, md=6),
-                        dbc.Col(_graph("deterministic-unit-distribution"), lg=4, md=6),
                         dbc.Col(_graph("deterministic-researcher-sector-distribution"), lg=4, md=6),
                     ], className="g-3"),
+                    _graph("deterministic-researcher-sector-cooccurrence"),
+
+                    html.H5("Unit of observation", className="subsection-heading"),
+                    dbc.Row([
+                        dbc.Col(_graph("deterministic-unit-distribution"), lg=4, md=6),
+                    ], className="g-3"),
+                    _metric_dropdown("deterministic-unit-trend-metric"),
+                    _graph("deterministic-unit-trend"),
+
+                    html.H5("Collection method & temporal structure", className="subsection-heading"),
+                    dbc.Row([
+                        dbc.Col(_graph("deterministic-collection-method-distribution"), lg=4, md=6),
+                        dbc.Col(_graph("deterministic-temporal-structure-distribution"), lg=4, md=6),
+                    ], className="g-3"),
                     html.P(
-                        "The trends below recompute each year's share from the per-project "
-                        "facets — is the administrative-data transition happening? Multi-count: "
-                        "a project using both survey and administrative data counts in both "
-                        "lines (likewise for temporal structure), so shares can sum past 100%.",
+                        "These trends recompute each year's share from the per-project facets. "
+                        "Multi-count: a project using both survey and administrative data "
+                        "counts in both lines (likewise for temporal structure), so shares "
+                        "can sum past 100%.",
                         className="section-desc mt-3",
                     ),
                     _metric_dropdown("deterministic-collection-method-trend-metric"),
@@ -730,6 +813,10 @@ def build_thematic_tab():
                 dbc.AccordionItem(
                     _deterministic_definitions_section(),
                     title="Deterministic facet definitions",
+                ),
+                dbc.AccordionItem(
+                    dcc.Markdown(_glossary_md, style=_MD_STYLE, className="taxonomy-defs"),
+                    title="Acronyms and abbreviations glossary",
                 ),
             ], start_collapsed=True, className="mb-4"),
 

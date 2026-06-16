@@ -55,6 +55,9 @@ PRODUCT_SHORT_LABELS = {
     "Covid-19 Infection Survey linked with VOA and EPC data": "CIS-VOA/EPC",
 }
 
+ADR_ENGLAND_FLAGSHIP_COLLECTION = "ADR England"
+OTHER_LINKED_DATASETS_LABEL = "Other linked datasets"
+
 
 def product_short_label(canonical: str) -> str:
     return PRODUCT_SHORT_LABELS.get(canonical, canonical)
@@ -125,6 +128,9 @@ for _record in _reference_indexes.reference.get("linked_products", []):
         "availability_source": _record.get("availability_source", ""),
         "announced_raw": _announced_raw,
         "announced_date": _availability_to_timestamp(_announced_raw),
+        "flagship_collection": str(_record.get("flagship_collection") or ""),
+        "flagship_source": str(_record.get("flagship_source") or ""),
+        "flagship_note": str(_record.get("flagship_note") or ""),
     })
 
 # Domain pairs covered by an existing linked product: every pair within a
@@ -201,28 +207,192 @@ else:
 PRODUCT_TOTALS = Counter(DF_PRODUCT_PROJECTS["product"])
 
 _register_years = sorted(int(y) for y in df_all["Year"].dropna().unique())
+_register_quarters = list(pd.period_range(
+    df_all["quarter_date"].min().to_period("Q"),
+    df_all["quarter_date"].max().to_period("Q"),
+    freq="Q",
+))
 _total_by_year = df_all.groupby("Year").size()
+_total_by_quarter = df_all.groupby("quarter_date").size()
+_first_seen_by_product = DF_PRODUCT_PROJECTS.groupby("product")["quarter_date"].min()
+_linked_product_by_canonical = {product["canonical"]: product for product in LINKED_PRODUCTS}
+PRODUCT_METADATA = pd.DataFrame([
+    {
+        "product": product["canonical"],
+        "short": product["short"],
+        "linkage_span": "Cross-domain" if product["is_cross_domain"] else "Within-domain",
+        "flagship_collection": product["flagship_collection"],
+        "is_adr_england_flagship": product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION,
+        "flagship_group": (
+            "ADR England flagship"
+            if product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION
+            else OTHER_LINKED_DATASETS_LABEL
+        ),
+    }
+    for product in LINKED_PRODUCTS
+])
+
+
+def _product_availability_date(product: str) -> pd.Timestamp | None:
+    record = _linked_product_by_canonical.get(product)
+    curated = record["curated_date"] if record else None
+    seen = _first_seen_by_product.get(product, pd.NaT)
+    if curated is not None and not pd.isna(curated):
+        return pd.Timestamp(curated)
+    if not pd.isna(seen):
+        return pd.Timestamp(seen)
+    return None
+
+
+def _product_period_start(product: str, granularity: str) -> pd.Timestamp:
+    availability = _product_availability_date(product)
+    start = REGISTER_WINDOW_START if availability is None else max(REGISTER_WINDOW_START, availability)
+    if granularity == "quarter":
+        return start.to_period("Q").start_time
+    return pd.Timestamp(start.year, 1, 1)
 
 
 def _product_by_year() -> pd.DataFrame:
-    """Projects per year per product, explicit zeros so dips show."""
+    """Projects per year per product, beginning at product availability."""
     rows = []
     counts = DF_PRODUCT_PROJECTS.groupby(["product", "Year"]).size()
     for product, _ in PRODUCT_TOTALS.most_common():
+        start_year = _product_period_start(product, "year").year
         for year in _register_years:
+            if year < start_year:
+                continue
             total = int(_total_by_year.get(year, 0))
             count = int(counts.get((product, year), 0))
             rows.append({
                 "product": product,
                 "Year": year,
+                "period_date": pd.Timestamp(year, 1, 1),
+                "period_label": str(year),
                 "count": count,
                 "total": total,
                 "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
             })
-    return pd.DataFrame(rows, columns=["product", "Year", "count", "total", "pct_of_projects"])
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "product", "Year", "period_date", "period_label",
+            "count", "total", "pct_of_projects",
+        ],
+    )
 
 
 DF_PRODUCT_BY_YEAR = _product_by_year()
+
+
+def _product_by_quarter() -> pd.DataFrame:
+    """Projects per quarter per product, beginning at product availability."""
+    rows = []
+    counts = DF_PRODUCT_PROJECTS.groupby(["product", "quarter_date"]).size()
+    for product, _ in PRODUCT_TOTALS.most_common():
+        start_quarter = _product_period_start(product, "quarter")
+        for quarter in _register_quarters:
+            quarter_start = quarter.start_time
+            if quarter_start < start_quarter:
+                continue
+            total = int(_total_by_quarter.get(quarter_start, 0))
+            count = int(counts.get((product, quarter_start), 0))
+            rows.append({
+                "product": product,
+                "Year": int(quarter.year),
+                "quarter_date": quarter_start,
+                "period_date": quarter_start,
+                "period_label": f"{quarter.year} Q{quarter.quarter}",
+                "count": count,
+                "total": total,
+                "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+            })
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "product", "Year", "quarter_date", "period_date", "period_label",
+            "count", "total", "pct_of_projects",
+        ],
+    )
+
+
+DF_PRODUCT_BY_QUARTER = _product_by_quarter()
+
+
+def _with_product_metadata(frame: pd.DataFrame) -> pd.DataFrame:
+    work = frame.merge(PRODUCT_METADATA, on="product", how="left")
+    work["short"] = work["short"].fillna(work["product"])
+    work["linkage_span"] = work["linkage_span"].fillna("Unclassified")
+    work["flagship_collection"] = work["flagship_collection"].fillna("")
+    work["is_adr_england_flagship"] = work["is_adr_england_flagship"].fillna(False).astype(bool)
+    work["flagship_group"] = work["flagship_group"].fillna(OTHER_LINKED_DATASETS_LABEL)
+    return work
+
+
+def adoption_curve_table(
+    granularity: str = "year",
+    *,
+    show_flagships: bool = True,
+    break_out_other: bool = False,
+) -> pd.DataFrame:
+    """Grouped adoption-curve rows for the linked-data uptake chart.
+
+    ADR England flagship products are shown individually by default. Non-
+    flagship linked products are summed into a single "Other linked datasets"
+    line unless the caller requests a constituent-line breakout.
+    """
+    source = DF_PRODUCT_BY_QUARTER if granularity == "quarter" else DF_PRODUCT_BY_YEAR
+    if source.empty:
+        return pd.DataFrame(columns=[
+            "line_id", "line_label", "line_group", "line_linkage_span",
+            "product", "period_date", "period_label", "Year", "count",
+            "total", "pct_of_projects",
+        ])
+    work = _with_product_metadata(source)
+    rows = []
+    if show_flagships:
+        flagship = work[work["is_adr_england_flagship"]].copy()
+        if not flagship.empty:
+            flagship["line_id"] = flagship["product"]
+            flagship["line_label"] = flagship["short"]
+            flagship["line_group"] = "ADR England flagship"
+            flagship["line_linkage_span"] = flagship["linkage_span"]
+            rows.append(flagship)
+
+    other = work[~work["is_adr_england_flagship"]].copy()
+    if not other.empty:
+        if break_out_other:
+            other["line_id"] = other["product"]
+            other["line_label"] = other["short"]
+            other["line_group"] = OTHER_LINKED_DATASETS_LABEL
+            other["line_linkage_span"] = other["linkage_span"]
+            rows.append(other)
+        else:
+            group_cols = ["period_date", "period_label", "Year"]
+            if "quarter_date" in other.columns:
+                group_cols.append("quarter_date")
+            grouped = (
+                other.groupby(group_cols, as_index=False, sort=True)
+                .agg(count=("count", "sum"), total=("total", "first"))
+            )
+            grouped["pct_of_projects"] = (
+                grouped["count"] / grouped["total"].replace(0, pd.NA) * 100
+            ).fillna(0).round(1)
+            grouped["product"] = OTHER_LINKED_DATASETS_LABEL
+            grouped["line_id"] = OTHER_LINKED_DATASETS_LABEL
+            grouped["line_label"] = OTHER_LINKED_DATASETS_LABEL
+            grouped["line_group"] = OTHER_LINKED_DATASETS_LABEL
+            grouped["line_linkage_span"] = "Mixed"
+            rows.append(grouped)
+
+    if not rows:
+        return pd.DataFrame(columns=[
+            "line_id", "line_label", "line_group", "line_linkage_span",
+            "product", "period_date", "period_label", "Year", "count",
+            "total", "pct_of_projects",
+        ])
+    result = pd.concat(rows, ignore_index=True, sort=False)
+    sort_cols = [col for col in ["line_group", "line_label", "period_date"] if col in result.columns]
+    return result.sort_values(sort_cols, kind="stable").reset_index(drop=True)
 
 # Honest annotation/table wording per availability basis: a documented-
 # accessible date is a real access date ("available"); announced and bounded
@@ -249,13 +419,12 @@ def product_summary_table() -> pd.DataFrame:
       shows DEA-gateway use. NOT adoption lag — ECHILD's ~3.5y here is a
       governance delay, not slow researcher uptake.
     """
-    first_seen = DF_PRODUCT_PROJECTS.groupby("product")["quarter_date"].min()
     rows = []
     for product in LINKED_PRODUCTS:
         canonical = product["canonical"]
         curated = product["curated_date"]
         basis = product["availability_basis"] if curated is not None else "proxy"
-        seen = first_seen.get(canonical, pd.NaT)
+        seen = _first_seen_by_product.get(canonical, pd.NaT)
         availability = curated if curated is not None else seen
         exposure = _exposure_years(availability) if not pd.isna(availability) else 0.0
         total = int(PRODUCT_TOTALS.get(canonical, 0))
@@ -276,6 +445,13 @@ def product_summary_table() -> pd.DataFrame:
             "product": canonical,
             "short": product["short"],
             "linkage_span": "Cross-domain" if product["is_cross_domain"] else "Within-domain",
+            "flagship_collection": product["flagship_collection"],
+            "is_adr_england_flagship": product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION,
+            "flagship_group": (
+                "ADR England flagship"
+                if product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION
+                else OTHER_LINKED_DATASETS_LABEL
+            ),
             "availability": (
                 str(product["curated_raw"]) if curated is not None else _quarter_label(seen)
             ),

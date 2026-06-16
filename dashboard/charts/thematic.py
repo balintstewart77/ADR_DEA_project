@@ -381,7 +381,7 @@ def make_latent_demand_cooccurrence(
     MIXED-LAYER figure: domains are LLM-inferred (unvalidated), the no-linkage
     filter is deterministic. ``served_pairs`` is a set of frozenset domain
     pairs covered by an existing linked product's component domains; those
-    cells get an open-circle marker. The diagonal (single-domain projects) is
+    cells get a coloured outline. The diagonal (single-domain projects) is
     excluded — the object of interest is pairs. ``metric`` mirrors
     ``make_domain_cooccurrence``: counts or row-wise share P(column | row).
     """
@@ -405,7 +405,7 @@ def make_latent_demand_cooccurrence(
 
     annotations = []
     hovertext = []
-    served_x, served_y = [], []
+    served_shapes = []
     for i, yd in enumerate(domains):
         hover_row = []
         for j, xd in enumerate(domains):
@@ -414,8 +414,18 @@ def make_latent_demand_cooccurrence(
                 continue
             served = frozenset((yd, xd)) in served_pairs
             if served:
-                served_x.append(xd)
-                served_y.append(yd)
+                served_shapes.append(dict(
+                    type="rect",
+                    xref="x",
+                    yref="y",
+                    x0=j - 0.5,
+                    x1=j + 0.5,
+                    y0=i - 0.5,
+                    y1=i + 0.5,
+                    line=dict(color="#e76f51", width=2.2),
+                    fillcolor="rgba(0,0,0,0)",
+                    layer="above",
+                ))
             cell_count = counts[i][j]
             cell_pct = pct[i][j]
             served_note = (
@@ -432,30 +442,43 @@ def make_latent_demand_cooccurrence(
                 continue
             text = f"{cell_pct:.0f}%" if show_pct else str(int(cell_count))
             annotations.append(dict(
-                x=xd, y=yd, text=text, showarrow=False,
+                x=j, y=i, text=text, showarrow=False,
                 font=dict(size=10, color="white" if val > z_hi * 0.55 else "#2c3e50"),
             ))
         hovertext.append(hover_row)
 
     fig = go.Figure(go.Heatmap(
-        z=z, x=domains, y=domains, text=hovertext,
+        z=z, x=list(range(len(domains))), y=list(range(len(domains))), text=hovertext,
         colorscale="Purples", showscale=True, hoverongaps=False,
         colorbar=dict(title="% of row domain" if show_pct else "Projects"),
         hovertemplate="%{text}<extra></extra>",
     ))
     fig.add_trace(go.Scatter(
-        x=served_x, y=served_y,
+        x=[None], y=[None],
         mode="markers",
-        marker=dict(symbol="circle-open", size=14, color="#e76f51", line_width=2),
-        name="Pair served by an existing linked product",
+        marker=dict(symbol="square-open", size=13, color="#e76f51", line_width=2),
+        name="Outlined = domain-pair served by an existing linked product",
         hoverinfo="skip",
         showlegend=True,
     ))
     fig.update_layout(
         title="Latent Cross-Domain Demand (projects without record linkage)",
         annotations=annotations,
-        xaxis=dict(side="bottom", tickangle=-35, automargin=True, tickmode="linear", tick0=0, dtick=1),
-        yaxis=dict(autorange="reversed", tickmode="linear", tick0=0, dtick=1),
+        shapes=served_shapes,
+        xaxis=dict(
+            side="bottom",
+            tickangle=-35,
+            automargin=True,
+            tickmode="array",
+            tickvals=list(range(len(domains))),
+            ticktext=domains,
+        ),
+        yaxis=dict(
+            autorange="reversed",
+            tickmode="array",
+            tickvals=list(range(len(domains))),
+            ticktext=domains,
+        ),
         legend=dict(
             orientation="h",
             yanchor="bottom", y=1.10,

@@ -1,4 +1,19 @@
-reference_version: "0.5.1"
+reference_version: "0.5.3"
+
+adr_england_flagship_source: &adr_england_flagship_source "https://www.adruk.org/data-access/flagship-datasets/"
+adr_england_flagship_note: &adr_england_flagship_note >
+  ADR England flagship collection, based on the 2023 ADR England brochure
+  framing (LEO, ECHILD, Growing Up in England, GRADE, ASHE-linked, Data First;
+  AD|ARC then under construction). Growing Up in England is included on this
+  2023 basis though it is not in the current 24-item ADR UK flagship catalogue.
+  This flag denotes the ADR *England* collection specifically — NOT the full
+  UK-wide ADR UK flagship catalogue. ADR UK flagship datasets for Northern
+  Ireland, Scotland and Wales (e.g. Business Data for Research NI, Education
+  Outcomes Linkage NI, Earnings and Employees Study NI, Scottish LEO, Looked
+  After Children datasets, RAPID, CRCS) are NOT flagged here: they are genuine
+  ADR UK flagships but not England-collection members, and most have thin or no
+  DEA-register presence (the register observes DEA-gateway use, which is
+  England-weighted). They appear in 'Other linked datasets'.
 meta_principle: >
   Each entity is classified by an intrinsic, structural, objective property,
   never by project use or organisational behaviour. Linkage is classified by
@@ -108,9 +123,12 @@ dataset_temporal_structure_rule:
     has actually been done.
   aggregate_indicator_limitation: >
     Aggregate indicators and national or area-level time-series outputs such as
-    CPI, GVA, PPI, and Capital Stock are not longitudinal under this facet
-    because they follow no units. They are time series, but not unit panels, and
-    are classified as cross-sectional point-in-time aggregate releases.
+    CPI, GVA, PPI, and Capital Stock are not longitudinal under this facet. They
+    may contain repeated time points, and sometimes repeated areas, industries,
+    sectors, or product categories, but they do not follow individual people,
+    households, businesses, or cases as units over time. Classify them as
+    cross-sectional aggregate statistical outputs unless the released dataset is
+    explicitly structured as a longitudinal unit-level panel.
   retired_category_note: >
     The former cohort category is retired because it conflated collection method
     with temporal structure and misnamed longitudinality. Business panels are
@@ -247,6 +265,9 @@ linked_products:
     availability_basis: "bounded_by_first_use"
     availability_source: null
     availability_note: "Bounded by first register use (2021 Q2). Formally announced in the ONS SRS 15 July 2021 (LEO I1SE): https://www.adruk.org/news-publications/news-blogs/the-longitudinal-education-outcomes-leo-dataset-is-now-available-in-the-ons-secure-research-service-426/ . Earlier bespoke DfE pilot route 2018-2019 (non-SRS): https://www.gov.uk/guidance/apply-to-join-dfes-longitudinal-education-outcomes-leo-pilot"
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "LEO"
       - "Longitudinal Education Outcomes (LEO)"
@@ -277,6 +298,9 @@ linked_products:
     availability_announced: "2021"
     availability_announced_source: "https://academic.oup.com/ije/article/51/1/17/6425590 ; https://www.echild.ac.uk/data-access"
     availability_note: "Announced/published 2021 (IJE Data Resource Profile; database created Nov 2020) but DEA/SRS-route accessibility is bounded by first register use (2024 Q3). Governance context (Balint, ex-ADR UK; recorded as context, not asserted fact): the linkage was built by UCL; a data-governance dispute over health data owners' consent to entry into the ONS SRS (SRS entry was a funding condition) delayed DEA-route access for years; it is unclear whether 2021-2024 ECHILD projects used UCL's own infrastructure under a different legal gateway (not captured in this register) or whether no research access existed in that period."
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "Education and Child Health Insights from Linked Data (ECHILD)"
       - "Education and Child Health Insights from Linked Data"
@@ -339,6 +363,9 @@ linked_products:
     availability_announced: "2021"
     availability_announced_source: "https://www.gov.uk/government/publications/grading-and-admissions-data-for-england-grade-framework/grading-and-admissions-data-for-england-grade-user-guide"
     availability_note: "The user guide records a 2021 first release of the GRADE dataset (2017-2020 coverage; re-released 2024 adding 2021-2022), but publication of framework documentation does not evidence SRS accessibility at that date. Same crisis-era origin as ECHILD; DEA-route availability bounded by first register use (2024 Q3)."
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "GRading and Admissions Data England (GRADE)"
       - "GRading and Admissions Data England"
@@ -367,6 +394,9 @@ linked_products:
     availability_basis: "documented_accessible"
     availability_source: "https://www.adruk.org/news-publications/news-blogs/magistrates-court-dataset-is-first-product-of-data-first-programme-available-to-researchers-241/ ; https://www.adruk.org/news-publications/news-blogs/crown-court-dataset-becomes-second-output-available-to-researchers-as-result-of-data-first-268/"
     availability_note: "First Data First product: magistrates' court dataset deposited in ONS SRS 30 June 2020; Crown Court dataset followed 11 Aug 2020."
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "MoJ Data First Crown Court Defendant"
       - "MoJ Data First Crown Court Defendant Case Level"
@@ -425,6 +455,9 @@ linked_products:
     availability_basis: "bounded_by_first_use"
     availability_source: null
     availability_note: "Bounded by first register use (2022 Q3). No dated public availability announcement found: adarc.ac.uk availability news is undated (https://adarc.ac.uk/adarc-research-ready-datasets-now-available-in-england-and-wales/); ADR UK annual report 2023-24 lists AD|ARC England and Wales among new and emerging datasets (https://reports.adruk.org/annual-report-2023-2024/our-data/new-and-emerging-datasets/administrative-data-agricultural-research-collection-england-and-wales/)."
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "AD|ARC"
       - "Administrative Data | Agricultural Research Collection (AD|ARC)"
@@ -457,6 +490,9 @@ linked_products:
     availability_basis: "documented_accessible"
     availability_source: "https://www.adruk.org/news-publications/news-blogs/labour-market-dataset-will-enable-greater-insight-into-employment-inequalities/"
     availability_note: "ADR UK announcement 24 Sep 2024: ASHE linked to PAYE and Self-Assessment available for accredited researchers (England, Scotland and Wales)."
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment"
     component_domains:
@@ -483,6 +519,9 @@ linked_products:
     availability_basis: "bounded_by_first_use"
     availability_source: null
     availability_note: "Bounded by first register use (2020 Q2). Formally announced by ADR UK / Wage and Employment Dynamics 8 Sep 2022: https://www.adruk.org/news-publications/news-blogs/new-linked-dataset-available-to-provide-insights-into-earnings-and-employment-in-england-and-wales/ - the register's first-use date falsifies the announcement date as availability; an earlier release evidently existed."
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "ASHE-linked"
       - "Annual Survey of Hours and Earnings linked to Census 2011"
@@ -540,6 +579,9 @@ linked_products:
     availability_announced: "2020-Q4"
     availability_announced_source: "https://www.adruk.org/news-publications/news-blogs/first-analysis-of-growing-up-in-england-dataset-provides-insight-into-educational-attainment-and-household-composition-259/ ; https://www.adruk.org/news-publications/news-blogs/growing-up-in-england-dataset-now-available-to-provide-better-understanding-of-vulnerable-childrens-outcomes/"
     availability_note: "ADR UK news 30 Jul 2020 records Wave 1 as EXPECTED into the ONS SRS late 2020 - an expectation, not evidenced delivery; the full linked dataset was announced available 29 Jun 2022. Availability bounded by first register use (2021 Q4)."
+    flagship_collection: "ADR England"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
     aliases:
       - "GUIE"
       - "Growing Up in England Wave 1 (GUIE)"
