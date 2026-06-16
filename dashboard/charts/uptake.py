@@ -34,6 +34,15 @@ def make_adoption_curves(
     x_col = "period_label" if "period_label" in df_adoption.columns else "Year"
     period_label = "Quarter" if granularity == "quarter" else "Year"
     share_label = "% of quarter's projects" if granularity == "quarter" else "% of year's projects"
+    category_order = []
+    if x_col == "period_label" and "period_date" in df_adoption.columns:
+        category_order = (
+            df_adoption[["period_label", "period_date"]]
+            .drop_duplicates()
+            .sort_values("period_date", kind="stable")["period_label"]
+            .astype(str)
+            .tolist()
+        )
     line_ids = list(dict.fromkeys(df_adoption["line_id"].dropna().astype(str)))
     for i, line_id in enumerate(line_ids):
         sort_cols = [
@@ -81,6 +90,8 @@ def make_adoption_curves(
             dtick=1 if granularity == "year" else None,
             tickangle=-35 if granularity == "quarter" else 0,
             type="category" if x_col == "period_label" else None,
+            categoryorder="array" if category_order else None,
+            categoryarray=category_order if category_order else None,
         ),
         legend=dict(
             orientation="v",

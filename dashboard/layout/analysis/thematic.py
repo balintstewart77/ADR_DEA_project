@@ -4,7 +4,7 @@ from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
 
-from dashboard.charts.template import CHART_CONFIG
+from dashboard.charts.template import CHART_CONFIG, CHART_HEIGHT
 from dashboard.charts.uptake import make_exposure_rate_bar
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import BROWSE_TABLE_STYLES, ENRICHED_TABLE_STYLES
@@ -28,6 +28,17 @@ from dashboard.data.thematic import (
 )
 
 _MD_STYLE = {"fontSize": "0.88rem", "lineHeight": "1.6"}
+DOMAIN_MATRIX_HEIGHT = 724
+LATENT_DEMAND_HEIGHT = 724
+DOMAIN_PURPOSE_HEIGHT = 560
+DOMAIN_LINKAGE_HEIGHT = 560
+UPTAKE_CURVES_HEIGHT = 460
+UPTAKE_EXPOSURE_BAR_HEIGHT = 520
+TAG_DOMAIN_HEIGHT = 440
+DOMAIN_TREND_HEIGHT = 480
+RECORD_LINKAGE_TREND_HEIGHT = 360
+COMPACT_DISTRIBUTION_HEIGHT = 280
+RESEARCHER_SECTOR_MATRIX_HEIGHT = 500
 
 
 def _md_table(layer: str) -> str:
@@ -39,11 +50,17 @@ def _md_table(layer: str) -> str:
     return "\n".join(lines)
 
 
-def _graph(graph_id: str) -> html.Div:
-    """A chart wrapper whose graph resizes correctly when its accordion opens."""
+def _graph(graph_id: str, height: int = CHART_HEIGHT) -> html.Div:
+    """A chart wrapper with a fixed graph height that survives re-render."""
     return html.Div(
-        dcc.Graph(id=graph_id, config=CHART_CONFIG, responsive=True),
+        dcc.Graph(
+            id=graph_id,
+            config=CHART_CONFIG,
+            responsive=True,
+            style={"height": f"{height}px"},
+        ),
         className="chart-wrapper",
+        style={"minHeight": f"{height + 8}px"},
     )
 
 
@@ -348,7 +365,7 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                     ),
                 ], md=4),
             ], className="mb-2 g-2"),
-            _graph("uptake-adoption-curves"),
+            _graph("uptake-adoption-curves", height=UPTAKE_CURVES_HEIGHT),
             html.H6("Adoption summary", className="mt-3"),
             html.P(
                 "Availability follows the available-by rule: a date is recorded as accessible "
@@ -368,6 +385,7 @@ def _uptake_accordion_item() -> dbc.AccordionItem:
                         figure=make_exposure_rate_bar(PRODUCT_SUMMARY),
                         config=CHART_CONFIG,
                         responsive=True,
+                        style={"height": f"{UPTAKE_EXPOSURE_BAR_HEIGHT}px"},
                     ),
                     lg=5,
                 ),
@@ -402,9 +420,17 @@ def _latent_demand_accordion_item() -> dbc.AccordionItem:
                 className="section-desc",
             ),
             _metric_dropdown("thematic-latent-demand-metric"),
-            _graph("thematic-latent-demand"),
+            _graph("thematic-latent-demand", height=LATENT_DEMAND_HEIGHT),
         ],
         title="Latent cross-domain demand (indicative)",
+    )
+
+
+def _deterministic_intro() -> html.P:
+    return html.P(
+        "These deterministic facets are exact, reproducible lookups derived "
+        "from the register and analysis/register_reference.yaml.",
+        className="section-desc",
     )
 
 
@@ -413,8 +439,8 @@ def _analyses_accordion():
         [
             dbc.AccordionItem(
                 dbc.Row([
-                    dbc.Col(_graph("thematic-domain-totals"), md=6),
-                    dbc.Col(_graph("thematic-purpose-totals"), md=6),
+                    dbc.Col(_graph("thematic-domain-totals", height=TAG_DOMAIN_HEIGHT), md=6),
+                    dbc.Col(_graph("thematic-purpose-totals", height=380), md=6),
                 ], className="g-3"),
                 title="Overall Distribution",
             ),
@@ -426,14 +452,14 @@ def _analyses_accordion():
                         className="section-desc",
                     ),
                     _metric_dropdown("thematic-domain-trend-metric"),
-                    _graph("thematic-domain-trend"),
+                    _graph("thematic-domain-trend", height=DOMAIN_TREND_HEIGHT),
                     html.P(
                         "Projects may have up to two purposes, so percentages can sum to slightly "
                         "more than 100%.",
                         className="section-desc mt-3",
                     ),
                     _metric_dropdown("thematic-purpose-trend-metric"),
-                    _graph("thematic-purpose-trend"),
+                    _graph("thematic-purpose-trend", height=CHART_HEIGHT),
                 ],
                 title="Substantive domain and Analytical purpose trends over time",
             ),
@@ -447,7 +473,7 @@ def _analyses_accordion():
                         className="section-desc",
                     ),
                     _metric_dropdown("thematic-cross-domain-purpose-metric"),
-                    _graph("thematic-cross-domain-purpose"),
+                    _graph("thematic-cross-domain-purpose", height=DOMAIN_PURPOSE_HEIGHT),
                 ],
                 title="Domain × Purpose breakdown",
             ),
@@ -464,7 +490,7 @@ def _analyses_accordion():
                         className="section-desc",
                     ),
                     _metric_dropdown("thematic-domain-cooccurrence-metric"),
-                    _graph("thematic-domain-cooccurrence"),
+                    _graph("thematic-domain-cooccurrence", height=DOMAIN_MATRIX_HEIGHT),
                 ],
                 title="Domain Co-occurrence",
             ),
@@ -479,15 +505,15 @@ def _analyses_accordion():
                         className="section-desc",
                     ),
                     _metric_dropdown("thematic-tag-trend-metric"),
-                    _graph("thematic-tag-trend"),
+                    _graph("thematic-tag-trend", height=CHART_HEIGHT),
                     dbc.Row([
                         dbc.Col([
                             _domain_share_dropdown("thematic-covid-tag-domain-metric"),
-                            _graph("thematic-covid-tag-domain"),
+                            _graph("thematic-covid-tag-domain", height=TAG_DOMAIN_HEIGHT),
                         ], md=6),
                         dbc.Col([
                             _domain_share_dropdown("thematic-demographic-tag-domain-metric"),
-                            _graph("thematic-demographic-tag-domain"),
+                            _graph("thematic-demographic-tag-domain", height=TAG_DOMAIN_HEIGHT),
                         ], md=6),
                     ], className="g-3"),
                     html.P(
@@ -501,37 +527,88 @@ def _analyses_accordion():
             ),
             dbc.AccordionItem(
                 [
-                    html.P(
-                        "These deterministic facets are exact, reproducible lookups derived "
-                        "from the register and analysis/register_reference.yaml.",
-                        className="section-desc",
-                    ),
-                    html.H5("Record linkage", className="subsection-heading"),
+                    _deterministic_intro(),
                     dbc.Row([
-                        dbc.Col(_graph("deterministic-record-linkage-distribution"), lg=4, md=6),
+                        dbc.Col(
+                            _graph(
+                                "deterministic-record-linkage-distribution",
+                                height=COMPACT_DISTRIBUTION_HEIGHT,
+                            ),
+                            lg=4,
+                            md=6,
+                        ),
                     ], className="g-3"),
                     _metric_dropdown("deterministic-record-linkage-trend-metric"),
-                    _graph("deterministic-record-linkage-trend"),
+                    _graph(
+                        "deterministic-record-linkage-trend",
+                        height=RECORD_LINKAGE_TREND_HEIGHT,
+                    ),
                     _metric_dropdown("deterministic-domain-linkage-metric"),
-                    _graph("deterministic-domain-linkage-breakdown"),
-
-                    html.H5("Researcher sector", className="subsection-heading"),
+                    _graph(
+                        "deterministic-domain-linkage-breakdown",
+                        height=DOMAIN_LINKAGE_HEIGHT,
+                    ),
+                ],
+                title="Record linkage",
+            ),
+            dbc.AccordionItem(
+                [
+                    _deterministic_intro(),
                     dbc.Row([
-                        dbc.Col(_graph("deterministic-researcher-sector-distribution"), lg=4, md=6),
+                        dbc.Col(
+                            _graph(
+                                "deterministic-researcher-sector-distribution",
+                                height=COMPACT_DISTRIBUTION_HEIGHT,
+                            ),
+                            lg=4,
+                            md=6,
+                        ),
                     ], className="g-3"),
-                    _graph("deterministic-researcher-sector-cooccurrence"),
-
-                    html.H5("Unit of observation", className="subsection-heading"),
+                    _graph(
+                        "deterministic-researcher-sector-cooccurrence",
+                        height=RESEARCHER_SECTOR_MATRIX_HEIGHT,
+                    ),
+                ],
+                title="Researcher sector",
+            ),
+            dbc.AccordionItem(
+                [
+                    _deterministic_intro(),
                     dbc.Row([
-                        dbc.Col(_graph("deterministic-unit-distribution"), lg=4, md=6),
+                        dbc.Col(
+                            _graph(
+                                "deterministic-unit-distribution",
+                                height=COMPACT_DISTRIBUTION_HEIGHT,
+                            ),
+                            lg=4,
+                            md=6,
+                        ),
                     ], className="g-3"),
                     _metric_dropdown("deterministic-unit-trend-metric"),
-                    _graph("deterministic-unit-trend"),
-
-                    html.H5("Collection method & temporal structure", className="subsection-heading"),
+                    _graph("deterministic-unit-trend", height=CHART_HEIGHT),
+                ],
+                title="Unit of observation",
+            ),
+            dbc.AccordionItem(
+                [
+                    _deterministic_intro(),
                     dbc.Row([
-                        dbc.Col(_graph("deterministic-collection-method-distribution"), lg=4, md=6),
-                        dbc.Col(_graph("deterministic-temporal-structure-distribution"), lg=4, md=6),
+                        dbc.Col(
+                            _graph(
+                                "deterministic-collection-method-distribution",
+                                height=COMPACT_DISTRIBUTION_HEIGHT,
+                            ),
+                            lg=4,
+                            md=6,
+                        ),
+                        dbc.Col(
+                            _graph(
+                                "deterministic-temporal-structure-distribution",
+                                height=COMPACT_DISTRIBUTION_HEIGHT,
+                            ),
+                            lg=4,
+                            md=6,
+                        ),
                     ], className="g-3"),
                     html.P(
                         "These trends recompute each year's share from the per-project facets. "
@@ -541,11 +618,11 @@ def _analyses_accordion():
                         className="section-desc mt-3",
                     ),
                     _metric_dropdown("deterministic-collection-method-trend-metric"),
-                    _graph("deterministic-collection-method-trend"),
+                    _graph("deterministic-collection-method-trend", height=CHART_HEIGHT),
                     _metric_dropdown("deterministic-temporal-structure-trend-metric"),
-                    _graph("deterministic-temporal-structure-trend"),
+                    _graph("deterministic-temporal-structure-trend", height=CHART_HEIGHT),
                 ],
-                title="Record linkage & data structure",
+                title="Collection method & temporal structure",
             ),
             _uptake_accordion_item(),
             _latent_demand_accordion_item(),

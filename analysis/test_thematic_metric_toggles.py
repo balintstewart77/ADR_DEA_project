@@ -1,6 +1,7 @@
 import json
 import unittest
 
+from dash import dcc
 from plotly.utils import PlotlyJSONEncoder
 
 from dashboard.charts.thematic import (
@@ -27,14 +28,53 @@ def _metric_col(metric: str) -> str:
     return "pct_of_projects" if metric == "pct" else "count"
 
 
+EXPECTED_TOGGLE_GRAPH_HEIGHTS = {
+    "thematic-domain-trend": 480,
+    "thematic-purpose-trend": 400,
+    "thematic-cross-domain-purpose": 560,
+    "thematic-domain-cooccurrence": 724,
+    "thematic-tag-trend": 400,
+    "thematic-covid-tag-domain": 440,
+    "thematic-demographic-tag-domain": 440,
+    "deterministic-record-linkage-trend": 360,
+    "deterministic-domain-linkage-breakdown": 560,
+    "deterministic-collection-method-trend": 400,
+    "deterministic-temporal-structure-trend": 400,
+    "deterministic-unit-trend": 400,
+    "thematic-latent-demand": 724,
+    "uptake-adoption-curves": 460,
+}
+
+
+def _walk_components(component):
+    yield component
+    children = getattr(component, "children", None)
+    if children is None:
+        return
+    if isinstance(children, (list, tuple)):
+        for child in children:
+            if child is not None:
+                yield from _walk_components(child)
+    else:
+        yield from _walk_components(children)
+
+
 class ThematicMetricToggleRegressionTest(unittest.TestCase):
     """Defend against the second recurrence of the G9 metric-toggle coupling bug."""
 
-    def _assert_serialises(self, figure):
+    def _assert_serialises(self, figure, expected_height: int | None = None):
         payload = figure.to_plotly_json()
         json.dumps(payload, cls=PlotlyJSONEncoder)
         self.assertIn("data", payload)
         self.assertIn("layout", payload)
+        # Collapse-on-re-render regression: callback liveness and figure
+        # serialisation are not enough. Re-rendered figures must keep an
+        # explicit layout height so Plotly never returns a heightless sliver.
+        height = payload["layout"].get("height")
+        self.assertIsInstance(height, int)
+        self.assertGreater(height, 0)
+        if expected_height is not None:
+            self.assertEqual(height, expected_height)
 
     def test_every_thematic_metric_figure_renders_in_both_metric_states(self):
         cases = [
@@ -57,6 +97,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                     PURPOSE_COLOURS,
                     _metric_col(metric),
                     "Analytical Purpose Over Time",
+                    height=400,
                     partial_year_info=PARTIAL_YEAR_INFO,
                 ),
             ),
@@ -66,6 +107,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                     thematic_data.df_cross_domain_purpose,
                     "domain",
                     "Substantive Domain x Analytical Purpose",
+                    height=560,
                     metric=metric,
                 ),
             ),
@@ -77,6 +119,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                     TAG_COLOURS,
                     _metric_col(metric),
                     "Cross-Cutting Tags Over Time",
+                    height=400,
                     partial_year_info=PARTIAL_YEAR_INFO,
                 ),
             ),
@@ -136,6 +179,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                     {"Survey": "#e76f51", "Administrative": "#2a9d8f"},
                     _metric_col(metric),
                     "Collection Method Over Time",
+                    height=400,
                     partial_year_info=PARTIAL_YEAR_INFO,
                 ),
             ),
@@ -147,6 +191,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                     {"Cross-sectional": "#f4a261", "Longitudinal": "#6a3d9a"},
                     _metric_col(metric),
                     "Temporal Structure Over Time",
+                    height=400,
                     partial_year_info=PARTIAL_YEAR_INFO,
                 ),
             ),
@@ -163,6 +208,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                     },
                     _metric_col(metric),
                     "Unit of Observation Over Time",
+                    height=400,
                     partial_year_info=PARTIAL_YEAR_INFO,
                 ),
             ),
@@ -170,7 +216,10 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
         for figure_id, builder in cases:
             for metric in ("pct", "count"):
                 with self.subTest(figure=figure_id, metric=metric):
-                    self._assert_serialises(builder(metric))
+                    self._assert_serialises(
+                        builder(metric),
+                        EXPECTED_TOGGLE_GRAPH_HEIGHTS[figure_id],
+                    )
 
     def test_uptake_adoption_toggle_renders_both_metrics_and_granularities(self):
         for granularity in ("year", "quarter"):
@@ -186,13 +235,27 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                             show_flagships=True,
                             break_out_other=break_out_other,
                         )
+                        fig = make_adoption_curves(
+                            frame,
+                            metric=metric,
+                            granularity=granularity,
+                            partial_year_info=PARTIAL_YEAR_INFO,
+                        )
                         self._assert_serialises(
-                            make_adoption_curves(
-                                frame,
-                                metric=metric,
-                                granularity=granularity,
-                                partial_year_info=PARTIAL_YEAR_INFO,
-                            )
+                            fig,
+                            EXPECTED_TOGGLE_GRAPH_HEIGHTS["uptake-adoption-curves"],
+                        )
+                        payload = fig.to_plotly_json()
+                        expected_order = (
+                            frame[["period_label", "period_date"]]
+                            .drop_duplicates()
+                            .sort_values("period_date", kind="stable")["period_label"]
+                            .astype(str)
+                            .tolist()
+                        )
+                        self.assertEqual(
+                            list(payload["layout"]["xaxis"]["categoryarray"]),
+                            expected_order,
                         )
 
     def test_uptake_adoption_default_groups_flagships_and_aggregates_other(self):
@@ -232,6 +295,41 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             with self.subTest(other_product=product):
                 groups = set(breakout.loc[breakout["line_id"] == product, "line_group"].unique())
                 self.assertEqual(groups, {OTHER_LINKED_DATASETS_LABEL})
+
+    def test_toggle_graph_components_have_fixed_render_height(self):
+        # Collapse-on-re-render regression: the dcc.Graph container itself must
+        # have a fixed height. 200-OK callbacks and valid figures did not catch
+        # the visual collapse because the rendered graph div lost its height.
+        from dashboard.layout.analysis.thematic import build_thematic_tab
+
+        graphs = {
+            component.id: component
+            for component in _walk_components(build_thematic_tab())
+            if isinstance(component, dcc.Graph) and component.id
+        }
+        for graph_id, expected_height in EXPECTED_TOGGLE_GRAPH_HEIGHTS.items():
+            with self.subTest(graph=graph_id):
+                self.assertIn(graph_id, graphs)
+                style = graphs[graph_id].style or {}
+                self.assertEqual(style.get("height"), f"{expected_height}px")
+
+    def test_deterministic_facets_are_four_separate_accordion_items(self):
+        from dashboard.layout.analysis.thematic import build_thematic_tab
+
+        titles = [
+            getattr(component, "title", None)
+            for component in _walk_components(build_thematic_tab())
+            if component.__class__.__name__ == "AccordionItem"
+        ]
+        for title in [
+            "Record linkage",
+            "Researcher sector",
+            "Unit of observation",
+            "Collection method & temporal structure",
+        ]:
+            with self.subTest(title=title):
+                self.assertIn(title, titles)
+        self.assertNotIn("Record linkage & data structure", titles)
 
     def test_metric_callbacks_are_one_output_and_do_not_share_toggle_state(self):
         from dashboard.app import app
