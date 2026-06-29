@@ -489,6 +489,7 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^annual survey of hours and earnings$"), "Annual Survey of Hours and Earnings (ASHE)"),
     (re.compile(r"(?i)^business enterprise research and development(?: england)?$"), "Business Enterprise Research and Development (BERD)"),
     (re.compile(r"(?i)^business insights and conditions survey$"), "Business Insights and Conditions Survey (BICS)"),
+    (re.compile(r"(?i)^business impact of covid[-\s]?19(?: survey)?$"), "Business Insights and Conditions Survey (BICS)"),
     (re.compile(r"(?i)^business structure database$"), "Business Structure Database (BSD)"),
     (re.compile(r"(?i)^business register and employment survey$"), "Business Register and Employment Survey (BRES)"),
     (re.compile(r"(?i)^crime survey for england and wales$"), "Crime Survey for England and Wales (CSEW)"),
