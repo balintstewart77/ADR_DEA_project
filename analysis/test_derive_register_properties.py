@@ -5,9 +5,12 @@ import unittest
 
 import pandas as pd
 from pandas.testing import assert_frame_equal
+import yaml
 
 from analysis.derive_register_properties import (
     REFERENCE_PATH,
+    TAXONOMY_PATH,
+    active_layer_a_domain_order,
     build_indexes,
     derive_properties,
     linkage_span_for_domains,
@@ -59,6 +62,21 @@ def _canonicalise_register_properties(df: pd.DataFrame, columns: list[str]) -> p
         .sort_values("Record ID")
         .reset_index(drop=True)
     )
+
+
+def _active_taxonomy_layer_a_labels() -> tuple[str, ...]:
+    with TAXONOMY_PATH.open(encoding="utf-8") as f:
+        taxonomy = yaml.safe_load(f)
+    labels = []
+    for category in taxonomy["categories"]:
+        status = " ".join(str(category.get("status") or "").split()).strip().lower()
+        if (
+            category.get("layer") == "Layer A -- domain"
+            and category.get("include_in_prompt") is True
+            and not status.startswith("removed")
+        ):
+            labels.append(" ".join(str(category.get("label") or "").split()).strip())
+    return tuple(labels)
 
 
 class DeterministicRegisterPropertiesTest(unittest.TestCase):
@@ -137,6 +155,14 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
                 self.assertNotIn("collection_type", dataset)
                 self.assertIn(dataset["collection_method"], {"survey", "administrative"})
                 self.assertIn(dataset["temporal_structure"], {"cross-sectional", "longitudinal"})
+
+    def test_component_domain_vocabulary_matches_taxonomy(self):
+        # Drift incident guard: Other / Cross-sector, COVID-19 & Pandemic,
+        # Income, Poverty & Inequality, and Transport & Mobility persisted in
+        # the old deterministic DOMAIN_ORDER after dict-1.0-rc2 removed or
+        # renamed them. The deterministic layer must single-source this
+        # vocabulary from the active Layer A taxonomy labels.
+        self.assertEqual(active_layer_a_domain_order(), _active_taxonomy_layer_a_labels())
 
     def test_multi_product_union_and_no_product(self):
         domains = set()

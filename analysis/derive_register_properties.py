@@ -8,6 +8,7 @@ import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Iterable
 
@@ -30,30 +31,15 @@ from dashboard.institution_normalisation import parse_institutions
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_DIR = Path(__file__).resolve().parent
 REFERENCE_PATH = ANALYSIS_DIR / "register_reference.yaml"
+TAXONOMY_PATH = PROJECT_ROOT / "taxonomy_data_dictionary.yaml"
 DEFAULT_OUTPUT_DIR = ANALYSIS_DIR / "outputs_deterministic_rc2"
 DEFAULT_REPORT_PATH = ANALYSIS_DIR / "outputs" / "instruction_rc2_temporal_correction_report.md"
+LAYER_A_DOMAIN = "Layer A -- domain"
 
 COLLECTION_METHODS = ("survey", "administrative")
 TEMPORAL_STRUCTURES = ("cross-sectional", "longitudinal")
 UNITS = ("individual", "household", "business", "area")
 SECTORS = ("academic", "government", "third-sector", "commercial", "unclassified")
-DOMAIN_ORDER = (
-    "Education & Skills",
-    "Health & Social Care",
-    "Labour Market & Employment",
-    "Business & Productivity",
-    "Income, Poverty & Inequality",
-    "Housing & Planning",
-    "Crime & Justice",
-    "Migration & Demographics",
-    "Environment & Agriculture",
-    "Public Finance & Taxation",
-    "Transport & Mobility",
-    "COVID-19 & Pandemic",
-    "Data Infrastructure & Methodology",
-    "Other / Cross-sector",
-    "Unclear from Register Entry",
-)
 LINKAGE_SPANS = (
     "No record linkage",
     "Within-domain record linkage",
@@ -214,6 +200,39 @@ def _key(value: object) -> str:
     return " ".join(str(value or "").split()).casefold()
 
 
+def _taxonomy_text(value: object) -> str:
+    return " ".join(str(value or "").split()).strip()
+
+
+@lru_cache(maxsize=None)
+def active_layer_a_domain_order(path: str | Path = TAXONOMY_PATH) -> tuple[str, ...]:
+    """Return the authoritative active Layer A domain labels in taxonomy order."""
+    taxonomy_path = Path(path)
+    with taxonomy_path.open(encoding="utf-8") as f:
+        taxonomy = yaml.safe_load(f)
+    if not isinstance(taxonomy, dict) or not isinstance(taxonomy.get("categories"), list):
+        raise ValueError(f"{taxonomy_path} is missing a categories list")
+
+    labels: list[str] = []
+    for category in taxonomy["categories"]:
+        if not isinstance(category, dict):
+            continue
+        status = _taxonomy_text(category.get("status")).lower()
+        if (
+            category.get("layer") == LAYER_A_DOMAIN
+            and category.get("include_in_prompt") is True
+            and not status.startswith("removed")
+        ):
+            label = _taxonomy_text(category.get("label"))
+            if not label:
+                raise ValueError(f"{taxonomy_path} has an active Layer A category without a label")
+            labels.append(label)
+
+    if not labels:
+        raise ValueError(f"{taxonomy_path} has no active Layer A domain labels")
+    return tuple(labels)
+
+
 _TRAILING_ACRONYM_SUFFIX_RE = re.compile(r"^(?P<base>.+?)\s+\((?P<suffix>[^()]+)\)\s*$")
 
 
@@ -367,6 +386,7 @@ def validate_reference(reference: dict) -> None:
         raise ValueError("reference_version is required")
     if not reference.get("meta_principle"):
         raise ValueError("meta_principle is required")
+    domain_order = active_layer_a_domain_order()
 
     seen_datasets: set[str] = set()
     dataset_reference_keys: set[str] = set()
@@ -436,7 +456,7 @@ def validate_reference(reference: dict) -> None:
         domains = _as_list(record.get("component_domains"))
         if not domains:
             raise ValueError(f"{canonical!r} has no component_domains")
-        invalid = sorted(set(domains) - set(DOMAIN_ORDER))
+        invalid = sorted(set(domains) - set(domain_order))
         if invalid:
             raise ValueError(f"{canonical!r} has invalid component domains {invalid!r}")
         product_dataset_keys: set[str] = set()
@@ -541,6 +561,7 @@ def derive_properties(
     institutions: pd.DataFrame,
     indexes: ReferenceIndexes,
 ) -> pd.DataFrame:
+    domain_order = active_layer_a_domain_order()
     datasets_by_record = datasets.groupby("Record ID", sort=False)["dataset"].apply(list).to_dict() if len(datasets) else {}
     institutions_by_record = (
         institutions.groupby("Record ID", sort=False)["institution"].apply(list).to_dict()
@@ -595,7 +616,7 @@ def derive_properties(
                 matched_product_names,
                 [record["canonical"] for record in indexes.reference.get("linked_products", [])],
             ),
-            "record_linkage_component_domains": _join(component_domains, DOMAIN_ORDER),
+            "record_linkage_component_domains": _join(component_domains, domain_order),
             "dataset_collection_methods": _join(collection_methods, COLLECTION_METHODS),
             "dataset_temporal_structures": _join(temporal_structures, TEMPORAL_STRUCTURES),
             "dataset_units": _join(units, UNITS),
