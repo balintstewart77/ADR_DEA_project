@@ -56,19 +56,12 @@ def make_srs_chart(df: pd.DataFrame) -> go.Figure:
     srs = (
         df["Secure Research Service"]
         .str.strip()
+        .replace("", pd.NA)
+        .dropna()
         .value_counts()
         .reset_index()
     )
     srs.columns = ["SRS", "Count"]
-    srs["SRS"] = srs["SRS"].str.replace(" Secure Research Service", "", regex=False)
-
-    # Collapse small slices into "Other"
-    threshold = srs["Count"].sum() * 0.03
-    small = srs[srs["Count"] < threshold]
-    if len(small) > 0:
-        srs = srs[srs["Count"] >= threshold].copy()
-        srs = pd.concat([srs, pd.DataFrame([{"SRS": "Other", "Count": small["Count"].sum()}])],
-                        ignore_index=True)
 
     fig = px.pie(
         srs, names="SRS", values="Count",

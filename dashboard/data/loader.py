@@ -8,11 +8,19 @@ from dashboard.config import (
     CLEANING_OUTPUT_DIR,
 )
 from analysis.register_cleaning import clean_register_dataframe, load_raw_register
+from analysis.derive_register_properties import (
+    REFERENCE_PATH,
+    build_indexes,
+    canonical_processing_environment_label,
+    load_reference,
+)
 
 try:
     from dashboard.dataset_normalisation import iter_dataset_entries, parse_datasets
 except ModuleNotFoundError:
     from dataset_normalisation import iter_dataset_entries, parse_datasets
+
+_REFERENCE_INDEXES = build_indexes(load_reference(REFERENCE_PATH))
 
 
 def load_raw(data_dir=DATA_DIR):
@@ -68,6 +76,10 @@ def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict
         output_dir=CLEANING_OUTPUT_DIR,
         include_quarter_date=True,
         include_project_row_id=True,
+    )
+
+    df["Secure Research Service"] = df["Secure Research Service"].apply(
+        lambda value: canonical_processing_environment_label(value, _REFERENCE_INDEXES)
     )
 
     df["collections"] = df["Datasets Used"].apply(classify_collection)

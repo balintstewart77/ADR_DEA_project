@@ -17,10 +17,12 @@ import unittest
 from analysis.derive_register_properties import (
     REFERENCE_PATH,
     build_indexes,
+    canonical_processing_environment_label,
     linkage_span_for_domains,
     load_reference,
     lookup_dataset_record,
     lookup_organisation_record,
+    lookup_processing_environment_record,
     match_linked_products,
     project_linkage_span,
 )
@@ -220,6 +222,40 @@ class AdjudicatedDecisionsTest(unittest.TestCase):
                 record = lookup_organisation_record(canonical, self.indexes)
                 self.assertIsNotNone(record, f"{canonical!r} not found")
                 self.assertEqual(record["sectors"], ["government"])
+
+    # 14. Processing-environment aliases (human-adjudicated, reference 0.5.4):
+    # these are display/grouping corrections for the existing TRE field only.
+    def test_processing_environment_aliases_resolve_to_display_labels(self):
+        cases = {
+            "Office for National Statistics Secure Research Service":
+                "ONS Secure Research Service (SRS)",
+            "ONS SRS": "ONS Secure Research Service (SRS)",
+            "SRS": "ONS Secure Research Service (SRS)",
+            "Northern Ireland Statistics and Research Agency":
+                "Northern Ireland Statistics and Research Agency (NISRA)",
+            "NISRA": "Northern Ireland Statistics and Research Agency (NISRA)",
+            "SAIL": "SAIL Databank",
+            "SAIL Databank": "SAIL Databank",
+            "UKDS": "UK Data Service (UKDS)",
+            "UK Data Service": "UK Data Service (UKDS)",
+        }
+        for alias, expected in cases.items():
+            with self.subTest(alias=alias):
+                self.assertEqual(
+                    canonical_processing_environment_label(alias, self.indexes),
+                    expected,
+                )
+
+    def test_integrated_data_service_is_not_ons_srs(self):
+        ids = lookup_processing_environment_record(
+            "Integrated Data Service", self.indexes
+        )
+        ons_srs = lookup_processing_environment_record("SRS", self.indexes)
+
+        self.assertIsNotNone(ids)
+        self.assertIsNotNone(ons_srs)
+        self.assertEqual(ids["display_label"], "Integrated Data Service (IDS)")
+        self.assertNotEqual(ids["canonical"], ons_srs["canonical"])
 
     # 15. June 2026 organisation rulings (human-adjudicated, reference 0.4.9):
     # Oxford Brookes academic (distinct from University of Oxford), Anna Freud

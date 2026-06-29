@@ -1,4 +1,4 @@
-reference_version: "0.5.3"
+reference_version: "0.5.4"
 
 adr_england_flagship_source: &adr_england_flagship_source "https://www.adruk.org/data-access/flagship-datasets/"
 adr_england_flagship_note: &adr_england_flagship_note >
@@ -34,6 +34,64 @@ canonical_key_policy: >
   GUIE waves, and AD|ARC phases. Researcher organisations are parsed with
   dashboard.institution_normalisation.parse_institutions and matched on its
   canonical institution string.
+
+processing_environment_rule:
+  rule: >
+    Processing-environment values are canonicalised for display and grouping
+    from reviewed register aliases. This is a grouping correction for the
+    existing Secure Research Service / TRE field only; it must not affect
+    dataset facets, researcher sectors, LLM classifications, or record-linkage
+    derivation.
+  count_basis: >
+    Counts use cleaned DEA register project records after the legal-basis filter
+    and duplicate policy, not raw source rows. Non-DEA SRSA rows are excluded
+    before this alias grouping is applied.
+  adjudicated_decisions:
+    - >
+      Bare "SRS" is the ONS Secure Research Service and is folded into the ONS
+      SRS group.
+    - >
+      Integrated Data Service is the ONS IDS, a distinct newer environment; it
+      is intentionally not merged into the ONS SRS group.
+    - >
+      SAIL Databank is the display name; do not expand SAIL to Secure
+      Anonymised Information Linkage in dashboard labels.
+
+processing_environments:
+  - canonical: "ONS Secure Research Service"
+    display_label: "ONS Secure Research Service (SRS)"
+    aliases:
+      - "Office for National Statistics Secure Research Service"
+      - "ONS SRS"
+      - "SRS"
+    notes: >
+      Balint-adjudicated June 2026: bare SRS is the ONS Secure Research
+      Service, not a generic secure research service bucket.
+  - canonical: "Northern Ireland Statistics and Research Agency"
+    display_label: "Northern Ireland Statistics and Research Agency (NISRA)"
+    aliases:
+      - "Northern Ireland Statistics and Research Agency"
+      - "NISRA"
+  - canonical: "SAIL Databank"
+    display_label: "SAIL Databank"
+    aliases:
+      - "SAIL Databank"
+      - "SAIL"
+    notes: >
+      Use the commonly recognised product name; do not spell out the SAIL
+      acronym in dashboard labels.
+  - canonical: "UK Data Service"
+    display_label: "UK Data Service (UKDS)"
+    aliases:
+      - "UK Data Service"
+      - "UKDS"
+  - canonical: "Integrated Data Service"
+    display_label: "Integrated Data Service (IDS)"
+    aliases:
+      - "Integrated Data Service"
+    notes: >
+      Kept separate from ONS Secure Research Service; IDS is a distinct newer
+      ONS environment.
 
 linked_products_rule:
   rule: >

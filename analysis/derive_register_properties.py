@@ -205,6 +205,7 @@ class ReferenceIndexes:
     reference: dict
     dataset_by_key: dict[str, dict]
     organisation_by_key: dict[str, dict]
+    processing_environment_by_key: dict[str, dict]
     linked_product_by_key: dict[str, list[dict]]
     linked_product_order: dict[str, int]
 
@@ -325,6 +326,18 @@ def build_indexes(reference: dict) -> ReferenceIndexes:
             for key in _organisation_match_keys(value):
                 _add_unique(organisation_by_key, key, record, "organisation")
 
+    processing_environment_by_key: dict[str, dict] = {}
+    for record in reference.get("processing_environments", []):
+        values = [
+            record["canonical"],
+            record.get("display_label", ""),
+            *_as_list(record.get("aliases")),
+        ]
+        for value in values:
+            key = _key(value)
+            if key:
+                _add_unique(processing_environment_by_key, key, record, "processing environment")
+
     linked_product_by_key: dict[str, list[dict]] = defaultdict(list)
     linked_product_order: dict[str, int] = {}
     for i, record in enumerate(reference.get("linked_products", [])):
@@ -343,6 +356,7 @@ def build_indexes(reference: dict) -> ReferenceIndexes:
         reference=reference,
         dataset_by_key=dataset_by_key,
         organisation_by_key=organisation_by_key,
+        processing_environment_by_key=processing_environment_by_key,
         linked_product_by_key=dict(linked_product_by_key),
         linked_product_order=linked_product_order,
     )
@@ -388,6 +402,19 @@ def validate_reference(reference: dict) -> None:
         invalid = sorted(set(sectors) - set(SECTORS))
         if invalid:
             raise ValueError(f"{canonical!r} has invalid sectors {invalid!r}")
+
+    seen_envs: set[str] = set()
+    for record in reference.get("processing_environments", []):
+        canonical = record.get("canonical")
+        if not canonical:
+            raise ValueError("Every processing environment record needs canonical")
+        if canonical in seen_envs:
+            raise ValueError(f"Duplicate processing environment record {canonical!r}")
+        seen_envs.add(canonical)
+        if not record.get("display_label"):
+            raise ValueError(f"{canonical!r} is missing processing-environment display_label")
+        if not _as_list(record.get("aliases")):
+            raise ValueError(f"{canonical!r} has no processing-environment aliases")
 
     seen_products: set[str] = set()
     for record in reference.get("linked_products", []):
@@ -436,6 +463,29 @@ def lookup_organisation_record(institution: str, indexes: ReferenceIndexes) -> d
         if record is not None:
             return record
     return None
+
+
+def lookup_processing_environment_record(
+    processing_environment: object,
+    indexes: ReferenceIndexes,
+) -> dict | None:
+    key = _key(processing_environment)
+    if not key:
+        return None
+    return indexes.processing_environment_by_key.get(key)
+
+
+def canonical_processing_environment_label(
+    processing_environment: object,
+    indexes: ReferenceIndexes,
+) -> str:
+    if pd.isna(processing_environment):
+        return ""
+    text = " ".join(str(processing_environment or "").split()).strip()
+    record = lookup_processing_environment_record(text, indexes)
+    if record is None:
+        return text
+    return str(record.get("display_label") or record["canonical"]).strip()
 
 
 def match_linked_products(canonical_dataset: str, indexes: ReferenceIndexes) -> list[dict]:

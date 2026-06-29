@@ -154,7 +154,7 @@ _ALL_INSTITUTION_OPTIONS = (
 def _format_tre_provider(value) -> str:
     if pd.isna(value):
         return ""
-    return str(value).strip().replace(" Secure Research Service", "")
+    return str(value).strip()
 
 
 _tre_values = sorted({
@@ -165,8 +165,8 @@ _tre_values = sorted({
 _tre_project_counts = (
     df_all.assign(_tre_value=df_all["Secure Research Service"].astype("string").str.strip())
     .dropna(subset=["_tre_value"])
-    .drop_duplicates(subset=["Project ID", "_tre_value"])
-    .groupby("_tre_value")["Project ID"].nunique()
+    .query("_tre_value != ''")
+    .groupby("_tre_value")["Project Row ID"].count()
 )
 _ALL_TRE_OPTIONS = (
     [{"label": "All processing environments", "value": "ALL"}]

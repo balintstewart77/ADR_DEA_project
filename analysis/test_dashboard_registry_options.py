@@ -1,6 +1,11 @@
 import unittest
 
-from dashboard.data.registry import _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS
+from dashboard.data.registry import (
+    _ALL_DATASET_OPTIONS,
+    _ALL_PROVIDER_OPTIONS,
+    _ALL_TRE_OPTIONS,
+    df_all,
+)
 
 
 class DashboardRegistryOptionTest(unittest.TestCase):
@@ -29,6 +34,40 @@ class DashboardRegistryOptionTest(unittest.TestCase):
         self.assertTrue(expected_values.issubset(set(values)))
         for acronym in ("DBT", "DLUHC", "DfT", "DWP"):
             self.assertNotIn(acronym, values)
+
+    def test_processing_environment_options_are_canonicalised(self):
+        expected_counts = {
+            "ONS Secure Research Service (SRS)": 1012,
+            "Northern Ireland Statistics and Research Agency (NISRA)": 22,
+            "SAIL Databank": 77,
+            "UK Data Service (UKDS)": 184,
+            "Integrated Data Service (IDS)": 13,
+        }
+        values = [option["value"] for option in _ALL_TRE_OPTIONS]
+        labels_by_value = {option["value"]: option["label"] for option in _ALL_TRE_OPTIONS}
+
+        self.assertEqual(set(values) - {"ALL"}, set(expected_counts))
+        for value, count in expected_counts.items():
+            with self.subTest(processing_environment=value):
+                self.assertIn(f"({count} projects)", labels_by_value[value])
+
+        raw_aliases = {
+            "Office for National Statistics Secure Research Service",
+            "ONS SRS",
+            "SRS",
+            "Northern Ireland Statistics and Research Agency",
+            "NISRA",
+            "SAIL",
+            "UK Data Service",
+            "UKDS",
+            "Integrated Data Service",
+        }
+        self.assertFalse(raw_aliases & set(values))
+
+        counts = df_all["Secure Research Service"].value_counts().to_dict()
+        for value, count in expected_counts.items():
+            with self.subTest(live_count=value):
+                self.assertEqual(counts.get(value), count)
 
 
 if __name__ == "__main__":
