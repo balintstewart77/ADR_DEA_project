@@ -1869,3 +1869,56 @@ Linked data uptake section intro and here. Exposure years are now shown
 wherever a rate is shown; rates over short exposures are initial-adoption
 rates, not sustained demand. The availability <= first-register-use invariant
 is unchanged and still enforced by test_adjudicated_decisions.
+
+# Methods log — gateway-defined register coverage and deterministic reproducibility guard (2026-06-29)
+
+## Processing-environment normalisation
+
+The processing-environment field was canonicalised as a count-correction, not a
+new substantive classification: ONS SRS variants, NISRA variants, SAIL
+variants and UKDS variants had been fragmenting project counts across aliases.
+`Integrated Data Service (IDS)` is retained separately from ONS SRS. The change
+is defended by tests and did not alter other deterministic facets or headline
+record-linkage figures. The more important methodological output of the work
+was the gateway-coverage finding below.
+
+## Gateway-coverage finding
+
+The register is a faithful lens on DEA-gated activity, but that is a
+gateway-defined lens rather than a complete census of all research use of the
+same infrastructures or linked assets. During the processing-environment audit,
+the raw-to-cleaned count gap exposed a coherent block of about 71
+UKDS-hosted SRSA Approved Researcher Gateway projects in 2023. These records
+were correctly excluded by the DEA-only legal-basis filter, demonstrating that a
+parallel route can be systematically visible in the source spreadsheet while
+remaining outside the analytical instrument used here.
+
+This should be framed as boundary-mapping, not as a defect in the analysis: the
+analysis measures DEA-route activity, and the finding helps define the edge of
+that instrument. It belongs with the existing MoJ-DfE/PNC-linked Data First
+case (excluded from public-register Data First counts because it uses a
+different legal gateway) and the SAIL-native-data cases (visible only where
+they enter the DEA-register route, not as a complete measure of SAIL demand).
+Together, these examples show that research activity is fragmented across
+gateways and infrastructures, none of which should be treated as fully visible
+from another gateway's public register.
+
+Open question: the SRSA route may be a predecessor route partly superseded by
+DEA, a persistent parallel route, or both. If it is partly a predecessor route,
+there may be gateway-migration contamination in apparent DEA growth trends; if
+it is mainly persistent and parallel, it is primarily a coverage caveat. The
+analysis currently records the boundary and leaves that historical relationship
+unresolved.
+
+## Deterministic reproducibility safeguard
+
+A re-derive during the processing-environment work found that the committed
+deterministic properties output had silently drifted from current code: COVID
+linked-product matches for `2023/066` and `2023/228` were being dropped because
+the parsed alias variants were not covered, while `2021/015` correctly gained
+the BICS business unit. The COVID aliases were restored, the BICS correction was
+accepted into `register_properties.csv`, and an idempotency test now asserts
+that the committed deterministic output is reproducible from current code and
+reference data. This records the methodological safeguard, not the individual
+cell fixes: the deterministic layer is now enforced-reproducible rather than
+trusted to remain aligned by convention.
