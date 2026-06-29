@@ -1,17 +1,64 @@
 import copy
+from pathlib import Path
+import tempfile
 import unittest
+
+import pandas as pd
+from pandas.testing import assert_frame_equal
 
 from analysis.derive_register_properties import (
     REFERENCE_PATH,
     build_indexes,
+    derive_properties,
     linkage_span_for_domains,
     load_reference,
     lookup_dataset_record,
     lookup_organisation_record,
     match_linked_products,
+    parse_register_entities,
     project_linkage_span,
     _organisation_match_keys,
 )
+from analysis.register_cleaning import DATA_DIR, load_clean_register
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+COMMITTED_REGISTER_PROPERTIES = PROJECT_ROOT / "analysis" / "outputs_deterministic_rc2" / "register_properties.csv"
+EXPECTED_2023_066_PRODUCTS = (
+    "COVID-19 Infection Survey linked to NHS Test and Trace - England; "
+    "COVID-19 Infection Survey linked to Combined Vaccination - UK; "
+    "Covid-19 Schools Infection Survey linked with Test and Trace"
+)
+EXPECTED_2023_228_PRODUCTS = (
+    "COVID-19 Infection Survey linked to NHS Test and Trace - England; "
+    "COVID-19 Infection Survey linked to Combined Vaccination - UK; "
+    "COVID-19 Infection Survey linked to Mortality - England and Wales ONS; "
+    "Covid-19 Infection Survey linked with VOA and EPC data"
+)
+
+
+def _derive_current_register_properties() -> pd.DataFrame:
+    reference = load_reference(REFERENCE_PATH)
+    indexes = build_indexes(reference)
+    with tempfile.TemporaryDirectory() as output_dir:
+        df, _, _ = load_clean_register(
+            DATA_DIR,
+            output_dir=output_dir,
+            include_quarter_date=True,
+            verbose=False,
+        )
+    datasets, institutions = parse_register_entities(df)
+    return derive_properties(df, datasets, institutions, indexes)
+
+
+def _canonicalise_register_properties(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+    return (
+        df.loc[:, columns]
+        .fillna("")
+        .astype(str)
+        .sort_values("Record ID")
+        .reset_index(drop=True)
+    )
 
 
 class DeterministicRegisterPropertiesTest(unittest.TestCase):
@@ -19,6 +66,13 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
     def setUpClass(cls):
         cls.reference = load_reference(REFERENCE_PATH)
         cls.indexes = build_indexes(cls.reference)
+        cls._current_properties = None
+
+    @classmethod
+    def current_register_properties(cls) -> pd.DataFrame:
+        if cls._current_properties is None:
+            cls._current_properties = _derive_current_register_properties()
+        return cls._current_properties.copy()
 
     def span_for_dataset(self, dataset: str) -> str:
         # Per-product aggregation (reference 0.4.8): the span is the maximum of
@@ -109,6 +163,31 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             if not any(lookup_dataset_record(value, self.indexes) for value in values):
                 missing.append(product["canonical"])
         self.assertEqual(missing, [])
+
+    def test_covid_linked_product_regression_records(self):
+        # Incident guard: parsed COVID alias variants for these records must keep
+        # resolving to the adjudicated linked products.
+        properties = self.current_register_properties().set_index("Record ID")
+        self.assertEqual(properties.at["2023/066", "matched_products"], EXPECTED_2023_066_PRODUCTS)
+        self.assertEqual(properties.at["2023/228", "matched_products"], EXPECTED_2023_228_PRODUCTS)
+        self.assertIn("business", properties.at["2021/015", "dataset_units"].split("; "))
+
+    def test_committed_register_properties_are_reproducible(self):
+        committed = pd.read_csv(
+            COMMITTED_REGISTER_PROPERTIES,
+            dtype=str,
+            keep_default_na=False,
+            encoding="utf-8-sig",
+        )
+        current = self.current_register_properties()
+        self.assertEqual(set(current.columns), set(committed.columns))
+
+        columns = committed.columns.tolist()
+        assert_frame_equal(
+            _canonicalise_register_properties(current, columns),
+            _canonicalise_register_properties(committed, columns),
+            check_dtype=False,
+        )
 
     def test_linked_products_require_dataset_property_records(self):
         reference = copy.deepcopy(self.reference)

@@ -157,7 +157,7 @@
 2021/012,Cross-domain record linkage,"Linked Census, HES and Mortality Data",Health & Social Care; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic; government
 2021/013,Cross-domain record linkage,"Linked Census, HES and Mortality Data",Health & Social Care; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual,academic
 2021/014,No record linkage,,,survey; administrative,cross-sectional,business,academic
-2021/015,Cross-domain record linkage,"Linked Census, HES and Mortality Data",Health & Social Care; Migration & Demographics,survey,cross-sectional; longitudinal,individual; household,academic; government
+2021/015,Cross-domain record linkage,"Linked Census, HES and Mortality Data",Health & Social Care; Migration & Demographics,survey,cross-sectional; longitudinal,individual; household; business,academic; government
 2021/016,No record linkage,,,survey,cross-sectional,individual,academic
 2021/017,No record linkage,,,survey; administrative,cross-sectional,individual; business,commercial
 2021/018,No record linkage,,,survey,cross-sectional,individual; business,academic

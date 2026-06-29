@@ -1,4 +1,4 @@
-reference_version: "0.5.4"
+reference_version: "0.5.5"
 
 adr_england_flagship_source: &adr_england_flagship_source "https://www.adruk.org/data-access/flagship-datasets/"
 adr_england_flagship_note: &adr_england_flagship_note >
@@ -829,6 +829,7 @@ linked_products:
     aliases:
       - "COVID-19 Infection Survey linked to NHS Test and Trace - England"
       - "Covid-19 Infection Survey linked to NHS Test and Trace"
+      - "DHSC: COVID-19 Infection Survey linked to NHS Test and Trace"
     component_domains:
       - "Health & Social Care"
     notes: "COVID-19 Infection Survey linkage to NHS Test and Trace. Kept distinct from standalone COVID-19 Infection Survey and school-setting CIS linkages."
@@ -855,6 +856,7 @@ linked_products:
     availability_note: "Bounded by first register use (2021 Q1). Static catalogue release 31 Mar 2023: https://ons.metadata.works/browser/dataset/306/0 - earlier in-pandemic versions existed."
     aliases:
       - "COVID-19 Infection Survey linked to Combined Vaccination - UK"
+      - "COVID-19 Infection Survey linked to Combined Vaccination - UK ONS"
       - "Covid-19 Infection Survey linked with Combined Vaccination Dataset"
       - "Covid-19 Infection Survey with Combined Vaccination Dataset"
     component_domains:
