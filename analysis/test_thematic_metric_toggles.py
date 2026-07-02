@@ -1,6 +1,7 @@
 import json
 import unittest
 
+import pandas as pd
 from dash import dcc
 from plotly.utils import PlotlyJSONEncoder
 
@@ -322,14 +323,24 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
         self.assertIn("latest quarter provisional", annotation_text)
 
     def test_tag_domain_bars_exclude_unclear_display_only(self):
-        self.assertIn(
-            "Unclear from Register Entry",
-            set(thematic_data.df_thematic_covid_tag_by_domain["domain"]),
-        )
+        frame = pd.DataFrame([
+            {
+                "domain": "Health & Social Care",
+                "count": 3,
+                "domain_total": 10,
+                "pct_of_domain": 30.0,
+            },
+            {
+                "domain": "Unclear from Register Entry",
+                "count": 1,
+                "domain_total": 2,
+                "pct_of_domain": 50.0,
+            },
+        ])
         fig = make_tag_domain_bar(
-            thematic_data.df_thematic_covid_tag_by_domain,
+            frame,
             DOMAIN_COLOURS,
-            "COVID-19 & Pandemic by domain",
+            "Tagged projects by domain",
             metric="pct",
         )
         payload = fig.to_plotly_json()
@@ -339,7 +350,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             str(annotation.get("text", ""))
             for annotation in payload["layout"].get("annotations", [])
         )
-        self.assertIn("Excludes 'Unclear from Register Entry' (n=4 projects)", annotation_text)
+        self.assertIn("Excludes 'Unclear from Register Entry' (n=2 projects)", annotation_text)
 
     def test_toggle_graph_components_have_fixed_render_height(self):
         # Collapse-on-re-render regression: the dcc.Graph container itself must

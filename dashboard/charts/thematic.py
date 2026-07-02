@@ -94,9 +94,16 @@ def make_tag_domain_bar(
     fig = go.Figure()
     if df_totals.empty or "domain" not in df_totals.columns:
         return _apply_common(fig, height=height)
-    df_totals = df_totals[
-        df_totals["domain"].fillna("").astype(str) != "Unclear from Register Entry"
-    ].copy()
+    domain_values = df_totals["domain"].fillna("").astype(str)
+    unclear_mask = domain_values == "Unclear from Register Entry"
+    excluded_total = 0
+    if unclear_mask.any():
+        unclear_rows = df_totals.loc[unclear_mask]
+        if "domain_total" in unclear_rows.columns and not unclear_rows["domain_total"].empty:
+            excluded_total = int(unclear_rows["domain_total"].max())
+        elif "count" in unclear_rows.columns:
+            excluded_total = int(unclear_rows["count"].sum())
+    df_totals = df_totals[~unclear_mask].copy()
     if df_totals.empty:
         return _apply_common(fig, height=height)
     show_pct = metric == "pct"
@@ -124,17 +131,21 @@ def make_tag_domain_bar(
         yaxis_title="",
         margin=dict(l=220, b=80),
     )
-    fig.add_annotation(
-        text="Excludes 'Unclear from Register Entry' (n=4 projects); its small size distorts percentage views.",
-        xref="paper",
-        yref="paper",
-        x=0,
-        y=-0.18,
-        showarrow=False,
-        xanchor="left",
-        yanchor="top",
-        font=dict(size=10, color="#7f8c8d"),
-    )
+    if excluded_total:
+        fig.add_annotation(
+            text=(
+                "Excludes 'Unclear from Register Entry' "
+                f"(n={excluded_total} projects); its small size distorts percentage views."
+            ),
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=-0.18,
+            showarrow=False,
+            xanchor="left",
+            yanchor="top",
+            font=dict(size=10, color="#7f8c8d"),
+        )
     return _apply_common(fig, height=height)
 
 
