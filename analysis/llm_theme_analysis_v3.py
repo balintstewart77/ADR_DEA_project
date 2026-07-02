@@ -30,8 +30,8 @@ Usage:
     set   ANTHROPIC_API_KEY=sk-ant-...   (Windows)
 
     python analysis/llm_theme_analysis_v3.py
-    python analysis/llm_theme_analysis_v3.py --model claude-opus-4-6 --output-dir analysis/outputs_opus_4_6
-    python analysis/llm_theme_analysis_v3.py --model claude-sonnet-4-6 --output-dir analysis/outputs_sonnet_4_6
+    python analysis/llm_theme_analysis_v3.py --model claude-fable-5 --output-dir analysis/outputs_classified_YYYYMMDD_fable5
+    python analysis/llm_theme_analysis_v3.py --model claude-opus-4-8 --output-dir analysis/outputs_opus_4_8
 
 Outputs (written to analysis/outputs_v3/):
     - layer_classifications.csv     : One row per project, all LLM outputs
@@ -102,8 +102,8 @@ CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
 CACHE_SCHEMA_VERSION = 6
 PROMPT_VERSION = "dict-1.0-rc2"
 
-MODEL      = "claude-opus-4-8"
-BATCH_SIZE = 10          # projects per LLM batch (reduced to improve Opus reliability)
+MODEL      = "claude-fable-5"
+BATCH_SIZE = 10          # projects per LLM batch
 MAX_TOKENS = 8192        # generous ceiling -- 20 projects x ~180 tokens/entry
 MAX_RETRIES = 3          # retry transient API failures before giving up
 RATIONALE_PLACEHOLDER = "(rationale not provided)"

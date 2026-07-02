@@ -239,6 +239,25 @@ class ReleasePointersTest(unittest.TestCase):
         )
         self.assertTrue(os.path.isfile(properties_csv), properties_csv)
 
+    def test_committed_classification_release_matches_classifier_defaults(self):
+        from analysis.llm_theme_analysis_v3 import MODEL, PROMPT_VERSION
+
+        project_root = os.path.normpath(
+            os.path.join(os.path.dirname(__file__), "..")
+        )
+        committed = os.path.join(project_root, "data", "release_pointers.json")
+        pointers = _load_release_pointers(committed)
+        classification_dir = os.path.join(
+            project_root, *pointers["classification_dir"].split("/")
+        )
+        metadata_path = os.path.join(classification_dir, "run_metadata.json")
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            metadata = json.load(f)
+
+        self.assertEqual(metadata["model"], MODEL)
+        self.assertEqual(metadata["prompt_version"], PROMPT_VERSION)
+        self.assertEqual(metadata["taxonomy_version"], PROMPT_VERSION)
+
 
 if __name__ == "__main__":
     unittest.main()
