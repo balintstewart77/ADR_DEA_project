@@ -62,6 +62,21 @@ def build_datasets_tab():
                     searchable=False,
                 ),
             ], md=3),
+            dbc.Col([
+                html.Label("Collections", className="filter-label"),
+                dcc.RadioItems(
+                    id="datasets-collection-display-mode",
+                    options=[
+                        {"label": "Grouped", "value": "grouped"},
+                        {"label": "Individual", "value": "individual"},
+                    ],
+                    value="grouped",
+                    inline=True,
+                    inputStyle={"marginRight": "0.3rem"},
+                    labelStyle={"marginRight": "0.7rem", "fontSize": "0.86rem"},
+                    className="collection-display-toggle",
+                ),
+            ], md=2),
         ], className="mb-3 g-2"),
         dbc.Row([
             dbc.Col(
@@ -80,7 +95,8 @@ def build_datasets_tab():
             "curated availability dates from the reference override the proxy where present. "
             "Datasets available before 2019 get the full window as exposure. The hover shows "
             "each dataset's exposure years — rates over short exposures are initial-adoption "
-            "rates, not sustained demand.",
+            "rates, not sustained demand. In grouped collection view, reference-defined "
+            "collection members are de-duplicated to one project per collection.",
             className="section-desc text-muted small",
         ),
         dbc.Row([

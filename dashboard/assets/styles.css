@@ -223,6 +223,14 @@
     letter-spacing: 0.03em;
     margin-bottom: 0.3rem;
 }
+.collection-display-toggle {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2rem 0;
+    color: #4f6274;
+}
 
 /* Hero search */
 .hero-search {

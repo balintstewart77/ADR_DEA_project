@@ -33,6 +33,35 @@ _LINKED_PRODUCT_COLLECTION_LABELS = {
 REFERENCE_COLLECTIONS = list(dict.fromkeys(_LINKED_PRODUCT_COLLECTION_LABELS.values()))
 
 
+def collection_labels_for_dataset(canonical_dataset: str) -> list[str]:
+    """Return reference-defined collection labels for a canonical dataset."""
+    labels = [
+        _LINKED_PRODUCT_COLLECTION_LABELS[product["canonical"]]
+        for product in match_linked_products(canonical_dataset, _REFERENCE_INDEXES)
+        if product["canonical"] in _LINKED_PRODUCT_COLLECTION_LABELS
+    ]
+    return list(dict.fromkeys(labels))
+
+
+def reference_collection_membership_rows() -> list[dict[str, str]]:
+    """Reference-derived collection membership rows, one row per product spelling."""
+    rows: list[dict[str, str]] = []
+    for record in _REFERENCE_INDEXES.reference.get("linked_products", []):
+        collection = str(record.get("collection_label") or "").strip()
+        if not collection:
+            continue
+        canonical = str(record.get("canonical") or "").strip()
+        values = [canonical, *[str(value).strip() for value in record.get("aliases", [])]]
+        for value in values:
+            if value:
+                rows.append({
+                    "collection": collection,
+                    "product": canonical,
+                    "member": value,
+                })
+    return rows
+
+
 def load_raw(data_dir=DATA_DIR):
     return load_raw_register(data_dir)
 
@@ -52,12 +81,7 @@ def count_collection_usages(datasets_str: str) -> list[str]:
         if not part:
             continue
         dataset = normalise_dataset_name(part)
-        labels = [
-            _LINKED_PRODUCT_COLLECTION_LABELS[product["canonical"]]
-            for product in match_linked_products(dataset, _REFERENCE_INDEXES)
-            if product["canonical"] in _LINKED_PRODUCT_COLLECTION_LABELS
-        ]
-        usages.extend(dict.fromkeys(labels))
+        usages.extend(collection_labels_for_dataset(dataset))
     return usages
 
 

@@ -26,6 +26,11 @@ from analysis.derive_register_properties import (
     match_linked_products,
 )
 from dashboard.data.deterministic import load_register_properties
+from dashboard.data.collection_view import (
+    COLLECTION_VIEW_GROUPED,
+    COLLECTION_VIEW_INDIVIDUAL,
+    normalise_collection_view,
+)
 from dashboard.data.registry import df_all, df_datasets
 
 REGISTER_WINDOW_START = pd.Timestamp("2019-01-01")
@@ -129,6 +134,7 @@ for _record in _reference_indexes.reference.get("linked_products", []):
         "announced_raw": _announced_raw,
         "announced_date": _availability_to_timestamp(_announced_raw),
         "flagship_collection": str(_record.get("flagship_collection") or ""),
+        "collection_label": str(_record.get("collection_label") or "").strip(),
         "flagship_source": str(_record.get("flagship_source") or ""),
         "flagship_note": str(_record.get("flagship_note") or ""),
     })
@@ -191,7 +197,13 @@ if "Record ID" in df_all.columns and not _properties.empty:
     _product_lookup = (
         _properties.set_index("Record ID")["matched_products"]
     )
-    _matched = df_all[["Record ID", "Year", "quarter_date"]].copy()
+    _project_key_col = (
+        "Project Row ID"
+        if "Project Row ID" in df_all.columns
+        else "Project ID" if "Project ID" in df_all.columns else "Record ID"
+    )
+    _matched = df_all[["Record ID", _project_key_col, "Year", "quarter_date"]].copy()
+    _matched["project_key"] = _matched[_project_key_col].astype(str)
     _matched["matched_products"] = (
         _matched["Record ID"].fillna("").astype(str).str.strip().map(_product_lookup).fillna("")
     )
@@ -200,9 +212,9 @@ if "Record ID" in df_all.columns and not _properties.empty:
     _matched = _matched.explode("product")
     _matched["product"] = _matched["product"].str.strip()
     _matched = _matched[_matched["product"] != ""]
-    DF_PRODUCT_PROJECTS = _matched[["product", "Year", "quarter_date"]].reset_index(drop=True)
+    DF_PRODUCT_PROJECTS = _matched[["project_key", "product", "Year", "quarter_date"]].reset_index(drop=True)
 else:
-    DF_PRODUCT_PROJECTS = pd.DataFrame(columns=["product", "Year", "quarter_date"])
+    DF_PRODUCT_PROJECTS = pd.DataFrame(columns=["project_key", "product", "Year", "quarter_date"])
 
 PRODUCT_TOTALS = Counter(DF_PRODUCT_PROJECTS["product"])
 
@@ -222,6 +234,7 @@ PRODUCT_METADATA = pd.DataFrame([
         "short": product["short"],
         "linkage_span": "Cross-domain" if product["is_cross_domain"] else "Within-domain",
         "flagship_collection": product["flagship_collection"],
+        "collection_label": product["collection_label"],
         "is_adr_england_flagship": product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION,
         "flagship_group": (
             "ADR England flagship"
@@ -342,45 +355,157 @@ def _with_product_metadata(frame: pd.DataFrame) -> pd.DataFrame:
     work["short"] = work["short"].fillna(work["product"])
     work["linkage_span"] = work["linkage_span"].fillna("Unclassified")
     work["flagship_collection"] = work["flagship_collection"].fillna("")
+    work["collection_label"] = work["collection_label"].fillna("")
     work["is_adr_england_flagship"] = work["is_adr_england_flagship"].fillna(False).astype(bool)
     work["flagship_group"] = work["flagship_group"].fillna(OTHER_LINKED_DATASETS_LABEL)
     return work
+
+
+def _line_span(values: pd.Series) -> str:
+    spans = set(values.dropna().astype(str))
+    if "Cross-domain" in spans:
+        return "Cross-domain"
+    if "Within-domain" in spans:
+        return "Within-domain"
+    return next(iter(spans), "Unclassified")
+
+
+def _line_start_for_products(products: list[str], granularity: str) -> pd.Timestamp:
+    starts = [_product_period_start(product, granularity) for product in products]
+    starts = [start for start in starts if start is not None and not pd.isna(start)]
+    if not starts:
+        return REGISTER_WINDOW_START
+    return min(starts)
+
+
+def _empty_adoption_frame() -> pd.DataFrame:
+    return pd.DataFrame(columns=[
+        "line_id", "line_label", "line_group", "line_linkage_span",
+        "product", "period_date", "period_label", "Year", "count",
+        "total", "pct_of_projects",
+    ])
 
 
 def adoption_curve_table(
     granularity: str = "year",
     *,
     selected_products: list[str] | None = None,
+    collection_view: str | None = None,
 ) -> pd.DataFrame:
     """Per-product adoption-curve rows for selected linked products."""
-    source = DF_PRODUCT_BY_QUARTER if granularity == "quarter" else DF_PRODUCT_BY_YEAR
-    if source.empty:
-        return pd.DataFrame(columns=[
-            "line_id", "line_label", "line_group", "line_linkage_span",
-            "product", "period_date", "period_label", "Year", "count",
-            "total", "pct_of_projects",
-        ])
-    work = _with_product_metadata(source)
     selected = list(dict.fromkeys(selected_products or []))
     if not selected:
-        return pd.DataFrame(columns=[
-            "line_id", "line_label", "line_group", "line_linkage_span",
-            "product", "period_date", "period_label", "Year", "count",
-            "total", "pct_of_projects",
-        ])
-    result = work[work["product"].isin(selected)].copy()
-    if result.empty:
-        return pd.DataFrame(columns=[
-            "line_id", "line_label", "line_group", "line_linkage_span",
-            "product", "period_date", "period_label", "Year", "count",
-            "total", "pct_of_projects",
-        ])
-    result["line_id"] = result["product"]
-    result["line_label"] = result["short"]
-    result["line_group"] = result["flagship_group"]
-    result["line_linkage_span"] = result["linkage_span"]
-    sort_cols = [col for col in ["line_group", "line_label", "period_date"] if col in result.columns]
-    return result.sort_values(sort_cols, kind="stable").reset_index(drop=True)
+        return _empty_adoption_frame()
+    if DF_PRODUCT_PROJECTS.empty:
+        return _empty_adoption_frame()
+
+    work = DF_PRODUCT_PROJECTS[DF_PRODUCT_PROJECTS["product"].isin(selected)].copy()
+    if work.empty:
+        return _empty_adoption_frame()
+    work = _with_product_metadata(work)
+    mode = (
+        normalise_collection_view(collection_view)
+        if collection_view is not None
+        else COLLECTION_VIEW_INDIVIDUAL
+    )
+    grouped = mode == COLLECTION_VIEW_GROUPED
+    has_collection = work["collection_label"].astype(str) != ""
+
+    if grouped:
+        work["line_id"] = work["product"]
+        work.loc[has_collection, "line_id"] = (
+            "collection::" + work.loc[has_collection, "collection_label"].astype(str)
+        )
+        work["line_label"] = work["short"]
+        work.loc[has_collection, "line_label"] = work.loc[has_collection, "collection_label"]
+        work["line_group"] = work["flagship_group"]
+    else:
+        work["line_id"] = work["product"]
+        work["line_label"] = work["short"]
+        work["line_group"] = work["flagship_group"]
+
+    if granularity == "quarter":
+        work["period_date"] = pd.to_datetime(work["quarter_date"])
+        work["period_label"] = work["period_date"].dt.to_period("Q").map(
+            lambda quarter: f"{quarter.year} Q{quarter.quarter}"
+        )
+        period_values = [
+            {
+                "period_key": quarter.start_time,
+                "period_date": quarter.start_time,
+                "period_label": f"{quarter.year} Q{quarter.quarter}",
+                "Year": int(quarter.year),
+                "total": int(_total_by_quarter.get(quarter.start_time, 0)),
+            }
+            for quarter in _register_quarters
+        ]
+        count_keys = ["line_id", "period_date"]
+    else:
+        work["period_date"] = work["Year"].map(lambda year: pd.Timestamp(int(year), 1, 1))
+        work["period_label"] = work["Year"].astype(int).astype(str)
+        period_values = [
+            {
+                "period_key": int(year),
+                "period_date": pd.Timestamp(int(year), 1, 1),
+                "period_label": str(int(year)),
+                "Year": int(year),
+                "total": int(_total_by_year.get(year, 0)),
+            }
+            for year in _register_years
+        ]
+        count_keys = ["line_id", "Year"]
+
+    counts = (
+        work.drop_duplicates(subset=["line_id", *count_keys[1:], "project_key"])
+        .groupby(count_keys)["project_key"]
+        .nunique()
+    )
+    line_meta = (
+        work.groupby("line_id", sort=False)
+        .agg(
+            line_label=("line_label", "first"),
+            line_group=("line_group", "first"),
+            line_linkage_span=("linkage_span", _line_span),
+            products=("product", lambda values: list(dict.fromkeys(values))),
+            total_projects=("project_key", lambda values: values.nunique()),
+        )
+        .sort_values("total_projects", ascending=False, kind="stable")
+    )
+
+    rows = []
+    for line_id, meta in line_meta.iterrows():
+        products = list(meta["products"])
+        start = _line_start_for_products(products, granularity)
+        for period in period_values:
+            period_date = period["period_date"]
+            if period_date < start:
+                continue
+            if granularity == "quarter":
+                count_key = (line_id, period_date)
+            else:
+                count_key = (line_id, period["Year"])
+            count = int(counts.get(count_key, 0))
+            total = int(period["total"])
+            rows.append({
+                "line_id": line_id,
+                "line_label": str(meta["line_label"]),
+                "line_group": str(meta["line_group"]),
+                "line_linkage_span": str(meta["line_linkage_span"]),
+                "product": "; ".join(products),
+                "period_date": period_date,
+                "period_label": period["period_label"],
+                "Year": int(period["Year"]),
+                "count": count,
+                "total": total,
+                "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+            })
+
+    if not rows:
+        return _empty_adoption_frame()
+    return pd.DataFrame(rows).sort_values(
+        ["line_group", "line_label", "period_date"],
+        kind="stable",
+    ).reset_index(drop=True)
 
 # Honest annotation/table wording per availability basis: a documented-
 # accessible date is a real access date ("available"); announced and bounded
@@ -393,7 +518,71 @@ _ANNOTATION_BASIS_LABELS = {
 }
 
 
-def product_summary_table() -> pd.DataFrame:
+def _group_product_summary(summary: pd.DataFrame) -> pd.DataFrame:
+    if summary.empty:
+        return summary
+
+    work = summary.copy()
+    has_collection = work["collection_label"].astype(str) != ""
+    work["line_id"] = work["product"]
+    work.loc[has_collection, "line_id"] = (
+        "collection::" + work.loc[has_collection, "collection_label"].astype(str)
+    )
+    rows = []
+    for line_id, group in work.groupby("line_id", sort=False):
+        if str(line_id).startswith("collection::"):
+            collection = str(group["collection_label"].iloc[0])
+            products = group["product"].dropna().astype(str).tolist()
+            project_count = int(
+                DF_PRODUCT_PROJECTS.loc[
+                    DF_PRODUCT_PROJECTS["product"].isin(products),
+                    ["project_key"],
+                ]["project_key"].nunique()
+            )
+            availability_values = [
+                value for value in group["availability_date"]
+                if value is not None and not pd.isna(value)
+            ]
+            availability = min(availability_values) if availability_values else pd.NaT
+            first_values = [
+                _first_seen_by_product.get(product, pd.NaT)
+                for product in products
+            ]
+            first_values = [value for value in first_values if not pd.isna(value)]
+            first_use = min(first_values) if first_values else pd.NaT
+            exposure = _exposure_years(availability) if not pd.isna(availability) else 0.0
+            span = _line_span(group["linkage_span"])
+            rows.append({
+                "product": collection,
+                "short": collection,
+                "linkage_span": span,
+                "flagship_collection": str(group["flagship_collection"].iloc[0]),
+                "collection_label": collection,
+                "is_adr_england_flagship": bool(group["is_adr_england_flagship"].any()),
+                "flagship_group": str(group["flagship_group"].iloc[0]),
+                "availability": _quarter_label(availability),
+                "basis": "collection",
+                "availability_basis": "collection member availability",
+                "availability_date": availability,
+                "announced": "",
+                "first_use": _quarter_label(first_use),
+                "lag_years": None,
+                "delivery_lag_years": None,
+                "exposure_years": round(exposure, 1),
+                "total_projects": project_count,
+                "projects_per_exposure_year": round(project_count / exposure, 1) if exposure else None,
+            })
+        else:
+            row = group.iloc[0].drop(labels=["line_id"]).to_dict()
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def product_summary_table(
+    *,
+    collection_view: str | None = None,
+    selected_products: list[str] | None = None,
+) -> pd.DataFrame:
     """Per-product availability, first accredited use, lags and demand rate.
 
     Two DISTINCT lag quantities, never conflated:
@@ -434,6 +623,7 @@ def product_summary_table() -> pd.DataFrame:
             "short": product["short"],
             "linkage_span": "Cross-domain" if product["is_cross_domain"] else "Within-domain",
             "flagship_collection": product["flagship_collection"],
+            "collection_label": product["collection_label"],
             "is_adr_england_flagship": product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION,
             "flagship_group": (
                 "ADR England flagship"
@@ -456,7 +646,18 @@ def product_summary_table() -> pd.DataFrame:
             "total_projects": total,
             "projects_per_exposure_year": round(total / exposure, 1) if exposure else None,
         })
-    return pd.DataFrame(rows).sort_values(
+    summary = pd.DataFrame(rows)
+    selected = list(dict.fromkeys(selected_products or []))
+    if selected:
+        summary = summary[summary["product"].isin(selected)].copy()
+    summary_mode = (
+        normalise_collection_view(collection_view)
+        if collection_view is not None
+        else COLLECTION_VIEW_INDIVIDUAL
+    )
+    if summary_mode == COLLECTION_VIEW_GROUPED:
+        summary = _group_product_summary(summary)
+    return summary.sort_values(
         "total_projects", ascending=False, kind="stable"
     ).reset_index(drop=True)
 

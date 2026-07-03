@@ -20,6 +20,7 @@ def make_adoption_curves(
     granularity: str = "year",
     height: int = 460,
     partial_year_info=None,
+    collection_view: str = "individual",
 ) -> go.Figure:
     """Per-product adoption curves for each linked product.
 
@@ -96,11 +97,18 @@ def make_adoption_curves(
         ),
         margin=dict(r=240, t=96),
     )
-    fig.add_annotation(
-        text=(
+    if collection_view == "grouped":
+        note = (
+            "Reference-defined collections are de-duplicated to one project per collection. "
+            "Lines begin at the earliest selected member availability. DEA-gateway use only."
+        )
+    else:
+        note = (
             "Selected linked datasets shown individually. Lines begin at each dataset's "
             "availability. DEA-gateway use only. Solid = cross-domain; dashed = within-domain."
-        ),
+        )
+    fig.add_annotation(
+        text=note,
         xref="paper", yref="paper",
         x=0, y=1.07, showarrow=False,
         xanchor="left", yanchor="bottom",

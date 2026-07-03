@@ -47,6 +47,7 @@ EXPECTED_TOGGLE_GRAPH_HEIGHTS = {
     "deterministic-unit-trend": 400,
     "thematic-latent-demand": 724,
     "uptake-adoption-curves": 460,
+    "uptake-exposure-rate-bar": 520,
 }
 
 
@@ -228,41 +229,45 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
     def test_uptake_adoption_toggle_renders_both_metrics_and_granularities(self):
         for granularity in ("year", "quarter"):
             for metric in ("pct", "count"):
-                for selected_products in (FLAGSHIP_PRODUCTS, OTHER_PRODUCTS, ALL_PRODUCT_SELECTION, []):
-                    with self.subTest(
-                        metric=metric,
-                        granularity=granularity,
-                        selected=len(selected_products),
-                    ):
-                        frame = adoption_curve_table(
-                            granularity,
-                            selected_products=selected_products,
-                        )
-                        fig = make_adoption_curves(
-                            frame,
+                for collection_view in ("grouped", "individual"):
+                    for selected_products in (FLAGSHIP_PRODUCTS, OTHER_PRODUCTS, ALL_PRODUCT_SELECTION, []):
+                        with self.subTest(
                             metric=metric,
                             granularity=granularity,
-                            partial_year_info=PARTIAL_YEAR_INFO,
-                        )
-                        self._assert_serialises(
-                            fig,
-                            EXPECTED_TOGGLE_GRAPH_HEIGHTS["uptake-adoption-curves"],
-                        )
-                        payload = fig.to_plotly_json()
-                        if frame.empty:
-                            self.assertNotIn("categoryarray", payload["layout"].get("xaxis", {}))
-                        else:
-                            expected_order = (
-                                frame[["period_label", "period_date"]]
-                                .drop_duplicates()
-                                .sort_values("period_date", kind="stable")["period_label"]
-                                .astype(str)
-                                .tolist()
+                            collection_view=collection_view,
+                            selected=len(selected_products),
+                        ):
+                            frame = adoption_curve_table(
+                                granularity,
+                                selected_products=selected_products,
+                                collection_view=collection_view,
                             )
-                            self.assertEqual(
-                                list(payload["layout"]["xaxis"]["categoryarray"]),
-                                expected_order,
+                            fig = make_adoption_curves(
+                                frame,
+                                metric=metric,
+                                granularity=granularity,
+                                partial_year_info=PARTIAL_YEAR_INFO,
+                                collection_view=collection_view,
                             )
+                            self._assert_serialises(
+                                fig,
+                                EXPECTED_TOGGLE_GRAPH_HEIGHTS["uptake-adoption-curves"],
+                            )
+                            payload = fig.to_plotly_json()
+                            if frame.empty:
+                                self.assertNotIn("categoryarray", payload["layout"].get("xaxis", {}))
+                            else:
+                                expected_order = (
+                                    frame[["period_label", "period_date"]]
+                                    .drop_duplicates()
+                                    .sort_values("period_date", kind="stable")["period_label"]
+                                    .astype(str)
+                                    .tolist()
+                                )
+                                self.assertEqual(
+                                    list(payload["layout"]["xaxis"]["categoryarray"]),
+                                    expected_order,
+                                )
 
     def test_uptake_adoption_selects_individual_products_without_other_aggregate(self):
         expected_flagship_products = {
@@ -356,11 +361,13 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
         # Collapse-on-re-render regression: the dcc.Graph container itself must
         # have a fixed height. 200-OK callbacks and valid figures did not catch
         # the visual collapse because the rendered graph div lost its height.
+        from dashboard.layout.analysis.datasets import build_datasets_tab
         from dashboard.layout.analysis.thematic import build_thematic_tab
 
         graphs = {
             component.id: component
-            for component in _walk_components(build_thematic_tab())
+            for root in (build_thematic_tab(), build_datasets_tab())
+            for component in _walk_components(root)
             if isinstance(component, dcc.Graph) and component.id
         }
         for graph_id, expected_height in EXPECTED_TOGGLE_GRAPH_HEIGHTS.items():
@@ -387,7 +394,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                 self.assertIn(title, titles)
         self.assertNotIn("Record linkage & data structure", titles)
 
-    def test_metric_callbacks_are_one_output_and_do_not_share_toggle_state(self):
+    def test_metric_callbacks_do_not_share_unrelated_toggle_state(self):
         from dashboard.app import app
 
         expected = {
@@ -411,14 +418,23 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
                 "uptake-adoption-metric.value",
                 "uptake-adoption-granularity.value",
                 "uptake-adoption-products.value",
+                "datasets-collection-display-mode.value",
+            },
+            "uptake-exposure-rate-bar.figure": {
+                "uptake-adoption-metric.value",
+                "uptake-adoption-granularity.value",
+                "uptake-adoption-products.value",
+                "datasets-collection-display-mode.value",
             },
         }
         callback_by_output = {}
         for meta in app.callback_map.values():
             output = meta["output"]
             if isinstance(output, list):
-                continue
-            callback_by_output[str(output)] = meta
+                for item in output:
+                    callback_by_output[str(item)] = meta
+            else:
+                callback_by_output[str(output)] = meta
 
         for output, allowed_inputs in expected.items():
             with self.subTest(output=output):

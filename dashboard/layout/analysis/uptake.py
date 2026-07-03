@@ -12,7 +12,7 @@ from dashboard.data.uptake import (
     FLAGSHIP_PRODUCTS,
     OTHER_PRODUCTS,
     PRODUCT_SELECTION_OPTIONS,
-    PRODUCT_SUMMARY,
+    product_summary_table,
 )
 
 UPTAKE_CURVES_HEIGHT = 460
@@ -37,12 +37,13 @@ _AVAILABILITY_BASIS_DISPLAY = {
     "bounded_by_first_use": "bounded by first use",
     "pre_register_window": "pre-register window",
     "proxy": "first register appearance",
+    "collection": "collection member availability",
 }
 
 
-def _adoption_summary_table() -> dash_table.DataTable:
+def build_adoption_summary_table(summary: pd.DataFrame) -> dash_table.DataTable:
     """Static per-product adoption summary (deterministic)."""
-    display = PRODUCT_SUMMARY.copy()
+    display = summary.copy()
     display["availability_display"] = display.apply(
         lambda row: (
             f"{row['availability']} (bounded; announced {row['announced']})"
@@ -89,6 +90,10 @@ def _adoption_summary_table() -> dash_table.DataTable:
 def _linked_data_uptake_content() -> list:
     flagship_count = len(FLAGSHIP_PRODUCTS)
     other_count = len(OTHER_PRODUCTS)
+    initial_summary = product_summary_table(
+        collection_view="grouped",
+        selected_products=FLAGSHIP_PRODUCTS,
+    )
     return [
         html.P(
             "Derived deterministically from the register and the named linked-product "
@@ -101,7 +106,8 @@ def _linked_data_uptake_content() -> list:
         html.P(
             "ADR England flagship datasets are selected by default. Other linked datasets "
             "can be added as a group or chosen individually. Lines begin at each dataset's "
-            "availability. DEA-gateway use only.",
+            "availability. The Collections toggle above switches between reference-defined "
+            "collection lines and individual linked-product lines. DEA-gateway use only.",
             className="section-desc text-muted",
         ),
         dbc.Row([
@@ -152,7 +158,7 @@ def _linked_data_uptake_content() -> list:
                 ),
             ], md=4),
             dbc.Col([
-                html.Label("Datasets shown", className="filter-label"),
+                html.Label("Linked products included", className="filter-label"),
                 dcc.Dropdown(
                     id="uptake-adoption-products",
                     options=PRODUCT_SELECTION_OPTIONS,
@@ -182,7 +188,7 @@ def _linked_data_uptake_content() -> list:
                 chart_wrapper(
                     dcc.Graph(
                         id="uptake-exposure-rate-bar",
-                        figure=make_exposure_rate_bar(PRODUCT_SUMMARY),
+                        figure=make_exposure_rate_bar(initial_summary),
                         config=CHART_CONFIG,
                         responsive=True,
                         style={"height": f"{UPTAKE_EXPOSURE_BAR_HEIGHT}px"},
@@ -190,7 +196,11 @@ def _linked_data_uptake_content() -> list:
                     "uptake-exposure-rate-bar",
                     style={"minHeight": f"{UPTAKE_EXPOSURE_BAR_HEIGHT + 8}px"},
                 ),
-                html.Div(_adoption_summary_table(), className="dea-table mb-2"),
+                html.Div(
+                    build_adoption_summary_table(initial_summary),
+                    id="uptake-adoption-summary-table",
+                    className="dea-table mb-2",
+                ),
             ],
             className="g-3",
         ),
