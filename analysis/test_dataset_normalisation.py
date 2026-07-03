@@ -159,6 +159,12 @@ class DatasetNormalisationTest(unittest.TestCase):
             "Linked Census, HES and Mortality Data": "Linked Census, HES and Mortality Data",
             "MoJ Data First Cross-Justice System Linking Dataset England And Wales": "MoJ Data First Cross-Justice System Linking Dataset",
             "MoJ Data First Cross-Justice System Linking": "MoJ Data First Cross-Justice System Linking Dataset",
+            "Family Man": "MoJ Data First Family Court",
+            "Family Court (FACO)": "MoJ Data First Family Court",
+            "Magistrates Court (MACO)": "MoJ Data First Magistrates Court Defendant",
+            "Crown Court (CRCO)": "MoJ Data First Crown Court Defendant",
+            "Prisoner Custodial Journey Dataset (PRIS)": "MoJ Data First Prisoner Custodial Journey",
+            "MOJDF cross justice linking (Cross-Justice System Linking dataset) and MAGS CROWN JOURNEY": "MoJ Data First Cross-Justice System Linking Dataset",
             "Capital Stock": "Capital Stock Dataset",
             "Linked Trade-in-Goods/IDBR dataset": "Linked Trade-in-Goods/IDBR",
         }
@@ -233,6 +239,24 @@ class DatasetNormalisationTest(unittest.TestCase):
                 "Magistrates' Court Defendant Case Level",
             ],
         )
+
+    def test_data_first_familyman_fragment_is_preserved(self):
+        raw = (
+            "Ministry of Justice: Children and Family Court Advisory and "
+            "Support Service (CAFCASS England), Family Man"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            entries,
+            [
+                (
+                    "Ministry of Justice",
+                    "Children and Family Court Advisory and Support Service (CAFCASS England)",
+                ),
+                ("Ministry of Justice", "Family Man"),
+            ],
+        )
+        self.assertEqual(normalise_dataset_name("Family Man"), "MoJ Data First Family Court")
 
     def test_known_comma_bearing_dataset_is_not_split(self):
         raw = "Office for National Statistics: Linked Census, HES and Mortality Data"

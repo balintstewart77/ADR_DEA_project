@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG
 from dashboard.data.registry import _ALL_PROVIDER_OPTIONS
+from dashboard.layout.analysis.uptake import build_linked_data_uptake_section
 
 
 def build_datasets_tab():
@@ -88,7 +89,5 @@ def build_datasets_tab():
                 md=5,
             ),
         ]),
-        # The previous Cross-Domain Linked Dataset Breakdown used the stale ADR
-        # flagship dataset list. Rebuild it from deterministic record-linkage
-        # data before surfacing that breakdown again.
+        build_linked_data_uptake_section(),
     ])

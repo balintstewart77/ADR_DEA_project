@@ -3,11 +3,10 @@
 import pandas as pd
 
 from dashboard.config import (
-    FLAGSHIP_COLLECTIONS,
     _PROJECT_ID_KEY_COL,
     PartialYearInfo,
 )
-from dashboard.data.loader import load_raw, process_data
+from dashboard.data.loader import REFERENCE_COLLECTIONS, load_raw, process_data
 from dashboard.data.keys import _project_id_key
 
 try:
@@ -47,7 +46,7 @@ df_institutions = parse_institutions(df_all)
 COLLECTIONS = (
     sorted(df_flagship_projects["collection"].unique())
     if len(df_flagship_projects)
-    else list(FLAGSHIP_COLLECTIONS.keys())
+    else REFERENCE_COLLECTIONS
 )
 _max_date = df_all["Accreditation Date"].max() if len(df_all) else None
 DATA_DATE = _max_date.strftime("%d %B %Y") if _max_date is not None else "unknown"

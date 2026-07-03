@@ -5,6 +5,7 @@ from dashboard.data.registry import (
     _ALL_PROVIDER_OPTIONS,
     _ALL_TRE_OPTIONS,
     df_all,
+    df_flagship_projects,
 )
 
 
@@ -21,6 +22,16 @@ class DashboardRegistryOptionTest(unittest.TestCase):
             1,
         )
         self.assertNotIn("collection::ECHILD", values)
+
+    def test_data_first_collection_uses_deterministic_reference(self):
+        counts = (
+            df_flagship_projects
+            .groupby("collection")["Project Row ID"]
+            .nunique()
+            .to_dict()
+        )
+
+        self.assertEqual(counts.get("Data First"), 31)
 
     def test_provider_filter_expands_selected_department_acronyms(self):
         values = [option["value"] for option in _ALL_PROVIDER_OPTIONS]

@@ -364,7 +364,6 @@ INVALID_DATASET_FRAGMENTS = {
     "structure database",
     "business enterprise",
     "renewable energy",
-    "family man",
     "designs and trade marks from",
     "designs and trade marks from intellectual property office",
     "maternal deaths",
@@ -616,6 +615,20 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^linked census and death occurrences$"), "Linked Census and Death Occurrences"),
     (re.compile(r"(?i)^linked census,\s*hes and mortality$"), "Linked Census, HES and Mortality Data"),
     (re.compile(r"(?i)^linked census,\s*hes and mortality data$"), "Linked Census, HES and Mortality Data"),
+    # -- MoJ Data First shorthand and register codes --
+    (re.compile(r"(?i)^family man$"), "MoJ Data First Family Court"),
+    (re.compile(r"(?i)^family court\s*\(FACO\)$"), "MoJ Data First Family Court"),
+    (re.compile(r"(?i)^magistrates court\s*\(MACO\)$"), "MoJ Data First Magistrates Court Defendant"),
+    (re.compile(r"(?i)^crown court\s*\(CRCO\)$"), "MoJ Data First Crown Court Defendant"),
+    (re.compile(r"(?i)^prisoner custodial journey(?: dataset)?\s*\(PRIS\)$"), "MoJ Data First Prisoner Custodial Journey"),
+    (
+        re.compile(
+            r"(?i)^MOJDF\s+cross\s+justice\s+linking\s*"
+            r"\(Cross-Justice System Linking dataset\)"
+            r"(?:\s+and\s+MAGS\s+CROWN\s+JOURNEY)?$"
+        ),
+        "MoJ Data First Cross-Justice System Linking Dataset",
+    ),
     (re.compile(r"(?i)^moj data first cross-justice system linking dataset england and wales$"), "MoJ Data First Cross-Justice System Linking Dataset"),
     (re.compile(r"(?i)^moj data first cross-justice system linking$"), "MoJ Data First Cross-Justice System Linking Dataset"),
     (re.compile(r"(?i)^administrative data \| agriculture research collection$"), "Administrative Data | Agricultural Research Collection (AD|ARC)"),

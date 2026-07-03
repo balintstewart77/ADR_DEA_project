@@ -77,11 +77,11 @@ Record-linkage and data-structure facets are read from the deterministic
 register reference layer used by the Thematic Analysis tab. They are controlled
 vocabulary lookups rather than LLM classifications.
 
-Earlier dashboard versions included a keyword-matched "Cross-Domain Linked
-Dataset Breakdown" based on the ADR UK flagship dataset list. That view is no
-longer shown in Dataset Demand because it has been superseded by the
-deterministic linkage layer. A future replacement should be recreated from the
-current deterministic record-linkage and component-domain data.
+Earlier dashboard versions included keyword-matched collection shortcuts based
+on a hard-coded ADR UK flagship dataset list. Collection matching now routes
+through the deterministic linked-product reference layer
+(`analysis/register_reference.yaml`) so dataset demand filters and linked-data
+uptake share the same reviewed source of truth.
 
 ---
 

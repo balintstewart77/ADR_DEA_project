@@ -574,7 +574,7 @@
 2023/069,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,individual; business,academic
 2023/070,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011; Linked Trade-in-Goods/IDBR,Labour Market & Employment; Business & Productivity; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2023/071,No record linkage,,,survey,cross-sectional; longitudinal,individual; business,academic
-2023/072,No record linkage,,,,,,academic
+2023/072,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
 2023/073,Within-domain record linkage,MoJ Data First,Crime & Justice,administrative,longitudinal,individual,academic
 2023/074,No record linkage,,,survey,cross-sectional,business,third-sector
 2023/075,No record linkage,,,survey,cross-sectional,business,commercial
@@ -1258,7 +1258,7 @@
 2026/034,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,third-sector
 2026/035,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic; third-sector; commercial
 2026/036,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,business,academic
-2026/037,No record linkage,,,survey,cross-sectional,individual,academic
+2026/037,Within-domain record linkage,MoJ Data First,Crime & Justice,survey; administrative,cross-sectional; longitudinal,individual,academic
 2026/038,No record linkage,,,survey,cross-sectional,individual,third-sector
 2026/039,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic; third-sector
 2026/040,No record linkage,,,survey; administrative,cross-sectional,individual; household; business,academic

@@ -4,7 +4,6 @@ import pandas as pd
 
 from dashboard.config import (
     DATA_DIR,
-    FLAGSHIP_COLLECTIONS,
     CLEANING_OUTPUT_DIR,
 )
 from analysis.register_cleaning import clean_register_dataframe, load_raw_register
@@ -13,14 +12,25 @@ from analysis.derive_register_properties import (
     build_indexes,
     canonical_processing_environment_label,
     load_reference,
+    match_linked_products,
 )
 
 try:
-    from dashboard.dataset_normalisation import iter_dataset_entries, parse_datasets
+    from dashboard.dataset_normalisation import (
+        iter_dataset_entries,
+        normalise_dataset_name,
+        parse_datasets,
+    )
 except ModuleNotFoundError:
-    from dataset_normalisation import iter_dataset_entries, parse_datasets
+    from dataset_normalisation import iter_dataset_entries, normalise_dataset_name, parse_datasets
 
 _REFERENCE_INDEXES = build_indexes(load_reference(REFERENCE_PATH))
+_LINKED_PRODUCT_COLLECTION_LABELS = {
+    record["canonical"]: str(record.get("collection_label") or "").strip()
+    for record in _REFERENCE_INDEXES.reference.get("linked_products", [])
+    if str(record.get("collection_label") or "").strip()
+}
+REFERENCE_COLLECTIONS = list(dict.fromkeys(_LINKED_PRODUCT_COLLECTION_LABELS.values()))
 
 
 def load_raw(data_dir=DATA_DIR):
@@ -28,39 +38,26 @@ def load_raw(data_dir=DATA_DIR):
 
 
 def classify_collection(datasets_str: str) -> list[str]:
-    """Return list of matching collection names for a datasets string."""
-    if not isinstance(datasets_str, str):
-        return []
-    s = " ".join(datasets_str.lower().split())
-    matches = []
-    for col, keywords in FLAGSHIP_COLLECTIONS.items():
-        if any(kw in s for kw in keywords):
-            matches.append(col)
-    return matches
+    """Return referenced collection labels matched through linked products."""
+    return list(dict.fromkeys(count_collection_usages(datasets_str)))
 
 
 def count_collection_usages(datasets_str: str) -> list[str]:
-    """Return one collection entry per individual dataset match.
-
-    If a project uses Crown Court + Magistrates Court + Prisoner Dataset,
-    this returns ["Data First", "Data First", "Data First"] — counting each
-    dataset access request separately, consistent with the notebook methodology.
-    """
+    """Return one collection entry per matched individual dataset request."""
     if not isinstance(datasets_str, str):
         return []
-    # Split into individual dataset entries (same logic as parse_datasets)
-    entries = [
-        " ".join(part.lower().split())
-        for _, _, part in iter_dataset_entries(datasets_str)
-        if part
-    ]
 
     usages = []
-    for entry in entries:
-        for col, keywords in FLAGSHIP_COLLECTIONS.items():
-            if any(kw in entry for kw in keywords):
-                usages.append(col)
-                break  # each entry maps to at most one collection
+    for _, _, part in iter_dataset_entries(datasets_str):
+        if not part:
+            continue
+        dataset = normalise_dataset_name(part)
+        labels = [
+            _LINKED_PRODUCT_COLLECTION_LABELS[product["canonical"]]
+            for product in match_linked_products(dataset, _REFERENCE_INDEXES)
+            if product["canonical"] in _LINKED_PRODUCT_COLLECTION_LABELS
+        ]
+        usages.extend(dict.fromkeys(labels))
     return usages
 
 
@@ -82,16 +79,16 @@ def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict
         lambda value: canonical_processing_environment_label(value, _REFERENCE_INDEXES)
     )
 
-    df["collections"] = df["Datasets Used"].apply(classify_collection)
+    df["collection_usages"] = df["Datasets Used"].apply(count_collection_usages)
+    df["collections"] = df["collection_usages"].apply(lambda values: list(dict.fromkeys(values)))
     df["is_flagship"] = df["collections"].apply(lambda x: len(x) > 0)
 
     # Explode by individual dataset usage (not just unique collection per project).
     # A project using 3 Data First datasets produces 3 rows, counting each access request.
-    df["collection_usages"] = df["Datasets Used"].apply(count_collection_usages)
     flagship_rows = []
     for _, row in df[df["is_flagship"]].iterrows():
         for coll in row["collection_usages"]:
             flagship_rows.append({**row.to_dict(), "collection": coll})
-    df_flagship = pd.DataFrame(flagship_rows)
+    df_flagship = pd.DataFrame(flagship_rows, columns=[*df.columns, "collection"])
 
     return df, df_flagship, stats

@@ -118,6 +118,16 @@
     margin-bottom: 1rem;
     line-height: 1.5;
 }
+.chart-interaction-hint {
+    font-size: 0.78rem;
+    color: #7f8c8d;
+    margin: -0.35rem 0 0.85rem;
+    line-height: 1.45;
+}
+.chart-interaction-hint strong {
+    color: #5f6f7a;
+    font-weight: 700;
+}
 
 /* Chart containers */
 .chart-wrapper {

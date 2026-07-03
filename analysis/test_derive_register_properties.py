@@ -38,6 +38,7 @@ EXPECTED_2023_228_PRODUCTS = (
     "COVID-19 Infection Survey linked to Mortality - England and Wales ONS; "
     "Covid-19 Infection Survey linked with VOA and EPC data"
 )
+EXPECTED_DATA_FIRST_PRODUCT = "MoJ Data First"
 
 
 def _derive_current_register_properties() -> pd.DataFrame:
@@ -197,6 +198,16 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
         self.assertEqual(properties.at["2023/066", "matched_products"], EXPECTED_2023_066_PRODUCTS)
         self.assertEqual(properties.at["2023/228", "matched_products"], EXPECTED_2023_228_PRODUCTS)
         self.assertIn("business", properties.at["2021/015", "dataset_units"].split("; "))
+
+    def test_data_first_shorthand_regression_records(self):
+        # Incident guard: reviewed family-court and shorthand/code strings must
+        # resolve through the deterministic linked-product reference rather than
+        # the retired keyword collection list.
+        properties = self.current_register_properties().set_index("Record ID")
+        self.assertEqual(properties.at["2023/072", "matched_products"], EXPECTED_DATA_FIRST_PRODUCT)
+        self.assertEqual(properties.at["2026/037", "matched_products"], EXPECTED_DATA_FIRST_PRODUCT)
+        self.assertEqual(properties.at["2023/072", "record_linkage"], "Within-domain record linkage")
+        self.assertEqual(properties.at["2026/037", "record_linkage"], "Within-domain record linkage")
 
     def test_committed_register_properties_are_reproducible(self):
         committed = pd.read_csv(
