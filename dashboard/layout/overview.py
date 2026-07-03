@@ -4,6 +4,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 from dashboard.components.stat_card import stat_card
+from dashboard.components.chart_tips import chart_wrapper
 from dashboard.charts.core import make_yearly_chart, make_quarterly_chart, make_srs_chart
 from dashboard.charts.template import CHART_CONFIG
 from dashboard.config import FEEDBACK_EMAIL_URL, SOURCE_URL
@@ -100,13 +101,13 @@ def build_overview_tab():
 
         dbc.Row([
             dbc.Col(
-                html.Div(
+                chart_wrapper(
                     dcc.Graph(
                         id="overview-teaser-chart",
                         figure=yearly_fig,
                         config=CHART_CONFIG,
                     ),
-                    className="chart-wrapper",
+                    "overview-teaser-chart",
                 ),
                 width=12,
             ),

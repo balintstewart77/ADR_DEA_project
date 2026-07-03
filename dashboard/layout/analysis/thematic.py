@@ -4,6 +4,7 @@ from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG, CHART_HEIGHT
+from dashboard.components.chart_tips import chart_wrapper
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
 from dashboard import taxonomy
@@ -47,14 +48,14 @@ def _md_table(layer: str) -> str:
 
 def _graph(graph_id: str, height: int = CHART_HEIGHT) -> html.Div:
     """A chart wrapper with a fixed graph height that survives re-render."""
-    return html.Div(
+    return chart_wrapper(
         dcc.Graph(
             id=graph_id,
             config=CHART_CONFIG,
             responsive=True,
             style={"height": f"{height}px"},
         ),
-        className="chart-wrapper",
+        graph_id,
         style={"minHeight": f"{height + 8}px"},
     )
 

@@ -4,6 +4,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG
+from dashboard.components.chart_tips import chart_wrapper
 from dashboard.data.registry import _ALL_PROVIDER_OPTIONS
 from dashboard.layout.analysis.uptake import build_linked_data_uptake_section
 
@@ -64,7 +65,10 @@ def build_datasets_tab():
         ], className="mb-3 g-2"),
         dbc.Row([
             dbc.Col(
-                html.Div(dcc.Graph(id="datasets-topn-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                chart_wrapper(
+                    dcc.Graph(id="datasets-topn-chart", config=CHART_CONFIG),
+                    "datasets-topn-chart",
+                ),
                 width=12,
             ),
         ]),
@@ -81,11 +85,17 @@ def build_datasets_tab():
         ),
         dbc.Row([
             dbc.Col(
-                html.Div(dcc.Graph(id="datasets-trend-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                chart_wrapper(
+                    dcc.Graph(id="datasets-trend-chart", config=CHART_CONFIG),
+                    "datasets-trend-chart",
+                ),
                 md=7,
             ),
             dbc.Col(
-                html.Div(dcc.Graph(id="datasets-provider-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                chart_wrapper(
+                    dcc.Graph(id="datasets-provider-chart", config=CHART_CONFIG),
+                    "datasets-provider-chart",
+                ),
                 md=5,
             ),
         ]),

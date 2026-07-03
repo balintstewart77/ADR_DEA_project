@@ -4,6 +4,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG
+from dashboard.components.chart_tips import chart_wrapper
 
 
 def build_institutions_tab():
@@ -40,7 +41,10 @@ def build_institutions_tab():
         ]),
         dbc.Row([
             dbc.Col(
-                html.Div(dcc.Graph(id="institutions-bar-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                chart_wrapper(
+                    dcc.Graph(id="institutions-bar-chart", config=CHART_CONFIG),
+                    "institutions-bar-chart",
+                ),
                 width=12,
             ),
         ]),
@@ -73,7 +77,10 @@ def build_institutions_tab():
         ], className="mb-2 g-2"),
         dbc.Row([
             dbc.Col(
-                html.Div(dcc.Graph(id="institutions-trend-chart", config=CHART_CONFIG), className="chart-wrapper"),
+                chart_wrapper(
+                    dcc.Graph(id="institutions-trend-chart", config=CHART_CONFIG),
+                    "institutions-trend-chart",
+                ),
                 width=12,
             ),
         ]),
