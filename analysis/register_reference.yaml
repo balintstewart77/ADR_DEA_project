@@ -1,4 +1,4 @@
-reference_version: "0.5.6"
+reference_version: "0.5.7"
 
 adr_england_flagship_source: &adr_england_flagship_source "https://www.adruk.org/data-access/flagship-datasets/"
 adr_england_flagship_note: &adr_england_flagship_note >
@@ -447,71 +447,201 @@ linked_products:
     component_datasets_verified: true
     component_datasets_source: "https://www.gov.uk/government/publications/grading-and-admissions-data-for-england-grade-framework/grading-and-admissions-data-for-england-grade-user-guide"
 
-  - canonical: "MoJ Data First"
+  # -- MoJ Data First: modelled as per-dataset linked products (reference
+  # 0.5.7) sharing collection_label "Data First". Each register-observed Data
+  # First justice extract is its own linked product so the Linked Data Uptake
+  # individual view can show per-dataset adoption; grouped view collapses them
+  # back to the "Data First" collection line (mirrors the WED pattern). All are
+  # single-domain Crime & Justice (within-domain linkage) and resolve to the
+  # shared "Data First" dataset facet record. Aliases are the exact partition of
+  # the former umbrella product's spellings, so deterministic matching (and the
+  # 94-request / 31-project collection counts) is unchanged. The two currently
+  # unmatched register spellings ("... Offender Assessment", "... Link Ed
+  # Criminal Courts") are intentionally left unmatched, as before.
+  - canonical: "MoJ Data First Crown Court Defendant"
     status: "standing"
     available_from: null
     discontinued_date: null
-    availability_date: "2020-Q2"
+    availability_date: "2020-Q3"
     availability_basis: "documented_accessible"
-    availability_source: "https://www.adruk.org/news-publications/news-blogs/magistrates-court-dataset-is-first-product-of-data-first-programme-available-to-researchers-241/ ; https://www.adruk.org/news-publications/news-blogs/crown-court-dataset-becomes-second-output-available-to-researchers-as-result-of-data-first-268/"
-    availability_note: "First Data First product: magistrates' court dataset deposited in ONS SRS 30 June 2020; Crown Court dataset followed 11 Aug 2020."
+    availability_source: "https://www.adruk.org/news-publications/news-blogs/crown-court-dataset-becomes-second-output-available-to-researchers-as-result-of-data-first-268/"
+    availability_note: "Crown Court defendant dataset available to accredited researchers 11 Aug 2020 (second Data First product)."
     flagship_collection: "ADR England"
     collection_label: "Data First"
     flagship_source: *adr_england_flagship_source
     flagship_note: *adr_england_flagship_note
     aliases:
-      - "MoJ Data First Crown Court Defendant"
       - "MoJ Data First Crown Court Defendant Case Level"
       - "MoJ Data First Crown Court Iteration 2"
-      - "MoJ Data First Cross-Justice System Linking Dataset"
-      - "MOJDF Cross Justice Linking"
-      - "MOJDF Cross Justice Linking (Cross-Justice System Linking Dataset)"
-      - "MoJ Data First Prisoner Custodial Journey"
-      - "MoJ Data First Prisoner Custodial Journey Dataset"
-      - "Prisoner Custodial Journey Dataset (PRIS)"
-      - "MoJ Data First Prison Iteration 2"
-      - "MoJ Data First Probation"
-      - "MoJ Data First Probation Iteration 2"
-      - "MoJ Data First Family Court"
-      - "Family Court (FACO)"
-      - "Family Man"
-      - "MoJ Data First Family Court Data Extract"
-      - "MoJ Data First Familyman Family Court"
-      - "MoJ Data First Magistrates' Court Defendant"
+      - "Crown Court (CRCO)"
+      - "RETIRED MoJ Data First Crown Court Defendant"
+    component_domains:
+      - "Crime & Justice"
+    notes: "Data First Crown Court defendant extract (criminal court administrative records)."
+    component_datasets:
+      - dataset: "Crown Court defendant data"
+        domain_reading: "Crime & Justice"
+        reason: "criminal court administrative records."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first ; https://datacatalogue.adruk.org/browser/dataset/58617/1"
+
+  - canonical: "MoJ Data First Magistrates' Court Defendant"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2020-Q2"
+    availability_basis: "documented_accessible"
+    availability_source: "https://www.adruk.org/news-publications/news-blogs/magistrates-court-dataset-is-first-product-of-data-first-programme-available-to-researchers-241/"
+    availability_note: "First Data First product: magistrates' court defendant dataset deposited in ONS SRS 30 June 2020."
+    flagship_collection: "ADR England"
+    collection_label: "Data First"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
+    aliases:
       - "MoJ Data First Magistrates Court Defendant"
       - "MoJ Data First Magistrates' Court Defendant Case Level"
       - "MoJ Data First Magistrates Court Iteration 2"
       - "MoJ Data First Magistrates Court Defendant Iteration 2"
       - "Magistrates Court (MACO)"
-      - "Crown Court (CRCO)"
-      - "MoJ Data First Linked Criminal Courts"
-      - "MoJ Data First Linked Criminal Courts Defendant Case Level"
-      - "MoJ Data First Linked Criminal Courts And Prisons Defendant"
-      - "RETIRED MoJ Data First Crown Court Defendant"
       - "RETIRED MoJ Data First Magistrates Court Defendant"
-      - "RETIRED MoJ Data First Probation"
     component_domains:
       - "Crime & Justice"
-    notes: "Public-register Data First justice extracts only; MoJ-DfE linkage is excluded."
+    notes: "Data First magistrates' court defendant extract (criminal court administrative records)."
     component_datasets:
       - dataset: "Magistrates' court defendant data"
         domain_reading: "Crime & Justice"
         reason: "criminal court administrative records."
-      - dataset: "Crown Court defendant data"
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first ; https://datacatalogue.adruk.org/browser/dataset/58617/1"
+
+  - canonical: "MoJ Data First Linked Criminal Courts"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2021-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: ""
+    availability_note: "No curated documented-access date sourced; availability bounded by first accredited register use (2021 Q2)."
+    flagship_collection: "ADR England"
+    collection_label: "Data First"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
+    aliases:
+      - "MoJ Data First Linked Criminal Courts Defendant Case Level"
+      - "MoJ Data First Linked Criminal Courts And Prisons Defendant"
+    component_domains:
+      - "Crime & Justice"
+    notes: "Data First linked criminal courts extract (Crown and magistrates' defendant records linked)."
+    component_datasets:
+      - dataset: "Linked criminal courts defendant data"
         domain_reading: "Crime & Justice"
-        reason: "criminal court administrative records."
+        reason: "linked Crown and magistrates' criminal court administrative records."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first ; https://datacatalogue.adruk.org/browser/dataset/58617/1"
+
+  - canonical: "MoJ Data First Prisoner Custodial Journey"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2021-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: ""
+    availability_note: "No curated documented-access date sourced; availability bounded by first accredited register use (2021 Q2)."
+    flagship_collection: "ADR England"
+    collection_label: "Data First"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
+    aliases:
+      - "MoJ Data First Prisoner Custodial Journey Dataset"
+      - "Prisoner Custodial Journey Dataset (PRIS)"
+      - "MoJ Data First Prison Iteration 2"
+    component_domains:
+      - "Crime & Justice"
+    notes: "Data First prisoner custodial journey extract (prison custody records)."
+    component_datasets:
       - dataset: "Prisoner custodial journey data"
         domain_reading: "Crime & Justice"
         reason: "prison custody records."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first ; https://datacatalogue.adruk.org/browser/dataset/58617/1"
+
+  - canonical: "MoJ Data First Probation"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2021-Q4"
+    availability_basis: "bounded_by_first_use"
+    availability_source: ""
+    availability_note: "No curated documented-access date sourced; availability bounded by first accredited register use (2021 Q4)."
+    flagship_collection: "ADR England"
+    collection_label: "Data First"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
+    aliases:
+      - "MoJ Data First Probation Iteration 2"
+      - "RETIRED MoJ Data First Probation"
+    component_domains:
+      - "Crime & Justice"
+    notes: "Data First probation and offender assessment extract (offender management records)."
+    component_datasets:
       - dataset: "Probation and offender assessment data"
         domain_reading: "Crime & Justice"
         reason: "offender management and probation records."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first ; https://datacatalogue.adruk.org/browser/dataset/58617/1"
+
+  - canonical: "MoJ Data First Family Court"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2022-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: ""
+    availability_note: "No curated documented-access date sourced; availability bounded by first accredited register use (2022 Q2)."
+    flagship_collection: "ADR England"
+    collection_label: "Data First"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
+    aliases:
+      - "Family Court (FACO)"
+      - "Family Man"
+      - "MoJ Data First Family Court Data Extract"
+      - "MoJ Data First Familyman Family Court"
+    component_domains:
+      - "Crime & Justice"
+    notes: "Data First family court extract (court-system administrative data, not a separate family-domain dataset in this taxonomy)."
+    component_datasets:
       - dataset: "Family court data"
         domain_reading: "Crime & Justice"
         reason: "court-system administrative data, not a separate family-domain dataset in this taxonomy."
-      - dataset: "Civil court data"
-        domain_reading: "Crime & Justice"
-        reason: "court-system administrative data."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.gov.uk/guidance/ministry-of-justice-data-first ; https://datacatalogue.adruk.org/browser/dataset/58617/1"
+    alias_review_notes:
+      - >
+        2023/072 lists CAFCASS England plus "Family Man" without explicit Data
+        First wording. FamilyMan is reviewed as the family-court source used by
+        adjacent DEA-register Data First family-court entries; CAFCASS alone is
+        not used as a Data First alias.
+
+  - canonical: "MoJ Data First Cross-Justice System Linking Dataset"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2024-Q2"
+    availability_basis: "bounded_by_first_use"
+    availability_source: ""
+    availability_note: "No curated documented-access date sourced; availability bounded by first accredited register use (2024 Q2)."
+    flagship_collection: "ADR England"
+    collection_label: "Data First"
+    flagship_source: *adr_england_flagship_source
+    flagship_note: *adr_england_flagship_note
+    aliases:
+      - "MOJDF Cross Justice Linking"
+      - "MOJDF Cross Justice Linking (Cross-Justice System Linking Dataset)"
+    component_domains:
+      - "Crime & Justice"
+    notes: "Data First cross-justice system linking table (linkage spine across justice-system datasets)."
+    component_datasets:
       - dataset: "Cross-justice system linking table"
         domain_reading: "Crime & Justice"
         reason: "linkage spine across justice-system datasets."
@@ -524,11 +654,6 @@ linked_products:
         Data First justice products because the same GOV.UK Data First catalogue
         lists family court, magistrates' courts, Crown Court, prisoner
         custodial journey, and cross-justice linking datasets.
-      - >
-        2023/072 lists CAFCASS England plus "Family Man" without explicit Data
-        First wording. FamilyMan is reviewed as the family-court source used by
-        adjacent DEA-register Data First family-court entries; CAFCASS alone is
-        not used as a Data First alias.
 
   - canonical: "Administrative Data | Agricultural Research Collection (AD|ARC)"
     status: "standing"

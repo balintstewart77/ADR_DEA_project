@@ -62,21 +62,6 @@ def build_datasets_tab():
                     searchable=False,
                 ),
             ], md=3),
-            dbc.Col([
-                html.Label("Collections", className="filter-label"),
-                dcc.RadioItems(
-                    id="datasets-collection-display-mode",
-                    options=[
-                        {"label": "Grouped", "value": "grouped"},
-                        {"label": "Individual", "value": "individual"},
-                    ],
-                    value="grouped",
-                    inline=True,
-                    inputStyle={"marginRight": "0.3rem"},
-                    labelStyle={"marginRight": "0.7rem", "fontSize": "0.86rem"},
-                    className="collection-display-toggle",
-                ),
-            ], md=2),
         ], className="mb-3 g-2"),
         dbc.Row([
             dbc.Col(

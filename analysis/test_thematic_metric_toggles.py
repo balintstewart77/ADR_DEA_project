@@ -273,7 +273,15 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
         expected_flagship_products = {
             "Longitudinal Education Outcomes (LEO)",
             "Education and Child Health Insights from Linked Data (ECHILD)",
-            "MoJ Data First",
+            # Data First per-dataset member products (reference 0.5.7); each is
+            # its own line in individual view, collapsed to "Data First" grouped.
+            "MoJ Data First Crown Court Defendant",
+            "MoJ Data First Magistrates' Court Defendant",
+            "MoJ Data First Linked Criminal Courts",
+            "MoJ Data First Prisoner Custodial Journey",
+            "MoJ Data First Probation",
+            "MoJ Data First Family Court",
+            "MoJ Data First Cross-Justice System Linking Dataset",
             "Growing Up in England (GUIE)",
             "GRading and Admissions Data England (GRADE)",
             "Administrative Data | Agricultural Research Collection (AD|ARC)",

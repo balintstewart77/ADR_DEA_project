@@ -10,6 +10,7 @@ from dashboard.config import PRIMARY_BAR
 from dashboard.charts.template import _apply_common, _annotate_partial_year
 from dashboard.data.collection_view import (
     COLLECTION_VIEW_GROUPED,
+    COLLECTION_VIEW_INDIVIDUAL,
     display_entity_counts,
     display_entity_exposure,
     normalise_collection_view,
@@ -218,13 +219,14 @@ def register(app):
         Input("datasets-topn-custom", "value"),
         Input("datasets-provider-filter", "value"),
         Input("datasets-topn-metric", "value"),
-        Input("datasets-collection-display-mode", "value"),
     )
-    def update_datasets_tab(preset, custom, provider, topn_metric, collection_view):
+    def update_datasets_tab(preset, custom, provider, topn_metric):
+        # Top-of-section demand always shows individual datasets; the collections
+        # toggle scopes only the Linked Data Uptake views.
         return build_dataset_demand_figures(
             preset,
             custom,
             provider,
             topn_metric,
-            collection_view,
+            COLLECTION_VIEW_INDIVIDUAL,
         )

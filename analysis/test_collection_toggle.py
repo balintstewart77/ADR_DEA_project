@@ -29,7 +29,7 @@ class CollectionToggleTest(unittest.TestCase):
             for label in collection_labels_for_dataset(row.member)
         }
         self.assertEqual(actual, expected)
-        self.assertIn(("MoJ Data First", "Data First"), actual)
+        self.assertIn(("MoJ Data First Crown Court Defendant", "Data First"), actual)
         self.assertIn(
             (
                 "Annual Survey of Hours and Earnings linked to Census 2011",
@@ -117,6 +117,69 @@ class CollectionToggleTest(unittest.TestCase):
                 self.assertEqual(top.to_plotly_json()["layout"]["height"], 400)
                 self.assertEqual(trend.to_plotly_json()["layout"]["height"], 400)
                 self.assertGreaterEqual(provider.to_plotly_json()["layout"]["height"], 420)
+
+    def _registered_callback_map(self):
+        from dash import Dash
+
+        from dashboard.callbacks import datasets as datasets_cb
+        from dashboard.callbacks import uptake as uptake_cb
+
+        app = Dash(__name__)
+        datasets_cb.register(app)
+        uptake_cb.register(app)
+        return app.callback_map
+
+    def test_collection_toggle_input_only_wires_linked_data_uptake(self):
+        toggle = "datasets-collection-display-mode"
+        uptake_output_ids = {
+            "uptake-adoption-curves",
+            "uptake-exposure-rate-bar",
+            "uptake-adoption-summary-table",
+        }
+        top_demand_output_ids = {
+            "datasets-topn-chart",
+            "datasets-trend-chart",
+            "datasets-provider-chart",
+        }
+
+        keys_with_toggle = [
+            key
+            for key, spec in self._registered_callback_map().items()
+            if any(inp["id"] == toggle for inp in spec["inputs"])
+        ]
+
+        self.assertTrue(keys_with_toggle, "toggle must still drive a callback")
+        for key in keys_with_toggle:
+            self.assertTrue(
+                any(out in key for out in uptake_output_ids),
+                f"toggle drives non-uptake outputs: {key}",
+            )
+            self.assertFalse(
+                any(out in key for out in top_demand_output_ids),
+                f"toggle must not drive top-of-section demand: {key}",
+            )
+
+    def test_top_demand_callback_renders_individual_regardless_of_toggle(self):
+        callback_map = self._registered_callback_map()
+        key = next(k for k in callback_map if "datasets-topn-chart" in k)
+        spec = callback_map[key]
+
+        input_ids = {inp["id"] for inp in spec["inputs"]}
+        self.assertNotIn("datasets-collection-display-mode", input_ids)
+
+        outputs_list = [
+            {"id": "datasets-topn-chart", "property": "figure"},
+            {"id": "datasets-trend-chart", "property": "figure"},
+            {"id": "datasets-provider-chart", "property": "figure"},
+        ]
+        with patch(
+            "dashboard.callbacks.datasets.build_dataset_demand_figures",
+            return_value=("top", "trend", "provider"),
+        ) as mocked:
+            spec["callback"](10, None, "ALL", "count", outputs_list=outputs_list)
+
+        self.assertEqual(mocked.call_count, 1)
+        self.assertEqual(mocked.call_args.args[-1], "individual")
 
     def test_uptake_grouped_wed_curve_dedupes_project_with_two_member_products(self):
         products = [

@@ -106,7 +106,7 @@ def _linked_data_uptake_content() -> list:
         html.P(
             "ADR England flagship datasets are selected by default. Other linked datasets "
             "can be added as a group or chosen individually. Lines begin at each dataset's "
-            "availability. The Collections toggle above switches between reference-defined "
+            "availability. The Collections toggle switches between reference-defined "
             "collection lines and individual linked-product lines. DEA-gateway use only.",
             className="section-desc text-muted",
         ),
@@ -137,6 +137,21 @@ def _linked_data_uptake_content() -> list:
                     searchable=False,
                 ),
             ], md=3),
+            dbc.Col([
+                html.Label("Collections", className="filter-label"),
+                dcc.RadioItems(
+                    id="datasets-collection-display-mode",
+                    options=[
+                        {"label": "Grouped", "value": "grouped"},
+                        {"label": "Individual", "value": "individual"},
+                    ],
+                    value="grouped",
+                    inline=True,
+                    inputStyle={"marginRight": "0.3rem"},
+                    labelStyle={"marginRight": "0.7rem", "fontSize": "0.86rem"},
+                    className="collection-display-toggle",
+                ),
+            ], md=2),
             dbc.Col([
                 html.Label("Dataset groups", className="filter-label"),
                 dcc.Checklist(
