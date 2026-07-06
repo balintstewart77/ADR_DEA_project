@@ -214,12 +214,27 @@ class CollectionToggleTest(unittest.TestCase):
                 selected_products=products,
                 collection_view="grouped",
             )
+            individual = adoption_curve_table(
+                "year",
+                selected_products=products,
+                collection_view="individual",
+            )
 
         wed_2024 = curve[
             (curve["line_label"] == "Wage and Employment Dynamics")
             & (curve["Year"] == 2024)
         ]
         self.assertEqual(int(wed_2024["count"].iloc[0]), 2)
+        # Access requests count each (project, member product) pair: P1 uses
+        # both members, P2 one, so the grouped line shows 3 requests and equals
+        # the sum of the member lines.
+        self.assertEqual(int(wed_2024["requests"].iloc[0]), 3)
+        individual_2024 = individual[individual["Year"] == 2024]
+        self.assertEqual(int(individual_2024["requests"].sum()), 3)
+        # On individual lines (one product per line) requests == projects.
+        self.assertTrue(
+            (individual_2024["requests"] == individual_2024["count"]).all()
+        )
 
 
 if __name__ == "__main__":

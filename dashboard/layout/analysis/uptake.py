@@ -117,6 +117,7 @@ def _linked_data_uptake_content() -> list:
                     id="uptake-adoption-metric",
                     options=[
                         {"label": "Project count", "value": "count"},
+                        {"label": "Access requests", "value": "requests"},
                         {"label": "% of period's projects", "value": "pct"},
                     ],
                     value="count",

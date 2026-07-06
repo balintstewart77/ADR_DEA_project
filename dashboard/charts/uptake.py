@@ -31,7 +31,12 @@ def make_adoption_curves(
     fig = go.Figure()
     if df_adoption.empty:
         return _apply_common(fig, height=height)
-    metric_col = "pct_of_projects" if metric == "pct" else "count"
+    if metric == "pct":
+        metric_col = "pct_of_projects"
+    elif metric == "requests" and "requests" in df_adoption.columns:
+        metric_col = "requests"
+    else:
+        metric_col = "count"
     x_col = "period_label" if "period_label" in df_adoption.columns else "Year"
     period_label = "Quarter" if granularity == "quarter" else "Year"
     share_label = "% of quarter's projects" if granularity == "quarter" else "% of year's projects"
@@ -74,14 +79,22 @@ def make_adoption_curves(
                 "%{customdata[0]}<br>"
                 "%{customdata[1]} linked product span<br>"
                 "%{x}<br>"
-                + (f"%{{y:.1f}}{share_label}" if metric == "pct" else "%{y} projects")
+                + (
+                    f"%{{y:.1f}}{share_label}" if metric == "pct"
+                    else "%{y} access requests" if metric_col == "requests"
+                    else "%{y} projects"
+                )
                 + "<extra></extra>"
             ),
         ))
     fig.update_layout(
         title="Linked-Product Adoption Curves",
         xaxis_title=period_label,
-        yaxis_title=share_label if metric == "pct" else "Projects",
+        yaxis_title=(
+            share_label if metric == "pct"
+            else "Access requests" if metric_col == "requests"
+            else "Projects"
+        ),
         xaxis=dict(
             dtick=1 if granularity == "year" else None,
             tickangle=-35 if granularity == "quarter" else 0,
@@ -98,10 +111,17 @@ def make_adoption_curves(
         margin=dict(r=240, t=96),
     )
     if collection_view == "grouped":
-        note = (
-            "Reference-defined collections are de-duplicated to one project per collection. "
-            "Lines begin at the earliest selected member availability. DEA-gateway use only."
-        )
+        if metric_col == "requests":
+            note = (
+                "Access requests count each (project, member dataset) pair, so a collection "
+                "line equals the sum of its member lines. Lines begin at the earliest "
+                "selected member availability. DEA-gateway use only."
+            )
+        else:
+            note = (
+                "Reference-defined collections are de-duplicated to one project per collection. "
+                "Lines begin at the earliest selected member availability. DEA-gateway use only."
+            )
     else:
         note = (
             "Selected linked datasets shown individually. Lines begin at each dataset's "

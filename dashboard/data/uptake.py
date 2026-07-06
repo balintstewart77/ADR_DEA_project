@@ -388,7 +388,7 @@ def _empty_adoption_frame() -> pd.DataFrame:
     return pd.DataFrame(columns=[
         "line_id", "line_label", "line_group", "line_linkage_span",
         "product", "period_date", "period_label", "Year", "count",
-        "total", "pct_of_projects",
+        "requests", "total", "pct_of_projects",
     ])
 
 
@@ -466,6 +466,15 @@ def adoption_curve_table(
         .groupby(count_keys)["project_key"]
         .nunique()
     )
+    # Access requests: one per distinct (project, member product) pair, so a
+    # project using several collection members counts once per member and a
+    # grouped collection line equals the sum of its member lines. For
+    # individual lines (one product per line) requests == projects.
+    request_counts = (
+        work.drop_duplicates(subset=["line_id", *count_keys[1:], "project_key", "product"])
+        .groupby(count_keys)
+        .size()
+    )
     line_meta = (
         work.groupby("line_id", sort=False)
         .agg(
@@ -502,6 +511,7 @@ def adoption_curve_table(
                 "period_label": period["period_label"],
                 "Year": int(period["Year"]),
                 "count": count,
+                "requests": int(request_counts.get(count_key, 0)),
                 "total": total,
                 "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
             })

@@ -228,7 +228,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
 
     def test_uptake_adoption_toggle_renders_both_metrics_and_granularities(self):
         for granularity in ("year", "quarter"):
-            for metric in ("pct", "count"):
+            for metric in ("pct", "count", "requests"):
                 for collection_view in ("grouped", "individual"):
                     for selected_products in (FLAGSHIP_PRODUCTS, OTHER_PRODUCTS, ALL_PRODUCT_SELECTION, []):
                         with self.subTest(
