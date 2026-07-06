@@ -3,7 +3,7 @@
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-from dashboard.config import FEEDBACK_EMAIL_URL, SOURCE_URL
+from dashboard.config import FEEDBACK_EMAIL_URL, RELEASE_MODEL, SOURCE_URL
 from dashboard.data.registry import (
     PROCESSING_STATS, DATA_DATE, source_file,
     RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT,
@@ -148,7 +148,7 @@ cross-cutting tags:
 - **Cross-cutting tags** - flags projects centred on COVID-19/pandemic framing,
   demographic disparities, or equity
 
-Classification is performed by Claude (claude-fable-5) using structured output
+Classification is performed by Claude (`{RELEASE_MODEL}`) using structured output
 via the Anthropic API. Labels follow the project taxonomy data dictionary, and
 results are cached locally to avoid re-classification. Record-linkage properties
 are no longer classified by the LLM; they are derived deterministically from the

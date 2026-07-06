@@ -114,6 +114,27 @@ CLASSIFICATION_DIR = os.path.join(
 REGISTER_PROPERTIES_CSV = os.path.join(
     _PROJECT_ROOT, *_RELEASE_POINTERS["register_properties_csv"].split("/")
 )
+RUN_METADATA_JSON = os.path.join(CLASSIFICATION_DIR, "run_metadata.json")
+_RELEASE_MODEL_FALLBACK = "see release metadata"
+
+
+def _load_release_model(path=RUN_METADATA_JSON) -> str:
+    """Model id recorded by the live classification run.
+
+    Degrades to a placeholder when the metadata is missing or unreadable, so
+    the displayed model can never silently drift from the run the release
+    pointer targets (it either matches the run or visibly says it is unknown).
+    """
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            metadata = json.load(f)
+        model = str(metadata.get("model") or "").strip()
+        return model or _RELEASE_MODEL_FALLBACK
+    except (OSError, ValueError):
+        return _RELEASE_MODEL_FALLBACK
+
+
+RELEASE_MODEL = _load_release_model()
 # Where register cleaning WRITES its duplicate-review diagnostic at startup.
 # Kept separate from CLASSIFICATION_DIR so the live app never writes into the
 # committed results directory.

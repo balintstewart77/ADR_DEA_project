@@ -9,6 +9,7 @@ from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
 from dashboard import taxonomy
 from dashboard import reference_definitions
+from dashboard.config import RELEASE_MODEL
 from dashboard.config import REGISTER_SOURCE_ICON, DERIVED_FIELD_ICON
 from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS, _ALL_INSTITUTION_OPTIONS, _ALL_TRE_OPTIONS,
@@ -191,8 +192,8 @@ _glossary_md = """
 
 
 _thematic_methodology_md = f"""
-**Model:** Claude Fable 5 (`claude-fable-5`) via the Anthropic API with
-structured JSON output.
+**Model:** `{RELEASE_MODEL}` (as recorded in the live release's run metadata)
+via the Anthropic API with structured JSON output.
 
 **Taxonomy:** Labels follow the project taxonomy data dictionary
 (`{taxonomy.DICTIONARY_VERSION}`, ontology {taxonomy.ONTOLOGY_VERSION}). The
