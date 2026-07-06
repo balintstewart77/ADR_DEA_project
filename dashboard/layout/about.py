@@ -148,7 +148,7 @@ cross-cutting tags:
 - **Cross-cutting tags** - flags projects centred on COVID-19/pandemic framing,
   demographic disparities, or equity
 
-Classification is performed by Claude (claude-opus-4-8) using structured output
+Classification is performed by Claude (claude-fable-5) using structured output
 via the Anthropic API. Labels follow the project taxonomy data dictionary, and
 results are cached locally to avoid re-classification. Record-linkage properties
 are no longer classified by the LLM; they are derived deterministically from the

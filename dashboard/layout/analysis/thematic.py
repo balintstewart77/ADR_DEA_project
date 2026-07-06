@@ -191,7 +191,7 @@ _glossary_md = """
 
 
 _thematic_methodology_md = f"""
-**Model:** Claude Opus 4.8 (`claude-opus-4-8`) via the Anthropic API with
+**Model:** Claude Fable 5 (`claude-fable-5`) via the Anthropic API with
 structured JSON output.
 
 **Taxonomy:** Labels follow the project taxonomy data dictionary
