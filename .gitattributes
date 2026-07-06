@@ -1,0 +1,16 @@
+# Pin LF in-repo and in working copies for all text formats so byte-exact
+# idempotency comparisons (e.g. register_properties.csv reproducibility) can
+# never be broken by CRLF churn. Binary formats are marked -text.
+*.py    text eol=lf
+*.csv   text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.md    text eol=lf
+*.json  text eol=lf
+*.txt   text eol=lf
+*.ipynb text eol=lf
+
+*.png   -text
+*.xlsx  -text
+*.ods   -text
+*.pdf   -text
