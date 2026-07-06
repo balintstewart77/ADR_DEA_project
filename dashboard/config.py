@@ -11,16 +11,6 @@ _PACKAGE_DIR = os.path.dirname(__file__)
 
 DATA_DIR = os.path.join(_PACKAGE_DIR, "..", "data")
 
-COLLECTION_COLOURS = {
-    "Data First":                       "#3366cc",
-    "LEO":                              "#dc3912",
-    "ECHILD":                           "#109618",
-    "Growing up in England":            "#ff9900",
-    "Wage and Employment Dynamics":     "#6a3d9a",
-    "GRADE":                            "#0099c6",
-    "Agricultural Research Collection": "#e377c2",
-}
-
 PRIMARY_BAR = "#2a9d8f"
 SECONDARY_BAR = "#e76f51"
 
