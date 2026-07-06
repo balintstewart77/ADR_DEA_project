@@ -1,3 +1,5 @@
+# Notebook-era only (archived 2025 analysis notebooks). Not used by the
+# dashboard or pipeline - do not install for deployment.
 # Optional heavyweight ML/NLP stack. Keep this out of the default install.
 huggingface-hub
 safetensors
