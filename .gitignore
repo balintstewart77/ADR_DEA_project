@@ -116,6 +116,7 @@ analysis/opus_v_sonnet_comparison_analysis/
 analysis/outputs/*
 !analysis/outputs/codebase_hygiene_audit.md
 !analysis/outputs/domain_order_reconciliation_review.md
+!analysis/outputs/hygiene_phase2_report.md
 analysis/outputs_examples_rc2/
 analysis/outputs_register_properties_tmp/
 analysis/outputs_deterministic_rc2/*
