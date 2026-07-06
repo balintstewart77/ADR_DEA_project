@@ -58,7 +58,6 @@ analysis/outputs_v3/quality/dataset_normalisation_audit.csv
 analysis/outputs_v3/quality/dataset_normalisation_review_queue.csv
 analysis/outputs_opus/
 analysis/outputs_sonnet/
-.claude/
 
 # YAML backup files (e.g. for taxonomy dictionary)
 *.backup.yaml
@@ -89,14 +88,6 @@ analysis/outputs_v*/quality/
 **/*.bak
 **/*.bak_*
 analysis/**/*.instruction*.bak
-
-# --- Python cache ---
-**/__pycache__/
-*.pyc
-
-# --- Virtual envs ---
-venv/
-.venv/
 
 # --- Local or ambiguous development artefacts surfaced during rc1 freeze ---
 analysis/**/*.instruction*_backup

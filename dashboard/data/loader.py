@@ -19,10 +19,9 @@ try:
     from dashboard.dataset_normalisation import (
         iter_dataset_entries,
         normalise_dataset_name,
-        parse_datasets,
     )
 except ModuleNotFoundError:
-    from dataset_normalisation import iter_dataset_entries, normalise_dataset_name, parse_datasets
+    from dataset_normalisation import iter_dataset_entries, normalise_dataset_name
 
 _REFERENCE_INDEXES = build_indexes(load_reference(REFERENCE_PATH))
 _LINKED_PRODUCT_COLLECTION_LABELS = {

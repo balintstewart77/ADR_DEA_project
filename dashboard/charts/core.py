@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from dashboard.charts.template import CHART_HEIGHT, _apply_common, _annotate_partial_year
+from dashboard.charts.template import _apply_common, _annotate_partial_year
 from dashboard.config import PRIMARY_BAR, SECONDARY_BAR
 
 

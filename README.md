@@ -21,12 +21,12 @@ This repository is built around the UK Statistics Authority public register of D
 
 ## Repository Structure
 
-- [`dashboard/app.py`](/C:/Users/balin/Desktop/ADR_DEA_project/dashboard/app.py): main Dash application.
-- [`dashboard/dataset_normalisation.py`](/C:/Users/balin/Desktop/ADR_DEA_project/dashboard/dataset_normalisation.py): dataset parsing and normalisation helpers shared by the dashboard and analysis scripts.
-- [`data`](/C:/Users/balin/Desktop/ADR_DEA_project/data): source extracts and processed CSV/XLSX files used by the app.
-- [`analysis`](/C:/Users/balin/Desktop/ADR_DEA_project/analysis): notebooks and scripts for quality checks, thematic classification, comparison work, and derived outputs.
-- [`scrape`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape): scraper scripts used to refresh the source register data.
-- [`docs`](/C:/Users/balin/Desktop/ADR_DEA_project/docs): published analysis artefacts and supporting documentation.
+- [`dashboard/app.py`](dashboard/app.py): main Dash application.
+- [`dashboard/dataset_normalisation.py`](dashboard/dataset_normalisation.py): dataset parsing and normalisation helpers shared by the dashboard and analysis scripts.
+- [`data`](data): source extracts and processed CSV/XLSX files used by the app.
+- [`analysis`](analysis): notebooks and scripts for quality checks, thematic classification, comparison work, and derived outputs.
+- [`scrape`](scrape): scraper scripts used to refresh the source register data.
+- [`docs`](docs): published analysis artefacts and supporting documentation.
 
 ## Dashboard Features
 
@@ -40,7 +40,7 @@ This repository is built around the UK Statistics Authority public register of D
 
 ## Data Processing Approach
 
-The dashboard loads the latest available CSV from [`data`](/C:/Users/balin/Desktop/ADR_DEA_project/data) and applies a small amount of cleaning before rendering:
+The dashboard loads the latest available CSV from [`data`](data) and applies a small amount of cleaning before rendering:
 
 - rows with missing accreditation dates are removed
 - non-DEA / non-relevant rows are filtered out
@@ -56,7 +56,7 @@ The `About` tab in the app documents the currently implemented counting and dupl
 
 The thematic analysis layer is experimental.
 
-It uses a separate script in [`analysis/llm_theme_analysis_v3.py`](/C:/Users/balin/Desktop/ADR_DEA_project/analysis/llm_theme_analysis_v3.py) to classify projects using project titles and datasets used. The dashboard reads generated outputs from the analysis directory when they are present; if those files are missing, the thematic analysis tab falls back to an informational message.
+It uses a separate script in [`analysis/llm_theme_analysis_v3.py`](analysis/llm_theme_analysis_v3.py) to classify projects using project titles and datasets used. The dashboard reads generated outputs from the analysis directory when they are present; if those files are missing, the thematic analysis tab falls back to an informational message.
 
 ## Setup
 
@@ -153,12 +153,12 @@ The individual steps remain available:
 
 - The public register is the governing source, so any inconsistencies in project titles, researcher strings, or dataset descriptions flow through into the dashboard.
 - Dataset and institution parsing depend on semi-structured free text and therefore involve heuristics.
-- Flagship classification is based on keyword matching against dataset text.
+- Flagship collection membership is derived from the curated linked-product reference ([`analysis/register_reference.yaml`](analysis/register_reference.yaml)).
 - Thematic analysis is experimental and should be treated as indicative rather than definitive.
 
 ## Main Entry Points
 
-- Run the dashboard: [`dashboard/app.py`](/C:/Users/balin/Desktop/ADR_DEA_project/dashboard/app.py)
-- Refresh the data end to end: `python -m analysis.refresh_pipeline` ([`analysis/refresh_pipeline.py`](/C:/Users/balin/Desktop/ADR_DEA_project/analysis/refresh_pipeline.py))
-- Fetch the source data only: [`scrape/fetch_register.py`](/C:/Users/balin/Desktop/ADR_DEA_project/scrape/fetch_register.py)
-- Regenerate thematic outputs: [`analysis/llm_theme_analysis_v3.py`](/C:/Users/balin/Desktop/ADR_DEA_project/analysis/llm_theme_analysis_v3.py)
+- Run the dashboard: [`dashboard/app.py`](dashboard/app.py)
+- Refresh the data end to end: `python -m analysis.refresh_pipeline` ([`analysis/refresh_pipeline.py`](analysis/refresh_pipeline.py))
+- Fetch the source data only: [`scrape/fetch_register.py`](scrape/fetch_register.py)
+- Regenerate thematic outputs: [`analysis/llm_theme_analysis_v3.py`](analysis/llm_theme_analysis_v3.py)

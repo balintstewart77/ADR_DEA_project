@@ -17,7 +17,6 @@ import argparse
 import os
 import re
 import sys
-import textwrap
 from collections import Counter
 
 import numpy as np

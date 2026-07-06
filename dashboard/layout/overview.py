@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 
 from dashboard.components.stat_card import stat_card
 from dashboard.components.chart_tips import chart_wrapper
-from dashboard.charts.core import make_yearly_chart, make_quarterly_chart, make_srs_chart
+from dashboard.charts.core import make_yearly_chart
 from dashboard.charts.template import CHART_CONFIG
 from dashboard.config import FEEDBACK_EMAIL_URL, SOURCE_URL
 from dashboard.data.registry import (
