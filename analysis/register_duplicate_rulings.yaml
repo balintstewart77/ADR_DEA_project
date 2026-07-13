@@ -1,0 +1,63 @@
+version: "1.0"
+
+rulings:
+  - project_id: "2023/211"
+    ruling_type: "duplicate_update"
+    note: >
+      Same project represented twice. The rows share datasets, processing
+      environment and accreditation date. One title contains duplicated ESCoE
+      wording and one row has an expanded researcher list.
+    source_matches:
+      - title: "ESCoE: Local Consumption and National Sustainable Well-being"
+      - title: "ESCOE: ESCoE: Local Consumption and National Sustainable Well-being"
+    canonical_record_id: "2023/211"
+    canonical_title: "ESCoE: Local Consumption and National Sustainable Well-being"
+    merge_policy:
+      researchers: "union"
+      require_equal:
+        - "Project ID"
+        - "Legal Basis"
+        - "Datasets Used"
+        - "Secure Research Service"
+        - "Accreditation Date"
+
+  - project_id: "2020/030"
+    ruling_type: "project_number_collision"
+    note: "Two unrelated projects were published under the same official Project ID."
+    entries:
+      - record_id: "2020/030/a"
+        title: "Examining the relationship between engaging in design and exporting"
+      - record_id: "2020/030/b"
+        title: "Occupational mobility: evidence from England and Wales"
+
+  - project_id: "2022/036"
+    ruling_type: "project_number_collision"
+    note: "Two unrelated projects were published under the same official Project ID."
+    entries:
+      - record_id: "2022/036/a"
+        title: "Assessing and evaluating the real extent of hidden crimes in the UK"
+      - record_id: "2022/036/b"
+        title: "Understanding Job Creation in Northern Ireland Firms"
+
+  - project_id: "2024/095"
+    ruling_type: "project_number_collision"
+    note: "Two unrelated projects were published under the same official Project ID."
+    entries:
+      - record_id: "2024/095/a"
+        title: "Diversity and the performance of UK firms and cities"
+      - record_id: "2024/095/b"
+        title: "Understanding pathways for support amongst children and young people in Wales experiencing mental health problems"
+
+  - project_id: "2024/014"
+    ruling_type: "related_distinct_entries_same_project_id"
+    note: >
+      Same researcher and accreditation date, with related subject matter but
+      materially different titles, datasets and processing environments.
+      Retained as separate register/classification entries. The published fields
+      do not establish whether these are separate access strands, amendment
+      history or another register process.
+    entries:
+      - record_id: "2024/014/a"
+        title: "Public services and youth crime (previously 'Gangs and social housing')"
+      - record_id: "2024/014/b"
+        title: "The impact of youth centres on crime"

@@ -15,6 +15,7 @@ from dataclasses import dataclass, field
 from typing import Iterable
 
 import pandas as pd
+import yaml
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(PROJECT_ROOT, "data")
@@ -29,6 +30,17 @@ CANDIDATE_FILES = [
 ]
 
 DUPLICATE_REVIEW_FILE = os.path.join(OUTPUT_DIR, "quality", "duplicate_review_flagged.csv")
+REGISTER_DUPLICATE_RULINGS_FILE = os.path.join(PROJECT_ROOT, "analysis", "register_duplicate_rulings.yaml")
+DUPLICATE_RULINGS_AUDIT_FILE = os.path.join(OUTPUT_DIR, "quality", "duplicate_rulings_audit.csv")
+
+RETAINED_DUPLICATE_RULING_TYPES = {
+    "project_number_collision",
+    "related_distinct_entries_same_project_id",
+}
+ALL_DUPLICATE_RULING_TYPES = {
+    "duplicate_update",
+    *RETAINED_DUPLICATE_RULING_TYPES,
+}
 
 COLUMN_MAP = {
     "Project Number": "Project ID",
@@ -71,6 +83,15 @@ class DuplicatePolicyResult:
     @property
     def tier2_rows_removed(self) -> int:
         return self.tier2_input_rows - self.tier2_merge_groups
+
+
+@dataclass
+class DuplicateRulingsResult:
+    dataframe: pd.DataFrame
+    audit: pd.DataFrame
+    audit_file: str = DUPLICATE_RULINGS_AUDIT_FILE
+    merged_source_rows: int = 0
+    retained_project_ids: list[str] = field(default_factory=list)
 
 
 def load_raw_register(
@@ -341,6 +362,335 @@ def write_duplicate_review(
     review.to_csv(review_file, index=False, encoding="utf-8-sig")
 
 
+def load_duplicate_rulings(path: str = REGISTER_DUPLICATE_RULINGS_FILE) -> dict[str, dict]:
+    """Load reviewed rulings keyed by Project ID."""
+    with open(path, "r", encoding="utf-8") as f:
+        payload = yaml.safe_load(f) or {}
+    rulings = payload.get("rulings")
+    if not isinstance(rulings, list):
+        raise ValueError(f"{path} must contain a 'rulings' list")
+
+    by_project_id: dict[str, dict] = {}
+    for ruling in rulings:
+        if not isinstance(ruling, dict):
+            raise ValueError(f"{path} contains a non-object ruling")
+        project_id = str(ruling.get("project_id") or "").strip()
+        ruling_type = str(ruling.get("ruling_type") or "").strip()
+        if not project_id:
+            raise ValueError(f"{path} contains a ruling without project_id")
+        if ruling_type not in ALL_DUPLICATE_RULING_TYPES:
+            raise ValueError(
+                f"{path} ruling for {project_id} has invalid ruling_type {ruling_type!r}"
+            )
+        if project_id in by_project_id:
+            raise ValueError(f"{path} contains duplicate rulings for {project_id}")
+        by_project_id[project_id] = ruling
+    return by_project_id
+
+
+def _normalised_match_value(col: str, value) -> str:
+    if col == "Accreditation Date":
+        return _normalise_date_key(value)
+    if col == "Title":
+        return _clean_title_text(value) if not pd.isna(value) else ""
+    if col == "Datasets Used":
+        return _normalise_duplicate_text(_clean_datasets_text(value))
+    if col in {"Researchers", "Legal Basis", "Secure Research Service"}:
+        return _normalise_duplicate_text(value)
+    return _normalise_duplicate_text(value)
+
+
+def _match_column_name(key: str) -> str:
+    return {
+        "project_id": "Project ID",
+        "title": "Title",
+        "researchers": "Researchers",
+        "legal_basis": "Legal Basis",
+        "datasets_used": "Datasets Used",
+        "secure_research_service": "Secure Research Service",
+        "accreditation_date": "Accreditation Date",
+    }.get(key, key)
+
+
+def _match_rows_for_criteria(group: pd.DataFrame, criteria: dict, *, project_id: str) -> list[int]:
+    if not isinstance(criteria, dict) or not criteria:
+        raise ValueError(f"Duplicate ruling for {project_id} has an empty source match")
+
+    mask = pd.Series(True, index=group.index)
+    for raw_col, expected in criteria.items():
+        col = _match_column_name(str(raw_col))
+        if col not in group.columns:
+            raise ValueError(
+                f"Duplicate ruling for {project_id} references missing match column {col!r}"
+            )
+        expected_key = _normalised_match_value(col, expected)
+        values = group[col].map(lambda value: _normalised_match_value(col, value))
+        mask &= values.eq(expected_key)
+    return group.index[mask].tolist()
+
+
+def _require_unique_matches(
+    group: pd.DataFrame,
+    matches: list[dict],
+    *,
+    project_id: str,
+) -> list[int]:
+    matched_indexes: list[int] = []
+    for criteria in matches:
+        indexes = _match_rows_for_criteria(group, criteria, project_id=project_id)
+        if not indexes:
+            raise ValueError(f"Duplicate ruling for {project_id} matched zero rows: {criteria}")
+        if len(indexes) > 1:
+            raise ValueError(
+                f"Duplicate ruling for {project_id} matched multiple rows: {criteria}"
+            )
+        matched_indexes.append(indexes[0])
+    if len(set(matched_indexes)) != len(matched_indexes):
+        raise ValueError(f"Duplicate ruling for {project_id} matches the same row more than once")
+    if set(matched_indexes) != set(group.index):
+        missing = sorted(set(group.index) - set(matched_indexes))
+        extra = sorted(set(matched_indexes) - set(group.index))
+        raise ValueError(
+            f"Duplicate ruling for {project_id} does not cover the residual duplicate group "
+            f"(missing={missing}, extra={extra})"
+        )
+    return matched_indexes
+
+
+def _required_equal_key(col: str, value) -> str:
+    if col == "Datasets Used":
+        return _normalise_duplicate_text(_clean_datasets_text(value))
+    if col == "Accreditation Date":
+        return _normalise_date_key(value)
+    return _normalise_duplicate_text(value)
+
+
+def _single_consistent_value(group: pd.DataFrame, col: str, *, project_id: str):
+    values = group[col]
+    keys = values.map(lambda value: _required_equal_key(col, value))
+    nonempty_keys = {key for key in keys if key}
+    if len(nonempty_keys) > 1:
+        raise ValueError(
+            f"Duplicate update ruling for {project_id} has conflicting values in {col!r}"
+        )
+    for value in values:
+        if not pd.isna(value) and str(value).strip():
+            return value
+    return values.iloc[0]
+
+
+def _merge_duplicate_update_group(group: pd.DataFrame, ruling: dict) -> pd.Series:
+    project_id = str(ruling["project_id"])
+    merge_policy = ruling.get("merge_policy") or {}
+    require_equal = list(merge_policy.get("require_equal") or [])
+    for col in require_equal:
+        if col not in group.columns:
+            raise ValueError(
+                f"Duplicate update ruling for {project_id} requires missing column {col!r}"
+            )
+
+    merged = group.iloc[0].copy()
+    for col in group.columns:
+        if col == "Title":
+            merged[col] = ruling.get("canonical_title") or group.iloc[0][col]
+        elif col == "Researchers":
+            merged[col] = _merge_researcher_values(group[col])
+        elif col == "Record ID":
+            merged[col] = ruling.get("canonical_record_id") or project_id
+        elif col in require_equal:
+            merged[col] = _single_consistent_value(group, col, project_id=project_id)
+        else:
+            keys = group[col].map(_normalise_duplicate_text)
+            nonempty = [value for value in group[col] if not pd.isna(value) and str(value).strip()]
+            if keys.nunique(dropna=False) <= 1:
+                merged[col] = group.iloc[0][col]
+            elif len(nonempty) == 1:
+                merged[col] = nonempty[0]
+            else:
+                raise ValueError(
+                    f"Duplicate update ruling for {project_id} has no merge rule for "
+                    f"conflicting column {col!r}"
+                )
+    merged["Record ID"] = ruling.get("canonical_record_id") or project_id
+    return merged
+
+
+def _audit_row(
+    group: pd.DataFrame,
+    ruling: dict,
+    *,
+    action: str,
+    record_ids: list[str],
+    canonical_title: str = "",
+) -> dict:
+    return {
+        "Project ID": str(ruling["project_id"]),
+        "ruling_type": str(ruling["ruling_type"]),
+        "action": action,
+        "source_row_indexes": "; ".join(str(idx) for idx in group.index.tolist()),
+        "source_titles": " | ".join(_clean_title_text(value) for value in group["Title"].tolist()),
+        "resulting_record_ids": "; ".join(record_ids),
+        "canonical_title": canonical_title,
+        "source_row_count": len(group),
+        "note": str(ruling.get("note") or "").strip(),
+    }
+
+
+def write_duplicate_rulings_audit(audit: pd.DataFrame, audit_file: str) -> None:
+    os.makedirs(os.path.dirname(audit_file), exist_ok=True)
+    audit.to_csv(audit_file, index=False, encoding="utf-8-sig")
+
+
+def apply_reviewed_duplicate_rulings(
+    df: pd.DataFrame,
+    *,
+    rulings_path: str = REGISTER_DUPLICATE_RULINGS_FILE,
+    audit_file: str = DUPLICATE_RULINGS_AUDIT_FILE,
+    stats: dict | None = None,
+) -> DuplicateRulingsResult:
+    """Apply reviewed rulings to residual duplicate Project IDs."""
+    if "Project ID" not in df.columns or "Title" not in df.columns:
+        out = df.copy()
+        audit = pd.DataFrame()
+        write_duplicate_rulings_audit(audit, audit_file)
+        return DuplicateRulingsResult(dataframe=out, audit=audit, audit_file=audit_file)
+
+    rulings = load_duplicate_rulings(rulings_path)
+    working = df.copy().reset_index(drop=True)
+    if "Record ID" not in working.columns:
+        working["Record ID"] = pd.NA
+
+    duplicate_ids = set(
+        working.loc[working["Project ID"].astype(str).duplicated(keep=False), "Project ID"]
+        .astype(str)
+        .unique()
+    )
+    absent_rulings = sorted(set(rulings) - duplicate_ids)
+    if absent_rulings:
+        raise ValueError(
+            "Duplicate rulings reference Project IDs not present as residual duplicates: "
+            + ", ".join(absent_rulings)
+        )
+    missing_rulings = sorted(duplicate_ids - set(rulings))
+    if missing_rulings:
+        raise ValueError(
+            "Residual duplicate Project IDs lack reviewed rulings: "
+            + ", ".join(missing_rulings)
+        )
+
+    retained_rows: list[pd.Series] = []
+    audit_rows: list[dict] = []
+    merged_source_rows = 0
+    retained_project_ids: list[str] = []
+
+    for project_id, group in working.groupby("Project ID", sort=False, dropna=False):
+        project_id = str(project_id)
+        if project_id not in duplicate_ids:
+            row = group.iloc[0].copy()
+            row["Record ID"] = project_id
+            retained_rows.append(row)
+            continue
+
+        ruling = rulings[project_id]
+        ruling_type = str(ruling["ruling_type"])
+        if ruling_type == "duplicate_update":
+            matches = ruling.get("source_matches") or []
+            if len(matches) != len(group):
+                raise ValueError(
+                    f"Duplicate update ruling for {project_id} expected {len(matches)} "
+                    f"source matches but residual group has {len(group)} rows"
+                )
+            matched_indexes = _require_unique_matches(group, matches, project_id=project_id)
+            matched_group = group.loc[matched_indexes]
+            merged = _merge_duplicate_update_group(matched_group, ruling)
+            retained_rows.append(merged)
+            merged_source_rows += len(group)
+            audit_rows.append(_audit_row(
+                group,
+                ruling,
+                action="merged",
+                record_ids=[str(merged["Record ID"])],
+                canonical_title=str(merged["Title"]),
+            ))
+            continue
+
+        entries = ruling.get("entries") or []
+        if ruling_type not in RETAINED_DUPLICATE_RULING_TYPES:
+            raise ValueError(f"Unsupported retained duplicate ruling type for {project_id}: {ruling_type}")
+        if len(entries) != len(group):
+            raise ValueError(
+                f"Retained duplicate ruling for {project_id} has {len(entries)} entries "
+                f"but residual group has {len(group)} rows"
+            )
+        match_criteria = [
+            {key: value for key, value in entry.items() if key != "record_id"}
+            for entry in entries
+        ]
+        matched_indexes = _require_unique_matches(group, match_criteria, project_id=project_id)
+        assigned_ids: list[str] = []
+        for entry, idx in zip(entries, matched_indexes):
+            record_id = str(entry.get("record_id") or "").strip()
+            if not record_id:
+                raise ValueError(f"Retained duplicate ruling for {project_id} has an entry without record_id")
+            row = group.loc[idx].copy()
+            row["Record ID"] = record_id
+            retained_rows.append(row)
+            assigned_ids.append(record_id)
+        retained_project_ids.append(project_id)
+        audit_rows.append(_audit_row(
+            group,
+            ruling,
+            action="retained",
+            record_ids=assigned_ids,
+            canonical_title="",
+        ))
+
+    out = pd.DataFrame(retained_rows, columns=working.columns).reset_index(drop=True)
+    if out["Record ID"].isna().any() or (out["Record ID"].astype(str).str.strip() == "").any():
+        raise ValueError("Some cleaned rows have no Record ID after duplicate rulings")
+    duplicate_record_ids = out.loc[out["Record ID"].astype(str).duplicated(), "Record ID"].astype(str)
+    if not duplicate_record_ids.empty:
+        raise ValueError(
+            "Duplicate Record IDs after duplicate rulings: "
+            + ", ".join(sorted(duplicate_record_ids.unique()))
+        )
+
+    audit = pd.DataFrame(
+        audit_rows,
+        columns=[
+            "Project ID",
+            "ruling_type",
+            "action",
+            "source_row_indexes",
+            "source_titles",
+            "resulting_record_ids",
+            "canonical_title",
+            "source_row_count",
+            "note",
+        ],
+    )
+    write_duplicate_rulings_audit(audit, audit_file)
+
+    if stats is not None:
+        stats["duplicate_rulings_file"] = rulings_path
+        stats["duplicate_rulings_audit_file"] = audit_file
+        stats["duplicate_ruling_groups_applied"] = len(audit)
+        stats["duplicate_ruling_merged_source_rows"] = merged_source_rows
+        stats["duplicate_ruling_rows_removed"] = merged_source_rows - sum(
+            1 for row in audit_rows if row["action"] == "merged"
+        )
+        stats["duplicate_ruling_retained_project_ids"] = retained_project_ids
+        stats["rows_after_duplicate_rulings"] = len(out)
+
+    return DuplicateRulingsResult(
+        dataframe=out,
+        audit=audit,
+        audit_file=audit_file,
+        merged_source_rows=merged_source_rows,
+        retained_project_ids=retained_project_ids,
+    )
+
+
 def apply_duplicate_policy(
     df: pd.DataFrame,
     *,
@@ -496,7 +846,7 @@ def _record_id_sort_key(row: pd.Series) -> tuple:
     return primary + tiebreak
 
 
-def assign_record_ids(df: pd.DataFrame) -> pd.DataFrame:
+def assign_record_ids(df: pd.DataFrame, *, allow_auto_suffix: bool = True) -> pd.DataFrame:
     out = df.copy()
     out["Project ID"] = (
         out["Project ID"].astype(str)
@@ -506,12 +856,30 @@ def assign_record_ids(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     duplicated_ids = out["Project ID"].duplicated(keep=False)
-    out["Record ID"] = out["Project ID"]
+    if "Record ID" not in out.columns:
+        out["Record ID"] = pd.NA
+    out["Record ID"] = out["Record ID"].astype("string")
+    missing_record_id = out["Record ID"].isna() | out["Record ID"].str.strip().eq("")
+    out.loc[missing_record_id & ~duplicated_ids, "Record ID"] = out.loc[
+        missing_record_id & ~duplicated_ids, "Project ID"
+    ]
     if duplicated_ids.any():
         for pid, grp in out.loc[duplicated_ids].groupby("Project ID", sort=False):
+            missing = grp["Record ID"].isna() | grp["Record ID"].str.strip().eq("")
+            if not missing.any():
+                continue
+            if not allow_auto_suffix:
+                raise ValueError(
+                    f"Duplicate Project ID {pid} has no explicit reviewed Record ID mapping"
+                )
             ranked = sorted(grp.index, key=lambda idx: _record_id_sort_key(out.loc[idx]))
             for rank, idx in enumerate(ranked):
-                out.loc[idx, "Record ID"] = f"{pid}/{_record_suffix(rank)}"
+                if pd.isna(out.loc[idx, "Record ID"]) or not str(out.loc[idx, "Record ID"]).strip():
+                    out.loc[idx, "Record ID"] = f"{pid}/{_record_suffix(rank)}"
+    duplicate_record_ids = out.loc[out["Record ID"].astype(str).duplicated(), "Record ID"]
+    if len(duplicate_record_ids):
+        sample = ", ".join(sorted(duplicate_record_ids.astype(str).unique())[:10])
+        raise ValueError(f"Duplicate Record ID values after assignment: {sample}")
     return out
 
 
@@ -539,7 +907,13 @@ def clean_register_dataframe(
     df = filter_dea_projects(df, stats)
     review_file = os.path.join(output_dir, "quality", "duplicate_review_flagged.csv")
     duplicate_result = apply_duplicate_policy(df, review_file=review_file, stats=stats, verbose=verbose)
-    df = assign_record_ids(duplicate_result.dataframe)
+    rulings_audit_file = os.path.join(output_dir, "quality", "duplicate_rulings_audit.csv")
+    rulings_result = apply_reviewed_duplicate_rulings(
+        duplicate_result.dataframe,
+        audit_file=rulings_audit_file,
+        stats=stats,
+    )
+    df = assign_record_ids(rulings_result.dataframe, allow_auto_suffix=False)
     df["Title"] = df["Title"].apply(_clean_title_text)
     df["Researchers"] = df["Researchers"].apply(_clean_researcher_text)
     df["Datasets Used"] = df["Datasets Used"].apply(

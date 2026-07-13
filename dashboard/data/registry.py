@@ -60,10 +60,14 @@ PARTIAL_YEAR_INFO = PartialYearInfo(
 )
 
 TOTAL_PROJECTS = len(df_all)
+TOTAL_RETAINED_REGISTER_ENTRIES = len(df_all)
+TOTAL_UNIQUE_OFFICIAL_PROJECT_IDS = df_all["Project ID"].nunique() if len(df_all) else 0
 TOTAL_DATASET_REQUESTS = len(df_datasets)
 TOTAL_FLAGSHIP = df_flagship_projects["Project Row ID"].nunique() if len(df_flagship_projects) else 0
 TOTAL_FLAGSHIP_REQUESTS = len(df_flagship_requests) if len(df_flagship_requests) else 0
 YEAR_RANGE = f"{int(df_all['Year'].min())}–{int(df_all['Year'].max())}" if len(df_all) else ""
+DATASET_PROJECT_KEY_COL = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
+INSTITUTION_PROJECT_KEY_COL = "Record ID" if "Record ID" in df_institutions.columns else "Project ID"
 
 _register_properties = load_register_properties(columns=[RECORD_LINKAGE_COL])
 if "Record ID" in df_all.columns and not _register_properties.empty:
@@ -113,8 +117,8 @@ df_all[_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
 # ---------------------------------------------------------------------------
 
 _dataset_project_counts = (
-    df_datasets.drop_duplicates(subset=["Project ID", "dataset"])
-    .groupby("dataset")["Project ID"].nunique()
+    df_datasets.drop_duplicates(subset=[DATASET_PROJECT_KEY_COL, "dataset"])
+    .groupby("dataset")[DATASET_PROJECT_KEY_COL].nunique()
 )
 _ALL_DATASET_OPTIONS = (
     [{"label": "All datasets", "value": "ALL"}]
@@ -125,8 +129,8 @@ _ALL_DATASET_OPTIONS = (
     ]
 )
 _provider_project_counts = (
-    df_datasets.drop_duplicates(subset=["Project ID", "provider"])
-    .groupby("provider")["Project ID"].nunique()
+    df_datasets.drop_duplicates(subset=[DATASET_PROJECT_KEY_COL, "provider"])
+    .groupby("provider")[DATASET_PROJECT_KEY_COL].nunique()
 )
 _ALL_PROVIDER_OPTIONS = (
     [{"label": "All dataset source organisations", "value": "ALL"}]
@@ -137,8 +141,8 @@ _ALL_PROVIDER_OPTIONS = (
     ]
 )
 _institution_project_counts = (
-    df_institutions.drop_duplicates(subset=["Project ID", "institution"])
-    .groupby("institution")["Project ID"].nunique()
+    df_institutions.drop_duplicates(subset=[INSTITUTION_PROJECT_KEY_COL, "institution"])
+    .groupby("institution")[INSTITUTION_PROJECT_KEY_COL].nunique()
 )
 _ALL_INSTITUTION_OPTIONS = (
     [{"label": "All institutions", "value": "ALL"}]

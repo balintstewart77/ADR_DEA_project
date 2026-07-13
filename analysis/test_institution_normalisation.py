@@ -544,7 +544,11 @@ class InstitutionNormalisationTest(unittest.TestCase):
             },
         ])
         parsed = parse_institutions(df)
-        self.assertEqual(parsed.columns.tolist(), ["Project ID", "Year", "institution"])
+        self.assertEqual(
+            parsed.columns.tolist(),
+            ["Project ID", "Record ID", "Project Row ID", "Year", "institution"],
+        )
+        self.assertEqual(parsed["Record ID"].tolist(), ["P1", "P1"])
 
         metadata = parse_institutions_with_metadata(df)
         self.assertEqual(

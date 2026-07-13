@@ -85,12 +85,13 @@ def with_collection_display(df: pd.DataFrame, display_mode: str | None) -> pd.Da
 def display_entity_counts(display_df: pd.DataFrame) -> pd.DataFrame:
     if display_df.empty:
         return pd.DataFrame(columns=["display_dataset", "display_kind", "Projects"])
+    project_key = "Record ID" if "Record ID" in display_df.columns else "Project ID"
     return (
         display_df
-        .drop_duplicates(subset=["Project ID", "display_dataset"])
-        .groupby(["display_dataset", "display_kind"], as_index=False)["Project ID"]
+        .drop_duplicates(subset=[project_key, "display_dataset"])
+        .groupby(["display_dataset", "display_kind"], as_index=False)[project_key]
         .nunique()
-        .rename(columns={"Project ID": "Projects"})
+        .rename(columns={project_key: "Projects"})
     )
 
 

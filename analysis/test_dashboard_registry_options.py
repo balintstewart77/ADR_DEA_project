@@ -48,7 +48,7 @@ class DashboardRegistryOptionTest(unittest.TestCase):
 
     def test_processing_environment_options_are_canonicalised(self):
         expected_counts = {
-            "ONS Secure Research Service (SRS)": 1012,
+            "ONS Secure Research Service (SRS)": 1011,
             "Northern Ireland Statistics and Research Agency (NISRA)": 22,
             "SAIL Databank": 77,
             "UK Data Service (UKDS)": 184,

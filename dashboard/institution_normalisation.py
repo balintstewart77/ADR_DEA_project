@@ -1158,6 +1158,8 @@ def _parse_institution_rows(df: pd.DataFrame, *, include_metadata: bool = False)
             continue
 
         project_id = proj["Project ID"]
+        record_id = proj.get("Record ID", project_id)
+        project_row_id = proj.get("Project Row ID", record_id)
         year = proj["Year"]
         text = _clean_text(raw)
         institutions_seen = set()
@@ -1206,6 +1208,8 @@ def _parse_institution_rows(df: pd.DataFrame, *, include_metadata: bool = False)
                                 match_status = "parser_cleanup"
                             rows.append({
                                 "Project ID": project_id,
+                                "Record ID": record_id,
+                                "Project Row ID": project_row_id,
                                 "Year": year,
                                 "raw_institution": raw_institution,
                                 "institution": split_institution,
@@ -1216,6 +1220,8 @@ def _parse_institution_rows(df: pd.DataFrame, *, include_metadata: bool = False)
                         else:
                             rows.append({
                                 "Project ID": project_id,
+                                "Record ID": record_id,
+                                "Project Row ID": project_row_id,
                                 "Year": year,
                                 "institution": split_institution,
                             })
@@ -1226,7 +1232,7 @@ def _parse_institution_rows(df: pd.DataFrame, *, include_metadata: bool = False)
 def parse_institutions(df: pd.DataFrame) -> pd.DataFrame:
     rows = _parse_institution_rows(df)
 
-    return pd.DataFrame(rows, columns=["Project ID", "Year", "institution"])
+    return pd.DataFrame(rows, columns=["Project ID", "Record ID", "Project Row ID", "Year", "institution"])
 
 
 def parse_institutions_with_metadata(df: pd.DataFrame) -> pd.DataFrame:
@@ -1235,6 +1241,8 @@ def parse_institutions_with_metadata(df: pd.DataFrame) -> pd.DataFrame:
         rows,
         columns=[
             "Project ID",
+            "Record ID",
+            "Project Row ID",
             "Year",
             "raw_institution",
             "institution",
@@ -1267,7 +1275,7 @@ def institution_normalisation_review_table(df: pd.DataFrame) -> pd.DataFrame:
         )
         .agg(
             mentions=("institution", "size"),
-            project_count=("Project ID", "nunique"),
+            project_count=("Record ID", "nunique"),
         )
         .reset_index()
     )

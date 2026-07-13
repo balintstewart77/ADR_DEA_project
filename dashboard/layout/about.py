@@ -7,6 +7,8 @@ from dashboard.config import FEEDBACK_EMAIL_URL, RELEASE_MODEL, SOURCE_URL
 from dashboard.data.registry import (
     PROCESSING_STATS, DATA_DATE, source_file,
     RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT,
+    TOTAL_RETAINED_REGISTER_ENTRIES,
+    TOTAL_UNIQUE_OFFICIAL_PROJECT_IDS,
 )
 
 
@@ -54,19 +56,26 @@ Row counts at each stage:
 | Tier 1 clerical duplicate rows removed | {PROCESSING_STATS['rows_after_dea_filter'] - PROCESSING_STATS['duplicate_tier1_rows_removed']:,} | {PROCESSING_STATS['duplicate_tier1_rows_removed']:,} |
 | Tier 2 fragmented records merged | {PROCESSING_STATS['rows_after_duplicate_policy']:,} | {PROCESSING_STATS['duplicate_tier2_rows_removed']:,} |
 | Tier 3 ambiguous duplicate rows flagged for review | {PROCESSING_STATS['rows_after_duplicate_policy']:,} | 0 |
+| Reviewed duplicate-Project-ID rulings applied | {PROCESSING_STATS['rows_after_duplicate_rulings']:,} | {PROCESSING_STATS['duplicate_ruling_rows_removed']:,} |
 | **Final dataset** | **{PROCESSING_STATS['final_rows']:,}** | |
 
 Additional processing: column names are standardised, accreditation dates are
 parsed, and year/quarter fields are derived for time-series analysis.
+
+The current cleaned register contains **{TOTAL_RETAINED_REGISTER_ENTRIES:,} retained
+register entries / classification units** and **{TOTAL_UNIQUE_OFFICIAL_PROJECT_IDS:,}
+unique official Project IDs**. Project ID is not unique in the published register,
+so Record ID is the stable key for classification, sampling and retained-entry
+counts.
 
 Duplicate policy:
 
 - Same **Project ID** and **Title** rows with identical normalised datasets and researchers are collapsed as clerical duplicates.
 - Same **Project ID**, **Title**, and accreditation date rows with fragmented datasets or researchers are merged by taking the union of parsed dataset entries and researcher entries.
 - Ambiguous same-ID/same-title rows are retained and written to `{PROCESSING_STATS['duplicate_review_file']}` for manual review. Current flagged rows: {PROCESSING_STATS['duplicate_tier3_rows_flagged']:,}.
-- Duplicate **Project ID** values with different titles are retained as separate projects for manual review.
+- Residual duplicate **Project ID** values are reviewed individually in `{PROCESSING_STATS['duplicate_rulings_file']}`. Clear identifier collisions and materially distinct register entries are retained as separate classification units with explicit stable Record IDs, while reviewed duplicate/update rows are collapsed.
 
-Retained conflicting duplicate IDs:
+Retained duplicated official Project IDs after reviewed rulings:
 `{RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT}`
 
 ---
@@ -120,8 +129,9 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 - **Dataset parsing** splits on commas and ampersands, which can incorrectly
   break dataset source organisation names that contain these characters
   (e.g. "Department for Business, Energy & Industrial Strategy").
-- **Duplicate handling** removes exact duplicates and same-ID/same-title
-  duplicates, but retains duplicate IDs where the titles differ.
+- **Duplicate handling** removes exact duplicates, merges reviewed fragmented or
+  duplicate/update rows, and retains reviewed identifier collisions or materially
+  distinct register entries with stable Record IDs.
 - **Dataset parsing** includes a cleanup pass for malformed provider breaks and
   drops obvious parser artefacts, but free-text source formatting can still
   produce imperfect splits.

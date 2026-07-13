@@ -17,14 +17,14 @@ def make_quarterly_chart(df: pd.DataFrame) -> go.Figure:
     )
     fig = px.bar(
         counts, x="quarter_date", y="Projects",
-        title="New DEA-Accredited Projects by Quarter",
-        labels={"quarter_date": "Quarter", "Projects": "New projects"},
+        title="New DEA-Accredited Register Entries by Quarter",
+        labels={"quarter_date": "Quarter", "Projects": "New retained entries"},
         color_discrete_sequence=[PRIMARY_BAR],
     )
     fig.update_layout(xaxis_tickformat="%b %Y", bargap=0.15)
     fig.update_traces(
         marker_line_width=0,
-        hovertemplate="<b>%{x|%b %Y}</b><br>%{y} projects<extra></extra>",
+        hovertemplate="<b>%{x|%b %Y}</b><br>%{y} retained entries<extra></extra>",
     )
     return _apply_common(fig)
 
@@ -41,11 +41,11 @@ def make_yearly_chart(df: pd.DataFrame, partial_year_info=None) -> go.Figure:
         x=yearly["Year"], y=yearly["Projects"],
         marker_color=colours,
         marker_line_width=0,
-        hovertemplate="<b>%{x}</b><br>%{y} projects<extra></extra>",
+        hovertemplate="<b>%{x}</b><br>%{y} retained entries<extra></extra>",
     ))
     fig.update_layout(
-        title="New DEA Projects by Year",
-        xaxis_title="Year", yaxis_title="Projects",
+        title="New DEA Register Entries by Year",
+        xaxis_title="Year", yaxis_title="Retained entries",
         bargap=0.25, xaxis_dtick=1,
     )
     _annotate_partial_year(fig, years=yearly["Year"], partial_year_info=partial_year_info)

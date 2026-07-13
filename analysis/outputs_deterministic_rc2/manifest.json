@@ -8,29 +8,41 @@
     "dropped_same_id_same_title": 35,
     "dropped_special_duplicate_rows": 0,
     "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
+    "duplicate_ruling_groups_applied": 5,
+    "duplicate_ruling_merged_source_rows": 2,
+    "duplicate_ruling_retained_project_ids": [
+      "2020/030",
+      "2022/036",
+      "2024/014",
+      "2024/095"
+    ],
+    "duplicate_ruling_rows_removed": 1,
+    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
+    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\register_duplicate_rulings.yaml",
     "duplicate_tier1_rows_removed": 23,
     "duplicate_tier2_input_rows": 24,
     "duplicate_tier2_merge_groups": 12,
     "duplicate_tier2_rows_removed": 12,
     "duplicate_tier3_rows_flagged": 0,
-    "final_rows": 1309,
+    "final_rows": 1308,
     "raw_loaded": 1450,
     "rows_after_dea_filter": 1344,
     "rows_after_duplicate_policy": 1309,
+    "rows_after_duplicate_rulings": 1308,
     "rows_after_required_fields": 1450
   },
-  "created_at_utc": "2026-07-03T10:49:00.386166+00:00",
+  "created_at_utc": "2026-07-13T17:56:24.566222+00:00",
   "git": {
-    "commit": "21d2f53a7152e5f70383090703913b40390be7bb",
+    "commit": "c9f86403911673d3230668b5e07b1ffe75e644db",
     "dirty": true,
-    "status_porcelain": "M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/register_reference.yaml\n M analysis/test_dashboard_registry_options.py\n M analysis/test_dataset_normalisation.py\n M analysis/test_derive_register_properties.py\n M dashboard/config.py\n M dashboard/data/loader.py\n M dashboard/data/registry.py\n M dashboard/dataset_normalisation.py\n M dashboard/layout/about.py"
+    "status_porcelain": "M METHODS_LOG.md\n M README.md\n M analysis/derive_register_properties.py\n M analysis/outputs_classified_20260702_fable5/layer_a_by_year.csv\n M analysis/outputs_classified_20260702_fable5/layer_a_totals.csv\n M analysis/outputs_classified_20260702_fable5/layer_c_by_year.csv\n M analysis/outputs_classified_20260702_fable5/layer_c_totals.csv\n M analysis/outputs_classified_20260702_fable5/layer_classifications.csv\n M analysis/outputs_classified_20260702_fable5/run_metadata.json\n M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/register_cleaning.py\n M analysis/test_register_cleaning.py\n M dashboard/callbacks/datasets.py\n M dashboard/charts/core.py\n M dashboard/charts/institutions.py\n M dashboard/data/collection_view.py\n M dashboard/data/filtering.py\n M dashboard/data/registry.py\n M dashboard/dataset_normalisation.py\n M dashboard/institution_normalisation.py\n M dashboard/layout/about.py\n M dashboard/layout/overview.py\n?? analysis/migrate_reviewed_duplicate_record_ids.py\n?? analysis/register_duplicate_rulings.yaml"
   },
   "model": null,
   "output_files": [
     "analysis\\outputs_deterministic_rc2\\register_properties.csv"
   ],
   "reference_table_version": "0.5.7",
-  "row_count": 1309,
+  "row_count": 1308,
   "run_type": "deterministic_properties",
   "source_file": "dea_accredited_projects_20260601.csv"
 }

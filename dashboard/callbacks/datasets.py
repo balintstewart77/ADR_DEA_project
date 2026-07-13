@@ -70,7 +70,7 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
             title=f"Top {top_n} {entity_noun} by Demand Rate (per year available)",
             labels={
                 "display_dataset": "",
-                "Rate": "Distinct projects per year available",
+                "Rate": "Retained entries per year available",
             },
             color_discrete_sequence=[PRIMARY_BAR],
             custom_data=["Projects", "exposure_years", "availability_basis", "display_kind"],
@@ -79,8 +79,8 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
             marker_line_width=0,
             hovertemplate=(
                 "<b>%{y}</b><br>%{customdata[3]}<br>"
-                "%{x:.2f} projects per year available<br>"
-                "%{customdata[0]} projects over %{customdata[1]:.1f} exposure years<br>"
+                "%{x:.2f} retained entries per year available<br>"
+                "%{customdata[0]} retained entries over %{customdata[1]:.1f} exposure years<br>"
                 "availability basis: %{customdata[2]}<extra></extra>"
             ),
         )
@@ -94,13 +94,13 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
             y="display_dataset",
             orientation="h",
             title=f"Top {top_n} Most-Requested {entity_noun}",
-            labels={"display_dataset": "", "Projects": "Distinct projects"},
+            labels={"display_dataset": "", "Projects": "Retained entries"},
             color_discrete_sequence=[PRIMARY_BAR],
             custom_data=["display_kind"],
         )
         fig_top.update_traces(
             marker_line_width=0,
-            hovertemplate="<b>%{y}</b><br>%{customdata[0]}<br>%{x} projects<extra></extra>",
+            hovertemplate="<b>%{y}</b><br>%{customdata[0]}<br>%{x} retained entries<extra></extra>",
         )
     fig_top.update_layout(
         showlegend=False,
@@ -118,11 +118,15 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
     )
     trend_data = (
         display_sub[display_sub["display_dataset"].isin(top_trend)]
-        .drop_duplicates(subset=["Project ID", "Year", "display_dataset"])
-        .groupby(["Year", "display_dataset"])["Project ID"]
+        .drop_duplicates(subset=[
+            "Record ID" if "Record ID" in display_sub.columns else "Project ID",
+            "Year",
+            "display_dataset",
+        ])
+        .groupby(["Year", "display_dataset"])["Record ID" if "Record ID" in display_sub.columns else "Project ID"]
         .nunique()
         .reset_index()
-        .rename(columns={"Project ID": "Projects"})
+        .rename(columns={"Record ID" if "Record ID" in display_sub.columns else "Project ID": "Projects"})
     )
     fig_trend = px.line(
         trend_data,
@@ -154,10 +158,10 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
     # -- Provider breakdown bar --
     prov_counts = (
         sub[sub["provider"] != ""]
-        .groupby("provider")["Project ID"]
+        .groupby("provider")["Record ID" if "Record ID" in sub.columns else "Project ID"]
         .nunique()
         .reset_index()
-        .rename(columns={"Project ID": "Projects"})
+        .rename(columns={"Record ID" if "Record ID" in sub.columns else "Project ID": "Projects"})
         .sort_values("Projects", ascending=False)
     )
     provider_top_n = 15
@@ -179,7 +183,7 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
         y="provider_label",
         orientation="h",
         title="Projects by Dataset source organisation",
-        labels={"provider_label": "", "Projects": "Distinct projects"},
+        labels={"provider_label": "", "Projects": "Retained entries"},
         color_discrete_sequence=[PRIMARY_BAR],
         custom_data=["provider"],
     )
@@ -188,7 +192,7 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
         text=prov_plot["Projects"],
         textposition="outside",
         cliponaxis=False,
-        hovertemplate="<b>%{customdata[0]}</b><br>%{x} projects<extra></extra>",
+        hovertemplate="<b>%{customdata[0]}</b><br>%{x} retained entries<extra></extra>",
     )
     fig_prov.update_layout(
         showlegend=False,

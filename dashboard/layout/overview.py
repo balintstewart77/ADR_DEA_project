@@ -18,15 +18,15 @@ from dashboard.data.registry import (
 
 def build_stat_cards():
     return dbc.Row([
-        stat_card(f"{TOTAL_PROJECTS:,}", "Total DEA projects", "#3366cc"),
+        stat_card(f"{TOTAL_PROJECTS:,}", "Retained register entries", "#3366cc"),
         stat_card(
             f"{CROSS_DOMAIN_LINKED_PROJECTS:,}",
-            "Projects using cross-domain linkage",
+            "Entries using cross-domain linkage",
             "#e76f51",
         ),
         stat_card(
             f"{WITHIN_DOMAIN_LINKED_PROJECTS:,}",
-            "Projects using within-domain linkage",
+            "Entries using within-domain linkage",
             "#109618",
         ),
         stat_card(YEAR_RANGE, "Year range", "#0099c6"),

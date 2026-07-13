@@ -15,11 +15,11 @@
   },
   "temperature_note": "The Messages API returned HTTP 400 when temperature=0 was sent to claude-opus-4-8 during the comparison. The release run omits the temperature parameter; this is the exact configuration certified by validation.",
   "source_register": "data/dea_accredited_projects_20260601.csv via register_manifest current=20260601",
-  "n_projects": 1309,
+  "n_projects": 1308,
   "seed_cache": "analysis\\outputs\\model_comparison_fable_5_run1\\llm_layer_cache.json",
   "seed_cache_entries": 201,
   "fresh_api_classifications": 1108,
-  "final_cache_entries": 1309,
+  "final_cache_entries": 1308,
   "output_dir": "analysis\\outputs_classified_20260702_fable5",
   "usage_totals": {
     "input_tokens": 104521,
@@ -1146,5 +1146,10 @@
     "prompt_version": "dict-1.0-rc2",
     "model": "claude-fable-5"
   },
-  "pricing_note": "Approximate first-party Claude API cost using Claude Fable 5 5-minute prompt-cache rates: $10/MTok input, $12.50/MTok cache write, $1/MTok cache read, $50/MTok output."
+  "pricing_note": "Approximate first-party Claude API cost using Claude Fable 5 5-minute prompt-cache rates: $10/MTok input, $12.50/MTok cache write, $1/MTok cache read, $50/MTok output.",
+  "reviewed_duplicate_record_id_migration": {
+    "status": "applied",
+    "audit_csv": "analysis/outputs/reviewed_duplicate_record_id_migration_audit.csv",
+    "note": "2023/211 duplicate/update collapsed; retained duplicate Project IDs rekeyed by reviewed rulings."
+  }
 }

@@ -46,7 +46,9 @@ The dashboard loads the latest available CSV from [`data`](data) and applies a s
 - non-DEA / non-relevant rows are filtered out
 - exact duplicates are removed
 - same `Project ID` + same title duplicates are collapsed
-- a small number of special duplicate cases are handled explicitly
+- reviewed duplicate-`Project ID` rulings collapse duplicate/update rows, retain
+  clear identifier collisions as separate entries, and assign stable `Record ID`
+  values
 - dates are parsed and year/quarter fields are derived
 - dataset and institution fields are normalised into analysis-friendly tables
 

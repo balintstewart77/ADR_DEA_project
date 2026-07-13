@@ -549,8 +549,12 @@ def _register_with_record_ids_for_parsers(df: pd.DataFrame) -> pd.DataFrame:
 
 def parse_register_entities(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     parser_df = _register_with_record_ids_for_parsers(df)
-    datasets = parse_datasets(parser_df).rename(columns={"Project ID": "Record ID"})
-    institutions = parse_institutions(parser_df).rename(columns={"Project ID": "Record ID"})
+    datasets = parse_datasets(parser_df)
+    institutions = parse_institutions(parser_df)
+    if "Record ID" not in datasets.columns and "Project ID" in datasets.columns:
+        datasets = datasets.rename(columns={"Project ID": "Record ID"})
+    if "Record ID" not in institutions.columns and "Project ID" in institutions.columns:
+        institutions = institutions.rename(columns={"Project ID": "Record ID"})
     return datasets, institutions
 
 

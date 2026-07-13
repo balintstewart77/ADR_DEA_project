@@ -45,6 +45,13 @@ def _filter_by_project_ids(df: pd.DataFrame, project_ids) -> pd.DataFrame:
     return df[project_key.isin(matching_keys)]
 
 
+def _filter_by_record_ids(df: pd.DataFrame, record_ids) -> pd.DataFrame:
+    if "Record ID" not in df.columns:
+        return _filter_by_project_ids(df, record_ids)
+    wanted = {str(value).strip() for value in record_ids if str(value).strip()}
+    return df[df["Record ID"].astype(str).str.strip().isin(wanted)]
+
+
 def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institution, tre) -> pd.DataFrame:
     """Apply the common register-side filters used by Project Explorer and Enriched Register."""
     base = df.copy()
@@ -61,30 +68,33 @@ def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institu
                     )
                 ]
             else:
-                matching_pids = set(
+                matching_ids = set(
                     df_all.loc[
                         df_all["collections"].apply(lambda x: selected_collection in x),
-                        "Project ID",
+                        "Record ID" if "Record ID" in df_all.columns else "Project ID",
                     ]
                 )
-                base = _filter_by_project_ids(base, matching_pids)
+                base = _filter_by_record_ids(base, matching_ids)
         else:
-            matching_pids = set(
-                df_datasets.loc[df_datasets["dataset"] == dataset, "Project ID"]
+            id_col = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
+            matching_ids = set(
+                df_datasets.loc[df_datasets["dataset"] == dataset, id_col]
             )
-            base = _filter_by_project_ids(base, matching_pids)
+            base = _filter_by_record_ids(base, matching_ids)
 
     if provider and provider != "ALL":
-        matching_pids = set(
-            df_datasets.loc[df_datasets["provider"] == provider, "Project ID"]
+        id_col = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
+        matching_ids = set(
+            df_datasets.loc[df_datasets["provider"] == provider, id_col]
         )
-        base = _filter_by_project_ids(base, matching_pids)
+        base = _filter_by_record_ids(base, matching_ids)
 
     if institution and institution != "ALL":
-        matching_pids = set(
-            df_institutions.loc[df_institutions["institution"] == institution, "Project ID"]
+        id_col = "Record ID" if "Record ID" in df_institutions.columns else "Project ID"
+        matching_ids = set(
+            df_institutions.loc[df_institutions["institution"] == institution, id_col]
         )
-        base = _filter_by_project_ids(base, matching_pids)
+        base = _filter_by_record_ids(base, matching_ids)
 
     if tre and tre != "ALL" and "Secure Research Service" in base.columns:
         base = base[

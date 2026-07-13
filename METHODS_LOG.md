@@ -2,11 +2,15 @@
 
 This document records the methodological decisions behind the LLM classification pipeline for DEA-accredited research projects. It is organised by decision area (data preparation → ontology → pipeline → validation)  so that each can be read as a coherent narrative with its full rationale and change history. Commit hashes and dates are cited inline throughout.
 
+## Current duplicate-ID correction note (2026-07-13)
+
+The active June 2026 release now applies reviewed duplicate-Project-ID rulings from `analysis/register_duplicate_rulings.yaml`. `2023/211` is collapsed from two malformed/update rows into one canonical `Record ID` (`2023/211`), while `2020/030`, `2022/036`, `2024/014`, and `2024/095` retain two explicit stable Record IDs each. This supersedes earlier active-release notes that referred to a 1,309-row cleaned June register: the corrected active population is **1,308 retained register entries / classification units** and **1,304 unique official Project IDs**. The migration report is `analysis/outputs/instruction_reviewed_duplicate_record_id_report.md`.
+
 ---
 
 ## 1. The classification task
 
-The unit of classification is a **DEA-accredited research project** as recorded in the UKSA accredited-projects register. Each project record includes a Project ID, title, accreditation date, researcher names, legal basis, datasets accessed, and processing environment. The register is published by the UK Statistics Authority and is the authoritative record of all projects accredited under the Digital Economy Act 2017. The register also includes projects accredited under the Statistics and Registration Service Act 2007 (SRSA), which we exclude in this analysis, because SRSA is limited to unpublished data held directly by the ONS, and is tailored for general statistical/deomsgraphic research.
+The unit of classification is one **cleaned public-register record**, uniquely identified by `Record ID`. Each retained record includes the published Project ID, title, accreditation date, researcher names, legal basis, datasets accessed, and processing environment. Project ID is not unique in the published UKSA register: some official identifiers occur on multiple rows because of identifier collisions or materially distinct register entries, while reviewed duplicate/update rows are collapsed. The register is published by the UK Statistics Authority and is the authoritative public record of projects accredited under the Digital Economy Act 2017. The register also includes projects accredited under the Statistics and Registration Service Act 2007 (SRSA), which we exclude in this analysis, because SRSA is limited to unpublished data held directly by the ONS, and is tailored for general statistical/deomsgraphic research.
 
 The original motivation for an LLM-based classification was to provide a more semantically-aware classification than that done in the July 2025 analysis in DEA_projects_analysis, which used bag-of-words / TF-IDF to track changes in research themes over time (initial script introduced in `242ce2b`, 2026-03-25). The v1 script classified all project titles into 14 research themes using the Claude API, with batching, caching, trend tables by year/quarter, and a generated narrative policy summary. It was superseded by the three-layer v3 framework.
 
@@ -48,14 +52,24 @@ Inspection of the register identified three categories of duplicate record:
    These are genuinely distinct projects, often re-accreditations of similar work by the same team in a later year. They are retained as separate records.
 
 2. **Same Project ID, different titles**  
-   These are distinct projects sharing an ID through register error. They are disambiguated by appending a `/a`, `/b` suffix to form a unique `Record ID`.
+   Project ID is not unique in the published register. Residual duplicate Project IDs are reviewed individually in `analysis/register_duplicate_rulings.yaml`. Clear identifier collisions and materially distinct register entries are retained as separate classification units with stable synthetic `Record ID`s, while duplicate/update rows are collapsed. The public fields do not always establish whether retained related rows are separate projects, access strands, amendments or another register process, so the retained unit is described as a register entry / classification unit rather than a conceptually distinct research project.
 
 3. **Same Project ID and same title**  
    This subdivides into:
    - clerical double entries, where rows are substantively identical;
    - fragmented records, where rows share ID and title but differ materially in datasets accessed and/or researchers listed.
 
-The current duplicate policy is content-aware: `apply_duplicate_policy()`, revised on 2026-05-21. Rows sharing Project ID and title are compared across their remaining fields. Substantively identical rows are deduplicated. Rows sharing Project ID, title and accreditation date but differing in datasets or researchers are treated as a single accreditation whose record was fragmented across rows, and are merged by taking the union of their dataset and researcher lists. Any remaining ambiguous cases are flagged to a review file rather than silently collapsed.
+The current duplicate policy is content-aware: `apply_duplicate_policy()`, revised on 2026-05-21, handles exact same-ID/same-title groups. Rows sharing Project ID and title are compared across their remaining fields. Substantively identical rows are deduplicated. Rows sharing Project ID, title and accreditation date but differing in datasets or researchers are treated as a single accreditation whose record was fragmented across rows, and are merged by taking the union of their dataset and researcher lists. Any remaining ambiguous same-ID/same-title cases are flagged to a review file rather than silently collapsed.
+
+Reviewed duplicate-Project-ID rulings are then applied explicitly. As of the 2026-06-01 register:
+
+| Project ID | Ruling type | Cleaning action |
+|---|---|---|
+| `2020/030` | `project_number_collision` | Retain two entries with explicit `2020/030/a` and `2020/030/b` mappings. |
+| `2022/036` | `project_number_collision` | Retain two entries with explicit `2022/036/a` and `2022/036/b` mappings. |
+| `2023/211` | `duplicate_update` | Collapse to one `2023/211` record with canonical title and unioned researchers. |
+| `2024/014` | `related_distinct_entries_same_project_id` | Retain two entries with explicit `2024/014/a` and `2024/014/b` mappings, without asserting that the rows are definitely separate projects. |
+| `2024/095` | `project_number_collision` | Retain two entries with explicit `2024/095/a` and `2024/095/b` mappings. |
 
 Running the analysis confirmed that no ambiguous cases remain: re-accredited projects with the same title but a different date are issued different Project IDs.
 

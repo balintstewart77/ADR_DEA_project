@@ -1122,6 +1122,8 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
     if datasets_idx is None:
         return pd.DataFrame(rows)
     pid_idx = col_idx["Project ID"]
+    record_id_idx = col_idx.get("Record ID")
+    project_row_id_idx = col_idx.get("Project Row ID")
     year_idx = col_idx["Year"]
     quarter_date_idx = col_idx["quarter_date"]
     srs_idx = col_idx.get("Secure Research Service")
@@ -1131,6 +1133,8 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
         if not isinstance(raw, str) or not raw.strip():
             continue
         pid = proj[pid_idx]
+        record_id = proj[record_id_idx] if record_id_idx is not None else pid
+        project_row_id = proj[project_row_id_idx] if project_row_id_idx is not None else record_id
         year = proj[year_idx]
         quarter_date = proj[quarter_date_idx]
         secure_research_service = proj[srs_idx] if srs_idx is not None else ""
@@ -1145,6 +1149,8 @@ def parse_datasets(df: pd.DataFrame) -> pd.DataFrame:
                 provider_name = infer_provider_name(secure_research_service)
             rows.append({
                 "Project ID": pid,
+                "Record ID": record_id,
+                "Project Row ID": project_row_id,
                 "Year": year,
                 "quarter_date": quarter_date,
                 "provider": provider_name,

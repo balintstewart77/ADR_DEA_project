@@ -4,7 +4,7 @@
 - Fetch status: skipped
 - Baseline version: 20260325
 
-- Cleaned register rows: 1,309
+- Cleaned register rows: 1,308
 - New projects: 38
 - Removed projects: 1
 - Content-changed projects: 1
