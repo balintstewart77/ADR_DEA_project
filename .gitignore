@@ -148,3 +148,7 @@ analysis/outputs_deterministic_rc2/*
 !analysis/outputs_v4_8_rc2/layer_b_totals.csv
 !analysis/outputs_v4_8_rc2/layer_c_totals.csv
 !analysis/outputs_v4_8_rc2/layer_summary.txt
+
+# ARI database analysis
+analysis/ari_exploration/ari_raw_*.json
+analysis/ari_exploration/ari_questions_*.csv
