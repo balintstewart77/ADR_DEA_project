@@ -27,8 +27,9 @@ preregistration, register, cleaning, duplicate, Record ID, taxonomy, prompt,
 model, Fable, GPT, comparison, repeatability, consistency, exclusion, training,
 pilot, REDCap, sampling, analysis, adjudication, evidence pack, sign-off,
 release, decision, deviation, clarification, log, checklist, instrument,
-dictionary, codebook, template, and lockfile terms. No DOCX or PDF file exists
-in the current worktree.
+dictionary, codebook, template, and lockfile terms. Subsequent local recovery
+placed the current coder and trainer DOCX handouts plus the pilot/debrief
+reference in package 05; their exact membership is now machine-checked against v8.
 
 High-signal locations inspected directly included:
 
@@ -66,7 +67,7 @@ version-number or timestamp inference.
 | Production configuration | `analysis/outputs_classified_20260702_fable5/run_metadata.json` | Records Fable 5, prompt/taxonomy `dict-1.0-rc2`, 1,308 records, and a 201-entry seed-cache reference. |
 | Production classifications | `analysis/outputs_classified_20260702_fable5/layer_classifications.csv` | `data/release_pointers.json` targets this run; direct audit confirms 1,308 Record IDs, 1,304 Project IDs, and four doubled Project IDs. |
 | Fable 5 stability evidence | `analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json` and `analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json` | Recovered and verified as the two independent Fable 5 / `dict-1.0-rc2` runs on the same exact 201-record sample. Deterministic recomputation reproduces every reported target. |
-| GPT-5.5 comparison evidence | `analysis/outputs/gpt55_classifications.csv` and current cross-model outputs | Deterministically regenerated offline after key migration; all reported aggregate agreement and disagreement counts are unchanged. |
+| GPT-5.5 comparison evidence | `analysis/outputs/gpt55_classifications.csv` and current cross-model outputs | Deterministically regenerated offline after key migration and the canonical equity-tag repair; domain/purpose aggregates and disagreement frame are unchanged, while equity-tag facets now correctly report 45 mismatches. |
 
 "Current candidate" does not mean "frozen". The protocol, cleaning bundle,
 prompt rendering, and final package still require a cross-document audit.
@@ -94,8 +95,9 @@ prompt rendering, and final package still require a cross-document audit.
 - `analysis/build_model_comparison.py` compares older Opus/Sonnet outputs and
   cannot be silently relabelled as the Fable 5/GPT-5.5 comparison script.
 - The design states that `training_pilot_exclusion_list_v7` is superseded by
-  v8. No v7 file was found in the worktree or any Git-history path, so its
-  physical identity and location remain unverified.
+  v8. The current v8 list is present and exactly matches the canonical coder,
+  trainer, discussion, and pilot/debrief ID membership. No v7 file was found
+  in the worktree or any Git-history path.
 
 ## Missing expected artefacts
 
@@ -110,7 +112,7 @@ prompt rendering, and final package still require a cross-document audit.
 ### Exclusions, instruments, and prospective tooling
 
 - official sampling script, sampling tests, and execution checklist;
-- coder handout, trainer guide, and separated pilot exclusion/assignment files;
+- restricted trainer guide and blinded pilot-assignment files;
 - both REDCap dictionaries, codebook, and import template;
 - validation analysis script and exact dependency lockfile;
 - adjudication instrument, audit-selection script, evidence-pack template, and
@@ -194,9 +196,10 @@ metadata committed on 2 July 2026 is the Git provenance anchor.
 
 ## Potentially stale artefacts
 
-No protocol or trainer guide was available to scan for the prohibited 1,309 /
-1,305 / five-duplicate / 23-exclusion / 387-frame facts. The following existing
-files contain superseded population counts and must not be treated as current:
+No protocol was available to scan for the prohibited 1,309 / 1,305 /
+five-duplicate / 23-exclusion / 387-frame facts. The recovered training
+materials and v8 membership have been checked separately. The following
+existing files contain superseded population counts and must not be treated as current:
 
 - `analysis/outputs_classified_20260601/layer_classifications.csv`: 1,309 rows
   and five doubled Project IDs;
@@ -227,7 +230,8 @@ Two other quality concerns are not count staleness:
 ## Artefacts requiring restricted handling
 
 - reserve Record IDs and reserve manifests;
-- trainer-only answer keys and restricted trainer material;
+- restricted operational trainer material not represented by the current
+  candidate handout;
 - personal contact lists;
 - blinded coder assignments and operational pilot assignments;
 - formal REDCap exports and any row-level personal data;

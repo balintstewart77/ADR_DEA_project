@@ -168,3 +168,6 @@ analysis/outputs/model_comparison_fable_5_run1/*
 analysis/outputs/model_comparison_fable_5_run2/*
 !analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json
 !analysis/outputs/model_comparison_fable_5_run2/run_metadata.json
+
+# Preserve the deterministic generator used to reproduce current cross-model evidence.
+!analysis/outputs/gpt55_crossmodel_stratum_run.py

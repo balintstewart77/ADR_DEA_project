@@ -14,6 +14,12 @@ the 380-record post-exclusion disagreement frame, metrics, and a verification
 report. These are pre-existing model-evidence outputs, not prospective
 validation samples or results.
 
+The comparison treats the frozen `COVID-19 & Pandemic` and `Demographic
+disparities / equity tag` labels as independent binary facets. The compatibility
+field `any_tag_set_match` now has the documented two-facet-conjunction meaning
+of `tag_set_match`; unknown tag labels fail verification. Aggregate Jaccards
+are calculated directly from unrounded parsed label sets.
+
 The recovered Fable run-cache keys were already clean. A pre-registration
 upstream cleaning defect had introduced boundary whitespace into 16 later
 canonical IDs; it was corrected offline in the cleaned register and current

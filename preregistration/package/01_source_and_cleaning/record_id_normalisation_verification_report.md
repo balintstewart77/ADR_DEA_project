@@ -21,6 +21,7 @@ deliberately excluded from the clean-output requirement.
 | GPT-5.5 cache keys | `analysis/outputs/gpt55_gpt-5.5_dict-1.0-rc2_llm_layer_cache.json` | 1,308 | 1,308 | 1,308 | 0 | 0 | PASS |
 | Cross-model comparison | `analysis/outputs/crossmodel_comparison.csv` | 1,308 | 1,308 | 1,308 | 0 | 0 | PASS |
 | Cross-model disagreement frame | `analysis/outputs/crossmodel_disagreement_stratum.csv` | 386 | 386 | 386 | 0 | 0 | PASS |
+| Packaged post-exclusion disagreement frame | `preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv` | 380 | 380 | 380 | 0 | 0 | PASS |
 | Reviewed migration audit (`new_record_id`) | `analysis/outputs/reviewed_duplicate_record_id_migration_audit.csv` | 2,616 | 2,616 | 1,308 | 0 | 0 | PASS; paired Fable/GPT rows explain expected raw duplicates |
 | Fable exact sample source | `analysis/outputs/model_comparison_sample.csv` | 201 | 201 | 201 | 0 | 0 | PASS |
 | Recovered Fable Run 1 cache keys | `analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json` | 201 | 201 | 201 | 0 | 0 | PASS |

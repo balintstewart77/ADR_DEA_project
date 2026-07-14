@@ -34,8 +34,8 @@ not official Project ID.
   comparison evidence that predates registration.
 - `package/04_exclusions_and_sampling/`: final v8 exclusions and frozen sampling
   code, tests, and execution checklist; never operational reserve IDs.
-- `package/05_training_and_pilot/`: coder-facing training material and public
-  pilot documentation; no trainer-only keys or blinded assignments.
+- `package/05_training_and_pilot/`: current coder/trainer handouts, pilot/debrief
+  reference, and machine-checked teaching/pilot membership; no blinded assignments.
 - `package/06_redcap/`: data dictionaries, codebook, and import templates; no
   formal exports or personal contact data.
 - `package/07_analysis/`: prospective confirmatory analysis code and dependency
@@ -165,9 +165,10 @@ After registration, changes require a new version; substantive changes also
 require a preregistration amendment recorded under `post_registration/amendments/`.
 
 The v7 training/pilot exclusion file is superseded by design and must never be
-labelled as the final exclusion set. The expected final artefact is v8 and must
-contain 22 unique stable Record IDs. Neither v7 nor v8 was located in this
-repository during this inventory.
+labelled as the final exclusion set. The current v8 list contains 22 unique
+stable Record IDs and is verified for exact equality with the canonical coder,
+trainer, discussion, and pilot/debrief materials. No physical v7 file has been
+located.
 
 ## 9. Blinding and embargo
 

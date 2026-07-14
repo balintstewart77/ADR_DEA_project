@@ -1,65 +1,61 @@
 {
+  "verification_status": "verified",
+  "no_api_or_llm_calls_made": true,
   "classification_content_changed": false,
-  "comparison": {
-    "domain_exact_count": 1065,
-    "domain_exact_rate": 0.8142201834862385,
-    "domain_mean_jaccard": 0.904243124617737,
-    "gpt_invalid_count": 0,
-    "n": 1308,
-    "purpose_exact_count": 1108,
-    "purpose_exact_rate": 0.8470948012232415,
-    "purpose_mean_jaccard": 0.8845565741590214,
-    "unique_record_ids": 1308
-  },
-  "exclusions": {
-    "count": 22,
-    "path": "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv"
-  },
-  "execution_timestamp_utc": "2026-07-14T22:01:51.046115+00:00",
+  "execution_timestamp_utc": "2026-07-14T22:53:50.335028+00:00",
+  "python_executable": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Scripts\\python.exe",
+  "python_version": "3.13.2",
   "inputs": {
-    "analysis/outputs/crossmodel_comparison.csv": {
-      "sha256": "d0ef698bb4f723a468f74771c6717653ef0eb83b22de3057e6badc1400bf7924"
-    },
-    "analysis/outputs/crossmodel_disagreement_stratum.csv": {
-      "sha256": "574566a5c72067c483b7cccfc7571c01a1c0d1e97df7f9bb93f356c429669ca5"
+    "analysis/outputs_classified_20260702_fable5/layer_classifications.csv": {
+      "sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299"
     },
     "analysis/outputs/gpt55_classifications.csv": {
       "sha256": "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
-    },
-    "analysis/outputs/gpt55_crossmodel_stratum_run.py": {
-      "sha256": "ab91280f12f730e002c57f09b0a5768fbab1fbe258caa8586f97603105f2f9ae"
-    },
-    "analysis/outputs_classified_20260702_fable5/layer_classifications.csv": {
-      "sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299"
     },
     "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv": {
       "sha256": "cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6"
     }
   },
-  "no_api_or_llm_calls_made": true,
+  "comparison": {
+    "n": 1308,
+    "unique_record_ids": 1308,
+    "domain_exact_count": 1065,
+    "domain_exact_rate": 0.8142201834862385,
+    "domain_mean_jaccard": 0.904243119266055,
+    "purpose_exact_count": 1108,
+    "purpose_exact_rate": 0.8470948012232415,
+    "purpose_mean_jaccard": 0.8845565749235474,
+    "covid_tag_match_count": 1304,
+    "disparities_tag_match_count": 1263,
+    "joint_tag_match_count": 1259,
+    "tag_mismatch_count": 49,
+    "gpt_invalid_count": 0
+  },
+  "pre_exclusion": {
+    "total_disagreement": 386,
+    "domain_only": 186,
+    "purpose_only": 143,
+    "both": 57,
+    "tag_disagreement_alongside_domain_or_purpose": 12,
+    "tag_only_outside_domain_purpose_frame": 37
+  },
   "post_exclusion": {
-    "both": 55,
+    "total_disagreement": 380,
     "domain_only": 182,
     "purpose_only": 143,
+    "both": 55,
     "tag_disagreement_alongside_domain_or_purpose": 11,
-    "tag_only_outside_domain_purpose_frame": 37,
-    "total_disagreement": 380
+    "tag_only_outside_domain_purpose_frame": 37
   },
   "post_exclusion_frame": {
     "path": "preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv",
     "rows": 380,
-    "sha256": "37099bb4ddf3ba8bb66f336e29d903d46e608881c7412df404d0d13c22d4b200",
-    "unique_record_ids": 380
+    "unique_record_ids": 380,
+    "sha256": "965ec169edf87ad49b4293c574dce40c9ccd5bce13fac9941ec293cfad2a2cb9"
   },
-  "pre_exclusion": {
-    "both": 57,
-    "domain_only": 186,
-    "purpose_only": 143,
-    "tag_disagreement_alongside_domain_or_purpose": 12,
-    "tag_only_outside_domain_purpose_frame": 37,
-    "total_disagreement": 386
+  "exclusions": {
+    "count": 22,
+    "path": "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv"
   },
-  "python_executable": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Scripts\\python.exe",
-  "python_version": "3.13.2",
-  "verification_status": "verified"
+  "calculation_method": "Exact set equality and Jaccard from parsed raw semicolon-delimited label sets; no six-decimal intermediate rounding."
 }
