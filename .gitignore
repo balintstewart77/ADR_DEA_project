@@ -152,3 +152,8 @@ analysis/outputs_deterministic_rc2/*
 # ARI database analysis
 analysis/ari_exploration/ari_raw_*.json
 analysis/ari_exploration/ari_questions_*.csv
+
+# DEA validation preregistration: local restricted and post-registration data
+/preregistration_restricted/
+/preregistration/post_registration/redcap_exports/*
+!/preregistration/post_registration/redcap_exports/.gitkeep
