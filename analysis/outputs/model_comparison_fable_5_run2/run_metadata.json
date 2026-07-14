@@ -1,0 +1,232 @@
+{
+  "created_at_utc": "2026-07-02T09:25:10.454036+00:00",
+  "run_key": "fable_5_run2",
+  "model": "claude-fable-5",
+  "prompt_version": "dict-1.0-rc2",
+  "cache_schema_version": 6,
+  "temperature_parameter": "omitted_api_deprecated",
+  "temperature_note": "A pre-run attempt to send temperature=0 to claude-opus-4-8 returned HTTP 400 '`temperature` is deprecated for this model.' The successful comparison runs therefore omit the parameter, matching the current classifier code path and the existing current-taxonomy Opus full run.",
+  "sample_csv": "analysis\\outputs\\model_comparison_sample.csv",
+  "n_projects": 201,
+  "output_dir": "analysis\\outputs\\model_comparison_fable_5_run2",
+  "usage_totals": {
+    "input_tokens": 21178,
+    "output_tokens": 73803,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 191919
+  },
+  "approx_cost_usd": 3.8821,
+  "usage_log": [
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01PkDGcZ7aMoCtAcJPavMrV4",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1127,
+      "output_tokens": 3330,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01ESxgYpc3uhBeKgVEGXFDfy",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 830,
+      "output_tokens": 3752,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01FqP7zURmv9rTVDU9TB3xSB",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1137,
+      "output_tokens": 3346,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01VYEkSLdJxxNdxGRmi7i8Ap",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1179,
+      "output_tokens": 4005,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01XfsS3s3A2ucEtZZ2NSQFC6",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1049,
+      "output_tokens": 3936,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01AFVNnvUTNKUmBQcpshGFVW",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 958,
+      "output_tokens": 3716,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01CSiGaVXzfMEkkNiuPnPWCx",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 932,
+      "output_tokens": 3074,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01NZfwNQP8pnqgybkdqznkYR",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 882,
+      "output_tokens": 3490,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01CkVBrb3CfVQoP99kDL2c7M",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 994,
+      "output_tokens": 3608,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_013YBo2W78VtGrmhUAYcKJbK",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1312,
+      "output_tokens": 3531,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01Duv6Ag38AEBwc8YAheUjHN",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1314,
+      "output_tokens": 3903,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01GZZjg9SmiM3BN7Z8YzvP1o",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1428,
+      "output_tokens": 3093,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01VHS1A2k2bf4CRfdBwgGEvg",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1006,
+      "output_tokens": 3625,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01FuwWWerT78U8aY5hTsNzU9",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1027,
+      "output_tokens": 3976,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01SAUwyGJ9EENKPUZh2CEFZo",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1179,
+      "output_tokens": 3217,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_015RSDhWzfHjyYzj6a4MD2HS",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 872,
+      "output_tokens": 3733,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01MaLTeT2L1Wuzkt1mgPKutM",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 998,
+      "output_tokens": 3768,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01WfR8oMXVZuHn4x7Ayn3zQu",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 1037,
+      "output_tokens": 4306,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01P264een2RKR8UD29ss4aQ4",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 871,
+      "output_tokens": 4175,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01VYdGq4QSao3ftxNz2kmJbG",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 927,
+      "output_tokens": 3859,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    },
+    {
+      "api_path": "messages.parse",
+      "response_id": "msg_01B2EaAYMheg2Fw6AyocWVtr",
+      "response_model": "claude-fable-5",
+      "stop_reason": "end_turn",
+      "input_tokens": 119,
+      "output_tokens": 360,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 9139
+    }
+  ],
+  "pricing_note": "Approximate first-party Claude API cost using 5-minute prompt-cache rates from Claude pricing docs."
+}

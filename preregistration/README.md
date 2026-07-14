@@ -66,10 +66,10 @@ REDCap exports remain restricted post-registration data.
 ## 5. Prospective versus pre-existing evidence
 
 The production-model repeatability exercise and GPT-5.5 comparison are
-pre-existing evidence. Their exact artefacts are currently missing from this
-repository and must be recovered and verified before inclusion. Human coding,
-project-owner review, confirmatory analysis, adjudication, and the release
-decision are prospective. The manifest labels every row as `pre_existing`,
+pre-existing evidence. Their locally recovered/current artefacts have been
+deterministically verified offline and documented in the model-evidence
+package. Human coding, project-owner review, confirmatory analysis,
+adjudication, and the release decision are prospective. The manifest labels every row as `pre_existing`,
 `prospective`, `mixed`, or `not_applicable` so the timing distinction survives
 packaging.
 
@@ -190,13 +190,16 @@ This phase performs no OSF operation and uploads nothing.
 
 ## 11. Known unresolved artefacts
 
-The detailed inventory is in `inventory_report.md`. Major unresolved items are
-the absent protocol candidate and final PDF; absent standalone rendered prompt;
-missing repeatability and GPT-5.5 comparison artefacts; absent v8 exclusion
-list; absent official validation sampling, training, REDCap, analysis, and
+The detailed inventory is in `inventory_report.md`. The frozen cleaned register,
+Fable 5 run-to-run package, and current Fable 5/GPT-5.5 comparison package have
+been deterministically verified offline. A 16-ID boundary-whitespace defect in
+the previous cleaned population was corrected before registration without
+changing the raw source or any classification content. Major unresolved items
+are the absent protocol candidate and final PDF; absent standalone rendered
+prompt; official validation sampling, training, REDCap, analysis, and
 adjudication materials; and uncertain provenance for the deterministic manifest
-because it records a dirty generating worktree. No official sample manifests
-exist, as expected at this stage.
+because it records a dirty generating worktree. No official active or reserve
+validation sample manifests exist, as expected at this stage.
 
 ## 12. How to update the manifest
 

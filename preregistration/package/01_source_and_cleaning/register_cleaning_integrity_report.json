@@ -1,0 +1,29 @@
+{
+  "generated_at_utc": "2026-07-14T21:38:07.341059+00:00",
+  "source_file": "data/dea_accredited_projects_20260601.csv",
+  "source_sha256": "fc911d3c2e5cb0ec42ef04b1bfa2822bd3b358558ba8afbfd75b1048dcfe9892",
+  "source_rows": 1450,
+  "cleaning_counts": {
+    "dropped_no_date_or_title": 0,
+    "dropped_non_dea_legal_basis": 106,
+    "rows_after_dea_filter": 1344,
+    "duplicate_tier1_rows_removed": 23,
+    "duplicate_tier2_rows_removed": 12,
+    "duplicate_ruling_rows_removed": 1,
+    "final_rows": 1308
+  },
+  "unique_official_project_ids": 1304,
+  "duplicated_official_project_ids": [
+    "2020/030",
+    "2022/036",
+    "2024/014",
+    "2024/095"
+  ],
+  "duplicated_official_project_id_group_count": 4,
+  "retained_records_per_duplicated_project_id": 2,
+  "unique_record_ids": 1308,
+  "record_ids_normalised": 16,
+  "duplicates_after_normalisation": 0,
+  "remaining_whitespace_or_control_violations": 0,
+  "raw_source_modified": false
+}

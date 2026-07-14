@@ -858,7 +858,11 @@ def assign_record_ids(df: pd.DataFrame, *, allow_auto_suffix: bool = True) -> pd
     duplicated_ids = out["Project ID"].duplicated(keep=False)
     if "Record ID" not in out.columns:
         out["Record ID"] = pd.NA
-    out["Record ID"] = out["Record ID"].astype("string")
+    # Reviewed duplicate handling can copy a raw Project ID into Record ID
+    # before Project ID itself is normalised. Normalise every pre-existing
+    # Record ID centrally so downstream joins never inherit boundary
+    # whitespace or source-CSV line breaks.
+    out["Record ID"] = out["Record ID"].astype("string").str.strip()
     missing_record_id = out["Record ID"].isna() | out["Record ID"].str.strip().eq("")
     out.loc[missing_record_id & ~duplicated_ids, "Record ID"] = out.loc[
         missing_record_id & ~duplicated_ids, "Project ID"
@@ -876,10 +880,33 @@ def assign_record_ids(df: pd.DataFrame, *, allow_auto_suffix: bool = True) -> pd
             for rank, idx in enumerate(ranked):
                 if pd.isna(out.loc[idx, "Record ID"]) or not str(out.loc[idx, "Record ID"]).strip():
                     out.loc[idx, "Record ID"] = f"{pid}/{_record_suffix(rank)}"
-    duplicate_record_ids = out.loc[out["Record ID"].astype(str).duplicated(), "Record ID"]
+
+    record_ids = out["Record ID"].astype("string")
+    missing_or_blank = record_ids.isna() | record_ids.str.strip().eq("")
+    if missing_or_blank.any():
+        raise ValueError("Some cleaned rows have a missing or blank Record ID after assignment")
+
+    boundary_whitespace = record_ids.ne(record_ids.str.strip())
+    if boundary_whitespace.any():
+        sample = ", ".join(repr(value) for value in record_ids[boundary_whitespace].head(10))
+        raise ValueError(f"Record ID values retain leading or trailing whitespace: {sample}")
+
+    prohibited_controls = record_ids.str.contains(
+        r"[\x00-\x1f\x7f\u00a0]", regex=True, na=False
+    )
+    if prohibited_controls.any():
+        sample = ", ".join(repr(value) for value in record_ids[prohibited_controls].head(10))
+        raise ValueError(f"Record ID values contain prohibited control characters: {sample}")
+
+    if not all(isinstance(value, str) for value in record_ids):
+        raise ValueError("Every Record ID must be string-valued after assignment")
+
+    duplicate_record_ids = out.loc[record_ids.duplicated(), "Record ID"]
     if len(duplicate_record_ids):
         sample = ", ".join(sorted(duplicate_record_ids.astype(str).unique())[:10])
-        raise ValueError(f"Duplicate Record ID values after assignment: {sample}")
+        raise ValueError(
+            f"Duplicate Record ID values after whitespace normalisation: {sample}"
+        )
     return out
 
 

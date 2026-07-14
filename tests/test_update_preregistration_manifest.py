@@ -79,7 +79,7 @@ class ManifestUpdaterTest(unittest.TestCase):
 
     def test_hashing_an_existing_file(self) -> None:
         path = self.root / "example.txt"
-        path.write_text("exact bytes\n", encoding="utf-8")
+        path.write_bytes(b"exact bytes\n")
         expected = hashlib.sha256(b"exact bytes\n").hexdigest()
         self.assertEqual(sha256_file(path), expected)
 

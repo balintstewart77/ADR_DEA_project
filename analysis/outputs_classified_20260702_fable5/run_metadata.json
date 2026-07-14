@@ -1151,5 +1151,14 @@
     "status": "applied",
     "audit_csv": "analysis/outputs/reviewed_duplicate_record_id_migration_audit.csv",
     "note": "2023/211 duplicate/update collapsed; retained duplicate Project IDs rekeyed by reviewed rulings."
+  },
+  "record_id_whitespace_normalisation": {
+    "status": "applied_before_registration",
+    "mapping_count": 16,
+    "script": "analysis/migrate_record_id_whitespace.py",
+    "migration_log": "preregistration/package/01_source_and_cleaning/record_id_whitespace_migration_log.json",
+    "executed_at_utc": "2026-07-14T21:38:07.341059+00:00",
+    "classification_calls": 0,
+    "classification_content_changed": false
   }
 }

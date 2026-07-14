@@ -63,6 +63,54 @@ class StableRecordIdTest(unittest.TestCase):
         unsuffixed = out[out["Project ID"] == "2026/002"]
         self.assertEqual(list(unsuffixed["Record ID"]), ["2026/002"])
 
+    def test_boundary_whitespace_is_stripped_from_existing_record_ids(self):
+        variants = [
+            "2026/010 ",
+            "2026/011\r\n",
+            " 2026/012",
+            "\t2026/013\t",
+            "\u00a02026/014\u00a0",
+        ]
+        rows = []
+        for index, record_id in enumerate(variants, start=10):
+            rows.append({
+                "Project ID": f"2026/{index:03d}",
+                "Record ID": record_id,
+                "Title": f"Project {index}",
+                "Accreditation Date": pd.Timestamp("2026-01-01"),
+                "Datasets Used": "ONS: Test data",
+                "Researchers": "A Researcher",
+            })
+        out = assign_record_ids(pd.DataFrame(rows), allow_auto_suffix=False)
+        self.assertEqual(
+            list(out["Record ID"]),
+            ["2026/010", "2026/011", "2026/012", "2026/013", "2026/014"],
+        )
+
+    def test_reviewed_duplicate_suffix_ids_remain_unchanged(self):
+        rows = _register_rows()[:2]
+        rows[0]["Record ID"] = "2026/001/b"
+        rows[1]["Record ID"] = "2026/001/a"
+        out = assign_record_ids(pd.DataFrame(rows), allow_auto_suffix=False)
+        self.assertEqual(set(out["Record ID"]), {"2026/001/a", "2026/001/b"})
+
+    def test_normalisation_collision_fails_loudly(self):
+        rows = _register_rows()[:2]
+        rows[0]["Project ID"] = "2026/010"
+        rows[1]["Project ID"] = "2026/011"
+        rows[0]["Record ID"] = "2026/999 "
+        rows[1]["Record ID"] = "2026/999"
+        with self.assertRaisesRegex(ValueError, "after whitespace normalisation"):
+            assign_record_ids(pd.DataFrame(rows), allow_auto_suffix=False)
+
+    def test_internal_control_characters_fail_invariant(self):
+        for control in ("\r", "\n", "\t", "\x00", "\x1f", "\x7f", "\u00a0"):
+            with self.subTest(control=repr(control)):
+                row = _register_rows()[2].copy()
+                row["Record ID"] = f"2026/{control}002"
+                with self.assertRaisesRegex(ValueError, "prohibited control"):
+                    assign_record_ids(pd.DataFrame([row]), allow_auto_suffix=False)
+
 
 class ClassificationFingerprintTest(unittest.TestCase):
     def test_fingerprint_changes_with_content(self):

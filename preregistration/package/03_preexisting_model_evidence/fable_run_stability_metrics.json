@@ -1,0 +1,137 @@
+{
+  "cleaned_register_link": {
+    "path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+    "record_ids_match_production_exactly": true,
+    "row_count": 1308,
+    "sha256": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1"
+  },
+  "comparison_sample": {
+    "cache_key_sets_identical": true,
+    "n": 201,
+    "source_path": "analysis/outputs/model_comparison_sample.csv",
+    "source_sha256": "0e6c33456c1aaf1695bc089adb29d96e2dcb4b26a43feb8cb04262d6e8c46271"
+  },
+  "execution_timestamp_utc": "2026-07-14T22:14:41.873494+00:00",
+  "input_hashes": {
+    "analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json": "e888422a3e46f8c3746c8560327e01fdb0e307491363e65a49c86ea78cb79156",
+    "analysis/outputs/model_comparison_fable_5_run1/run_metadata.json": "90553e77b8a262bb7ff73668dc3336ab721bbd39650780ed86ac4660d36ace50",
+    "analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json": "77cd247f06b0d966334726e17de858d4b16c4f5bbe67e246b653e007fd676fff",
+    "analysis/outputs/model_comparison_fable_5_run2/run_metadata.json": "e3f7cc0e9ffd38b882c80e52d359d19d50cc1236c20c284716f72acfc76c0426",
+    "analysis/outputs/model_comparison_sample.csv": "0e6c33456c1aaf1695bc089adb29d96e2dcb4b26a43feb8cb04262d6e8c46271",
+    "analysis/outputs_classified_20260702_fable5/layer_classifications.csv": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+    "analysis/outputs_classified_20260702_fable5/run_metadata.json": "0fd030520130542b70c3de719c136d9df6c66147c1bbfaa30108abb16e8671e4",
+    "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+    "taxonomy_data_dictionary.yaml": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
+  },
+  "mapping_count": 0,
+  "metrics": {
+    "all_component_agreement": {
+      "count": 171,
+      "denominator": 201,
+      "percentage": 85.07462686567165
+    },
+    "covid_tag_agreement": {
+      "count": 201,
+      "denominator": 201,
+      "percentage": 100.0
+    },
+    "domain_exact": {
+      "count": 191,
+      "denominator": 201,
+      "percentage": 95.02487562189054
+    },
+    "equity_tag_agreement": {
+      "count": 197,
+      "denominator": 201,
+      "percentage": 98.00995024875621
+    },
+    "invalid_or_failed_classifications": 0,
+    "joint_tag_agreement": {
+      "count": 197,
+      "denominator": 201,
+      "percentage": 98.00995024875621
+    },
+    "mean_domain_jaccard": 0.9742951907131012,
+    "mean_purpose_jaccard": 0.9353233830845771,
+    "missing_ids_run1": [],
+    "missing_ids_run2": [],
+    "n": 201,
+    "purpose_exact": {
+      "count": 185,
+      "denominator": 201,
+      "percentage": 92.03980099502488
+    }
+  },
+  "no_api_or_llm_calls_made": true,
+  "pre_registration_git_evidence": {
+    "commit": "fdc13fdcafcacafbb86d7818fe1485be0b1ed912",
+    "subject": "add fable 5 run outputs",
+    "timestamp": "2026-07-02T12:29:29+01:00"
+  },
+  "production_link": {
+    "fresh_classifications": 1108,
+    "mapping_evidence": [],
+    "matched_records": 201,
+    "production_metadata_path": "analysis/outputs_classified_20260702_fable5/run_metadata.json",
+    "production_metadata_reference_hash": "a5784924133d71f03797df67194f8a6fd60ed61e3703124cdfc4e7f023e47cab",
+    "production_metadata_reference_match": false,
+    "production_metadata_sha256_lf_normalized_in_memory": "0fd030520130542b70c3de719c136d9df6c66147c1bbfaa30108abb16e8671e4",
+    "production_metadata_sha256_working_bytes": "0fd030520130542b70c3de719c136d9df6c66147c1bbfaa30108abb16e8671e4",
+    "production_model": "claude-fable-5",
+    "production_output_path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+    "production_output_reference_hash": "eaf8b8280b58a64a42950fe316230c3640678dd402464c630b0c4d44d4884098",
+    "production_output_reference_match": false,
+    "production_output_sha256_lf_normalized_in_memory": "9827fc9f01b9e1f3e9b58fe8f41b59eb5a569c77aacb77d5140628ec04f5eeab",
+    "production_output_sha256_working_bytes": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+    "prompt_version": "dict-1.0-rc2",
+    "row_count": 1308,
+    "seed_cache": "analysis\\outputs\\model_comparison_fable_5_run1\\llm_layer_cache.json",
+    "seed_cache_entries": 201,
+    "source_register": "data/dea_accredited_projects_20260601.csv via register_manifest current=20260601",
+    "taxonomy_version": "dict-1.0-rc2",
+    "unique_record_ids": 1308
+  },
+  "python_executable": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Scripts\\python.exe",
+  "python_version": "3.13.2",
+  "repository_commit": "e1ee9e3f55a9733468395bc90c548e12bde7707f",
+  "run1": {
+    "cache_modified_at_utc": "2026-07-02T09:08:50.958880+00:00",
+    "cache_path": "analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json",
+    "cache_schema_version": "6",
+    "cache_sha256": "e888422a3e46f8c3746c8560327e01fdb0e307491363e65a49c86ea78cb79156",
+    "cache_size_bytes": 142209,
+    "created_at_utc": "2026-07-02T09:08:51.492750+00:00",
+    "entry_count": 201,
+    "metadata_path": "analysis/outputs/model_comparison_fable_5_run1/run_metadata.json",
+    "metadata_sha256": "90553e77b8a262bb7ff73668dc3336ab721bbd39650780ed86ac4660d36ace50",
+    "model": "claude-fable-5",
+    "prompt_version": "dict-1.0-rc2",
+    "run_key": "fable_5_run1",
+    "usage_response_count": 21
+  },
+  "run2": {
+    "cache_modified_at_utc": "2026-07-02T09:25:09.924958+00:00",
+    "cache_path": "analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json",
+    "cache_schema_version": "6",
+    "cache_sha256": "77cd247f06b0d966334726e17de858d4b16c4f5bbe67e246b653e007fd676fff",
+    "cache_size_bytes": 141219,
+    "created_at_utc": "2026-07-02T09:25:10.454036+00:00",
+    "entry_count": 201,
+    "metadata_path": "analysis/outputs/model_comparison_fable_5_run2/run_metadata.json",
+    "metadata_sha256": "e3f7cc0e9ffd38b882c80e52d359d19d50cc1236c20c284716f72acfc76c0426",
+    "model": "claude-fable-5",
+    "prompt_version": "dict-1.0-rc2",
+    "run_key": "fable_5_run2",
+    "usage_response_count": 21
+  },
+  "taxonomy": {
+    "covid_tag_label": "COVID-19 & Pandemic",
+    "equity_tag_label": "Demographic disparities / equity tag",
+    "version": "dict-1.0-rc2"
+  },
+  "verification_script": {
+    "path": "analysis/verify_fable_run_stability.py",
+    "sha256": "940b8cc6243ae6aa636a9dc779390c2f792e1bfaca07a2e09998edb9f3ee88a1"
+  },
+  "verification_status": "verified"
+}

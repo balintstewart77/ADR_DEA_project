@@ -83,7 +83,7 @@
 2020/059,No record linkage,,,survey,cross-sectional,business,third-sector
 2020/060,No record linkage,,,survey,cross-sectional,business,academic
 2020/061,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic; third-sector
-2020/062 ,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
+2020/062,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2020/063,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual,academic; government; commercial
 2020/064,No record linkage,,,survey,cross-sectional,business,government
 2020/065,No record linkage,,,administrative,cross-sectional,business,government
@@ -147,7 +147,7 @@
 2021/001,No record linkage,,,administrative,cross-sectional,individual,academic
 2021/002,No record linkage,,,survey,cross-sectional,individual,government
 2021/003,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
-2021/004 ,No record linkage,,,survey; administrative,cross-sectional,individual; business,government; commercial
+2021/004,No record linkage,,,survey; administrative,cross-sectional,individual; business,government; commercial
 2021/005,No record linkage,,,survey,cross-sectional,individual,academic
 2021/006,No record linkage,,,administrative,cross-sectional,individual,academic
 2021/007,No record linkage,,,survey,cross-sectional,individual; business,academic
@@ -267,44 +267,32 @@
 2021/129,No record linkage,,,survey,cross-sectional,business,academic
 2021/131,No record linkage,,,survey,cross-sectional,individual,academic
 2021/132,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional; longitudinal,business,academic
-"2021/135
-",No record linkage,,,survey; administrative,cross-sectional,business,government; third-sector
+2021/135,No record linkage,,,survey; administrative,cross-sectional,business,government; third-sector
 2021/136,No record linkage,,,survey; administrative,cross-sectional,business,commercial
 2021/137,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,commercial
 2021/138,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
-"2021/139
-",No record linkage,,,survey; administrative,cross-sectional,business,academic
-"2021/140
-",No record linkage,,,survey,cross-sectional,individual,academic
+2021/139,No record linkage,,,survey; administrative,cross-sectional,business,academic
+2021/140,No record linkage,,,survey,cross-sectional,individual,academic
 2021/141,Cross-domain record linkage,"Linked Census, HES and Mortality Data; Covid-19 Infection Survey linked with VOA and EPC data",Health & Social Care; Housing & Planning; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,government
 2021/142,No record linkage,,,survey,cross-sectional,individual,academic
-"2021/143
-",No record linkage,,,survey,cross-sectional,individual; business,academic
+2021/143,No record linkage,,,survey,cross-sectional,individual; business,academic
 2021/145,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2021/146,No record linkage,,,administrative,cross-sectional,business,academic; commercial
 2021/147,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011,Labour Market & Employment; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic; third-sector
 2021/149,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,individual; business,commercial
 2021/150,No record linkage,,,survey,longitudinal,household,third-sector
-"2021/151
-",No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; household; business; area,academic; third-sector
+2021/151,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; household; business; area,academic; third-sector
 2021/152,No record linkage,,,administrative,cross-sectional,individual,academic
-"2021/153
-",Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
+2021/153,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2021/154,No record linkage,,,survey,cross-sectional,individual,academic
-"2021/155
-",No record linkage,,,survey; administrative,cross-sectional,individual; business,government
-"2021/156
-",No record linkage,,,survey,cross-sectional,business,commercial
+2021/155,No record linkage,,,survey; administrative,cross-sectional,individual; business,government
+2021/156,No record linkage,,,survey,cross-sectional,business,commercial
 2021/157,No record linkage,,,survey,cross-sectional,individual,academic
-"2021/158
-",No record linkage,,,survey; administrative,cross-sectional,individual; household; business,academic
+2021/158,No record linkage,,,survey; administrative,cross-sectional,individual; household; business,academic
 2021/159,No record linkage,,,survey,longitudinal,household,third-sector
-"2021/160
-",No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; household; business,academic
-"2021/161
-",No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
-"2021/162
-",No record linkage,,,survey,cross-sectional,individual,third-sector
+2021/160,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; household; business,academic
+2021/161,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
+2021/162,No record linkage,,,survey,cross-sectional,individual,third-sector
 2021/163,No record linkage,,,survey,cross-sectional,individual,government
 2021/164,No record linkage,,,survey,cross-sectional,individual,government
 2021/165,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,commercial
@@ -476,7 +464,7 @@
 2022/156,No record linkage,,,survey,cross-sectional,business,academic
 2022/157,No record linkage,,,administrative,cross-sectional,individual; business,academic
 2022/158,No record linkage,,,survey,cross-sectional; longitudinal,household; business,academic
-2022/159 ,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
+2022/159,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2022/160,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic; third-sector
 2022/161,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2022/163,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
@@ -584,8 +572,7 @@
 2023/067,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,government
 2023/068,No record linkage,,,survey,cross-sectional,household,academic
 2023/069,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,individual; business,academic
-"2023/070
-",Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011; Linked Trade-in-Goods/IDBR,Labour Market & Employment; Business & Productivity; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic
+2023/070,Cross-domain record linkage,Annual Survey of Hours and Earnings linked to Census 2011; Linked Trade-in-Goods/IDBR,Labour Market & Employment; Business & Productivity; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,academic
 2023/071,No record linkage,,,survey,cross-sectional; longitudinal,individual; business,academic
 2023/072,Within-domain record linkage,MoJ Data First Family Court,Crime & Justice,administrative,longitudinal,individual,academic
 2023/073,Within-domain record linkage,MoJ Data First Family Court,Crime & Justice,administrative,longitudinal,individual,academic

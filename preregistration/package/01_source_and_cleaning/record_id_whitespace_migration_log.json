@@ -1,0 +1,317 @@
+{
+  "executed_at_utc": "2026-07-14T21:38:07.341059+00:00",
+  "check_mode": false,
+  "repository_root": "C:\\Users\\balin\\Desktop\\ADR_DEA_project",
+  "mapping_count": 16,
+  "mappings": [
+    {
+      "old_record_id": "2020/062 ",
+      "new_record_id": "2020/062",
+      "official_project_id": "2020/062",
+      "title": "Local Institutions, Productivity, Sustainability and Inclusivity Trade-offs",
+      "fingerprint": "5b552c0a25133aaa",
+      "reference_csv_row": 86,
+      "removed_characters": "  (U+0020 SPACE)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/004 ",
+      "new_record_id": "2021/004",
+      "official_project_id": "2021/004",
+      "title": "BEIS/ISC Understanding the Links Between Social Metrics and Productivity",
+      "fingerprint": "8676988633a79585",
+      "reference_csv_row": 150,
+      "removed_characters": "  (U+0020 SPACE)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/135\r\n",
+      "new_record_id": "2021/135",
+      "official_project_id": "2021/135",
+      "title": "Are assessments of innovation projects good predictors of success?",
+      "fingerprint": "826985d4d285ff43",
+      "reference_csv_row": 270,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/139\r\n",
+      "new_record_id": "2021/139",
+      "official_project_id": "2021/139",
+      "title": "Innovation failure and firm survival: The case of the UK tourism industry",
+      "fingerprint": "f6c5573851f1eb02",
+      "reference_csv_row": 274,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/140\r\n",
+      "new_record_id": "2021/140",
+      "official_project_id": "2021/140",
+      "title": "Well-being, wages, hours of work, and income",
+      "fingerprint": "2c783147b0df3191",
+      "reference_csv_row": 275,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/143\r\n",
+      "new_record_id": "2021/143",
+      "official_project_id": "2021/143",
+      "title": "The Impact of Automatic Enrolment in Workplace Pensions on Wages and Productivity",
+      "fingerprint": "a816565d14e4b705",
+      "reference_csv_row": 278,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/151\r\n",
+      "new_record_id": "2021/151",
+      "official_project_id": "2021/151",
+      "title": "Economy 2030 Inquiry: Places research strand",
+      "fingerprint": "956d83b8e2b14655",
+      "reference_csv_row": 284,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/153\r\n",
+      "new_record_id": "2021/153",
+      "official_project_id": "2021/153",
+      "title": "Assessing inequalities in health, wellbeing, and social participation outcomes for young carers in the UK",
+      "fingerprint": "83c6999b3d645997",
+      "reference_csv_row": 286,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/155\r\n",
+      "new_record_id": "2021/155",
+      "official_project_id": "2021/155",
+      "title": "Improving regional capital investment statistics",
+      "fingerprint": "56d4caf280802247",
+      "reference_csv_row": 288,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/156\r\n",
+      "new_record_id": "2021/156",
+      "official_project_id": "2021/156",
+      "title": "Creative Industries Tax Relief Evaluation",
+      "fingerprint": "8152186d0578af37",
+      "reference_csv_row": 289,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/158\r\n",
+      "new_record_id": "2021/158",
+      "official_project_id": "2021/158",
+      "title": "Cities, Levelling Up and Productivity",
+      "fingerprint": "ac4c9d6b9a56b7f4",
+      "reference_csv_row": 291,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/160\r\n",
+      "new_record_id": "2021/160",
+      "official_project_id": "2021/160",
+      "title": "Linking National and Regional Income Inequality: Cross-Country Data Harmonization and Analysis",
+      "fingerprint": "29f9e92c7cf53ff6",
+      "reference_csv_row": 293,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/161\r\n",
+      "new_record_id": "2021/161",
+      "official_project_id": "2021/161",
+      "title": "Workers and firms under Brexit uncertainty",
+      "fingerprint": "33e5a4fb2f8a53f6",
+      "reference_csv_row": 294,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2021/162\r\n",
+      "new_record_id": "2021/162",
+      "official_project_id": "2021/162",
+      "title": "Labour Flow Networks, Shocks, and Resilience",
+      "fingerprint": "62ef05bb5211b989",
+      "reference_csv_row": 295,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2022/159 ",
+      "new_record_id": "2022/159",
+      "official_project_id": "2022/159",
+      "title": "Paid employment, deprivation and unpaid care work across England and Wales",
+      "fingerprint": "6dea0b06ea78d286",
+      "reference_csv_row": 467,
+      "removed_characters": "  (U+0020 SPACE)",
+      "duplicate_would_result": false
+    },
+    {
+      "old_record_id": "2023/070\r\n",
+      "new_record_id": "2023/070",
+      "official_project_id": "2023/070",
+      "title": "The economic and socio-economic impacts of trade on the UK labour market (Census Data)",
+      "fingerprint": "30c1725ccc91e3f5",
+      "reference_csv_row": 575,
+      "removed_characters": "\\r (U+000D CARRIAGE RETURN); \\n (U+000A LINE FEED)",
+      "duplicate_would_result": false
+    }
+  ],
+  "files": [
+    {
+      "path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+      "operation": "cleaning_pipeline_output",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 16,
+      "sha256_before": null,
+      "sha256_after": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+      "non_id_content_unchanged": true
+    },
+    {
+      "path": "analysis/outputs_deterministic_rc2/register_properties.csv",
+      "operation": "csv_record_id_migration",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 16,
+      "sha256_before": "11cfbb0e4f8b2d07b1ca424ea4e934be8e3756371c86e8465a926641801d4704",
+      "sha256_after": "b43ced85f7304f4749fb3a529cafe503181700e1300b4dd28878b85e365fd46c",
+      "non_id_content_sha256_before": "311652dde297eb9f81d83b20aae31bfc31819a1a838f63406e81662b205513eb",
+      "non_id_content_sha256_after": "311652dde297eb9f81d83b20aae31bfc31819a1a838f63406e81662b205513eb",
+      "non_id_content_unchanged": true,
+      "declared_id_fields": [
+        "Record ID"
+      ]
+    },
+    {
+      "path": "analysis/outputs_classified_20260702_fable5/all_projects_classified.csv",
+      "operation": "csv_record_id_migration",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 16,
+      "sha256_before": "019651e9dd159b70a7c4f174dc1600c2faa30bd42f51f9b10e37816955e5654b",
+      "sha256_after": "94b3daa5388bcfbb42ec3cce69a5a7194ed61578667ba7452c70afd1ccf3406a",
+      "non_id_content_sha256_before": "e6fcad9a50b638cf75e4c741ac34a21237d4d498dc052f05c4b7f5478217969b",
+      "non_id_content_sha256_after": "e6fcad9a50b638cf75e4c741ac34a21237d4d498dc052f05c4b7f5478217969b",
+      "non_id_content_unchanged": true,
+      "declared_id_fields": [
+        "Record ID"
+      ]
+    },
+    {
+      "path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+      "operation": "csv_record_id_migration",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 16,
+      "sha256_before": "def487dc4ea31d10c6c8e0bc111fae8e0fe8024ea77236cd99f44779dc013ced",
+      "sha256_after": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "non_id_content_sha256_before": "7201c0d1535c568b0802119d77fba2c4666b3f16427322a1035f6889227c04fa",
+      "non_id_content_sha256_after": "7201c0d1535c568b0802119d77fba2c4666b3f16427322a1035f6889227c04fa",
+      "non_id_content_unchanged": true,
+      "declared_id_fields": [
+        "Record ID"
+      ]
+    },
+    {
+      "path": "analysis/outputs/gpt55_classifications.csv",
+      "operation": "csv_record_id_migration",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 16,
+      "sha256_before": "b405b886587eff9def09e8a901622e1dd98080e61ec43328dbc98036275febfc",
+      "sha256_after": "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded",
+      "non_id_content_sha256_before": "6c37516b64ea109b75080dba915cf5d11f5b9bd88968101c15f3e89091366433",
+      "non_id_content_sha256_after": "6c37516b64ea109b75080dba915cf5d11f5b9bd88968101c15f3e89091366433",
+      "non_id_content_unchanged": true,
+      "declared_id_fields": [
+        "Record ID"
+      ]
+    },
+    {
+      "path": "analysis/outputs/reviewed_duplicate_record_id_migration_audit.csv",
+      "operation": "csv_record_id_migration",
+      "row_or_entry_count": 2616,
+      "id_values_changed": 32,
+      "sha256_before": "ba37178ddd04657ed450871f38ec66055534bc86757ce5872a1d97f45c422a91",
+      "sha256_after": "3790fbe30797257571db11c5466099e7d2f6e3e4adb1f3086710b3222d1c437a",
+      "non_id_content_sha256_before": "05b29c17e7b9e194a11d0599fe6f4e38ceb3b1654c814aa0f339dffb89ea7ea0",
+      "non_id_content_sha256_after": "05b29c17e7b9e194a11d0599fe6f4e38ceb3b1654c814aa0f339dffb89ea7ea0",
+      "non_id_content_unchanged": true,
+      "declared_id_fields": [
+        "new_record_id"
+      ]
+    },
+    {
+      "path": "analysis/outputs_deterministic_rc2/quality/organisation_names_for_review.csv",
+      "operation": "csv_record_id_migration",
+      "row_or_entry_count": 281,
+      "id_values_changed": 19,
+      "sha256_before": "2fed8be2c747722b7d7b1e7175e2c64f83396d41447945624d82fa5a6bd7b4b3",
+      "sha256_after": "5e89622d2414343f06f55ffd079ce3661209b5192e9872cd8d975545c0023444",
+      "non_id_content_sha256_before": "f3deef4f5c5fca38e42a172b032cbb9cfe0154ac87ef731692577a80e35360e3",
+      "non_id_content_sha256_after": "f3deef4f5c5fca38e42a172b032cbb9cfe0154ac87ef731692577a80e35360e3",
+      "non_id_content_unchanged": true,
+      "declared_id_fields": [
+        "example_record_ids"
+      ]
+    },
+    {
+      "path": "analysis/outputs_classified_20260702_fable5/llm_layer_cache.json",
+      "operation": "json_mapping_key_migration",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 16,
+      "sha256_before": "b31feb680126d35e827a3d4cb354bc809bc4a908d837aa1360a52f4149b340e7",
+      "sha256_after": "a2469fae3c6eed1aad326332652bfad87234c7cb8209e87e838aa5bfcb345781",
+      "non_id_content_sha256_before": "7bc39ef514e48e3ea00d4e903ed79bf6a1c8fba6a22edcba6391307dd665ff5b",
+      "non_id_content_sha256_after": "7bc39ef514e48e3ea00d4e903ed79bf6a1c8fba6a22edcba6391307dd665ff5b",
+      "non_id_content_unchanged": true
+    },
+    {
+      "path": "analysis/outputs/gpt55_gpt-5.5_dict-1.0-rc2_llm_layer_cache.json",
+      "operation": "json_mapping_key_migration",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 16,
+      "sha256_before": "b0a0bb4c69387b9f1b91ce171b740884da5978394527c3b9ea103e0e7f34d154",
+      "sha256_after": "edd288deefb5a2be6bc97544bfe185a3c3d407bf2bafca04c9db52939d6abb0e",
+      "non_id_content_sha256_before": "c60d891a496141fb7cba6ad07c864d650365590617acc0e72ff76aa386e52c58",
+      "non_id_content_sha256_after": "c60d891a496141fb7cba6ad07c864d650365590617acc0e72ff76aa386e52c58",
+      "non_id_content_unchanged": true
+    },
+    {
+      "path": "analysis/outputs_classified_20260702_fable5/run_metadata.json",
+      "operation": "metadata_provenance_annotation",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 0,
+      "sha256_before": "1e22b9ad851bfd5276ea980f8b62bab77501fb1d728cb3b0552d2506bb84b53d",
+      "sha256_after": "0fd030520130542b70c3de719c136d9df6c66147c1bbfaa30108abb16e8671e4",
+      "non_id_content_sha256_before": "49c4d9c35893cd5798f67a04c4f745d216c02ed224b2f42a1e02c5278d09911a",
+      "non_id_content_sha256_after": "49c4d9c35893cd5798f67a04c4f745d216c02ed224b2f42a1e02c5278d09911a",
+      "non_id_content_unchanged": true
+    },
+    {
+      "path": "analysis/outputs/gpt55_run_metadata.json",
+      "operation": "metadata_provenance_annotation",
+      "row_or_entry_count": 1308,
+      "id_values_changed": 0,
+      "sha256_before": "a949d722d312868ca01c456ff3eedc2ccbcafa7eaf529e742e1b379040b7a2eb",
+      "sha256_after": "e67af0028bc0567ab14194ef9e119a85111901a11f83bf3358f3e4f805ec9fe9",
+      "non_id_content_sha256_before": "4d612755a090c7080fb1946b209e451f8879e54ad972e8a83931101191ec7859",
+      "non_id_content_sha256_after": "4d612755a090c7080fb1946b209e451f8879e54ad972e8a83931101191ec7859",
+      "non_id_content_unchanged": true
+    }
+  ],
+  "protected_file_hashes": {
+    "analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json": "e888422a3e46f8c3746c8560327e01fdb0e307491363e65a49c86ea78cb79156",
+    "analysis/outputs/model_comparison_fable_5_run1/run_metadata.json": "90553e77b8a262bb7ff73668dc3336ab721bbd39650780ed86ac4660d36ace50",
+    "analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json": "77cd247f06b0d966334726e17de858d4b16c4f5bbe67e246b653e007fd676fff",
+    "analysis/outputs/model_comparison_fable_5_run2/run_metadata.json": "e3f7cc0e9ffd38b882c80e52d359d19d50cc1236c20c284716f72acfc76c0426",
+    "data/dea_accredited_projects_20260601.csv": "fc911d3c2e5cb0ec42ef04b1bfa2822bd3b358558ba8afbfd75b1048dcfe9892"
+  },
+  "classification_calls": 0,
+  "classification_content_changed": false,
+  "raw_source_modified": false
+}

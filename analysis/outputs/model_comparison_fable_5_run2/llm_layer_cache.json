@@ -1,0 +1,2403 @@
+{
+  "__meta__": {
+    "cache_schema_version": 6,
+    "prompt_version": "dict-1.0-rc2",
+    "model": "claude-fable-5"
+  },
+  "entries": {
+    "2019/015": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Poverty, Wealth & Living Standards because the project studies household saving behaviour using the Wealth and Assets Survey; Descriptive Monitoring because 'understanding saving behaviour' indicates characterising patterns and profiles of saving rather than testing a policy or exposure; no tag because no demographic-equity or pandemic lens is evident.",
+      "fingerprint": "3862cce91ae70236"
+    },
+    "2019/024": {
+      "substantive_domains": [
+        "Housing & Planning",
+        "Migration & Demographics"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Housing & Planning and Migration & Demographics because the title concerns the Right to Buy scheme, gentrification, and migration/residential population change using the ONS Longitudinal Study; Policy Evaluation / Impact Analysis because the Right to Buy is a named housing policy whose consequences are being analysed; no tag because no demographic-equity comparison or pandemic framing is central.",
+      "fingerprint": "7172971b7df3f72f"
+    },
+    "2020/003": {
+      "substantive_domains": [
+        "Housing & Planning",
+        "Labour Market & Employment",
+        "Public Finance & Taxation"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Housing & Planning, Labour Market & Employment and Public Finance & Taxation because the project studies spatial sorting in housing and employment via planning decisions, housing subsidies, public investments and business rates; Policy Evaluation / Impact Analysis because the title explicitly assesses the impact of named policy instruments; no tag because the COVID-19 dataset appears instrumental rather than a central lens of the research question.",
+      "fingerprint": "1c13e88cbb3ba114"
+    },
+    "2020/006": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Education & Skills because the outcome is educational inequality and disadvantage; Outcome Tracking because parental separation is a naturally occurring family circumstance linked to downstream educational outcomes in the ONS Longitudinal Study; Demographic disparities / equity tag because comparison of 'diverging destinies' across three cohorts is central to the research question.",
+      "fingerprint": "d62f0b68f622ce03"
+    },
+    "2020/013": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project analyses firm-level research and development using BERD, the Business Structure Database, patents and innovation surveys; Descriptive Monitoring because the title indicates characterising firm-level R&D activity rather than evaluating a named intervention; no tag because the COVID-linked dataset does not make pandemic conditions central to the stated question.",
+      "fingerprint": "89ea6ccbd3943827"
+    },
+    "2020/019": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Public Finance & Taxation"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Public Finance & Taxation because the project examines how government expenditure affects employment and wages using firm and earnings data; Policy Evaluation / Impact Analysis because the analytical operation estimates the impact of deliberate public spending; no tag because no demographic-equity or pandemic lens appears in the entry.",
+      "fingerprint": "492250e114fc2cae"
+    },
+    "2020/022": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because the project analyses digital skills requirements within English apprenticeship standards and occupational job roles; Descriptive Monitoring because it profiles skills content across job roles rather than testing an exposure or evaluating an intervention; no tag because no demographic comparison or pandemic framing is central.",
+      "fingerprint": "d1c3abcf8deadd7b"
+    },
+    "2020/027": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because the project concerns COVID-19 infection, immunisation and death outcomes via the Covid-19 Infection Survey and linked mortality data; Descriptive Monitoring because infection surveillance measures prevalence, levels and trends in the population; COVID-19 & Pandemic tag because the pandemic and infection surveillance are the explicit central condition of the study.",
+      "fingerprint": "3f942df33a232340"
+    },
+    "2020/030/b": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because occupational mobility is central to the research question; Life-Course / Trajectory Analysis because the ONS Longitudinal Study is used to follow individuals' occupational movements over extended periods; no tag because no demographic-equity comparison or pandemic lens is evident.",
+      "fingerprint": "2af6e94af51072c9"
+    },
+    "2020/030/a": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies firm engagement in design and exporting behaviour using the UK Innovation Survey; Outcome Tracking because it links a naturally occurring firm characteristic (design engagement) to a downstream outcome (exporting); no tag because no demographic or pandemic lens applies.",
+      "fingerprint": "c23f9e328d177fc1"
+    },
+    "2020/033": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the title centres on education in relation to identity; Outcome Tracking because the framing links educational status as a naturally occurring characteristic to identity outcomes using Labour Force Survey data; no tag because no demographic comparison or pandemic lens is explicit in the entry.",
+      "fingerprint": "f1261f032056ea0f"
+    },
+    "2020/045": {
+      "substantive_domains": [
+        "Migration & Demographics",
+        "Public Finance & Taxation"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Migration & Demographics and Public Finance & Taxation because the title studies migration and its relationship with redistributive local authority spending; Outcome Tracking because migration is a naturally occurring exposure linked to a spending outcome; no tag because demographic-group comparison and pandemic framing are not central.",
+      "fingerprint": "b78ec1fa61ba9f86"
+    },
+    "2020/046": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because the project studies wage and employment dynamics using ASHE, New Earnings Survey and linked earnings-census data; Life-Course / Trajectory Analysis because 'dynamics' with long-run linked earnings panels indicates following workers' wage and employment trajectories over time; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "6cccd2c19b248793"
+    },
+    "2020/050": {
+      "substantive_domains": [
+        "Unclear from Register Entry"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Unclear from Register Entry because 'Inequalities in the 21st Century' with the general-purpose ONS Longitudinal Study does not resolve which substantive outcome (health, employment, income) is studied; Descriptive Monitoring because the visible operation is characterising patterns of inequality over time; demographic disparities tag because comparing outcomes across population groups is central to an inequalities study on census-linked data.",
+      "fingerprint": "0a4ff85f069a9f32"
+    },
+    "2020/053": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies firms' decisions to become multinational using business surveys, FDI and R&D data; Outcome Tracking because it links naturally occurring domestic economic incentives to the firm-level outcome of multinational status and its effects; no tag because no demographic or pandemic lens applies.",
+      "fingerprint": "d903891de9c14c9d"
+    },
+    "2020/056": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because adherence to stay-at-home public health guidance is a public health behaviour question; Outcome Tracking because the study analyses factors associated with adherence rather than building a prospective prediction tool; COVID-19 tag because pandemic guidance and its social impacts are the explicit condition of the research.",
+      "fingerprint": "1dc572fed429a652"
+    },
+    "2020/062": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because productivity and inclusivity trade-offs are studied with the Business Structure Database, ASHE, APS and BRES covering firm and workforce outcomes; Outcome Tracking because local institutions are analysed as an exposure shaping productivity, sustainability and inclusivity outcomes; no tag because demographic comparison and pandemic framing are not central.",
+      "fingerprint": "5b552c0a25133aaa"
+    },
+    "2020/066": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Business & Productivity because the CMA taskforce concerns markets and business behaviour, using the Business Impact of COVID-19 Survey; Policy Evaluation / Impact Analysis because the project explicitly evaluates a named institutional intervention (the CMA Covid-19 taskforce); COVID-19 tag because the taskforce and datasets are pandemic-specific.",
+      "fingerprint": "927396b7ef9489f7"
+    },
+    "2020/074": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because the health of older people is the substantive object, studied via the ONS Longitudinal Study; Descriptive Monitoring because the visible operation is characterising older people's health across places as an asset; no tag because older age defines the study population rather than a demographic comparison, and no pandemic lens is present.",
+      "fingerprint": "d34584cb9628e959"
+    },
+    "2020/077": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because place of death in older adults is an end-of-life care outcome studied via the ONS Longitudinal Study; Outcome Tracking because social determinants are naturally occurring exposures linked to the downstream outcome of place of death; no tag because the determinants are socioeconomic rather than a central demographic-group comparison and no pandemic framing appears.",
+      "fingerprint": "4269cdbf3c185e65"
+    },
+    "2020/078": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because the study examines health and mortality outcomes of postal workers using the ONS Longitudinal Study; Outcome Tracking because it links an occupational status (postal work) to downstream health and mortality outcomes; no tag because no pandemic or demographic-equity lens is central.",
+      "fingerprint": "3f6c6d4ca98cc891"
+    },
+    "2020/082": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic",
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Health & Social Care because wellbeing is the substantive outcome measured via the Coronavirus social impacts survey; Descriptive Monitoring because the project charts changes over time and variation across groups rather than testing a specific exposure-outcome design; COVID-19 & Pandemic because the pandemic is the central condition, and Demographic disparities because comparison by demographic characteristics is explicit in the title.",
+      "fingerprint": "61ca26ae4b11e55b"
+    },
+    "2020/083": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because labour market outcomes are the substantive object over 1991-2011; Outcome Tracking because religion is a naturally occurring characteristic linked to employment outcomes; Demographic disparities tag because comparison across religious groups is central to the research question.",
+      "fingerprint": "17226d6e1396ea44"
+    },
+    "2020/084": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because excess mortality is analysed as a health outcome using death registration data; Descriptive Monitoring because the aim is to measure levels and trends of excess deaths during and after the pandemic; COVID-19 & Pandemic tag because the pandemic is the explicit framing of the mortality analysis.",
+      "fingerprint": "3af60f5be3387cf1"
+    },
+    "2020/086": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Business & Productivity",
+        "Migration & Demographics"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment, Business & Productivity and Migration & Demographics because the project studies a labour supply shock from immigration policy and its effects on firm outcomes using earnings, business and labour force datasets; Policy Evaluation / Impact Analysis because the exposure is a deliberate UK immigration policy whose effects are estimated; no tag because migrant status comparison and pandemic framing are not central.",
+      "fingerprint": "6c004eb66c24ca7c"
+    },
+    "2020/092": {
+      "substantive_domains": [
+        "Migration & Demographics",
+        "Data Infrastructure & Methodology"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Migration & Demographics because fertility is the substantive demographic object, and Data Infrastructure & Methodology because improving fertility forecasting methodologies is itself an object of the project; Descriptive Monitoring because it characterises recent UK fertility patterns and Methodological / Infrastructure Research because it develops forecasting methods; no tag because no pandemic or equity lens is evident.",
+      "fingerprint": "773ed66f1e76d94f"
+    },
+    "2020/095": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because firm productivity and trade are the substantive outcomes analysed with business and trade datasets; Outcome Tracking because policy uncertainty is a naturally occurring economic condition linked to firm outcomes rather than a named intervention; no tag because no pandemic or demographic lens applies.",
+      "fingerprint": "691f0291a2923b3f"
+    },
+    "2020/104": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because the object is COVID-19 infection in schools using the Schools Infection Survey linked to immunisation and Test & Trace data, with schools as the setting rather than an educational outcome; Descriptive Monitoring because the analysis measures infection levels to inform government decisions; COVID-19 & Pandemic tag because pandemic surveillance is the explicit focus.",
+      "fingerprint": "220c2ef10450c5a6"
+    },
+    "2020/106": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because non-coronavirus death registrations are analysed as health outcomes; Descriptive Monitoring because the project profiles patterns of deaths over January-November 2020 without testing a specific exposure; COVID-19 & Pandemic tag because the pandemic period and the distinction from coronavirus deaths frame the analysis.",
+      "fingerprint": "ac69ac88b95916a9"
+    },
+    "2020/118": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Risk Prediction / Early Identification"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because multimorbidity, polypharmacy, health, resilience and wellbeing in the Welsh population are the substantive objects; Risk Prediction / Early Identification because machine learning is used to discover phenotypes that identify groups at elevated risk of poorer outcomes; no tag because no pandemic or demographic-equity comparison is central.",
+      "fingerprint": "373bccd4cc3ef414"
+    },
+    "2020/120": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care and Labour Market & Employment because the project profiles COVID-19 infection, deaths (Infection Survey, death registrations) alongside employment and earnings data (APS, ASHE) at local-area level; Descriptive Monitoring because 'Local Area Profiles' indicates characterising levels and patterns across places rather than testing an exposure-outcome design; COVID-19 & Pandemic tag because the pandemic is the explicit subject of the profiles.",
+      "fingerprint": "d1b81e54617d7691"
+    },
+    "2020/127": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because the project studies the health of domiciliary care workers and care service planning and carer support; Outcome Tracking because it establishes the impact of the naturally occurring COVID-19 pandemic on worker health outcomes; COVID-19 & Pandemic tag because COVID-19's impact is the central condition of the research question.",
+      "fingerprint": "ceea37ac5e2e1f5a"
+    },
+    "2021/002": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because the project examines coronavirus social impacts on wellbeing and daily life using the ONS social impacts survey; Descriptive Monitoring because the visible operation is characterising the social impacts on the London population rather than testing an exposure-outcome relationship; COVID-19 & Pandemic tag because coronavirus impacts are explicitly the focus of the title.",
+      "fingerprint": "4ad6657e818a3256"
+    },
+    "2021/012": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because the project seeks epidemiological insights into COVID-19 infection, drawing on the COVID-19 Infection Survey and linked census-death data; Descriptive Monitoring because 'investigating epidemiological insights across the UK' indicates measuring infection patterns and distribution rather than evaluating an intervention; COVID-19 & Pandemic tag because COVID-19 infection is the explicit research object.",
+      "fingerprint": "ae96cc6847eefa8d"
+    },
+    "2021/013": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic",
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Health & Social Care because COVID-19 mortality is analysed as a health outcome using death registrations and linked census-death data; Outcome Tracking because the design links ethnicity, socioeconomic position and geography as exposures to mortality outcomes; COVID-19 & Pandemic and Demographic disparities tags because the pandemic frames the research and ethnicity-based inequality in mortality is central to the question.",
+      "fingerprint": "6ee9092e679b89d4"
+    },
+    "2021/015": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Business & Productivity",
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Labour Market & Employment, Business & Productivity and Poverty, Wealth & Living Standards because the project studies economic impacts on both residents and businesses using LFS, BICS and Effects of Tax and Benefits data; Outcome Tracking because it links the naturally occurring pandemic to downstream economic outcomes rather than evaluating a named policy; COVID-19 & Pandemic tag because pandemic economic impact is the explicit research question.",
+      "fingerprint": "c90f34b85091a228"
+    },
+    "2021/017": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project concerns medicines manufacturing firms using business surveys (ABS, BERD, BSD); Policy Evaluation / Impact Analysis because it evaluates the named ISCF Medicines Manufacturing programme; no tag because neither pandemic conditions nor demographic comparison is central.",
+      "fingerprint": "0abb3e83c58d47c3"
+    },
+    "2021/018": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic",
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because the project studies impacts on working lives using the Labour Force Survey and BICS; Outcome Tracking because it links the naturally occurring pandemic to labour-market outcomes; COVID-19 & Pandemic and Demographic disparities tags because the pandemic is the central exposure and the comparison between women's and men's working lives is central to the question.",
+      "fingerprint": "c4bdcc2d7b72d931"
+    },
+    "2021/028": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because the project concerns healthcare resource allocation and unmet health need, using mortality registrations; Methodological / Infrastructure Research because the analytical operation is developing an approach to account for unmet need within allocation formulas; no tag because equity here concerns need-based allocation rather than a demographic-group comparison or pandemic lens.",
+      "fingerprint": "b843f750e2c4b996"
+    },
+    "2021/032": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because the project studies non-monetary work benefits and the gender pay gap using ASHE earnings data; Descriptive Monitoring because the operation is measuring and characterising the pay gap's composition when non-monetary benefits are included; Demographic disparities tag because the gender comparison in pay is central to the research question.",
+      "fingerprint": "e42817e9a1be9f2d"
+    },
+    "2021/040": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Service Interaction / Systems Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because the project studies serious and organised crime cases in Crown Courts using MoJ court and prisoner datasets; Descriptive Monitoring and Service Interaction / Systems Analysis because it examines the nature and extent of cases and their outcomes as they progress through courts and custodial journeys; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "7715f14b57ffa332"
+    },
+    "2021/044": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care and Labour Market & Employment because the project links occupation to COVID-19 infection using the Covid-19 Infection Survey; Outcome Tracking because occupation is a naturally occurring exposure linked to infection outcomes; COVID-19 & Pandemic tag because COVID-19 infection is the central outcome.",
+      "fingerprint": "e356d603fc71091c"
+    },
+    "2021/046": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis",
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because the project concerns palliative and end of life care using death registrations and health research data; Policy Evaluation / Impact Analysis and Methodological / Infrastructure Research because it evaluates the pandemic response in palliative care while explicitly connecting and boosting data assets; COVID-19 & Pandemic tag because the pandemic response is the object of evaluation.",
+      "fingerprint": "193c50b4c7a06d13"
+    },
+    "2021/053": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Labour Market & Employment because occupational change and skill mismatch among graduates are central, using Labour Force Survey and APS data; Outcome Tracking because COVID-19 is a naturally occurring exposure linked to occupational and mismatch outcomes; COVID-19 & Pandemic tag because pandemic effects frame the research question.",
+      "fingerprint": "0a38c9840e07e4aa"
+    },
+    "2021/054": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because the distributional impact assessment of a rail scheme draws on the Annual Population Survey to assess impacts on population and labour-market characteristics; Policy Evaluation / Impact Analysis because Northern Powerhouse Rail is a specific named infrastructure scheme being assessed; Demographic disparities tag because a distributional impact assessment centrally compares impacts across population groups.",
+      "fingerprint": "e10e5a553a97613e"
+    },
+    "2021/071": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Poverty, Wealth & Living Standards because poverty and inequality in Central London are the substantive focus; Descriptive Monitoring and Outcome Tracking because the project profiles poverty and inequality and examines how the pandemic affected them; COVID-19 & Pandemic tag because pandemic impact is explicitly central to the question.",
+      "fingerprint": "1555de92eb197d13"
+    },
+    "2021/087": {
+      "substantive_domains": [
+        "Migration & Demographics",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Migration & Demographics and Labour Market & Employment because spatial (residential/population) mobility and social mobility are the substantive objects, using the ONS Longitudinal Study; Life-Course / Trajectory Analysis because the design follows individuals across time to trace mobilities shaping geographical inequalities; no tag because the inequality lens is geographic rather than demographic and no pandemic framing is present.",
+      "fingerprint": "54b8d92e777238b4"
+    },
+    "2021/089": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because scam victimisation is the substantive focus, using the Crime Survey for England and Wales; Outcome Tracking because victimisation is a naturally occurring exposure linked to subjective wellbeing outcomes; no tag because no demographic-comparison or pandemic lens is central.",
+      "fingerprint": "48b2a94818ad30c7"
+    },
+    "2021/090": {
+      "substantive_domains": [
+        "Environment & Agriculture",
+        "Data Infrastructure & Methodology"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Environment & Agriculture and Data Infrastructure & Methodology because the project builds linkage between individual and farm-level data for agricultural research; Methodological / Infrastructure Research because developing the linked data asset is the central analytical operation; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "7834216e6fac8a92"
+    },
+    "2021/104": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic",
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because the self-employed and the labour-market impacts of the pandemic are the substantive focus, using Labour Force Survey and APS data; Outcome Tracking because COVID-19 is a naturally occurring exposure linked to outcomes for the self-employed; COVID-19 & Pandemic tag because pandemic impacts are central, and Demographic disparities tag because the explicit inclusivity framing centres comparison of impacts across social groups.",
+      "fingerprint": "491a5d3da8a3f5fd"
+    },
+    "2021/114": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care and Environment & Agriculture because the project studies health and well-being impacts of air quality interventions in urban environments; Policy Evaluation / Impact Analysis because Low Emission Zones and Clean Air Zones are named policy interventions whose impacts are being estimated; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "1e587b72f9450603"
+    },
+    "2021/123": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because the 'People research strand' of the Economy 2030 Inquiry draws heavily on earnings, employment, and vacancy surveys (ASHE, LFS, APS, Vacancy Survey) indicating a workforce focus; Descriptive Monitoring because an inquiry strand characterising the state and trends of the labour market is the visible operation; no tag because the coronavirus dataset appears as one of many contextual sources rather than a central pandemic lens.",
+      "fingerprint": "812d8404da683877"
+    },
+    "2021/131": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because precarious employment among men is the substantive object, using Labour Force Survey data; Descriptive Monitoring because the analysis profiles the prevalence and patterning of precarious employment across groups; Demographic disparities tag because ethnicity-based comparison is central to the research question.",
+      "fingerprint": "2ed92abbc8e6318f"
+    },
+    "2021/132": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because foreign market power and its role in the UK economy is a firm/industrial-structure question, supported by firm-level datasets (ARD, BSD, trade-linked IDBR); Outcome Tracking because the study links foreign market power as a naturally occurring economic condition to downstream economic outcomes; no tag because no demographic or pandemic lens is present.",
+      "fingerprint": "d3cfa94a39162a56"
+    },
+    "2021/137": {
+      "substantive_domains": [
+        "Data Infrastructure & Methodology"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Data Infrastructure & Methodology because the Social Value Bank is itself a measurement and valuation framework being produced from survey data (Crime Survey, Understanding Society); Methodological / Infrastructure Research because developing and maintaining this valuation asset is the main analytical operation; no tag because no demographic-comparison or pandemic lens is central.",
+      "fingerprint": "af0dd1bada3e3753"
+    },
+    "2021/138": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project maps the industrial and economic structure of the Shetland Islands economy using business surveys; Methodological / Infrastructure Research because constructing input-output tables is the development of a statistical data asset; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "825bec77065f39b5"
+    },
+    "2021/140": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Health & Social Care because wages, hours of work, and income are analysed in relation to well-being as a central outcome; Outcome Tracking because naturally occurring labour-market circumstances are linked to a downstream well-being outcome; no tag because no demographic comparison or pandemic framing appears in the entry.",
+      "fingerprint": "2c783147b0df3191"
+    },
+    "2021/154": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because occupational sorting by task content and language skills is the substantive object, using Census data; Descriptive Monitoring because the analysis characterises patterns of occupational sorting across groups rather than testing a policy or single exposure-outcome chain; Demographic disparities tag because comparison of immigrant and UK-born ethnic minorities versus White British is central to the question.",
+      "fingerprint": "0e18d5bb5ee9826b"
+    },
+    "2021/172": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because the UK labour market is the substantive object, evidenced by ASHE and LFS datasets; Policy Evaluation / Impact Analysis because the project estimates the impact of institutional change, a deliberate institutional/policy shift, on labour-market outcomes; no tag because no demographic-comparison or pandemic lens is central.",
+      "fingerprint": "8afa0e132916a820"
+    },
+    "2021/176": {
+      "substantive_domains": [
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Environment & Agriculture because the project concerns sustainable and circular energy transitions on Scottish Islands using meter-level gas and electricity consumption data; Descriptive Monitoring because measuring and characterising local energy consumption patterns is the visible analytical operation; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "426a87b05dab4661"
+    },
+    "2021/180": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies firm innovation and export performance using the Longitudinal Small Business Survey; Outcome Tracking because it links a naturally occurring firm characteristic (innovation) to a downstream outcome (export performance); no tag because no demographic comparison or pandemic framing is present.",
+      "fingerprint": "9c63bc52fe80a5e5"
+    },
+    "2022/022": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because birth outcomes are a health outcome, and Crime & Justice because the study population is defined by the women's prison estate; Descriptive Monitoring because the project measures births and birth outcomes within this population using birth registrations; no tag because neither demographic-group comparison nor pandemic framing is central.",
+      "fingerprint": "f555bd71f751fe7d"
+    },
+    "2022/041": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Poverty, Wealth & Living Standards because digital poverty concerns material deprivation and access to resources; Descriptive Monitoring because the project profiles the prevalence and distribution of digital poverty across the UK using surveys like LFS and Opinions and Lifestyle; no tag because the coronavirus dataset appears contextual rather than a central pandemic lens.",
+      "fingerprint": "32f4ba986fb4a391"
+    },
+    "2022/044": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because the project studies entrepreneurial firms and employment responses to the China trade shock using business and labour force surveys; Outcome Tracking because it links a naturally occurring trade exposure to firm and employment outcomes rather than a named policy; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "3d9482c946df8bcd"
+    },
+    "2022/045": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because creative-industry clusters, spillovers, and growth potential are firm and industry-level phenomena studied via business, R&D, and innovation surveys; Outcome Tracking because the analysis links cluster presence (a naturally occurring condition) to spillover and growth outcomes; no tag because no demographic comparison or pandemic framing is evident.",
+      "fingerprint": "37bef51bdf62b924"
+    },
+    "2022/047": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because children's academic and behavioural outcomes are the studied object, and Poverty, Wealth & Living Standards because Universal Credit is a benefit affecting household resources; Policy Evaluation / Impact Analysis because the project estimates effects of a named welfare reform (Universal Credit); no tag because no demographic-group comparison or pandemic framing is central.",
+      "fingerprint": "53ccefd088778e41"
+    },
+    "2022/060": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project concerns business support and firm outcomes using the Business Structure Database and ASHE; Policy Evaluation / Impact Analysis because it explicitly evaluates the ERDF business-support programme; no tag because neither demographic disparity nor pandemic framing is present.",
+      "fingerprint": "8cfcf2cc06680f6a"
+    },
+    "2022/073": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the disadvantage attainment gap in the Growing Up in England data is the central outcome; Outcome Tracking because the project links naturally occurring parental education and occupation to children's attainment; no tag because the comparison is socioeconomic rather than across a demographic or equality-relevant group.",
+      "fingerprint": "54b6d3f48eecb1c5"
+    },
+    "2022/095": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project examines firm-level productivity dynamics using business surveys and the Business Structure Database; Descriptive Monitoring because 'micro-anatomy' indicates decomposing and characterising the productivity slowdown rather than testing a policy or exposure; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "152290f91e359f88"
+    },
+    "2022/109": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because startups and firm activity across regions are the substantive object, studied via the Business Structure Database and Annual Business Survey; Descriptive Monitoring because the project characterises regional patterns of startup activity and inequality rather than evaluating a named intervention; no tag because regional inequality is not a demographic or equality-relevant group comparison and no pandemic framing is present.",
+      "fingerprint": "e836476ae8805466"
+    },
+    "2022/117": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Education & Skills because the project studies access and representation in elite higher education using UCAS admissions data; Descriptive Monitoring because the visible operation is profiling who accesses and is represented within elite institutions; Demographic disparities / equity tag because representation and access comparisons across groups are central to the research question.",
+      "fingerprint": "468926c62b97b30f"
+    },
+    "2022/129": {
+      "substantive_domains": [
+        "Data Infrastructure & Methodology",
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Data Infrastructure & Methodology and Environment & Agriculture because the project builds a linkage between individual and farm-level data for agricultural research using the Agricultural Research Collection; Methodological / Infrastructure Research because the central operation is creating and developing a linked data asset (AD|ARC); no tag because no demographic-equity or pandemic lens is evident.",
+      "fingerprint": "7a9ddbd7a0317c70"
+    },
+    "2022/132": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project models Northern Ireland trade using business inquiry and sales/exports statistics, with firm trade activity as the object; Descriptive Monitoring because the trade model characterises the level and pattern of NI trade flows rather than testing a named intervention; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "b49c7f2c5bedcf2d"
+    },
+    "2022/133": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because the project analyses earnings differentials using the Earnings and Employees Study; Descriptive Monitoring because it measures and characterises the earnings gap between groups; Demographic disparities / equity tag because the Catholic-Protestant (religious group) comparison is the core of the research question.",
+      "fingerprint": "b42917a424395e2b"
+    },
+    "2022/135": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because the project studies wage inequality using the Annual Survey of Hours and Earnings; Outcome Tracking because it links naturally occurring exposures (automation and regulatory conditions) to wage outcomes rather than evaluating a single named policy; no tag because inequality here is socioeconomic/occupational rather than a demographic equality comparison.",
+      "fingerprint": "3cd23a8b5095b62a"
+    },
+    "2022/136": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because firm entry and exit and aggregate productivity are the substantive objects, using the Annual Business Survey and Annual Respondents Database; Outcome Tracking because the design links firm entry/exit dynamics to downstream productivity outcomes; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "c219cfc13d8ed461"
+    },
+    "2022/144": {
+      "substantive_domains": [
+        "Housing & Planning",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Housing & Planning and Labour Market & Employment because the project studies how the housing market shapes the spatial allocation of credit-constrained workers, combining earnings data with Understanding Society; Outcome Tracking because housing-market conditions are analysed as an exposure affecting worker location and labour outcomes; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "22333e2929b9a189"
+    },
+    "2022/159": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Poverty, Wealth & Living Standards",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment, Poverty, Wealth & Living Standards and Health & Social Care because the project jointly analyses paid employment, deprivation and unpaid care work using the ONS Longitudinal Study; Outcome Tracking because it links unpaid caring circumstances to employment and deprivation outcomes across England and Wales; no tag because no central demographic-equality comparison or pandemic framing is stated.",
+      "fingerprint": "6dea0b06ea78d286"
+    },
+    "2022/172": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies innovation, management capability and productivity in SMEs using firm-level surveys (ABS, BERD, UK Innovation Survey, Management Practices Survey); Outcome Tracking because it links firm characteristics such as management capability and innovation to productivity outcomes; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "97d238e3189a704b"
+    },
+    "2022/176": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because the project examines how local skill deficiencies affect firm performance, productivity and agglomeration using employer skills surveys, business surveys and the Labour Force Survey; Outcome Tracking because skill deficiencies are analysed as an exposure affecting downstream firm and local economic outcomes; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "5b2a43322971c8dd"
+    },
+    "2022/177": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Unclear from Register Entry"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the title concerns firm innovation and technology management and the datasets are firm-level business, R&D, productivity and innovation surveys; Unclear from Register Entry for purpose because the title states only a topic and neither title nor datasets reveal whether the design is monitoring, evaluation, or exposure-outcome analysis; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "8db004f6ce757f32"
+    },
+    "2022/193": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because the project studies reoffending using MoJ courts, prisons and probation data; Policy Evaluation / Impact Analysis because it tests whether the enforced alcohol abstinence intervention reduces reoffending; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "34037ed0176a9f83"
+    },
+    "2023/004": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Health & Social Care because the study examines educational pathways and outcomes for children who are looked after, making both education and the children's social care system central; Life-Course / Trajectory Analysis and Outcome Tracking because it follows pathways over time and links care status to educational outcomes; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "2e6f98f560ab0c7f"
+    },
+    "2023/008": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because elite mobility studied via the Labour Force Survey concerns occupational and social mobility within the labour market; Life-Course / Trajectory Analysis because mobility into elite positions involves following progression and trajectories; no tag because no central demographic comparison or pandemic framing is evident.",
+      "fingerprint": "e4d5e49b5cfce4aa"
+    },
+    "2023/009": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies firm performance, trade and FDI using extensive firm-level business and trade datasets; Policy Evaluation / Impact Analysis because it assesses the impact of Brexit, a specific institutional change, on firm outcomes; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "97d579dd921a0ed1"
+    },
+    "2023/031": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because monopsony and minimum wages concern wages, labour demand and employer power, using earnings and labour force data; Policy Evaluation / Impact Analysis because the minimum wage is a named policy whose effects are being analysed; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "36ecf2ccd528df2e"
+    },
+    "2023/033": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the project studies the higher education market and university admissions using UCAS data; Policy Evaluation / Impact Analysis because the focus on regulation and competition in the HE market indicates analysis of deliberate regulatory and institutional arrangements; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "9274dee534ce896b"
+    },
+    "2023/040": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because domestic violence victimisation, measured via the Crime Survey for England and Wales, is the outcome of interest; Outcome Tracking because the design links a naturally occurring condition (female councillor representation) to domestic violence outcomes rather than evaluating a named policy; no tag because gender enters as a political representation exposure rather than a central demographic outcome comparison.",
+      "fingerprint": "2eaee2841a99a212"
+    },
+    "2023/046": {
+      "substantive_domains": [
+        "Migration & Demographics"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Migration & Demographics because immigrants' location choices and residential settlement patterns are the substantive object; Outcome Tracking because the study links a naturally occurring exposure (local far-right support) to migrants' location decisions; no tag because migrant status defines the study population rather than a comparative demographic-equity lens.",
+      "fingerprint": "e9ddb03066aab940"
+    },
+    "2023/056": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Service Interaction / Systems Analysis",
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Health & Social Care because children's social services involvement in Wales is the substantive system studied; Service Interaction / Systems Analysis and Descriptive Monitoring because the project examines patterns of contact with and outcomes from children's social services across groups; Demographic disparities / equity tag because ethnic and religious inequalities are the explicit focus of the research question.",
+      "fingerprint": "3aaf96beb1a39297"
+    },
+    "2023/066": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because the project studies vaccination uptake using COVID-19 Infection Survey, vaccination and Test and Trace data; Descriptive Monitoring because the visible operation is measuring heterogeneity in vaccination across social networks rather than testing an exposure-outcome relationship or evaluating a policy; COVID-19 & Pandemic tag because COVID-19 vaccination and infection surveillance are the central condition of the study.",
+      "fingerprint": "311e7f4e67240c8c"
+    },
+    "2023/073": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Service Interaction / Systems Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because the project concerns domestic abuse proceedings and private/public family justice using MoJ FamilyMan family court data; Service Interaction / Systems Analysis because the focus is on overlap and pathways of cases through the family court system; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "4dfbc1c88703fc1b"
+    },
+    "2023/094": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because the research object is health outcomes of Scottish nurses; Outcome Tracking because it links a naturally occurring circumstance (deprivation) to downstream health outcomes using Census 2011; no tag because deprivation is a socioeconomic rather than demographic/equality comparison and no pandemic framing appears.",
+      "fingerprint": "12ccb297fbb3a358"
+    },
+    "2023/098": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Health & Social Care because the project links time in social care (Children Looked After, Children in Need) to educational attainment at ages 16-18; Outcome Tracking because it connects a naturally occurring circumstance (time in care) to a downstream attainment outcome rather than evaluating a named intervention; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "8e059888d84a85ad"
+    },
+    "2023/113": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking",
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because later-life health and morbidity are the research outcomes; Outcome Tracking and Life-Course / Trajectory Analysis because early-life health and nutritional environment are linked to later-life outcomes across the life span using the ONS Longitudinal Study; no tag because no demographic comparison or pandemic condition is central.",
+      "fingerprint": "df776b0a70de47ae"
+    },
+    "2023/114": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Education & Skills because the project studies how compulsory education affects occupational sorting and earnings stability using ASHE and LFS data; Policy Evaluation / Impact Analysis because compulsory education is a deliberate policy whose impact is being estimated; no tag because no demographic-equity or pandemic lens is evident.",
+      "fingerprint": "9923916491fcc5c9"
+    },
+    "2023/167": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Environment & Agriculture because the project measures firms' market power along the milk supply chain, an agricultural sector, using firm-level Annual Respondents Database data; Descriptive Monitoring because the visible operation is measuring and characterising market power rather than testing an exposure-outcome relationship or evaluating a named policy; no tag because no demographic or pandemic lens appears.",
+      "fingerprint": "001b2cac49c3f46a"
+    },
+    "2023/170": {
+      "substantive_domains": [
+        "Public Finance & Taxation",
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research",
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Public Finance & Taxation and Poverty, Wealth & Living Standards because tax and benefit microsimulation concerns fiscal transfers and household resources using household income and expenditure surveys; Methodological / Infrastructure Research and Policy Evaluation / Impact Analysis because microsimulation involves developing and maintaining a modelling tool to simulate the distributional impacts of tax and benefit policies; no tag because no demographic-equity comparison or pandemic condition is central.",
+      "fingerprint": "ceed2c1ca2b80140"
+    },
+    "2023/173": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the project studies grade inflation, attainment, and subsequent outcomes at UK universities using Longitudinal Education Outcomes data, with later outcomes used to study consequences of education; Descriptive Monitoring and Outcome Tracking because it profiles trends in grade inflation and links university attainment to downstream outcomes; no tag because no demographic comparison or pandemic framing is central.",
+      "fingerprint": "6afd3c5421ad38d8"
+    },
+    "2023/181": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because the project assesses Enterprise Zones' effects on firms (Business Structure Database, Annual Business Survey) and on earnings and employment (ASHE, LFS); Policy Evaluation / Impact Analysis because it evaluates the impact of a specific named policy, UK Enterprise Zones; no tag because no demographic-equity or pandemic lens is evident.",
+      "fingerprint": "c8894401cd39ea51"
+    },
+    "2023/190": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because the title centres on productivity from a macroeconomic perspective using earnings and labour-force datasets (ASHE, LFS); Descriptive Monitoring because 'understanding productivity' indicates characterising levels and patterns rather than testing a named intervention; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "062cb6af0851506b"
+    },
+    "2023/204": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies firm-level R&D, innovation and productivity using business surveys (ABS, BERD, UK Innovation Survey); Descriptive Monitoring because 'understanding' firm-level patterns in a region indicates profiling rather than evaluating a named policy; no tag because no demographic or pandemic lens is present.",
+      "fingerprint": "90d22e57bd06c7c3"
+    },
+    "2023/205": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Education & Skills because educational attainment is the substantive outcome, using Growing Up in England and school census data; Outcome Tracking because the design links family background (a naturally occurring circumstance) to attainment outcomes; Demographic disparities tag because comparison 'across ethnic categories' is central to the research question.",
+      "fingerprint": "f6270c4fd1c37056"
+    },
+    "2023/212": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because school exclusion and subsequent education-to-work outcomes are central, using LEO linked education-employment data; Life-Course / Trajectory Analysis and Outcome Tracking because the project follows young people's trajectories and links the exclusion experience to downstream outcomes; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "ae61a39260e5d6fb"
+    },
+    "2023/215": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because labour-market transitions of over-50s are the substantive focus, using longitudinal LFS datasets; Descriptive Monitoring because the visible operation is characterising transition patterns over short LFS panels rather than testing an intervention or extended life-course trajectories; no tag because over-50s defines the study population rather than a central demographic comparison.",
+      "fingerprint": "018d623fc7855ad6"
+    },
+    "2023/217": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because the composition of the sports workforce is the substantive object, using the Labour Force Survey; Descriptive Monitoring because the project profiles workforce ethnicity rather than testing exposure-outcome relationships; Demographic disparities tag because ethnicity comparison is central to the research question.",
+      "fingerprint": "622dc91ad01c751f"
+    },
+    "2023/228": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "COVID-19 & Pandemic"
+      ],
+      "rationale": "Assigned Health & Social Care because infection, vaccination, mortality and test-and-trace linkages centre on health outcomes; Descriptive Monitoring and Outcome Tracking because the COVID-19 Infection Survey objectives combine surveillance of infection patterns with linking infection to downstream outcomes such as mortality; COVID-19 & Pandemic tag because COVID-19 infection is explicitly the research object.",
+      "fingerprint": "e66aece7f6085f5c"
+    },
+    "2023/232": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because lifelong learning and skills for longer working lives concern training pathways and their labour-market consequences, using LEO linked education-employment data; Life-Course / Trajectory Analysis because the framing of learning across 'longer lives' indicates following individuals through extended education-to-work trajectories; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "eb404b6b21b7bdf9"
+    },
+    "2023/234": {
+      "substantive_domains": [
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Environment & Agriculture because environmental impacts of road investment are a central substantive outcome; Policy Evaluation / Impact Analysis because the project explicitly assesses the impact of road investment, a deliberate public investment programme; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "1e967e993dc6c98d"
+    },
+    "2023/261": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Poverty, Wealth & Living Standards and Labour Market & Employment because distributional consequences are analysed across household resources (Wealth and Assets, Living Costs and Food) and earnings/employment data (ASHE, LFS); Descriptive Monitoring because the visible operation is characterising distributional patterns to inform monetary policy rather than evaluating a specific named intervention; no tag because the COVID dataset appears only incidentally and no demographic comparison is central.",
+      "fingerprint": "2555c851761eaf34"
+    },
+    "2023/271": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies business outcomes of firms using business structure, survey and R&D data; Policy Evaluation / Impact Analysis because it estimates the impact of the named NMS innovation support programme; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "4ac0f31a1071ccb2"
+    },
+    "2023/273": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Environment & Agriculture because the project examines firm innovation and emissions using business surveys and the Low Carbon and Renewable Energy Economy Survey; Policy Evaluation / Impact Analysis because it assesses firm responses to environmental regulations, a deliberate policy exposure; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "f93bec948841249b"
+    },
+    "2023/285": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the object is the economic impact on businesses using firm-level business and R&D datasets; Policy Evaluation / Impact Analysis because it evaluates support delivered by NMS-funded laboratories, a named programme; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "20f0e2508286806e"
+    },
+    "2023/295": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Data Infrastructure & Methodology"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Data Infrastructure & Methodology because the project concerns firm headquartering and how it affects the measurement of innovation statistics using the UK Innovation Survey and business registers; Methodological / Infrastructure Research because examining distortions in official innovation statistics is the central analytical operation; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "c6b8f1461ecc719a"
+    },
+    "2023/300": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment",
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills, Labour Market & Employment and Poverty, Wealth & Living Standards because the project studies higher education expansion, overeducation, labour market outcomes and income distribution using Labour Force Survey and Understanding Society data; Policy Evaluation / Impact Analysis because it estimates the impact of the deliberate expansion of higher education; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "3ab2b1cddb6ec3d4"
+    },
+    "2023/304": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Health & Social Care because the project examines workforce withdrawal linked to sickness ('Sick Britain') using census data linked to benefits and income; Descriptive Monitoring because it aims to generate insights and profile where workers have gone rather than test a specific exposure-outcome or policy effect; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "ca4d532825e66cfb"
+    },
+    "2023/307": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Health & Social Care because smoking status and cigarette consumption are the substantive health behaviours studied using the Opinions and Lifestyle Survey; Descriptive Monitoring because the analysis models long-run trends and patterns of smoking from 1972-2014; Demographic disparities / equity tag because comparison across age, period and cohort groups is central to the research question.",
+      "fingerprint": "bcee55b21fbf588a"
+    },
+    "2024/003": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project investigates business investment using extensive firm-level microdata such as the Annual Business Survey and Business Structure Database; Descriptive Monitoring because it characterises the features and patterns of investment rather than testing a policy or exposure effect; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "8cd9703333beb924"
+    },
+    "2024/004": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the outcomes concern firm performance measured through business surveys and the Business Structure Database; Policy Evaluation / Impact Analysis because the project explicitly evaluates the named Exceptional Regional Growth Fund; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "9cf89f77a148e755"
+    },
+    "2024/014/b": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because crime is the substantive outcome studied, with the National Pupil Database extract identifying the youth population; Policy Evaluation / Impact Analysis because the project estimates the impact of youth centre provision, a deliberate intervention, on crime; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "b06bbbfa7de0749e"
+    },
+    "2024/014/a": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because the title centres on youth crime and gangs and uses the Crime Survey for England and Wales; Outcome Tracking because the design links exposure to public services (including social housing) to youth crime outcomes rather than evaluating a named intervention; no tag because no demographic-equity or pandemic lens is evident.",
+      "fingerprint": "7f4ed49783cb874c"
+    },
+    "2024/033": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the title concerns firm productivity, trade and value chains, using extensive firm-level surveys (Annual Business Survey, FDI, trade-in-goods data); Outcome Tracking because the visible operation links firms' value-chain participation and trade activity to productivity outcomes; no tag because no equity or pandemic lens is central.",
+      "fingerprint": "769348da0f7d510b"
+    },
+    "2024/037": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Education & Skills because the title focuses on technology, workforce skills and learning capacity, using ASHE, the Employer Skills Survey and Workplace Employment Relations Survey; Outcome Tracking because it links technology exposure to skills and labour-market outcomes; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "bab49b4f6b466b99"
+    },
+    "2024/044": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the title concerns regional trade integration measured through business surveys (Annual Business Survey/Inquiry); Outcome Tracking because it links trade integration as a naturally occurring economic exposure to anti-globalisation backlash outcomes; no tag because no equity or pandemic framing appears.",
+      "fingerprint": "d943b92c7872ed3d"
+    },
+    "2024/045": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Health & Social Care because economic inactivity due to long-term sickness combines labour-market status with health conditions, using LFS and APS; Descriptive Monitoring because 'exploring' inactivity in Newcastle indicates profiling levels and characteristics of a local phenomenon; no tag because no demographic comparison or pandemic lens is central.",
+      "fingerprint": "0386829121452c6c"
+    },
+    "2024/051": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because firm performance and survival are the substantive objects, using the Business Structure Database and Longitudinal Small Business Survey; Outcome Tracking because it links firm characteristics ('factors') to performance and survival outcomes; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "3dfdd6197187301b"
+    },
+    "2024/053": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the title examines firm performance and technological/non-technological innovation using the Business Structure Database; Outcome Tracking because it tests how innovation activity shapes firm performance as an exposure-outcome relationship; no tag because no demographic or pandemic framing appears.",
+      "fingerprint": "7edd7f543e4feb88"
+    },
+    "2024/054": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because the project studies higher education expansion and its consequences for overeducation, labour-market outcomes and income distribution using LFS and Understanding Society; Policy Evaluation / Impact Analysis because it estimates the impact of a deliberate policy expansion of higher education; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "3ab2b1cddb6ec3d4"
+    },
+    "2024/060": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because social mobility of the 1990s cohort concerns occupational and socioeconomic progression, using the ONS Longitudinal Study; Life-Course / Trajectory Analysis because the design follows a birth cohort across life stages to study intergenerational mobility; no tag because socioeconomic mobility alone does not indicate a demographic-equity comparison.",
+      "fingerprint": "a2f733364a046c53"
+    },
+    "2024/068": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because STEM readiness and economic returns concern education pathways and their earnings outcomes via Longitudinal Education Outcomes data; Life-Course / Trajectory Analysis and Outcome Tracking because LEO follows individuals from education into work and the project links STEM participation to economic returns; Demographic disparities / equity tag because 'inclusion' signals central comparison of access and outcomes across equality-relevant groups.",
+      "fingerprint": "a5d011e849731ad2"
+    },
+    "2024/085": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Risk Prediction / Early Identification",
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the project concerns university admissions using Longitudinal Education Outcomes data; Risk Prediction / Early Identification and Methodological / Infrastructure Research because 'using past data to improve admissions' implies building predictive/data-driven tools to prospectively inform selection decisions; no tag because no demographic comparison or pandemic framing is evident.",
+      "fingerprint": "b6d312411d0172fa"
+    },
+    "2024/093": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the study focuses on firms via the Help to Grow Management programme with business survey and structure datasets; Policy Evaluation / Impact Analysis because Help to Grow Management is a named government business-support scheme being studied; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "33366b0219494afb"
+    },
+    "2024/119": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Service Interaction / Systems Analysis"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Crime & Justice because domestic abuse victimisation is the substantive object, using the Crime Survey for England and Wales; Descriptive Monitoring and Service Interaction / Systems Analysis because the study measures inequalities in victimisation prevalence and examines help-seeking behaviour and support access; Demographic disparities / equity tag because 'inequalities' in victimisation across groups is central to the research question.",
+      "fingerprint": "89f55d225d8e7d85"
+    },
+    "2024/122": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because the project concerns self-employment support and labour-market entry for young people; Policy Evaluation / Impact Analysis because it is a randomised controlled trial feasibility study of a named support intervention; no tag because young people define the population, not a central demographic comparison.",
+      "fingerprint": "c8df149d0e76b22a"
+    },
+    "2024/126": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies firm-level technology trade using business structure, R&D, trade-in-services, trade-in-goods and innovation survey data; Outcome Tracking because the design links firms' technology trading activity to firm performance outcomes rather than evaluating a named policy; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "f54a11c8d3773735"
+    },
+    "2024/136": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because the project examines returns to vocational education alongside labour-market sorting and mobility using LEO data; Outcome Tracking because it links vocational education exposure to downstream earnings and labour-market outcomes; no tag because no demographic comparison or pandemic condition is central.",
+      "fingerprint": "4eef3d18e8afcb27"
+    },
+    "2024/139": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Service Interaction / Systems Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because the family justice system is the explicit substantive focus; Service Interaction / Systems Analysis because understanding how families move through and are processed by the family justice system is the visible analytical operation; no tag because no demographic or pandemic lens is evident from the entry.",
+      "fingerprint": "7f514d19046fb00d"
+    },
+    "2024/144": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Education & Skills because the project studies university admissions, application behaviour and teacher predicted grades using UCAS grading and admissions data; Outcome Tracking because it links application behaviour and predicted grades to admissions gaps as outcomes; Demographic disparities / equity tag because gender (and SES) gaps in admissions are the central comparative question.",
+      "fingerprint": "cc57cae1a385a5b8"
+    },
+    "2024/157": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the project studies how rank in maths and English skills during schooling affects later outcomes traced through LEO data; Outcome Tracking because it links a naturally occurring characteristic (skill rank) to downstream education and labour-market outcomes; no tag because no demographic comparison or pandemic framing is central.",
+      "fingerprint": "62991813401ed3e9"
+    },
+    "2024/161": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis",
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Poverty, Wealth & Living Standards because pension entitlement, under-provisioning and retirement resources are the substantive focus, using Wealth and Assets Survey and earnings data; Policy Evaluation / Impact Analysis and Descriptive Monitoring because the project assesses consequences of the named state pension age changes and profiles who has been left under-provisioned; Demographic disparities / equity tag because women's pension entitlement is the explicit gendered focus of the research question.",
+      "fingerprint": "35a63a6c332f00e6"
+    },
+    "2024/167": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the project studies when and why students stop studying mathematics using qualifications, DfE and UCAS admissions data; Life-Course / Trajectory Analysis because it follows students' progression through the mathematics 'pipeline' across educational stages; no tag because no demographic-comparison or pandemic lens is central.",
+      "fingerprint": "82ebd1b8ae45080f"
+    },
+    "2024/193": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project examines firm-level productivity, investment and R&D of foreign-owned establishments using business surveys and the IDBR; Outcome Tracking because it links a naturally occurring firm characteristic (foreign ownership) to productivity outcomes after 2008 rather than evaluating a named policy; no tag because no equity or pandemic lens applies.",
+      "fingerprint": "a6070d19ec65d5c5"
+    },
+    "2024/194": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Service Interaction / Systems Analysis",
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because the substantive focus is adolescent self-harm and health service use in the SAIL Databank; Service Interaction / Systems Analysis and Descriptive Monitoring because the project segments and profiles patterns of health service utilisation across the population; no tag because no demographic-comparison or pandemic framing is central.",
+      "fingerprint": "4706f21a33596413"
+    },
+    "2024/197": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care and Education & Skills because autism diagnosis is a health condition studied through the linked education-child health ECHILD dataset with likely educational outcomes; Outcome Tracking because the growing and uneven diagnosis of autism is a naturally occurring exposure whose effects on downstream outcomes are analysed; no tag because unevenness is not explicitly framed as a demographic-group comparison.",
+      "fingerprint": "e02c2b517179f904"
+    },
+    "2024/204": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because child maltreatment and social care exposure is central, and Education & Skills and Labour Market & Employment because educational and labour market outcomes are the studied results in the LEO linked data; Outcome Tracking because a naturally occurring exposure (maltreatment/social care contact) is linked to downstream outcomes; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "ec6d7825ca705ead"
+    },
+    "2024/218": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because the project concerns court outcomes using MoJ Data First magistrates and Crown Court data; Policy Evaluation / Impact Analysis because it assesses the impact of a specific named law-enforcement operation (Operation Venetic); no tag because no demographic or pandemic lens applies.",
+      "fingerprint": "a1662af8b5c70dca"
+    },
+    "2024/239": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because the project studies how employee jobs and self-employment are combined using ASHE linked to PAYE and Self-Assessment earnings data; Descriptive Monitoring because it uncovers patterns of job combination rather than testing an exposure-outcome relationship or evaluating a policy; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "2ddb8ea6097c7f6c"
+    },
+    "2024/256": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Service Interaction / Systems Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because drug trafficking offences are studied via MoJ Data First courts, prisons and probation data; Descriptive Monitoring and Service Interaction / Systems Analysis because the linked cross-justice datasets indicate profiling of drug trafficking cases and their processing through courts, custody and probation; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "ecef2f67780d695f"
+    },
+    "2025/001": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care and Education & Skills because the project studies both health and educational outcomes of children with sickle cell disease using the linked ECHILD dataset; Outcome Tracking because a naturally occurring condition (sickle cell disease) is linked to downstream outcomes; no tag because no demographic-group comparison or pandemic framing is explicitly central.",
+      "fingerprint": "d8497926f36348a4"
+    },
+    "2025/002": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because the project studies vascular inflammation-related health outcomes and mortality via death registrations; Policy Evaluation / Impact Analysis because it exploits eligibility for the named herpes zoster vaccination programme to estimate its effects on health outcomes; no tag because no demographic-equity or pandemic lens applies.",
+      "fingerprint": "8cf1b25e8a8dfb43"
+    },
+    "2025/024": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Poverty, Wealth & Living Standards because the project studies household finances and food expenditure using the Living Costs and Food Survey; Outcome Tracking because it links naturally occurring exposures (school holidays and local food environments) to a downstream household-finance outcome; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "d8982fad5025a3f4"
+    },
+    "2025/036": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Education & Skills because the project asks whether employers or education providers drive labour market inequality using Longitudinal Education Outcomes data linking education to earnings; Outcome Tracking because it links education and employer characteristics to labour-market outcomes; no tag because the inequality studied is not explicitly a demographic or equality-group comparison.",
+      "fingerprint": "c3b6e28081c0716f"
+    },
+    "2025/038": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because firm productivity via the Business Structure Database is the substantive outcome; Outcome Tracking because transport connectivity is a naturally occurring exposure linked to productivity rather than a named policy evaluation; no tag because no demographic or pandemic lens is present.",
+      "fingerprint": "ad2e74b8a43a77c4"
+    },
+    "2025/053": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies supply chains, trade in goods and services, and firm activity using business and trade datasets; Policy Evaluation / Impact Analysis because the EU-UK Trade and Cooperation Agreement is a named institutional change whose disruption effects are being assessed; no tag because no demographic or pandemic framing appears.",
+      "fingerprint": "2cb6e073aa31d614"
+    },
+    "2025/058": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the object is firm-level growth capital, business investment, and productivity of UK scale-up companies using the Decision Maker Panel; Outcome Tracking because the project examines causes and consequences of a naturally occurring condition (the growth-capital gap) for investment and productivity outcomes; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "9b6e98da353a0ca6"
+    },
+    "2025/060": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Poverty, Wealth & Living Standards and Health & Social Care because food insecurity is a material-hardship outcome and nutrition is a health outcome among older adults; Descriptive Monitoring because the project characterises prevalence and patterns in a defined population and region using lifestyle and food surveys; no tag because older adults define the study population rather than a demographic comparison.",
+      "fingerprint": "c14c8a2502a16d33"
+    },
+    "2025/061": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Service Interaction / Systems Analysis",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because additional learning needs provision and educational outcomes in Wales are the substantive focus; Service Interaction / Systems Analysis and Outcome Tracking because the title centres on how support provision ('right place, right time, right support') is accessed and how it links to educational outcomes; no tag because the ALN population defines the sample rather than a demographic-comparison lens.",
+      "fingerprint": "45bc093e4b58561a"
+    },
+    "2025/062": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because Key Stage 4/5 attainment, Higher Education participation, and qualifications are the substantive objects, using grading and admissions data; Outcome Tracking because analysing 'correlates of' attainment and participation links characteristics to educational outcomes; no tag because no demographic-comparison or pandemic framing is evident.",
+      "fingerprint": "31dad7e41fe95e65"
+    },
+    "2025/069": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because resilience among children and young people is a wellbeing/mental-health-focused object; Life-Course / Trajectory Analysis because the project follows changes in resilience across young people over time using the Second Longitudinal Study of Young People in England; no tag because no demographic comparison or pandemic condition is central.",
+      "fingerprint": "34c50e34e640314e"
+    },
+    "2025/075": {
+      "substantive_domains": [
+        "Migration & Demographics"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking",
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Migration & Demographics because longevity/mortality is studied as a population outcome using the ONS Longitudinal Study; Outcome Tracking because social inequality is linked to longevity as an exposure-outcome relationship, and Methodological / Infrastructure Research because the 'beta test' framing indicates the project also demonstrates or tests a data asset or research environment; no tag because the inequality is socioeconomic rather than an explicit demographic-group comparison.",
+      "fingerprint": "b875533b61c9f7f9"
+    },
+    "2025/076": {
+      "substantive_domains": [
+        "Data Infrastructure & Methodology"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Data Infrastructure & Methodology because the title names the development of an electronic children's cohort (WECC 4) as the object, with Census Wales data supporting cohort construction in SAIL; Methodological / Infrastructure Research because building and updating a linked e-cohort data asset is the visible analytical operation; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "0fea6a6471364559"
+    },
+    "2025/083": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the project studies exports, trade, innovation and firm-level data (Business Structure Database, trade-in-goods, patents); Policy Evaluation / Impact Analysis because it explicitly evaluates DBT export promotion activities, a named government programme; no tag because no demographic or pandemic lens appears.",
+      "fingerprint": "9a69c669347b953f"
+    },
+    "2025/084": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because pay differentials, recruitment and retention of public sector workers are central, using ASHE and LFS earnings/employment data; Outcome Tracking because it links a naturally occurring exposure (public-private pay gaps) to workforce recruitment/retention outcomes rather than a named policy; no tag because no demographic-equity or pandemic framing is evident.",
+      "fingerprint": "52b440236234aae6"
+    },
+    "2025/093": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because crime is the substantive outcome, using the Crime Survey for England and Wales; Outcome Tracking because the design links transport innovation as an exposure to crime outcomes rather than evaluating a specific named scheme; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "ed8f039f8764ede9"
+    },
+    "2025/104": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Risk Prediction / Early Identification"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because dissociative seizures, their epidemiology and clinical outcomes are the research object; Descriptive Monitoring and Risk Prediction / Early Identification because the title explicitly combines epidemiological description with risk stratification of patients; no tag because no demographic-equity or pandemic framing is present.",
+      "fingerprint": "9f9ff1ea3fd0075e"
+    },
+    "2025/110": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Data Infrastructure & Methodology"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care and Data Infrastructure & Methodology because the UK MS Register is a disease-specific data asset about multiple sclerosis, here linked to Census 2021 in SAIL; Methodological / Infrastructure Research because maintaining and enriching a patient register through census linkage is the visible analytical operation; no tag because no comparative-equity or pandemic lens appears.",
+      "fingerprint": "39b7c467ce5cbae0"
+    },
+    "2025/122": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because contextualised university admissions, applications, enrolment and subsequent attainment/labour-market outcomes of education pathways are central, using LEO data; Policy Evaluation / Impact Analysis because it analyses the impacts of a deliberate admissions policy practice; no tag because the comparison is socioeconomic-contextual rather than centrally across a demographic or equality-relevant group.",
+      "fingerprint": "32316cc33a614376"
+    },
+    "2025/126": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because place of death for people with dementia and cancer is an end-of-life care question, using death registrations; Descriptive Monitoring because the study characterises geographical variation in where people die rather than testing an exposure-outcome or policy effect; no tag because age defines the population rather than a demographic comparison lens.",
+      "fingerprint": "4b129dcfeac6d505"
+    },
+    "2025/153": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because the project links firm productivity (Business Structure Database, ABS) to worker-level wages (ASHE), making both firms and earnings central; Outcome Tracking because it relates a naturally occurring firm characteristic (productivity) to wage outcomes; no tag because no demographic-equity or pandemic lens is evident.",
+      "fingerprint": "b0949f8f3f2c82bb"
+    },
+    "2025/167": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because the project studies qualifications and skills (LEO data) in relation to city-level productivity and labour-market performance, with skills mismatch central; Outcome Tracking because it tests whether a lack of appropriate qualifications (exposure) explains poor local economic performance (outcome); no tag because place-based comparison is geographic rather than demographic or pandemic-related.",
+      "fingerprint": "4bf0ef590b866720"
+    },
+    "2025/172": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Migration & Demographics"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Health & Social Care and Migration & Demographics because the project studies mortality and health outcomes by migrant status using census and death registration data; Outcome Tracking because migrant status is treated as a naturally occurring characteristic linked to downstream mortality and health outcomes; demographic disparities tag because the comparison between migrants and natives is the central research question.",
+      "fingerprint": "be1d11119747e798"
+    },
+    "2025/176": {
+      "substantive_domains": [
+        "Migration & Demographics",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Migration & Demographics because internal migration is the central object, and Labour Market & Employment because the LEO dataset links education to earnings and employment outcomes in the levelling-up context; Outcome Tracking because internal migration is analysed as a naturally occurring exposure linked to economic outcomes across places; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "d00bb169cf162699"
+    },
+    "2025/178": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because the Towns Fund targets local economic regeneration and the datasets (Annual Business Survey, ASHE, BRES, APS) capture firm activity, employment and earnings; Policy Evaluation / Impact Analysis because the project explicitly evaluates the named Towns Fund programme; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "257007bc95a26ead"
+    },
+    "2025/179": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Crime & Justice because victimisation and crime outcomes measured through the Crime Survey for England and Wales are the substantive object; Outcome Tracking because the project links crime outcomes as an exposure to victims' downstream well-being; no tag because no demographic comparison or pandemic framing is central.",
+      "fingerprint": "ff7590ad3a983bbb"
+    },
+    "2025/181": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Risk Prediction / Early Identification"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the project concerns students' academic outcomes using grading and admissions data; Risk Prediction / Early Identification because machine learning models are explicitly developed to predict academic outcomes from prior performance; no tag because no equity or pandemic lens is central.",
+      "fingerprint": "f6f5a754148dff8d"
+    },
+    "2025/185": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Service Interaction / Systems Analysis",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because mental health and emergency department use in young people are the substantive objects, using linked NHS-education data; Service Interaction / Systems Analysis because high-intensity emergency department use is the central service-utilisation phenomenon, and Outcome Tracking because it is linked longitudinally to mental health conditions; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "330eef3eb9c58140"
+    },
+    "2025/192": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Labour Market & Employment because agglomeration economies concern firm structure and productivity alongside earnings and labour-market data (ASHE, Business Structure Database, LFS); Descriptive Monitoring because the project maps agglomeration patterns across places from Victorian Britain to the present rather than testing a named intervention; no tag because no equity or pandemic lens is evident.",
+      "fingerprint": "94b1405abfb4e52a"
+    },
+    "2025/200": {
+      "substantive_domains": [
+        "Unclear from Register Entry"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Unclear from Register Entry because 'inequality and inequity in Wales' does not identify a specific substantive domain and the census datasets are domain-agnostic; Descriptive Monitoring because investigating inequality patterns across census populations indicates measurement and characterisation of variation; no tag because the groups across which inequity is compared are not specified in the register entry.",
+      "fingerprint": "ad3a2f0f5a0e4654"
+    },
+    "2025/201": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because pay and low pay across sectors are the central objects, using ASHE earnings data; Descriptive Monitoring because the project analyses trends and sectoral variation in pay without testing an exposure-outcome relationship or evaluating a named policy; no tag because no demographic-equity or pandemic lens is central.",
+      "fingerprint": "410d05dffeaccda4"
+    },
+    "2025/207": {
+      "substantive_domains": [
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Environment & Agriculture because the project studies energy demand, mobility and progress toward net-zero using meter-level gas and electricity consumption, travel and smart energy data; Descriptive Monitoring because it tracks change in mobility and energy demand over time rather than evaluating a named intervention; no tag because no equity or pandemic lens is central.",
+      "fingerprint": "195ce2fa676d442b"
+    },
+    "2025/212": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because the project concerns GCSE tier entry and maths teaching and learning using Ofqual grading and admissions data; Policy Evaluation / Impact Analysis because the title explicitly evaluates approaches to tier entry as a deliberate school-level practice to improve outcomes; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "9c191992ea8029bf"
+    },
+    "2025/214": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Life-Course / Trajectory Analysis"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because the title studies education and labour transitions using Longitudinal Education Outcomes data linking education to earnings; Life-Course / Trajectory Analysis because education-to-work transitions and pathways are the analytical focus; Demographic disparities / equity tag because the multi-ethnic society framing makes ethnic comparison central.",
+      "fingerprint": "8be7255e6a8cd65b"
+    },
+    "2025/224": {
+      "substantive_domains": [
+        "Data Infrastructure & Methodology",
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Data Infrastructure & Methodology and Health & Social Care because the project is a Public Health Wales linked data feasibility hub where the linkage infrastructure itself, in a public health context, is the object; Methodological / Infrastructure Research because the operation is testing feasibility of data linkage; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "f3468b21c695d46b"
+    },
+    "2025/227": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care and Education & Skills because the project studies children's social care involvement and its effects on education and health outcomes using the ECHILD linked education-health database; Outcome Tracking because it links a naturally occurring exposure (social care interaction) to downstream education and health outcomes; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "8c30f9629e55c1e4"
+    },
+    "2025/228": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because the Biomedical Catalyst is an innovation/business-support programme analysed with firm-level datasets (Business Structure Database, BERD, Annual Business Survey); Policy Evaluation / Impact Analysis because the title is an explicit impact evaluation of a named programme; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "2b569f70b8d67d6d"
+    },
+    "2025/244": {
+      "substantive_domains": [
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Crime & Justice because intimate partner abuse victimisation is the substantive focus using the Crime Survey for England and Wales; Descriptive Monitoring because the visible operation is measuring the prevalence and characteristics of abuse in a specific population; Demographic disparities / equity tag because the focus on lesbian relationships makes sexual orientation an equality-relevant group central to the question.",
+      "fingerprint": "74cc9ff0f4df36e8"
+    },
+    "2025/246": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking",
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because female labour force participation is the central object studied with census data; Outcome Tracking and Descriptive Monitoring because the project examines origins (drivers of participation and political rights) alongside long-run patterns and dynamics; Demographic disparities / equity tag because gendered participation and women's rights are central to the research question.",
+      "fingerprint": "a04c1fa121cee6ff"
+    },
+    "2025/251": {
+      "substantive_domains": [
+        "Environment & Agriculture",
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Methodological / Infrastructure Research"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Environment & Agriculture and Business & Productivity because the circular economy is an environmental-economic transition studied through firm-level business surveys and trade statistics; Methodological / Infrastructure Research because developing an agent-based modelling approach is the central analytical operation named in the title; no tag because no demographic or pandemic lens is present.",
+      "fingerprint": "7135ada0eef07cd4"
+    },
+    "2025/260": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking",
+        "Service Interaction / Systems Analysis"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Health & Social Care because cancer outcomes, screening, smoking cessation and access to care are the substantive focus; Outcome Tracking and Service Interaction / Systems Analysis because the project links inequalities to cancer outcomes while analysing preventive pathways and access to care services; Demographic disparities / equity tag because inequalities in outcomes and access across population groups, captured via census characteristics, are central to the framing.",
+      "fingerprint": "51b3f771bf7633d3"
+    },
+    "2026/010": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [
+        "Demographic disparities / equity tag"
+      ],
+      "rationale": "Assigned Labour Market & Employment because labour market outcomes are the central object studied via the Annual Population Survey and ONS Longitudinal Study; Outcome Tracking because the design links a naturally occurring exposure (historical deindustrialisation) to labour market outcomes; Demographic disparities / equity tag because the focus on ethnic minority communities makes ethnic comparison central to the question.",
+      "fingerprint": "e41f4de8601e4b27"
+    },
+    "2026/021": {
+      "substantive_domains": [
+        "Education & Skills",
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills and Labour Market & Employment because the project studies education and labour market outcomes using the LEO linked education-earnings data; Policy Evaluation / Impact Analysis because exposure to austerity is a deliberate policy regime whose effects are being estimated; no tag because no demographic-comparison or pandemic lens is evident.",
+      "fingerprint": "ca01871eb92e4121"
+    },
+    "2026/033": {
+      "substantive_domains": [
+        "Poverty, Wealth & Living Standards"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Poverty, Wealth & Living Standards because household spending trade-offs and socio-economic inequalities in consumption using the Living Costs and Food Survey are the substantive focus; Descriptive Monitoring because the project characterises inequalities and spending patterns across households and local accessibility rather than testing a named intervention; no tag because socioeconomic comparison alone does not qualify for the demographic disparities tag.",
+      "fingerprint": "991c737c95e32a5f"
+    },
+    "2026/035": {
+      "substantive_domains": [
+        "Education & Skills"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Education & Skills because demand for English higher education is the substantive object, using LEO data; Outcome Tracking because the project links determinants (e.g. prices, characteristics) to higher education demand and estimates elasticities rather than evaluating a named policy; no tag because no demographic or pandemic lens is central.",
+      "fingerprint": "dd89b18202852a47"
+    },
+    "2026/045": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because living in families with multi-person long-term conditions is a health-centred exposure and the impact on children is the research object; Outcome Tracking because a naturally occurring family health condition is linked to downstream child outcomes using Welsh census data; no tag because no demographic-equity or pandemic framing is evident.",
+      "fingerprint": "c0684209440ad3b6"
+    },
+    "2026/049": {
+      "substantive_domains": [
+        "Business & Productivity"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring",
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity because firm-level services trade performance using business surveys and the Longitudinal Business Database is the substantive object; Descriptive Monitoring and Outcome Tracking because the project both characterises UK services trade performance and analyses its drivers as exposures linked to trade outcomes; no tag because no demographic or pandemic lens applies.",
+      "fingerprint": "6b8681ecf01f14a7"
+    },
+    "2026/053": {
+      "substantive_domains": [
+        "Health & Social Care",
+        "Education & Skills",
+        "Crime & Justice"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care, Education & Skills and Crime & Justice because maternal assault victimisation is the central exposure and children's health and education outcomes are studied through the linked ECHILD (NHS/DfE) database; Outcome Tracking because a naturally occurring exposure (maternal assault) is linked causally to downstream child outcomes; no tag because no demographic-comparison or pandemic lens is central.",
+      "fingerprint": "f2924b5d7e59744b"
+    },
+    "2026/059": {
+      "substantive_domains": [
+        "Business & Productivity",
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Outcome Tracking"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Business & Productivity and Environment & Agriculture because eco-innovation by firms, studied via the UK Innovation Survey, BERD and business structure data, combines firm innovation with environmental outcomes; Outcome Tracking because enablers and barriers are analysed as factors linked to eco-innovation outcomes rather than a named policy evaluation; no tag because no demographic or pandemic lens is evident.",
+      "fingerprint": "8991409293e531f8"
+    },
+    "2026/064": {
+      "substantive_domains": [
+        "Health & Social Care"
+      ],
+      "analytical_purpose": [
+        "Policy Evaluation / Impact Analysis"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Health & Social Care because the outcome studied is health inequalities and wellbeing, using APS well-being data; Policy Evaluation / Impact Analysis because the project evaluates the impact of national local economic growth policies in disadvantaged places; no tag because inequality is framed by place-based disadvantage rather than a demographic or equality-relevant group comparison.",
+      "fingerprint": "429ba4b253ba2567"
+    },
+    "2026/067": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because access to good jobs and workers' labour market outcomes are the substantive focus, using APS and Labour Force Survey data; Descriptive Monitoring because 'who gets the good jobs' indicates profiling the distribution of job quality across workers rather than testing a named intervention; no tag because the register entry does not show that comparison across demographic or equality-relevant groups is central.",
+      "fingerprint": "41c048e22d58bf9a"
+    },
+    "2026/073": {
+      "substantive_domains": [
+        "Labour Market & Employment"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment because the geographical location and characteristics of creative freelancers as a workforce group in rural Wales is the substantive focus, using Census 2021; Descriptive Monitoring because the analysis profiles the location and characteristics of this group to inform policy rather than evaluating an intervention; no tag because no demographic-comparison or pandemic lens is central.",
+      "fingerprint": "669a01a228663ee8"
+    },
+    "2026/083": {
+      "substantive_domains": [
+        "Labour Market & Employment",
+        "Environment & Agriculture"
+      ],
+      "analytical_purpose": [
+        "Descriptive Monitoring"
+      ],
+      "cross_cutting_tags": [],
+      "rationale": "Assigned Labour Market & Employment and Environment & Agriculture because the project examines job quality (wages, conditions, employment characteristics) specifically within the clean energy/low carbon sector, using the Annual Population Survey and the Low Carbon and Renewable Energy Economy Survey; Descriptive Monitoring because the visible operation is to measure and profile the quality of clean energy jobs rather than test an exposure-outcome relationship or evaluate a named policy; no tag because no demographic-comparison or pandemic lens is evident from the title or datasets.",
+      "fingerprint": "558273deda444cb7"
+    }
+  }
+}

@@ -155,8 +155,22 @@ class CurrentRegisterCleaningTests(unittest.TestCase):
         self.assertEqual(len(self.df), 1308)
         self.assertEqual(self.df["Project ID"].nunique(), 1304)
         self.assertEqual(self.df["Record ID"].nunique(), 1308)
+        repeated = self.df["Project ID"].value_counts()
+        self.assertEqual(len(repeated[repeated.eq(2)]), 4)
+        self.assertTrue((repeated <= 2).all())
         self.assertEqual(self.stats["rows_after_duplicate_policy"], 1309)
         self.assertEqual(self.stats["rows_after_duplicate_rulings"], 1308)
+
+    def test_current_record_ids_are_clean_and_collision_free(self):
+        record_ids = self.df["Record ID"].astype("string")
+        self.assertFalse(record_ids.isna().any())
+        self.assertTrue(record_ids.map(lambda value: isinstance(value, str)).all())
+        self.assertTrue(record_ids.eq(record_ids.str.strip()).all())
+        self.assertFalse(
+            record_ids.str.contains(r"[\x00-\x1f\x7f\u00a0]", regex=True).any()
+        )
+        self.assertFalse(record_ids.duplicated().any())
+        self.assertFalse(record_ids.str.strip().duplicated().any())
 
     def test_escaped_carriage_return_artifacts_are_removed(self):
         text_values = self.df.select_dtypes(include=["object"]).fillna("").astype(str)

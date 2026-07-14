@@ -3,16 +3,19 @@
 ## Inventory snapshot
 
 - Inventory date: 2026-07-14
-- Repository root: `/Users/balintstewart/Desktop/ADR_DEA_project`
+- Repository root: `C:\Users\balin\Desktop\ADR_DEA_project`
 - Branch: `main`
-- Commit at pre-flight: `dfd6b2b080fcf6cd9453793a4ff0c80c42bec7b2`
-- Python: 3.12.5
+- Commit at recovery pre-flight: `e1ee9e3f55a9733468395bc90c548e12bde7707f`
+- Python: 3.13.2 (`C:\Users\balin\Desktop\ADR_DEA_project\venv\Scripts\python.exe`)
 - Pre-flight Git status: clean
 - Repository-level instruction files: none found
 
-This was a read-only scientific-artefact inventory. Existing scientific files
-were not edited, no model was called, and no official validation sampling
-operation was run.
+The initial scientific-artefact inventory and forensic search were read-only.
+After the Fable evidence gates passed, an authorised pre-registration
+Record-ID cleaning correction was applied. It changed only the central cleaning
+invariant and current derived Record-ID keys, then regenerated deterministic
+evidence artefacts. The raw source and recovered run caches were not edited, no
+model was called, and no official validation sampling operation was run.
 
 ## Files searched
 
@@ -40,9 +43,10 @@ High-signal locations inspected directly included:
 - repository requirements files, dashboard adjudication tests, methods notes,
   QA reports, and all relevant paths in Git history.
 
-The manifest records 71 artefact rows. Thirty-one existing non-sensitive rows
-have exact SHA-256 hashes, UTC modification times, and the inventory commit.
-Forty missing, prospective, or restricted rows remain unhashed by design.
+The manifest is refreshed after the clean-ID migration. Existing non-sensitive
+rows have exact SHA-256 hashes, UTC modification times, and the verification-time
+repository HEAD; missing, prospective, or restricted rows remain skipped by
+design.
 
 ## Proposed authoritative or current candidates
 
@@ -56,11 +60,13 @@ version-number or timestamp inference.
 | Cleaning | `analysis/register_cleaning.py` | Current implementation produces 1,308 retained rows after reviewed rulings; candidate for final freeze pending cross-document audit. |
 | Duplicate rulings | `analysis/register_duplicate_rulings.yaml` | Governing reviewed rulings for the current release. |
 | Record ID | `assign_record_ids` and reviewed-ruling logic in `analysis/register_cleaning.py` | Current stable synthetic identifier implementation, supported by `analysis/test_record_id_stability.py`. |
-| Cleaned population | No standalone file | The Fable production CSV embeds 1,308 unique Record IDs and 1,304 Project IDs, but a distinct frozen cleaned-register export was not found. |
+| Cleaned population | `preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv` | Frozen deterministic export with 1,308 clean unique Record IDs and 1,304 Project IDs; integrity and whitespace-normalisation audits accompany it. |
 | Taxonomy | `taxonomy_data_dictionary.yaml` | File metadata and design facts agree on dictionary `1.0-rc2` / ontology `v3.4-rc2`. |
 | Prompt implementation | `analysis/llm_theme_analysis_v3.py` | Declares Fable 5 and `dict-1.0-rc2`; the exact prompt is assembled dynamically. No standalone rendered prompt exists. |
 | Production configuration | `analysis/outputs_classified_20260702_fable5/run_metadata.json` | Records Fable 5, prompt/taxonomy `dict-1.0-rc2`, 1,308 records, and a 201-entry seed-cache reference. |
 | Production classifications | `analysis/outputs_classified_20260702_fable5/layer_classifications.csv` | `data/release_pointers.json` targets this run; direct audit confirms 1,308 Record IDs, 1,304 Project IDs, and four doubled Project IDs. |
+| Fable 5 stability evidence | `analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json` and `analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json` | Recovered and verified as the two independent Fable 5 / `dict-1.0-rc2` runs on the same exact 201-record sample. Deterministic recomputation reproduces every reported target. |
+| GPT-5.5 comparison evidence | `analysis/outputs/gpt55_classifications.csv` and current cross-model outputs | Deterministically regenerated offline after key migration; all reported aggregate agreement and disagreement counts are unchanged. |
 
 "Current candidate" does not mean "frozen". The protocol, cleaning bundle,
 prompt rendering, and final package still require a cross-document audit.
@@ -70,9 +76,9 @@ prompt rendering, and final package still require a cross-document audit.
 - `data/dea_accredited_projects_20260325.*` and the legacy
   `data/dea_accredited_projects.csv` are prior snapshots. The register manifest,
   not filename recency, establishes `20260601` as current.
-- `taxonomy_data_dictionary.triage_backup.yaml` is an ignored 1.0/v3.4 backup.
-  It is superseded by the rc2 taxonomy according to both the design facts and
-  current dictionary metadata.
+- `taxonomy_data_dictionary.triage_backup.yaml` was previously inventoried as
+  an ignored 1.0/v3.4 backup but is not present in this checkout. Its manifest
+  row now accurately records it as missing and superseded by the rc2 taxonomy.
 - `analysis/outputs_classified_20260601/layer_classifications.csv` contains
   1,309 records and five doubled official Project IDs. It is superseded by the
   reviewed 1,308-row Fable output.
@@ -96,24 +102,13 @@ prompt rendering, and final package still require a cross-document audit.
 ### Protocol and source freeze
 
 - `Validation_Protocol_PreReg_v4.docx` and final protocol PDF;
-- standalone 1,308-row frozen cleaned register;
-- `instruction_reviewed_duplicate_record_id_report.md`, which is referenced by
-  `METHODS_LOG.md` but absent.
 
 ### Taxonomy, prompt, and pre-existing model evidence
 
 - exact rendered `dict-1.0-rc2` production prompt;
-- both Fable 5 repeatability runs and the exact shared 201-Record-ID manifest;
-- production repeatability report;
-- 1,308-record GPT-5.5 classification output;
-- Fable 5/GPT-5.5 comparison script and verification report;
-- full 380-record post-exclusion hard frame. The design facts specify 182
-  domain-only, 143 purpose-only, 55 both-dimension, and 11 records with an
-  accompanying tag disagreement, but the proving artefact is absent.
 
 ### Exclusions, instruments, and prospective tooling
 
-- final 22-Record-ID v8 exclusion list;
 - official sampling script, sampling tests, and execution checklist;
 - coder handout, trainer guide, and separated pilot exclusion/assignment files;
 - both REDCap dictionaries, codebook, and import template;
@@ -127,6 +122,75 @@ The official active sample manifest, reserve manifest, formal REDCap export,
 final results, and adjudication outputs are intentionally not yet generated.
 Their manifest rows are post-registration placeholders, not missing work to be
 produced in this phase.
+
+## Recovered and verified Fable 5 stability evidence
+
+The pre-existing Fable stability package was recovered and independently
+verified on this Windows checkout at
+`C:\Users\balin\Desktop\ADR_DEA_project`, branch `main`, starting HEAD
+`e1ee9e3f55a9733468395bc90c548e12bde7707f`. No LLM or API call was made.
+
+Authoritative source files:
+
+- Run 1 cache:
+  `analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json`,
+  SHA-256
+  `e888422a3e46f8c3746c8560327e01fdb0e307491363e65a49c86ea78cb79156`;
+- Run 2 cache:
+  `analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json`,
+  SHA-256
+  `77cd247f06b0d966334726e17de858d4b16c4f5bbe67e246b653e007fd676fff`;
+- Run 1 metadata:
+  `analysis/outputs/model_comparison_fable_5_run1/run_metadata.json`,
+  SHA-256
+  `90553e77b8a262bb7ff73668dc3336ab721bbd39650780ed86ac4660d36ace50`;
+- Run 2 metadata:
+  `analysis/outputs/model_comparison_fable_5_run2/run_metadata.json`,
+  SHA-256
+  `e3f7cc0e9ffd38b882c80e52d359d19d50cc1236c20c284716f72acfc76c0426`.
+
+Both cache key sets and the recovered
+`analysis/outputs/model_comparison_sample.csv` contain the same 201 Record
+IDs. Both caches identify model `claude-fable-5`, prompt
+`dict-1.0-rc2`, and cache schema 6. Their run metadata records distinct
+timestamps and 21 disjoint provider response IDs per run.
+
+Exact reproduced metrics:
+
+| Measure | Result |
+| --- | ---: |
+| Research Domain exact-set agreement | 191/201 (95.0%) |
+| Mean Research Domain Jaccard | 0.974295190713 (0.974 displayed) |
+| Analytical Purpose exact-set agreement | 185/201 (92.0%) |
+| Mean Analytical Purpose Jaccard | 0.935323383085 (0.935 displayed) |
+| COVID-19/pandemic tag agreement | 201/201 (100.0%) |
+| Demographic-disparities/equity tag agreement | 197/201 (98.0%) |
+| Joint two-tag agreement | 197/201 (98.0%) |
+| All-component agreement | 171/201 (85.1%) |
+| Invalid or failed classifications | 0 |
+
+Run 1 is the 201-entry seed cache named by the current production metadata.
+All 201 Run 1 classifications now match the corrected 1,308-row production
+output directly. The recovered Run 1 and Run 2 keys were already clean. The
+previous three apparent mappings (`2020/062`, `2021/140`, and `2022/159`) were
+caused solely by boundary whitespace in later canonical IDs. The central
+cleaning correction strips boundary whitespace before Record-ID validation;
+the 16-ID migration is documented in
+`record_id_whitespace_normalisation_audit.csv` and the migration log. Project
+`2023/211` was not in the 201-record comparison sample; its separate reviewed
+duplicate/update collapse remains documented in production provenance.
+
+The raw June source remains byte-identical. The current production hashes differ
+from earlier reference values because the correction changed only 16 Record-ID
+keys; semantic non-ID content digests and all agreement results were verified
+unchanged. Current hashes are recorded in the migration log and manifest.
+
+The complete record manifest, diagnostics, metrics, verification report and
+forensic recovery log are under
+`preregistration/package/03_preexisting_model_evidence/`. The raw caches were
+already in their canonical paths, so no copy was made. Direct cache provenance
+is limited by their formerly ignored/untracked status; tracked production
+metadata committed on 2 July 2026 is the Git provenance anchor.
 
 ## Potentially stale artefacts
 
@@ -178,29 +242,27 @@ README plus empty directories.
 
 1. Supply or identify the actual `Validation_Protocol_PreReg_v4.docx`, then
    approve the final PDF only after collaborator review and cross-document audit.
-2. Recover and identify the two Fable 5 repeatability runs, exact 201-record
-   manifest, and report. Confirm sample composition or seed only from those
-   artefacts or their proving generator.
-3. Recover the GPT-5.5 output, comparison code/report, and exact 380-record hard
-   frame; confirm that the documented 182/143/55 and 11-tag counts reproduce.
-4. Locate the superseded v7 exclusion file and provide or approve the final v8
+2. Locate the superseded v7 exclusion file and provide or approve the final v8
    22-Record-ID artefact. Decide whether v7 should be retained privately or as
    excluded historical provenance.
-5. Decide how to materialise the standalone frozen cleaned register and exact
-   rendered production prompt without rerunning a model.
-6. Decide whether the dirty-worktree deterministic manifest is acceptable
+3. Decide how to materialise the exact rendered production prompt without
+   rerunning a model.
+4. Decide whether the dirty-worktree deterministic manifest is acceptable
    supporting provenance or must be replaced by a clean, portable manifest.
-7. Decide whether the empty production layer summary should be omitted or
+5. Decide whether the empty production layer summary should be omitted or
    replaced by a verified report derived without changing scientific outputs.
-8. Approve the validation-specific sampling, REDCap, analysis, adjudication,
+6. Approve the validation-specific sampling, REDCap, analysis, adjudication,
    log-template, and dependency-lock artefacts before registration and before
    any official sampling.
-9. Confirm access and publication treatment for the trainer guide, Jo-review
+7. Confirm access and publication treatment for the trainer guide, Jo-review
    decision log, active identities, and any restricted hash commitments.
 
 ## Sampling confirmation
 
-No active or reserve sample was drawn or generated. No sample manifest was
-created. `SEED_DRAW = 20260713` is documented only as the future formal seed and
-was not executed against the real frame. No reserve IDs were inspected or
-written, no REDCap export was generated, and formal human coding has not begun.
+No active or reserve validation sample was drawn or generated, and no official
+validation sample manifest was created. The recovered 201-record file is a
+pre-existing model-comparison evidence manifest, not an active or reserve
+validation sample. `SEED_DRAW = 20260713` is documented only as the future
+formal seed and was not executed against the real frame. No reserve IDs were
+inspected or written, no REDCap export was generated, and formal human coding
+has not begun.
