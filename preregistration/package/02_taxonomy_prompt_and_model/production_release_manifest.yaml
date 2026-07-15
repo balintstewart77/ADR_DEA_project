@@ -1,0 +1,88 @@
+release:
+  release_id: dea-validation-production-20260702-fable5-dict-1.0-rc2
+  release_status: frozen_authoritative_phase_3_release
+  generated_at_utc: '2026-07-15T09:43:23.9610240Z'
+  repository_commit: e9d53023417348ad2784e629c855bf8d04f38df8
+  preregistration_phase: 3
+
+source:
+  raw_register_path: data/dea_accredited_projects_20260601.csv
+  raw_register_sha256: fc911d3c2e5cb0ec42ef04b1bfa2822bd3b358558ba8afbfd75b1048dcfe9892
+  raw_register_rows: 1450
+  register_snapshot_date: '2026-06-01'
+  register_manifest_path: data/register_manifest.json
+  source_provenance_path: preregistration/package/01_source_and_cleaning/source_register_provenance.json
+
+cleaning:
+  cleaning_code_path: analysis/register_cleaning.py
+  cleaning_code_sha256: 1d80349057207c75208643d61e1a5df730ca2bb58c37d9ce95dd1fb7c00c3f01
+  duplicate_rulings_path: analysis/register_duplicate_rulings.yaml
+  duplicate_rulings_sha256: b074283b8995ccbeb09a2c15a48d2867994fe8c3d7146ccf07fba59fa3064f73
+  cleaned_register_path: preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv
+  cleaned_register_sha256: a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1
+  cleaned_rows: 1308
+  unique_project_ids: 1304
+  unique_record_ids: 1308
+
+taxonomy:
+  taxonomy_path: taxonomy_data_dictionary.yaml
+  taxonomy_sha256: 7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de
+  taxonomy_version: 1.0-rc2 / v3.4-rc2
+  domain_label_count: 12
+  purpose_label_count: 8
+  cross_cutting_tags:
+    - Demographic disparities / equity tag
+    - COVID-19 & Pandemic
+
+production_model:
+  provider: Anthropic
+  model_identifier: claude-fable-5
+  prompt_version: dict-1.0-rc2
+  cache_schema_version: 6
+  classification_code_path: analysis/llm_theme_analysis_v3.py
+  classification_code_sha256: 51adce65e808290dc7750a15f334fdcb7794f6d426d4aa7dc3edd9e98f460eac
+  output_path: analysis/outputs_classified_20260702_fable5/layer_classifications.csv
+  output_sha256: 6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299
+  run_metadata_path: analysis/outputs_classified_20260702_fable5/run_metadata.json
+  run_metadata_sha256: 0fd030520130542b70c3de719c136d9df6c66147c1bbfaa30108abb16e8671e4
+  row_count: 1308
+  invalid_or_failed_count: 0
+  evidence_fields_visible_to_model:
+    - Title
+    - Datasets Used
+
+preexisting_evidence:
+  fable_run1_cache_path: analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json
+  fable_run1_cache_sha256: e888422a3e46f8c3746c8560327e01fdb0e307491363e65a49c86ea78cb79156
+  fable_run2_cache_path: analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json
+  fable_run2_cache_sha256: 77cd247f06b0d966334726e17de858d4b16c4f5bbe67e246b653e007fd676fff
+  fable_stability_metrics_path: preregistration/package/03_preexisting_model_evidence/fable_run_stability_metrics.json
+  fable_stability_metrics_sha256: 26a1494410b36aa2b05ef52ec74f643cb34dc9f5d5a0f7e35530aac03e6dc975
+  crossmodel_metrics_path: preregistration/package/03_preexisting_model_evidence/fable5_gpt55_metrics.json
+  crossmodel_metrics_sha256: f5aed6afb4f1f80a036b72a7bbeda4e1278c1334ab93cf224472e73257a92532
+  disagreement_frame_path: preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv
+  disagreement_frame_sha256: 965ec169edf87ad49b4293c574dce40c9ccd5bce13fac9941ec293cfad2a2cb9
+
+exclusions:
+  exclusion_csv_path: preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv
+  exclusion_csv_sha256: cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6
+  worked_example_count: 11
+  discussion_count: 1
+  pilot_count: 10
+  total_unique_exclusions: 22
+  exact_membership_check_path: scripts/verify_training_exclusion_membership.py
+  status: exact_membership_verified; exclusion_list_frozen; training_materials_working_candidate_pending_post_pilot_freeze
+
+prospective_boundary:
+  official_sample_drawn: false
+  formal_validation_coding_started: false
+  pilot_precedes_registration: true
+  pilot_excluded_from_analysis: true
+
+notes:
+  limitations:
+    - The production prompt was assembled dynamically by the hashed classifier code from the hashed taxonomy; no separate exact rendered prompt file exists.
+    - The source register manifest stores the LF Git-blob hash while the protected Windows worktree snapshot has the documented CRLF hash.
+  unresolved_post_pilot_items:
+    - Complete the preregistration pilot and collaborator review.
+    - Freeze final coder, trainer, pilot, REDCap and protocol materials only after the pilot and review gates are resolved.

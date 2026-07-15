@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "publisher": "UK Statistics Authority",
+  "register_name": "List of accredited researchers and research projects under the research strand of the Digital Economy Act",
+  "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+  "snapshot_date": "2026-06-01",
+  "retrieval_date": "2026-06-11",
+  "raw_csv_path": "data/dea_accredited_projects_20260601.csv",
+  "raw_csv_sha256": "fc911d3c2e5cb0ec42ef04b1bfa2822bd3b358558ba8afbfd75b1048dcfe9892",
+  "raw_csv_git_blob_sha256": "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d",
+  "raw_row_count": 1450,
+  "raw_columns": [
+    "Project ID",
+    "Title",
+    "Researchers",
+    "Legal Basis",
+    "Datasets Used",
+    "Secure Research Service",
+    "Accreditation Date"
+  ],
+  "register_manifest_path": "data/register_manifest.json",
+  "cleaning_code_path": "analysis/register_cleaning.py",
+  "duplicate_rulings_path": "analysis/register_duplicate_rulings.yaml",
+  "cleaned_register_path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+  "cleaned_register_sha256": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+  "cleaned_row_count": 1308,
+  "unique_project_id_count": 1304,
+  "unique_record_id_count": 1308,
+  "public_access_status": "Publicly downloadable source register; an explicit licence statement is not recorded in the repository.",
+  "notes": [
+    "data/register_manifest.json identifies version 20260601 as current and records the source URL, retrieval date and 1450-row count.",
+    "The register manifest hash is the canonical LF-normalised Git blob. The protected Windows working-tree hash records the byte-identical CSV content with CRLF line endings; replacing CRLF with LF reproduces the Git-blob hash exactly.",
+    "The raw source was not modified during Record-ID normalisation or Phase 3 packaging.",
+    "A deterministic in-memory rerun of the cleaning pipeline reproduced the frozen cleaned CSV exactly."
+  ]
+}

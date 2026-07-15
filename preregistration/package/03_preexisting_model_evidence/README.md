@@ -25,3 +25,7 @@ upstream cleaning defect had introduced boundary whitespace into 16 later
 canonical IDs; it was corrected offline in the cleaned register and current
 derived outputs. No model call or classification rerun occurred, and neither
 recovered run cache was modified.
+
+The verified stability and cross-model artefacts are hash-linked into
+`../02_taxonomy_prompt_and_model/production_release_manifest.yaml` and form the
+frozen pre-existing-evidence component of the completed Phase 3 release.

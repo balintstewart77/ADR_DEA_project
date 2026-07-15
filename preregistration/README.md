@@ -13,7 +13,11 @@ artefact.
 
 - `Validation_Protocol_PreReg_v4.docx` is the current protocol review candidate,
   but it is not present in this repository and has not been finally frozen.
-- Preparatory artefacts and templates are still being constructed and audited.
+- Phase 3 is complete: the source, cleaned population, taxonomy/production
+  classification release, pre-existing model evidence and exact exclusions are
+  frozen and tied together by a machine-readable release manifest.
+- Protocol, training, REDCap and other prospective validation artefacts remain
+  absent or working candidates pending collaborator review and the pilot.
 - No official active or reserve sample has been drawn.
 - Formal human coding has not begun.
 - Nothing in this workspace has been uploaded to OSF.
@@ -28,14 +32,16 @@ not official Project ID.
 - `package/00_protocol/`: reviewed protocol source and final registration PDF.
 - `package/01_source_and_cleaning/`: source snapshot, cleaning/versioning
   evidence, duplicate rulings, Record-ID procedure, and frozen cleaned register.
-- `package/02_taxonomy_prompt_and_model/`: frozen taxonomy, rendered production
-  prompt, production configuration, and production classifications.
+- `package/02_taxonomy_prompt_and_model/`: frozen taxonomy, production prompt
+  implementation/version, production configuration, classifications and the
+  Phase 3 production release manifest.
 - `package/03_preexisting_model_evidence/`: model repeatability and GPT-5.5
   comparison evidence that predates registration.
 - `package/04_exclusions_and_sampling/`: final v8 exclusions and frozen sampling
   code, tests, and execution checklist; never operational reserve IDs.
 - `package/05_training_and_pilot/`: current coder/trainer handouts, pilot/debrief
-  reference, and machine-checked teaching/pilot membership; no blinded assignments.
+  reference, structured record manifest, and machine-checked teaching/pilot
+  membership; no blinded assignments.
 - `package/06_redcap/`: data dictionaries, codebook, and import templates; no
   formal exports or personal contact data.
 - `package/07_analysis/`: prospective confirmatory analysis code and dependency
@@ -50,6 +56,11 @@ The numbered package folders currently contain scope READMEs, not frozen copies
 of the proposed artefacts. Proposed destinations are recorded in
 `preregistration_artifact_manifest.csv`; copying is deferred until authority and
 completeness decisions are resolved.
+
+Phase 3 follows this reference-based convention. Exact current paths and hashes
+are recorded in
+`package/02_taxonomy_prompt_and_model/production_release_manifest.yaml`; no
+parallel authoritative copies were created.
 
 ## 4. Public, restricted and post-registration materials
 
@@ -159,10 +170,13 @@ a separately approved commitment procedure is adopted.
 
 The manifest distinguishes authoritative, candidate, supporting, superseded,
 ambiguous, and missing artefacts. A higher version number or later timestamp is
-not, by itself, evidence of authority. Files are not frozen until collaborator
-protocol review and a final cross-document consistency audit are complete.
-After registration, changes require a new version; substantive changes also
-require a preregistration amendment recorded under `post_registration/amendments/`.
+not, by itself, evidence of authority. Phase 3 source, cleaning, production and
+pre-existing-evidence artefacts are frozen only after their completed offline
+cross-document audit. Protocol, teaching, REDCap and other prospective
+materials are not finally frozen until their collaborator-review and pilot
+gates are complete. After registration, changes require a new version;
+substantive changes also require a preregistration amendment recorded under
+`post_registration/amendments/`.
 
 The v7 training/pilot exclusion file is superseded by design and must never be
 labelled as the final exclusion set. The current v8 list contains 22 unique
@@ -189,18 +203,23 @@ The intended mapping, to be performed only after explicit approval, is:
 
 This phase performs no OSF operation and uploads nothing.
 
-## 11. Known unresolved artefacts
+## 11. Phase 3 completion and unresolved artefacts
 
-The detailed inventory is in `inventory_report.md`. The frozen cleaned register,
-Fable 5 run-to-run package, and current Fable 5/GPT-5.5 comparison package have
-been deterministically verified offline. A 16-ID boundary-whitespace defect in
-the previous cleaned population was corrected before registration without
-changing the raw source or any classification content. Major unresolved items
-are the absent protocol candidate and final PDF; absent standalone rendered
-prompt; official validation sampling, training, REDCap, analysis, and
-adjudication materials; and uncertain provenance for the deterministic manifest
-because it records a dirty generating worktree. No official active or reserve
-validation sample manifests exist, as expected at this stage.
+The detailed inventory and `phase_3_completion_report.md` record the completed
+offline Phase 3 audit. The frozen cleaned register, production classification,
+Fable 5 run-to-run package, current Fable 5/GPT-5.5 comparison package and exact
+22-record exclusions reproduce and are hash-linked in the production release
+manifest. A 16-ID boundary-whitespace defect in the previous cleaned population
+was corrected before registration without changing the raw source or any
+classification content.
+
+The exact production prompt is dynamically assembled by the hashed classifier
+code from the hashed taxonomy; no separate rendered prompt file exists. This is
+an explicit packaging limitation, not an unresolved production identity.
+Remaining work concerns the absent/future protocol, pilot and training freeze,
+REDCap, official sampling, prospective analysis, adjudication and log-template
+artefacts. No official active or reserve validation sample manifests exist, as
+expected at this stage.
 
 ## 12. How to update the manifest
 

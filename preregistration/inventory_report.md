@@ -2,13 +2,30 @@
 
 ## Inventory snapshot
 
-- Inventory date: 2026-07-14
+- Inventory date: 2026-07-15
 - Repository root: `C:\Users\balin\Desktop\ADR_DEA_project`
 - Branch: `main`
 - Commit at recovery pre-flight: `e1ee9e3f55a9733468395bc90c548e12bde7707f`
 - Python: 3.13.2 (`C:\Users\balin\Desktop\ADR_DEA_project\venv\Scripts\python.exe`)
 - Pre-flight Git status: clean
 - Repository-level instruction files: none found
+
+## Phase 3 completion update
+
+An offline completion audit at branch `main`, commit
+`e9d53023417348ad2784e629c855bf8d04f38df8`, verified the complete source,
+cleaning, production-classification and pre-existing-evidence release. The raw
+source and recovered Fable caches retained their protected hashes; a fresh
+in-memory cleaning run reproduced the frozen 1,308-row population exactly; the
+production output aligned one-to-one and label-for-label with the cleaned
+register and frozen taxonomy; Fable stability, cross-model metrics and exact
+22-record exclusions all reproduced.
+
+Phase 3 added machine-readable source provenance, a hash-tied production
+release manifest, a 22-row structured training-material record manifest, and
+`phase_3_completion_report.md`. The reference-based package convention was
+preserved, so no competing copies of canonical source or production files were
+created. No sample, assignment or formal coding data was generated.
 
 The initial scientific-artefact inventory and forensic search were read-only.
 After the Fable evidence gates passed, an authorised pre-registration
@@ -58,19 +75,20 @@ version-number or timestamp inference.
 | --- | --- | --- |
 | Protocol | `Validation_Protocol_PreReg_v4.docx` | Named current review candidate, but missing. It is not frozen. |
 | Source | `data/dea_accredited_projects_20260601.xlsx` and matching CSV | `data/register_manifest.json` explicitly points to version `20260601` as current. |
-| Cleaning | `analysis/register_cleaning.py` | Current implementation produces 1,308 retained rows after reviewed rulings; candidate for final freeze pending cross-document audit. |
+| Cleaning | `analysis/register_cleaning.py` | Frozen authoritative Phase 3 implementation; an in-memory rerun reproduced the packaged 1,308-row cleaned population exactly. |
 | Duplicate rulings | `analysis/register_duplicate_rulings.yaml` | Governing reviewed rulings for the current release. |
 | Record ID | `assign_record_ids` and reviewed-ruling logic in `analysis/register_cleaning.py` | Current stable synthetic identifier implementation, supported by `analysis/test_record_id_stability.py`. |
 | Cleaned population | `preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv` | Frozen deterministic export with 1,308 clean unique Record IDs and 1,304 Project IDs; integrity and whitespace-normalisation audits accompany it. |
 | Taxonomy | `taxonomy_data_dictionary.yaml` | File metadata and design facts agree on dictionary `1.0-rc2` / ontology `v3.4-rc2`. |
-| Prompt implementation | `analysis/llm_theme_analysis_v3.py` | Declares Fable 5 and `dict-1.0-rc2`; the exact prompt is assembled dynamically. No standalone rendered prompt exists. |
+| Prompt implementation | `analysis/llm_theme_analysis_v3.py` | Frozen production classifier and dynamic prompt implementation declaring Fable 5 and `dict-1.0-rc2`; hash-tied to the taxonomy and run metadata. No standalone rendered prompt exists. |
 | Production configuration | `analysis/outputs_classified_20260702_fable5/run_metadata.json` | Records Fable 5, prompt/taxonomy `dict-1.0-rc2`, 1,308 records, and a 201-entry seed-cache reference. |
 | Production classifications | `analysis/outputs_classified_20260702_fable5/layer_classifications.csv` | `data/release_pointers.json` targets this run; direct audit confirms 1,308 Record IDs, 1,304 Project IDs, and four doubled Project IDs. |
 | Fable 5 stability evidence | `analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json` and `analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json` | Recovered and verified as the two independent Fable 5 / `dict-1.0-rc2` runs on the same exact 201-record sample. Deterministic recomputation reproduces every reported target. |
 | GPT-5.5 comparison evidence | `analysis/outputs/gpt55_classifications.csv` and current cross-model outputs | Deterministically regenerated offline after key migration and the canonical equity-tag repair; domain/purpose aggregates and disagreement frame are unchanged, while equity-tag facets now correctly report 45 mismatches. |
 
-"Current candidate" does not mean "frozen". The protocol, cleaning bundle,
-prompt rendering, and final package still require a cross-document audit.
+The source/cleaning and production release passed the Phase 3 cross-document
+audit. "Current candidate" still does not mean "frozen" for the protocol,
+training materials, REDCap instruments or other post-pilot artefacts.
 
 ## Duplicate and superseded versions
 
@@ -107,7 +125,9 @@ prompt rendering, and final package still require a cross-document audit.
 
 ### Taxonomy, prompt, and pre-existing model evidence
 
-- exact rendered `dict-1.0-rc2` production prompt;
+- no standalone rendered `dict-1.0-rc2` production prompt exists; the exact
+  dynamic implementation, taxonomy and version are now hash-tied in the Phase
+  3 release manifest and this does not block production reproducibility;
 
 ### Exclusions, instruments, and prospective tooling
 
@@ -246,12 +266,11 @@ README plus empty directories.
 
 1. Supply or identify the actual `Validation_Protocol_PreReg_v4.docx`, then
    approve the final PDF only after collaborator review and cross-document audit.
-2. Locate the superseded v7 exclusion file and provide or approve the final v8
-   22-Record-ID artefact. Decide whether v7 should be retained privately or as
-   excluded historical provenance.
-3. Decide how to materialise the exact rendered production prompt without
-   rerunning a model.
-4. Decide whether the dirty-worktree deterministic manifest is acceptable
+2. Decide whether the missing superseded v7 exclusion file should be recovered
+   for historical retention; authoritative v8 is present and verified.
+3. Decide whether a standalone rendering of the dynamically assembled
+   production prompt is desirable for final package presentation.
+4. Decide whether the dirty-worktree deterministic register-properties manifest is acceptable
    supporting provenance or must be replaced by a clean, portable manifest.
 5. Decide whether the empty production layer summary should be omitted or
    replaced by a verified report derived without changing scientific outputs.

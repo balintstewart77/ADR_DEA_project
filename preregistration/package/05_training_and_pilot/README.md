@@ -13,3 +13,9 @@ the DOCX files and requires exact equality with v8: 11 keyed worked examples,
 one unkeyed discussion case, and ten pilot records (22 unique clean Record
 IDs). The current verified P4, P7, and T1 IDs are respectively `2025/039`,
 `2025/251`, and `2021/113`.
+
+`training_material_record_manifest.csv` provides one row per unique exclusion,
+including semicolon-delimited repeated card appearances, material role, keyed
+status, document sections and exclusion status. It has exactly 22 rows and is a
+verified working candidate pending the post-pilot freeze; creating it does not
+freeze or alter the coder, trainer or pilot documents.
