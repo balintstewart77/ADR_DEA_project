@@ -1,0 +1,74 @@
+release:
+  specification_version: sampling-1.0-rc1
+  status: working_candidate_pending_gate_1_freeze
+  generated_at_utc: "2026-07-15T10:38:44.7179641Z"
+  repository_commit: c34f963ed404c29ac299ac2b0f82f0bb5bf2bc05
+  preregistration_phase: 4
+  python_version: 3.13.2
+  numpy_version: 2.2.5
+  pandas_version: 2.2.3
+inputs:
+  cleaned_population_path: preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv
+  cleaned_population_sha256: a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1
+  cleaned_population_rows: 1308
+  exclusion_path: preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv
+  exclusion_sha256: cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6
+  exclusion_count: 22
+  disagreement_frame_path: preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv
+  disagreement_frame_sha256: 965ec169edf87ad49b4293c574dce40c9ccd5bce13fac9941ec293cfad2a2cb9
+  disagreement_frame_rows: 380
+randomisation:
+  master_seed: 20260713
+  bit_generator: numpy.random.PCG64
+  stable_input_sort: clean Record ID ascending before every random choice
+  draw_order:
+    - baseline_active
+    - baseline_reserve
+    - hard_active_domain_only_random_fill_after_forced_cases
+    - hard_active_purpose_only_random_fill_after_forced_cases
+    - hard_active_both_random_fill_after_forced_cases
+    - hard_reserve_sixteen_seat_stratum
+    - hard_reserve_reallocation_tie_order
+    - hard_reserve_domain_only
+    - hard_reserve_purpose_only
+    - hard_reserve_both
+  tie_breaking_method: one PCG64 permutation of domain_only, purpose_only and both, consumed after selection of the 16-seat stratum
+baseline:
+  active_n: 150
+  reserve_n: 100
+  sampling_method: simple random sampling without replacement
+  replacement: false
+hard_active:
+  total_n: 75
+  domain_only_n: 25
+  purpose_only_n: 25
+  both_n: 25
+  accompanying_tag_rule: Every post-baseline eligible accompanying-tag disagreement is forced into active hard within its existing stratum quota; overflow is fatal.
+hard_reserve:
+  target_n: 50
+  initial_allocation:
+    seat_counts: [17, 17, 16]
+    strata: [domain_only, purpose_only, both]
+  sixteen_seat_selection_rule: PCG64 selects one of the three strata after hard-active filling.
+  active_priority: Active hard quotas of 25 per stratum are filled before any reserve seat.
+  fallback_reallocation_rule: Cap each initial quota at availability, then distribute shortfall one seat per eligible stratum in the seed-governed tie order until filled or capacity is exhausted.
+  overall_shortfall_rule: Return the largest valid reserve and record target minus actual rows; never fabricate records.
+assertions:
+  excluded_ids_absent: true
+  no_replacement: true
+  unique_ids: true
+  active_reserve_disjoint: true
+  hard_stratum_validity: true
+  forced_tag_inclusion: true
+  expected_columns: true
+  clean_record_ids: true
+prospective_boundary:
+  official_draw_executed: false
+  official_sample_exists: false
+  draw_requires_registration: true
+  draw_requires_gate_2: true
+  real_seed_forbidden_in_tests: true
+embargo:
+  active_identity_release: Restricted after draw; release only after initial independent coding is complete and remaining blinded work cannot be compromised.
+  reserve_identity_release: Embargoed until reserve retesting is complete or the reserve is formally retired unused; reserve strata and ranks follow the same embargo.
+  permitted_public_metadata: Aggregate counts, strata, code, specification, seed, input hashes, software environment, schema and runbook, without sampled identities.

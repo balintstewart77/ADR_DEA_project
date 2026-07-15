@@ -216,12 +216,33 @@ classification content.
 The exact production prompt is dynamically assembled by the hashed classifier
 code from the hashed taxonomy; no separate rendered prompt file exists. This is
 an explicit packaging limitation, not an unresolved production identity.
-Remaining work concerns the absent/future protocol, pilot and training freeze,
-REDCap, official sampling, prospective analysis, adjudication and log-template
-artefacts. No official active or reserve validation sample manifests exist, as
-expected at this stage.
+Remaining work concerns the future protocol, pilot and training freeze,
+REDCap, Gate 1/Gate 2 execution, prospective analysis, adjudication and
+log-template artefacts. No official active or reserve validation sample
+manifests exist, as expected at this stage.
 
-## 12. How to update the manifest
+## 12. Phase 4 sampling-system completion
+
+Phase 4 produced a deterministic, test-covered sampling engine without drawing
+the official sample. Its machine-readable specification fixes the PCG64 RNG,
+stable Record-ID sorting, exact generator-consumption order, 150/100 baseline
+allocation, 25/25/25 active hard allocation, forced accompanying-tag rule and
+17/17/16 hard-reserve fallback. The official seed is recorded but tests use
+only non-official seeds.
+
+The engine has separate `--check` and `--validate-real-inputs` paths that do not
+instantiate an RNG or write files. The latter verified the frozen 1,308-row
+population, exact 22 exclusions and 380-row disagreement frame (182
+domain-only, 143 purpose-only, 55 both; 11 accompanying-tag cases). Official
+mode requires registration and Gate 2 receipt evidence, hash and commit
+agreement, a clean worktree, restricted empty output storage and a typed token.
+
+At registration, the code, specification, seed, hashes, environment, output
+schema and runbook may be archived publicly. Actual sampled identities do not
+exist yet. Future active and reserve identities remain restricted under the
+embargo in the specification and runbook. See `phase_4_completion_report.md`.
+
+## 13. How to update the manifest
 
 From the repository root, check hashes and provenance without writing:
 

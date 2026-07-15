@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dea-validation-sampling-output-schema-1.0-rc1",
+  "title": "Future restricted DEA validation sampling outputs",
+  "description": "Schema for outputs created only after registration and Gate 2. This file contains no sample identities.",
+  "type": "object",
+  "required": ["files", "record_fields", "metadata_fields", "embargo"],
+  "properties": {
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseline_active", "baseline_reserve", "hard_active", "hard_reserve", "combined_manifest", "metadata", "assertion_report"],
+      "properties": {
+        "baseline_active": {"const": "baseline_active.csv"},
+        "baseline_reserve": {"const": "baseline_reserve.csv"},
+        "hard_active": {"const": "hard_active.csv"},
+        "hard_reserve": {"const": "hard_reserve.csv"},
+        "combined_manifest": {"const": "combined_sampling_manifest.csv"},
+        "metadata": {"const": "sampling_metadata.json"},
+        "assertion_report": {"const": "sampling_assertion_report.json"}
+      }
+    },
+    "record_fields": {
+      "const": ["record_id", "official_project_id", "sample_family", "sample_status", "hard_case_stratum", "accompanying_tag_disagreement", "forced_into_active_hard", "draw_stage", "draw_rank", "validation_included", "source_population_version", "sampling_specification_version"]
+    },
+    "record_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "record_id": {"type": "string", "pattern": "^[0-9]{4}/[0-9]{3}((/[a-z]+)|( CLOSED))?$"},
+        "sample_family": {"enum": ["baseline", "hard_case"]},
+        "sample_status": {"enum": ["active", "reserve"]},
+        "hard_case_stratum": {"enum": ["", "domain_only", "purpose_only", "both"]},
+        "accompanying_tag_disagreement": {"type": "boolean"},
+        "forced_into_active_hard": {"type": "boolean"},
+        "draw_rank": {"type": "integer", "minimum": 1},
+        "validation_included": {"const": "yes"}
+      }
+    },
+    "metadata_fields": {
+      "const": ["timestamp", "repository_commit", "input_paths", "input_hashes", "specification_path", "specification_hash", "master_seed", "rng", "bit_generator", "python_version", "numpy_version", "pandas_version", "eligible_population_count", "exclusion_count", "pre_baseline_hard_stratum_counts", "post_baseline_hard_stratum_counts", "forced_accompanying_tag_counts", "initial_hard_reserve_allocation", "hard_reserve_sixteen_seat_stratum", "hard_reserve_reallocation_tie_order", "hard_reserve_availability", "hard_reserve_fallback_actions", "final_hard_reserve_allocation", "hard_reserve_unfilled_shortfall", "output_row_counts", "output_hashes", "assertions"]
+    },
+    "embargo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["active_identities", "reserve_identities", "public_metadata"],
+      "properties": {
+        "active_identities": {"const": "restricted_until_initial_independent_coding_complete_and_blinding_safe"},
+        "reserve_identities": {"const": "restricted_until_retesting_complete_or_reserve_retired"},
+        "public_metadata": {"const": "aggregate_counts_and_strata_only"}
+      }
+    }
+  },
+  "additionalProperties": false
+}

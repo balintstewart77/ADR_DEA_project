@@ -27,6 +27,22 @@ release manifest, a 22-row structured training-material record manifest, and
 preserved, so no competing copies of canonical source or production files were
 created. No sample, assignment or formal coding data was generated.
 
+## Phase 4 completion update
+
+At branch `main`, audited HEAD `c34f963ed404c29ac299ac2b0f82f0bb5bf2bc05`,
+Phase 4 added the official sampling engine, a machine-readable sampling
+specification, an identity-free output schema, a concise execution runbook and
+32 synthetic/safety tests. The engine uses stable Record-ID ordering and
+`numpy.random.Generator(PCG64)`, and implements the complete baseline,
+accompanying-tag, active-hard and reserve-fallback design.
+
+The canonical real inputs were validated in a no-RNG, no-write path: 1,308
+cleaned records, 22 exclusions, and 380 hard cases split 182/143/55, including
+11 accompanying-tag disagreements. Official execution remains blocked behind
+registration-receipt, Gate 2, frozen-commit, clean-worktree, hash, restricted
+output and typed-token guards. No real Record ID was randomly ranked or
+selected and no active, reserve or assignment file exists.
+
 The initial scientific-artefact inventory and forensic search were read-only.
 After the Fable evidence gates passed, an authorised pre-registration
 Record-ID cleaning correction was applied. It changed only the central cleaning
@@ -131,7 +147,8 @@ training materials, REDCap instruments or other post-pilot artefacts.
 
 ### Exclusions, instruments, and prospective tooling
 
-- official sampling script, sampling tests, and execution checklist;
+- final Gate 1 freeze of the now-tested sampling engine, specification, schema
+  and runbook; the official draw remains a post-registration Gate 2 operation;
 - restricted trainer guide and blinded pilot-assignment files;
 - both REDCap dictionaries, codebook, and import template;
 - validation analysis script and exact dependency lockfile;
