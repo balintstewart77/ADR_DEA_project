@@ -1,0 +1,23 @@
+variable,taxonomy_layer,canonical_label,choice_code,proposed_label_flag,fit_field,evidence_visibility_field,missing_label_field
+d01,domain,Labour Market & Employment,1,prop_d01,po_d01_fit,po_d01_vis,po_miss_domains
+d02,domain,Education & Skills,2,prop_d02,po_d02_fit,po_d02_vis,po_miss_domains
+d03,domain,Health & Social Care,3,prop_d03,po_d03_fit,po_d03_vis,po_miss_domains
+d04,domain,Crime & Justice,4,prop_d04,po_d04_fit,po_d04_vis,po_miss_domains
+d05,domain,Business & Productivity,5,prop_d05,po_d05_fit,po_d05_vis,po_miss_domains
+d06,domain,"Poverty, Wealth & Living Standards",6,prop_d06,po_d06_fit,po_d06_vis,po_miss_domains
+d07,domain,Housing & Planning,7,prop_d07,po_d07_fit,po_d07_vis,po_miss_domains
+d08,domain,Migration & Demographics,8,prop_d08,po_d08_fit,po_d08_vis,po_miss_domains
+d09,domain,Environment & Agriculture,9,prop_d09,po_d09_fit,po_d09_vis,po_miss_domains
+d10,domain,Public Finance & Taxation,10,prop_d10,po_d10_fit,po_d10_vis,po_miss_domains
+d11,domain,Data Infrastructure & Methodology,11,prop_d11,po_d11_fit,po_d11_vis,po_miss_domains
+d12,domain,Unclear from Register Entry,12,prop_d12,po_d12_fit,po_d12_vis,po_miss_domains
+p01,purpose,Descriptive Monitoring,1,prop_p01,po_p01_fit,po_p01_vis,po_miss_purposes
+p02,purpose,Outcome Tracking,2,prop_p02,po_p02_fit,po_p02_vis,po_miss_purposes
+p03,purpose,Life-Course / Trajectory Analysis,3,prop_p03,po_p03_fit,po_p03_vis,po_miss_purposes
+p04,purpose,Service Interaction / Systems Analysis,4,prop_p04,po_p04_fit,po_p04_vis,po_miss_purposes
+p05,purpose,Policy Evaluation / Impact Analysis,5,prop_p05,po_p05_fit,po_p05_vis,po_miss_purposes
+p06,purpose,Risk Prediction / Early Identification,6,prop_p06,po_p06_fit,po_p06_vis,po_miss_purposes
+p07,purpose,Methodological / Infrastructure Research,7,prop_p07,po_p07_fit,po_p07_vis,po_miss_purposes
+p08,purpose,Unclear from Register Entry,8,prop_p08,po_p08_fit,po_p08_vis,po_miss_purposes
+t01,tag,Demographic disparities / equity tag,1,prop_t01,po_t01_fit,po_t01_vis,po_miss_tags
+t02,tag,COVID-19 & Pandemic,2,prop_t02,po_t02_fit,po_t02_vis,po_miss_tags

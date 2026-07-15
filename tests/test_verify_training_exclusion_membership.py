@@ -11,6 +11,15 @@ from scripts import verify_training_exclusion_membership as membership
 KEYED = {"A1": "2019/004", "A2": "2020/021", "A3": "2024/019", "P2": "2022/073", "P4": "2025/039", "P5": "2022/042", "P6": "2021/065", "P7": "2025/251", "T1": "2021/113", "T3": "2021/007", "I1": "2020/003"}
 DISCUSSION = {"I2": "2022/090"}
 PILOTS = {"1": "2019/015", "2": "2021/038", "3": "2021/063", "4": "2021/103", "5": "2022/130", "6": "2024/248", "7": "2021/056", "8": "2022/034", "9": "2025/181", "10": "2025/027"}
+CORRECT_BLINDING = (
+    "assignment_id Visible: neutral opaque code identifying this assignment, e.g. A7K3M9Q2. "
+    "project_title Visible, read-only: public register project title. "
+    "datasets_used Visible, read-only: public register datasets-used entry. "
+    "reviewer_id / coder_id Hidden: administrative reviewer linkage. "
+    "record_id Hidden: stable source-record linkage. "
+    "official_project_id Hidden: official register identifier. "
+    "sample and stratum fields Hidden: sampling administration."
+)
 
 
 def make_docx(path: Path, cards: dict[str, str], discussion: dict[str, str], pilots: dict[str, str], summary: bool) -> None:
@@ -22,6 +31,7 @@ def make_docx(path: Path, cards: dict[str, str], discussion: dict[str, str], pil
     if summary:
         ids = ", ".join([*cards.values(), *discussion.values(), *pilots.values()])
         parts += ['<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>Exclusion set</w:t></w:r></w:p>', f'<w:p><w:r><w:t>IDs: {ids}</w:t></w:r></w:p>']
+    parts += [f'<w:p><w:r><w:t>{CORRECT_BLINDING}</w:t></w:r></w:p>']
     xml = '<?xml version="1.0" encoding="UTF-8"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + "".join(parts) + '<w:sectPr/></w:body></w:document>'
     with zipfile.ZipFile(path, "w") as archive:
         archive.writestr("word/document.xml", xml)
@@ -96,6 +106,28 @@ class MembershipTests(unittest.TestCase):
         write_csv(self.csv, whitespace=True)
         with self.assertRaisesRegex(membership.MembershipError, "boundary-whitespace"):
             self.check()
+
+
+class CoderBlindingTests(unittest.TestCase):
+    def test_corrected_materials_pass(self) -> None:
+        membership.verify_coder_blinding_text(CORRECT_BLINDING)
+
+    def test_prohibited_encoded_assignment_example_fails(self) -> None:
+        with self.assertRaisesRegex(membership.MembershipError, "prohibited encoded assignment"):
+            membership.verify_coder_blinding_text(CORRECT_BLINDING + " baseline_C02_2024_123")
+
+    def test_visible_record_id_language_fails(self) -> None:
+        text = CORRECT_BLINDING.replace("record_id Hidden: stable source-record linkage", "record_id Visible: DEA project ID")
+        with self.assertRaisesRegex(membership.MembershipError, "source Record ID described as visible"):
+            membership.verify_coder_blinding_text(text)
+
+    def test_visible_coder_id_language_fails(self) -> None:
+        text = CORRECT_BLINDING.replace("reviewer_id / coder_id Hidden: administrative reviewer linkage", "coder_id Visible: your anonymised coder ID reviewer_id / coder_id Hidden")
+        with self.assertRaisesRegex(membership.MembershipError, "coder/reviewer ID described as visible"):
+            membership.verify_coder_blinding_text(text)
+
+    def test_neutral_assignment_language_passes(self) -> None:
+        membership.verify_coder_blinding_text(CORRECT_BLINDING.replace("A7K3M9Q2", "Q4N8Z2L7"))
 
 
 if __name__ == "__main__":

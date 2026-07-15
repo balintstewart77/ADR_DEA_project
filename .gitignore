@@ -157,6 +157,9 @@ analysis/ari_exploration/ari_questions_*.csv
 /preregistration_restricted/
 /preregistration/post_registration/redcap_exports/*
 !/preregistration/post_registration/redcap_exports/.gitkeep
+.env
+.env.*
+*.redcap-token
 
 # Preserve the two preregistered Fable 5 stability source caches and metadata.
 !analysis/outputs/model_comparison_fable_5_run1/

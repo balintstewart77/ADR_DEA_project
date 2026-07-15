@@ -1,0 +1,373 @@
+fixture_status: synthetic_only
+contains_real_record_ids: false
+cases:
+- case_id: sc_01_ordinary
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: &id002
+    - 1
+    sc_purposes: &id001
+    - 1
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+- case_id: sc_02_multi_domain
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains:
+    - 1
+    - 2
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+- case_id: sc_03_two_purpose
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes:
+    - 1
+    - 2
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+- case_id: sc_04_unclear_domain
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains:
+    - 12
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+- case_id: sc_05_unclear_conflict
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains:
+    - 1
+    - 12
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+- case_id: sc_06_three_purpose
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes:
+    - 1
+    - 2
+    - 3
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+- case_id: sc_07_partial_note
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 2
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+    sc_note: Public entry gives only partial evidence.
+- case_id: sc_08_insufficient_note
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 3
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+    sc_note: The analytical operation is not visible.
+- case_id: sc_09_low_confidence
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 3
+    sc_note: A rule boundary remains uncertain.
+- case_id: sc_10_taxonomy_issue
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 2
+    sc_note: Two categories overlap.
+- case_id: sc_11_exposure
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 1
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+    sc_exposure_note: Unexpected non-permitted context was visible.
+    sc_note: Exposure was reported.
+- case_id: sc_12_incomplete_core
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+- case_id: po_13_all_fit
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+- case_id: po_14_not_fit
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 2
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_note: The proposed domain does not fit.
+- case_id: po_15_unsure
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 3
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_note: I am unsure.
+- case_id: po_16_basis_not_visible
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 3
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_note: The basis is not public.
+- case_id: po_17_missing_domain
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 1
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_miss_domains:
+    - 2
+    po_note: Education is missing.
+- case_id: po_18_missing_purpose
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 1
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_miss_purposes:
+    - 2
+    po_note: Outcome tracking is missing.
+- case_id: po_19_missing_tag
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 1
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_miss_tags:
+    - 1
+    po_note: The equity tag is missing.
+- case_id: po_20_taxonomy_concern
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 2
+    po_tax_issue:
+    - 1
+    po_note: A category is missing.
+- case_id: po_21_owner_a
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+- case_id: po_21_owner_b
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: R5T9X3C8
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-B
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+- case_id: po_22_contradiction
+  stream: owner
+  expected_valid: false
+  data:
+    assignment_id: Q4N8Z2L7
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 1
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_miss_domains:
+    - 1
+    po_note: Contradictory synthetic case.

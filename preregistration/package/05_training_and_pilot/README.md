@@ -19,3 +19,12 @@ including semicolon-delimited repeated card appearances, material role, keyed
 status, document sections and exclusion status. It has exactly 22 rows and is a
 verified working candidate pending the post-pilot freeze; creating it does not
 freeze or alter the coder, trainer or pilot documents.
+
+On 15 July 2026 the coder handout received a narrow pre-pilot administrative
+correction: its REDCap table now uses an opaque visible assignment code and
+explicitly marks reviewer/source IDs, sampling metadata, and model/comparison
+metadata as hidden. The protocol, teaching examples, answer content, taxonomy
+rules, and exact 22-record membership were unchanged. The trainer and
+pilot/debrief DOCX files did not contain the stale text and required no edit.
+The checker now enforces this blinding description across all Word XML parts.
+The handouts remain working candidates pending the pilot.

@@ -242,7 +242,22 @@ schema and runbook may be archived publicly. Actual sampled identities do not
 exist yet. Future active and reserve identities remain restricted under the
 embargo in the specification and runbook. See `phase_4_completion_report.md`.
 
-## 13. How to update the manifest
+## 13. Phase 5 REDCap candidate
+
+Phase 5 resolved a stale coder-handout blinding table in favour of the protocol:
+visible assignment IDs are opaque, while reviewer/source IDs and all sampling,
+model, comparison, reserve, and other-response metadata are hidden. No teaching
+answer or exclusion ID changed.
+
+Package 06 now contains a locally validated candidate for one REDCap project
+with hidden administration, scratch-coder, and project-owner instruments. The
+dictionary is generated from the frozen taxonomy, and its branching,
+assignment-import, export, blinding, and synthetic-response rules are checked
+offline. No formal assignment or response exists. Live import, user-rights,
+action-tag, rendering, routing, and export QA remain mandatory before the
+excluded pilot; the candidate is not frozen.
+
+## 14. How to update the manifest
 
 From the repository root, check hashes and provenance without writing:
 

@@ -1,0 +1,156 @@
+variable,source_form,redcap_generated_or_user_defined,data_type,allowed_values,analysis_role,project_level_or_assignment_level,required_at_lock,restricted_public_status,notes
+assignment_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,y,restricted response data,Hidden from reviewers
+review_stream,assignment_admin,user-defined,integer,"1, Scratch coder | 2, Project owner",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+reviewer_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+source_record_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+official_project_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+project_title,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+datasets_used,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+sample_set,assignment_admin,user-defined,integer,"1, Baseline | 2, Hard case | 3, Owner review",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+hard_stratum,assignment_admin,user-defined,integer,"0, Not applicable | 1, Domain only | 2, Purpose only | 3, Both",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+validation_included,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+sample_status,assignment_admin,user-defined,integer,"1, Active | 2, Reserve | 3, Review only",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+display_order,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+assignment_batch,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+source_pop_ver,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+production_ver,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+instrument_ver,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+cluster_id,assignment_admin,user-defined,string,,identifier/provenance,project,,restricted response data,Hidden from reviewers
+owner_resp_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_project_id,assignment_admin,user-defined,string,,identifier/provenance,project,,restricted response data,Hidden from reviewers
+prop_d01,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d02,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d03,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d04,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d05,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d06,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d07,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d08,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d09,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d10,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d11,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_d12,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p01,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p02,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p03,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p04,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p05,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p06,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p07,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_p08,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_t01,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+prop_t02,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+sc_blind_decl,scratch_coder,user-defined,integer,"1, Confirmed | 0, Cannot confirm",classification/diagnostic,assignment,y,restricted response data,
+sc_exposure,scratch_coder,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
+sc_exposure_note,scratch_coder,user-defined,string,,classification/diagnostic,assignment,y,restricted response data,
+sc_domains___1,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Labour Market & Employment
+sc_domains___2,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Education & Skills
+sc_domains___3,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Health & Social Care
+sc_domains___4,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Crime & Justice
+sc_domains___5,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Business & Productivity
+sc_domains___6,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,"Poverty, Wealth & Living Standards"
+sc_domains___7,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Housing & Planning
+sc_domains___8,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Migration & Demographics
+sc_domains___9,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Environment & Agriculture
+sc_domains___10,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Public Finance & Taxation
+sc_domains___11,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Data Infrastructure & Methodology
+sc_domains___12,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Unclear from Register Entry
+sc_purposes___1,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Descriptive Monitoring
+sc_purposes___2,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Outcome Tracking
+sc_purposes___3,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Life-Course / Trajectory Analysis
+sc_purposes___4,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Service Interaction / Systems Analysis
+sc_purposes___5,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Policy Evaluation / Impact Analysis
+sc_purposes___6,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Risk Prediction / Early Identification
+sc_purposes___7,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Methodological / Infrastructure Research
+sc_purposes___8,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Unclear from Register Entry
+sc_covid,scratch_coder,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
+sc_equity,scratch_coder,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
+sc_sufficiency,scratch_coder,user-defined,integer,"1, Sufficient | 2, Partial | 3, Insufficient",classification/diagnostic,assignment,y,restricted response data,
+sc_taxonomy_fit,scratch_coder,user-defined,integer,"1, Fit | 2, Partial Fit | 3, No Fit",classification/diagnostic,assignment,y,restricted response data,
+sc_tax_issue___1,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Missing category
+sc_tax_issue___2,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Ambiguous/overlapping categories
+sc_tax_issue___3,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too broad
+sc_tax_issue___4,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too narrow
+sc_tax_issue___5,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Other
+sc_tax_issue___6,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,None
+sc_confidence,scratch_coder,user-defined,integer,"1, High | 2, Medium | 3, Low",classification/diagnostic,assignment,y,restricted response data,
+sc_note,scratch_coder,user-defined,string,,classification/diagnostic,assignment,y,restricted response data,
+po_d01_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d01_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d02_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d02_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d03_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d03_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d04_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d04_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d05_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d05_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d06_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d06_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d07_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d07_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d08_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d08_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d09_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d09_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d10_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d10_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d11_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d11_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d12_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_d12_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p01_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p01_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p02_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p02_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p03_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p03_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p04_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p04_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p05_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p05_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p06_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p06_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p07_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p07_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p08_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_p08_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_t01_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_t01_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_t02_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_t02_vis,project_owner,user-defined,integer,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",classification/diagnostic,assignment,y,restricted response data,
+po_miss_domain,project_owner,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
+po_miss_domains___1,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Labour Market & Employment
+po_miss_domains___2,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Education & Skills
+po_miss_domains___3,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Health & Social Care
+po_miss_domains___4,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Crime & Justice
+po_miss_domains___5,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Business & Productivity
+po_miss_domains___6,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,"Poverty, Wealth & Living Standards"
+po_miss_domains___7,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Housing & Planning
+po_miss_domains___8,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Migration & Demographics
+po_miss_domains___9,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Environment & Agriculture
+po_miss_domains___10,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Public Finance & Taxation
+po_miss_domains___11,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Data Infrastructure & Methodology
+po_miss_purpose,project_owner,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
+po_miss_purposes___1,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Descriptive Monitoring
+po_miss_purposes___2,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Outcome Tracking
+po_miss_purposes___3,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Life-Course / Trajectory Analysis
+po_miss_purposes___4,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Service Interaction / Systems Analysis
+po_miss_purposes___5,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Policy Evaluation / Impact Analysis
+po_miss_purposes___6,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Risk Prediction / Early Identification
+po_miss_purposes___7,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Methodological / Infrastructure Research
+po_miss_tag,project_owner,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
+po_miss_tags___1,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Demographic disparities / equity tag
+po_miss_tags___2,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,COVID-19 & Pandemic
+po_sufficiency,project_owner,user-defined,integer,"1, Sufficient | 2, Partial | 3, Insufficient",classification/diagnostic,assignment,y,restricted response data,
+po_taxonomy_fit,project_owner,user-defined,integer,"1, Fit | 2, Partial Fit | 3, No Fit",classification/diagnostic,assignment,y,restricted response data,
+po_tax_issue___1,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Missing category
+po_tax_issue___2,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Ambiguous/overlapping categories
+po_tax_issue___3,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too broad
+po_tax_issue___4,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too narrow
+po_tax_issue___5,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Other
+po_tax_issue___6,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,None
+po_note,project_owner,user-defined,string,,classification/diagnostic,assignment,y,restricted response data,
+assignment_admin_complete,assignment_admin,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.
+scratch_coder_complete,scratch_coder,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.
+project_owner_complete,project_owner,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.

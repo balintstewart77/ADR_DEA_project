@@ -20,6 +20,10 @@ RECORD_ID_RE = re.compile(r"(?<![0-9/])20\d{2}/\d{3}(?:/[a-z])?(?![0-9/])")
 RECORD_ID_FULL_RE = re.compile(r"20\d{2}/\d{3}(?:/[a-z])?\Z")
 EXAMPLE_RE = re.compile(r"\bExample\s+([APTIS]\d+)\b", re.IGNORECASE)
 PILOT_RE = re.compile(r"\bPilot\s+(\d+)\s*:\s*(20\d{2}/\d{3}(?:/[a-z])?)\b")
+PROHIBITED_ASSIGNMENT_EXAMPLE_RE = re.compile(
+    r"\b(?:baseline|hard(?:_case)?|reserve|active)[_-][A-Za-z0-9_-]{2,}\b",
+    re.IGNORECASE,
+)
 
 
 class MembershipError(ValueError):
@@ -87,6 +91,59 @@ def iter_document_blocks(path: Path) -> list[Block]:
                 cells = [_text(cell) for cell in row.findall("./w:tc", NS)]
                 blocks.append(Block(f"table:{index}:row:{row_index}", section, " | ".join(cells)))
     return blocks
+
+
+def extract_all_docx_text(path: Path) -> str:
+    """Extract text robustly from every Word XML part, including SDTs and headers."""
+    chunks: list[str] = []
+    try:
+        with zipfile.ZipFile(path) as archive:
+            for name in sorted(archive.namelist()):
+                if not name.startswith("word/") or not name.endswith(".xml"):
+                    continue
+                root = ET.fromstring(archive.read(name))
+                chunks.extend(node.text or "" for node in root.findall(".//w:t", NS))
+    except (OSError, KeyError, zipfile.BadZipFile, ET.ParseError) as exc:
+        raise MembershipError(f"Cannot parse DOCX text {path}: {exc}") from exc
+    return re.sub(r"\s+", " ", " ".join(chunks)).strip()
+
+
+def verify_coder_blinding_text(text: str) -> None:
+    """Enforce the protocol-authoritative coder visibility description."""
+    normalised = re.sub(r"\s+", " ", text).strip()
+    lower = normalised.lower()
+    errors: list[str] = []
+    if "baseline_c02_2024_123" in lower:
+        errors.append("prohibited encoded assignment example baseline_C02_2024_123")
+    encoded = PROHIBITED_ASSIGNMENT_EXAMPLE_RE.search(normalised)
+    if encoded:
+        errors.append(f"assignment-ID example encodes sampling information: {encoded.group(0)}")
+    prohibited_patterns = {
+        "source Record ID described as visible": r"\brecord_id\b.{0,100}\b(?:visible|dea project id|public register id)\b",
+        "coder/reviewer ID described as visible": r"\b(?:coder_id|reviewer_id)\b.{0,100}\b(?:visible|your|anonymised coder id)\b",
+        "official Project ID described as visible": r"\bofficial_project_id\b.{0,100}\bvisible\b",
+    }
+    for message, pattern in prohibited_patterns.items():
+        if re.search(pattern, lower):
+            errors.append(message)
+    required_patterns = {
+        "neutral visible assignment_id": r"\bassignment_id\b.{0,160}\bvisible\b.{0,80}\bneutral opaque\b",
+        "visible project_title": r"\bproject_title\b.{0,120}\bvisible\b.{0,40}\bread-only\b",
+        "visible datasets_used": r"\bdatasets_used\b.{0,120}\bvisible\b.{0,40}\bread-only\b",
+        "hidden reviewer/coder ID": r"\breviewer_id\s*/\s*coder_id\b.{0,100}\bhidden\b|\breviewer_id\s*/\s*coder_id\b\s+hidden",
+        "hidden source Record ID": r"\brecord_id\b.{0,100}\bhidden\b|\brecord_id\b\s+hidden",
+        "hidden official Project ID": r"\bofficial_project_id\b.{0,100}\bhidden\b|\bofficial_project_id\b\s+hidden",
+        "hidden sample metadata": r"\bsample and stratum fields\b.{0,100}\bhidden\b|\bsample and stratum fields\b\s+hidden",
+    }
+    for message, pattern in required_patterns.items():
+        if re.search(pattern, lower) is None:
+            errors.append(f"missing {message} language")
+    if errors:
+        raise MembershipError("Coder-handout blinding check failed: " + "; ".join(errors))
+
+
+def verify_coder_blinding(path: Path) -> None:
+    verify_coder_blinding_text(extract_all_docx_text(path))
 
 
 def _validate_record_id(record_id: str, source: str) -> None:
@@ -169,6 +226,7 @@ def verify_membership(
     trainer_path: Path, coder_path: Path, pilot_reference_path: Path,
     exclusion_path: Path, cleaned_register_path: Path | None = None,
 ) -> dict[str, object]:
+    verify_coder_blinding(coder_path)
     trainer, coder, pilot = (
         extract_document_cards(trainer_path),
         extract_document_cards(coder_path),

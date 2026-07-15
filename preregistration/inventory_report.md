@@ -43,6 +43,21 @@ registration-receipt, Gate 2, frozen-commit, clean-worktree, hash, restricted
 output and typed-token guards. No real Record ID was randomly ranked or
 selected and no active, reserve or assignment file exists.
 
+## Phase 5 candidate update
+
+At branch `main`, audited HEAD `6da64a4eb003396856d85fe4fcf71cbe886be1bb`,
+Phase 5 created a combined REDCap candidate for hidden administration,
+scratch-coder classification, and project-owner proposed-label review. The
+candidate uses one opaque assignment record per reviewer-record assignment and
+preserves hidden project clustering for repeated coders or owners.
+
+The frozen taxonomy supplies all 12 domain choices, eight purpose choices, and
+two tags. Offline checks cover dictionary structure, branching references,
+choice codes, taxonomy alignment, blinding, import/export alignment, 23
+synthetic scenarios, and security markers. Live REDCap import and browser QA
+remain pending and required before the excluded pilot. No assignment, response,
+sample identity, contact, token, or live survey link was created.
+
 The initial scientific-artefact inventory and forensic search were read-only.
 After the Fable evidence gates passed, an authorised pre-registration
 Record-ID cleaning correction was applied. It changed only the central cleaning

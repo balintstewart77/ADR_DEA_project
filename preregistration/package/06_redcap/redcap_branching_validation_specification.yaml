@@ -1,0 +1,242 @@
+version: redcap-candidate-0.1
+forms:
+- assignment_admin
+- scratch_coder
+- project_owner
+scratch:
+  domain_field: sc_domains
+  domain_unclear_code: 12
+  domain_unclear_exclusive: true
+  purpose_field: sc_purposes
+  purpose_unclear_code: 8
+  purpose_min: 1
+  purpose_max: 2
+  purpose_unclear_exclusive: true
+  required_core:
+  - sc_blind_decl
+  - sc_exposure
+  - sc_domains
+  - sc_purposes
+  - sc_covid
+  - sc_equity
+  - sc_sufficiency
+  - sc_taxonomy_fit
+  - sc_confidence
+  conditional_required:
+    sc_exposure_note: sc_exposure == 1
+    sc_tax_issue: sc_taxonomy_fit in [2,3]
+    sc_note: sc_exposure == 1 or sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3]
+      or sc_confidence == 3
+  action_tags_for_live_confirmation:
+    sc_domains: '@NONEOFTHEABOVE=''12'''
+    sc_purposes: '@MAXCHOICE=2 @NONEOFTHEABOVE=''8'''
+owner:
+  label_mapping:
+  - variable: d01
+    taxonomy_layer: domain
+    canonical_label: Labour Market & Employment
+    choice_code: '1'
+    proposed_label_flag: prop_d01
+    fit_field: po_d01_fit
+    evidence_visibility_field: po_d01_vis
+    missing_label_field: po_miss_domains
+  - variable: d02
+    taxonomy_layer: domain
+    canonical_label: Education & Skills
+    choice_code: '2'
+    proposed_label_flag: prop_d02
+    fit_field: po_d02_fit
+    evidence_visibility_field: po_d02_vis
+    missing_label_field: po_miss_domains
+  - variable: d03
+    taxonomy_layer: domain
+    canonical_label: Health & Social Care
+    choice_code: '3'
+    proposed_label_flag: prop_d03
+    fit_field: po_d03_fit
+    evidence_visibility_field: po_d03_vis
+    missing_label_field: po_miss_domains
+  - variable: d04
+    taxonomy_layer: domain
+    canonical_label: Crime & Justice
+    choice_code: '4'
+    proposed_label_flag: prop_d04
+    fit_field: po_d04_fit
+    evidence_visibility_field: po_d04_vis
+    missing_label_field: po_miss_domains
+  - variable: d05
+    taxonomy_layer: domain
+    canonical_label: Business & Productivity
+    choice_code: '5'
+    proposed_label_flag: prop_d05
+    fit_field: po_d05_fit
+    evidence_visibility_field: po_d05_vis
+    missing_label_field: po_miss_domains
+  - variable: d06
+    taxonomy_layer: domain
+    canonical_label: Poverty, Wealth & Living Standards
+    choice_code: '6'
+    proposed_label_flag: prop_d06
+    fit_field: po_d06_fit
+    evidence_visibility_field: po_d06_vis
+    missing_label_field: po_miss_domains
+  - variable: d07
+    taxonomy_layer: domain
+    canonical_label: Housing & Planning
+    choice_code: '7'
+    proposed_label_flag: prop_d07
+    fit_field: po_d07_fit
+    evidence_visibility_field: po_d07_vis
+    missing_label_field: po_miss_domains
+  - variable: d08
+    taxonomy_layer: domain
+    canonical_label: Migration & Demographics
+    choice_code: '8'
+    proposed_label_flag: prop_d08
+    fit_field: po_d08_fit
+    evidence_visibility_field: po_d08_vis
+    missing_label_field: po_miss_domains
+  - variable: d09
+    taxonomy_layer: domain
+    canonical_label: Environment & Agriculture
+    choice_code: '9'
+    proposed_label_flag: prop_d09
+    fit_field: po_d09_fit
+    evidence_visibility_field: po_d09_vis
+    missing_label_field: po_miss_domains
+  - variable: d10
+    taxonomy_layer: domain
+    canonical_label: Public Finance & Taxation
+    choice_code: '10'
+    proposed_label_flag: prop_d10
+    fit_field: po_d10_fit
+    evidence_visibility_field: po_d10_vis
+    missing_label_field: po_miss_domains
+  - variable: d11
+    taxonomy_layer: domain
+    canonical_label: Data Infrastructure & Methodology
+    choice_code: '11'
+    proposed_label_flag: prop_d11
+    fit_field: po_d11_fit
+    evidence_visibility_field: po_d11_vis
+    missing_label_field: po_miss_domains
+  - variable: d12
+    taxonomy_layer: domain
+    canonical_label: Unclear from Register Entry
+    choice_code: '12'
+    proposed_label_flag: prop_d12
+    fit_field: po_d12_fit
+    evidence_visibility_field: po_d12_vis
+    missing_label_field: po_miss_domains
+  - variable: p01
+    taxonomy_layer: purpose
+    canonical_label: Descriptive Monitoring
+    choice_code: '1'
+    proposed_label_flag: prop_p01
+    fit_field: po_p01_fit
+    evidence_visibility_field: po_p01_vis
+    missing_label_field: po_miss_purposes
+  - variable: p02
+    taxonomy_layer: purpose
+    canonical_label: Outcome Tracking
+    choice_code: '2'
+    proposed_label_flag: prop_p02
+    fit_field: po_p02_fit
+    evidence_visibility_field: po_p02_vis
+    missing_label_field: po_miss_purposes
+  - variable: p03
+    taxonomy_layer: purpose
+    canonical_label: Life-Course / Trajectory Analysis
+    choice_code: '3'
+    proposed_label_flag: prop_p03
+    fit_field: po_p03_fit
+    evidence_visibility_field: po_p03_vis
+    missing_label_field: po_miss_purposes
+  - variable: p04
+    taxonomy_layer: purpose
+    canonical_label: Service Interaction / Systems Analysis
+    choice_code: '4'
+    proposed_label_flag: prop_p04
+    fit_field: po_p04_fit
+    evidence_visibility_field: po_p04_vis
+    missing_label_field: po_miss_purposes
+  - variable: p05
+    taxonomy_layer: purpose
+    canonical_label: Policy Evaluation / Impact Analysis
+    choice_code: '5'
+    proposed_label_flag: prop_p05
+    fit_field: po_p05_fit
+    evidence_visibility_field: po_p05_vis
+    missing_label_field: po_miss_purposes
+  - variable: p06
+    taxonomy_layer: purpose
+    canonical_label: Risk Prediction / Early Identification
+    choice_code: '6'
+    proposed_label_flag: prop_p06
+    fit_field: po_p06_fit
+    evidence_visibility_field: po_p06_vis
+    missing_label_field: po_miss_purposes
+  - variable: p07
+    taxonomy_layer: purpose
+    canonical_label: Methodological / Infrastructure Research
+    choice_code: '7'
+    proposed_label_flag: prop_p07
+    fit_field: po_p07_fit
+    evidence_visibility_field: po_p07_vis
+    missing_label_field: po_miss_purposes
+  - variable: p08
+    taxonomy_layer: purpose
+    canonical_label: Unclear from Register Entry
+    choice_code: '8'
+    proposed_label_flag: prop_p08
+    fit_field: po_p08_fit
+    evidence_visibility_field: po_p08_vis
+    missing_label_field: po_miss_purposes
+  - variable: t01
+    taxonomy_layer: tag
+    canonical_label: Demographic disparities / equity tag
+    choice_code: '1'
+    proposed_label_flag: prop_t01
+    fit_field: po_t01_fit
+    evidence_visibility_field: po_t01_vis
+    missing_label_field: po_miss_tags
+  - variable: t02
+    taxonomy_layer: tag
+    canonical_label: COVID-19 & Pandemic
+    choice_code: '2'
+    proposed_label_flag: prop_t02
+    fit_field: po_t02_fit
+    evidence_visibility_field: po_t02_vis
+    missing_label_field: po_miss_tags
+  fit_codes:
+    1: Fits
+    2: Does not fit
+    3: Unsure
+  visibility_codes:
+    1: Clearly visible
+    2: Partly visible
+    3: Not visible
+    4: Unsure
+  missing_branches:
+    po_miss_domains: po_miss_domain == 1
+    po_miss_purposes: po_miss_purpose == 1
+    po_miss_tags: po_miss_tag == 1
+  conditional_note: any proposed fit != 1 or visibility != 1; any missing-label report;
+    sufficiency != 1; taxonomy_fit != 1
+  contradiction_rule: Proposed-and-Fits plus missing for the same label is rejected.
+neutral_assignment_id:
+  pattern: ^[A-Z0-9]{8}$
+  forbidden_tokens:
+  - baseline
+  - hard
+  - reserve
+  - active
+  - coder
+  - owner
+  must_not_derive_from_hidden_id: true
+completion:
+  generated_fields:
+  - assignment_admin_complete
+  - scratch_coder_complete
+  - project_owner_complete
+  invalid_if_trigger_unresolved: true

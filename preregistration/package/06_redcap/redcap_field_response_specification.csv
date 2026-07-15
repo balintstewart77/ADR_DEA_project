@@ -1,0 +1,319 @@
+variable_name,conceptual_name,form_name,field_type,response_code,response_label,canonical_taxonomy_label,required_rule,branching_rule,visible_to_scratch_coder,visible_to_project_owner,exported_for_analysis,notes
+assignment_id,Neutral opaque assignment identifier,assignment_admin,text,,,,required,,no,no,yes,@HIDDEN-SURVEY @READONLY
+review_stream,Review stream,assignment_admin,radio,1,Scratch coder,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+review_stream,Review stream,assignment_admin,radio,2,Project owner,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+reviewer_id,Administrative reviewer identifier,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+source_record_id,Stable source Record ID,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+official_project_id,Official Project ID,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+project_title,Frozen public-register project title,assignment_admin,notes,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+datasets_used,Frozen public-register datasets-used entry,assignment_admin,notes,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sample_set,Sample set,assignment_admin,radio,1,Baseline,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sample_set,Sample set,assignment_admin,radio,2,Hard case,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sample_set,Sample set,assignment_admin,radio,3,Owner review,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+hard_stratum,Hard-case stratum,assignment_admin,radio,0,Not applicable,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+hard_stratum,Hard-case stratum,assignment_admin,radio,1,Domain only,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+hard_stratum,Hard-case stratum,assignment_admin,radio,2,Purpose only,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+hard_stratum,Hard-case stratum,assignment_admin,radio,3,Both,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+validation_included,Included in validation analysis,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sample_status,Active or reserve status,assignment_admin,radio,1,Active,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sample_status,Active or reserve status,assignment_admin,radio,2,Reserve,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sample_status,Active or reserve status,assignment_admin,radio,3,Review only,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+display_order,Reviewer display order,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+assignment_batch,Assignment batch,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+source_pop_ver,Source-population version,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+production_ver,Production-output version,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+instrument_ver,Instrument version,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+cluster_id,Project-level clustering identifier,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_resp_id,Owner respondent identifier,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_project_id,Owner project identifier,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d01,Proposed domain flag: Labour Market & Employment,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d02,Proposed domain flag: Education & Skills,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d03,Proposed domain flag: Health & Social Care,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d04,Proposed domain flag: Crime & Justice,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d05,Proposed domain flag: Business & Productivity,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d06,"Proposed domain flag: Poverty, Wealth & Living Standards",assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d07,Proposed domain flag: Housing & Planning,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d08,Proposed domain flag: Migration & Demographics,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d09,Proposed domain flag: Environment & Agriculture,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d10,Proposed domain flag: Public Finance & Taxation,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d11,Proposed domain flag: Data Infrastructure & Methodology,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_d12,Proposed domain flag: Unclear from Register Entry,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p01,Proposed purpose flag: Descriptive Monitoring,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p02,Proposed purpose flag: Outcome Tracking,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p03,Proposed purpose flag: Life-Course / Trajectory Analysis,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p04,Proposed purpose flag: Service Interaction / Systems Analysis,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p05,Proposed purpose flag: Policy Evaluation / Impact Analysis,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p06,Proposed purpose flag: Risk Prediction / Early Identification,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p07,Proposed purpose flag: Methodological / Infrastructure Research,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_p08,Proposed purpose flag: Unclear from Register Entry,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_t01,Proposed tag flag: Demographic disparities / equity tag,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+prop_t02,Proposed tag flag: COVID-19 & Pandemic,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sc_intro,"Classify using only the displayed title, datasets-used entry and approved training materials.",scratch_coder,descriptive,,,,optional/display,,yes,no,no,
+sc_assignment,Assignment: <strong>[assignment_id]</strong>,scratch_coder,descriptive,,,,optional/display,,yes,no,no,
+sc_project_title,<strong>Project title</strong><br>[project_title],scratch_coder,descriptive,,,,optional/display,,yes,no,no,
+sc_datasets,<strong>Datasets used</strong><br>[datasets_used],scratch_coder,descriptive,,,,optional/display,,yes,no,no,
+sc_blind_decl,I confirm that I used only the permitted register evidence and training materials.,scratch_coder,radio,1,Confirmed,,required,,yes,no,yes,
+sc_blind_decl,I confirm that I used only the permitted register evidence and training materials.,scratch_coder,radio,0,Cannot confirm,,required,,yes,no,yes,
+sc_exposure,Were you accidentally exposed to prohibited project or reviewer information?,scratch_coder,radio,0,No,,required,,yes,no,yes,
+sc_exposure,Were you accidentally exposed to prohibited project or reviewer information?,scratch_coder,radio,1,Yes,,required,,yes,no,yes,
+sc_exposure_note,Describe the accidental exposure without copying restricted content.,scratch_coder,notes,,,,conditional,[sc_exposure] = '1',yes,no,yes,
+sc_domains,Research Domain(s),scratch_coder,checkbox,1,Labour Market & Employment,Labour Market & Employment,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,2,Education & Skills,Education & Skills,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,3,Health & Social Care,Health & Social Care,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,4,Crime & Justice,Crime & Justice,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,5,Business & Productivity,Business & Productivity,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,6,"Poverty, Wealth & Living Standards","Poverty, Wealth & Living Standards",required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,7,Housing & Planning,Housing & Planning,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,8,Migration & Demographics,Migration & Demographics,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,9,Environment & Agriculture,Environment & Agriculture,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,10,Public Finance & Taxation,Public Finance & Taxation,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,11,Data Infrastructure & Methodology,Data Infrastructure & Methodology,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_domains,Research Domain(s),scratch_coder,checkbox,12,Unclear from Register Entry,Unclear from Register Entry,required,,yes,no,yes,"Select every supported substantive domain, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,1,Descriptive Monitoring,Descriptive Monitoring,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,2,Outcome Tracking,Outcome Tracking,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,3,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,4,Service Interaction / Systems Analysis,Service Interaction / Systems Analysis,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,5,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,6,Risk Prediction / Early Identification,Risk Prediction / Early Identification,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,7,Methodological / Infrastructure Research,Methodological / Infrastructure Research,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_purposes,Analytical Purpose(s),scratch_coder,checkbox,8,Unclear from Register Entry,Unclear from Register Entry,required,,yes,no,yes,"Select one or at most two purposes, or Unclear alone."
+sc_covid,COVID-19 & Pandemic,scratch_coder,radio,0,No,,required,,yes,no,yes,
+sc_covid,COVID-19 & Pandemic,scratch_coder,radio,1,Yes,,required,,yes,no,yes,
+sc_equity,Demographic disparities / equity tag,scratch_coder,radio,0,No,,required,,yes,no,yes,
+sc_equity,Demographic disparities / equity tag,scratch_coder,radio,1,Yes,,required,,yes,no,yes,
+sc_sufficiency,Register-entry sufficiency,scratch_coder,radio,1,Sufficient,,required,,yes,no,yes,
+sc_sufficiency,Register-entry sufficiency,scratch_coder,radio,2,Partial,,required,,yes,no,yes,
+sc_sufficiency,Register-entry sufficiency,scratch_coder,radio,3,Insufficient,,required,,yes,no,yes,
+sc_taxonomy_fit,Taxonomy fit,scratch_coder,radio,1,Fit,,required,,yes,no,yes,
+sc_taxonomy_fit,Taxonomy fit,scratch_coder,radio,2,Partial Fit,,required,,yes,no,yes,
+sc_taxonomy_fit,Taxonomy fit,scratch_coder,radio,3,No Fit,,required,,yes,no,yes,
+sc_tax_issue,Taxonomy issue type,scratch_coder,checkbox,1,Missing category,,conditional,[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3',yes,no,yes,
+sc_tax_issue,Taxonomy issue type,scratch_coder,checkbox,2,Ambiguous/overlapping categories,,conditional,[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3',yes,no,yes,
+sc_tax_issue,Taxonomy issue type,scratch_coder,checkbox,3,Too broad,,conditional,[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3',yes,no,yes,
+sc_tax_issue,Taxonomy issue type,scratch_coder,checkbox,4,Too narrow,,conditional,[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3',yes,no,yes,
+sc_tax_issue,Taxonomy issue type,scratch_coder,checkbox,5,Other,,conditional,[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3',yes,no,yes,
+sc_tax_issue,Taxonomy issue type,scratch_coder,checkbox,6,None,,conditional,[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3',yes,no,yes,
+sc_confidence,Classification confidence,scratch_coder,radio,1,High,,required,,yes,no,yes,
+sc_confidence,Classification confidence,scratch_coder,radio,2,Medium,,required,,yes,no,yes,
+sc_confidence,Classification confidence,scratch_coder,radio,3,Low,,required,,yes,no,yes,
+sc_note,Explanatory note,scratch_coder,notes,,,,conditional,[sc_exposure] = '1' or [sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3',yes,no,yes,"Required for exposure, Partial/Insufficient evidence, Partial/No Fit, or Low confidence."
+po_intro,Review proposed labels separately for actual-project fit and visibility in the public register entry.,project_owner,descriptive,,,,optional/display,,no,yes,no,
+po_assignment,Assignment: <strong>[assignment_id]</strong>,project_owner,descriptive,,,,optional/display,,no,yes,no,
+po_project_title,<strong>Project title</strong><br>[project_title],project_owner,descriptive,,,,optional/display,,no,yes,no,
+po_datasets,<strong>Datasets used</strong><br>[datasets_used],project_owner,descriptive,,,,optional/display,,no,yes,no,
+po_d01_label,"<strong>Labour Market &amp; Employment</strong><br>Research concerning work, employment, labour-market participation, and workforce dynamics. Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality; working hours, contracts, gig or platform work, and working conditions; labour supply and demand; occupational, sectoral and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and transitions into, through, or out of work.",project_owner,descriptive,,,,optional/display,[prop_d01] = '1',no,yes,no,
+po_d01_fit,Does Labour Market & Employment describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d01] = '1',no,yes,yes,
+po_d01_fit,Does Labour Market & Employment describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d01] = '1',no,yes,yes,
+po_d01_fit,Does Labour Market & Employment describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d01] = '1',no,yes,yes,
+po_d01_vis,Is the basis for Labour Market & Employment visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d01] = '1',no,yes,yes,
+po_d01_vis,Is the basis for Labour Market & Employment visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d01] = '1',no,yes,yes,
+po_d01_vis,Is the basis for Labour Market & Employment visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d01] = '1',no,yes,yes,
+po_d01_vis,Is the basis for Labour Market & Employment visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d01] = '1',no,yes,yes,
+po_d02_label,"<strong>Education &amp; Skills</strong><br>Research concerning education, learning, training, skills formation, and transitions through education systems. Includes early years, schools, colleges,  universities, qualifications, apprenticeships, admissions, attainment, attendance, teacher workforce issues, childcare, and education-to-work pathways.",project_owner,descriptive,,,,optional/display,[prop_d02] = '1',no,yes,no,
+po_d02_fit,Does Education & Skills describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d02] = '1',no,yes,yes,
+po_d02_fit,Does Education & Skills describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d02] = '1',no,yes,yes,
+po_d02_fit,Does Education & Skills describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d02] = '1',no,yes,yes,
+po_d02_vis,Is the basis for Education & Skills visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d02] = '1',no,yes,yes,
+po_d02_vis,Is the basis for Education & Skills visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d02] = '1',no,yes,yes,
+po_d02_vis,Is the basis for Education & Skills visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d02] = '1',no,yes,yes,
+po_d02_vis,Is the basis for Education & Skills visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d02] = '1',no,yes,yes,
+po_d03_label,"<strong>Health &amp; Social Care</strong><br>Research concerning health, illness, mortality, wellbeing, clinical outcomes, health services, public health,  mental health, social care, and care-system use. Includes NHS services, hospitals, GP care, palliative care,  maternity, morbidity, mortality where health is the research object, and adult or children&#x27;s social care.",project_owner,descriptive,,,,optional/display,[prop_d03] = '1',no,yes,no,
+po_d03_fit,Does Health & Social Care describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d03] = '1',no,yes,yes,
+po_d03_fit,Does Health & Social Care describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d03] = '1',no,yes,yes,
+po_d03_fit,Does Health & Social Care describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d03] = '1',no,yes,yes,
+po_d03_vis,Is the basis for Health & Social Care visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d03] = '1',no,yes,yes,
+po_d03_vis,Is the basis for Health & Social Care visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d03] = '1',no,yes,yes,
+po_d03_vis,Is the basis for Health & Social Care visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d03] = '1',no,yes,yes,
+po_d03_vis,Is the basis for Health & Social Care visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d03] = '1',no,yes,yes,
+po_d04_label,"<strong>Crime &amp; Justice</strong><br>Research concerning crime, victimisation, public safety, offending, policing, courts, prisons, probation, sentencing, family justice, civil justice, reoffending, and criminal records.",project_owner,descriptive,,,,optional/display,[prop_d04] = '1',no,yes,no,
+po_d04_fit,Does Crime & Justice describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d04] = '1',no,yes,yes,
+po_d04_fit,Does Crime & Justice describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d04] = '1',no,yes,yes,
+po_d04_fit,Does Crime & Justice describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d04] = '1',no,yes,yes,
+po_d04_vis,Is the basis for Crime & Justice visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d04] = '1',no,yes,yes,
+po_d04_vis,Is the basis for Crime & Justice visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d04] = '1',no,yes,yes,
+po_d04_vis,Is the basis for Crime & Justice visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d04] = '1',no,yes,yes,
+po_d04_vis,Is the basis for Crime & Justice visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d04] = '1',no,yes,yes,
+po_d05_label,"<strong>Business &amp; Productivity</strong><br>Research concerning firms, business activity, industrial structure, innovation, productivity, entrepreneurship,  trade, exports, foreign direct investment, research and development, business support, and firm-level performance.",project_owner,descriptive,,,,optional/display,[prop_d05] = '1',no,yes,no,
+po_d05_fit,Does Business & Productivity describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d05] = '1',no,yes,yes,
+po_d05_fit,Does Business & Productivity describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d05] = '1',no,yes,yes,
+po_d05_fit,Does Business & Productivity describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d05] = '1',no,yes,yes,
+po_d05_vis,Is the basis for Business & Productivity visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d05] = '1',no,yes,yes,
+po_d05_vis,Is the basis for Business & Productivity visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d05] = '1',no,yes,yes,
+po_d05_vis,Is the basis for Business & Productivity visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d05] = '1',no,yes,yes,
+po_d05_vis,Is the basis for Business & Productivity visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d05] = '1',no,yes,yes,
+po_d06_label,"<strong>Poverty, Wealth &amp; Living Standards</strong><br>Research concerning material resources, economic hardship, household living standards, poverty, wealth, debt,  savings, benefits, deprivation, food security, cost of living, household income, and distribution of resources.",project_owner,descriptive,,,,optional/display,[prop_d06] = '1',no,yes,no,
+po_d06_fit,"Does Poverty, Wealth & Living Standards describe the actual project?",project_owner,radio,1,Fits,,conditional,[prop_d06] = '1',no,yes,yes,
+po_d06_fit,"Does Poverty, Wealth & Living Standards describe the actual project?",project_owner,radio,2,Does not fit,,conditional,[prop_d06] = '1',no,yes,yes,
+po_d06_fit,"Does Poverty, Wealth & Living Standards describe the actual project?",project_owner,radio,3,Unsure,,conditional,[prop_d06] = '1',no,yes,yes,
+po_d06_vis,"Is the basis for Poverty, Wealth & Living Standards visible in the public register entry?",project_owner,radio,1,Clearly visible,,conditional,[prop_d06] = '1',no,yes,yes,
+po_d06_vis,"Is the basis for Poverty, Wealth & Living Standards visible in the public register entry?",project_owner,radio,2,Partly visible,,conditional,[prop_d06] = '1',no,yes,yes,
+po_d06_vis,"Is the basis for Poverty, Wealth & Living Standards visible in the public register entry?",project_owner,radio,3,Not visible,,conditional,[prop_d06] = '1',no,yes,yes,
+po_d06_vis,"Is the basis for Poverty, Wealth & Living Standards visible in the public register entry?",project_owner,radio,4,Unsure,,conditional,[prop_d06] = '1',no,yes,yes,
+po_d07_label,"<strong>Housing &amp; Planning</strong><br>Research concerning housing, homelessness, residential conditions, tenure, home ownership, planning systems,  neighbourhoods, gentrification, residential mobility, and place-based housing or planning interventions.",project_owner,descriptive,,,,optional/display,[prop_d07] = '1',no,yes,no,
+po_d07_fit,Does Housing & Planning describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d07] = '1',no,yes,yes,
+po_d07_fit,Does Housing & Planning describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d07] = '1',no,yes,yes,
+po_d07_fit,Does Housing & Planning describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d07] = '1',no,yes,yes,
+po_d07_vis,Is the basis for Housing & Planning visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d07] = '1',no,yes,yes,
+po_d07_vis,Is the basis for Housing & Planning visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d07] = '1',no,yes,yes,
+po_d07_vis,Is the basis for Housing & Planning visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d07] = '1',no,yes,yes,
+po_d07_vis,Is the basis for Housing & Planning visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d07] = '1',no,yes,yes,
+po_d08_label,"<strong>Migration &amp; Demographics</strong><br>Research concerning population structure, population change, migration, immigration,  population mobility, fertility, ageing, mortality as a demographic outcome,  census-based population analysis, and demographic composition.",project_owner,descriptive,,,,optional/display,[prop_d08] = '1',no,yes,no,
+po_d08_fit,Does Migration & Demographics describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d08] = '1',no,yes,yes,
+po_d08_fit,Does Migration & Demographics describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d08] = '1',no,yes,yes,
+po_d08_fit,Does Migration & Demographics describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d08] = '1',no,yes,yes,
+po_d08_vis,Is the basis for Migration & Demographics visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d08] = '1',no,yes,yes,
+po_d08_vis,Is the basis for Migration & Demographics visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d08] = '1',no,yes,yes,
+po_d08_vis,Is the basis for Migration & Demographics visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d08] = '1',no,yes,yes,
+po_d08_vis,Is the basis for Migration & Demographics visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d08] = '1',no,yes,yes,
+po_d09_label,"<strong>Environment &amp; Agriculture</strong><br>Research concerning the natural environment, climate, climate adaptation or resilience, energy, agriculture, farming, land use, pollution, decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic or social activity.",project_owner,descriptive,,,,optional/display,[prop_d09] = '1',no,yes,no,
+po_d09_fit,Does Environment & Agriculture describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d09] = '1',no,yes,yes,
+po_d09_fit,Does Environment & Agriculture describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d09] = '1',no,yes,yes,
+po_d09_fit,Does Environment & Agriculture describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d09] = '1',no,yes,yes,
+po_d09_vis,Is the basis for Environment & Agriculture visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d09] = '1',no,yes,yes,
+po_d09_vis,Is the basis for Environment & Agriculture visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d09] = '1',no,yes,yes,
+po_d09_vis,Is the basis for Environment & Agriculture visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d09] = '1',no,yes,yes,
+po_d09_vis,Is the basis for Environment & Agriculture visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d09] = '1',no,yes,yes,
+po_d10_label,"<strong>Public Finance &amp; Taxation</strong><br>Research concerning government revenue, taxation, tax compliance, tax credits, public expenditure,  public spending, fiscal transfers, business rates, tax reliefs, and fiscal policy.",project_owner,descriptive,,,,optional/display,[prop_d10] = '1',no,yes,no,
+po_d10_fit,Does Public Finance & Taxation describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d10] = '1',no,yes,yes,
+po_d10_fit,Does Public Finance & Taxation describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d10] = '1',no,yes,yes,
+po_d10_fit,Does Public Finance & Taxation describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d10] = '1',no,yes,yes,
+po_d10_vis,Is the basis for Public Finance & Taxation visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d10] = '1',no,yes,yes,
+po_d10_vis,Is the basis for Public Finance & Taxation visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d10] = '1',no,yes,yes,
+po_d10_vis,Is the basis for Public Finance & Taxation visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d10] = '1',no,yes,yes,
+po_d10_vis,Is the basis for Public Finance & Taxation visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d10] = '1',no,yes,yes,
+po_d11_label,"<strong>Data Infrastructure &amp; Methodology</strong><br>Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data.",project_owner,descriptive,,,,optional/display,[prop_d11] = '1',no,yes,no,
+po_d11_fit,Does Data Infrastructure & Methodology describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d11] = '1',no,yes,yes,
+po_d11_fit,Does Data Infrastructure & Methodology describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d11] = '1',no,yes,yes,
+po_d11_fit,Does Data Infrastructure & Methodology describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d11] = '1',no,yes,yes,
+po_d11_vis,Is the basis for Data Infrastructure & Methodology visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d11] = '1',no,yes,yes,
+po_d11_vis,Is the basis for Data Infrastructure & Methodology visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d11] = '1',no,yes,yes,
+po_d11_vis,Is the basis for Data Infrastructure & Methodology visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d11] = '1',no,yes,yes,
+po_d11_vis,Is the basis for Data Infrastructure & Methodology visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d11] = '1',no,yes,yes,
+po_d12_label,<strong>Unclear from Register Entry</strong><br>Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain. ,project_owner,descriptive,,,,optional/display,[prop_d12] = '1',no,yes,no,
+po_d12_fit,Does Unclear from Register Entry describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_d12] = '1',no,yes,yes,
+po_d12_fit,Does Unclear from Register Entry describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_d12] = '1',no,yes,yes,
+po_d12_fit,Does Unclear from Register Entry describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_d12] = '1',no,yes,yes,
+po_d12_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_d12] = '1',no,yes,yes,
+po_d12_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_d12] = '1',no,yes,yes,
+po_d12_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_d12] = '1',no,yes,yes,
+po_d12_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_d12] = '1',no,yes,yes,
+po_p01_label,"<strong>Descriptive Monitoring</strong><br>Research whose analytical purpose is to measure and characterise a phenomenon — its level, prevalence,  distribution, composition, profile, trend, or pattern — including how it varies across places, populations,  or time, without primarily testing an exposure-outcome relationship or evaluating a named intervention.",project_owner,descriptive,,,,optional/display,[prop_p01] = '1',no,yes,no,
+po_p01_fit,Does Descriptive Monitoring describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p01] = '1',no,yes,yes,
+po_p01_fit,Does Descriptive Monitoring describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p01] = '1',no,yes,yes,
+po_p01_fit,Does Descriptive Monitoring describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p01] = '1',no,yes,yes,
+po_p01_vis,Is the basis for Descriptive Monitoring visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p01] = '1',no,yes,yes,
+po_p01_vis,Is the basis for Descriptive Monitoring visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p01] = '1',no,yes,yes,
+po_p01_vis,Is the basis for Descriptive Monitoring visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p01] = '1',no,yes,yes,
+po_p01_vis,Is the basis for Descriptive Monitoring visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p01] = '1',no,yes,yes,
+po_p02_label,"<strong>Outcome Tracking</strong><br>Research that links a naturally occurring exposure, condition, event, status, characteristic, or circumstance to a downstream outcome.",project_owner,descriptive,,,,optional/display,[prop_p02] = '1',no,yes,no,
+po_p02_fit,Does Outcome Tracking describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p02] = '1',no,yes,yes,
+po_p02_fit,Does Outcome Tracking describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p02] = '1',no,yes,yes,
+po_p02_fit,Does Outcome Tracking describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p02] = '1',no,yes,yes,
+po_p02_vis,Is the basis for Outcome Tracking visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p02] = '1',no,yes,yes,
+po_p02_vis,Is the basis for Outcome Tracking visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p02] = '1',no,yes,yes,
+po_p02_vis,Is the basis for Outcome Tracking visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p02] = '1',no,yes,yes,
+po_p02_vis,Is the basis for Outcome Tracking visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p02] = '1',no,yes,yes,
+po_p03_label,"<strong>Life-Course / Trajectory Analysis</strong><br>Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions,  or life stages to understand trajectories, progression, mobility, or cumulative outcomes.",project_owner,descriptive,,,,optional/display,[prop_p03] = '1',no,yes,no,
+po_p03_fit,Does Life-Course / Trajectory Analysis describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p03] = '1',no,yes,yes,
+po_p03_fit,Does Life-Course / Trajectory Analysis describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p03] = '1',no,yes,yes,
+po_p03_fit,Does Life-Course / Trajectory Analysis describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p03] = '1',no,yes,yes,
+po_p03_vis,Is the basis for Life-Course / Trajectory Analysis visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p03] = '1',no,yes,yes,
+po_p03_vis,Is the basis for Life-Course / Trajectory Analysis visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p03] = '1',no,yes,yes,
+po_p03_vis,Is the basis for Life-Course / Trajectory Analysis visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p03] = '1',no,yes,yes,
+po_p03_vis,Is the basis for Life-Course / Trajectory Analysis visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p03] = '1',no,yes,yes,
+po_p04_label,"<strong>Service Interaction / Systems Analysis</strong><br>Research focused on how people, cases, families, or organisations move through, use, access, or are processed by public service systems.",project_owner,descriptive,,,,optional/display,[prop_p04] = '1',no,yes,no,
+po_p04_fit,Does Service Interaction / Systems Analysis describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p04] = '1',no,yes,yes,
+po_p04_fit,Does Service Interaction / Systems Analysis describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p04] = '1',no,yes,yes,
+po_p04_fit,Does Service Interaction / Systems Analysis describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p04] = '1',no,yes,yes,
+po_p04_vis,Is the basis for Service Interaction / Systems Analysis visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p04] = '1',no,yes,yes,
+po_p04_vis,Is the basis for Service Interaction / Systems Analysis visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p04] = '1',no,yes,yes,
+po_p04_vis,Is the basis for Service Interaction / Systems Analysis visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p04] = '1',no,yes,yes,
+po_p04_vis,Is the basis for Service Interaction / Systems Analysis visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p04] = '1',no,yes,yes,
+po_p05_label,"<strong>Policy Evaluation / Impact Analysis</strong><br>Research that evaluates the effects, impacts, implementation, or consequences of a specific named policy, programme, regulation, intervention, scheme, or institutional change.",project_owner,descriptive,,,,optional/display,[prop_p05] = '1',no,yes,no,
+po_p05_fit,Does Policy Evaluation / Impact Analysis describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p05] = '1',no,yes,yes,
+po_p05_fit,Does Policy Evaluation / Impact Analysis describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p05] = '1',no,yes,yes,
+po_p05_fit,Does Policy Evaluation / Impact Analysis describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p05] = '1',no,yes,yes,
+po_p05_vis,Is the basis for Policy Evaluation / Impact Analysis visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p05] = '1',no,yes,yes,
+po_p05_vis,Is the basis for Policy Evaluation / Impact Analysis visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p05] = '1',no,yes,yes,
+po_p05_vis,Is the basis for Policy Evaluation / Impact Analysis visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p05] = '1',no,yes,yes,
+po_p05_vis,Is the basis for Policy Evaluation / Impact Analysis visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p05] = '1',no,yes,yes,
+po_p06_label,"<strong>Risk Prediction / Early Identification</strong><br>Research with an explicit predictive or early-identification design focused on predicting risk, identifying at-risk  individuals or groups, building risk scores, developing screening tools, or prospectively targeting people or places  before or as an adverse outcome emerges.",project_owner,descriptive,,,,optional/display,[prop_p06] = '1',no,yes,no,
+po_p06_fit,Does Risk Prediction / Early Identification describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p06] = '1',no,yes,yes,
+po_p06_fit,Does Risk Prediction / Early Identification describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p06] = '1',no,yes,yes,
+po_p06_fit,Does Risk Prediction / Early Identification describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p06] = '1',no,yes,yes,
+po_p06_vis,Is the basis for Risk Prediction / Early Identification visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p06] = '1',no,yes,yes,
+po_p06_vis,Is the basis for Risk Prediction / Early Identification visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p06] = '1',no,yes,yes,
+po_p06_vis,Is the basis for Risk Prediction / Early Identification visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p06] = '1',no,yes,yes,
+po_p06_vis,Is the basis for Risk Prediction / Early Identification visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p06] = '1',no,yes,yes,
+po_p07_label,"<strong>Methodological / Infrastructure Research</strong><br>Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches,
+ survey methods, or data assets. ",project_owner,descriptive,,,,optional/display,[prop_p07] = '1',no,yes,no,
+po_p07_fit,Does Methodological / Infrastructure Research describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p07] = '1',no,yes,yes,
+po_p07_fit,Does Methodological / Infrastructure Research describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p07] = '1',no,yes,yes,
+po_p07_fit,Does Methodological / Infrastructure Research describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p07] = '1',no,yes,yes,
+po_p07_vis,Is the basis for Methodological / Infrastructure Research visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p07] = '1',no,yes,yes,
+po_p07_vis,Is the basis for Methodological / Infrastructure Research visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p07] = '1',no,yes,yes,
+po_p07_vis,Is the basis for Methodological / Infrastructure Research visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p07] = '1',no,yes,yes,
+po_p07_vis,Is the basis for Methodological / Infrastructure Research visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p07] = '1',no,yes,yes,
+po_p08_label,<strong>Unclear from Register Entry</strong><br>Use where the project title and datasets do not provide enough information to infer the analytical purpose. ,project_owner,descriptive,,,,optional/display,[prop_p08] = '1',no,yes,no,
+po_p08_fit,Does Unclear from Register Entry describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_p08] = '1',no,yes,yes,
+po_p08_fit,Does Unclear from Register Entry describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_p08] = '1',no,yes,yes,
+po_p08_fit,Does Unclear from Register Entry describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_p08] = '1',no,yes,yes,
+po_p08_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_p08] = '1',no,yes,yes,
+po_p08_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_p08] = '1',no,yes,yes,
+po_p08_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_p08] = '1',no,yes,yes,
+po_p08_vis,Is the basis for Unclear from Register Entry visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_p08] = '1',no,yes,yes,
+po_t01_label,"<strong>Demographic disparities / equity tag</strong><br>A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups.",project_owner,descriptive,,,,optional/display,[prop_t01] = '1',no,yes,no,
+po_t01_fit,Does Demographic disparities / equity tag describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_t01] = '1',no,yes,yes,
+po_t01_fit,Does Demographic disparities / equity tag describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_t01] = '1',no,yes,yes,
+po_t01_fit,Does Demographic disparities / equity tag describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_t01] = '1',no,yes,yes,
+po_t01_vis,Is the basis for Demographic disparities / equity tag visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_t01] = '1',no,yes,yes,
+po_t01_vis,Is the basis for Demographic disparities / equity tag visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_t01] = '1',no,yes,yes,
+po_t01_vis,Is the basis for Demographic disparities / equity tag visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_t01] = '1',no,yes,yes,
+po_t01_vis,Is the basis for Demographic disparities / equity tag visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_t01] = '1',no,yes,yes,
+po_t02_label,"<strong>COVID-19 &amp; Pandemic</strong><br>A cross-cutting tag for projects where COVID-19, the COVID-19 pandemic, pandemic conditions, infection surveillance, vaccination, lockdowns, social distancing, pandemic-related public support, or pandemic consequences are a central condition or lens for the research question.",project_owner,descriptive,,,,optional/display,[prop_t02] = '1',no,yes,no,
+po_t02_fit,Does COVID-19 & Pandemic describe the actual project?,project_owner,radio,1,Fits,,conditional,[prop_t02] = '1',no,yes,yes,
+po_t02_fit,Does COVID-19 & Pandemic describe the actual project?,project_owner,radio,2,Does not fit,,conditional,[prop_t02] = '1',no,yes,yes,
+po_t02_fit,Does COVID-19 & Pandemic describe the actual project?,project_owner,radio,3,Unsure,,conditional,[prop_t02] = '1',no,yes,yes,
+po_t02_vis,Is the basis for COVID-19 & Pandemic visible in the public register entry?,project_owner,radio,1,Clearly visible,,conditional,[prop_t02] = '1',no,yes,yes,
+po_t02_vis,Is the basis for COVID-19 & Pandemic visible in the public register entry?,project_owner,radio,2,Partly visible,,conditional,[prop_t02] = '1',no,yes,yes,
+po_t02_vis,Is the basis for COVID-19 & Pandemic visible in the public register entry?,project_owner,radio,3,Not visible,,conditional,[prop_t02] = '1',no,yes,yes,
+po_t02_vis,Is the basis for COVID-19 & Pandemic visible in the public register entry?,project_owner,radio,4,Unsure,,conditional,[prop_t02] = '1',no,yes,yes,
+po_miss_domain,Is any Research Domain missing?,project_owner,radio,0,No,,required,,no,yes,yes,
+po_miss_domain,Is any Research Domain missing?,project_owner,radio,1,Yes,,required,,no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,1,Labour Market & Employment,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,2,Education & Skills,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,3,Health & Social Care,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,4,Crime & Justice,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,5,Business & Productivity,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,6,"Poverty, Wealth & Living Standards",,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,7,Housing & Planning,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,8,Migration & Demographics,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,9,Environment & Agriculture,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,10,Public Finance & Taxation,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_domains,Which Research Domain label(s) are missing?,project_owner,checkbox,11,Data Infrastructure & Methodology,,conditional,[po_miss_domain] = '1',no,yes,yes,
+po_miss_purpose,Is any Analytical Purpose missing?,project_owner,radio,0,No,,required,,no,yes,yes,
+po_miss_purpose,Is any Analytical Purpose missing?,project_owner,radio,1,Yes,,required,,no,yes,yes,
+po_miss_purposes,Which Analytical Purpose label(s) are missing?,project_owner,checkbox,1,Descriptive Monitoring,,conditional,[po_miss_purpose] = '1',no,yes,yes,
+po_miss_purposes,Which Analytical Purpose label(s) are missing?,project_owner,checkbox,2,Outcome Tracking,,conditional,[po_miss_purpose] = '1',no,yes,yes,
+po_miss_purposes,Which Analytical Purpose label(s) are missing?,project_owner,checkbox,3,Life-Course / Trajectory Analysis,,conditional,[po_miss_purpose] = '1',no,yes,yes,
+po_miss_purposes,Which Analytical Purpose label(s) are missing?,project_owner,checkbox,4,Service Interaction / Systems Analysis,,conditional,[po_miss_purpose] = '1',no,yes,yes,
+po_miss_purposes,Which Analytical Purpose label(s) are missing?,project_owner,checkbox,5,Policy Evaluation / Impact Analysis,,conditional,[po_miss_purpose] = '1',no,yes,yes,
+po_miss_purposes,Which Analytical Purpose label(s) are missing?,project_owner,checkbox,6,Risk Prediction / Early Identification,,conditional,[po_miss_purpose] = '1',no,yes,yes,
+po_miss_purposes,Which Analytical Purpose label(s) are missing?,project_owner,checkbox,7,Methodological / Infrastructure Research,,conditional,[po_miss_purpose] = '1',no,yes,yes,
+po_miss_tag,Is any cross-cutting tag missing?,project_owner,radio,0,No,,required,,no,yes,yes,
+po_miss_tag,Is any cross-cutting tag missing?,project_owner,radio,1,Yes,,required,,no,yes,yes,
+po_miss_tags,Which cross-cutting tag(s) are missing?,project_owner,checkbox,1,Demographic disparities / equity tag,,conditional,[po_miss_tag] = '1',no,yes,yes,
+po_miss_tags,Which cross-cutting tag(s) are missing?,project_owner,checkbox,2,COVID-19 & Pandemic,,conditional,[po_miss_tag] = '1',no,yes,yes,
+po_sufficiency,Public register-entry sufficiency,project_owner,radio,1,Sufficient,,required,,no,yes,yes,
+po_sufficiency,Public register-entry sufficiency,project_owner,radio,2,Partial,,required,,no,yes,yes,
+po_sufficiency,Public register-entry sufficiency,project_owner,radio,3,Insufficient,,required,,no,yes,yes,
+po_taxonomy_fit,Taxonomy fit,project_owner,radio,1,Fit,,required,,no,yes,yes,
+po_taxonomy_fit,Taxonomy fit,project_owner,radio,2,Partial Fit,,required,,no,yes,yes,
+po_taxonomy_fit,Taxonomy fit,project_owner,radio,3,No Fit,,required,,no,yes,yes,
+po_tax_issue,Taxonomy issue type,project_owner,checkbox,1,Missing category,,conditional,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',no,yes,yes,
+po_tax_issue,Taxonomy issue type,project_owner,checkbox,2,Ambiguous/overlapping categories,,conditional,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',no,yes,yes,
+po_tax_issue,Taxonomy issue type,project_owner,checkbox,3,Too broad,,conditional,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',no,yes,yes,
+po_tax_issue,Taxonomy issue type,project_owner,checkbox,4,Too narrow,,conditional,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',no,yes,yes,
+po_tax_issue,Taxonomy issue type,project_owner,checkbox,5,Other,,conditional,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',no,yes,yes,
+po_tax_issue,Taxonomy issue type,project_owner,checkbox,6,None,,conditional,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',no,yes,yes,
+po_note,Explanation,project_owner,notes,,,,conditional,[po_d01_fit] = '2' or [po_d01_fit] = '3' or [po_d01_vis] = '2' or [po_d01_vis] = '3' or [po_d01_vis] = '4' or [po_d02_fit] = '2' or [po_d02_fit] = '3' or [po_d02_vis] = '2' or [po_d02_vis] = '3' or [po_d02_vis] = '4' or [po_d03_fit] = '2' or [po_d03_fit] = '3' or [po_d03_vis] = '2' or [po_d03_vis] = '3' or [po_d03_vis] = '4' or [po_d04_fit] = '2' or [po_d04_fit] = '3' or [po_d04_vis] = '2' or [po_d04_vis] = '3' or [po_d04_vis] = '4' or [po_d05_fit] = '2' or [po_d05_fit] = '3' or [po_d05_vis] = '2' or [po_d05_vis] = '3' or [po_d05_vis] = '4' or [po_d06_fit] = '2' or [po_d06_fit] = '3' or [po_d06_vis] = '2' or [po_d06_vis] = '3' or [po_d06_vis] = '4' or [po_d07_fit] = '2' or [po_d07_fit] = '3' or [po_d07_vis] = '2' or [po_d07_vis] = '3' or [po_d07_vis] = '4' or [po_d08_fit] = '2' or [po_d08_fit] = '3' or [po_d08_vis] = '2' or [po_d08_vis] = '3' or [po_d08_vis] = '4' or [po_d09_fit] = '2' or [po_d09_fit] = '3' or [po_d09_vis] = '2' or [po_d09_vis] = '3' or [po_d09_vis] = '4' or [po_d10_fit] = '2' or [po_d10_fit] = '3' or [po_d10_vis] = '2' or [po_d10_vis] = '3' or [po_d10_vis] = '4' or [po_d11_fit] = '2' or [po_d11_fit] = '3' or [po_d11_vis] = '2' or [po_d11_vis] = '3' or [po_d11_vis] = '4' or [po_d12_fit] = '2' or [po_d12_fit] = '3' or [po_d12_vis] = '2' or [po_d12_vis] = '3' or [po_d12_vis] = '4' or [po_p01_fit] = '2' or [po_p01_fit] = '3' or [po_p01_vis] = '2' or [po_p01_vis] = '3' or [po_p01_vis] = '4' or [po_p02_fit] = '2' or [po_p02_fit] = '3' or [po_p02_vis] = '2' or [po_p02_vis] = '3' or [po_p02_vis] = '4' or [po_p03_fit] = '2' or [po_p03_fit] = '3' or [po_p03_vis] = '2' or [po_p03_vis] = '3' or [po_p03_vis] = '4' or [po_p04_fit] = '2' or [po_p04_fit] = '3' or [po_p04_vis] = '2' or [po_p04_vis] = '3' or [po_p04_vis] = '4' or [po_p05_fit] = '2' or [po_p05_fit] = '3' or [po_p05_vis] = '2' or [po_p05_vis] = '3' or [po_p05_vis] = '4' or [po_p06_fit] = '2' or [po_p06_fit] = '3' or [po_p06_vis] = '2' or [po_p06_vis] = '3' or [po_p06_vis] = '4' or [po_p07_fit] = '2' or [po_p07_fit] = '3' or [po_p07_vis] = '2' or [po_p07_vis] = '3' or [po_p07_vis] = '4' or [po_p08_fit] = '2' or [po_p08_fit] = '3' or [po_p08_vis] = '2' or [po_p08_vis] = '3' or [po_p08_vis] = '4' or [po_t01_fit] = '2' or [po_t01_fit] = '3' or [po_t01_vis] = '2' or [po_t01_vis] = '3' or [po_t01_vis] = '4' or [po_t02_fit] = '2' or [po_t02_fit] = '3' or [po_t02_vis] = '2' or [po_t02_vis] = '3' or [po_t02_vis] = '4' or [po_miss_domain] = '1' or [po_miss_purpose] = '1' or [po_miss_tag] = '1' or [po_sufficiency] = '2' or [po_sufficiency] = '3' or [po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',no,yes,yes,"Required for disagreement, uncertainty, missing labels, limited public evidence, or taxonomy concern."
