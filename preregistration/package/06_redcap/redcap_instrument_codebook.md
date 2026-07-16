@@ -29,4 +29,4 @@ REDCap generates `assignment_admin_complete`, `scratch_coder_complete`, and `pro
 
 ## Candidate limitations
 
-`@MAXCHOICE`, `@NONEOFTHEABOVE`, survey piping, hidden/read-only tags, user rights, save/return, and rendering require manual confirmation in the actual UCL REDCap version. The owner visibility categories are an implementation-level candidate operationalisation of the protocol distinction and require collaborator/pilot review. The HTML preview is structural, not pixel-perfect.
+`@MAXCHECKED=2` and `@NONEOFTHEABOVE` were confirmed for the Scratch Coder fields in the tested UCL REDCap version. Survey piping, hidden/read-only tags, user rights, save/return, rendering, and the Project Owner instrument still require completion of their applicable runtime QA. The owner visibility categories are an implementation-level candidate operationalisation of the protocol distinction and require collaborator/pilot review. The HTML preview is structural, not pixel-perfect.

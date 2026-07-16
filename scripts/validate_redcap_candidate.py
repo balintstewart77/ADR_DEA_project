@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline structural, taxonomy, blinding, and synthetic-response validation."""
 from __future__ import annotations
-import argparse, csv, json, re, sys
+import argparse, csv, html, json, re, sys
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Mapping
@@ -19,6 +19,10 @@ FIXTURES=ROOT/'tests/fixtures/redcap_candidate_synthetic_submissions.yaml'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 FORMS={'assignment_admin','scratch_coder','project_owner'}
 TYPES={'text','notes','radio','dropdown','checkbox','yesno','truefalse','descriptive','calc','slider','file','signature'}
+PURPOSE_ANNOTATION="@MAXCHECKED=2 @NONEOFTHEABOVE='8'"
+SC_EXPOSURE_BRANCH="[sc_exposure] = '1'"
+SC_NOTE_BRANCH="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
+SC_NOTE_HELP='Required for partial or insufficient evidence, low confidence, or a taxonomy concern.'
 NAME_RE=re.compile(r'^[a-z][a-z0-9_]*$'); REAL_ID_RE=re.compile(r'(?<!\d)20\d{2}/\d{3}(?!\d)')
 BRANCH_RE=re.compile(r'\[([a-z][a-z0-9_]*)(?:\((\d+)\))?\]')
 
@@ -77,8 +81,13 @@ def validate_dictionary(path=DICTIONARY):
  for forbidden in ('source_record_id','official_project_id','sample_set','hard_stratum','sample_status','draw_rank','model rationale','cross-model','owner response','reviewer_id'):
   if forbidden in scratch_text: errors.append(f'Scratch form leaks hidden field/content: {forbidden}')
  if '[assignment_id]' not in scratch_text or '[project_title]' not in scratch_text or '[datasets_used]' not in scratch_text: errors.append('Scratch form lacks permitted neutral/evidence piping')
- if by.get('sc_purposes',{}).get('Field Annotation')!="@MAXCHOICE=2 @NONEOFTHEABOVE='8'": errors.append('Scratch purpose action tags differ')
+ if by.get('sc_purposes',{}).get('Field Annotation')!=PURPOSE_ANNOTATION: errors.append('Scratch purpose action tags differ')
  if by.get('sc_domains',{}).get('Field Annotation')!="@NONEOFTHEABOVE='12'": errors.append('Scratch domain action tag differs')
+ exposure_note=by.get('sc_exposure_note',{})
+ if exposure_note.get('Branching Logic (Show field only if...)')!=SC_EXPOSURE_BRANCH or exposure_note.get('Required Field?')!='y': errors.append('Dedicated exposure description must remain required when sc_exposure = 1')
+ sc_note=by.get('sc_note',{})
+ if sc_note.get('Branching Logic (Show field only if...)')!=SC_NOTE_BRANCH: errors.append('Scratch generic note branching differs')
+ if sc_note.get('Field Note')!=SC_NOTE_HELP: errors.append('Scratch generic note help text differs')
  if errors: raise CandidateError('\n'.join(errors))
  return rows,by
 
@@ -98,6 +107,10 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  if len(keys)!=len(set(keys)): errors.append('Duplicate conceptual/response mapping')
  spec=yaml.safe_load((package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))
  if spec.get('forms')!=['assignment_admin','scratch_coder','project_owner']: errors.append('Branch specification form order differs')
+ scratch_spec=spec.get('scratch',{})
+ if scratch_spec.get('conditional_required',{}).get('sc_exposure_note')!='sc_exposure == 1': errors.append('Branch specification exposure-note rule differs')
+ if scratch_spec.get('conditional_required',{}).get('sc_note')!='sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence == 3': errors.append('Branch specification generic-note rule differs')
+ if scratch_spec.get('action_tags_for_live_confirmation',{}).get('sc_purposes')!=PURPOSE_ANNOTATION: errors.append('Branch specification purpose action tags differ')
  mapping=spec.get('owner',{}).get('label_mapping',[]); labels=taxonomy_labels()
  for layer in ('domain','purpose','tag'):
   actual=[x.get('canonical_label') for x in mapping if x.get('taxonomy_layer')==layer]
@@ -109,6 +122,7 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  if missing: errors.append(f'Expected-export-schema omission: {sorted(missing)}')
  preview=(package/'redcap_candidate_instrument_preview.html').read_text(encoding='utf-8'); parser=PreviewParser(); parser.feed(preview)
  if not (parser.html and parser.h1): errors.append('Static preview is not parseable HTML')
+ if html.escape(SC_NOTE_BRANCH) not in preview: errors.append('Static preview lacks corrected generic-note branch')
  fixture=fixture_path.read_text(encoding='utf-8')
  if REAL_ID_RE.search(fixture): errors.append('Real Record ID in synthetic fixture')
  if re.search(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',fixture): errors.append('Email address in synthetic fixture')
@@ -139,7 +153,7 @@ def validate_scratch(data):
  if data.get('sc_exposure')==1 and not data.get('sc_exposure_note'): e.append('accidental exposure requires explanation')
  if data.get('sc_taxonomy_fit') in (2,3):
   if not data.get('sc_tax_issue') or 6 in data.get('sc_tax_issue',[]): e.append('taxonomy issue requires issue type')
- triggers=data.get('sc_exposure')==1 or data.get('sc_sufficiency') in (2,3) or data.get('sc_taxonomy_fit') in (2,3) or data.get('sc_confidence')==3
+ triggers=data.get('sc_sufficiency') in (2,3) or data.get('sc_taxonomy_fit') in (2,3) or data.get('sc_confidence')==3
  if triggers and not data.get('sc_note'): e.append('conditional explanatory note required')
  return e
 def validate_owner(data,mapping):

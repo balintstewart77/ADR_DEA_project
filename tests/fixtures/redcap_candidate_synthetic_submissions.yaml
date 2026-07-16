@@ -174,7 +174,6 @@ cases:
     sc_taxonomy_fit: 1
     sc_confidence: 1
     sc_exposure_note: Unexpected non-permitted context was visible.
-    sc_note: Exposure was reported.
 - case_id: sc_12_incomplete_core
   stream: scratch
   expected_valid: false

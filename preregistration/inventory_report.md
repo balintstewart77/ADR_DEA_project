@@ -2,7 +2,7 @@
 
 ## Inventory snapshot
 
-- Inventory date: 2026-07-15
+- Inventory date: 2026-07-16
 - Repository root: `C:\Users\balin\Desktop\ADR_DEA_project`
 - Branch: `main`
 - Commit at recovery pre-flight: `e1ee9e3f55a9733468395bc90c548e12bde7707f`
@@ -54,9 +54,15 @@ preserves hidden project clustering for repeated coders or owners.
 The frozen taxonomy supplies all 12 domain choices, eight purpose choices, and
 two tags. Offline checks cover dictionary structure, branching references,
 choice codes, taxonomy alignment, blinding, import/export alignment, 23
-synthetic scenarios, and security markers. Live REDCap import and browser QA
-remain pending and required before the excluded pilot. No assignment, response,
-sample identity, contact, token, or live survey link was created.
+synthetic scenarios, and security markers. On 2026-07-16, synthetic-only UCL
+REDCap testing of seven assignment records confirmed one row per assignment
+and identified two runtime defects. Candidate 0.2 replaces `@MAXCHOICE=2` with
+`@MAXCHECKED=2` and removes `sc_exposure` from the generic `sc_note` branch
+while retaining the required dedicated exposure description. Fresh records
+confirmed both fixes and essential Scratch Coder runtime QA passed. Project
+Owner runtime QA remains outstanding. No real or pilot assignment, personal
+information, response export, project identifier, token, or live survey link
+was stored in Git.
 
 The initial scientific-artefact inventory and forensic search were read-only.
 After the Fable evidence gates passed, an authorised pre-registration

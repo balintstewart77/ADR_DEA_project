@@ -4,7 +4,7 @@
 - [ ] Administrative, source, sampling, and model fields are absent from coder and owner displays.
 - [ ] Coder sees only opaque assignment ID, title, datasets, and coding questions.
 - [ ] Owner sees only permitted project information, proposed labels, and review questions.
-- [ ] `@NONEOFTHEABOVE`, `@MAXCHOICE=2`, hidden, and read-only tags behave as intended.
+- [ ] `@NONEOFTHEABOVE`, `@MAXCHECKED=2`, hidden, and read-only tags behave as intended.
 - [ ] Branching and conditional-required fields behave correctly for every trigger.
 - [ ] Desktop and mobile display, save-and-return (if enabled), and completion status work.
 - [ ] Export matches `redcap_expected_export_schema.csv` with one row per assignment.

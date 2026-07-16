@@ -1,4 +1,4 @@
-version: redcap-candidate-0.1
+version: redcap-candidate-0.2
 forms:
 - assignment_admin
 - scratch_coder
@@ -25,11 +25,11 @@ scratch:
   conditional_required:
     sc_exposure_note: sc_exposure == 1
     sc_tax_issue: sc_taxonomy_fit in [2,3]
-    sc_note: sc_exposure == 1 or sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3]
-      or sc_confidence == 3
+    sc_note: sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence
+      == 3
   action_tags_for_live_confirmation:
     sc_domains: '@NONEOFTHEABOVE=''12'''
-    sc_purposes: '@MAXCHOICE=2 @NONEOFTHEABOVE=''8'''
+    sc_purposes: '@MAXCHECKED=2 @NONEOFTHEABOVE=''8'''
 owner:
   label_mapping:
   - variable: d01

@@ -61,6 +61,7 @@ class CandidateTests(unittest.TestCase):
  def test_17_low_confidence_without_note_fails(self): self.assertTrue(v.validate_scratch(dict(self.sc(),sc_confidence=3)))
  def test_18_taxonomy_issue_without_type_note_fails(self): self.assertTrue(v.validate_scratch(dict(self.sc(),sc_taxonomy_fit=2)))
  def test_19_exposure_without_explanation_fails(self): self.assertTrue(v.validate_scratch(dict(self.sc(),sc_exposure=1)))
+ def test_19a_exposure_with_dedicated_description_needs_no_generic_note(self): self.assertFalse(v.validate_scratch(dict(self.sc(),sc_exposure=1,sc_exposure_note='Synthetic accidental exposure.')))
  def test_20_owner_proposed_response_missing_fails(self):
   d=self.po(); d.pop('po_d01_fit'); self.assertTrue(v.validate_owner(d,self.mapping()))
  def test_21_owner_disagreement_without_note_fails(self): self.assertTrue(v.validate_owner(dict(self.po(),po_d01_fit=2),self.mapping()))
@@ -89,5 +90,11 @@ class CandidateTests(unittest.TestCase):
  def test_31_multiple_owners_share_project_but_not_assignment(self): self.assertEqual(v.validate_submissions(self.fixture)['cases'],23)
  def test_32_check_writes_no_files(self):
   before={p.relative_to(v.ROOT):p.stat().st_mtime_ns for p in v.PACKAGE.iterdir() if p.is_file()}; self.assertEqual(v.main(['--check']),0); after={p.relative_to(v.ROOT):p.stat().st_mtime_ns for p in v.PACKAGE.iterdir() if p.is_file()}; self.assertEqual(before,after)
+ def test_33_legacy_maxchoice_action_tag_fails(self):
+  r=self.rows(); next(x for x in r if x['Variable / Field Name']=='sc_purposes')['Field Annotation']="@MAXCHOICE=2 @NONEOFTHEABOVE='8'"; self.write_rows(r)
+  with self.assertRaisesRegex(v.CandidateError,'purpose action tags differ'): self.check()
+ def test_34_generic_note_exposure_branch_fails(self):
+  r=self.rows(); note=next(x for x in r if x['Variable / Field Name']=='sc_note'); note['Branching Logic (Show field only if...)']="[sc_exposure] = '1' or "+note['Branching Logic (Show field only if...)']; self.write_rows(r)
+  with self.assertRaisesRegex(v.CandidateError,'generic note branching differs'): self.check()
 
 if __name__=='__main__': unittest.main()

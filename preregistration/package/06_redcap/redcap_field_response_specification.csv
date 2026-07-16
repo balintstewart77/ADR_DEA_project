@@ -96,7 +96,7 @@ sc_tax_issue,Taxonomy issue type,scratch_coder,checkbox,6,None,,conditional,[sc_
 sc_confidence,Classification confidence,scratch_coder,radio,1,High,,required,,yes,no,yes,
 sc_confidence,Classification confidence,scratch_coder,radio,2,Medium,,required,,yes,no,yes,
 sc_confidence,Classification confidence,scratch_coder,radio,3,Low,,required,,yes,no,yes,
-sc_note,Explanatory note,scratch_coder,notes,,,,conditional,[sc_exposure] = '1' or [sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3',yes,no,yes,"Required for exposure, Partial/Insufficient evidence, Partial/No Fit, or Low confidence."
+sc_note,Explanatory note,scratch_coder,notes,,,,conditional,[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3',yes,no,yes,"Required for partial or insufficient evidence, low confidence, or a taxonomy concern."
 po_intro,Review proposed labels separately for actual-project fit and visibility in the public register entry.,project_owner,descriptive,,,,optional/display,,no,yes,no,
 po_assignment,Assignment: <strong>[assignment_id]</strong>,project_owner,descriptive,,,,optional/display,,no,yes,no,
 po_project_title,<strong>Project title</strong><br>[project_title],project_owner,descriptive,,,,optional/display,,no,yes,no,
