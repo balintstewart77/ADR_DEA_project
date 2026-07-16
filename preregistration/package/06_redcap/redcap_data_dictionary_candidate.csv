@@ -6,7 +6,7 @@ source_record_id,assignment_admin,,text,Stable source Record ID,,,,,,,,,,,,,@HID
 official_project_id,assignment_admin,,text,Official Project ID,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 project_title,assignment_admin,,notes,Frozen public-register project title,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 datasets_used,assignment_admin,,notes,Frozen public-register datasets-used entry,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
-sample_set,assignment_admin,,radio,Sample set,"1, Baseline | 2, Hard case | 3, Owner review",,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+sample_set,assignment_admin,,radio,Sample set,"1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot",,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 hard_stratum,assignment_admin,,radio,Hard-case stratum,"0, Not applicable | 1, Domain only | 2, Purpose only | 3, Both",,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 validation_included,assignment_admin,,yesno,Included in validation analysis,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 sample_status,assignment_admin,,radio,Active or reserve status,"1, Active | 2, Reserve | 3, Review only",,,,,,,,,,,,@HIDDEN-SURVEY @READONLY

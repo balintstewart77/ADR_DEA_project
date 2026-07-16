@@ -6,7 +6,7 @@ source_record_id,assignment_admin,user-defined,string,,identifier/provenance,ass
 official_project_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 project_title,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 datasets_used,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
-sample_set,assignment_admin,user-defined,integer,"1, Baseline | 2, Hard case | 3, Owner review",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+sample_set,assignment_admin,user-defined,integer,"1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 hard_stratum,assignment_admin,user-defined,integer,"0, Not applicable | 1, Domain only | 2, Purpose only | 3, Both",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 validation_included,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 sample_status,assignment_admin,user-defined,integer,"1, Active | 2, Reserve | 3, Review only",identifier/provenance,assignment,,restricted response data,Hidden from reviewers

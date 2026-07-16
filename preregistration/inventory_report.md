@@ -53,7 +53,7 @@ preserves hidden project clustering for repeated coders or owners.
 
 The frozen taxonomy supplies all 12 domain choices, eight purpose choices, and
 two tags. Offline checks cover dictionary structure, branching references,
-choice codes, taxonomy alignment, blinding, import/export alignment, 23
+choice codes, taxonomy alignment, blinding, import/export alignment, 27
 synthetic scenarios, and security markers. On 2026-07-16, synthetic-only UCL
 REDCap testing of seven assignment records confirmed one row per assignment
 and identified two runtime defects. Candidate 0.2 replaces `@MAXCHOICE=2` with
@@ -63,6 +63,16 @@ confirmed both fixes and essential Scratch Coder runtime QA passed. Project
 Owner runtime QA remains outstanding. No real or pilot assignment, personal
 information, response export, project identifier, token, or live survey link
 was stored in Git.
+
+Candidate 0.3 corrects a hidden administrative representational defect found
+while preparing the already-specified frozen training-pilot import. Candidate
+0.2 had no Pilot value in `sample_set`; candidate 0.3 adds `4, Pilot` without
+changing codes 1–3 and requires Pilot rows to use `validation_included = 0`.
+The protocol and canonical exclusion artefacts already specified the same ten
+pilot records within the unchanged 22-record exclusion set. No incorrect
+substitute was used, no pilot assignment file was generated under candidate
+0.2 or during this revision, and no respondent-facing field, taxonomy,
+sampling design, validation sample, or reserve sample changed.
 
 The initial scientific-artefact inventory and forensic search were read-only.
 After the Fable evidence gates passed, an authorised pre-registration

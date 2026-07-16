@@ -10,6 +10,7 @@ datasets_used,Frozen public-register datasets-used entry,assignment_admin,notes,
 sample_set,Sample set,assignment_admin,radio,1,Baseline,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 sample_set,Sample set,assignment_admin,radio,2,Hard case,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 sample_set,Sample set,assignment_admin,radio,3,Owner review,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+sample_set,Sample set,assignment_admin,radio,4,Pilot,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 hard_stratum,Hard-case stratum,assignment_admin,radio,0,Not applicable,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 hard_stratum,Hard-case stratum,assignment_admin,radio,1,Domain only,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 hard_stratum,Hard-case stratum,assignment_admin,radio,2,Purpose only,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY

@@ -19,6 +19,9 @@ FIXTURES=ROOT/'tests/fixtures/redcap_candidate_synthetic_submissions.yaml'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 FORMS={'assignment_admin','scratch_coder','project_owner'}
 TYPES={'text','notes','radio','dropdown','checkbox','yesno','truefalse','descriptive','calc','slider','file','signature'}
+VERSION='redcap-candidate-0.3'
+SAMPLE_SET_CHOICES={'1':'Baseline','2':'Hard case','3':'Owner review','4':'Pilot'}
+SAMPLE_SET_TEXT='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
 PURPOSE_ANNOTATION="@MAXCHECKED=2 @NONEOFTHEABOVE='8'"
 SC_EXPOSURE_BRANCH="[sc_exposure] = '1'"
 SC_NOTE_BRANCH="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
@@ -83,6 +86,7 @@ def validate_dictionary(path=DICTIONARY):
  if '[assignment_id]' not in scratch_text or '[project_title]' not in scratch_text or '[datasets_used]' not in scratch_text: errors.append('Scratch form lacks permitted neutral/evidence piping')
  if by.get('sc_purposes',{}).get('Field Annotation')!=PURPOSE_ANNOTATION: errors.append('Scratch purpose action tags differ')
  if by.get('sc_domains',{}).get('Field Annotation')!="@NONEOFTHEABOVE='12'": errors.append('Scratch domain action tag differs')
+ if choices(by.get('sample_set',{}).get('Choices, Calculations, OR Slider Labels',''))!=SAMPLE_SET_CHOICES: errors.append('Administrative sample_set choices differ')
  exposure_note=by.get('sc_exposure_note',{})
  if exposure_note.get('Branching Logic (Show field only if...)')!=SC_EXPOSURE_BRANCH or exposure_note.get('Required Field?')!='y': errors.append('Dedicated exposure description must remain required when sc_exposure = 1')
  sc_note=by.get('sc_note',{})
@@ -105,8 +109,14 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  fs,fh=read_csv(package/'redcap_field_response_specification.csv')
  keys=[(r.get('variable_name'),r.get('response_code')) for r in fs]
  if len(keys)!=len(set(keys)): errors.append('Duplicate conceptual/response mapping')
+ sample_set_mapping={r.get('response_code'):r.get('response_label') for r in fs if r.get('variable_name')=='sample_set'}
+ if sample_set_mapping!=SAMPLE_SET_CHOICES: errors.append('Field specification sample_set mapping differs')
  spec=yaml.safe_load((package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))
+ if spec.get('version')!=VERSION: errors.append('Branch specification candidate version differs')
  if spec.get('forms')!=['assignment_admin','scratch_coder','project_owner']: errors.append('Branch specification form order differs')
+ admin_spec=spec.get('administration',{})
+ if admin_spec.get('sample_set_codes')!={1:'Baseline',2:'Hard case',3:'Owner review',4:'Pilot'}: errors.append('Branch specification sample_set codes differ')
+ if admin_spec.get('pilot_validation_included')!=0: errors.append('Branch specification pilot exclusion rule differs')
  scratch_spec=spec.get('scratch',{})
  if scratch_spec.get('conditional_required',{}).get('sc_exposure_note')!='sc_exposure == 1': errors.append('Branch specification exposure-note rule differs')
  if scratch_spec.get('conditional_required',{}).get('sc_note')!='sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence == 3': errors.append('Branch specification generic-note rule differs')
@@ -120,6 +130,8 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  if imp: errors.append('Assignment import template contains rows')
  exp,eh=read_csv(package/'redcap_expected_export_schema.csv'); actual={r.get('variable') for r in exp}; missing=expected_exports(rows)-actual
  if missing: errors.append(f'Expected-export-schema omission: {sorted(missing)}')
+ sample_export=next((r for r in exp if r.get('variable')=='sample_set'),{})
+ if sample_export.get('allowed_values')!=SAMPLE_SET_TEXT: errors.append('Expected-export-schema sample_set choices differ')
  preview=(package/'redcap_candidate_instrument_preview.html').read_text(encoding='utf-8'); parser=PreviewParser(); parser.feed(preview)
  if not (parser.html and parser.h1): errors.append('Static preview is not parseable HTML')
  if html.escape(SC_NOTE_BRANCH) not in preview: errors.append('Static preview lacks corrected generic-note branch')
@@ -139,6 +151,15 @@ def neutral(value):
 def required(data,names,errors):
  for n in names:
   if n not in data or data[n] in ('',None,[]): errors.append(f'missing required {n}')
+def validate_admin(data):
+ e=[]
+ if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
+ required(data,['review_stream','sample_set','validation_included'],e)
+ if data.get('review_stream') not in (1,2): e.append('invalid review_stream code')
+ if data.get('sample_set') not in (1,2,3,4): e.append('invalid sample_set code')
+ if data.get('validation_included') not in (0,1): e.append('invalid validation_included code')
+ if data.get('sample_set')==4 and data.get('validation_included')!=0: e.append('pilot assignments must be excluded from validation')
+ return e
 def validate_scratch(data):
  e=[]
  if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
@@ -183,7 +204,11 @@ def validate_submissions(path=FIXTURES,spec_path=BRANCH_SPEC):
  payload=yaml.safe_load(path.read_text(encoding='utf-8')); spec=yaml.safe_load(spec_path.read_text(encoding='utf-8')); errors=[]; owner_pair=[]
  for case in payload.get('cases',[]):
   cid=case.get('case_id'); data=case.get('data',{}); aid=data.get('assignment_id')
-  actual=validate_scratch(data) if case.get('stream')=='scratch' else validate_owner(data,spec['owner']['label_mapping'])
+  stream=case.get('stream')
+  if stream=='admin': actual=validate_admin(data)
+  elif stream=='scratch': actual=validate_scratch(data)
+  elif stream=='owner': actual=validate_owner(data,spec['owner']['label_mapping'])
+  else: actual=[f'unknown synthetic stream: {stream}']
   expected=case.get('expected_valid')
   if expected and actual: errors.append(f'{cid}: expected valid but failed: {actual}')
   if not expected and not actual: errors.append(f'{cid}: expected invalid but passed')

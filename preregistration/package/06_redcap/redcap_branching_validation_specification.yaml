@@ -1,4 +1,4 @@
-version: redcap-candidate-0.2
+version: redcap-candidate-0.3
 forms:
 - assignment_admin
 - scratch_coder
@@ -240,3 +240,10 @@ completion:
   - scratch_coder_complete
   - project_owner_complete
   invalid_if_trigger_unresolved: true
+administration:
+  sample_set_codes:
+    1: Baseline
+    2: Hard case
+    3: Owner review
+    4: Pilot
+  pilot_validation_included: 0

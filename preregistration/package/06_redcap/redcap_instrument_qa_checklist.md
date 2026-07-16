@@ -2,6 +2,8 @@
 
 - [ ] Dictionary imports without unresolved warnings; form and field order are correct.
 - [ ] Administrative, source, sampling, and model fields are absent from coder and owner displays.
+- [ ] `sample_set` retains `1 Baseline`, `2 Hard case` and `3 Owner review`,
+      adds `4 Pilot`, and every Pilot row has `validation_included = 0`.
 - [ ] Coder sees only opaque assignment ID, title, datasets, and coding questions.
 - [ ] Owner sees only permitted project information, proposed labels, and review questions.
 - [ ] `@NONEOFTHEABOVE`, `@MAXCHECKED=2`, hidden, and read-only tags behave as intended.

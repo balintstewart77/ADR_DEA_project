@@ -1,6 +1,6 @@
 # REDCap instrument codebook
 
-Status: working candidate `redcap-candidate-0.1`; final freeze follows collaborator review and the excluded pilot.
+Status: working candidate `redcap-candidate-0.3`; final freeze follows collaborator review and the excluded pilot.
 
 ## Architecture
 
@@ -16,6 +16,8 @@ Source IDs, reviewer IDs, sampling information, model provenance and rationales,
 
 - Domains and purposes reproduce `dict-1.0-rc2`. Purposes permit one or two; Unclear is exclusive in both layers.
 - Tags: `0 No`, `1 Yes`.
+- Administrative sample set: `1 Baseline`, `2 Hard case`, `3 Owner review`,
+  `4 Pilot`. Pilot administration must use `validation_included = 0` (No).
 - Sufficiency: `1 Sufficient`, `2 Partial`, `3 Insufficient`.
 - Taxonomy fit: `1 Fit`, `2 Partial Fit`, `3 No Fit`.
 - Confidence: `1 High`, `2 Medium`, `3 Low`.
@@ -23,7 +25,7 @@ Source IDs, reviewer IDs, sampling information, model provenance and rationales,
 - Owner public-entry visibility: `1 Clearly visible`, `2 Partly visible`, `3 Not visible`, `4 Unsure`.
 - Taxonomy issue: Missing category; Ambiguous/overlapping categories; Too broad; Too narrow; Other; None. The local validator rejects `None` when a concern triggers the field.
 
-The assignment import template is the authoritative ordered administrative list. It includes neutral assignment and stream identifiers, hidden reviewer/source/project IDs, frozen evidence fields, sampling and provenance fields, clustering fields, owner identifiers, and one proposed-label flag per canonical label.
+The assignment import template is the authoritative ordered administrative list. It includes neutral assignment and stream identifiers, hidden reviewer/source/project IDs, frozen evidence fields, sampling and provenance fields, clustering fields, owner identifiers, and one proposed-label flag per canonical label. Candidate 0.3 adds only the hidden administrative `sample_set = 4` Pilot representation; it does not change any respondent-facing field.
 
 REDCap generates `assignment_admin_complete`, `scratch_coder_complete`, and `project_owner_complete`; there is no redundant custom completion field. The local validator blocks unresolved conditional requirements.
 

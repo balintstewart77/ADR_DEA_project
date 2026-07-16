@@ -1,6 +1,38 @@
 fixture_status: synthetic_only
 contains_real_record_ids: false
 cases:
+- case_id: admin_01_baseline
+  stream: admin
+  expected_valid: true
+  data:
+    assignment_id: B6J4K8M2
+    review_stream: 1
+    sample_set: 1
+    validation_included: 1
+- case_id: admin_02_pilot_excluded
+  stream: admin
+  expected_valid: true
+  data:
+    assignment_id: B6J4K8M2
+    review_stream: 1
+    sample_set: 4
+    validation_included: 0
+- case_id: admin_03_unknown_sample_set
+  stream: admin
+  expected_valid: false
+  data:
+    assignment_id: B6J4K8M2
+    review_stream: 1
+    sample_set: 9
+    validation_included: 1
+- case_id: admin_04_pilot_included
+  stream: admin
+  expected_valid: false
+  data:
+    assignment_id: B6J4K8M2
+    review_stream: 1
+    sample_set: 4
+    validation_included: 1
 - case_id: sc_01_ordinary
   stream: scratch
   expected_valid: true

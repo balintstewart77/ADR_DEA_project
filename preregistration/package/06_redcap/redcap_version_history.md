@@ -1,5 +1,24 @@
 # REDCap candidate version history
 
+## redcap-candidate-0.3 — 2026-07-16
+
+- Corrected a hidden administrative-schema defect discovered while preparing
+  to generate the frozen scratch-coder training-pilot import: candidate 0.2
+  could not represent the already-specified Pilot sample without an incorrect
+  substitute.
+- Added `4, Pilot` to `sample_set` while preserving `1, Baseline`, `2, Hard
+  case`, and `3, Owner review` exactly.
+- Required Pilot administration to use `validation_included = 0` (No) and
+  added synthetic and regression coverage for the exact mapping, unknown
+  codes, and pilot exclusion.
+- Preserved the protocol-authoritative ten pilot Record IDs, the complete
+  22-record exclusion set, taxonomy, respondent-facing Scratch Coder form and
+  branching, sampling design, `@MAXCHECKED=2`, and the corrected generic-note
+  exposure behavior.
+- No invalid substitute code was used and no pilot assignment file was
+  generated under the invalid schema or during this revision. No validation or
+  reserve sample was drawn.
+
 ## redcap-candidate-0.2 — 2026-07-16
 
 - Applied two confirmed UCL REDCap runtime corrections after synthetic-only

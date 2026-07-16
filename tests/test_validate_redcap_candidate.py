@@ -1,5 +1,5 @@
 from __future__ import annotations
-import csv, shutil, tempfile, unittest
+import csv, hashlib, json, shutil, tempfile, unittest
 from pathlib import Path
 import yaml
 from scripts import validate_redcap_candidate as v
@@ -52,6 +52,7 @@ class CandidateTests(unittest.TestCase):
   self.change_domain(lambda p:p+['13, Fictional Domain'])
   with self.assertRaisesRegex(v.CandidateError,'Taxonomy label mismatch'): self.check()
  def sc(self): return {'assignment_id':'A7K3M9Q2','sc_blind_decl':1,'sc_exposure':0,'sc_domains':[1],'sc_purposes':[1],'sc_covid':0,'sc_equity':0,'sc_sufficiency':1,'sc_taxonomy_fit':1,'sc_confidence':1}
+ def admin(self): return {'assignment_id':'B6J4K8M2','review_stream':1,'sample_set':1,'validation_included':1}
  def po(self): return {'assignment_id':'Q4N8Z2L7','cluster_id':'SYNTH-P','owner_resp_id':'SYNTH-O','prop_d01':1,'po_d01_fit':1,'po_d01_vis':1,'po_miss_domain':0,'po_miss_purpose':0,'po_miss_tag':0,'po_sufficiency':1,'po_taxonomy_fit':1}
  def mapping(self): return yaml.safe_load(v.BRANCH_SPEC.read_text(encoding='utf-8'))['owner']['label_mapping']
  def test_13_unclear_plus_domain_fails(self): self.assertTrue(v.validate_scratch(dict(self.sc(),sc_domains=[1,12])))
@@ -87,7 +88,7 @@ class CandidateTests(unittest.TestCase):
   rows=[x for x in rows if x['variable']!='scratch_coder_complete']
   with p.open('w',encoding='utf-8',newline='') as f: w=csv.DictWriter(f,fieldnames=h,lineterminator='\n'); w.writeheader(); w.writerows(rows)
   with self.assertRaisesRegex(v.CandidateError,'Expected-export-schema omission'): self.check()
- def test_31_multiple_owners_share_project_but_not_assignment(self): self.assertEqual(v.validate_submissions(self.fixture)['cases'],23)
+ def test_31_multiple_owners_share_project_but_not_assignment(self): self.assertEqual(v.validate_submissions(self.fixture)['cases'],27)
  def test_32_check_writes_no_files(self):
   before={p.relative_to(v.ROOT):p.stat().st_mtime_ns for p in v.PACKAGE.iterdir() if p.is_file()}; self.assertEqual(v.main(['--check']),0); after={p.relative_to(v.ROOT):p.stat().st_mtime_ns for p in v.PACKAGE.iterdir() if p.is_file()}; self.assertEqual(before,after)
  def test_33_legacy_maxchoice_action_tag_fails(self):
@@ -96,5 +97,24 @@ class CandidateTests(unittest.TestCase):
  def test_34_generic_note_exposure_branch_fails(self):
   r=self.rows(); note=next(x for x in r if x['Variable / Field Name']=='sc_note'); note['Branching Logic (Show field only if...)']="[sc_exposure] = '1' or "+note['Branching Logic (Show field only if...)']; self.write_rows(r)
   with self.assertRaisesRegex(v.CandidateError,'generic note branching differs'): self.check()
+ def test_35_sample_set_mapping_is_exact_and_existing_codes_unchanged(self):
+  row=next(x for x in self.rows() if x['Variable / Field Name']=='sample_set')
+  self.assertEqual(v.choices(row['Choices, Calculations, OR Slider Labels']),{'1':'Baseline','2':'Hard case','3':'Owner review','4':'Pilot'})
+  for code in (1,2,3): self.assertFalse(v.validate_admin(dict(self.admin(),sample_set=code)))
+ def test_36_candidate_without_pilot_sample_set_fails(self):
+  r=self.rows(); next(x for x in r if x['Variable / Field Name']=='sample_set')['Choices, Calculations, OR Slider Labels']='1, Baseline | 2, Hard case | 3, Owner review'; self.write_rows(r)
+  with self.assertRaisesRegex(v.CandidateError,'sample_set choices differ'): self.check()
+ def test_37_pilot_sample_set_is_valid_when_excluded(self): self.assertFalse(v.validate_admin(dict(self.admin(),sample_set=4,validation_included=0)))
+ def test_38_unknown_sample_set_is_invalid(self): self.assertTrue(v.validate_admin(dict(self.admin(),sample_set=9)))
+ def test_39_pilot_cannot_be_validation_included(self): self.assertTrue(v.validate_admin(dict(self.admin(),sample_set=4,validation_included=1)))
+ def test_40_scratch_coder_form_signature_is_unchanged(self):
+  rows=[r for r in self.rows() if r['Form Name']=='scratch_coder']; payload=json.dumps(rows,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
+  self.assertEqual(hashlib.sha256(payload).hexdigest(),'8f59881f91573106a2327fc6d056fd04b9bdb34816846daf0898e3b26196c00f')
+ def test_41_candidate_version_is_0_3(self): self.assertEqual(yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['version'],'redcap-candidate-0.3')
+ def test_42_runtime_corrections_remain_intact(self):
+  by={r['Variable / Field Name']:r for r in self.rows()}
+  self.assertEqual(by['sc_purposes']['Field Annotation'],v.PURPOSE_ANNOTATION)
+  self.assertEqual(by['sc_note']['Branching Logic (Show field only if...)'],v.SC_NOTE_BRANCH)
+  self.assertNotIn('sc_exposure',by['sc_note']['Branching Logic (Show field only if...)'])
 
 if __name__=='__main__': unittest.main()
