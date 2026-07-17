@@ -1,0 +1,9 @@
+figure_id,title,source_table,population,metric,intended_form,confirmatory_or_diagnostic,status,notes
+FIG-01,Replacement-panel alpha comparison,replacement_panel_alphas.csv,random baseline,Krippendorff alpha,point-and-interval plot,confirmatory,template only,No figure is generated before locked outcomes.
+FIG-02,Replacement differences and least-favourable substitution,replacement_differences.csv,random baseline,replacement difference and delta_min,point-and-interval plot,confirmatory,template only,All linked quantities use joint project-level bootstrap replicates.
+FIG-03,Register-sufficiency sensitivity,sufficiency_sensitivity.csv,random baseline,broad and strict subset estimates,faceted point-and-interval plot,diagnostic,template only,Subset membership uses original pre-adjudication ratings.
+FIG-04,Per-label diagnostic support,per_label_diagnostics.csv,random baseline,labelwise diagnostics,faceted dot plot,diagnostic,template only,Support cautions follow Section 8.6.
+FIG-05,Binary-tag diagnostics,tag_diagnostics.csv,baseline and hard case,tag agreement and prevalence,faceted diagnostic plot,diagnostic,template only,Full tag metrics are deferred to Batch 2.
+FIG-06,Evidence and taxonomy diagnostics,evidence_and_taxonomy_diagnostics.csv,baseline and hard case,sufficiency and taxonomy fit,stacked distribution plot,diagnostic,template only,Cannot assess is not a taxonomy defect.
+FIG-07,Project-owner findings,project_owner_results.csv,owner review,respondent and project summaries,descriptive panel,diagnostic,template only,Owner analysis and recruitment are deferred.
+FIG-08,Adjudication issue frequencies,adjudication_issue_frequencies.csv,adjudicated cases,issue-code frequency,descriptive bar plot,diagnostic,template only,Adjudication implementation is deferred.

@@ -1,0 +1,85 @@
+fixture_version: synthetic-validation-batch1-1
+record_id_policy: All project identifiers are synthetic and match SYN-* only.
+export_models:
+  SYN-001:
+    domains: [Labour Market & Employment]
+    purposes: [Descriptive Monitoring]
+    equity_tag: 0
+    covid_tag: 0
+  SYN-002:
+    domains: [Education & Skills]
+    purposes: [Outcome Tracking]
+    equity_tag: 0
+    covid_tag: 0
+  SYN-003:
+    domains: [Labour Market & Employment]
+    purposes: [Descriptive Monitoring]
+    equity_tag: 1
+    covid_tag: 0
+  SYN-004:
+    domains: [Labour Market & Employment]
+    purposes: [Descriptive Monitoring]
+    equity_tag: 0
+    covid_tag: 0
+cases:
+  - case_id: perfect_human_and_model
+    record_id: SYN-001
+    expected: all three humans and the model have identical domain and purpose sets
+  - case_id: perfect_human_model_disagreement
+    record_id: SYN-002
+    expected: humans agree perfectly and the model disagrees on both set dimensions
+  - case_id: boundary_model_matches_two
+    record_id: SYN-003
+    expected: model matches coders A and B but not coder C
+  - case_id: boundary_model_matches_one
+    record_id: SYN-005
+    coder_values: [A, B, B]
+    model_value: A
+    expected_model_matches: 1
+  - case_id: subset_overlap_masi
+    record_id: SYN-006
+    left: [A]
+    right: [A, B]
+    expected_jaccard: 1/2
+    expected_masi: 1/3
+  - case_id: missing_coder_dimension
+    record_id: SYN-004
+    expected_missing_slot: C
+  - case_id: broad_not_strict
+    record_id: SYN-007
+    sufficiency: [Sufficient, Partially sufficient, Insufficient]
+    expected_broad: true
+    expected_strict: false
+  - case_id: majority_insufficient_retained_primary
+    record_id: SYN-008
+    sufficiency: [Insufficient, Insufficient, Sufficient]
+    expected_broad: false
+    expected_strict: false
+    expected_primary_inclusion: true
+  - case_id: rare_label_support
+    record_id: SYN-009
+    coder_sets: [[Rare label], [Rare label], []]
+    expected_human_supported: true
+    expected_support_count: 1
+    expected_support_band: fewer_than_10
+  - case_id: undefined_binary_zero_variation
+    record_id: SYN-010
+    units: [[0, 0, 0], [0, 0, 0]]
+    expected_alpha_valid: false
+    expected_reason: expected_disagreement_zero
+  - case_id: candidate_0_4_taxonomy_fit_values
+    record_id: SYN-011
+    values: [Fit, Partial Fit, No Fit, Cannot assess from register entry]
+    expected_valid_value_count: 4
+  - case_id: cannot_assess_not_taxonomy_defect
+    record_id: SYN-012
+    values: [Fit, Partial Fit, No Fit, Cannot assess from register entry]
+    expected_taxonomy_issue_denominator: 2
+    excluded_value: Cannot assess from register entry
+  - case_id: future_owner_multiple_responses
+    owner_project_id: SYN-OWNER-001
+    responses:
+      - owner_response_id: SYN-OWNER-RESP-1
+      - owner_response_id: SYN-OWNER-RESP-2
+    expected_reporting: retain both respondent rows but one project-level cluster
+    implementation_status: schema fixture only; owner analysis deferred
