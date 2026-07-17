@@ -1,34 +1,77 @@
 # REDCap instrument codebook
 
-Status: working candidate `redcap-candidate-0.3`; final freeze follows collaborator review and the excluded pilot.
+Status: working post-training candidate redcap-candidate-0.4. The pilot used
+redcap-candidate-0.3; candidate 0.4 live runtime QA remains pending.
 
-## Architecture
+## Architecture and visibility
 
-One non-longitudinal REDCap project contains `assignment_admin`, `scratch_coder`, and `project_owner`. `assignment_id` is the record key. One reviewer-record assignment is one REDCap record and one export row. Multiple coders or owners reviewing the same project have distinct opaque assignment IDs and share hidden `cluster_id` or `owner_project_id` values.
+One non-longitudinal REDCap project contains assignment_admin, scratch_coder,
+and project_owner. assignment_id is the record key. Multiple coders or owners
+reviewing one project have distinct opaque assignment IDs and share hidden
+project clustering identifiers.
 
-## Blinding and visibility
+Scratch coders see only a neutral assignment code, title, datasets used, and
+scratch questions. Owners additionally see proposed labels and definitions.
+The owner stream separates actual-project fit from whether the public register
+entry visibly supports the label. Administrative fields remain hidden and
+read-only.
 
-Scratch coders see only a neutral assignment code, title, datasets used, and scratch questions. Owners additionally see proposed labels and short definitions because reviewing them is their task. The administrative form and imported flags are hidden from surveys and read-only; user rights must also deny reviewer access.
+## Current response codes
 
-Source IDs, reviewer IDs, sampling information, model provenance and rationales, disagreement data, reserve data, other responses, and owner comments are never piped to scratch forms. Proposed-label flags reveal only the labels under owner review, not model rationale or comparison status. No names, emails, or recruitment contacts occur in the public dictionary.
+- Domains and purposes reproduce dict-1.0-rc2. Purposes permit one or two;
+  Unclear is exclusive in both layers.
+- Tags: 0 No; 1 Yes.
+- Sample set: 1 Baseline; 2 Hard case; 3 Owner review; 4 Pilot. Pilot rows use
+  validation_included = 0.
+- Sufficiency: 1 Sufficient; 2 Partial; 3 Insufficient.
+- Scratch taxonomy fit: 1 Fit; 2 Partial Fit; 3 No Fit; 4 Cannot assess from
+  register entry.
+- Project-owner taxonomy fit: 1 Fit; 2 Partial Fit; 3 No Fit.
+- Taxonomy issue, both streams: 1 Missing or inadequately represented
+  category; 2 Ambiguous or overlapping category boundaries; 5 Other taxonomy
+  problem.
+- Confidence: 1 High; 2 Medium; 3 Low.
+- Proposed-label owner fit: 1 Fits; 2 Does not fit; 3 Unsure.
+- Owner public-entry visibility: 1 Clearly visible; 2 Partly visible; 3 Not
+  visible; 4 Unsure.
 
-## Response codes
+Cannot assess from register entry means that the visible title and dataset field
+are too thin to judge taxonomy fit. It is not No Fit, is not a taxonomy defect,
+does not display sc_tax_issue, and is coherent only when sc_sufficiency is
+Partial or Insufficient. Partial or Insufficient evidence does not force this
+response: a coder may still be able to judge taxonomy fit.
 
-- Domains and purposes reproduce `dict-1.0-rc2`. Purposes permit one or two; Unclear is exclusive in both layers.
-- Tags: `0 No`, `1 Yes`.
-- Administrative sample set: `1 Baseline`, `2 Hard case`, `3 Owner review`,
-  `4 Pilot`. Pilot administration must use `validation_included = 0` (No).
-- Sufficiency: `1 Sufficient`, `2 Partial`, `3 Insufficient`.
-- Taxonomy fit: `1 Fit`, `2 Partial Fit`, `3 No Fit`.
-- Confidence: `1 High`, `2 Medium`, `3 Low`.
-- Owner fit: `1 Fits`, `2 Does not fit`, `3 Unsure`.
-- Owner public-entry visibility: `1 Clearly visible`, `2 Partly visible`, `3 Not visible`, `4 Unsure`.
-- Taxonomy issue: Missing category; Ambiguous/overlapping categories; Too broad; Too narrow; Other; None. The local validator rejects `None` when a concern triggers the field.
+The issue field is shown and required only for Partial Fit or No Fit. One or
+more retained issue types may be selected. Other taxonomy problem requires an
+explanatory note. The field remains hidden for Fit and, in the scratch stream,
+Cannot assess from register entry.
 
-The assignment import template is the authoritative ordered administrative list. It includes neutral assignment and stream identifiers, hidden reviewer/source/project IDs, frozen evidence fields, sampling and provenance fields, clustering fields, owner identifiers, and one proposed-label flag per canonical label. Candidate 0.3 adds only the hidden administrative `sample_set = 4` Pilot representation; it does not change any respondent-facing field.
+## Historical candidate-0.3 decoding
 
-REDCap generates `assignment_admin_complete`, `scratch_coder_complete`, and `project_owner_complete`; there is no redundant custom completion field. The local validator blocks unresolved conditional requirements.
+Candidate 0.3 scratch taxonomy fit used only 1 Fit, 2 Partial Fit and 3 No Fit.
+Both candidate-0.3 issue fields used:
 
-## Candidate limitations
+1. Missing category
+2. Ambiguous/overlapping categories
+3. Too broad
+4. Too narrow
+5. Other
+6. None
 
-`@MAXCHECKED=2` and `@NONEOFTHEABOVE` were confirmed for the Scratch Coder fields in the tested UCL REDCap version. Survey piping, hidden/read-only tags, user rights, save/return, rendering, and the Project Owner instrument still require completion of their applicable runtime QA. The owner visibility categories are an implementation-level candidate operationalisation of the protocol distinction and require collaborator/pilot review. The HTML preview is structural, not pixel-perfect.
+Archived pilot exports must be decoded by instrument_ver. Codes 3, 4 and 6 are
+preserved exactly for candidate-0.3 data and are not silently mapped to the
+candidate-0.4 categories. The current expected export schema lists only
+candidate-0.4 checkbox columns 1, 2 and 5.
+
+## Reporting
+
+Scratch taxonomy-fit reporting includes Fit, Partial Fit, No Fit and Cannot
+assess from register entry. Where useful, an assessable-fit distribution is
+reported using only Fit, Partial Fit and No Fit. Cannot assess is reported with
+register-sufficiency diagnostics; it is not counted as No Fit, a taxonomy
+defect, or in the taxonomy-issue denominator. Taxonomy-issue frequencies use
+only cases with Partial Fit or No Fit.
+
+REDCap generates the three standard form-completion fields. The local validator
+blocks unresolved conditional requirements and applies instrument-version-aware
+response validation.

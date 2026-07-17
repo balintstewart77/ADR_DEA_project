@@ -1,6 +1,49 @@
 # REDCap candidate version history
 
+## redcap-candidate-0.4 — 2026-07-17
+
+- Created after the 17 July shared scratch-coder training feedback and pilot
+  launch, before formal validation coding and before preregistration
+  submission. Candidate 0.3, not candidate 0.4, was used for the pilot.
+- Added scratch-coder stored choice 4, Cannot assess from register entry. The
+  complete new sc_taxonomy_fit set is 1 Fit; 2 Partial Fit; 3 No Fit; 4 Cannot
+  assess from register entry. Project-owner po_taxonomy_fit remains 1 Fit;
+  2 Partial Fit; 3 No Fit because owners assess actual-project fit separately
+  from public-entry sufficiency.
+- Replaced each candidate-0.3 taxonomy-issue choice set — 1 Missing category;
+  2 Ambiguous/overlapping categories; 3 Too broad; 4 Too narrow; 5 Other;
+  6 None — with 1 Missing or inadequately represented category; 2 Ambiguous or
+  overlapping category boundaries; 5 Other taxonomy problem.
+- Retained stored codes 1, 2 and 5. Retired codes 3, 4 and 6 without reuse or
+  renumbering. Historical candidate-0.3 mappings remain decode-only and no
+  pilot response is silently consolidated or destructively recoded.
+- Limited each issue field to Partial Fit or No Fit, retained multi-select
+  behaviour, and required an explanatory note for Other taxonomy problem.
+  Cannot assess is not No Fit, is not a taxonomy defect, and does not trigger
+  the issue field.
+- Added offline incoherence detection for scratch Cannot Assess with Sufficient
+  register evidence. Partial or Insufficient evidence does not force Cannot
+  Assess.
+- Preserved all domain labels and cardinality, the purpose labels and maximum
+  two rule, both Unclear exclusivity rules, the COVID tag, and the
+  demographic-disparities/equity tag. This is not a substantive taxonomy
+  change.
+- The pilot exclusion set, sampling artefacts, assignments, taxonomy, prompts,
+  production outputs and cross-model frame were not changed. No formal
+  validation coding had begun.
+- Status: repository-validated working candidate for post-pilot formal coding.
+  Candidate-0.4 live runtime QA remains pending until manually tested.
+
 ## redcap-candidate-0.3 — 2026-07-16
+
+- This was the instrument version used for the 17 July excluded pilot. Its
+  pilot assignment imports and instrument_ver values remain unchanged.
+- Candidate dictionary SHA-256:
+  `d690ec4a882ff8a7eddc9c227952e09db0af51992948e5e1f8731dc5d2e891c7`.
+- Its exact taxonomy-fit choices for both streams were 1 Fit; 2 Partial Fit;
+  3 No Fit. Its exact taxonomy-issue choices for both streams were 1 Missing
+  category; 2 Ambiguous / overlapping categories; 3 Too broad; 4 Too narrow;
+  5 Other; 6 None. These values remain the historical decoding schema.
 
 - Corrected a hidden administrative-schema defect discovered while preparing
   to generate the frozen scratch-coder training-pilot import: candidate 0.2

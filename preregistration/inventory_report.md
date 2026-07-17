@@ -2,7 +2,7 @@
 
 ## Inventory snapshot
 
-- Inventory date: 2026-07-16
+- Inventory date: 2026-07-17
 - Repository root: `C:\Users\balin\Desktop\ADR_DEA_project`
 - Branch: `main`
 - Commit at recovery pre-flight: `e1ee9e3f55a9733468395bc90c548e12bde7707f`
@@ -74,6 +74,24 @@ substitute was used, no pilot assignment file was generated under candidate
 0.2 or during this revision, and no respondent-facing field, taxonomy,
 sampling design, validation sample, or reserve sample changed.
 
+Candidate 0.3 was subsequently used to launch the ten-record excluded pilot.
+Following the 17 July 2026 shared scratch-coder training session, candidate 0.4
+adds `Cannot assess from register entry` only to Scratch Coder taxonomy fit and
+consolidates both taxonomy-issue fields to stored codes 1, 2, and 5. These are
+diagnostic-instrument changes only: the substantive domain, purpose, COVID and
+equity choices are unchanged. Candidate 0.3 and the materials delivered during
+training remain preserved and decodable. The new formal-coding materials are
+separately versioned, and the decisions are recorded in
+`package/05_training_and_pilot/pilot_feedback_log_20260717.md`.
+
+The active unregistered protocol candidate is now
+`Validation_Protocol_PreReg_v0.10.docx`, created under the repository's
+separate-draft convention from preserved v0.9. It was revised directly because
+the preregistration has not been submitted; no amendment document was created.
+Formal coding cannot begin until candidate-0.3 pilot responses are complete and
+archived and candidate 0.4 passes repository validation and manual live runtime
+QA.
+
 The initial scientific-artefact inventory and forensic search were read-only.
 After the Fable evidence gates passed, an authorised pre-registration
 Record-ID cleaning correction was applied. It changed only the central cleaning
@@ -120,7 +138,7 @@ version-number or timestamp inference.
 
 | Area | Candidate | Assessment and evidence |
 | --- | --- | --- |
-| Protocol | `Validation_Protocol_PreReg_v4.docx` | Named current review candidate, but missing. It is not frozen. |
+| Protocol | `Validation_Protocol_PreReg_v0.10.docx` | Active unregistered review candidate incorporating the 17 July diagnostic-instrument decisions. Preserved v0.9 is superseded; neither version is frozen. |
 | Source | `data/dea_accredited_projects_20260601.xlsx` and matching CSV | `data/register_manifest.json` explicitly points to version `20260601` as current. |
 | Cleaning | `analysis/register_cleaning.py` | Frozen authoritative Phase 3 implementation; an in-memory rerun reproduced the packaged 1,308-row cleaned population exactly. |
 | Duplicate rulings | `analysis/register_duplicate_rulings.yaml` | Governing reviewed rulings for the current release. |
@@ -168,7 +186,7 @@ training materials, REDCap instruments or other post-pilot artefacts.
 
 ### Protocol and source freeze
 
-- `Validation_Protocol_PreReg_v4.docx` and final protocol PDF;
+- final reviewed protocol v1.0 DOCX and immutable registration PDF;
 
 ### Taxonomy, prompt, and pre-existing model evidence
 
@@ -181,7 +199,10 @@ training materials, REDCap instruments or other post-pilot artefacts.
 - final Gate 1 freeze of the now-tested sampling engine, specification, schema
   and runbook; the official draw remains a post-registration Gate 2 operation;
 - restricted trainer guide and blinded pilot-assignment files;
-- both REDCap dictionaries, codebook, and import template;
+- candidate-0.4 manual live runtime QA and sign-off in PID 9128; the combined
+  137-field dictionary, codebook, import template, specifications, preview and
+  offline validator are present, while the historical dated runtime-QA record
+  remains unchanged;
 - validation analysis script and exact dependency lockfile;
 - adjudication instrument, audit-selection script, evidence-pack template, and
   senior sign-off template;
@@ -312,8 +333,9 @@ README plus empty directories.
 
 ## Decisions required from Balint
 
-1. Supply or identify the actual `Validation_Protocol_PreReg_v4.docx`, then
-   approve the final PDF only after collaborator review and cross-document audit.
+1. Review `Validation_Protocol_PreReg_v0.10.docx`, complete candidate-0.4 live
+   runtime QA after the candidate-0.3 pilot export is archived, and approve the
+   final v1.0 DOCX/PDF only after the final cross-document audit.
 2. Decide whether the missing superseded v7 exclusion file should be recovered
    for historical retention; authoritative v8 is present and verified.
 3. Decide whether a standalone rendering of the dynamically assembled

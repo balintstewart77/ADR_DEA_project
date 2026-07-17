@@ -1,60 +1,50 @@
-# Live REDCap runtime QA record — blank template
+# Live REDCap runtime QA record — blank candidate-0.4 template
 
-Tester:  Not stored in Git
-Test date:  16/07/2026
-REDCap instance:  
-REDCap version:  17.0.3
-Test project identifier (store only where approved):  
-Dictionary version and SHA-256:  c905e60f5908da48451c1135e7def57e9f0d9dc855f2553f61993f5282b160ac
-Import warnings:  
-Action-tag compatibility:  
-Checkbox exclusivity result:  
-Analytical Purposes maximum-selection test: PASS after correction.
-    Initial annotation: @MAXCHOICE=2
-    Corrected annotation: @MAXCHECKED=2
-    Observed behaviour: third purpose could not remain selected.
-    Repository candidate still requires the same correction before pilot use.
-Unclear from register entry exclusivity:  PASS
-    Research Domains: Unclear cannot coexist with substantive domains.
-    Analytical Purposes: Unclear cannot coexist with substantive purposes.
-    Tested in both selection orders.
-Branching result:  PASS
-Conditional-required-field result:  PASS
-Hidden-field result:  
-Coder user-rights result:  
-Project-owner survey result:  
-Mobile result:  
-Desktop result:  
-Synthetic assignment import result:  
-Export test:  PASS
-    Records exported: 5
-    Unique assignment IDs: 5
-    Rows per assignment: 1
-    scratch_coder_complete present: Yes / No
-    Hidden administrative fields retained in administrator export: Yes / No
-    Unexpected duplicate rows: Yes / No
-One-row-per-assignment result:  PASS
-Multiple-owner-response result:  
-Synthetic-data deletion confirmation:  
-Defects found:  
+Tester: Not stored in Git
+Test date:
+REDCap instance:
+REDCap version:
+Test project identifier (store only where approved):
+Dictionary version: redcap-candidate-0.4
+Dictionary SHA-256:
+Import warnings:
 
-Post-fix retests: PASS
+## Scratch Coder
 
-Accidental exposure:
-Record F4K8M2Q6
-Dedicated exposure description populated.
-Generic explanatory note blank.
-Survey completed successfully.
+Domain Unclear exclusivity:
+Purpose Unclear exclusivity:
+MAXCHECKED=2 result:
+COVID/equity unchanged:
+Fit codes 1/2/3/4 result:
+Issue field shown and required for fit 2 and 3:
+Issue field hidden for fit 1 and 4:
+Cannot Assess plus Sufficient incoherence handling:
+Cannot Assess plus Partial/Insufficient result:
+Other taxonomy problem explanatory-note result:
+Dedicated exposure-note result:
+Generic note excludes exposure-only trigger:
 
-Maximum two purposes:
-Record G7N3R9T5
-Exactly two purpose checkbox fields exported as selected.
-No third purpose persisted.
-Survey completed successfully.
+## Project Owner
 
-Export architecture:
-Seven records exported.
-Seven unique assignment IDs.
-One row per assignment.
+Actual-project/public-entry distinction visible:
+Fit codes limited to 1/2/3:
+Issue field shown and required for fit 2 and 3:
+Issue field hidden for fit 1:
+Other taxonomy problem explanatory-note result:
 
-Pilot readiness decision:
+## Export and administration
+
+Candidate-0.3 pilot export archived before import:
+Pilot assignment instrument_ver values preserved:
+Current issue columns exactly 1, 2 and 5:
+Retired issue columns absent from candidate-0.4 export:
+One-row-per-assignment result:
+Multiple-owner-response result:
+Hidden-field and user-rights result:
+Desktop result:
+Mobile result:
+Synthetic-data deletion confirmation:
+Defects found:
+Post-fix retests:
+
+Candidate-0.4 formal-coding readiness decision:

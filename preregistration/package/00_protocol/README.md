@@ -1,8 +1,15 @@
 # Protocol
 
-This folder is for the reviewed protocol source and final registration PDF. It
-must not contain working comments, coder assignments, contact details, or
-post-registration amendments. Both files are expected to be frozen at
-registration. `Validation_Protocol_PreReg_v4.docx` is the named current review
-candidate, but neither it nor the final PDF is currently present in the
-repository; review completion and the final cross-document audit remain open.
+This folder contains the reviewed protocol source candidates and, after
+approval, will contain the final registration PDF. It must not contain coder
+assignments, contact details, or post-registration amendments.
+
+`Validation_Protocol_PreReg_v0.10.docx` is the active, unregistered protocol
+candidate. It directly incorporates the diagnostic-instrument decisions from
+the 17 July 2026 shared scratch-coder training session. The preceding v0.9
+candidate is preserved as superseded history; it was not registered. No OSF
+amendment was created because preregistration has not yet been submitted.
+
+The v0.10 candidate and final PDF remain unfrozen until collaborator review,
+candidate-0.4 repository validation, live runtime QA, and the final
+cross-document audit are complete.

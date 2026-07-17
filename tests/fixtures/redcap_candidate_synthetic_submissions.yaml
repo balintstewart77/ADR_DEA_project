@@ -9,6 +9,7 @@ cases:
     review_stream: 1
     sample_set: 1
     validation_included: 1
+    instrument_ver: redcap-candidate-0.4
 - case_id: admin_02_pilot_excluded
   stream: admin
   expected_valid: true
@@ -17,6 +18,7 @@ cases:
     review_stream: 1
     sample_set: 4
     validation_included: 0
+    instrument_ver: redcap-candidate-0.3
 - case_id: admin_03_unknown_sample_set
   stream: admin
   expected_valid: false
@@ -25,6 +27,7 @@ cases:
     review_stream: 1
     sample_set: 9
     validation_included: 1
+    instrument_ver: redcap-candidate-0.4
 - case_id: admin_04_pilot_included
   stream: admin
   expected_valid: false
@@ -33,11 +36,13 @@ cases:
     review_stream: 1
     sample_set: 4
     validation_included: 1
+    instrument_ver: redcap-candidate-0.3
 - case_id: sc_01_ordinary
   stream: scratch
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: &id002
@@ -54,6 +59,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains:
@@ -70,6 +76,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
@@ -86,6 +93,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains:
@@ -101,6 +109,7 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains:
@@ -117,6 +126,7 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
@@ -134,6 +144,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
@@ -149,6 +160,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
@@ -164,6 +176,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
@@ -174,11 +187,12 @@ cases:
     sc_taxonomy_fit: 1
     sc_confidence: 3
     sc_note: A rule boundary remains uncertain.
-- case_id: sc_10_taxonomy_issue
+- case_id: sc_10_partial_missing_issue
   stream: scratch
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
@@ -189,13 +203,219 @@ cases:
     sc_taxonomy_fit: 2
     sc_confidence: 1
     sc_tax_issue:
-    - 2
-    sc_note: Two categories overlap.
-- case_id: sc_11_exposure
+    - 1
+    sc_note: An important category is inadequately represented.
+- case_id: sc_11_no_fit_boundary_issue
   stream: scratch
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 3
+    sc_confidence: 1
+    sc_tax_issue:
+    - 2
+    sc_note: Category boundaries cannot express the understood project.
+- case_id: sc_12_partial_other_issue
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 5
+    sc_note: A different taxonomy problem is present.
+- case_id: sc_13_cannot_assess_insufficient
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 3
+    sc_taxonomy_fit: 4
+    sc_confidence: 1
+    sc_note: The register entry is too thin to assess taxonomy fit.
+- case_id: sc_14_cannot_assess_partial
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 2
+    sc_taxonomy_fit: 4
+    sc_confidence: 1
+    sc_note: The register entry supports only a partial understanding.
+- case_id: sc_15_cannot_assess_sufficient
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 4
+    sc_confidence: 1
+- case_id: sc_16_cannot_assess_with_issue
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 3
+    sc_taxonomy_fit: 4
+    sc_confidence: 1
+    sc_tax_issue:
+    - 1
+    sc_note: Incoherent issue selection.
+- case_id: sc_17_fit_with_issue
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 1
+    sc_confidence: 1
+    sc_tax_issue:
+    - 1
+- case_id: sc_18_partial_without_issue
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_note: Issue type omitted.
+- case_id: sc_19_retired_issue_3
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 3
+    sc_note: Retired code.
+- case_id: sc_20_retired_issue_4
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 4
+    sc_note: Retired code.
+- case_id: sc_21_retired_issue_6
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 6
+    sc_note: Retired code.
+- case_id: sc_22_other_without_note
+  stream: scratch
+  expected_valid: false
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 5
+- case_id: sc_23_exposure
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 1
     sc_domains: *id002
@@ -206,11 +426,12 @@ cases:
     sc_taxonomy_fit: 1
     sc_confidence: 1
     sc_exposure_note: Unexpected non-permitted context was visible.
-- case_id: sc_12_incomplete_core
+- case_id: sc_24_incomplete_core
   stream: scratch
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.4
     sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
@@ -219,11 +440,66 @@ cases:
     sc_sufficiency: 1
     sc_taxonomy_fit: 1
     sc_confidence: 1
-- case_id: po_13_all_fit
+- case_id: sc_25_historical_issue_3
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.3
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 3
+    sc_note: Historical response retained exactly.
+- case_id: sc_26_historical_issue_4
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.3
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 4
+    sc_note: Historical response retained exactly.
+- case_id: sc_27_historical_issue_6
+  stream: scratch
+  expected_valid: true
+  data:
+    assignment_id: A7K3M9Q2
+    instrument_ver: redcap-candidate-0.3
+    sc_blind_decl: 1
+    sc_exposure: 0
+    sc_domains: *id002
+    sc_purposes: *id001
+    sc_covid: 0
+    sc_equity: 0
+    sc_sufficiency: 1
+    sc_taxonomy_fit: 2
+    sc_confidence: 1
+    sc_tax_issue:
+    - 6
+    sc_note: Historical response retained exactly.
+- case_id: po_28_all_fit
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -234,11 +510,12 @@ cases:
     po_miss_tag: 0
     po_sufficiency: 1
     po_taxonomy_fit: 1
-- case_id: po_14_not_fit
+- case_id: po_29_not_fit
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -250,11 +527,12 @@ cases:
     po_sufficiency: 1
     po_taxonomy_fit: 1
     po_note: The proposed domain does not fit.
-- case_id: po_15_unsure
+- case_id: po_30_unsure
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -266,11 +544,12 @@ cases:
     po_sufficiency: 1
     po_taxonomy_fit: 1
     po_note: I am unsure.
-- case_id: po_16_basis_not_visible
+- case_id: po_31_basis_not_visible
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -282,11 +561,12 @@ cases:
     po_sufficiency: 1
     po_taxonomy_fit: 1
     po_note: The basis is not public.
-- case_id: po_17_missing_domain
+- case_id: po_32_missing_domain
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -300,11 +580,12 @@ cases:
     po_miss_domains:
     - 2
     po_note: Education is missing.
-- case_id: po_18_missing_purpose
+- case_id: po_33_missing_purpose
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -318,11 +599,12 @@ cases:
     po_miss_purposes:
     - 2
     po_note: Outcome tracking is missing.
-- case_id: po_19_missing_tag
+- case_id: po_34_missing_tag
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -336,11 +618,12 @@ cases:
     po_miss_tags:
     - 1
     po_note: The equity tag is missing.
-- case_id: po_20_taxonomy_concern
+- case_id: po_35_taxonomy_concern
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -353,12 +636,102 @@ cases:
     po_taxonomy_fit: 2
     po_tax_issue:
     - 1
-    po_note: A category is missing.
-- case_id: po_21_owner_a
+    po_note: A category is inadequately represented.
+- case_id: po_36_no_fit_boundary
   stream: owner
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 3
+    po_tax_issue:
+    - 2
+    po_note: The boundaries cannot express the project.
+- case_id: po_37_other_taxonomy_problem
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 2
+    po_tax_issue:
+    - 5
+    po_note: A different taxonomy problem is present.
+- case_id: po_38_fit_code_4
+  stream: owner
+  expected_valid: false
+  data:
+    assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 4
+- case_id: po_39_partial_without_issue
+  stream: owner
+  expected_valid: false
+  data:
+    assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 2
+    po_note: Issue omitted.
+- case_id: po_40_other_without_note
+  stream: owner
+  expected_valid: false
+  data:
+    assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
+    cluster_id: SYNTH-PROJECT-A
+    owner_resp_id: SYNTH-OWNER-A
+    prop_d01: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 2
+    po_tax_issue:
+    - 5
+- case_id: po_41_owner_a
+  stream: owner
+  expected_valid: true
+  data:
+    assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -369,11 +742,12 @@ cases:
     po_miss_tag: 0
     po_sufficiency: 1
     po_taxonomy_fit: 1
-- case_id: po_21_owner_b
+- case_id: po_41_owner_b
   stream: owner
   expected_valid: true
   data:
     assignment_id: R5T9X3C8
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-B
     prop_d01: 1
@@ -384,11 +758,12 @@ cases:
     po_miss_tag: 0
     po_sufficiency: 1
     po_taxonomy_fit: 1
-- case_id: po_22_contradiction
+- case_id: po_42_contradiction
   stream: owner
   expected_valid: false
   data:
     assignment_id: Q4N8Z2L7
+    instrument_ver: redcap-candidate-0.4
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1

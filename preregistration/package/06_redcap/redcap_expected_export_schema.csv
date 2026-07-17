@@ -66,13 +66,10 @@ sc_purposes___8,scratch_coder,REDCap checkbox export,integer,"0,1",classificatio
 sc_covid,scratch_coder,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
 sc_equity,scratch_coder,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
 sc_sufficiency,scratch_coder,user-defined,integer,"1, Sufficient | 2, Partial | 3, Insufficient",classification/diagnostic,assignment,y,restricted response data,
-sc_taxonomy_fit,scratch_coder,user-defined,integer,"1, Fit | 2, Partial Fit | 3, No Fit",classification/diagnostic,assignment,y,restricted response data,
-sc_tax_issue___1,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Missing category
-sc_tax_issue___2,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Ambiguous/overlapping categories
-sc_tax_issue___3,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too broad
-sc_tax_issue___4,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too narrow
-sc_tax_issue___5,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Other
-sc_tax_issue___6,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,None
+sc_taxonomy_fit,scratch_coder,user-defined,integer,"1, Fit | 2, Partial Fit | 3, No Fit | 4, Cannot assess from register entry",classification/diagnostic,assignment,y,restricted response data,
+sc_tax_issue___1,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Missing or inadequately represented category
+sc_tax_issue___2,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Ambiguous or overlapping category boundaries
+sc_tax_issue___5,scratch_coder,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Other taxonomy problem
 sc_confidence,scratch_coder,user-defined,integer,"1, High | 2, Medium | 3, Low",classification/diagnostic,assignment,y,restricted response data,
 sc_note,scratch_coder,user-defined,string,,classification/diagnostic,assignment,y,restricted response data,
 po_d01_fit,project_owner,user-defined,integer,"1, Fits | 2, Does not fit | 3, Unsure",classification/diagnostic,assignment,y,restricted response data,
@@ -144,12 +141,9 @@ po_miss_tags___1,project_owner,REDCap checkbox export,integer,"0,1",classificati
 po_miss_tags___2,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,COVID-19 & Pandemic
 po_sufficiency,project_owner,user-defined,integer,"1, Sufficient | 2, Partial | 3, Insufficient",classification/diagnostic,assignment,y,restricted response data,
 po_taxonomy_fit,project_owner,user-defined,integer,"1, Fit | 2, Partial Fit | 3, No Fit",classification/diagnostic,assignment,y,restricted response data,
-po_tax_issue___1,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Missing category
-po_tax_issue___2,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Ambiguous/overlapping categories
-po_tax_issue___3,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too broad
-po_tax_issue___4,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Too narrow
-po_tax_issue___5,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Other
-po_tax_issue___6,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,None
+po_tax_issue___1,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Missing or inadequately represented category
+po_tax_issue___2,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Ambiguous or overlapping category boundaries
+po_tax_issue___5,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Other taxonomy problem
 po_note,project_owner,user-defined,string,,classification/diagnostic,assignment,y,restricted response data,
 assignment_admin_complete,assignment_admin,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.
 scratch_coder_complete,scratch_coder,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.

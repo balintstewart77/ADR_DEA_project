@@ -19,13 +19,18 @@ FIXTURES=ROOT/'tests/fixtures/redcap_candidate_synthetic_submissions.yaml'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 FORMS={'assignment_admin','scratch_coder','project_owner'}
 TYPES={'text','notes','radio','dropdown','checkbox','yesno','truefalse','descriptive','calc','slider','file','signature'}
-VERSION='redcap-candidate-0.3'
+VERSION='redcap-candidate-0.4'
+HISTORICAL_VERSION='redcap-candidate-0.3'
 SAMPLE_SET_CHOICES={'1':'Baseline','2':'Hard case','3':'Owner review','4':'Pilot'}
 SAMPLE_SET_TEXT='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
 PURPOSE_ANNOTATION="@MAXCHECKED=2 @NONEOFTHEABOVE='8'"
 SC_EXPOSURE_BRANCH="[sc_exposure] = '1'"
 SC_NOTE_BRANCH="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
 SC_NOTE_HELP='Required for partial or insufficient evidence, low confidence, or a taxonomy concern.'
+SC_TAXONOMY_FIT_CHOICES={'1':'Fit','2':'Partial Fit','3':'No Fit','4':'Cannot assess from register entry'}
+PO_TAXONOMY_FIT_CHOICES={'1':'Fit','2':'Partial Fit','3':'No Fit'}
+CURRENT_TAXONOMY_ISSUE_CHOICES={'1':'Missing or inadequately represented category','2':'Ambiguous or overlapping category boundaries','5':'Other taxonomy problem'}
+HISTORICAL_TAXONOMY_ISSUE_CHOICES={'1':'Missing category','2':'Ambiguous/overlapping categories','3':'Too broad','4':'Too narrow','5':'Other','6':'None'}
 NAME_RE=re.compile(r'^[a-z][a-z0-9_]*$'); REAL_ID_RE=re.compile(r'(?<!\d)20\d{2}/\d{3}(?!\d)')
 BRANCH_RE=re.compile(r'\[([a-z][a-z0-9_]*)(?:\((\d+)\))?\]')
 
@@ -55,6 +60,7 @@ def validate_dictionary(path=DICTIONARY):
  if header!=HEADERS: errors.append(f'Standard dictionary headers differ: {header}')
  if not rows: errors.append('Dictionary is empty'); raise CandidateError('\n'.join(errors))
  names=[r.get('Variable / Field Name','') for r in rows]
+ if len(rows)!=137: errors.append(f'Candidate dictionary must contain 137 fields, found {len(rows)}')
  if names[0]!='assignment_id': errors.append('First dictionary field must be assignment_id')
  if len(names)!=len(set(names)): errors.append('Duplicate variable name')
  for n in names:
@@ -74,6 +80,14 @@ def validate_dictionary(path=DICTIONARY):
   actual=list(choices(by.get(variable,{}).get('Choices, Calculations, OR Slider Labels','')).values())
   if actual!=labels[layer]: errors.append(f'Taxonomy label mismatch for {variable}: expected={labels[layer]}, actual={actual}')
  if by.get('sc_equity',{}).get('Field Label')!=labels['tag'][0] or by.get('sc_covid',{}).get('Field Label')!=labels['tag'][1]: errors.append('Scratch tag labels differ from the two canonical taxonomy tags')
+ if choices(by.get('sc_taxonomy_fit',{}).get('Choices, Calculations, OR Slider Labels',''))!=SC_TAXONOMY_FIT_CHOICES: errors.append('Scratch taxonomy-fit choices differ')
+ if choices(by.get('po_taxonomy_fit',{}).get('Choices, Calculations, OR Slider Labels',''))!=PO_TAXONOMY_FIT_CHOICES: errors.append('Owner taxonomy-fit choices differ')
+ for variable,prefix in [('sc_tax_issue','Scratch'),('po_tax_issue','Owner')]:
+  row=by.get(variable,{})
+  if choices(row.get('Choices, Calculations, OR Slider Labels',''))!=CURRENT_TAXONOMY_ISSUE_CHOICES: errors.append(f'{prefix} taxonomy-issue choices differ')
+  if row.get('Field Annotation'): errors.append(f'{prefix} taxonomy-issue field must not carry an action tag')
+ if by.get('sc_tax_issue',{}).get('Branching Logic (Show field only if...)')!="[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'": errors.append('Scratch taxonomy-issue branching differs')
+ if by.get('po_tax_issue',{}).get('Branching Logic (Show field only if...)')!="[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'": errors.append('Owner taxonomy-issue branching differs')
  obsolete={'Gender, Race & Ethnicity','Inequality / Disparities Analysis','Single-Dataset','Within-Domain Linkage','Cross-Domain Linkage'}
  all_choice_labels={v for r in rows for v in choices(r.get('Choices, Calculations, OR Slider Labels','')).values()}
  if all_choice_labels & obsolete: errors.append(f'Obsolete taxonomy label present: {sorted(all_choice_labels & obsolete)}')
@@ -120,8 +134,16 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  scratch_spec=spec.get('scratch',{})
  if scratch_spec.get('conditional_required',{}).get('sc_exposure_note')!='sc_exposure == 1': errors.append('Branch specification exposure-note rule differs')
  if scratch_spec.get('conditional_required',{}).get('sc_note')!='sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence == 3': errors.append('Branch specification generic-note rule differs')
+ if scratch_spec.get('taxonomy_fit_codes')!={1:'Fit',2:'Partial Fit',3:'No Fit',4:'Cannot assess from register entry'}: errors.append('Branch specification Scratch taxonomy-fit codes differ')
+ if scratch_spec.get('taxonomy_issue_codes')!={1:'Missing or inadequately represented category',2:'Ambiguous or overlapping category boundaries',5:'Other taxonomy problem'}: errors.append('Branch specification current taxonomy-issue codes differ')
+ if scratch_spec.get('cannot_assess_requires_sufficiency')!=[2,3]: errors.append('Branch specification Cannot Assess coherence rule differs')
+ historical=spec.get('historical_versions',{}).get(HISTORICAL_VERSION,{})
+ if historical.get('taxonomy_issue_codes')!={1:'Missing category',2:'Ambiguous/overlapping categories',3:'Too broad',4:'Too narrow',5:'Other',6:'None'}: errors.append('Candidate-0.3 historical taxonomy-issue mapping differs')
+ if not historical.get('decode_only') or not historical.get('no_destructive_recode'): errors.append('Candidate-0.3 historical mapping must be decode-only')
  if scratch_spec.get('action_tags_for_live_confirmation',{}).get('sc_purposes')!=PURPOSE_ANNOTATION: errors.append('Branch specification purpose action tags differ')
  mapping=spec.get('owner',{}).get('label_mapping',[]); labels=taxonomy_labels()
+ if spec.get('owner',{}).get('taxonomy_fit_codes')!={1:'Fit',2:'Partial Fit',3:'No Fit'}: errors.append('Branch specification Owner taxonomy-fit codes differ')
+ if spec.get('owner',{}).get('taxonomy_issue_codes')!={1:'Missing or inadequately represented category',2:'Ambiguous or overlapping category boundaries',5:'Other taxonomy problem'}: errors.append('Branch specification Owner taxonomy-issue codes differ')
  for layer in ('domain','purpose','tag'):
   actual=[x.get('canonical_label') for x in mapping if x.get('taxonomy_layer')==layer]
   if actual!=labels[layer]: errors.append(f'Owner taxonomy mapping mismatch: {layer}')
@@ -130,6 +152,11 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  if imp: errors.append('Assignment import template contains rows')
  exp,eh=read_csv(package/'redcap_expected_export_schema.csv'); actual={r.get('variable') for r in exp}; missing=expected_exports(rows)-actual
  if missing: errors.append(f'Expected-export-schema omission: {sorted(missing)}')
+ retired_current={f'{prefix}___{code}' for prefix in ('sc_tax_issue','po_tax_issue') for code in (3,4,6)}
+ if actual & retired_current: errors.append(f'Current export schema contains retired taxonomy-issue columns: {sorted(actual & retired_current)}')
+ for prefix in ('sc_tax_issue','po_tax_issue'):
+  expected_current={f'{prefix}___{code}' for code in (1,2,5)}
+  if not expected_current <= actual: errors.append(f'Current export schema lacks non-contiguous issue codes for {prefix}')
  sample_export=next((r for r in exp if r.get('variable')=='sample_set'),{})
  if sample_export.get('allowed_values')!=SAMPLE_SET_TEXT: errors.append('Expected-export-schema sample_set choices differ')
  preview=(package/'redcap_candidate_instrument_preview.html').read_text(encoding='utf-8'); parser=PreviewParser(); parser.feed(preview)
@@ -154,6 +181,7 @@ def required(data,names,errors):
 def validate_admin(data):
  e=[]
  if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
+ if data.get('instrument_ver') not in (VERSION,HISTORICAL_VERSION): e.append('invalid or missing instrument_ver')
  required(data,['review_stream','sample_set','validation_included'],e)
  if data.get('review_stream') not in (1,2): e.append('invalid review_stream code')
  if data.get('sample_set') not in (1,2,3,4): e.append('invalid sample_set code')
@@ -163,23 +191,37 @@ def validate_admin(data):
 def validate_scratch(data):
  e=[]
  if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
+ version=data.get('instrument_ver')
+ if version not in (VERSION,HISTORICAL_VERSION): e.append('invalid or missing instrument_ver')
  required(data,['sc_blind_decl','sc_exposure','sc_domains','sc_purposes','sc_covid','sc_equity','sc_sufficiency','sc_taxonomy_fit','sc_confidence'],e)
  if data.get('sc_blind_decl')!=1: e.append('blinding declaration not confirmed')
- domains=data.get('sc_domains',[]); purposes=data.get('sc_purposes',[])
+ domains=data.get('sc_domains') or []; purposes=data.get('sc_purposes') or []
  if any(x not in range(1,13) for x in domains): e.append('invalid domain response code')
  if 12 in domains and len(domains)>1: e.append('Unclear domain plus substantive domain')
  if not 1<=len(purposes)<=2: e.append('purposes must contain one or two responses')
  if any(x not in range(1,9) for x in purposes): e.append('invalid purpose response code')
  if 8 in purposes and len(purposes)>1: e.append('Unclear purpose plus substantive purpose')
+ if data.get('sc_sufficiency') not in (1,2,3): e.append('invalid register-sufficiency code')
  if data.get('sc_exposure')==1 and not data.get('sc_exposure_note'): e.append('accidental exposure requires explanation')
- if data.get('sc_taxonomy_fit') in (2,3):
-  if not data.get('sc_tax_issue') or 6 in data.get('sc_tax_issue',[]): e.append('taxonomy issue requires issue type')
- triggers=data.get('sc_sufficiency') in (2,3) or data.get('sc_taxonomy_fit') in (2,3) or data.get('sc_confidence')==3
+ fit=data.get('sc_taxonomy_fit')
+ allowed_fit=(1,2,3,4) if version==VERSION else (1,2,3)
+ if fit not in allowed_fit: e.append('invalid scratch taxonomy-fit code')
+ issue=data.get('sc_tax_issue') or []
+ if not isinstance(issue,list): e.append('scratch taxonomy issue must be a list'); issue=[]
+ allowed_issue={1,2,5} if version==VERSION else {1,2,3,4,5,6}
+ if any(code not in allowed_issue for code in issue): e.append('invalid taxonomy-issue code for instrument version')
+ if fit in (1,4) and issue: e.append('taxonomy issue selected while field is hidden')
+ if fit in (2,3) and not issue: e.append('taxonomy issue requires issue type')
+ if version==VERSION and fit==4 and data.get('sc_sufficiency')==1: e.append('Cannot assess is incoherent with Sufficient register evidence')
+ triggers=data.get('sc_sufficiency') in (2,3) or fit in (2,3) or data.get('sc_confidence')==3
  if triggers and not data.get('sc_note'): e.append('conditional explanatory note required')
+ if version==VERSION and 5 in issue and not data.get('sc_note'): e.append('Other taxonomy problem requires explanation')
  return e
 def validate_owner(data,mapping):
  e=[]
  if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
+ version=data.get('instrument_ver')
+ if version not in (VERSION,HISTORICAL_VERSION): e.append('invalid or missing instrument_ver')
  required(data,['cluster_id','owner_resp_id','po_miss_domain','po_miss_purpose','po_miss_tag','po_sufficiency','po_taxonomy_fit'],e)
  note=False
  for m in mapping:
@@ -194,9 +236,17 @@ def validate_owner(data,mapping):
   if data.get(flag)==1:
    note=True
    if not data.get(target): e.append(f'owner missing-label branch incomplete: {target}')
- if data.get('po_taxonomy_fit') in (2,3):
+ fit=data.get('po_taxonomy_fit')
+ if fit not in (1,2,3): e.append('invalid owner taxonomy-fit code')
+ issue=data.get('po_tax_issue') or []
+ if not isinstance(issue,list): e.append('owner taxonomy issue must be a list'); issue=[]
+ allowed_issue={1,2,5} if version==VERSION else {1,2,3,4,5,6}
+ if any(code not in allowed_issue for code in issue): e.append('invalid owner taxonomy-issue code for instrument version')
+ if fit==1 and issue: e.append('owner taxonomy issue selected while field is hidden')
+ if fit in (2,3):
   note=True
-  if not data.get('po_tax_issue') or 6 in data.get('po_tax_issue',[]): e.append('owner taxonomy issue incomplete')
+  if not issue: e.append('owner taxonomy issue incomplete')
+ if version==VERSION and 5 in issue and not data.get('po_note'): e.append('Other taxonomy problem requires owner explanation')
  note |= data.get('po_sufficiency') in (2,3)
  if note and not data.get('po_note'): e.append('owner disagreement/uncertainty explanation required')
  return e
@@ -212,7 +262,7 @@ def validate_submissions(path=FIXTURES,spec_path=BRANCH_SPEC):
   expected=case.get('expected_valid')
   if expected and actual: errors.append(f'{cid}: expected valid but failed: {actual}')
   if not expected and not actual: errors.append(f'{cid}: expected invalid but passed')
-  if str(cid).startswith('po_21_owner_'): owner_pair.append((data.get('cluster_id'),aid))
+  if re.fullmatch(r'po_\d+_owner_[ab]',str(cid)): owner_pair.append((data.get('cluster_id'),aid))
  raw=path.read_text(encoding='utf-8')
  if REAL_ID_RE.search(raw): errors.append('real Record ID in synthetic fixture')
  if len(owner_pair)!=2 or len({x[0] for x in owner_pair})!=1 or len({x[1] for x in owner_pair})!=2: errors.append('multiple owner rows do not remain separate assignments within a shared project')

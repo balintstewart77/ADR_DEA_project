@@ -1,4 +1,19 @@
-version: redcap-candidate-0.3
+version: redcap-candidate-0.4
+historical_versions:
+  redcap-candidate-0.3:
+    scratch_taxonomy_fit_codes:
+      1: Fit
+      2: Partial Fit
+      3: No Fit
+    taxonomy_issue_codes:
+      1: Missing category
+      2: Ambiguous/overlapping categories
+      3: Too broad
+      4: Too narrow
+      5: Other
+      6: None
+    decode_only: true
+    no_destructive_recode: true
 forms:
 - assignment_admin
 - scratch_coder
@@ -12,6 +27,18 @@ scratch:
   purpose_min: 1
   purpose_max: 2
   purpose_unclear_exclusive: true
+  taxonomy_fit_codes:
+    1: Fit
+    2: Partial Fit
+    3: No Fit
+    4: Cannot assess from register entry
+  taxonomy_issue_codes:
+    1: Missing or inadequately represented category
+    2: Ambiguous or overlapping category boundaries
+    5: Other taxonomy problem
+  cannot_assess_requires_sufficiency:
+  - 2
+  - 3
   required_core:
   - sc_blind_decl
   - sc_exposure
@@ -27,6 +54,7 @@ scratch:
     sc_tax_issue: sc_taxonomy_fit in [2,3]
     sc_note: sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence
       == 3
+    other_taxonomy_problem_note: 5 in sc_tax_issue
   action_tags_for_live_confirmation:
     sc_domains: '@NONEOFTHEABOVE=''12'''
     sc_purposes: '@MAXCHECKED=2 @NONEOFTHEABOVE=''8'''
@@ -212,6 +240,14 @@ owner:
     1: Fits
     2: Does not fit
     3: Unsure
+  taxonomy_fit_codes:
+    1: Fit
+    2: Partial Fit
+    3: No Fit
+  taxonomy_issue_codes:
+    1: Missing or inadequately represented category
+    2: Ambiguous or overlapping category boundaries
+    5: Other taxonomy problem
   visibility_codes:
     1: Clearly visible
     2: Partly visible
@@ -222,7 +258,7 @@ owner:
     po_miss_purposes: po_miss_purpose == 1
     po_miss_tags: po_miss_tag == 1
   conditional_note: any proposed fit != 1 or visibility != 1; any missing-label report;
-    sufficiency != 1; taxonomy_fit != 1
+    sufficiency != 1; taxonomy_fit != 1; or Other taxonomy problem selected
   contradiction_rule: Proposed-and-Fits plus missing for the same label is rejected.
 neutral_assignment_id:
   pattern: ^[A-Z0-9]{8}$

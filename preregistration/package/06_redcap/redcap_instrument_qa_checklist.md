@@ -1,16 +1,34 @@
-# REDCap instrument QA checklist
+# REDCap instrument QA checklist — redcap-candidate-0.4
 
-- [ ] Dictionary imports without unresolved warnings; form and field order are correct.
-- [ ] Administrative, source, sampling, and model fields are absent from coder and owner displays.
-- [ ] `sample_set` retains `1 Baseline`, `2 Hard case` and `3 Owner review`,
-      adds `4 Pilot`, and every Pilot row has `validation_included = 0`.
-- [ ] Coder sees only opaque assignment ID, title, datasets, and coding questions.
-- [ ] Owner sees only permitted project information, proposed labels, and review questions.
-- [ ] `@NONEOFTHEABOVE`, `@MAXCHECKED=2`, hidden, and read-only tags behave as intended.
-- [ ] Branching and conditional-required fields behave correctly for every trigger.
-- [ ] Desktop and mobile display, save-and-return (if enabled), and completion status work.
-- [ ] Export matches `redcap_expected_export_schema.csv` with one row per assignment.
-- [ ] Multiple owner responses remain separate but share the hidden project identifier.
-- [ ] Prohibited-material declaration and accidental-exposure branch work.
-- [ ] Capture dated import log and screenshots or PDF evidence in approved restricted storage.
-- [ ] Delete synthetic data and confirm deletion before the excluded pilot.
+- [ ] Confirm every candidate-0.3 pilot response is complete, exported and
+      archived before candidate 0.4 is imported.
+- [ ] Dictionary imports without unresolved warnings; field count is 137.
+- [ ] Administrative, source, sampling and model fields are absent from coder
+      and owner displays.
+- [ ] Existing sample-set codes 1–4 are unchanged and every Pilot row has
+      validation_included = 0 and instrument_ver = redcap-candidate-0.3.
+- [ ] sc_taxonomy_fit shows exactly codes 1 Fit, 2 Partial Fit, 3 No Fit and
+      4 Cannot assess from register entry.
+- [ ] po_taxonomy_fit shows exactly codes 1 Fit, 2 Partial Fit and 3 No Fit.
+- [ ] Both taxonomy-issue fields show only stored codes 1, 2 and 5 with the
+      candidate-0.4 labels.
+- [ ] sc_tax_issue appears and is required for fit 2 or 3 only; it remains
+      hidden for fit 1 and 4.
+- [ ] po_tax_issue appears and is required for fit 2 or 3 only; it remains
+      hidden for fit 1.
+- [ ] Multiple retained issue types can be selected.
+- [ ] Other taxonomy problem requires the stream's explanatory note.
+- [ ] Cannot Assess plus Sufficient is rejected or review-flagged, while
+      Cannot Assess plus Partial or Insufficient with a note is accepted.
+- [ ] sc_note is triggered by Partial/Insufficient sufficiency, Partial/No Fit,
+      or Low confidence, and not by accidental exposure alone.
+- [ ] sc_exposure_note remains required when accidental exposure is Yes.
+- [ ] Domain and purpose Unclear exclusivity and MAXCHECKED=2 behave as
+      intended; COVID and equity choices are unchanged.
+- [ ] Export contains current issue checkbox columns 1, 2 and 5, not 3, 4 or 6.
+- [ ] Desktop/mobile display, save-and-return and completion status work.
+- [ ] Export matches redcap_expected_export_schema.csv with one row per
+      assignment.
+- [ ] Capture dated import log and screenshots or PDF evidence in approved
+      restricted storage.
+- [ ] Candidate-0.4 readiness is not marked passed until all tests above pass.

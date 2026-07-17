@@ -1,5 +1,13 @@
 # Methods Log — DEA Project Classification
 
+## Human-validation instrument feedback (2026-07-17)
+
+The two post-training diagnostic-instrument decisions, their examples,
+candidate-0.3 pilot compatibility, and candidate-0.4 implementation boundary
+are recorded in
+preregistration/package/05_training_and_pilot/pilot_feedback_log_20260717.md.
+The full entries are maintained only in that dated log.
+
 This document records the methodological decisions behind the LLM classification pipeline for DEA-accredited research projects. It is organised by decision area (data preparation → ontology → pipeline → validation)  so that each can be read as a coherent narrative with its full rationale and change history. Commit hashes and dates are cited inline throughout.
 
 ## Current duplicate-ID correction note (2026-07-13)

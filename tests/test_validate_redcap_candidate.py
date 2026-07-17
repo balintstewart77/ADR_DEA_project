@@ -51,9 +51,9 @@ class CandidateTests(unittest.TestCase):
  def test_12_unknown_taxonomy_label_fails(self):
   self.change_domain(lambda p:p+['13, Fictional Domain'])
   with self.assertRaisesRegex(v.CandidateError,'Taxonomy label mismatch'): self.check()
- def sc(self): return {'assignment_id':'A7K3M9Q2','sc_blind_decl':1,'sc_exposure':0,'sc_domains':[1],'sc_purposes':[1],'sc_covid':0,'sc_equity':0,'sc_sufficiency':1,'sc_taxonomy_fit':1,'sc_confidence':1}
- def admin(self): return {'assignment_id':'B6J4K8M2','review_stream':1,'sample_set':1,'validation_included':1}
- def po(self): return {'assignment_id':'Q4N8Z2L7','cluster_id':'SYNTH-P','owner_resp_id':'SYNTH-O','prop_d01':1,'po_d01_fit':1,'po_d01_vis':1,'po_miss_domain':0,'po_miss_purpose':0,'po_miss_tag':0,'po_sufficiency':1,'po_taxonomy_fit':1}
+ def sc(self): return {'assignment_id':'A7K3M9Q2','instrument_ver':v.VERSION,'sc_blind_decl':1,'sc_exposure':0,'sc_domains':[1],'sc_purposes':[1],'sc_covid':0,'sc_equity':0,'sc_sufficiency':1,'sc_taxonomy_fit':1,'sc_confidence':1}
+ def admin(self): return {'assignment_id':'B6J4K8M2','instrument_ver':v.VERSION,'review_stream':1,'sample_set':1,'validation_included':1}
+ def po(self): return {'assignment_id':'Q4N8Z2L7','instrument_ver':v.VERSION,'cluster_id':'SYNTH-P','owner_resp_id':'SYNTH-O','prop_d01':1,'po_d01_fit':1,'po_d01_vis':1,'po_miss_domain':0,'po_miss_purpose':0,'po_miss_tag':0,'po_sufficiency':1,'po_taxonomy_fit':1}
  def mapping(self): return yaml.safe_load(v.BRANCH_SPEC.read_text(encoding='utf-8'))['owner']['label_mapping']
  def test_13_unclear_plus_domain_fails(self): self.assertTrue(v.validate_scratch(dict(self.sc(),sc_domains=[1,12])))
  def test_14_three_purposes_fail(self): self.assertTrue(v.validate_scratch(dict(self.sc(),sc_purposes=[1,2,3])))
@@ -88,7 +88,7 @@ class CandidateTests(unittest.TestCase):
   rows=[x for x in rows if x['variable']!='scratch_coder_complete']
   with p.open('w',encoding='utf-8',newline='') as f: w=csv.DictWriter(f,fieldnames=h,lineterminator='\n'); w.writeheader(); w.writerows(rows)
   with self.assertRaisesRegex(v.CandidateError,'Expected-export-schema omission'): self.check()
- def test_31_multiple_owners_share_project_but_not_assignment(self): self.assertEqual(v.validate_submissions(self.fixture)['cases'],27)
+ def test_31_multiple_owners_share_project_but_not_assignment(self): self.assertEqual(v.validate_submissions(self.fixture)['cases'],47)
  def test_32_check_writes_no_files(self):
   before={p.relative_to(v.ROOT):p.stat().st_mtime_ns for p in v.PACKAGE.iterdir() if p.is_file()}; self.assertEqual(v.main(['--check']),0); after={p.relative_to(v.ROOT):p.stat().st_mtime_ns for p in v.PACKAGE.iterdir() if p.is_file()}; self.assertEqual(before,after)
  def test_33_legacy_maxchoice_action_tag_fails(self):
@@ -107,14 +107,51 @@ class CandidateTests(unittest.TestCase):
  def test_37_pilot_sample_set_is_valid_when_excluded(self): self.assertFalse(v.validate_admin(dict(self.admin(),sample_set=4,validation_included=0)))
  def test_38_unknown_sample_set_is_invalid(self): self.assertTrue(v.validate_admin(dict(self.admin(),sample_set=9)))
  def test_39_pilot_cannot_be_validation_included(self): self.assertTrue(v.validate_admin(dict(self.admin(),sample_set=4,validation_included=1)))
- def test_40_scratch_coder_form_signature_is_unchanged(self):
-  rows=[r for r in self.rows() if r['Form Name']=='scratch_coder']; payload=json.dumps(rows,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
-  self.assertEqual(hashlib.sha256(payload).hexdigest(),'8f59881f91573106a2327fc6d056fd04b9bdb34816846daf0898e3b26196c00f')
- def test_41_candidate_version_is_0_3(self): self.assertEqual(yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['version'],'redcap-candidate-0.3')
+ def test_40_scratch_coder_form_signature_changes_for_diagnostics_only(self):
+   rows=[r for r in self.rows() if r['Form Name']=='scratch_coder']; payload=json.dumps(rows,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
+   self.assertEqual(hashlib.sha256(payload).hexdigest(),'7c17aba55f089f78603ae7cf6b48253c50e518dadc05445632680b1e86ac816c')
+   self.assertNotEqual(hashlib.sha256(payload).hexdigest(),'8f59881f91573106a2327fc6d056fd04b9bdb34816846daf0898e3b26196c00f')
+ def test_41_candidate_version_is_0_4(self): self.assertEqual(yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['version'],'redcap-candidate-0.4')
  def test_42_runtime_corrections_remain_intact(self):
   by={r['Variable / Field Name']:r for r in self.rows()}
   self.assertEqual(by['sc_purposes']['Field Annotation'],v.PURPOSE_ANNOTATION)
   self.assertEqual(by['sc_note']['Branching Logic (Show field only if...)'],v.SC_NOTE_BRANCH)
   self.assertNotIn('sc_exposure',by['sc_note']['Branching Logic (Show field only if...)'])
+ def test_43_substantive_classification_core_signature_is_unchanged(self):
+  rows=[r for r in self.rows() if r['Variable / Field Name'] in ('sc_domains','sc_purposes','sc_covid','sc_equity')]
+  payload=json.dumps(rows,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
+  self.assertEqual(hashlib.sha256(payload).hexdigest(),'73406c72fc8c86bdb362dcf1c02a42b3b420484a7edc2415583899cb5581230f')
+ def test_44_exact_fit_issue_choices_and_branches(self):
+  by={r['Variable / Field Name']:r for r in self.rows()}
+  self.assertEqual(v.choices(by['sc_taxonomy_fit']['Choices, Calculations, OR Slider Labels']),v.SC_TAXONOMY_FIT_CHOICES)
+  self.assertEqual(v.choices(by['po_taxonomy_fit']['Choices, Calculations, OR Slider Labels']),v.PO_TAXONOMY_FIT_CHOICES)
+  for field in ('sc_tax_issue','po_tax_issue'):
+   self.assertEqual(v.choices(by[field]['Choices, Calculations, OR Slider Labels']),v.CURRENT_TAXONOMY_ISSUE_CHOICES)
+   self.assertFalse(by[field]['Field Annotation'])
+  self.assertEqual(by['sc_tax_issue']['Branching Logic (Show field only if...)'],"[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'")
+  self.assertEqual(by['po_tax_issue']['Branching Logic (Show field only if...)'],"[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'")
+ def test_45_cannot_assess_coherence(self):
+  self.assertFalse(v.validate_scratch(dict(self.sc(),sc_sufficiency=3,sc_taxonomy_fit=4,sc_note='Thin public evidence.')))
+  self.assertFalse(v.validate_scratch(dict(self.sc(),sc_sufficiency=2,sc_taxonomy_fit=4,sc_note='Partial public evidence.')))
+  self.assertTrue(v.validate_scratch(dict(self.sc(),sc_sufficiency=1,sc_taxonomy_fit=4)))
+  self.assertTrue(v.validate_scratch(dict(self.sc(),sc_sufficiency=3,sc_taxonomy_fit=4,sc_tax_issue=[1],sc_note='Incoherent.')))
+ def test_46_current_and_historical_issue_code_rules(self):
+  for code in (3,4,6):
+   self.assertTrue(v.validate_scratch(dict(self.sc(),sc_taxonomy_fit=2,sc_tax_issue=[code],sc_note='Retired current code.')))
+   self.assertFalse(v.validate_scratch(dict(self.sc(),instrument_ver=v.HISTORICAL_VERSION,sc_taxonomy_fit=2,sc_tax_issue=[code],sc_note='Historical response.')))
+ def test_47_hidden_or_missing_issue_rules(self):
+  self.assertTrue(v.validate_scratch(dict(self.sc(),sc_taxonomy_fit=1,sc_tax_issue=[1])))
+  self.assertTrue(v.validate_scratch(dict(self.sc(),sc_taxonomy_fit=2,sc_note='Missing issue type.')))
+  self.assertTrue(v.validate_owner(dict(self.po(),po_taxonomy_fit=1,po_tax_issue=[1]),self.mapping()))
+  self.assertTrue(v.validate_owner(dict(self.po(),po_taxonomy_fit=2,po_note='Missing issue type.'),self.mapping()))
+ def test_48_other_problem_requires_note_and_owner_has_no_fit_code_4(self):
+  self.assertTrue(v.validate_scratch(dict(self.sc(),sc_taxonomy_fit=2,sc_tax_issue=[5])))
+  self.assertTrue(v.validate_owner(dict(self.po(),po_taxonomy_fit=2,po_tax_issue=[5]),self.mapping()))
+  self.assertTrue(v.validate_owner(dict(self.po(),po_taxonomy_fit=4),self.mapping()))
+ def test_49_dictionary_field_count_and_owner_actual_project_wording(self):
+  rows=self.rows(); by={r['Variable / Field Name']:r for r in rows}
+  self.assertEqual(len(rows),137)
+  self.assertIn('actual-project fit',by['po_intro']['Field Label'])
+  self.assertIn('actual project',by['po_d01_fit']['Field Label'])
 
 if __name__=='__main__': unittest.main()
