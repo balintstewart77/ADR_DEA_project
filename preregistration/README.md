@@ -11,8 +11,9 @@ artefact.
 
 ## 2. Current study status
 
-- `Validation_Protocol_PreReg_v4.docx` is the current protocol review candidate,
-  but it is not present in this repository and has not been finally frozen.
+- `Validation_Protocol_PreReg_v0.11.docx` is the current implementation and
+  collaborator-review candidate. It is present but is not finally frozen or
+  registered, and it does not authorise an official sample draw.
 - Phase 3 is complete: the source, cleaned population, taxonomy/production
   classification release, pre-existing model evidence and exact exclusions are
   frozen and tied together by a machine-readable release manifest.
@@ -96,8 +97,17 @@ The manifest uses these columns and controlled values.
 - `proposed_package_path`: proposed destination, not evidence that copying has
   occurred.
 - `description`, `version`, `notes`: manually maintained explanatory fields.
-- `sha256`, `created_or_modified_at`, `source_commit`: exact-content and Git
-  provenance for existing non-sensitive files.
+- `sha256`, `created_or_modified_at`, `source_commit`: legacy exact-content and
+  inventory-refresh provenance for existing non-sensitive files.
+- Protocol rows additionally use `size_bytes`, `git_blob_oid`,
+  `protocol_source_commit`, `protocol_source_commit_date`,
+  `protocol_source_commit_message`, and `implementation_last_checked_commit`.
+  The protocol-source commit identifies where the DOCX was introduced; the
+  implementation-check commit identifies the repository revision audited
+  against it. Neither is a future final-package freeze commit.
+- `protocol_status`, `current_implementation_basis`, `frozen`, `registered`,
+  `official_sample_draw_authorised`, `supersedes`, `superseded_by`, and
+  `pending_gates` record protocol state without overloading registration intent.
 
 `current_state`:
 

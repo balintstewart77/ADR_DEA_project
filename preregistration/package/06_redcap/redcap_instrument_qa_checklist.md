@@ -1,4 +1,4 @@
-# REDCap instrument QA checklist — redcap-candidate-0.4
+# REDCap instrument QA checklist — redcap-candidate-0.5
 
 - [ ] Confirm every candidate-0.3 pilot response is complete, exported and
       archived before candidate 0.4 is imported.
@@ -11,7 +11,7 @@
       4 Cannot assess from register entry.
 - [ ] po_taxonomy_fit shows exactly codes 1 Fit, 2 Partial Fit and 3 No Fit.
 - [ ] Both taxonomy-issue fields show only stored codes 1, 2 and 5 with the
-      candidate-0.4 labels.
+      candidate-0.5 labels.
 - [ ] sc_tax_issue appears and is required for fit 2 or 3 only; it remains
       hidden for fit 1 and 4.
 - [ ] po_tax_issue appears and is required for fit 2 or 3 only; it remains

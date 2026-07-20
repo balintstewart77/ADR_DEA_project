@@ -1,6 +1,6 @@
 # Official sampling execution runbook
 
-Use this runbook only after collaborator review, excluded pilot completion, Gate 1 freeze, OSF registration and Gate 2 authorisation. The Phase 4 package does not contain a registration receipt or sampled identities.
+Use this runbook only after excluded pilot completion and debrief, closure of the dated pilot-feedback log, Jo's final substantive review, propagation of resulting changes, final package QA, Gate 1 freeze, official preregistration verification, and Gate 2 authorisation. The canonical manifest must record one current implementation basis with `frozen`, `registered`, and `official_sample_draw_authorised` all true. Under v0.11 they are false, so this runbook is not executable. The package does not contain a registration receipt or sampled identities.
 
 ## Before execution
 

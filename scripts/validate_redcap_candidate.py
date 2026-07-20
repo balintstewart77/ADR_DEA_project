@@ -19,7 +19,7 @@ FIXTURES=ROOT/'tests/fixtures/redcap_candidate_synthetic_submissions.yaml'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 FORMS={'assignment_admin','scratch_coder','project_owner'}
 TYPES={'text','notes','radio','dropdown','checkbox','yesno','truefalse','descriptive','calc','slider','file','signature'}
-VERSION='redcap-candidate-0.4'
+VERSION='redcap-candidate-0.5'
 HISTORICAL_VERSION='redcap-candidate-0.3'
 SAMPLE_SET_CHOICES={'1':'Baseline','2':'Hard case','3':'Owner review','4':'Pilot'}
 SAMPLE_SET_TEXT='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
@@ -60,7 +60,7 @@ def validate_dictionary(path=DICTIONARY):
  if header!=HEADERS: errors.append(f'Standard dictionary headers differ: {header}')
  if not rows: errors.append('Dictionary is empty'); raise CandidateError('\n'.join(errors))
  names=[r.get('Variable / Field Name','') for r in rows]
- if len(rows)!=137: errors.append(f'Candidate dictionary must contain 137 fields, found {len(rows)}')
+ if len(rows)!=145: errors.append(f'Candidate dictionary must contain 145 fields, found {len(rows)}')
  if names[0]!='assignment_id': errors.append('First dictionary field must be assignment_id')
  if len(names)!=len(set(names)): errors.append('Duplicate variable name')
  for n in names:
@@ -101,6 +101,7 @@ def validate_dictionary(path=DICTIONARY):
  if by.get('sc_purposes',{}).get('Field Annotation')!=PURPOSE_ANNOTATION: errors.append('Scratch purpose action tags differ')
  if by.get('sc_domains',{}).get('Field Annotation')!="@NONEOFTHEABOVE='12'": errors.append('Scratch domain action tag differs')
  if choices(by.get('sample_set',{}).get('Choices, Calculations, OR Slider Labels',''))!=SAMPLE_SET_CHOICES: errors.append('Administrative sample_set choices differ')
+ if choices(by.get('owner_recruit_route',{}).get('Choices, Calculations, OR Slider Labels',''))!={'0':'Not applicable','1':'Sequence based','2':'Supplementary purposive','3':'Post-revision'}: errors.append('Owner recruitment-route choices differ')
  exposure_note=by.get('sc_exposure_note',{})
  if exposure_note.get('Branching Logic (Show field only if...)')!=SC_EXPOSURE_BRANCH or exposure_note.get('Required Field?')!='y': errors.append('Dedicated exposure description must remain required when sc_exposure = 1')
  sc_note=by.get('sc_note',{})
@@ -131,6 +132,9 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  admin_spec=spec.get('administration',{})
  if admin_spec.get('sample_set_codes')!={1:'Baseline',2:'Hard case',3:'Owner review',4:'Pilot'}: errors.append('Branch specification sample_set codes differ')
  if admin_spec.get('pilot_validation_included')!=0: errors.append('Branch specification pilot exclusion rule differs')
+ if admin_spec.get('owner_sequence_target_unique_records')!=50 or admin_spec.get('owner_sequence_minimum_viable_unique_records')!=25: errors.append('Owner sequence target/minimum differs')
+ if admin_spec.get('owner_supplementary_invitation_maximum')!=10 or admin_spec.get('owner_data_collection_close_day')!=42: errors.append('Owner supplementary maximum or close day differs')
+ if admin_spec.get('no_fixed_owner_reserve') is not True: errors.append('Owner reserve must be explicitly absent')
  scratch_spec=spec.get('scratch',{})
  if scratch_spec.get('conditional_required',{}).get('sc_exposure_note')!='sc_exposure == 1': errors.append('Branch specification exposure-note rule differs')
  if scratch_spec.get('conditional_required',{}).get('sc_note')!='sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence == 3': errors.append('Branch specification generic-note rule differs')

@@ -23,8 +23,10 @@ register entry`, and consolidate taxonomy-issue codes to 1, 2, and 5. They do
 not alter domain, purpose, COVID, equity, sample, or exclusion rules. The two
 decisions and their pilot/formal-coding impacts are recorded in
 `pilot_feedback_log_20260717.md`. The pilot was launched under
-`redcap-candidate-0.3`; candidate 0.4 applies only after pilot export/archive,
-repository validation, and live runtime QA.
+`redcap-candidate-0.3`; candidate 0.4 records the post-training diagnostic
+changes, and candidate 0.5 is the current v0.11-aligned repository candidate.
+It remains gated by pilot export/archive and debrief, feedback-log closure, Jo's
+review, repository validation, and live runtime QA.
 
 Exact membership is checked offline with
 `scripts/verify_training_exclusion_membership.py`. It parses the designated

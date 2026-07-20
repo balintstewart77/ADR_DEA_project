@@ -8,7 +8,7 @@ import yaml
 ROOT=Path(__file__).resolve().parents[1]
 PACKAGE=ROOT/'preregistration/package/06_redcap'
 FIXTURES=ROOT/'tests/fixtures'
-VERSION='redcap-candidate-0.4'
+VERSION='redcap-candidate-0.5'
 HISTORICAL_VERSION='redcap-candidate-0.3'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 SAMPLE_SET_CHOICES='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
@@ -37,7 +37,15 @@ def build_dictionary():
  domains,purposes,tags=tax(); dl=[x['label'] for x in domains]; pl=[x['label'] for x in purposes]; tl=[x['label'] for x in tags]
  hidden='@HIDDEN-SURVEY @READONLY'; rows=[]
  admin=[
- ('assignment_id','Neutral opaque assignment identifier','text','', ''),('review_stream','Review stream','radio','1, Scratch coder | 2, Project owner',''),('reviewer_id','Administrative reviewer identifier','text','',''),('source_record_id','Stable source Record ID','text','',''),('official_project_id','Official Project ID','text','',''),('project_title','Frozen public-register project title','notes','',''),('datasets_used','Frozen public-register datasets-used entry','notes','',''),('sample_set','Sample set','radio',SAMPLE_SET_CHOICES,''),('hard_stratum','Hard-case stratum','radio','0, Not applicable | 1, Domain only | 2, Purpose only | 3, Both',''),('validation_included','Included in validation analysis','yesno','',''),('sample_status','Active or reserve status','radio','1, Active | 2, Reserve | 3, Review only',''),('display_order','Reviewer display order','text','','integer'),('assignment_batch','Assignment batch','text','',''),('source_pop_ver','Source-population version','text','',''),('production_ver','Production-output version','text','',''),('instrument_ver','Instrument version','text','',''),('cluster_id','Project-level clustering identifier','text','',''),('owner_resp_id','Owner respondent identifier','text','',''),('owner_project_id','Owner project identifier','text','','')]
+ ('assignment_id','Neutral opaque assignment identifier','text','', ''),('review_stream','Review stream','radio','1, Scratch coder | 2, Project owner',''),('reviewer_id','Administrative reviewer identifier','text','',''),('source_record_id','Stable source Record ID','text','',''),('official_project_id','Official Project ID','text','',''),('project_title','Frozen public-register project title','notes','',''),('datasets_used','Frozen public-register datasets-used entry','notes','',''),('sample_set','Sample set','radio',SAMPLE_SET_CHOICES,''),('hard_stratum','Hard-case stratum','radio','0, Not applicable | 1, Domain only | 2, Purpose only | 3, Both',''),('validation_included','Included in validation analysis','yesno','',''),('sample_status','Active or reserve status','radio','1, Active | 2, Reserve | 3, Review only',''),('display_order','Reviewer display order','text','','integer'),('assignment_batch','Assignment batch','text','',''),('source_pop_ver','Source-population version','text','',''),('production_ver','Production-output version','text','',''),('instrument_ver','Instrument version','text','',''),('cluster_id','Project-level clustering identifier','text','',''),('owner_resp_id','Owner respondent identifier','text','',''),('owner_project_id','Owner project identifier','text','',''),
+ ('owner_recruit_route','Owner recruitment route','radio','0, Not applicable | 1, Sequence based | 2, Supplementary purposive | 3, Post-revision',''),
+ ('owner_sequence_pos','Owner greedy-sequence position','text','','integer'),
+ ('owner_invite_batch','Owner invitation batch or checkpoint','text','',''),
+ ('owner_invite_date','Owner invitation date','text','','date_ymd'),
+ ('owner_reminder_date','Owner reminder date','text','','date_ymd'),
+ ('owner_contact_disp','Owner contact/recruitment disposition','radio','0, Not applicable | 1, Contactable | 2, Unreachable | 3, Failed delivery | 4, No response | 5, Response received',''),
+ ('owner_supp_reason','Pre-contact reason for supplementary invitation','notes','',''),
+ ('owner_response_status','Owner response status','radio','0, Not invited | 1, Invited | 2, Partial | 3, Complete | 4, Non-response | 5, Failed delivery','')]
  for i,x in enumerate(domains,1): admin.append((f'prop_d{i:02d}',f"Proposed domain flag: {x['label']}",'yesno','',''))
  for i,x in enumerate(purposes,1): admin.append((f'prop_p{i:02d}',f"Proposed purpose flag: {x['label']}",'yesno','',''))
  for i,x in enumerate(tags,1): admin.append((f'prop_t{i:02d}',f"Proposed tag flag: {x['label']}",'yesno','',''))
@@ -103,11 +111,21 @@ def build_specs(rows,meta):
    'missing_branches':{'po_miss_domains':'po_miss_domain == 1','po_miss_purposes':'po_miss_purpose == 1','po_miss_tags':'po_miss_tag == 1'},
    'conditional_note':'any proposed fit != 1 or visibility != 1; any missing-label report; sufficiency != 1; taxonomy_fit != 1; or Other taxonomy problem selected',
    'contradiction_rule':'Proposed-and-Fits plus missing for the same label is rejected.',
+   'completion_rule':'Every proposed-label verdict and public-entry sufficiency are complete.',
   },
   'neutral_assignment_id':{'pattern':'^[A-Z0-9]{8}$','forbidden_tokens':['baseline','hard','reserve','active','coder','owner'],'must_not_derive_from_hidden_id':True},
   'completion':{'generated_fields':['assignment_admin_complete','scratch_coder_complete','project_owner_complete'],'invalid_if_trigger_unresolved':True},
  }
- spec['administration']={'sample_set_codes':{1:'Baseline',2:'Hard case',3:'Owner review',4:'Pilot'},'pilot_validation_included':0}
+ spec['administration']={
+  'sample_set_codes':{1:'Baseline',2:'Hard case',3:'Owner review',4:'Pilot'},
+  'pilot_validation_included':0,
+  'owner_recruitment_route_codes':{0:'Not applicable',1:'Sequence based',2:'Supplementary purposive',3:'Post-revision'},
+  'owner_sequence_target_unique_records':50,
+  'owner_sequence_minimum_viable_unique_records':25,
+  'owner_supplementary_invitation_maximum':10,
+  'owner_data_collection_close_day':42,
+  'no_fixed_owner_reserve':True,
+ }
  (PACKAGE/'redcap_branching_validation_specification.yaml').write_text(yaml.safe_dump(spec,sort_keys=False,allow_unicode=True),encoding='utf-8')
  write_csv(PACKAGE/'redcap_label_variable_mapping.csv',list(meta['owner_mapping'][0]),meta['owner_mapping'])
 

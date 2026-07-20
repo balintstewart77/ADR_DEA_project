@@ -235,21 +235,39 @@ class InputAndSafetyTests(unittest.TestCase):
         receipt = root / "receipt.json"
         expected = {"sampling_specification": sampler.sha256_file(spec), **inputs.input_hashes}
         receipt.write_text(json.dumps({"osf_registration_identifier_or_url": "https://osf.invalid/registered", "registration_timestamp": "2030-01-01T00:00:00Z", "frozen_git_commit": "abc123", "gate_2_passed": True, "expected_hashes": expected}), encoding="utf-8")
+        manifest = root / sampler.PROTOCOL_MANIFEST_PATH
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(
+            "artefact_group,current_implementation_basis,frozen,registered,official_sample_draw_authorised,registration_identifier,registration_timestamp,implementation_last_checked_commit\n"
+            "00_protocol,true,true,true,true,https://osf.invalid/registered,2030-01-01T00:00:00Z,abc123\n",
+            encoding="utf-8",
+        )
         return inputs, spec, output, receipt
 
-    def test_27_official_guard_rejects_dirty_worktree(self) -> None:
+    def test_27_current_v0_11_manifest_blocks_official_draw(self) -> None:
+        receipt = {
+            "osf_registration_identifier_or_url": "synthetic",
+            "registration_timestamp": "2030-01-01T00:00:00Z",
+            "frozen_git_commit": "a" * 40,
+        }
+        with self.assertRaisesRegex(sampler.SamplingError, "not finally frozen"):
+            sampler.validate_protocol_draw_authorisation(
+                sampler.ROOT / sampler.PROTOCOL_MANIFEST_PATH, receipt
+            )
+
+    def test_28_official_guard_rejects_dirty_worktree(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             inputs, spec, output, receipt = self._guard_fixture(Path(tmp))
             with self.assertRaisesRegex(sampler.SamplingError, "clean Git worktree"):
                 sampler.validate_official_guard(receipt_path=receipt, output_directory=output, confirmation_token=sampler.CONFIRMATION_TOKEN, specification_path=spec, inputs=inputs, root=Path(tmp), head_commit="abc123", worktree_clean=False)
 
-    def test_28_official_guard_rejects_head_mismatch(self) -> None:
+    def test_29_official_guard_rejects_head_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             inputs, spec, output, receipt = self._guard_fixture(Path(tmp))
             with self.assertRaisesRegex(sampler.SamplingError, "frozen receipt commit"):
                 sampler.validate_official_guard(receipt_path=receipt, output_directory=output, confirmation_token=sampler.CONFIRMATION_TOKEN, specification_path=spec, inputs=inputs, root=Path(tmp), head_commit="different", worktree_clean=True)
 
-    def test_29_official_guard_rejects_existing_output(self) -> None:
+    def test_30_official_guard_rejects_existing_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             inputs, spec, output, receipt = self._guard_fixture(Path(tmp))
             output.mkdir(parents=True)
@@ -257,7 +275,7 @@ class InputAndSafetyTests(unittest.TestCase):
             with self.assertRaisesRegex(sampler.SamplingError, "already contains"):
                 sampler.validate_official_guard(receipt_path=receipt, output_directory=output, confirmation_token=sampler.CONFIRMATION_TOKEN, specification_path=spec, inputs=inputs, root=Path(tmp), head_commit="abc123", worktree_clean=True)
 
-    def test_30_output_metadata_and_hashes_match(self) -> None:
+    def test_31_output_metadata_and_hashes_match(self) -> None:
         result = sampler.draw_samples(make_inputs(), 28)
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "synthetic"
@@ -267,13 +285,16 @@ class InputAndSafetyTests(unittest.TestCase):
                 self.assertEqual(digest, sampler.sha256_file(output / filename))
             self.assertEqual(hashes["sampling_metadata.json"], sampler.sha256_file(output / "sampling_metadata.json"))
 
-    def test_31_specification_and_output_schema_parse(self) -> None:
+    def test_32_specification_and_output_schema_parse(self) -> None:
         specification = yaml.safe_load((sampler.ROOT / sampler.SPECIFICATION_PATH).read_text(encoding="utf-8"))
         schema = json.loads((sampler.ROOT / "preregistration/package/04_exclusions_and_sampling/sampling_output_schema.json").read_text(encoding="utf-8"))
         self.assertFalse(specification["prospective_boundary"]["official_draw_executed"])
+        self.assertFalse(specification["protocol_basis"]["frozen"])
+        self.assertFalse(specification["protocol_basis"]["registered"])
+        self.assertFalse(specification["project_owner_review"]["fixed_reserve_exists"])
         self.assertIn("record_fields", schema["required"])
 
-    def test_32_runbook_uses_placeholders_not_fabricated_receipt(self) -> None:
+    def test_33_runbook_uses_placeholders_not_fabricated_receipt(self) -> None:
         runbook = (sampler.ROOT / "preregistration/package/04_exclusions_and_sampling/official_sampling_runbook.md").read_text(encoding="utf-8")
         self.assertIn("Do not fabricate", runbook)
         self.assertNotIn("--registration-receipt fake", runbook)

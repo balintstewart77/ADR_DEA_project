@@ -18,6 +18,14 @@ instrument_ver,assignment_admin,,text,Instrument version,,,,,,,,,,,,,@HIDDEN-SUR
 cluster_id,assignment_admin,,text,Project-level clustering identifier,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 owner_resp_id,assignment_admin,,text,Owner respondent identifier,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 owner_project_id,assignment_admin,,text,Owner project identifier,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_recruit_route,assignment_admin,,radio,Owner recruitment route,"0, Not applicable | 1, Sequence based | 2, Supplementary purposive | 3, Post-revision",,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_sequence_pos,assignment_admin,,text,Owner greedy-sequence position,,,integer,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_invite_batch,assignment_admin,,text,Owner invitation batch or checkpoint,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_invite_date,assignment_admin,,text,Owner invitation date,,,date_ymd,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_reminder_date,assignment_admin,,text,Owner reminder date,,,date_ymd,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_contact_disp,assignment_admin,,radio,Owner contact/recruitment disposition,"0, Not applicable | 1, Contactable | 2, Unreachable | 3, Failed delivery | 4, No response | 5, Response received",,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_supp_reason,assignment_admin,,notes,Pre-contact reason for supplementary invitation,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
+owner_response_status,assignment_admin,,radio,Owner response status,"0, Not invited | 1, Invited | 2, Partial | 3, Complete | 4, Non-response | 5, Failed delivery",,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 prop_d01,assignment_admin,,yesno,Proposed domain flag: Labour Market & Employment,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 prop_d02,assignment_admin,,yesno,Proposed domain flag: Education & Skills,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 prop_d03,assignment_admin,,yesno,Proposed domain flag: Health & Social Care,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY

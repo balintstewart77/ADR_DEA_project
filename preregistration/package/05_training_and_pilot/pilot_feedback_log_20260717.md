@@ -1,7 +1,9 @@
 # Pilot feedback log — 17 July 2026
 
-Status: implemented in repository candidate redcap-candidate-0.4; live runtime
-QA remains pending. The pilot was launched under redcap-candidate-0.3.
+Status: open pending completion of the excluded pilot, debrief, and formal log
+closure. The recorded diagnostic decisions were implemented in candidate 0.4
+and are retained in the v0.11-aligned candidate 0.5; live runtime QA remains
+pending. The pilot was launched under redcap-candidate-0.3.
 
 ## PILOT-001 — Taxonomy fit cannot be assessed under insufficient evidence
 

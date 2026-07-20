@@ -1,5 +1,23 @@
 # REDCap candidate version history
 
+## redcap-candidate-0.5 — 2026-07-18
+
+- Provisional repository candidate aligned to protocol v0.11. It has not been
+  imported into or connected to REDCap and is not authorised for formal use.
+- Added hidden, read-only owner recruitment-route, greedy-sequence position,
+  invitation/checkpoint, reminder, contact disposition, supplementary-reason,
+  and response-status fields. These preserve sequence-based, supplementary
+  purposive, and post-revision routes in exports without exposing them to
+  reviewers.
+- Recorded the 50-unique-record sequence target, 25-record minimum viable
+  threshold, maximum 10 supplementary invitations, 42-day close, and absence of
+  a fixed project-owner reserve in the machine-readable candidate specification.
+- Preserved all respondent-facing candidate-0.4 fields and codes. Candidate 0.3
+  and 0.4 remain historical decode-compatible versions; no pilot data were
+  recoded or regenerated.
+- Status: working review candidate pending pilot closure, Jo's review,
+  propagation of resulting changes, repository QA, and fresh live runtime QA.
+
 ## redcap-candidate-0.4 — 2026-07-17
 
 - Created after the 17 July shared scratch-coder training feedback and pilot

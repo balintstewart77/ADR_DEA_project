@@ -1,8 +1,8 @@
 """Synthetic-tested foundations for the preregistered validation analysis.
 
-This package contains no live REDCap client, sampling execution, adjudication,
-release decision, or empirical-result code.  Section 8 of protocol v0.10 is the
-scientific specification.
+This package contains no live REDCap client, official sampling execution,
+completed adjudication, automated release decision, or empirical-result code.
+Sections 8-10 of protocol v0.11 are the scientific specification.
 """
 
 from .alpha import AlphaResult, krippendorff_alpha

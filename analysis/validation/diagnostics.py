@@ -25,7 +25,7 @@ def taxonomy_defect_eligible(taxonomy_fit: str) -> bool:
     """Cannot assess is evidence-limited and never enters defect denominators."""
 
     if taxonomy_fit not in {"Fit", "Partial Fit", "No Fit", "Cannot assess from register entry"}:
-        raise ValueError(f"Unknown candidate-0.4 taxonomy-fit value: {taxonomy_fit!r}")
+        raise ValueError(f"Unknown current-candidate taxonomy-fit value: {taxonomy_fit!r}")
     return taxonomy_fit in {"Partial Fit", "No Fit"}
 
 
@@ -43,3 +43,21 @@ def support_band(positive_records: int) -> str:
     if positive_records < 30:
         return "10_to_29_low_support_caution"
     return "30_or_more_standard_reporting"
+
+
+def macro_average_eligible(positive_records: int) -> bool:
+    """Domains and purposes enter macro-averages at 10 baseline positives."""
+
+    support_band(positive_records)
+    return positive_records >= 10
+
+
+def majority_diagnostic_rating(values: Iterable[str]) -> str:
+    """Return an exact two-of-three category or the prespecified split label."""
+
+    ratings = tuple(values)
+    if len(ratings) != 3 or any(not value for value in ratings):
+        raise ValueError("Diagnostic majority requires three non-empty ratings")
+    counts = Counter(ratings)
+    winner, count = counts.most_common(1)[0]
+    return winner if count >= 2 else "No majority / split judgement"

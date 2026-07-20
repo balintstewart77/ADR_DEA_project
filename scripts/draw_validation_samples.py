@@ -46,6 +46,7 @@ REAL_HARD_PATH = Path(
     "gpt55_disagreement_frame_380.csv"
 )
 RESTRICTED_SAMPLING_ROOT = Path("preregistration_restricted/sampling")
+PROTOCOL_MANIFEST_PATH = Path("preregistration/preregistration_artifact_manifest.csv")
 OFFICIAL_OUTPUT_NAMES = (
     "baseline_active.csv",
     "baseline_reserve.csv",
@@ -187,6 +188,8 @@ def load_sampling_specification(
         "baseline",
         "hard_active",
         "hard_reserve",
+        "project_owner_review",
+        "protocol_basis",
         "assertions",
         "prospective_boundary",
         "embargo",
@@ -203,15 +206,26 @@ def load_sampling_specification(
         "draw_requires_registration": True,
         "draw_requires_gate_2": True,
         "real_seed_forbidden_in_tests": True,
+        "canonical_protocol_authorisation_required": True,
     }:
         raise SamplingError("Prospective boundary is incomplete or unsafe")
+    protocol_basis = specification["protocol_basis"]
+    if not isinstance(protocol_basis, dict) or protocol_basis.get("version") != "v0.11":
+        raise SamplingError("Sampling specification protocol basis must be v0.11")
+    if any(protocol_basis.get(field) is not False for field in (
+        "frozen", "registered", "official_sample_draw_authorised"
+    )):
+        raise SamplingError("v0.11 protocol basis must remain unauthorised")
+    owner_review = specification["project_owner_review"]
+    if not isinstance(owner_review, dict) or owner_review.get("fixed_reserve_exists") is not False:
+        raise SamplingError("Sampling specification must not define a fixed owner reserve")
     randomisation = specification["randomisation"]
     if not isinstance(randomisation, dict):
         raise SamplingError("randomisation must be a mapping")
     if randomisation.get("master_seed") != OFFICIAL_SEED:
-        raise SamplingError("Official seed differs from the registered constant")
+        raise SamplingError("Official seed differs from the protocol candidate constant")
     if randomisation.get("bit_generator") != "numpy.random.PCG64":
-        raise SamplingError("Registered bit generator must be numpy.random.PCG64")
+        raise SamplingError("Protocol bit generator must be numpy.random.PCG64")
     baseline = specification["baseline"]
     hard_active = specification["hard_active"]
     hard_reserve = specification["hard_reserve"]
@@ -629,10 +643,44 @@ def _git_clean(root: Path) -> bool:
     return not subprocess.run(["git", "status", "--porcelain"], cwd=root, check=True, capture_output=True, text=True).stdout.strip()
 
 
+def validate_protocol_draw_authorisation(
+    manifest_path: Path, receipt: Mapping[str, object]
+) -> Mapping[str, str]:
+    """Require the canonical manifest to authorise the registered frozen basis."""
+
+    if not manifest_path.is_file():
+        raise SamplingError("Canonical protocol manifest does not exist")
+    with manifest_path.open(encoding="utf-8", newline="") as handle:
+        candidates = [
+            row for row in csv.DictReader(handle)
+            if row.get("artefact_group") == "00_protocol"
+            and (row.get("current_implementation_basis") or "").lower() == "true"
+        ]
+    if len(candidates) != 1:
+        raise SamplingError("Manifest must declare exactly one current protocol implementation basis")
+    row = candidates[0]
+    if (row.get("frozen") or "").lower() != "true":
+        raise SamplingError("Current protocol implementation basis is not finally frozen")
+    if (row.get("registered") or "").lower() != "true":
+        raise SamplingError("Current protocol implementation basis is not registered")
+    if (row.get("official_sample_draw_authorised") or "").lower() != "true":
+        raise SamplingError("Canonical protocol metadata does not authorise an official sample draw")
+    if not row.get("registration_identifier") or not row.get("registration_timestamp"):
+        raise SamplingError("Registered protocol metadata lacks registration identity or timestamp")
+    if row["registration_identifier"] != str(receipt.get("osf_registration_identifier_or_url", "")):
+        raise SamplingError("Protocol metadata and receipt registration identities differ")
+    if row["registration_timestamp"] != str(receipt.get("registration_timestamp", "")):
+        raise SamplingError("Protocol metadata and receipt registration timestamps differ")
+    if row.get("implementation_last_checked_commit") != str(receipt.get("frozen_git_commit", "")):
+        raise SamplingError("Protocol implementation-check commit differs from the frozen receipt commit")
+    return row
+
+
 def validate_official_guard(
     *, receipt_path: Path, output_directory: Path, confirmation_token: str,
     specification_path: Path, inputs: ValidatedInputs, root: Path = ROOT,
     head_commit: str | None = None, worktree_clean: bool | None = None,
+    protocol_manifest_path: Path | None = None,
 ) -> Mapping[str, object]:
     if confirmation_token != CONFIRMATION_TOKEN:
         raise SamplingError("Official confirmation token is absent or incorrect")
@@ -655,6 +703,9 @@ def validate_official_guard(
         raise SamplingError("Registration receipt has a blank registration identity or timestamp")
     if receipt["gate_2_passed"] is not True:
         raise SamplingError("Registration receipt does not confirm Gate 2")
+    validate_protocol_draw_authorisation(
+        protocol_manifest_path or root / PROTOCOL_MANIFEST_PATH, receipt
+    )
     actual_head = head_commit if head_commit is not None else _git_head(root)
     if receipt["frozen_git_commit"] != actual_head:
         raise SamplingError("Current HEAD differs from the frozen receipt commit")

@@ -4,6 +4,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+# HISTORICAL REPRODUCTION ONLY: this script created the superseded v0.10 and
+# candidate-0.4 materials. It is not the v0.11 implementation or finalisation path.
 $word = $null
 $report = @()
 

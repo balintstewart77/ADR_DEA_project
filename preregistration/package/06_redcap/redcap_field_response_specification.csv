@@ -27,6 +27,27 @@ instrument_ver,Instrument version,assignment_admin,text,,,,optional/display,,no,
 cluster_id,Project-level clustering identifier,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 owner_resp_id,Owner respondent identifier,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 owner_project_id,Owner project identifier,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_recruit_route,Owner recruitment route,assignment_admin,radio,0,Not applicable,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_recruit_route,Owner recruitment route,assignment_admin,radio,1,Sequence based,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_recruit_route,Owner recruitment route,assignment_admin,radio,2,Supplementary purposive,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_recruit_route,Owner recruitment route,assignment_admin,radio,3,Post-revision,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_sequence_pos,Owner greedy-sequence position,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_invite_batch,Owner invitation batch or checkpoint,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_invite_date,Owner invitation date,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_reminder_date,Owner reminder date,assignment_admin,text,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_contact_disp,Owner contact/recruitment disposition,assignment_admin,radio,0,Not applicable,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_contact_disp,Owner contact/recruitment disposition,assignment_admin,radio,1,Contactable,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_contact_disp,Owner contact/recruitment disposition,assignment_admin,radio,2,Unreachable,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_contact_disp,Owner contact/recruitment disposition,assignment_admin,radio,3,Failed delivery,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_contact_disp,Owner contact/recruitment disposition,assignment_admin,radio,4,No response,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_contact_disp,Owner contact/recruitment disposition,assignment_admin,radio,5,Response received,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_supp_reason,Pre-contact reason for supplementary invitation,assignment_admin,notes,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_response_status,Owner response status,assignment_admin,radio,0,Not invited,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_response_status,Owner response status,assignment_admin,radio,1,Invited,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_response_status,Owner response status,assignment_admin,radio,2,Partial,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_response_status,Owner response status,assignment_admin,radio,3,Complete,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_response_status,Owner response status,assignment_admin,radio,4,Non-response,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
+owner_response_status,Owner response status,assignment_admin,radio,5,Failed delivery,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 prop_d01,Proposed domain flag: Labour Market & Employment,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 prop_d02,Proposed domain flag: Education & Skills,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY
 prop_d03,Proposed domain flag: Health & Social Care,assignment_admin,yesno,,,,optional/display,,no,no,yes,@HIDDEN-SURVEY @READONLY

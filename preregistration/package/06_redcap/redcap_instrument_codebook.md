@@ -1,7 +1,7 @@
 # REDCap instrument codebook
 
-Status: working post-training candidate redcap-candidate-0.4. The pilot used
-redcap-candidate-0.3; candidate 0.4 live runtime QA remains pending.
+Status: working v0.11-aligned candidate redcap-candidate-0.5. The pilot used
+redcap-candidate-0.3; fresh candidate 0.5 live runtime QA remains pending.
 
 ## Architecture and visibility
 
@@ -60,8 +60,8 @@ Both candidate-0.3 issue fields used:
 
 Archived pilot exports must be decoded by instrument_ver. Codes 3, 4 and 6 are
 preserved exactly for candidate-0.3 data and are not silently mapped to the
-candidate-0.4 categories. The current expected export schema lists only
-candidate-0.4 checkbox columns 1, 2 and 5.
+candidate-0.5 categories. The current expected export schema lists only
+candidate-0.5 checkbox columns 1, 2 and 5.
 
 ## Reporting
 

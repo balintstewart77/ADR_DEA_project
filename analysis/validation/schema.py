@@ -61,7 +61,9 @@ TAXONOMY_ISSUES_04 = frozenset(
         "Other taxonomy problem",
     }
 )
-INSTRUMENT_VERSIONS = frozenset({"redcap-candidate-0.3", "redcap-candidate-0.4"})
+INSTRUMENT_VERSIONS = frozenset({
+    "redcap-candidate-0.3", "redcap-candidate-0.4", "redcap-candidate-0.5"
+})
 SAMPLE_SETS = frozenset({"random_baseline", "hard_case", "owner_review", "pilot"})
 
 
@@ -300,7 +302,7 @@ def validate_project(project: ProjectRatings) -> ValidationReport:
                     f"{slot}: {sorted(unknown_issues)}",
                 )
             )
-        if project.instrument_version == "redcap-candidate-0.4":
+        if project.instrument_version in {"redcap-candidate-0.4", "redcap-candidate-0.5"}:
             if coder.taxonomy_fit == "Cannot assess from register entry" and coder.register_sufficiency == "Sufficient":
                 issues.append(
                     ValidationIssue(

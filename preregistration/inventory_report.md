@@ -84,13 +84,14 @@ training remain preserved and decodable. The new formal-coding materials are
 separately versioned, and the decisions are recorded in
 `package/05_training_and_pilot/pilot_feedback_log_20260717.md`.
 
-The active unregistered protocol candidate is now
-`Validation_Protocol_PreReg_v0.10.docx`, created under the repository's
-separate-draft convention from preserved v0.9. It was revised directly because
-the preregistration has not been submitted; no amendment document was created.
-Formal coding cannot begin until candidate-0.3 pilot responses are complete and
-archived and candidate 0.4 passes repository validation and manual live runtime
-QA.
+The current protocol implementation and collaborator-review candidate is
+`Validation_Protocol_PreReg_v0.11.docx`. Exact source-commit, blob, size, and
+SHA-256 provenance are recorded in the canonical manifest separately from the
+implementation-check commit. It is not frozen or registered and does not
+authorise an official draw, formal coding, or owner recruitment. Final freeze
+remains gated by pilot closure, Jo's substantive review, propagation of changes,
+and final package QA. REDCap candidate 0.5 is the provisional v0.11-aligned
+repository candidate; live runtime QA remains pending.
 
 The initial scientific-artefact inventory and forensic search were read-only.
 After the Fable evidence gates passed, an authorised pre-registration
@@ -138,7 +139,7 @@ version-number or timestamp inference.
 
 | Area | Candidate | Assessment and evidence |
 | --- | --- | --- |
-| Protocol | `Validation_Protocol_PreReg_v0.10.docx` | Active unregistered review candidate incorporating the 17 July diagnostic-instrument decisions. Preserved v0.9 is superseded; neither version is frozen. |
+| Protocol | `Validation_Protocol_PreReg_v0.11.docx` | Current implementation and collaborator-review candidate. It supersedes v0.10 but is neither frozen nor registered and does not authorise an official draw. |
 | Source | `data/dea_accredited_projects_20260601.xlsx` and matching CSV | `data/register_manifest.json` explicitly points to version `20260601` as current. |
 | Cleaning | `analysis/register_cleaning.py` | Frozen authoritative Phase 3 implementation; an in-memory rerun reproduced the packaged 1,308-row cleaned population exactly. |
 | Duplicate rulings | `analysis/register_duplicate_rulings.yaml` | Governing reviewed rulings for the current release. |
@@ -199,8 +200,8 @@ training materials, REDCap instruments or other post-pilot artefacts.
 - final Gate 1 freeze of the now-tested sampling engine, specification, schema
   and runbook; the official draw remains a post-registration Gate 2 operation;
 - restricted trainer guide and blinded pilot-assignment files;
-- candidate-0.4 manual live runtime QA and sign-off in PID 9128; the combined
-  137-field dictionary, codebook, import template, specifications, preview and
+- candidate-0.5 manual live runtime QA and sign-off in a synthetic test project; the combined
+  145-field dictionary, codebook, import template, specifications, preview and
   offline validator are present, while the historical dated runtime-QA record
   remains unchanged;
 - validation analysis script and exact dependency lockfile;
@@ -333,9 +334,10 @@ README plus empty directories.
 
 ## Decisions required from Balint
 
-1. Review `Validation_Protocol_PreReg_v0.10.docx`, complete candidate-0.4 live
-   runtime QA after the candidate-0.3 pilot export is archived, and approve the
-   final v1.0 DOCX/PDF only after the final cross-document audit.
+1. Complete and debrief the excluded pilot, close its dated feedback log,
+   complete Jo's substantive review of v0.11, propagate resulting changes, run
+   candidate-0.5 live runtime QA, and create the final protocol only after final
+   cross-document and repository QA.
 2. Decide whether the missing superseded v7 exclusion file should be recovered
    for historical retention; authoritative v8 is present and verified.
 3. Decide whether a standalone rendering of the dynamically assembled

@@ -7,6 +7,8 @@ import yaml
 
 from analysis.validation.diagnostics import (
     human_supported,
+    macro_average_eligible,
+    majority_diagnostic_rating,
     majority_supported_labels,
     support_band,
     taxonomy_issue_denominator,
@@ -85,7 +87,7 @@ def valid_project(**changes):
             0,
             0,
         ),
-        instrument_version="redcap-candidate-0.4",
+        instrument_version="redcap-candidate-0.5",
     )
     values.update(changes)
     return ProjectRatings(**values)
@@ -295,6 +297,18 @@ def test_cannot_assess_is_excluded_from_taxonomy_defect_denominator():
 )
 def test_support_bands_use_random_baseline_count_boundaries(count, expected):
     assert support_band(count) == expected
+
+
+def test_macro_average_eligibility_starts_at_ten_baseline_positives():
+    assert not macro_average_eligible(9)
+    assert macro_average_eligible(10)
+
+
+def test_diagnostic_majority_preserves_three_way_split():
+    assert majority_diagnostic_rating(("Fit", "Fit", "No Fit")) == "Fit"
+    assert majority_diagnostic_rating(
+        ("Fit", "Partial Fit", "No Fit")
+    ) == "No majority / split judgement"
 
 
 def test_fixture_contains_no_real_ids_and_future_owner_cluster_is_synthetic():

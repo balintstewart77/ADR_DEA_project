@@ -7,6 +7,14 @@ release:
   python_version: 3.13.2
   numpy_version: 2.2.5
   pandas_version: 2.2.3
+protocol_basis:
+  version: v0.11
+  path: preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.11.docx
+  status: review_candidate
+  current_implementation_basis: true
+  frozen: false
+  registered: false
+  official_sample_draw_authorised: false
 inputs:
   cleaned_population_path: preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv
   cleaned_population_sha256: a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1
@@ -53,6 +61,10 @@ hard_reserve:
   active_priority: Active hard quotas of 25 per stratum are filled before any reserve seat.
   fallback_reallocation_rule: Cap each initial quota at availability, then distribute shortfall one seat per eligible stratum in the seed-governed tie order until filled or capacity is exhausted.
   overall_shortfall_rule: Return the largest valid reserve and record target minus actual rows; never fabricate records.
+project_owner_review:
+  fixed_reserve_n: 0
+  fixed_reserve_exists: false
+  reserve_rule: No fixed project-owner reserve is drawn; further review uses a separate post-revision cohort and newly generated greedy sequence.
 assertions:
   excluded_ids_absent: true
   no_replacement: true
@@ -68,6 +80,7 @@ prospective_boundary:
   draw_requires_registration: true
   draw_requires_gate_2: true
   real_seed_forbidden_in_tests: true
+  canonical_protocol_authorisation_required: true
 embargo:
   active_identity_release: Restricted after draw; release only after initial independent coding is complete and remaining blinded work cannot be compromised.
   reserve_identity_release: Embargoed until reserve retesting is complete or the reserve is formally retired unused; reserve strata and ranks follow the same embargo.

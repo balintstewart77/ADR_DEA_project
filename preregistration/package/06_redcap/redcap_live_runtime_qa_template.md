@@ -1,11 +1,11 @@
-# Live REDCap runtime QA record — blank candidate-0.4 template
+# Live REDCap runtime QA record — blank candidate-0.5 template
 
 Tester: Not stored in Git
 Test date:
 REDCap instance:
 REDCap version:
 Test project identifier (store only where approved):
-Dictionary version: redcap-candidate-0.4
+Dictionary version: redcap-candidate-0.5
 Dictionary SHA-256:
 Import warnings:
 
@@ -37,7 +37,7 @@ Other taxonomy problem explanatory-note result:
 Candidate-0.3 pilot export archived before import:
 Pilot assignment instrument_ver values preserved:
 Current issue columns exactly 1, 2 and 5:
-Retired issue columns absent from candidate-0.4 export:
+Retired issue columns absent from candidate-0.5 export:
 One-row-per-assignment result:
 Multiple-owner-response result:
 Hidden-field and user-rights result:

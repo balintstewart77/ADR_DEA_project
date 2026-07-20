@@ -1,4 +1,4 @@
-version: redcap-candidate-0.4
+version: redcap-candidate-0.5
 historical_versions:
   redcap-candidate-0.3:
     scratch_taxonomy_fit_codes:
@@ -260,6 +260,7 @@ owner:
   conditional_note: any proposed fit != 1 or visibility != 1; any missing-label report;
     sufficiency != 1; taxonomy_fit != 1; or Other taxonomy problem selected
   contradiction_rule: Proposed-and-Fits plus missing for the same label is rejected.
+  completion_rule: Every proposed-label verdict and public-entry sufficiency are complete.
 neutral_assignment_id:
   pattern: ^[A-Z0-9]{8}$
   forbidden_tokens:
@@ -283,3 +284,13 @@ administration:
     3: Owner review
     4: Pilot
   pilot_validation_included: 0
+  owner_recruitment_route_codes:
+    0: Not applicable
+    1: Sequence based
+    2: Supplementary purposive
+    3: Post-revision
+  owner_sequence_target_unique_records: 50
+  owner_sequence_minimum_viable_unique_records: 25
+  owner_supplementary_invitation_maximum: 10
+  owner_data_collection_close_day: 42
+  no_fixed_owner_reserve: true

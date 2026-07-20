@@ -39,10 +39,15 @@ def test_traceability_covers_every_section_8_subsection_and_allowed_statuses():
         "8.6",
         "8.7",
         "8.8",
+        "8.9",
+        "8.10",
     }
     allowed = {
         "Implemented foundation",
         "Tested",
+        "Tested foundation",
+        "Schema and tested foundation",
+        "Vocabulary tested",
         "Output shell prepared",
         "Deferred to Batch 2",
         "Blocked pending real export schema",

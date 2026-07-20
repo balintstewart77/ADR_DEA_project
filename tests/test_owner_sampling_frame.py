@@ -6,11 +6,14 @@ import pytest
 from analysis.validation.owner_sampling_frame import (
     EXPECTED_RECORDS,
     assert_no_contact_columns,
+    apply_scratch_reserve_exclusions,
+    build_contactability_aware_sequence,
     build_prefix_concentration,
     build_researcher_summary,
     build_coverage_sequences,
     build_coverage_thresholds,
     build_overlap_summary,
+    build_sequence_recruitment_batches,
     build_researcher_record_frame,
     classify_entity,
     load_exclusion_ids,
@@ -323,3 +326,54 @@ def test_exact_22_exclusion_enforcement(tmp_path):
     pd.DataFrame({"record_id": [f"SYN-{number:03d}" for number in range(21)]}).to_csv(path, index=False)
     with pytest.raises(ValueError, match="exactly 22"):
         load_exclusion_ids(path)
+
+
+def test_reserve_exclusion_is_an_exact_join_without_identity_output():
+    frame = pd.DataFrame({
+        "record_id": ["SYN-001", "SYN-002", "SYN-003"],
+        "provisional_base_owner_eligible": [1, 1, 0],
+        "future_reserve_removal_pending": [1, 1, 1],
+    })
+    result = apply_scratch_reserve_exclusions(frame, {"SYN-002"})
+    assert list(result["owner_review_record_eligibility"]) == [1, 0, 0]
+    assert result["future_reserve_removal_pending"].eq(0).all()
+
+
+def test_contactability_aware_greedy_recalculates_after_unreachable_candidate():
+    portfolios = {
+        "alex": frozenset({"SYN-001", "SYN-002", "SYN-003"}),
+        "blair": frozenset({"SYN-001", "SYN-002"}),
+        "casey": frozenset({"SYN-003", "SYN-004"}),
+        "scratch": frozenset({"SYN-005"}),
+    }
+    summary = pd.DataFrame([
+        {"researcher_identity_key": key, "entity_status": "person_candidate"}
+        for key in portfolios
+    ])
+    result = build_contactability_aware_sequence(
+        summary, portfolios, 5,
+        {"alex": "unreachable", "blair": "contactable", "casey": "contactable"},
+        scratch_coder_keys={"scratch"},
+    )
+    assert list(result.sequence["researcher_identity_key"]) == ["blair", "casey"]
+    assert list(result.sequence["newly_covered_records"]) == [2, 2]
+    assert result.disposition_audit.iloc[0]["contactability_disposition"] == "unreachable"
+
+
+def test_unresolved_leading_contactability_stops_sequence():
+    summary = pd.DataFrame([{
+        "researcher_identity_key": "alex", "entity_status": "person_candidate"
+    }])
+    with pytest.raises(ValueError, match="must be resolved"):
+        build_contactability_aware_sequence(
+            summary, {"alex": frozenset({"SYN-001"})}, 1, {}
+        )
+
+
+def test_sequence_batches_follow_target_checkpoints_without_owner_reserve():
+    batches = build_sequence_recruitment_batches(
+        30, {14: 20, 21: 35, 28: 50}
+    )
+    assert list(batches["planned_people"]) == [10, 5, 5]
+    assert list(batches["checkpoint_day"]) == [0, 14, 21]
+    assert batches["minimum_viable_unique_complete_records"].eq(25).all()

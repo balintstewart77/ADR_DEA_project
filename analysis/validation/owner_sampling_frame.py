@@ -70,6 +70,12 @@ class ParsedResearcher:
     entity_status_reason: str
 
 
+@dataclass(frozen=True)
+class ContactabilitySequenceResult:
+    sequence: pd.DataFrame
+    disposition_audit: pd.DataFrame
+
+
 def normalise_researcher_name(value: str) -> str:
     """Conservatively normalise typography, punctuation and whitespace."""
     text = unicodedata.normalize("NFKC", str(value))
@@ -449,6 +455,120 @@ def researcher_portfolios(
         key: frozenset(group["record_id"])
         for key, group in eligible.groupby("researcher_identity_key") if len(group)
     }
+
+
+def apply_scratch_reserve_exclusions(
+    frame: pd.DataFrame, reserve_record_ids: Iterable[str]
+) -> pd.DataFrame:
+    """Apply reserve exclusion by exact join without emitting reserve identities."""
+
+    reserve_ids = frozenset(str(value).strip() for value in reserve_record_ids)
+    if "" in reserve_ids:
+        raise ValueError("Scratch-coder reserve IDs cannot be blank")
+    out = frame.copy()
+    in_reserve = out["record_id"].astype(str).isin(reserve_ids)
+    out["in_scratch_coder_reserve"] = in_reserve.astype(int)
+    out["owner_review_record_eligibility"] = (
+        out["provisional_base_owner_eligible"].eq(1) & ~in_reserve
+    ).astype(int)
+    out["future_reserve_removal_pending"] = 0
+    return out
+
+
+def build_contactability_aware_sequence(
+    summary: pd.DataFrame,
+    portfolios: Mapping[str, frozenset[str]],
+    eligible_population_count: int,
+    contactability: Mapping[str, str],
+    *,
+    scratch_coder_keys: Iterable[str] = (),
+) -> ContactabilitySequenceResult:
+    """Build the v0.11 greedy sequence from explicit offline dispositions.
+
+    No contact route or personal detail is accepted or emitted. An unreachable
+    leading candidate is removed without covering records and the next position
+    is recalculated. Missing or unresolved leading dispositions stop the build.
+    """
+
+    if eligible_population_count <= 0:
+        raise ValueError("eligible_population_count must be positive")
+    metadata = summary.set_index("researcher_identity_key").to_dict("index")
+    excluded = frozenset(scratch_coder_keys)
+    remaining = set(portfolios) - set(excluded)
+    for key in remaining:
+        if metadata.get(key, {}).get("entity_status", "person_candidate") != "person_candidate":
+            raise ValueError(f"Non-person identity entered owner sequence: {key}")
+    covered: set[str] = set()
+    sequence_rows: list[dict[str, object]] = []
+    audit_rows: list[dict[str, object]] = []
+    evaluation_step = 0
+    while remaining:
+        evaluation_step += 1
+        chosen = min(
+            remaining,
+            key=lambda key: (-len(portfolios[key] - covered), -len(portfolios[key]), key),
+        )
+        disposition = contactability.get(chosen, "unresolved")
+        if disposition not in {"contactable", "unreachable"}:
+            raise ValueError(
+                f"Leading candidate contactability must be resolved before sequencing: {chosen}"
+            )
+        marginal = portfolios[chosen] - covered
+        audit_rows.append({
+            "evaluation_step": evaluation_step,
+            "researcher_identity_key": chosen,
+            "contactability_disposition": disposition,
+            "marginal_records_at_evaluation": len(marginal),
+            "added_to_sequence": int(disposition == "contactable"),
+            "tie_break_rule": "new coverage descending; total eligible records descending; conservative identity key ascending",
+        })
+        remaining.remove(chosen)
+        if disposition == "unreachable":
+            continue
+        covered.update(portfolios[chosen])
+        sequence_rows.append({
+            "sequence_position": len(sequence_rows) + 1,
+            "researcher_identity_key": chosen,
+            "total_eligible_records": len(portfolios[chosen]),
+            "newly_covered_records": len(marginal),
+            "cumulative_unique_records_covered": len(covered),
+            "cumulative_proportion_of_eligible_population": len(covered) / eligible_population_count,
+            "contactability_disposition": disposition,
+            "planning_only_not_an_official_selection": 1,
+        })
+    return ContactabilitySequenceResult(
+        pd.DataFrame(sequence_rows), pd.DataFrame(audit_rows)
+    )
+
+
+def build_sequence_recruitment_batches(
+    sequence_length: int, completed_unique_records_by_checkpoint: Mapping[int, int]
+) -> pd.DataFrame:
+    """Return position ranges for the initial 10 and conditional day-14/21/28 batches."""
+
+    if sequence_length < 0:
+        raise ValueError("sequence_length cannot be negative")
+    rows: list[dict[str, object]] = []
+    next_position = 1
+    for checkpoint_day, planned in ((0, 10), (14, 5), (21, 5), (28, 5)):
+        if checkpoint_day and completed_unique_records_by_checkpoint.get(checkpoint_day, 0) >= 50:
+            break
+        final_position = min(sequence_length, next_position + planned - 1)
+        if final_position < next_position:
+            break
+        rows.append({
+            "recruitment_route": "sequence_based",
+            "checkpoint_day": checkpoint_day,
+            "first_sequence_position": next_position,
+            "last_sequence_position": final_position,
+            "planned_people": final_position - next_position + 1,
+            "target_unique_complete_records": 50,
+            "minimum_viable_unique_complete_records": 25,
+            "data_collection_close_day": 42,
+            "planning_only_not_formal_assignments": 1,
+        })
+        next_position = final_position + 1
+    return pd.DataFrame(rows)
 
 
 def build_coverage_sequences(

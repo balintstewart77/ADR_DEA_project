@@ -47,6 +47,10 @@ FIT_CODES = {
         3: "No Fit",
         4: "Cannot assess from register entry",
     },
+    "redcap-candidate-0.5": {
+        1: "Fit", 2: "Partial Fit", 3: "No Fit",
+        4: "Cannot assess from register entry",
+    },
 }
 ISSUE_CODES = {
     "redcap-candidate-0.3": {
@@ -58,6 +62,11 @@ ISSUE_CODES = {
         6: "None",
     },
     "redcap-candidate-0.4": {
+        1: "Missing or inadequately represented category",
+        2: "Ambiguous or overlapping category boundaries",
+        5: "Other taxonomy problem",
+    },
+    "redcap-candidate-0.5": {
         1: "Missing or inadequately represented category",
         2: "Ambiguous or overlapping category boundaries",
         5: "Other taxonomy problem",

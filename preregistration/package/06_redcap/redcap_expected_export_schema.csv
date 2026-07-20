@@ -18,6 +18,14 @@ instrument_ver,assignment_admin,user-defined,string,,identifier/provenance,assig
 cluster_id,assignment_admin,user-defined,string,,identifier/provenance,project,,restricted response data,Hidden from reviewers
 owner_resp_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 owner_project_id,assignment_admin,user-defined,string,,identifier/provenance,project,,restricted response data,Hidden from reviewers
+owner_recruit_route,assignment_admin,user-defined,integer,"0, Not applicable | 1, Sequence based | 2, Supplementary purposive | 3, Post-revision",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_sequence_pos,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_invite_batch,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_invite_date,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_reminder_date,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_contact_disp,assignment_admin,user-defined,integer,"0, Not applicable | 1, Contactable | 2, Unreachable | 3, Failed delivery | 4, No response | 5, Response received",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_supp_reason,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+owner_response_status,assignment_admin,user-defined,integer,"0, Not invited | 1, Invited | 2, Partial | 3, Complete | 4, Non-response | 5, Failed delivery",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 prop_d01,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 prop_d02,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 prop_d03,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers

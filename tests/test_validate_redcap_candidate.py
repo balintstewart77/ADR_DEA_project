@@ -111,7 +111,7 @@ class CandidateTests(unittest.TestCase):
    rows=[r for r in self.rows() if r['Form Name']=='scratch_coder']; payload=json.dumps(rows,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
    self.assertEqual(hashlib.sha256(payload).hexdigest(),'7c17aba55f089f78603ae7cf6b48253c50e518dadc05445632680b1e86ac816c')
    self.assertNotEqual(hashlib.sha256(payload).hexdigest(),'8f59881f91573106a2327fc6d056fd04b9bdb34816846daf0898e3b26196c00f')
- def test_41_candidate_version_is_0_4(self): self.assertEqual(yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['version'],'redcap-candidate-0.4')
+ def test_41_candidate_version_is_0_5(self): self.assertEqual(yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['version'],'redcap-candidate-0.5')
  def test_42_runtime_corrections_remain_intact(self):
   by={r['Variable / Field Name']:r for r in self.rows()}
   self.assertEqual(by['sc_purposes']['Field Annotation'],v.PURPOSE_ANNOTATION)
@@ -150,8 +150,9 @@ class CandidateTests(unittest.TestCase):
   self.assertTrue(v.validate_owner(dict(self.po(),po_taxonomy_fit=4),self.mapping()))
  def test_49_dictionary_field_count_and_owner_actual_project_wording(self):
   rows=self.rows(); by={r['Variable / Field Name']:r for r in rows}
-  self.assertEqual(len(rows),137)
+  self.assertEqual(len(rows),145)
   self.assertIn('actual-project fit',by['po_intro']['Field Label'])
   self.assertIn('actual project',by['po_d01_fit']['Field Label'])
+  self.assertEqual(v.choices(by['owner_recruit_route']['Choices, Calculations, OR Slider Labels'])['2'],'Supplementary purposive')
 
 if __name__=='__main__': unittest.main()
