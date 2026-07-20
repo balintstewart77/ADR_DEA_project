@@ -1,0 +1,19 @@
+record_id,issue_source,issue_category,observed_pattern,relevant_coder_ids,brief_evidence,status
+2019/015,set_agreement,Research Domains_disagreement,two_vs_one,C01,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief
+2021/038,set_agreement,Analytical Purposes_disagreement,all_sets_distinct,C02 | C03,Complete sets: all_sets_distinct; labelwise majority-supported count: 2,pending_debrief
+2021/056,confidence,low_confidence_response,Low confidence,C02,At least one coder recorded low confidence,pending_debrief
+2021/056,diagnostic_item,confidence_three_way_split,No majority / split judgement,C01 | C02 | C03,All three confidence categories differ,pending_debrief
+2021/056,set_agreement,Research Domains_disagreement,two_vs_one,C01,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief
+2021/063,confidence,low_confidence_response,Low confidence,C02,At least one coder recorded low confidence,pending_debrief
+2021/063,diagnostic_item,taxonomy_fit_three_way_split,No majority / split judgement,C01 | C02 | C03,All three taxonomy_fit categories differ,pending_debrief
+2021/063,set_agreement,Analytical Purposes_disagreement,two_vs_one,C03,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief
+2021/063,set_agreement,Research Domains_disagreement,all_sets_distinct,C01 | C02,Complete sets: all_sets_distinct; labelwise majority-supported count: 1,pending_debrief
+2021/103,confidence,low_confidence_response,Low confidence,C02,At least one coder recorded low confidence,pending_debrief
+2021/103,confidence,low_confidence_response,Low confidence,C03,At least one coder recorded low confidence,pending_debrief
+2021/103,instrument_qc,candidate_0_3_none_taxonomy_issue,warning_interpretable,C02,Historical candidate-0.3 recorded the known incoherent None issue option,pending_debrief
+2022/034,set_agreement,Research Domains_disagreement,two_vs_one,C01,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief
+2022/130,set_agreement,Analytical Purposes_disagreement,two_vs_one,C01,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief
+2022/130,set_agreement,Research Domains_disagreement,two_vs_one,C01,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief
+2024/248,set_agreement,Research Domains_disagreement,all_sets_distinct,C01 | C03,Complete sets: all_sets_distinct; labelwise majority-supported count: 1,pending_debrief
+2025/027,set_agreement,Analytical Purposes_disagreement,two_vs_one,C01,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief
+2025/181,set_agreement,Analytical Purposes_disagreement,two_vs_one,C01,Complete sets: two_vs_one; labelwise majority-supported count: 1,pending_debrief

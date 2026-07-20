@@ -1,0 +1,197 @@
+source:
+  repository_relative_path: preregistration/package/05_training_and_pilot/pilot_raw_DATA_2026-07-20_2153.csv
+  sha256: ab338998123b806898cfb714814b6b51cde918deffd5e6345a98b7871db093f5
+  byte_size: 21390
+  filename_export_timestamp: 2026-07-20 21:53 (filename; Europe/London local time)
+  encoding: utf-8
+  csv_rows: 30
+  csv_columns: 158
+  headers:
+  - assignment_id
+  - redcap_data_access_group
+  - redcap_survey_identifier
+  - review_stream
+  - reviewer_id
+  - source_record_id
+  - official_project_id
+  - project_title
+  - datasets_used
+  - sample_set
+  - hard_stratum
+  - validation_included
+  - sample_status
+  - display_order
+  - assignment_batch
+  - source_pop_ver
+  - production_ver
+  - instrument_ver
+  - cluster_id
+  - owner_resp_id
+  - owner_project_id
+  - prop_d01
+  - prop_d02
+  - prop_d03
+  - prop_d04
+  - prop_d05
+  - prop_d06
+  - prop_d07
+  - prop_d08
+  - prop_d09
+  - prop_d10
+  - prop_d11
+  - prop_d12
+  - prop_p01
+  - prop_p02
+  - prop_p03
+  - prop_p04
+  - prop_p05
+  - prop_p06
+  - prop_p07
+  - prop_p08
+  - prop_t01
+  - prop_t02
+  - assignment_admin_complete
+  - scratch_coder_timestamp
+  - sc_blind_decl
+  - sc_exposure
+  - sc_exposure_note
+  - sc_domains___1
+  - sc_domains___2
+  - sc_domains___3
+  - sc_domains___4
+  - sc_domains___5
+  - sc_domains___6
+  - sc_domains___7
+  - sc_domains___8
+  - sc_domains___9
+  - sc_domains___10
+  - sc_domains___11
+  - sc_domains___12
+  - sc_purposes___1
+  - sc_purposes___2
+  - sc_purposes___3
+  - sc_purposes___4
+  - sc_purposes___5
+  - sc_purposes___6
+  - sc_purposes___7
+  - sc_purposes___8
+  - sc_covid
+  - sc_equity
+  - sc_sufficiency
+  - sc_taxonomy_fit
+  - sc_tax_issue___1
+  - sc_tax_issue___2
+  - sc_tax_issue___3
+  - sc_tax_issue___4
+  - sc_tax_issue___5
+  - sc_tax_issue___6
+  - sc_confidence
+  - sc_note
+  - scratch_coder_complete
+  - po_d01_fit
+  - po_d01_vis
+  - po_d02_fit
+  - po_d02_vis
+  - po_d03_fit
+  - po_d03_vis
+  - po_d04_fit
+  - po_d04_vis
+  - po_d05_fit
+  - po_d05_vis
+  - po_d06_fit
+  - po_d06_vis
+  - po_d07_fit
+  - po_d07_vis
+  - po_d08_fit
+  - po_d08_vis
+  - po_d09_fit
+  - po_d09_vis
+  - po_d10_fit
+  - po_d10_vis
+  - po_d11_fit
+  - po_d11_vis
+  - po_d12_fit
+  - po_d12_vis
+  - po_p01_fit
+  - po_p01_vis
+  - po_p02_fit
+  - po_p02_vis
+  - po_p03_fit
+  - po_p03_vis
+  - po_p04_fit
+  - po_p04_vis
+  - po_p05_fit
+  - po_p05_vis
+  - po_p06_fit
+  - po_p06_vis
+  - po_p07_fit
+  - po_p07_vis
+  - po_p08_fit
+  - po_p08_vis
+  - po_t01_fit
+  - po_t01_vis
+  - po_t02_fit
+  - po_t02_vis
+  - po_miss_domain
+  - po_miss_domains___1
+  - po_miss_domains___2
+  - po_miss_domains___3
+  - po_miss_domains___4
+  - po_miss_domains___5
+  - po_miss_domains___6
+  - po_miss_domains___7
+  - po_miss_domains___8
+  - po_miss_domains___9
+  - po_miss_domains___10
+  - po_miss_domains___11
+  - po_miss_purpose
+  - po_miss_purposes___1
+  - po_miss_purposes___2
+  - po_miss_purposes___3
+  - po_miss_purposes___4
+  - po_miss_purposes___5
+  - po_miss_purposes___6
+  - po_miss_purposes___7
+  - po_miss_tag
+  - po_miss_tags___1
+  - po_miss_tags___2
+  - po_sufficiency
+  - po_taxonomy_fit
+  - po_tax_issue___1
+  - po_tax_issue___2
+  - po_tax_issue___3
+  - po_tax_issue___4
+  - po_tax_issue___5
+  - po_tax_issue___6
+  - po_note
+  - project_owner_complete
+  detected_instrument_version: redcap-candidate-0.3
+analysis:
+  analysis_timestamp_utc: '2026-07-20T21:25:27.481651+00:00'
+  repository_head: 16f04e1e40e3481ec67ea518aff1453662273ae3
+  analysis_command: C:\Users\balin\Desktop\ADR_DEA_project\venv\Scripts\python.exe
+    -m analysis.validation.run_pilot_analysis --input preregistration/package/05_training_and_pilot/pilot_raw_DATA_2026-07-20_2153.csv
+    --output-dir preregistration/package/05_training_and_pilot/pilot_analysis
+  code_path: analysis/validation/run_pilot_analysis.py
+  formal_validation_metrics: false
+  model_outputs_initially_hidden: true
+sensitivity:
+  personal_name_or_email_headers_detected: false
+  email_like_cells_detected: 0
+  free_text_note_field_present: true
+  nonempty_free_text_notes: 12
+  hidden_administrative_identifiers_present: true
+  raw_export_commit_recommendation: restricted/local only pending explicit disclosure
+    review; source is currently tracked
+generated_artifact_commit_recommendations:
+  pilot_export_metadata.yaml: safe to commit after sensitivity review
+  pilot_assignment_qc.csv: safe only after review of hidden pseudonymous identifiers
+  pilot_qc_report.md: safe to commit after sensitivity review
+  pilot_analysis_ready.csv: generated and reproducible; safe after disclosure review
+  pilot_record_agreement.csv: generated and reproducible; safe after disclosure review
+  pilot_pairwise_agreement.csv: generated and reproducible; safe to commit
+  pilot_metric_summary.csv: generated and reproducible; safe to commit
+  pilot_diagnostic_item_summary.csv: generated and reproducible; safe after disclosure
+    review
+  pilot_issue_candidates.csv: safe only after debrief and disclosure review
+  pilot_agreement_report.md: safe to commit after debrief and disclosure review

@@ -1,0 +1,22 @@
+metric,classification_dimension,category,point_estimate,valid,undefined_reason,numerator,denominator,descriptive_pilot_statistic,notes
+valid_coder_record_responses,All scratch responses,,30,1,,30,30,1,"Completed, mapped, decodable pilot responses"
+three_rater_krippendorff_alpha_masi,Research Domains,,0.573947,1,,,10,1,No bootstrap; descriptive three-coder pilot statistic
+complete_set_pattern_count,Research Domains,unanimous,4,1,,4,10,1,Complete-set equality pattern; not labelwise majority
+complete_set_pattern_count,Research Domains,two_vs_one,4,1,,4,10,1,Complete-set equality pattern; not labelwise majority
+complete_set_pattern_count,Research Domains,all_sets_distinct,2,1,,2,10,1,Complete-set equality pattern; not labelwise majority
+three_rater_krippendorff_alpha_masi,Analytical Purposes,,0.644952,1,,,10,1,No bootstrap; descriptive three-coder pilot statistic
+complete_set_pattern_count,Analytical Purposes,unanimous,5,1,,5,10,1,Complete-set equality pattern; not labelwise majority
+complete_set_pattern_count,Analytical Purposes,two_vs_one,4,1,,4,10,1,Complete-set equality pattern; not labelwise majority
+complete_set_pattern_count,Analytical Purposes,all_sets_distinct,1,1,,1,10,1,Complete-set equality pattern; not labelwise majority
+binary_tag_record_pattern_count,Cross-cutting tag,COVID-19 & Pandemic: unanimous_negative,9,1,,9,10,1,
+binary_tag_record_pattern_count,Cross-cutting tag,COVID-19 & Pandemic: unanimous_positive,1,1,,1,10,1,
+binary_tag_pairwise_raw_agreement,Cross-cutting tag,COVID-19 & Pandemic: C01-C02,1.000000,1,,10,10,1,
+binary_tag_pairwise_raw_agreement,Cross-cutting tag,COVID-19 & Pandemic: C01-C03,1.000000,1,,10,10,1,
+binary_tag_pairwise_raw_agreement,Cross-cutting tag,COVID-19 & Pandemic: C02-C03,1.000000,1,,10,10,1,
+three_rater_krippendorff_alpha_nominal,Cross-cutting tag,COVID-19 & Pandemic,1.000000,1,,,10,1,Undefined values remain undefined; no forced numeric result
+binary_tag_record_pattern_count,Cross-cutting tag,Demographic disparities / equity: unanimous_negative,9,1,,9,10,1,
+binary_tag_record_pattern_count,Cross-cutting tag,Demographic disparities / equity: unanimous_positive,1,1,,1,10,1,
+binary_tag_pairwise_raw_agreement,Cross-cutting tag,Demographic disparities / equity: C01-C02,1.000000,1,,10,10,1,
+binary_tag_pairwise_raw_agreement,Cross-cutting tag,Demographic disparities / equity: C01-C03,1.000000,1,,10,10,1,
+binary_tag_pairwise_raw_agreement,Cross-cutting tag,Demographic disparities / equity: C02-C03,1.000000,1,,10,10,1,
+three_rater_krippendorff_alpha_nominal,Cross-cutting tag,Demographic disparities / equity,1.000000,1,,,10,1,Undefined values remain undefined; no forced numeric result

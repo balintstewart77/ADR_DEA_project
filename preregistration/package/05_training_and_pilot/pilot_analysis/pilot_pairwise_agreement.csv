@@ -1,0 +1,7 @@
+classification_dimension,coder_pair,denominator,exact_count,exact_proportion,mean_jaccard,median_jaccard,minimum_jaccard,maximum_jaccard
+Research Domains,C01-C02,10,4,0.400000,0.583333,0.500000,0.000000,1.000000
+Research Domains,C01-C03,10,4,0.400000,0.566667,0.500000,0.000000,1.000000
+Research Domains,C02-C03,10,8,0.800000,0.800000,1.000000,0.000000,1.000000
+Analytical Purposes,C01-C02,10,6,0.600000,0.750000,1.000000,0.000000,1.000000
+Analytical Purposes,C01-C03,10,5,0.500000,0.650000,0.750000,0.000000,1.000000
+Analytical Purposes,C02-C03,10,8,0.800000,0.800000,1.000000,0.000000,1.000000

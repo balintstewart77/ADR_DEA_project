@@ -1,0 +1,71 @@
+record_id,dimension,dimension_type,agreement_pattern,all_agree_flag,two_vs_one_flag,split_flag,pairwise_exact_count,mean_pairwise_jaccard,majority_category,notes_for_interpretation
+2019/015,Research Domains,set,two_vs_one,0,1,0,1,0.666667,,Two complete label sets match and one differs
+2019/015,Analytical Purposes,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2019/015,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2019/015,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2019/015,Register sufficiency,categorical,two_vs_one,0,1,0,1,,Partially sufficient,Two categorical responses match and one differs
+2019/015,Taxonomy fit,categorical,all_agree,1,0,0,3,,Fit,All three categorical responses are identical
+2019/015,Confidence,categorical,two_vs_one,0,1,0,1,,Medium,Two categorical responses match and one differs
+2021/038,Research Domains,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2021/038,Analytical Purposes,set,all_sets_distinct,0,0,1,0,0.333333,,All three complete label sets differ pairwise
+2021/038,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2021/038,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2021/038,Register sufficiency,categorical,all_agree,1,0,0,3,,Sufficient,All three categorical responses are identical
+2021/038,Taxonomy fit,categorical,all_agree,1,0,0,3,,Fit,All three categorical responses are identical
+2021/038,Confidence,categorical,two_vs_one,0,1,0,1,,High,Two categorical responses match and one differs
+2021/056,Research Domains,set,two_vs_one,0,1,0,1,0.333333,,Two complete label sets match and one differs
+2021/056,Analytical Purposes,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2021/056,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2021/056,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2021/056,Register sufficiency,categorical,two_vs_one,0,1,0,1,,Partially sufficient,Two categorical responses match and one differs
+2021/056,Taxonomy fit,categorical,two_vs_one,0,1,0,1,,Partial Fit,Two categorical responses match and one differs
+2021/056,Confidence,categorical,split,0,0,1,0,,No majority / split judgement,All three categorical responses differ; no majority
+2021/063,Research Domains,set,all_sets_distinct,0,0,1,0,0.111111,,All three complete label sets differ pairwise
+2021/063,Analytical Purposes,set,two_vs_one,0,1,0,1,0.333333,,Two complete label sets match and one differs
+2021/063,Tag: Demographic disparities / equality,binary_tag,all_agree_positive,1,0,0,3,,Positive,All three coders selected the positive tag
+2021/063,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2021/063,Register sufficiency,categorical,two_vs_one,0,1,0,1,,Insufficient,Two categorical responses match and one differs
+2021/063,Taxonomy fit,categorical,split,0,0,1,0,,No majority / split judgement,All three categorical responses differ; no majority
+2021/063,Confidence,categorical,two_vs_one,0,1,0,1,,Medium,Two categorical responses match and one differs
+2021/103,Research Domains,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2021/103,Analytical Purposes,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2021/103,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2021/103,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2021/103,Register sufficiency,categorical,all_agree,1,0,0,3,,Insufficient,All three categorical responses are identical
+2021/103,Taxonomy fit,categorical,all_agree,1,0,0,3,,No Fit,All three categorical responses are identical
+2021/103,Confidence,categorical,two_vs_one,0,1,0,1,,Low,Two categorical responses match and one differs
+2022/034,Research Domains,set,two_vs_one,0,1,0,1,0.666667,,Two complete label sets match and one differs
+2022/034,Analytical Purposes,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2022/034,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2022/034,Tag: COVID-19 / pandemic,binary_tag,all_agree_positive,1,0,0,3,,Positive,All three coders selected the positive tag
+2022/034,Register sufficiency,categorical,all_agree,1,0,0,3,,Sufficient,All three categorical responses are identical
+2022/034,Taxonomy fit,categorical,all_agree,1,0,0,3,,Fit,All three categorical responses are identical
+2022/034,Confidence,categorical,all_agree,1,0,0,3,,High,All three categorical responses are identical
+2022/130,Research Domains,set,two_vs_one,0,1,0,1,0.555555,,Two complete label sets match and one differs
+2022/130,Analytical Purposes,set,two_vs_one,0,1,0,1,0.333333,,Two complete label sets match and one differs
+2022/130,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2022/130,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2022/130,Register sufficiency,categorical,two_vs_one,0,1,0,1,,Sufficient,Two categorical responses match and one differs
+2022/130,Taxonomy fit,categorical,all_agree,1,0,0,3,,Fit,All three categorical responses are identical
+2022/130,Confidence,categorical,two_vs_one,0,1,0,1,,Medium,Two categorical responses match and one differs
+2024/248,Research Domains,set,all_sets_distinct,0,0,1,0,0.166667,,All three complete label sets differ pairwise
+2024/248,Analytical Purposes,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2024/248,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2024/248,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2024/248,Register sufficiency,categorical,all_agree,1,0,0,3,,Sufficient,All three categorical responses are identical
+2024/248,Taxonomy fit,categorical,all_agree,1,0,0,3,,Fit,All three categorical responses are identical
+2024/248,Confidence,categorical,all_agree,1,0,0,3,,High,All three categorical responses are identical
+2025/027,Research Domains,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2025/027,Analytical Purposes,set,two_vs_one,0,1,0,1,0.666667,,Two complete label sets match and one differs
+2025/027,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2025/027,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2025/027,Register sufficiency,categorical,all_agree,1,0,0,3,,Sufficient,All three categorical responses are identical
+2025/027,Taxonomy fit,categorical,all_agree,1,0,0,3,,Fit,All three categorical responses are identical
+2025/027,Confidence,categorical,all_agree,1,0,0,3,,High,All three categorical responses are identical
+2025/181,Research Domains,set,unanimous,1,0,0,3,1.000000,,All three complete label sets are identical
+2025/181,Analytical Purposes,set,two_vs_one,0,1,0,1,0.666667,,Two complete label sets match and one differs
+2025/181,Tag: Demographic disparities / equality,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2025/181,Tag: COVID-19 / pandemic,binary_tag,all_agree_negative,1,0,0,3,,Negative,All three coders selected the negative tag
+2025/181,Register sufficiency,categorical,all_agree,1,0,0,3,,Sufficient,All three categorical responses are identical
+2025/181,Taxonomy fit,categorical,all_agree,1,0,0,3,,Fit,All three categorical responses are identical
+2025/181,Confidence,categorical,all_agree,1,0,0,3,,High,All three categorical responses are identical

@@ -1,0 +1,31 @@
+record_id,coder_id,instrument_version,research_domains,analytical_purposes,covid_tag,equity_tag,register_sufficiency,taxonomy_fit,taxonomy_issues,confidence,response_complete,note_triggered,note_present,qc_status
+2019/015,C01,redcap-candidate-0.3,"Labour Market & Employment | Poverty, Wealth & Living Standards",Descriptive Monitoring,0,0,Sufficient,Fit,,Medium,1,0,0,pass
+2019/015,C02,redcap-candidate-0.3,"Poverty, Wealth & Living Standards",Descriptive Monitoring,0,0,Partially sufficient,Fit,,Medium,1,1,1,pass
+2019/015,C03,redcap-candidate-0.3,"Poverty, Wealth & Living Standards",Descriptive Monitoring,0,0,Partially sufficient,Fit,,High,1,1,1,pass
+2021/038,C01,redcap-candidate-0.3,Crime & Justice,Descriptive Monitoring | Life-Course / Trajectory Analysis,0,0,Sufficient,Fit,,Medium,1,0,0,pass
+2021/038,C02,redcap-candidate-0.3,Crime & Justice,Life-Course / Trajectory Analysis,0,0,Sufficient,Fit,,High,1,0,0,pass
+2021/038,C03,redcap-candidate-0.3,Crime & Justice,Descriptive Monitoring,0,0,Sufficient,Fit,,High,1,0,0,pass
+2021/056,C01,redcap-candidate-0.3,Unclear from Register Entry,Policy Evaluation / Impact Analysis,0,0,Sufficient,No Fit,Ambiguous/overlapping categories | Missing category,High,1,1,1,pass
+2021/056,C02,redcap-candidate-0.3,Housing & Planning,Policy Evaluation / Impact Analysis,0,0,Partially sufficient,Partial Fit,Other,Low,1,1,1,pass
+2021/056,C03,redcap-candidate-0.3,Housing & Planning,Policy Evaluation / Impact Analysis,0,0,Partially sufficient,Partial Fit,Other,Medium,1,1,1,pass
+2021/063,C01,redcap-candidate-0.3,"Labour Market & Employment | Poverty, Wealth & Living Standards | Public Finance & Taxation",Unclear from Register Entry,0,1,Insufficient,Fit,,Medium,1,1,1,pass
+2021/063,C02,redcap-candidate-0.3,Unclear from Register Entry,Unclear from Register Entry,0,1,Insufficient,No Fit,Other,Low,1,1,1,pass
+2021/063,C03,redcap-candidate-0.3,Labour Market & Employment,Descriptive Monitoring,0,1,Partially sufficient,Partial Fit,Too broad,Medium,1,1,1,pass
+2021/103,C01,redcap-candidate-0.3,Unclear from Register Entry,Unclear from Register Entry,0,0,Insufficient,No Fit,Ambiguous/overlapping categories,High,1,1,1,pass
+2021/103,C02,redcap-candidate-0.3,Unclear from Register Entry,Unclear from Register Entry,0,0,Insufficient,No Fit,None,Low,1,1,1,warning_interpretable
+2021/103,C03,redcap-candidate-0.3,Unclear from Register Entry,Unclear from Register Entry,0,0,Insufficient,No Fit,Other,Low,1,1,1,pass
+2022/034,C01,redcap-candidate-0.3,Business & Productivity | Labour Market & Employment,Methodological / Infrastructure Research,1,0,Sufficient,Fit,,High,1,0,0,pass
+2022/034,C02,redcap-candidate-0.3,Business & Productivity,Methodological / Infrastructure Research,1,0,Sufficient,Fit,,High,1,0,0,pass
+2022/034,C03,redcap-candidate-0.3,Business & Productivity,Methodological / Infrastructure Research,1,0,Sufficient,Fit,,High,1,0,0,pass
+2022/130,C01,redcap-candidate-0.3,"Health & Social Care | Labour Market & Employment | Poverty, Wealth & Living Standards",Descriptive Monitoring,0,0,Partially sufficient,Fit,,Medium,1,1,1,pass
+2022/130,C02,redcap-candidate-0.3,Labour Market & Employment,Outcome Tracking,0,0,Sufficient,Fit,,Medium,1,0,0,pass
+2022/130,C03,redcap-candidate-0.3,Labour Market & Employment,Outcome Tracking,0,0,Sufficient,Fit,,High,1,0,0,pass
+2024/248,C01,redcap-candidate-0.3,"Environment & Agriculture | Poverty, Wealth & Living Standards",Policy Evaluation / Impact Analysis,0,0,Sufficient,Fit,,High,1,0,0,pass
+2024/248,C02,redcap-candidate-0.3,"Poverty, Wealth & Living Standards",Policy Evaluation / Impact Analysis,0,0,Sufficient,Fit,,High,1,0,0,pass
+2024/248,C03,redcap-candidate-0.3,Housing & Planning,Policy Evaluation / Impact Analysis,0,0,Sufficient,Fit,,High,1,0,0,pass
+2025/027,C01,redcap-candidate-0.3,Migration & Demographics,Descriptive Monitoring | Policy Evaluation / Impact Analysis,0,0,Sufficient,Fit,,High,1,0,0,pass
+2025/027,C02,redcap-candidate-0.3,Migration & Demographics,Descriptive Monitoring,0,0,Sufficient,Fit,,High,1,0,0,pass
+2025/027,C03,redcap-candidate-0.3,Migration & Demographics,Descriptive Monitoring,0,0,Sufficient,Fit,,High,1,0,0,pass
+2025/181,C01,redcap-candidate-0.3,Education & Skills,Methodological / Infrastructure Research | Risk Prediction / Early Identification,0,0,Sufficient,Fit,,High,1,0,0,pass
+2025/181,C02,redcap-candidate-0.3,Education & Skills,Risk Prediction / Early Identification,0,0,Sufficient,Fit,,High,1,0,0,pass
+2025/181,C03,redcap-candidate-0.3,Education & Skills,Risk Prediction / Early Identification,0,0,Sufficient,Fit,,High,1,0,0,pass

@@ -1,0 +1,91 @@
+item,scope,category,coder_id,record_id,count,denominator,proportion,majority_or_pattern,details
+register_sufficiency,coder_frequency,Insufficient,C01,,2,10,0.200000,,
+register_sufficiency,coder_frequency,Partially sufficient,C01,,1,10,0.100000,,
+register_sufficiency,coder_frequency,Sufficient,C01,,7,10,0.700000,,
+register_sufficiency,coder_frequency,Insufficient,C02,,2,10,0.200000,,
+register_sufficiency,coder_frequency,Partially sufficient,C02,,2,10,0.200000,,
+register_sufficiency,coder_frequency,Sufficient,C02,,6,10,0.600000,,
+register_sufficiency,coder_frequency,Insufficient,C03,,1,10,0.100000,,
+register_sufficiency,coder_frequency,Partially sufficient,C03,,3,10,0.300000,,
+register_sufficiency,coder_frequency,Sufficient,C03,,6,10,0.600000,,
+register_sufficiency,record_majority,,,2019/015,,3,,Partially sufficient,C01:Sufficient | C02:Partially sufficient | C03:Partially sufficient
+register_sufficiency,record_majority,,,2021/038,,3,,Sufficient,C01:Sufficient | C02:Sufficient | C03:Sufficient
+register_sufficiency,record_majority,,,2021/056,,3,,Partially sufficient,C01:Sufficient | C02:Partially sufficient | C03:Partially sufficient
+register_sufficiency,record_majority,,,2021/063,,3,,Insufficient,C01:Insufficient | C02:Insufficient | C03:Partially sufficient
+register_sufficiency,record_majority,,,2021/103,,3,,Insufficient,C01:Insufficient | C02:Insufficient | C03:Insufficient
+register_sufficiency,record_majority,,,2022/034,,3,,Sufficient,C01:Sufficient | C02:Sufficient | C03:Sufficient
+register_sufficiency,record_majority,,,2022/130,,3,,Sufficient,C01:Partially sufficient | C02:Sufficient | C03:Sufficient
+register_sufficiency,record_majority,,,2024/248,,3,,Sufficient,C01:Sufficient | C02:Sufficient | C03:Sufficient
+register_sufficiency,record_majority,,,2025/027,,3,,Sufficient,C01:Sufficient | C02:Sufficient | C03:Sufficient
+register_sufficiency,record_majority,,,2025/181,,3,,Sufficient,C01:Sufficient | C02:Sufficient | C03:Sufficient
+taxonomy_fit,coder_frequency,Fit,C01,,8,10,0.800000,,
+taxonomy_fit,coder_frequency,No Fit,C01,,2,10,0.200000,,
+taxonomy_fit,coder_frequency,Fit,C02,,7,10,0.700000,,
+taxonomy_fit,coder_frequency,No Fit,C02,,2,10,0.200000,,
+taxonomy_fit,coder_frequency,Partial Fit,C02,,1,10,0.100000,,
+taxonomy_fit,coder_frequency,Fit,C03,,7,10,0.700000,,
+taxonomy_fit,coder_frequency,No Fit,C03,,1,10,0.100000,,
+taxonomy_fit,coder_frequency,Partial Fit,C03,,2,10,0.200000,,
+taxonomy_fit,record_majority,,,2019/015,,3,,Fit,C01:Fit | C02:Fit | C03:Fit
+taxonomy_fit,record_majority,,,2021/038,,3,,Fit,C01:Fit | C02:Fit | C03:Fit
+taxonomy_fit,record_majority,,,2021/056,,3,,Partial Fit,C01:No Fit | C02:Partial Fit | C03:Partial Fit
+taxonomy_fit,record_majority,,,2021/063,,3,,No majority / split judgement,C01:Fit | C02:No Fit | C03:Partial Fit
+taxonomy_fit,record_majority,,,2021/103,,3,,No Fit,C01:No Fit | C02:No Fit | C03:No Fit
+taxonomy_fit,record_majority,,,2022/034,,3,,Fit,C01:Fit | C02:Fit | C03:Fit
+taxonomy_fit,record_majority,,,2022/130,,3,,Fit,C01:Fit | C02:Fit | C03:Fit
+taxonomy_fit,record_majority,,,2024/248,,3,,Fit,C01:Fit | C02:Fit | C03:Fit
+taxonomy_fit,record_majority,,,2025/027,,3,,Fit,C01:Fit | C02:Fit | C03:Fit
+taxonomy_fit,record_majority,,,2025/181,,3,,Fit,C01:Fit | C02:Fit | C03:Fit
+confidence,coder_frequency,High,C01,,6,10,0.600000,,
+confidence,coder_frequency,Medium,C01,,4,10,0.400000,,
+confidence,coder_frequency,High,C02,,5,10,0.500000,,
+confidence,coder_frequency,Low,C02,,3,10,0.300000,,
+confidence,coder_frequency,Medium,C02,,2,10,0.200000,,
+confidence,coder_frequency,High,C03,,7,10,0.700000,,
+confidence,coder_frequency,Low,C03,,1,10,0.100000,,
+confidence,coder_frequency,Medium,C03,,2,10,0.200000,,
+confidence,record_majority,,,2019/015,,3,,Medium,C01:Medium | C02:Medium | C03:High
+confidence,record_majority,,,2021/038,,3,,High,C01:Medium | C02:High | C03:High
+confidence,record_majority,,,2021/056,,3,,No majority / split judgement,C01:High | C02:Low | C03:Medium
+confidence,record_majority,,,2021/063,,3,,Medium,C01:Medium | C02:Low | C03:Medium
+confidence,record_majority,,,2021/103,,3,,Low,C01:High | C02:Low | C03:Low
+confidence,record_majority,,,2022/034,,3,,High,C01:High | C02:High | C03:High
+confidence,record_majority,,,2022/130,,3,,Medium,C01:Medium | C02:Medium | C03:High
+confidence,record_majority,,,2024/248,,3,,High,C01:High | C02:High | C03:High
+confidence,record_majority,,,2025/027,,3,,High,C01:High | C02:High | C03:High
+confidence,record_majority,,,2025/181,,3,,High,C01:High | C02:High | C03:High
+taxonomy_issue_type,coder_frequency,Ambiguous/overlapping categories,C01,,2,10,0.200000,,Historical candidate-0.3 categories retained without recoding
+taxonomy_issue_type,coder_frequency,Missing category,C01,,1,10,0.100000,,Historical candidate-0.3 categories retained without recoding
+taxonomy_issue_type,coder_frequency,None,C02,,1,10,0.100000,,Historical candidate-0.3 categories retained without recoding
+taxonomy_issue_type,coder_frequency,Other,C02,,2,10,0.200000,,Historical candidate-0.3 categories retained without recoding
+taxonomy_issue_type,coder_frequency,Other,C03,,2,10,0.200000,,Historical candidate-0.3 categories retained without recoding
+taxonomy_issue_type,coder_frequency,Too broad,C03,,1,10,0.100000,,Historical candidate-0.3 categories retained without recoding
+cannot_assess_from_register_entry,overall_frequency,,,,0,30,0.000000,,
+low_confidence_response,overall_frequency,,,,4,30,0.133333,,
+triggered_note_completed,overall_frequency,,,,12,12,1.000000,,
+COVID-19 & Pandemic,record_pattern,,,2019/015,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2021/038,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2021/056,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2021/063,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2021/103,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2022/034,3,3,1.000000,unanimous_positive,C01:1 | C02:1 | C03:1
+COVID-19 & Pandemic,record_pattern,,,2022/130,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2024/248,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2025/027,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,record_pattern,,,2025/181,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+COVID-19 & Pandemic,positive_count_by_coder,positive,C01,,1,10,0.100000,,
+COVID-19 & Pandemic,positive_count_by_coder,positive,C02,,1,10,0.100000,,
+COVID-19 & Pandemic,positive_count_by_coder,positive,C03,,1,10,0.100000,,
+Demographic disparities / equity,record_pattern,,,2019/015,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2021/038,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2021/056,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2021/063,3,3,1.000000,unanimous_positive,C01:1 | C02:1 | C03:1
+Demographic disparities / equity,record_pattern,,,2021/103,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2022/034,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2022/130,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2024/248,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2025/027,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,record_pattern,,,2025/181,0,3,0.000000,unanimous_negative,C01:0 | C02:0 | C03:0
+Demographic disparities / equity,positive_count_by_coder,positive,C01,,1,10,0.100000,,
+Demographic disparities / equity,positive_count_by_coder,positive,C02,,1,10,0.100000,,
+Demographic disparities / equity,positive_count_by_coder,positive,C03,,1,10,0.100000,,
