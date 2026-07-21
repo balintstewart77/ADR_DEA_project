@@ -51,6 +51,9 @@ DEFAULT_FABLE_METADATA = Path(
     "analysis/outputs_classified_20260702_fable5/run_metadata.json"
 )
 DEFAULT_GPT_RUN_SCRIPT = Path("analysis/outputs/gpt55_crossmodel_stratum_run.py")
+DEFAULT_GPT_SOURCE = Path(
+    "analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv"
+)
 DEFAULT_GPT_REFERENCE = Path(
     "preregistration_restricted/pilot_private_review/"
     "pilot_human_model_classifications.csv"
@@ -61,16 +64,13 @@ CODERS = ("C01", "C02", "C03")
 CLASSIFICATION_DIMENSIONS = ("Research Domains", "Analytical Purposes")
 DIAGNOSTIC_DIMENSIONS = ("Confidence", "Register sufficiency", "Taxonomy fit")
 EXPECTED_TAXONOMY = "dict-1.0-rc2"
-PROVISIONAL_FILENAME = "classifications_1309_precollapse_PROVISIONAL.csv"
-PROVISIONAL_WARNING_TITLE = "GPT source status: TEMPORARY PRE-CANONICAL SNAPSHOT"
-PROVISIONAL_WARNING = (
-    "This restricted workbook was generated using "
-    "preregistration_restricted/classifications_1309_precollapse_PROVISIONAL.csv, "
-    "an archived 1,309-row pre-collapse GPT-5.5 snapshot.\n\n"
-    "It is suitable only for exploratory pilot review. The workbook must be "
-    "regenerated and checked against the recovered canonical 1,308-row GPT-5.5 "
-    "snapshot before pilot closure, final package freeze, preregistration, "
-    "publication or formal reporting."
+EXPECTED_GPT_SHA256 = "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
+CANONICAL_GPT_STATUS_TITLE = "GPT source status: FROZEN CANONICAL 1,308-ROW RELEASE"
+CANONICAL_GPT_STATUS = (
+    "This restricted workbook was generated directly from the tracked frozen "
+    "canonical GPT-5.5 release for the retained 1,308-record population. The "
+    "release was recovered from the original run output and preserved byte-for-"
+    "byte; it was not reconstructed, regenerated or edited."
 )
 MISSING_RATIONALE = "Not available in stored model output"
 KNOWN_WARNING = (
@@ -149,16 +149,16 @@ COLUMNS = (
     ColumnSpec("Research Domains", "domain_c03", "Domain C03", 28),
     ColumnSpec("Research Domains", "domain_fable", "Domain Fable", 28),
     ColumnSpec("Research Domains", "domain_fable_rationale", "Domain Fable stored rationale", 52),
-    ColumnSpec("Research Domains", "domain_gpt55", "Domain provisional GPT-5.5", 28),
-    ColumnSpec("Research Domains", "domain_gpt55_rationale", "Domain provisional GPT-5.5 stored rationale", 52),
+    ColumnSpec("Research Domains", "domain_gpt55", "Domain canonical GPT-5.5", 28),
+    ColumnSpec("Research Domains", "domain_gpt55_rationale", "Domain canonical GPT-5.5 stored rationale", 52),
     ColumnSpec("Analytical Purposes", "purpose_agreement_pattern", "Human agreement pattern", 20),
     ColumnSpec("Analytical Purposes", "purpose_c01", "Purpose C01", 28),
     ColumnSpec("Analytical Purposes", "purpose_c02", "Purpose C02", 28),
     ColumnSpec("Analytical Purposes", "purpose_c03", "Purpose C03", 28),
     ColumnSpec("Analytical Purposes", "purpose_fable", "Purpose Fable", 28),
     ColumnSpec("Analytical Purposes", "purpose_fable_rationale", "Purpose Fable stored rationale", 52),
-    ColumnSpec("Analytical Purposes", "purpose_gpt55", "Purpose provisional GPT-5.5", 28),
-    ColumnSpec("Analytical Purposes", "purpose_gpt55_rationale", "Purpose provisional GPT-5.5 stored rationale", 52),
+    ColumnSpec("Analytical Purposes", "purpose_gpt55", "Purpose canonical GPT-5.5", 28),
+    ColumnSpec("Analytical Purposes", "purpose_gpt55_rationale", "Purpose canonical GPT-5.5 stored rationale", 52),
     ColumnSpec("C01 diagnostics", "c01_confidence", "C01 confidence", 17),
     ColumnSpec("C01 diagnostics", "c01_register_sufficiency", "C01 register sufficiency", 21),
     ColumnSpec("C01 diagnostics", "c01_taxonomy_fit", "C01 taxonomy fit", 18),
@@ -498,25 +498,29 @@ def load_model_source(
 
 
 def verify_gpt_snapshot(source: ModelSource, pilot_ids: set[str]) -> dict[str, object]:
-    if source.row_count not in {1308, 1309}:
-        raise CaseReviewError(f"GPT source must have 1,308 or 1,309 rows; found {source.row_count}")
+    if source.sha256 != EXPECTED_GPT_SHA256:
+        raise CaseReviewError(
+            f"GPT source hash mismatch: {source.sha256} != {EXPECTED_GPT_SHA256}"
+        )
+    if source.row_count != 1308:
+        raise CaseReviewError(f"Canonical GPT source must have 1,308 rows; found {source.row_count}")
     if source.unique_record_count != source.row_count:
         raise CaseReviewError("GPT source does not have one unique Record ID per row")
     all_rows = _read_csv(source.path)
     all_ids = Counter(row["Record ID"].strip() for row in all_rows)
-    variants = {variant: all_ids[variant] for variant in ("2023/211/a", "2023/211/b")}
-    if source.row_count == 1309 and variants != {"2023/211/a": 1, "2023/211/b": 1}:
-        raise CaseReviewError(f"Pre-collapse duplicate variants are not both present once: {variants}")
+    canonical = {
+        record_id: all_ids[record_id]
+        for record_id in ("2023/211", "2023/211/a", "2023/211/b")
+    }
+    if canonical != {"2023/211": 1, "2023/211/a": 0, "2023/211/b": 0}:
+        raise CaseReviewError(f"Canonical 2023/211 representation is invalid: {canonical}")
     if any(all_ids[record_id] != 1 for record_id in pilot_ids):
         raise CaseReviewError("At least one pilot Record ID is missing or duplicated in GPT source")
-    if pilot_ids & set(variants):
-        raise CaseReviewError("A pilot record is affected by the 2023/211 variant condition")
-    is_provisional = source.path.name == PROVISIONAL_FILENAME
-    if is_provisional and source.row_count != 1309:
-        raise CaseReviewError("The named provisional snapshot must contain 1,309 rows")
+    if pilot_ids & {"2023/211", "2023/211/a", "2023/211/b"}:
+        raise CaseReviewError("A pilot record is affected by the 2023/211 collapse")
     return {
-        "is_provisional": is_provisional,
-        "variant_counts": variants,
+        "is_canonical": True,
+        "canonical_record_counts": canonical,
         "pilot_records_unaffected": True,
     }
 
@@ -557,7 +561,7 @@ def verify_model_provenance(
         "gpt_run": "cross_model_hard_case_disagreement_stratum_not_release",
         "gpt_prompt": EXPECTED_TAXONOMY,
         "gpt_taxonomy": EXPECTED_TAXONOMY,
-        "gpt_metadata_basis": "archived run script; the provisional CSV has no embedded version columns",
+        "gpt_metadata_basis": "archived run script and frozen canonical release receipt; the CSV has no embedded version columns",
     }
 
 
@@ -901,13 +905,13 @@ def _provenance_sheet(
 ) -> None:
     sheet = workbook.create_sheet("Provenance and legend")
     sheet.merge_cells("A1:B1")
-    sheet["A1"] = PROVISIONAL_WARNING_TITLE if snapshot["is_provisional"] else "GPT source status: supplied snapshot"
-    sheet["A1"].fill = PatternFill("solid", fgColor=COLORS["warning"])
+    sheet["A1"] = CANONICAL_GPT_STATUS_TITLE
+    sheet["A1"].fill = PatternFill("solid", fgColor=COLORS["green"])
     sheet["A1"].font = Font(bold=True, size=14)
     sheet.merge_cells("A2:B5")
-    sheet["A2"] = PROVISIONAL_WARNING if snapshot["is_provisional"] else "The supplied GPT source is not identified as the provisional 1,309-row snapshot."
+    sheet["A2"] = CANONICAL_GPT_STATUS
     sheet["A2"].alignment = Alignment(wrap_text=True, vertical="top")
-    sheet["A2"].fill = PatternFill("solid", fgColor=COLORS["warning"])
+    sheet["A2"].fill = PatternFill("solid", fgColor=COLORS["neutral"])
     sheet.row_dimensions[2].height = 95
     row_index = 7
 
@@ -935,7 +939,8 @@ def _provenance_sheet(
     for label, path, digest, count in sources:
         item(label, f"{_relative(path, REPOSITORY_ROOT)}\nSHA-256: {digest}\nRows: {count}")
     item("GPT encoding / bytes", f"{gpt.encoding}; {gpt.byte_size} bytes")
-    item("GPT duplicate condition", f"2023/211/a={snapshot['variant_counts']['2023/211/a']}; 2023/211/b={snapshot['variant_counts']['2023/211/b']}; ten pilot records unaffected=yes")
+    counts = snapshot["canonical_record_counts"]
+    item("GPT duplicate condition", f"2023/211={counts['2023/211']}; 2023/211/a={counts['2023/211/a']}; 2023/211/b={counts['2023/211/b']}; ten pilot records unaffected=yes")
     item("Prior restricted GPT comparison", reference_status)
     section("Direct pilot exact-set checks")
     item(
@@ -984,15 +989,16 @@ def _write_legend(
         f"- {label}: `{_relative(source_path, REPOSITORY_ROOT)}`; SHA-256 `{digest}`; rows `{count}`."
         for label, source_path, digest, count in sources
     )
-    warning = f"## {PROVISIONAL_WARNING_TITLE}\n\n{PROVISIONAL_WARNING}" if snapshot["is_provisional"] else "## GPT source status\n\nSupplied replaceable GPT snapshot."
+    warning = f"## {CANONICAL_GPT_STATUS_TITLE}\n\n{CANONICAL_GPT_STATUS}"
     text = f"""# Restricted pilot private case-review legend
 
 {warning}
 
 - Actual GPT SHA-256: `{gpt.sha256}`.
 - GPT byte size: `{gpt.byte_size}`; encoding: `{gpt.encoding}`; data rows: `{gpt.row_count}`.
-- Pre-collapse condition: `2023/211/a` and `2023/211/b` each occur once.
-- The ten pilot Record IDs each occur once and none is affected by that condition.
+- Canonical collapse condition: `2023/211` occurs once; `2023/211/a` and
+  `2023/211/b` are absent.
+- The ten pilot Record IDs each occur once and none is affected by that collapse.
 - Repository HEAD: `{git_head}`.
 - Generated at: `{created_at}`.
 
@@ -1041,8 +1047,8 @@ The CSV is a restricted machine-readable companion and does not preserve Excel f
 
 def build_private_case_review(
     *,
-    gpt_source: Path,
     output_dir: Path,
+    gpt_source: Path = DEFAULT_GPT_SOURCE,
     ready_path: Path = DEFAULT_READY,
     agreement_path: Path = DEFAULT_AGREEMENT,
     dimension_summary_path: Path = DEFAULT_DIMENSION_SUMMARY,
@@ -1167,7 +1173,7 @@ def inspect_workbook(path: Path) -> dict[str, object]:
         "case_filter": case.auto_filter.ref,
         "wrapped_data_cells": sum(bool(cell.alignment.wrap_text) for row in case.iter_rows(min_row=3) for cell in row),
         "comment_cells": sum(cell.comment is not None for row in case.iter_rows() for cell in row),
-        "warning_present": any(PROVISIONAL_WARNING_TITLE in str(cell.value) for row in workbook["Provenance and legend"].iter_rows() for cell in row if cell.value),
+        "canonical_status_present": any(CANONICAL_GPT_STATUS_TITLE in str(cell.value) for row in workbook["Provenance and legend"].iter_rows() for cell in row if cell.value),
     }
 
 
@@ -1176,8 +1182,8 @@ def _parser() -> argparse.ArgumentParser:
         description="Build an offline restricted pilot case-review XLSX/CSV/legend."
     )
     parser.add_argument(
-        "--gpt-source", required=True, type=Path,
-        help="GPT classification CSV to use. Replace this path to regenerate against the canonical snapshot.",
+        "--gpt-source", type=Path, default=DEFAULT_GPT_SOURCE,
+        help="Tracked canonical GPT classification CSV.",
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--ready", type=Path, default=DEFAULT_READY)

@@ -164,7 +164,11 @@ def regenerate(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Offline deterministic Fable/GPT comparison regeneration (no API calls).")
     parser.add_argument("--fable", type=Path, default=ROOT / "analysis/outputs_classified_20260702_fable5/layer_classifications.csv")
-    parser.add_argument("--gpt", type=Path, default=ROOT / "analysis/outputs/gpt55_classifications.csv")
+    parser.add_argument(
+        "--gpt",
+        type=Path,
+        default=ROOT / "analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv",
+    )
     parser.add_argument("--exclusions", type=Path, default=ROOT / "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv")
     parser.add_argument("--comparison", type=Path, default=ROOT / "analysis/outputs/crossmodel_comparison.csv")
     parser.add_argument("--stratum", type=Path, default=ROOT / "analysis/outputs/crossmodel_disagreement_stratum.csv")

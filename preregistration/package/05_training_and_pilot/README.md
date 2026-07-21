@@ -29,8 +29,11 @@ that the pilot was not scored, pilot responses did not need revision,
 disagreement remained expected and informative, and formal coding should remain
 independent. The four-case
 qualitative model-direction check is in
-`post_pilot_calibration_model_direction_audit.csv` and must be reverified when
-the canonical 1,308-row GPT-5.5 snapshot is recovered.
+`post_pilot_calibration_model_direction_audit.csv`. It was reverified on 21
+July 2026 against the frozen canonical 1,308-row GPT-5.5 release and retains the
+documented mixed four-case pattern. A 1,309-row restricted intermediate was
+temporarily used during excluded-pilot review but was not retained as a formal
+study artefact; formal provenance and validation use the canonical release.
 
 The formal-coding versions add Scratch Coder choice 4, `Cannot assess from
 register entry`, and consolidate taxonomy-issue codes to 1, 2, and 5. They do

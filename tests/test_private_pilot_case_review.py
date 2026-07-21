@@ -152,29 +152,19 @@ def _make_inputs(root: Path):
     }), encoding="utf-8")
 
     gpt_rows = list(gpt_pilot_rows)
-    gpt_rows.extend([
+    gpt_rows.append(
         {
-            "Record ID": "2023/211/a",
-            "Title": "Synthetic variant a",
+            "Record ID": "2023/211",
+            "Title": "Synthetic canonical retained record",
             "Datasets Used": "Synthetic",
             "substantive_domains": "Education & Skills",
             "analytical_purpose": "Descriptive Monitoring",
             "rationale": "Stored",
             "gpt_status": "ok",
             "validation_error": "",
-        },
-        {
-            "Record ID": "2023/211/b",
-            "Title": "Synthetic variant b",
-            "Datasets Used": "Synthetic",
-            "substantive_domains": "Education & Skills",
-            "analytical_purpose": "Descriptive Monitoring",
-            "rationale": "Stored",
-            "gpt_status": "ok",
-            "validation_error": "",
-        },
-    ])
-    for index in range(1309 - len(gpt_rows)):
+        }
+    )
+    for index in range(1308 - len(gpt_rows)):
         gpt_rows.append({
             "Record ID": f"EXTRA-{index:04}",
             "Title": "Synthetic extra",
@@ -185,7 +175,7 @@ def _make_inputs(root: Path):
             "gpt_status": "ok",
             "validation_error": "",
         })
-    gpt_path = root / "preregistration_restricted" / review.PROVISIONAL_FILENAME
+    gpt_path = root / review.DEFAULT_GPT_SOURCE
     _write_csv(gpt_path, list(gpt_rows[0]), gpt_rows, bom=True)
 
     run_script = root / review.DEFAULT_GPT_RUN_SCRIPT
@@ -230,6 +220,7 @@ def _make_inputs(root: Path):
 @pytest.fixture
 def built(tmp_path, monkeypatch):
     paths = _make_inputs(tmp_path)
+    monkeypatch.setattr(review, "EXPECTED_GPT_SHA256", review._sha256(paths["gpt"]))
     monkeypatch.setattr(review, "_is_git_ignored", lambda path, root: True)
     monkeypatch.setattr(review, "_git_head", lambda root: "a" * 40)
     output_dir = tmp_path / "preregistration_restricted" / "pilot_private_review_output"
@@ -249,16 +240,19 @@ def built(tmp_path, monkeypatch):
     return result, paths, output_dir
 
 
-def test_explicit_gpt_source_argument_is_required():
-    with pytest.raises(SystemExit):
-        review._parser().parse_args([])
+def test_canonical_gpt_source_is_the_cli_default():
+    assert review._parser().parse_args([]).gpt_source == review.DEFAULT_GPT_SOURCE
 
 
-def test_provisional_snapshot_has_1309_rows_variants_and_unique_pilot(built):
+def test_canonical_snapshot_has_1308_rows_and_retained_record(built):
     result, _, _ = built
-    assert result["gpt"].row_count == 1309
-    assert result["gpt"].unique_record_count == 1309
-    assert result["snapshot"]["variant_counts"] == {"2023/211/a": 1, "2023/211/b": 1}
+    assert result["gpt"].row_count == 1308
+    assert result["gpt"].unique_record_count == 1308
+    assert result["snapshot"]["canonical_record_counts"] == {
+        "2023/211": 1,
+        "2023/211/a": 0,
+        "2023/211/b": 0,
+    }
     assert result["snapshot"]["pilot_records_unaffected"] is True
     assert result["reference_status"].startswith("Passed:")
 
@@ -326,7 +320,7 @@ def test_workbook_shape_formatting_warning_and_annotations(built):
         str(cell.value) for row in workbook["Provenance and legend"].iter_rows()
         for cell in row if cell.value
     ]
-    assert any(review.PROVISIONAL_WARNING_TITLE in value for value in provenance_values)
+    assert any(review.CANONICAL_GPT_STATUS_TITLE in value for value in provenance_values)
 
 
 def test_outputs_are_restricted_and_sources_unchanged(built):
@@ -336,10 +330,13 @@ def test_outputs_are_restricted_and_sources_unchanged(built):
     expected_keys = {column.key for column in review.COLUMNS}
     assert all(expected_keys <= set(row) for row in result["rows"])
     for path in result["outputs"]:
-        assert path.resolve().is_relative_to((paths["gpt"].parent).resolve())
+        assert path.resolve().is_relative_to(
+            (paths["gpt"].parents[3] / "preregistration_restricted").resolve()
+        )
         assert path.parent == output_dir
     legend = (output_dir / "pilot_private_case_review_legend.md").read_text(encoding="utf-8")
-    assert review.PROVISIONAL_WARNING_TITLE in legend
-    assert "must be regenerated" in legend
+    assert review.CANONICAL_GPT_STATUS_TITLE in legend
+    assert "preserved byte-for-byte" in legend
+    assert "must be regenerated" not in legend
     for path, digest in result["source_hashes"].items():
         assert review._sha256(Path(path)) == digest

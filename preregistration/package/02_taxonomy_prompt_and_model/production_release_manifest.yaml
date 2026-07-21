@@ -52,6 +52,14 @@ production_model:
     - Datasets Used
 
 preexisting_evidence:
+  canonical_gpt55_path: analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv
+  canonical_gpt55_sha256: 5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded
+  canonical_gpt55_rows: 1308
+  canonical_gpt55_model: gpt-5.5
+  canonical_gpt55_run_identifier: cross_model_hard_case_disagreement_stratum_not_release
+  canonical_gpt55_status: recovered_original_frozen_byte_identical_release
+  original_gpt55_output_path: analysis/outputs/gpt55_classifications.csv
+  provisional_1309_intermediate_required: false
   fable_run1_cache_path: analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json
   fable_run1_cache_sha256: e888422a3e46f8c3746c8560327e01fdb0e307491363e65a49c86ea78cb79156
   fable_run2_cache_path: analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json

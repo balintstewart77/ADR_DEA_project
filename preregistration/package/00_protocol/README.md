@@ -17,7 +17,9 @@ status, to record simultaneous circulation on 21 July 2026, closure of coder
 feedback, and candidate 0.6 as the current formal-instrument review candidate.
 Candidate 0.6 adds point-of-use help only; it has passed offline validation but
 is not frozen or live-runtime-QA approved. Detailed instrument history remains
-in the REDCap version history rather than protocol Section 6.2.
+in the REDCap version history rather than protocol Section 6.2. The same
+working candidate now records that the model-direction check was reverified
+against the frozen canonical 1,308-row GPT-5.5 artefact before preregistration.
 
 Final freeze remains conditional on final formal-instrument live QA, Jo's final substantive review,
 propagation of resulting changes, and final package QA. No official active or

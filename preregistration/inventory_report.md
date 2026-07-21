@@ -150,7 +150,7 @@ version-number or timestamp inference.
 | Production configuration | `analysis/outputs_classified_20260702_fable5/run_metadata.json` | Records Fable 5, prompt/taxonomy `dict-1.0-rc2`, 1,308 records, and a 201-entry seed-cache reference. |
 | Production classifications | `analysis/outputs_classified_20260702_fable5/layer_classifications.csv` | `data/release_pointers.json` targets this run; direct audit confirms 1,308 Record IDs, 1,304 Project IDs, and four doubled Project IDs. |
 | Fable 5 stability evidence | `analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json` and `analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json` | Recovered and verified as the two independent Fable 5 / `dict-1.0-rc2` runs on the same exact 201-record sample. Deterministic recomputation reproduces every reported target. |
-| GPT-5.5 comparison evidence | `analysis/outputs/gpt55_classifications.csv` and current cross-model outputs | Deterministically regenerated offline after key migration and the canonical equity-tag repair; domain/purpose aggregates and disagreement frame are unchanged, while equity-tag facets now correctly report 45 mismatches. |
+| GPT-5.5 comparison evidence | `analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv` and current cross-model outputs | The tracked canonical 1,308-row release is byte-identical to the recovered original run output at `analysis/outputs/gpt55_classifications.csv`. Cross-model evidence was deterministically recomputed offline after key migration and the canonical equity-tag repair; no classification was rerun. |
 
 The source/cleaning and production release passed the Phase 3 cross-document
 audit. "Current candidate" still does not mean "frozen" for the protocol,

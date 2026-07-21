@@ -52,7 +52,9 @@ DEFAULT_FABLE = Path(
 DEFAULT_FABLE_METADATA = Path(
     "analysis/outputs_classified_20260702_fable5/run_metadata.json"
 )
-DEFAULT_GPT55 = Path("analysis/outputs/gpt55_classifications.csv")
+DEFAULT_GPT55 = Path(
+    "analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv"
+)
 DEFAULT_GPT55_METADATA = Path("analysis/outputs/gpt55_run_metadata.json")
 DEFAULT_OUTPUT_DIR = Path("preregistration_restricted/pilot_private_review")
 

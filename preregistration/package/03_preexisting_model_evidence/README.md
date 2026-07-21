@@ -8,11 +8,21 @@ metadata remain byte-for-byte at their canonical paths under
 `analysis/outputs/model_comparison_fable_5_run1/` and
 `analysis/outputs/model_comparison_fable_5_run2/`.
 
-The current GPT-5.5 classifications and Fable 5/GPT-5.5 comparison were
-verified locally by deterministic, offline recomputation. The package includes
+The GPT-5.5 classifications are frozen at
+`../../../analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv`.
+That tracked canonical release is byte-identical to the recovered original run
+output at `../../../analysis/outputs/gpt55_classifications.csv`; formal
+validation uses the release path. The Fable 5/GPT-5.5 comparison was verified
+locally by deterministic, offline recomputation. The package includes
 the 380-record post-exclusion disagreement frame, metrics, and a verification
 report. These are pre-existing model-evidence outputs, not prospective
 validation samples or results.
+
+A 1,309-row restricted intermediate was temporarily used during excluded-pilot
+review but was not retained as a formal study artefact. All formal provenance,
+sampling and validation now use the recovered frozen 1,308-row canonical
+GPT-5.5 release. No direct scientific comparison with that absent intermediate
+is claimed.
 
 The comparison treats the frozen `COVID-19 & Pandemic` and `Demographic
 disparities / equity tag` labels as independent binary facets. The compatibility

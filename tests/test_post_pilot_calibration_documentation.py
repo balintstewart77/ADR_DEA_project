@@ -16,7 +16,10 @@ AUDIT = Path(
     "post_pilot_calibration_model_direction_audit.csv"
 )
 FABLE = Path("analysis/outputs_classified_20260702_fable5/layer_classifications.csv")
-GPT = Path("preregistration_restricted/classifications_1309_precollapse_PROVISIONAL.csv")
+GPT = Path(
+    "analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv"
+)
+GPT_SHA256 = "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
 PROTOCOL = Path(
     "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.12.docx"
 )
@@ -98,12 +101,12 @@ def test_model_direction_audit_recomputes_from_complete_sets():
     fable_rows = {row["Record ID"]: row for row in _csv_rows(FABLE)}
     gpt_all = _csv_rows(GPT)
     gpt_rows = {row["Record ID"]: row for row in gpt_all}
-    assert len(gpt_all) == 1309
-    assert len(gpt_rows) == 1309
-    assert {variant: sum(row["Record ID"] == variant for row in gpt_all) for variant in (
-        "2023/211/a", "2023/211/b"
-    )} == {"2023/211/a": 1, "2023/211/b": 1}
-    assert all(record_id not in {"2023/211/a", "2023/211/b"} for record_id in EXPECTED_IDS)
+    assert hashlib.sha256(GPT.read_bytes()).hexdigest() == GPT_SHA256
+    assert len(gpt_all) == 1308
+    assert len(gpt_rows) == 1308
+    assert {record_id: sum(row["Record ID"] == record_id for row in gpt_all) for record_id in (
+        "2023/211", "2023/211/a", "2023/211/b"
+    )} == {"2023/211": 1, "2023/211/a": 0, "2023/211/b": 0}
     audit_rows = _csv_rows(AUDIT)
     assert len(audit_rows) == 5
     for row in audit_rows:
@@ -127,6 +130,9 @@ def test_model_direction_audit_recomputes_from_complete_sets():
             "exact_complete_set_match" if calibration_set == gpt_set
             else "different_complete_set"
         )
+        assert row["gpt55_source_path"] == GPT.as_posix()
+        assert row["gpt55_sha256"] == GPT_SHA256
+        assert row["gpt55_source_status"] == "frozen_canonical_1308_byte_preserved"
     by_id = {}
     for row in audit_rows:
         by_id.setdefault(row["record_id"], set()).add(row["summary_pattern"])
@@ -160,9 +166,8 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
         "Pilot-driven instrument changes have been resolved and documented in the "
         "instrument-change log. The formal instrument will not be frozen or used for "
         "coding until the current candidate has passed fresh live REDCap runtime QA. The "
-        "GPT-5.5 comparison used for the model-direction check currently relies on the "
-        "provisional 1,309-row pre-collapse snapshot and must be reverified against the "
-        "canonical 1,308-row artefact when it is recovered."
+        "model-direction check was reverified against the frozen canonical 1,308-row "
+        "GPT-5.5 artefact before preregistration."
     )
     assert calibration_paragraph in paragraphs
     assert instrument_paragraph in paragraphs
@@ -174,6 +179,8 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
     assert "candidate 0.5" not in protocol
     assert "prepared for equal circulation" not in protocol
     assert "candidate 0.3" not in instrument_paragraph
+    assert "provisional 1,309-row" not in protocol
+    assert "must be reverified" not in protocol
     with Path(
         "preregistration/package/09_logs_and_templates/coding_clarification_log.csv"
     ).open(encoding="utf-8", newline="") as handle:
@@ -189,6 +196,8 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
     assert "coder feedback resolved" in entry["status"]
     assert "live REDCap QA pending" in entry["status"]
     assert "qualitative bias check" in entry["conclusion"]
+    assert "frozen canonical 1,308-row GPT-5.5 release" in entry["check_performed"]
+    assert f"gpt55_canonical={GPT_SHA256}" in entry["source_hashes"]
 
 
 def test_exclusions_and_manifest_entries_remain_coherent():
@@ -208,3 +217,6 @@ def test_exclusions_and_manifest_entries_remain_coherent():
         assert hashlib.sha256(path.read_bytes()).hexdigest() == row["sha256"]
     assert by_id["TRN-014"]["description"].startswith("Coder-facing post-pilot")
     assert "trainer answer key" in by_id["TRN-014"]["notes"]
+    assert by_id["EVD-005"]["current_path"] == GPT.as_posix()
+    assert by_id["EVD-005"]["sha256"] == GPT_SHA256
+    assert "absent 1,309-row restricted pilot intermediate is not a formal dependency" in by_id["EVD-005"]["notes"]

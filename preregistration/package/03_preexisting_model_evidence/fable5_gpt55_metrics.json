@@ -9,7 +9,7 @@
     "analysis/outputs_classified_20260702_fable5/layer_classifications.csv": {
       "sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299"
     },
-    "analysis/outputs/gpt55_classifications.csv": {
+    "analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv": {
       "sha256": "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
     },
     "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv": {

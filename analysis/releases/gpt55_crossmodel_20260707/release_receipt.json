@@ -1,0 +1,66 @@
+{
+  "release_id": "gpt55_crossmodel_20260707",
+  "verification_date": "2026-07-21",
+  "starting_git_commit": "e0c322fd77ae93a574a0dfcee076757d294de0d2",
+  "artefact": {
+    "filename": "gpt55_classifications.csv",
+    "sha256": "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded",
+    "byte_size": 920480,
+    "encoding": "UTF-8 with BOM",
+    "record_terminators": "CRLF; embedded LF characters occur inside quoted multiline fields",
+    "row_count": 1308,
+    "unique_record_id_count": 1308,
+    "unique_project_id_count": 1304,
+    "source_status": "recovered original run artefact preserved byte-for-byte",
+    "original_source_output": "analysis/outputs/gpt55_classifications.csv",
+    "canonical_release_path": "analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv",
+    "byte_identity_verified": true
+  },
+  "model_provenance": {
+    "model": "gpt-5.5",
+    "run_identifier": "cross_model_hard_case_disagreement_stratum_not_release",
+    "prompt_version": "dict-1.0-rc2",
+    "taxonomy_version": "dict-1.0-rc2",
+    "cache_namespace": "openai/gpt-5.5/dict-1.0-rc2"
+  },
+  "canonical_population": {
+    "path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+    "sha256": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+    "row_count": 1308,
+    "unique_record_id_count": 1308,
+    "unique_project_id_count": 1304,
+    "exact_record_id_set_alignment": true
+  },
+  "duplicate_resolution": {
+    "collapsed_project_id": "2023/211",
+    "canonical_record_id": "2023/211",
+    "retained_two_record_project_ids": [
+      "2020/030",
+      "2022/036",
+      "2024/014",
+      "2024/095"
+    ],
+    "status": "exactly aligned with the canonical population; no IDs were changed during recovery"
+  },
+  "historical_restricted_intermediate": {
+    "description": "An untracked restricted 1,309-row intermediate was used temporarily during excluded-pilot review.",
+    "formal_study_artefact": false,
+    "retained": false,
+    "reconstructed": false,
+    "direct_equivalence_claimed": false,
+    "formal_dependency": false
+  },
+  "validation": {
+    "all_rows_gpt_status_ok": true,
+    "validation_error_count": 0,
+    "taxonomy_and_schema_valid": true,
+    "known_source_field_absence": "Record ID 2023/214 has an empty Datasets Used field in both the classification output and canonical population.",
+    "tests": [
+      "tests/test_gpt55_canonical_release.py",
+      "tests/test_post_pilot_calibration_documentation.py",
+      "tests/test_private_pilot_case_review.py",
+      "tests/test_verify_protocol_metadata.py"
+    ]
+  }
+}
+
