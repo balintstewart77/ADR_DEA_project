@@ -1,16 +1,33 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import tempfile
 import unittest
 import zipfile
+from collections import Counter
 from pathlib import Path
+
+import yaml
 
 from scripts import verify_training_exclusion_membership as membership
 
 KEYED = {"A1": "2019/004", "A2": "2020/021", "A3": "2024/019", "P2": "2022/073", "P4": "2025/039", "P5": "2022/042", "P6": "2021/065", "P7": "2025/251", "T1": "2021/113", "T3": "2021/007", "I1": "2020/003"}
 DISCUSSION = {"I2": "2022/090"}
 PILOTS = {"1": "2019/015", "2": "2021/038", "3": "2021/063", "4": "2021/103", "5": "2022/130", "6": "2024/248", "7": "2021/056", "8": "2022/034", "9": "2025/181", "10": "2025/027"}
+ROOT = Path(__file__).resolve().parents[1]
+EXCLUSION_PATH = ROOT / "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv"
+POPULATION_PATH = ROOT / "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv"
+TRAINER_PATH = ROOT / "preregistration/package/05_training_and_pilot/DEA_trainer_handout_v2.docx"
+CODER_PATH = ROOT / "preregistration/package/05_training_and_pilot/DEA_coder_training_handout_v3.docx"
+PILOT_REFERENCE_PATH = ROOT / "preregistration/package/05_training_and_pilot/DEA_pilot_projects_trainer_debrief_reference_v2.docx"
+SPECIFICATION_PATH = ROOT / "preregistration/package/04_exclusions_and_sampling/sampling_specification.yaml"
+CANONICAL_SHA256 = "cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6"
+EXPECTED_ROLES = {
+    **{record_id: "keyed_worked_example" for record_id in KEYED.values()},
+    **{record_id: "unkeyed_discussion" for record_id in DISCUSSION.values()},
+    **{record_id: "pilot" for record_id in PILOTS.values()},
+}
 CORRECT_BLINDING = (
     "assignment_id Visible: neutral opaque code identifying this assignment, e.g. A7K3M9Q2. "
     "project_title Visible, read-only: public register project title. "
@@ -76,8 +93,13 @@ class MembershipTests(unittest.TestCase):
     def test_equal_sets_pass(self) -> None:
         self.assertEqual(self.check()["counts"]["total_unique"], 22)
 
-    def test_substituted_id_with_correct_count_fails(self) -> None:
+    def test_superseded_planning_p4_is_rejected(self) -> None:
         write_csv(self.csv, replacement=("2025/039", "2024/259"))
+        with self.assertRaisesRegex(membership.MembershipError, "extra"):
+            self.check()
+
+    def test_superseded_planning_t1_is_rejected(self) -> None:
+        write_csv(self.csv, replacement=("2021/113", "2019/010"))
         with self.assertRaisesRegex(membership.MembershipError, "extra"):
             self.check()
 
@@ -128,6 +150,57 @@ class CoderBlindingTests(unittest.TestCase):
 
     def test_neutral_assignment_language_passes(self) -> None:
         membership.verify_coder_blinding_text(CORRECT_BLINDING.replace("A7K3M9Q2", "Q4N8Z2L7"))
+
+
+class RepositoryExclusionTests(unittest.TestCase):
+    def test_authoritative_csv_has_exact_membership_and_roles(self) -> None:
+        roles = membership.read_exclusion_csv(EXCLUSION_PATH)
+        self.assertEqual(roles, EXPECTED_ROLES)
+        self.assertEqual(len(roles), 22)
+        self.assertEqual(
+            Counter(roles.values()),
+            Counter({"keyed_worked_example": 11, "unkeyed_discussion": 1, "pilot": 10}),
+        )
+        self.assertTrue({"2025/039", "2021/113"}.issubset(roles))
+        self.assertTrue({"2019/010", "2024/259", "2021/090"}.isdisjoint(roles))
+
+    def test_final_materials_record_actual_exposure(self) -> None:
+        coder = membership.extract_document_cards(CODER_PATH)
+        trainer = membership.extract_document_cards(TRAINER_PATH)
+        pilot = membership.extract_document_cards(PILOT_REFERENCE_PATH, require_cards=False)
+        self.assertEqual(coder.keyed_cards["P4"], "2025/039")
+        self.assertEqual(coder.keyed_cards["T1"], "2021/113")
+        self.assertTrue({"2019/010", "2024/259"}.isdisjoint(coder.keyed_ids))
+        self.assertEqual(trainer.keyed_ids, set(KEYED.values()))
+        self.assertEqual(trainer.discussion_ids, set(DISCUSSION.values()))
+        self.assertEqual(pilot.pilot_ids, set(PILOTS.values()))
+
+    def test_every_exclusion_occurs_once_in_frozen_population(self) -> None:
+        with POPULATION_PATH.open(encoding="utf-8-sig", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        counts = Counter(row["Record ID"].strip() for row in rows)
+        self.assertEqual(len(rows), 1308)
+        self.assertEqual({record_id: counts[record_id] for record_id in EXPECTED_ROLES}, dict.fromkeys(EXPECTED_ROLES, 1))
+
+    def test_canonical_serialization_and_recorded_hash(self) -> None:
+        raw = EXCLUSION_PATH.read_bytes()
+        self.assertTrue(raw.startswith(b"\xef\xbb\xbf"))
+        self.assertNotIn(b"\r", raw)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), CANONICAL_SHA256)
+        specification = yaml.safe_load(SPECIFICATION_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(specification["inputs"]["exclusion_sha256"], CANONICAL_SHA256)
+        self.assertIn("canonical UTF-8-with-BOM LF", specification["inputs"]["exclusion_hash_basis"])
+
+    def test_line_endings_do_not_change_parsed_scientific_content(self) -> None:
+        canonical = EXCLUSION_PATH.read_bytes()
+        with tempfile.TemporaryDirectory() as tmp:
+            lf_path = Path(tmp) / "lf.csv"
+            crlf_path = Path(tmp) / "crlf.csv"
+            lf_path.write_bytes(canonical)
+            crlf_path.write_bytes(canonical.replace(b"\n", b"\r\n"))
+            self.assertEqual(membership.read_exclusion_csv(lf_path), EXPECTED_ROLES)
+            self.assertEqual(membership.read_exclusion_csv(crlf_path), EXPECTED_ROLES)
+            self.assertNotEqual(hashlib.sha256(lf_path.read_bytes()).digest(), hashlib.sha256(crlf_path.read_bytes()).digest())
 
 
 if __name__ == "__main__":

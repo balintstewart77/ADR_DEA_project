@@ -59,13 +59,15 @@ preexisting_evidence:
   fable_stability_metrics_path: preregistration/package/03_preexisting_model_evidence/fable_run_stability_metrics.json
   fable_stability_metrics_sha256: 26a1494410b36aa2b05ef52ec74f643cb34dc9f5d5a0f7e35530aac03e6dc975
   crossmodel_metrics_path: preregistration/package/03_preexisting_model_evidence/fable5_gpt55_metrics.json
-  crossmodel_metrics_sha256: f5aed6afb4f1f80a036b72a7bbeda4e1278c1334ab93cf224472e73257a92532
+  crossmodel_metrics_sha256: c7ae2c262b0c6da67320c65881b5c973d979f7a22967461afc8eefbf2f4d0c7d
   disagreement_frame_path: preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv
-  disagreement_frame_sha256: 965ec169edf87ad49b4293c574dce40c9ccd5bce13fac9941ec293cfad2a2cb9
+  disagreement_frame_sha256: e21c113913beb5f70bb45080808c7d4d78df95798f32db16aecf718b10cb93af
+  disagreement_frame_hash_basis: raw SHA-256 of the canonical UTF-8-with-BOM LF serialization enforced by .gitattributes
 
 exclusions:
   exclusion_csv_path: preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv
   exclusion_csv_sha256: cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6
+  exclusion_csv_hash_basis: raw SHA-256 of the canonical UTF-8-with-BOM LF serialization enforced by .gitattributes
   worked_example_count: 11
   discussion_count: 1
   pilot_count: 10

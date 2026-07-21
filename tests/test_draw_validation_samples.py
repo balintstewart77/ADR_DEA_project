@@ -288,6 +288,16 @@ class InputAndSafetyTests(unittest.TestCase):
     def test_32_specification_and_output_schema_parse(self) -> None:
         specification = yaml.safe_load((sampler.ROOT / sampler.SPECIFICATION_PATH).read_text(encoding="utf-8"))
         schema = json.loads((sampler.ROOT / "preregistration/package/04_exclusions_and_sampling/sampling_output_schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            specification["inputs"]["exclusion_sha256"],
+            sampler.sha256_file(sampler.ROOT / sampler.REAL_EXCLUSION_PATH),
+        )
+        self.assertIn("canonical UTF-8-with-BOM LF", specification["inputs"]["exclusion_hash_basis"])
+        self.assertEqual(
+            specification["inputs"]["disagreement_frame_sha256"],
+            sampler.sha256_file(sampler.ROOT / sampler.REAL_HARD_PATH),
+        )
+        self.assertIn("canonical UTF-8-with-BOM LF", specification["inputs"]["disagreement_frame_hash_basis"])
         self.assertFalse(specification["prospective_boundary"]["official_draw_executed"])
         self.assertFalse(specification["protocol_basis"]["frozen"])
         self.assertFalse(specification["protocol_basis"]["registered"])

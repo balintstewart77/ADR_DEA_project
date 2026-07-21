@@ -24,7 +24,12 @@ coding is produced before registration and Gate 2.
 | --- | ---: | --- |
 | `preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv` | 1,308 | `a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1` |
 | `preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv` | 22 | `cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6` |
-| `preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv` | 380 | `965ec169edf87ad49b4293c574dce40c9ccd5bce13fac9941ec293cfad2a2cb9` |
+| `preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv` | 380 | `e21c113913beb5f70bb45080808c7d4d78df95798f32db16aecf718b10cb93af` |
+
+The exclusion and disagreement-frame digests are raw SHA-256 values of their
+canonical UTF-8-with-BOM, LF serializations enforced by `.gitattributes`;
+platform-specific CRLF working copies are not valid replacement provenance
+values.
 
 The cleaned population has 1,308 unique clean canonical Record IDs. The
 exclusion set is exactly 11 keyed worked examples, one unkeyed discussion case

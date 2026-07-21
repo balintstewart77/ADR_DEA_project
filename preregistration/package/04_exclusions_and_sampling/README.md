@@ -37,6 +37,25 @@ released only after initial independent coding and a blinding review, while
 reserve identities, strata and ranks remain embargoed through reserve retesting
 or formal retirement. Aggregate counts and strata may be public.
 
+## Exclusion membership and provenance
+
+Final exclusion membership is defined by actual coder exposure in the final
+training and pilot materials. Record `2025/039` was used as keyed worked
+example P4 and `2021/113` as keyed worked example T1, so both remain excluded.
+Records `2019/010` and `2024/259` occurred in a superseded planning list but
+were not used in the final coder-facing training materials and are not
+excluded. Record `2021/090` was a referenced contrast rather than a retained
+training or pilot case and is also not excluded. This audit confirmed the
+existing membership; it did not change any exclusion.
+
+The canonical v8 CSV is UTF-8 with a byte-order mark and LF line endings. The
+repository-wide `*.csv text eol=lf` rule in `.gitattributes` governs both the
+Git object and working-tree serialization. Its recorded SHA-256 is the raw-file
+hash of that canonical LF serialization:
+`cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6`.
+CRLF serialization may parse to the same rows, but it is not the canonical
+packaged byte representation and must not be used to update provenance hashes.
+
 This folder must not contain active or reserve manifests, executed draw logs,
 assignments or reserve identities. The superseded v7 exclusion file was not
 located; v8 remains exactly machine-verified as 11 keyed worked examples, one

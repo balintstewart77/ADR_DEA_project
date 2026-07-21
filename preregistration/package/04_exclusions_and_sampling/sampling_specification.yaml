@@ -21,9 +21,11 @@ inputs:
   cleaned_population_rows: 1308
   exclusion_path: preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv
   exclusion_sha256: cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6
+  exclusion_hash_basis: raw SHA-256 of the canonical UTF-8-with-BOM LF serialization enforced by .gitattributes
   exclusion_count: 22
   disagreement_frame_path: preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv
-  disagreement_frame_sha256: 965ec169edf87ad49b4293c574dce40c9ccd5bce13fac9941ec293cfad2a2cb9
+  disagreement_frame_sha256: e21c113913beb5f70bb45080808c7d4d78df95798f32db16aecf718b10cb93af
+  disagreement_frame_hash_basis: raw SHA-256 of the canonical UTF-8-with-BOM LF serialization enforced by .gitattributes
   disagreement_frame_rows: 380
 randomisation:
   master_seed: 20260713
