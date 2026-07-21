@@ -8,7 +8,7 @@ import yaml
 ROOT=Path(__file__).resolve().parents[1]
 PACKAGE=ROOT/'preregistration/package/06_redcap'
 FIXTURES=ROOT/'tests/fixtures'
-VERSION='redcap-candidate-0.5'
+VERSION='redcap-candidate-0.6'
 HISTORICAL_VERSION='redcap-candidate-0.3'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 SAMPLE_SET_CHOICES='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
@@ -16,6 +16,9 @@ PURPOSE_ANNOTATION="@MAXCHECKED=2 @NONEOFTHEABOVE='8'"
 SC_NOTE_BRANCH="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
 SC_NOTE_HELP='Required for partial or insufficient evidence, low confidence, or a taxonomy concern.'
 SC_TAXONOMY_FIT_CHOICES='1, Fit | 2, Partial Fit | 3, No Fit | 4, Cannot assess from register entry'
+SC_TAXONOMY_FIT_HELP=('Taxonomy fit asks whether the taxonomy can adequately represent the project, not whether the public register entry contains enough information to judge this. '
+                      'Select “Cannot assess from register entry” when the entry is too limited to determine taxonomy fit. '
+                      'Do not select “Partial Fit” or “No Fit” solely because the entry lacks information.')
 PO_TAXONOMY_FIT_CHOICES='1, Fit | 2, Partial Fit | 3, No Fit'
 TAXONOMY_ISSUE_CHOICES='1, Missing or inadequately represented category | 2, Ambiguous or overlapping category boundaries | 5, Other taxonomy problem'
 
@@ -54,7 +57,7 @@ def build_dictionary():
  field('sc_intro','scratch_coder','descriptive','Classify using only the displayed title, datasets-used entry and approved training materials.','Scratch-coder review'),field('sc_assignment','scratch_coder','descriptive','Assignment: <strong>[assignment_id]</strong>'),field('sc_project_title','scratch_coder','descriptive','<strong>Project title</strong><br>[project_title]'),field('sc_datasets','scratch_coder','descriptive','<strong>Datasets used</strong><br>[datasets_used]'),
  field('sc_blind_decl','scratch_coder','radio','I confirm that I used only the permitted register evidence and training materials.',choices='1, Confirmed | 0, Cannot confirm',required=True),field('sc_exposure','scratch_coder','radio','Were you accidentally exposed to prohibited project or reviewer information?',choices='0, No | 1, Yes',required=True),field('sc_exposure_note','scratch_coder','notes','Describe the accidental exposure without copying restricted content.',branch="[sc_exposure] = '1'",required=True),
  field('sc_domains','scratch_coder','checkbox','Research Domain(s)','Classification',choice(dl),'Select every supported substantive domain, or Unclear alone.',required=True,annotation="@NONEOFTHEABOVE='12'"),field('sc_purposes','scratch_coder','checkbox','Analytical Purpose(s)',choices=choice(pl),note='Select one or at most two purposes, or Unclear alone.',required=True,annotation=PURPOSE_ANNOTATION),field('sc_covid','scratch_coder','radio','COVID-19 & Pandemic',choices='0, No | 1, Yes',required=True),field('sc_equity','scratch_coder','radio','Demographic disparities / equity tag',choices='0, No | 1, Yes',required=True),
- field('sc_sufficiency','scratch_coder','radio','Register-entry sufficiency','Evidence and confidence','1, Sufficient | 2, Partial | 3, Insufficient',required=True),field('sc_taxonomy_fit','scratch_coder','radio','Taxonomy fit',choices=SC_TAXONOMY_FIT_CHOICES,required=True),field('sc_tax_issue','scratch_coder','checkbox','Taxonomy issue type',choices=TAXONOMY_ISSUE_CHOICES,branch="[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'",required=True),field('sc_confidence','scratch_coder','radio','Classification confidence',choices='1, High | 2, Medium | 3, Low',required=True),field('sc_note','scratch_coder','notes','Explanatory note',note=SC_NOTE_HELP,branch=SC_NOTE_BRANCH,required=True)]
+ field('sc_sufficiency','scratch_coder','radio','Register-entry sufficiency','Evidence and confidence','1, Sufficient | 2, Partial | 3, Insufficient',required=True),field('sc_taxonomy_fit','scratch_coder','radio','Taxonomy fit',choices=SC_TAXONOMY_FIT_CHOICES,note=SC_TAXONOMY_FIT_HELP,required=True),field('sc_tax_issue','scratch_coder','checkbox','Taxonomy issue type',choices=TAXONOMY_ISSUE_CHOICES,branch="[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'",required=True),field('sc_confidence','scratch_coder','radio','Classification confidence',choices='1, High | 2, Medium | 3, Low',required=True),field('sc_note','scratch_coder','notes','Explanatory note',note=SC_NOTE_HELP,branch=SC_NOTE_BRANCH,required=True)]
  rows += [field('po_intro','project_owner','descriptive','Review proposed labels separately for actual-project fit and visibility in the public register entry.','Project-owner review'),field('po_assignment','project_owner','descriptive','Assignment: <strong>[assignment_id]</strong>'),field('po_project_title','project_owner','descriptive','<strong>Project title</strong><br>[project_title]'),field('po_datasets','project_owner','descriptive','<strong>Datasets used</strong><br>[datasets_used]')]
  mapping=[]; triggers=[]
  for prefix,layer,items in [('d','domain',domains),('p','purpose',purposes),('t','tag',tags)]:
@@ -148,11 +151,11 @@ def build_preview(rows):
   fs=[]
   for r in rows:
    if r['Form Name']!=form: continue
-   c=r['Choices, Calculations, OR Slider Labels']; b=r['Branching Logic (Show field only if...)']
-   fs.append(f"<section><h3>{html.escape(r['Field Label'])}{' *' if r['Required Field?'] else ''}</h3>{'<p>Choices: '+html.escape(c)+'</p>' if c else ''}{'<p class=branch>Shown when: '+html.escape(b)+'</p>' if b else ''}</section>")
+   c=r['Choices, Calculations, OR Slider Labels']; b=r['Branching Logic (Show field only if...)']; n=r['Field Note']
+   fs.append(f"<section><h3>{html.escape(r['Field Label'])}{' *' if r['Required Field?'] else ''}</h3>{'<p>Choices: '+html.escape(c)+'</p>' if c else ''}{'<p class=field-note>'+html.escape(n)+'</p>' if n else ''}{'<p class=branch>Shown when: '+html.escape(b)+'</p>' if b else ''}</section>")
   forms.append(f'<h2>{form}</h2>'+''.join(fs))
  admin=''.join(f"<li>{html.escape(r['Variable / Field Name'])}: {html.escape(r['Field Label'])}{': '+html.escape(r['Choices, Calculations, OR Slider Labels']) if r['Choices, Calculations, OR Slider Labels'] else ''}</li>" for r in rows if r['Form Name']=='assignment_admin')
- doc=f"<!doctype html><html lang=en><head><meta charset=utf-8><title>REDCap candidate preview</title><style>body{{font-family:Arial;max-width:960px;margin:2rem auto}}section{{border-top:1px solid #ccc}}.warning{{background:#fff3cd;padding:1rem}}</style></head><body><h1>REDCap candidate instrument preview</h1><p class=warning>Candidate {VERSION}; synthetic structural preview only, not a pixel-perfect REDCap rendering. Confirm appearance, branching and action tags in live runtime QA before formal coding.</p>{''.join(forms)}<h2>Administrative appendix (hidden from reviewers)</h2><ul>{admin}</ul></body></html>"
+ doc=f"<!doctype html><html lang=en><head><meta charset=utf-8><title>REDCap candidate preview</title><style>body{{font-family:Arial;max-width:960px;margin:2rem auto}}section{{border-top:1px solid #ccc}}.warning{{background:#fff3cd;padding:1rem}}.field-note{{font-style:italic}}</style></head><body><h1>REDCap candidate instrument preview</h1><p class=warning>Candidate {VERSION}; synthetic structural preview only, not a pixel-perfect REDCap rendering. Confirm appearance, branching and action tags in live runtime QA before formal coding.</p>{''.join(forms)}<h2>Administrative appendix (hidden from reviewers)</h2><ul>{admin}</ul></body></html>"
  (PACKAGE/'redcap_candidate_instrument_preview.html').write_text(doc,encoding='utf-8')
 
 def build_fixtures():

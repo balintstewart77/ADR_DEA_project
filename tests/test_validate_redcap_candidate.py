@@ -109,9 +109,10 @@ class CandidateTests(unittest.TestCase):
  def test_39_pilot_cannot_be_validation_included(self): self.assertTrue(v.validate_admin(dict(self.admin(),sample_set=4,validation_included=1)))
  def test_40_scratch_coder_form_signature_changes_for_diagnostics_only(self):
    rows=[r for r in self.rows() if r['Form Name']=='scratch_coder']; payload=json.dumps(rows,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
-   self.assertEqual(hashlib.sha256(payload).hexdigest(),'7c17aba55f089f78603ae7cf6b48253c50e518dadc05445632680b1e86ac816c')
+   self.assertEqual(hashlib.sha256(payload).hexdigest(),'977e8bc2961c7720671ef0dc22944ace677403d83316246eb904b8b9ba8df353')
+   self.assertNotEqual(hashlib.sha256(payload).hexdigest(),'7c17aba55f089f78603ae7cf6b48253c50e518dadc05445632680b1e86ac816c')
    self.assertNotEqual(hashlib.sha256(payload).hexdigest(),'8f59881f91573106a2327fc6d056fd04b9bdb34816846daf0898e3b26196c00f')
- def test_41_candidate_version_is_0_5(self): self.assertEqual(yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['version'],'redcap-candidate-0.5')
+ def test_41_candidate_version_is_0_6(self): self.assertEqual(yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['version'],'redcap-candidate-0.6')
  def test_42_runtime_corrections_remain_intact(self):
   by={r['Variable / Field Name']:r for r in self.rows()}
   self.assertEqual(by['sc_purposes']['Field Annotation'],v.PURPOSE_ANNOTATION)
@@ -123,7 +124,13 @@ class CandidateTests(unittest.TestCase):
   self.assertEqual(hashlib.sha256(payload).hexdigest(),'73406c72fc8c86bdb362dcf1c02a42b3b420484a7edc2415583899cb5581230f')
  def test_44_exact_fit_issue_choices_and_branches(self):
   by={r['Variable / Field Name']:r for r in self.rows()}
-  self.assertEqual(v.choices(by['sc_taxonomy_fit']['Choices, Calculations, OR Slider Labels']),v.SC_TAXONOMY_FIT_CHOICES)
+  scratch_fit=by['sc_taxonomy_fit']
+  self.assertEqual(v.choices(scratch_fit['Choices, Calculations, OR Slider Labels']),v.SC_TAXONOMY_FIT_CHOICES)
+  self.assertEqual(scratch_fit['Field Note'],v.SC_TAXONOMY_FIT_HELP)
+  self.assertEqual(scratch_fit['Field Type'],'radio')
+  self.assertEqual(scratch_fit['Required Field?'],'y')
+  self.assertFalse(scratch_fit['Branching Logic (Show field only if...)'])
+  self.assertFalse(scratch_fit['Field Annotation'])
   self.assertEqual(v.choices(by['po_taxonomy_fit']['Choices, Calculations, OR Slider Labels']),v.PO_TAXONOMY_FIT_CHOICES)
   for field in ('sc_tax_issue','po_tax_issue'):
    self.assertEqual(v.choices(by[field]['Choices, Calculations, OR Slider Labels']),v.CURRENT_TAXONOMY_ISSUE_CHOICES)
@@ -154,5 +161,26 @@ class CandidateTests(unittest.TestCase):
   self.assertIn('actual-project fit',by['po_intro']['Field Label'])
   self.assertIn('actual project',by['po_d01_fit']['Field Label'])
   self.assertEqual(v.choices(by['owner_recruit_route']['Choices, Calculations, OR Slider Labels'])['2'],'Supplementary purposive')
+ def test_50_taxonomy_fit_help_is_synchronised_to_derived_materials(self):
+  with (self.package/'redcap_field_response_specification.csv').open(encoding='utf-8-sig',newline='') as f:
+   spec=[r for r in csv.DictReader(f) if r['variable_name']=='sc_taxonomy_fit']
+  self.assertEqual(len(spec),4)
+  self.assertTrue(all(r['notes']==v.SC_TAXONOMY_FIT_HELP for r in spec))
+  preview=(self.package/'redcap_candidate_instrument_preview.html').read_text(encoding='utf-8')
+  self.assertIn(v.SC_TAXONOMY_FIT_HELP,preview)
+  codebook=(self.package/'redcap_instrument_codebook.md').read_text(encoding='utf-8')
+  self.assertIn(v.SC_TAXONOMY_FIT_HELP,' '.join(codebook.split()))
+ def test_51_missing_taxonomy_fit_help_fails(self):
+  rows=self.rows(); next(r for r in rows if r['Variable / Field Name']=='sc_taxonomy_fit')['Field Note']=''; self.write_rows(rows)
+  with self.assertRaisesRegex(v.CandidateError,'taxonomy-fit help text differs'): self.check()
+ def test_52_obsolete_pilot_issue_options_are_absent_but_historical_mapping_remains(self):
+  by={r['Variable / Field Name']:r for r in self.rows()}
+  current=set(v.choices(by['sc_tax_issue']['Choices, Calculations, OR Slider Labels']).values())
+  self.assertTrue({'None','Too broad','Too narrow'}.isdisjoint(current))
+  history=yaml.safe_load((self.package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))['historical_versions']['redcap-candidate-0.3']
+  self.assertEqual(history['scratch_taxonomy_fit_codes'],{1:'Fit',2:'Partial Fit',3:'No Fit'})
+  self.assertEqual(history['taxonomy_issue_codes'],{1:'Missing category',2:'Ambiguous/overlapping categories',3:'Too broad',4:'Too narrow',5:'Other',6:'None'})
+  self.assertTrue(history['decode_only'])
+  self.assertTrue(history['no_destructive_recode'])
 
 if __name__=='__main__': unittest.main()

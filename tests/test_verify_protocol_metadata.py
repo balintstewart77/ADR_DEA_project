@@ -1,5 +1,6 @@
 from scripts.verify_protocol_metadata import (
-    DEFAULT_MANIFEST, REPOSITORY_ROOT, validate_protocol_status, verify_protocol_entry,
+    DEFAULT_MANIFEST, REPOSITORY_ROOT, REQUIRED_PENDING_GATES,
+    validate_protocol_status, verify_protocol_entry,
 )
 
 
@@ -12,8 +13,15 @@ def candidate_row() -> dict[str, str]:
     }
 
 
-def test_canonical_v0_11_metadata_and_committed_bytes_verify_offline():
+def test_canonical_v0_12_working_candidate_metadata_verifies_offline():
     assert verify_protocol_entry(REPOSITORY_ROOT / DEFAULT_MANIFEST, REPOSITORY_ROOT) == []
+
+
+def test_feedback_closure_is_removed_from_pending_protocol_gates():
+    assert not any("feedback" in gate.lower() for gate in REQUIRED_PENDING_GATES)
+    assert REQUIRED_PENDING_GATES[0] == (
+        "Complete fresh live REDCap runtime QA and freeze the formal instrument"
+    )
 
 
 def test_review_candidate_cannot_be_frozen():

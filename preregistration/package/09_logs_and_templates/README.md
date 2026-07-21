@@ -1,10 +1,12 @@
 # Logs and templates
 
-This folder is for blank protocol-deviation, instrument-change, coding-
-clarification, and Jo-review decision logs. It must not contain prospective
-entries before the relevant event, personal contact data, or unrestricted
-reserve information. The blank structures are registration-time templates;
-populated logs are versioned records and may require an amendment. Header-only
-CSV templates are present for protocol deviations, instrument changes, coding
-clarifications, and Jo-review decisions. The dated pilot-feedback log remains in
-Package 05 and is not yet closed.
+This folder contains protocol-deviation, instrument-change, coding-clarification,
+and Jo-review decision logs. It must not contain entries before the relevant
+event, personal contact data, or unrestricted reserve information. Header-only
+registration-time templates remain for protocol deviations and Jo-review
+decisions. The instrument-change and coding-clarification logs contain the
+pre-formal candidate-0.6 diagnostic clarification and shared-calibration
+governance records. Future post-registration entries must be versioned and may
+require an amendment. The dated pilot-feedback log remains in Package 05 and is
+closed for coder feedback; live REDCap QA and formal-instrument freeze remain
+pending.

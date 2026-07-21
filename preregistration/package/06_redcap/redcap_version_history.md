@@ -1,5 +1,40 @@
 # REDCap candidate version history
 
+## redcap-candidate-0.6 — 2026-07-21
+
+- Created from intermediate formal candidate 0.5 in response to final coder
+  usability feedback on the revised scratch-coder taxonomy-fit question. The
+  feedback request was circulated with the shared calibration note to all three
+  scratch coders on 21 July 2026. All three responded. No additional substantive
+  taxonomy or instrument concerns were raised; one coder requested clearer
+  operational guidance for using `Cannot assess from register entry`.
+- Added point-of-use help text to `sc_taxonomy_fit`: "Taxonomy fit asks whether
+  the taxonomy can adequately represent the project, not whether the public
+  register entry contains enough information to judge this. Select “Cannot
+  assess from register entry” when the entry is too limited to determine
+  taxonomy fit. Do not select “Partial Fit” or “No Fit” solely because the entry
+  lacks information."
+- This is an operational clarification of the revised diagnostic instrument.
+  It does not change the taxonomy, Research Domain or Analytical Purpose rules,
+  field name, radio type, answer codes or labels, field order, required status,
+  branching, validation, export mappings, or candidate-0.3 pilot data.
+- `Cannot assess from register entry` records an inability to judge taxonomy fit
+  from insufficient visible evidence. It is distinct from `Partial Fit` or `No
+  Fit`, which indicate a genuine taxonomy limitation for a sufficiently
+  understood project.
+- Regenerated the dictionary, machine-readable field specification, structural
+  preview, candidate specification, and synthetic fixtures from the
+  deterministic local builder. The preview now renders dictionary field notes
+  so the point-of-use guidance is visible in the human-readable derivative.
+- The coder-feedback window is closed because all three coders responded before
+  the stated close-of-play deadline on Wednesday 22 July 2026. Their responses
+  are not treated as formal approval or endorsement. Screenshot-based guidance
+  remains planned for the coder start pack.
+- Candidate 0.6 is the current working formal-instrument review candidate. It
+  has passed offline repository validation, but it has not been imported into
+  REDCap, has not passed fresh live runtime QA, and is not frozen or authorised
+  for formal coding.
+
 ## redcap-candidate-0.5 — 2026-07-18
 
 - Provisional repository candidate aligned to protocol v0.11. It has not been
@@ -15,8 +50,21 @@
 - Preserved all respondent-facing candidate-0.4 fields and codes. Candidate 0.3
   and 0.4 remain historical decode-compatible versions; no pilot data were
   recoded or regenerated.
-- Status: working review candidate pending pilot closure, Jo's review,
+- Status at this version: intermediate working review candidate pending pilot closure, Jo's review,
   propagation of resulting changes, repository QA, and fresh live runtime QA.
+- Post-pilot shared calibration did not introduce another instrument or
+  taxonomy change. The already-implemented distinction remains: `Cannot assess
+  from register entry` records inability to judge taxonomy fit from thin public
+  evidence; `Partial Fit` and `No Fit` record genuine taxonomy limitations for
+  a sufficiently understood project. Candidate-0.3 pilot responses remain
+  unchanged, and candidate 0.5 applies only to formal coding after repository
+  validation and fresh live REDCap runtime QA.
+- The shared-calibration decision is cross-referenced in
+  `../05_training_and_pilot/pilot_feedback_log_20260717.md` and
+  `../09_logs_and_templates/coding_clarification_log.csv`. At the candidate 0.5
+  stage, the coder circulation and remaining-feedback request were prepared but
+  not yet recorded as sent. Candidate 0.6 records the subsequent circulation,
+  feedback resolution, and continuing live-QA gate.
 
 ## redcap-candidate-0.4 — 2026-07-17
 

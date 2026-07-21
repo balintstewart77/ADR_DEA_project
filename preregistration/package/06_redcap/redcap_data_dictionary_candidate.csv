@@ -60,7 +60,7 @@ sc_purposes,scratch_coder,,checkbox,Analytical Purpose(s),"1, Descriptive Monito
 sc_covid,scratch_coder,,radio,COVID-19 & Pandemic,"0, No | 1, Yes",,,,,,,y,,,,,
 sc_equity,scratch_coder,,radio,Demographic disparities / equity tag,"0, No | 1, Yes",,,,,,,y,,,,,
 sc_sufficiency,scratch_coder,Evidence and confidence,radio,Register-entry sufficiency,"1, Sufficient | 2, Partial | 3, Insufficient",,,,,,,y,,,,,
-sc_taxonomy_fit,scratch_coder,,radio,Taxonomy fit,"1, Fit | 2, Partial Fit | 3, No Fit | 4, Cannot assess from register entry",,,,,,,y,,,,,
+sc_taxonomy_fit,scratch_coder,,radio,Taxonomy fit,"1, Fit | 2, Partial Fit | 3, No Fit | 4, Cannot assess from register entry","Taxonomy fit asks whether the taxonomy can adequately represent the project, not whether the public register entry contains enough information to judge this. Select “Cannot assess from register entry” when the entry is too limited to determine taxonomy fit. Do not select “Partial Fit” or “No Fit” solely because the entry lacks information.",,,,,,y,,,,,
 sc_tax_issue,scratch_coder,,checkbox,Taxonomy issue type,"1, Missing or inadequately represented category | 2, Ambiguous or overlapping category boundaries | 5, Other taxonomy problem",,,,,,[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3',y,,,,,
 sc_confidence,scratch_coder,,radio,Classification confidence,"1, High | 2, Medium | 3, Low",,,,,,,y,,,,,
 sc_note,scratch_coder,,notes,Explanatory note,,"Required for partial or insufficient evidence, low confidence, or a taxonomy concern.",,,,,[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3',y,,,,,

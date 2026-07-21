@@ -18,15 +18,40 @@ The corresponding post-training formal-coding candidates are:
 - `DEA_trainer_handout_v2.docx`; and
 - `DEA_pilot_projects_trainer_debrief_reference_v2.docx`.
 
+`DEA_post_pilot_shared_calibration_note.docx` is the project-lead-authored,
+coder-facing shared calibration based only on four permanently excluded pilot
+records. It is not a trainer answer key, accuracy score, request to revise pilot
+responses, or model-concordance exercise. The source document is preserved
+unchanged; it was circulated simultaneously to all three scratch coders on 21
+July 2026. Its exact hash, role and circulation status are recorded in the
+package manifest and coding-clarification log. The covering email explained
+that the pilot was not scored, pilot responses did not need revision,
+disagreement remained expected and informative, and formal coding should remain
+independent. The four-case
+qualitative model-direction check is in
+`post_pilot_calibration_model_direction_audit.csv` and must be reverified when
+the canonical 1,308-row GPT-5.5 snapshot is recovered.
+
 The formal-coding versions add Scratch Coder choice 4, `Cannot assess from
 register entry`, and consolidate taxonomy-issue codes to 1, 2, and 5. They do
 not alter domain, purpose, COVID, equity, sample, or exclusion rules. The two
 decisions and their pilot/formal-coding impacts are recorded in
 `pilot_feedback_log_20260717.md`. The pilot was launched under
 `redcap-candidate-0.3`; candidate 0.4 records the post-training diagnostic
-changes, and candidate 0.5 is the current v0.11-aligned repository candidate.
-It remains gated by pilot export/archive and debrief, feedback-log closure, Jo's
-review, repository validation, and live runtime QA.
+changes, and candidate 0.6 is the current formal-instrument repository candidate.
+Candidate 0.6 adds only point-of-use help for the revised scratch-coder
+taxonomy-fit field; candidate-0.3 pilot responses and mappings remain unchanged.
+All three coders responded to the feedback request. No additional substantive
+taxonomy or instrument concerns were raised; one operational clarification was
+resolved in candidate 0.6. Screenshot-based guidance remains planned for the
+coder start pack. Candidate 0.6 has passed offline repository validation but
+remains gated by Jo's review, formal-instrument freeze, and fresh live runtime
+QA.
+
+The dated pilot-feedback window is closed because all three coders responded.
+The original deadline of close of play on Wednesday 22 July 2026 is retained as
+historical metadata. Their responses are not described as formal approval or
+endorsement; formal-instrument freeze and live REDCap QA remain outstanding.
 
 Exact membership is checked offline with
 `scripts/verify_training_exclusion_membership.py`. It parses the designated

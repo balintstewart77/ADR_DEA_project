@@ -1,7 +1,7 @@
 # REDCap instrument codebook
 
-Status: working v0.11-aligned candidate redcap-candidate-0.5. The pilot used
-redcap-candidate-0.3; fresh candidate 0.5 live runtime QA remains pending.
+Status: working formal-instrument candidate redcap-candidate-0.6. The pilot used
+redcap-candidate-0.3; fresh candidate 0.6 live runtime QA remains pending.
 
 ## Architecture and visibility
 
@@ -41,6 +41,12 @@ does not display sc_tax_issue, and is coherent only when sc_sufficiency is
 Partial or Insufficient. Partial or Insufficient evidence does not force this
 response: a coder may still be able to judge taxonomy fit.
 
+Point-of-use guidance for `sc_taxonomy_fit`: Taxonomy fit asks whether the
+taxonomy can adequately represent the project, not whether the public register
+entry contains enough information to judge this. Select “Cannot assess from
+register entry” when the entry is too limited to determine taxonomy fit. Do not
+select “Partial Fit” or “No Fit” solely because the entry lacks information.
+
 The issue field is shown and required only for Partial Fit or No Fit. One or
 more retained issue types may be selected. Other taxonomy problem requires an
 explanatory note. The field remains hidden for Fit and, in the scratch stream,
@@ -60,8 +66,8 @@ Both candidate-0.3 issue fields used:
 
 Archived pilot exports must be decoded by instrument_ver. Codes 3, 4 and 6 are
 preserved exactly for candidate-0.3 data and are not silently mapped to the
-candidate-0.5 categories. The current expected export schema lists only
-candidate-0.5 checkbox columns 1, 2 and 5.
+candidate-0.6 categories. The current expected export schema lists only
+candidate-0.6 checkbox columns 1, 2 and 5.
 
 ## Reporting
 

@@ -15,12 +15,11 @@ from typing import Mapping
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = Path("preregistration/preregistration_artifact_manifest.csv")
-DEFAULT_VERSION = "v0.11"
+DEFAULT_VERSION = "v0.12"
 FULL_COMMIT = re.compile(r"[0-9a-f]{40}")
 GIT_OBJECT = re.compile(r"[0-9a-f]{40,64}")
 REQUIRED_PENDING_GATES = (
-    "Complete the excluded pilot and pilot debrief",
-    "Close the dated pilot-feedback log",
+    "Complete fresh live REDCap runtime QA and freeze the formal instrument",
     "Complete Jo's final substantive review",
     "Resolve and propagate all resulting changes",
     "Complete final cross-document and repository consistency checks",
@@ -103,11 +102,24 @@ def verify_protocol_entry(
     repo_root = repo_root.resolve()
     row = _load_protocol_row(manifest_path.resolve(), version)
     issues = validate_protocol_status(row)
+    expected_predecessor = {"v0.12": "v0.11", "v0.11": "v0.10"}.get(version)
+    if expected_predecessor is None:
+        raise ProtocolMetadataError(f"No protocol predecessor rule is defined for {version}")
     for field, expected in {
-        "protocol_status": "review_candidate", "supersedes": "v0.10", "superseded_by": "",
+        "protocol_status": "review_candidate",
+        "supersedes": expected_predecessor,
+        "superseded_by": "",
     }.items():
         if (row.get(field) or "").strip() != expected:
             issues.append(f"{field} must be {expected!r} for {version}")
+    if version == "v0.12":
+        notes = (row.get("notes") or "").strip()
+        if "candidate 0.6" not in notes:
+            issues.append("v0.12 notes must identify candidate 0.6 as the current instrument")
+        if "candidate 0.5" in notes:
+            issues.append("v0.12 notes retain a stale current-candidate 0.5 reference")
+        if "closed coder feedback" not in notes:
+            issues.append("v0.12 notes must record closed coder feedback")
 
     relative = (row.get("current_path") or "").strip()
     posix_path = PurePosixPath(relative)
@@ -145,21 +157,37 @@ def verify_protocol_entry(
         issues.append("implementation_last_checked_commit must be a full lowercase 40-character commit hash")
     if not GIT_OBJECT.fullmatch(blob_oid):
         issues.append("git_blob_oid must be a full lowercase Git object ID")
+    source_kind = (row.get("protocol_source_kind") or "").strip()
+    if source_kind not in {"committed_blob", "working_tree_candidate"}:
+        issues.append("protocol_source_kind must be committed_blob or working_tree_candidate")
+        return issues
     try:
-        committed_oid = str(_git(repo_root, "rev-parse", f"{source_commit}:{relative}")).strip()
-        committed_bytes = bytes(_git(repo_root, "cat-file", "blob", committed_oid, binary=True))
+        current_oid = str(_git(repo_root, "hash-object", relative)).strip()
         source_details = str(
             _git(repo_root, "show", "-s", "--format=%cI%n%s", source_commit)
         ).splitlines()
     except ProtocolMetadataError as exc:
         issues.append(str(exc))
         return issues
-    if committed_oid != blob_oid:
-        issues.append("protocol source commit contains a different Git blob than declared")
-    if hashlib.sha256(committed_bytes).hexdigest() != (row.get("sha256") or "").strip():
-        issues.append("committed protocol SHA-256 differs from manifest")
-    if len(committed_bytes) != len(content):
-        issues.append("committed protocol size differs from working protocol")
+    if current_oid != blob_oid:
+        issues.append("working protocol Git object ID differs from manifest")
+    if source_kind == "committed_blob":
+        try:
+            committed_oid = str(
+                _git(repo_root, "rev-parse", f"{source_commit}:{relative}")
+            ).strip()
+            committed_bytes = bytes(
+                _git(repo_root, "cat-file", "blob", committed_oid, binary=True)
+            )
+        except ProtocolMetadataError as exc:
+            issues.append(str(exc))
+            return issues
+        if committed_oid != blob_oid:
+            issues.append("protocol source commit contains a different Git blob than declared")
+        if hashlib.sha256(committed_bytes).hexdigest() != (row.get("sha256") or "").strip():
+            issues.append("committed protocol SHA-256 differs from manifest")
+        if len(committed_bytes) != len(content):
+            issues.append("committed protocol size differs from working protocol")
     if len(source_details) < 2:
         issues.append("could not read protocol source commit date and message")
     else:
@@ -175,7 +203,7 @@ def verify_protocol_entry(
         value.strip() for value in (row.get("pending_gates") or "").split(" | ") if value.strip()
     )
     if gates != REQUIRED_PENDING_GATES:
-        issues.append("pending_gates does not match the required ordered v0.11 gates")
+        issues.append(f"pending_gates does not match the required ordered {version} gates")
     return issues
 
 

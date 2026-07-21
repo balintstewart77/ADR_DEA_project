@@ -1,8 +1,8 @@
-# REDCap instrument QA checklist — redcap-candidate-0.5
+# REDCap instrument QA checklist — redcap-candidate-0.6
 
 - [ ] Confirm every candidate-0.3 pilot response is complete, exported and
-      archived before candidate 0.4 is imported.
-- [ ] Dictionary imports without unresolved warnings; field count is 137.
+      archived before candidate 0.6 is imported.
+- [ ] Dictionary imports without unresolved warnings; field count is 145.
 - [ ] Administrative, source, sampling and model fields are absent from coder
       and owner displays.
 - [ ] Existing sample-set codes 1–4 are unchanged and every Pilot row has
@@ -10,8 +10,10 @@
 - [ ] sc_taxonomy_fit shows exactly codes 1 Fit, 2 Partial Fit, 3 No Fit and
       4 Cannot assess from register entry.
 - [ ] po_taxonomy_fit shows exactly codes 1 Fit, 2 Partial Fit and 3 No Fit.
+- [ ] The exact approved point-of-use help text appears beneath
+      sc_taxonomy_fit and nowhere on unrelated taxonomy fields.
 - [ ] Both taxonomy-issue fields show only stored codes 1, 2 and 5 with the
-      candidate-0.5 labels.
+      candidate-0.6 labels.
 - [ ] sc_tax_issue appears and is required for fit 2 or 3 only; it remains
       hidden for fit 1 and 4.
 - [ ] po_tax_issue appears and is required for fit 2 or 3 only; it remains
@@ -31,4 +33,4 @@
       assignment.
 - [ ] Capture dated import log and screenshots or PDF evidence in approved
       restricted storage.
-- [ ] Candidate-0.4 readiness is not marked passed until all tests above pass.
+- [ ] Candidate-0.6 readiness is not marked passed until all tests above pass.

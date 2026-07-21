@@ -87,7 +87,7 @@ def valid_project(**changes):
             0,
             0,
         ),
-        instrument_version="redcap-candidate-0.5",
+        instrument_version="redcap-candidate-0.6",
     )
     values.update(changes)
     return ProjectRatings(**values)
@@ -146,6 +146,15 @@ def test_unknown_instrument_version_and_0_3_fit_4_fail_clearly():
     row["sc_taxonomy_fit"] = "4"
     with pytest.raises(ExportParseError, match="Unknown sc_taxonomy_fit code"):
         decode_scratch_row(row)
+
+
+def test_candidate_0_6_uses_the_existing_post_pilot_response_mapping():
+    row = deepcopy(load_wide_export(FIXTURE)[0])
+    row["instrument_ver"] = "redcap-candidate-0.6"
+    row["sc_taxonomy_fit"] = "4"
+    decoded = decode_scratch_row(row)
+    assert decoded.rating.taxonomy_fit == "Cannot assess from register entry"
+    assert not decoded.rating.taxonomy_issues
 
 
 def test_duplicate_reviewer_project_and_inconsistent_assignment_ids_fail():

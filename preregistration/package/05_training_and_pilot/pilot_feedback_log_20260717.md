@@ -1,9 +1,10 @@
 # Pilot feedback log — 17 July 2026
 
-Status: open pending completion of the excluded pilot, debrief, and formal log
-closure. The recorded diagnostic decisions were implemented in candidate 0.4
-and are retained in the v0.11-aligned candidate 0.5; live runtime QA remains
-pending. The pilot was launched under redcap-candidate-0.3.
+Status: coder feedback closed and resolved; formal-instrument freeze and fresh
+live REDCap runtime QA remain pending. The recorded diagnostic decisions were
+implemented in candidate 0.4 and are retained in formal review candidate 0.6.
+Candidate 0.6 has passed offline repository validation. The pilot was launched
+under redcap-candidate-0.3.
 
 ## PILOT-001 — Taxonomy fit cannot be assessed under insufficient evidence
 
@@ -45,6 +46,48 @@ sample design.
 | Status | Implemented in repository candidate; live runtime QA pending |
 | Impact on pilot data | Archived candidate-0.3 responses may contain retired codes and remain decodable using the historical version mapping. No old response is mapped or destructively recoded. |
 | Impact on formal coding | Candidate-0.4 formal responses accept only stored codes 1, 2 and 5; the issue field is required only for Partial Fit or No Fit, and Other taxonomy problem requires an explanatory note. |
+
+## PILOT-003 — Shared post-pilot calibration before formal coding
+
+| Item | Record |
+| --- | --- |
+| Issue ID | PILOT-003 |
+| Date prepared | 2026-07-21 |
+| Study stage | Pre-formal pilot calibration |
+| Issue observed | The excluded pilot showed recurring differences in assigning a Domain from a dataset rather than the substantive research object; the threshold for additional Domains or Purposes; adding Descriptive Monitoring alongside a more specific operation; using Unclear from Register Entry independently by dimension; distinguishing residential mobility from general transport mobility; and recognising justified multi-domain cases without treating fewer labels as inherently preferable. |
+| Evidence | Shared calibration examples use permanently excluded Record IDs 2019/015, 2021/038, 2021/056 and 2024/248. |
+| Decision | Circulate one shared calibration note simultaneously to all three scratch coders. Do not require retrospective pilot recoding. Do not treat the note as an accuracy score or gold-standard answer key. Do not send coder-specific performance comparisons. Preserve independent judgement and legitimate disagreement during formal coding. |
+| Classification of change | Clarification of existing coding rules and pre-formal calibration. No taxonomy structural change. No production-model change. No change to original pilot data. |
+| Protocol implication | Describe the shared clarification process and qualitative model-direction check briefly in the active protocol candidate. All ten pilot records remain permanently excluded. |
+| Model-direction check | The four shared readings were compared with archived Fable 5 and GPT-5.5 outputs. The direction was mixed: one matched both models, one matched Fable only, one matched GPT-5.5 only, and one was narrower than either model. See post_pilot_calibration_model_direction_audit.csv and the coding-clarification governance log. |
+| Calibration document | DEA_post_pilot_shared_calibration_note.docx; SHA-256 ae2bae5169260f4e7e3bf10af5e158068d91be6e0a4860fc36b6612538d3c946; 198448 bytes. The DOCX is an unchanged project-lead input. |
+| Document QA limitation | The calibration DOCX contains the four intended cases and no coder/model information, but does not itself explicitly state that the pilot was unscored, original responses must not be revised, disagreement remains expected, or formal coding remains independent. Those governance conditions are recorded here and in the protocol; any change to the DOCX requires manual project-lead action and a new hash. |
+| Circulation evidence | Circulated simultaneously to all three scratch coders on 2026-07-21. The covering email explained that the pilot was not scored, pilot responses did not need revision, disagreement remained expected and informative, and formal coding should remain independent. |
+| Feedback request | Remaining feedback was requested on wording, branching, required notes, conditional fields and technical usability by close of play on Wednesday 22 July 2026. All three coders responded before closure; their responses are not treated as formal approval or endorsement. |
+| Feedback outcome | All three coders responded. No additional substantive taxonomy or instrument concerns were raised. One coder requested explicit guidance for projects where taxonomy fit cannot be judged because the public register entry lacks information, rather than because a taxonomy category is missing or inadequate. |
+| Resolution | Candidate 0.6 adds point-of-use guidance to the formal taxonomy-fit field distinguishing Cannot assess from register entry from Partial Fit, No Fit and a missing-category diagnosis. The same distinction will be illustrated in the coder start pack. Candidate-0.3 pilot responses remain unchanged. |
+| Remaining action | Add screenshot-based guidance to the coder start pack; complete fresh live REDCap runtime QA; freeze the formal instrument only after all remaining gates pass. |
+| Resolver | Project lead, with repository verification of model-direction and provenance claims. |
+| Affected artefacts | Active protocol candidate; REDCap version history; coding-clarification log; teaching-material and preregistration artefact manifests. |
+| Status | Coder feedback resolved; formal-instrument freeze and live REDCap QA pending. |
+
+The original 22 July deadline is retained as historical metadata. Feedback was
+closed because all three coders responded, not because silence was treated as
+approval.
+
+## PILOT-004 — Point-of-use taxonomy-fit guidance
+
+| Item | Record |
+| --- | --- |
+| Issue ID | PILOT-004 |
+| Date recorded | 2026-07-21 |
+| Study stage | Final pre-formal instrument feedback |
+| Feedback | Coders reported no further substantive taxonomy or instrument concerns. One coder requested explicit confirmation of how to complete the revised taxonomy-fit field where a project cannot be classified easily because the public register entry lacks information, rather than because the taxonomy is missing or inadequately represents a category. |
+| Resolution | Candidate 0.6 adds point-of-use help text to the formal scratch-coder `sc_taxonomy_fit` field distinguishing `Cannot assess from register entry` from Partial Fit, No Fit and a missing-category diagnosis. The same distinction will be illustrated with screenshot-based guidance in the coder start pack. |
+| Classification of change | Operational clarification of the revised diagnostic instrument. No taxonomy change and no Domain or Analytical Purpose classification-rule change. |
+| Historical treatment | Candidate-0.3 pilot responses remain unchanged. The clarification applies only to formal instrument candidate 0.6. |
+| Invariants | Field name, radio type, answer codes and labels, field order, required status, branching, validation and export mappings remain unchanged. |
+| Status | Implemented in repository candidate 0.6; offline validation passed; coder feedback resolved; coder-pack illustration, formal-instrument freeze and fresh live REDCap QA pending. |
 
 ## Before-edit provenance
 

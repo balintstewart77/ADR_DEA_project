@@ -19,7 +19,7 @@ FIXTURES=ROOT/'tests/fixtures/redcap_candidate_synthetic_submissions.yaml'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 FORMS={'assignment_admin','scratch_coder','project_owner'}
 TYPES={'text','notes','radio','dropdown','checkbox','yesno','truefalse','descriptive','calc','slider','file','signature'}
-VERSION='redcap-candidate-0.5'
+VERSION='redcap-candidate-0.6'
 HISTORICAL_VERSION='redcap-candidate-0.3'
 SAMPLE_SET_CHOICES={'1':'Baseline','2':'Hard case','3':'Owner review','4':'Pilot'}
 SAMPLE_SET_TEXT='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
@@ -27,6 +27,9 @@ PURPOSE_ANNOTATION="@MAXCHECKED=2 @NONEOFTHEABOVE='8'"
 SC_EXPOSURE_BRANCH="[sc_exposure] = '1'"
 SC_NOTE_BRANCH="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
 SC_NOTE_HELP='Required for partial or insufficient evidence, low confidence, or a taxonomy concern.'
+SC_TAXONOMY_FIT_HELP=('Taxonomy fit asks whether the taxonomy can adequately represent the project, not whether the public register entry contains enough information to judge this. '
+                      'Select “Cannot assess from register entry” when the entry is too limited to determine taxonomy fit. '
+                      'Do not select “Partial Fit” or “No Fit” solely because the entry lacks information.')
 SC_TAXONOMY_FIT_CHOICES={'1':'Fit','2':'Partial Fit','3':'No Fit','4':'Cannot assess from register entry'}
 PO_TAXONOMY_FIT_CHOICES={'1':'Fit','2':'Partial Fit','3':'No Fit'}
 CURRENT_TAXONOMY_ISSUE_CHOICES={'1':'Missing or inadequately represented category','2':'Ambiguous or overlapping category boundaries','5':'Other taxonomy problem'}
@@ -81,6 +84,7 @@ def validate_dictionary(path=DICTIONARY):
   if actual!=labels[layer]: errors.append(f'Taxonomy label mismatch for {variable}: expected={labels[layer]}, actual={actual}')
  if by.get('sc_equity',{}).get('Field Label')!=labels['tag'][0] or by.get('sc_covid',{}).get('Field Label')!=labels['tag'][1]: errors.append('Scratch tag labels differ from the two canonical taxonomy tags')
  if choices(by.get('sc_taxonomy_fit',{}).get('Choices, Calculations, OR Slider Labels',''))!=SC_TAXONOMY_FIT_CHOICES: errors.append('Scratch taxonomy-fit choices differ')
+ if by.get('sc_taxonomy_fit',{}).get('Field Note')!=SC_TAXONOMY_FIT_HELP: errors.append('Scratch taxonomy-fit help text differs')
  if choices(by.get('po_taxonomy_fit',{}).get('Choices, Calculations, OR Slider Labels',''))!=PO_TAXONOMY_FIT_CHOICES: errors.append('Owner taxonomy-fit choices differ')
  for variable,prefix in [('sc_tax_issue','Scratch'),('po_tax_issue','Owner')]:
   row=by.get(variable,{})
@@ -126,6 +130,8 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  if len(keys)!=len(set(keys)): errors.append('Duplicate conceptual/response mapping')
  sample_set_mapping={r.get('response_code'):r.get('response_label') for r in fs if r.get('variable_name')=='sample_set'}
  if sample_set_mapping!=SAMPLE_SET_CHOICES: errors.append('Field specification sample_set mapping differs')
+ fit_spec=[r for r in fs if r.get('variable_name')=='sc_taxonomy_fit']
+ if not fit_spec or any(r.get('notes')!=SC_TAXONOMY_FIT_HELP for r in fit_spec): errors.append('Field specification Scratch taxonomy-fit help differs')
  spec=yaml.safe_load((package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))
  if spec.get('version')!=VERSION: errors.append('Branch specification candidate version differs')
  if spec.get('forms')!=['assignment_admin','scratch_coder','project_owner']: errors.append('Branch specification form order differs')
@@ -166,6 +172,7 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  preview=(package/'redcap_candidate_instrument_preview.html').read_text(encoding='utf-8'); parser=PreviewParser(); parser.feed(preview)
  if not (parser.html and parser.h1): errors.append('Static preview is not parseable HTML')
  if html.escape(SC_NOTE_BRANCH) not in preview: errors.append('Static preview lacks corrected generic-note branch')
+ if html.escape(SC_TAXONOMY_FIT_HELP) not in preview: errors.append('Static preview lacks Scratch taxonomy-fit help text')
  fixture=fixture_path.read_text(encoding='utf-8')
  if REAL_ID_RE.search(fixture): errors.append('Real Record ID in synthetic fixture')
  if re.search(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',fixture): errors.append('Email address in synthetic fixture')
