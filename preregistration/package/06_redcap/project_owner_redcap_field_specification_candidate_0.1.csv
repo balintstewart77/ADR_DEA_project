@@ -1,0 +1,153 @@
+variable,form,field_type,choices,validation,branching,required,identifier,respondent_visible,ordinary_analytical_export,restriction,candidate_source
+owner_record_id,owner_contact_admin,text,,,,y,,no,yes,standard,renamed:assignment_id
+record_type,owner_contact_admin,radio,"1, Contact | 2, Assignment",,,y,,no,yes,standard,renamed:record_kind
+owner_id,owner_contact_admin,text,,,,y,,no,yes,standard,renamed:owner_resp_id
+oc_name,owner_contact_admin,text,,,[record_type] = '1',y,y,no,no,direct_identifier,new
+oc_email,owner_contact_admin,text,,email,[record_type] = '1',,y,no,no,direct_identifier,new
+oc_affiliation,owner_contact_admin,text,,,[record_type] = '1',,y,no,no,direct_identifier,new
+oc_contact_source,owner_contact_admin,dropdown,"1, Public register entry | 2, Institutional profile | 3, Public directory | 4, Existing approved contact record | 5, Other public source",,[record_type] = '1',y,,no,no,standard,new
+oc_contactability,owner_contact_admin,radio,"0, Unresolved | 1, Contactable | 2, Uncontactable | 3, Identity ambiguous | 4, Contact must not proceed",,[record_type] = '1',y,,no,no,standard,new
+oc_contact_issue_note,owner_contact_admin,notes,,,([record_type] = '1') and ([oc_contactability] = '2' or [oc_contactability] = '3' or [oc_contactability] = '4'),y,y,no,no,direct_identifier,new
+oc_eligible_projects,owner_contact_admin,text,,integer,[record_type] = '1',y,,no,no,standard,new
+oc_projects_offered,owner_contact_admin,text,,integer,[record_type] = '1',y,,no,no,standard,new
+oc_minutes_per_project,owner_contact_admin,text,,integer,[record_type] = '1',y,,no,no,standard,new
+oc_est_total_minutes,owner_contact_admin,text,,integer,[record_type] = '1',y,,no,no,standard,new
+oc_eoi_invite_date,owner_contact_admin,text,,date_ymd,[record_type] = '1',,,no,no,standard,new
+oc_eoi_status,owner_contact_admin,radio,"0, Not approached | 1, Awaiting response | 2, Interested | 3, Not interested | 4, No response | 5, Withdrawn",,[record_type] = '1',y,,no,no,standard,new
+oc_eoi_response_date,owner_contact_admin,text,,date_ymd,([record_type] = '1') and ([oc_eoi_status] = '2' or [oc_eoi_status] = '3' or [oc_eoi_status] = '5'),y,,no,no,standard,new
+oc_projects_accepted,owner_contact_admin,text,,integer,([record_type] = '1') and [oc_eoi_status] = '2',,,no,no,standard,new
+oc_followup_date,owner_contact_admin,text,,date_ymd,[record_type] = '1',,,no,no,standard,new
+oc_contact_suppression,owner_contact_admin,radio,"0, None | 1, Declined and no further approach | 2, Do not contact | 3, Researcher-level withdrawal",,[record_type] = '1',y,,no,no,standard,new
+oc_recruit_route,owner_contact_admin,radio,"1, Deterministic sequence | 2, Supplementary",,[record_type] = '1',y,,no,no,standard,new
+oc_sequence_pos,owner_contact_admin,text,,integer,([record_type] = '1') and [oc_recruit_route] = '1',y,,no,no,standard,new
+oc_supp_reason,owner_contact_admin,notes,,,([record_type] = '1') and [oc_recruit_route] = '2',y,,no,no,standard,new
+oc_ack_permission,owner_contact_admin,radio,"0, Not asked | 1, Permission granted | 2, Permission declined | 3, Permission withdrawn",,[record_type] = '1',y,,no,no,standard,new
+oc_ack_name,owner_contact_admin,text,,,([record_type] = '1') and [oc_ack_permission] = '1',y,y,no,no,direct_identifier,new
+oc_ack_affiliation,owner_contact_admin,text,,,([record_type] = '1') and [oc_ack_permission] = '1',y,y,no,no,direct_identifier,new
+oc_ack_permission_date,owner_contact_admin,text,,date_ymd,([record_type] = '1') and ([oc_ack_permission] = '1' or [oc_ack_permission] = '2' or [oc_ack_permission] = '3'),y,,no,no,standard,new
+oc_ack_permission_source,owner_contact_admin,text,,,([record_type] = '1') and ([oc_ack_permission] = '1' or [oc_ack_permission] = '2' or [oc_ack_permission] = '3'),y,y,no,no,direct_identifier,new
+owner_assignment_id,owner_assignment_admin,text,,,[record_type] = '2',y,,no,yes,standard,renamed:owner_project_id
+source_record_id,owner_assignment_admin,text,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+official_project_id,owner_assignment_admin,text,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+project_title,owner_assignment_admin,notes,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+datasets_used,owner_assignment_admin,notes,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+public_register_url,owner_assignment_admin,text,,url,[record_type] = '2',y,,no,yes,standard,new
+production_ver,owner_assignment_admin,text,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+taxonomy_ver,owner_assignment_admin,text,,,[record_type] = '2',y,,no,yes,standard,new
+proposal_output_sha256,owner_assignment_admin,text,,,[record_type] = '2',y,,no,yes,standard,new
+owner_recruit_route,owner_assignment_admin,radio,"1, Deterministic sequence | 2, Supplementary",,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+owner_sequence_pos,owner_assignment_admin,text,,integer,([record_type] = '2') and [owner_recruit_route] = '1',y,,no,yes,standard,retained_name_modified_for_standalone
+owner_invite_batch,owner_assignment_admin,radio,"1, Initial 10 | 2, Day 14 | 3, Day 21 | 4, Day 28 | 5, Supplementary",,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+owner_link_release,owner_assignment_admin,radio,"0, Blocked pending affirmative interest | 1, Approved not sent | 2, Released",,[record_type] = '2',y,,no,yes,standard,new
+owner_invite_date,owner_assignment_admin,text,,date_ymd,([record_type] = '2') and [owner_link_release] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+owner_reminder_date,owner_assignment_admin,text,,date_ymd,[record_type] = '2',,,no,yes,standard,retained_name_modified_for_standalone
+owner_withdrawal_status,owner_assignment_admin,radio,"0, None | 1, Withdrawal requested | 2, Withdrawn or excluded before analysis",,[record_type] = '2',y,,no,yes,standard,new
+instrument_ver,owner_assignment_admin,text,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d01,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d02,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d03,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d04,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d05,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d06,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d07,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d08,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d09,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d10,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d11,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_d12,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p01,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p02,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p03,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p04,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p05,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p06,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p07,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_p08,owner_assignment_admin,yesno,,,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_t01,owner_assignment_admin,radio,"0, Not applied | 1, Applied",,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+prop_t02,owner_assignment_admin,radio,"0, Not applied | 1, Applied",,[record_type] = '2',y,,no,yes,standard,retained_name_modified_for_standalone
+po_intro,project_owner_review,descriptive,,,[record_type] = '2',,,yes,no,standard,retained_name_modified_for_standalone
+po_privacy,project_owner_review,descriptive,,,[record_type] = '2',,,yes,no,standard,new
+po_ack,project_owner_review,radio,"1, Yes, continue to the review | 0, No, I do not wish to participate",,[record_type] = '2',y,,yes,yes,standard,new
+po_assignment,project_owner_review,descriptive,,,([record_type] = '2') and [po_ack] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_project_title,project_owner_review,descriptive,,,([record_type] = '2') and [po_ack] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_datasets,project_owner_review,descriptive,,,([record_type] = '2') and [po_ack] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d01_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d01] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d01_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d01] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d01_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d01] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d02_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d02] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d02_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d02] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d02_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d02] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d03_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d03] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d03_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d03] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d03_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d03] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d04_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d04] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d04_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d04] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d04_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d04] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d05_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d05] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d05_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d05] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d05_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d05] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d06_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d06] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d06_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d06] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d06_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d06] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d07_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d07] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d07_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d07] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d07_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d07] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d08_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d08] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d08_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d08] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d08_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d08] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d09_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d09] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d09_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d09] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d09_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d09] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d10_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d10] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d10_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d10] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d10_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d10] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d11_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d11] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d11_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d11] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d11_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d11] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d12_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_d12] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_d12_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d12] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_d12_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_d12] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p01_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p01] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p01_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p01] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p01_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p01] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p02_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p02] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p02_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p02] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p02_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p02] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p03_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p03] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p03_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p03] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p03_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p03] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p04_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p04] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p04_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p04] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p04_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p04] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p05_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p05] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p05_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p05] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p05_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p05] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p06_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p06] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p06_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p06] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p06_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p06] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p07_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p07] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p07_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p07] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p07_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p07] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p08_label,project_owner_review,descriptive,,,(([record_type] = '2') and [po_ack] = '1') and [prop_p08] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_p08_fit,project_owner_review,radio,"1, Fits | 2, Does not fit | 3, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p08] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_p08_vis,project_owner_review,radio,"1, Clearly visible | 2, Partly visible | 3, Not visible | 4, Unsure",,(([record_type] = '2') and [po_ack] = '1') and [prop_p08] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_t01_label,project_owner_review,descriptive,,,([record_type] = '2') and [po_ack] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_t01_correct,project_owner_review,radio,"1, Yes | 0, No | 2, Unsure",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,renamed:po_t01_fit
+po_t01_det,project_owner_review,radio,"1, Yes | 2, Partly | 0, No | 3, Unsure",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,renamed:po_t01_vis
+po_t02_label,project_owner_review,descriptive,,,([record_type] = '2') and [po_ack] = '1',,,yes,no,standard,retained_name_modified_for_standalone
+po_t02_correct,project_owner_review,radio,"1, Yes | 0, No | 2, Unsure",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,renamed:po_t02_fit
+po_t02_det,project_owner_review,radio,"1, Yes | 2, Partly | 0, No | 3, Unsure",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,renamed:po_t02_vis
+po_miss_domain,project_owner_review,radio,"0, No | 1, Yes",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_miss_domains,project_owner_review,checkbox,"1, Labour Market & Employment | 2, Education & Skills | 3, Health & Social Care | 4, Crime & Justice | 5, Business & Productivity | 6, Poverty, Wealth & Living Standards | 7, Housing & Planning | 8, Migration & Demographics | 9, Environment & Agriculture | 10, Public Finance & Taxation | 11, Data Infrastructure & Methodology",,(([record_type] = '2') and [po_ack] = '1') and [po_miss_domain] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_miss_purpose,project_owner_review,radio,"0, No | 1, Yes",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_miss_purposes,project_owner_review,checkbox,"1, Descriptive Monitoring | 2, Outcome Tracking | 3, Life-Course / Trajectory Analysis | 4, Service Interaction / Systems Analysis | 5, Policy Evaluation / Impact Analysis | 6, Risk Prediction / Early Identification | 7, Methodological / Infrastructure Research",,(([record_type] = '2') and [po_ack] = '1') and [po_miss_purpose] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_miss_tag,project_owner_review,radio,"0, No | 1, Yes",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_miss_tags,project_owner_review,checkbox,"1, Demographic disparities / equity tag | 2, COVID-19 & Pandemic",,(([record_type] = '2') and [po_ack] = '1') and [po_miss_tag] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_sufficiency,project_owner_review,radio,"1, Sufficient | 2, Partial | 3, Insufficient",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_taxonomy_fit,project_owner_review,radio,"1, Fit | 2, Partial Fit | 3, No Fit",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,retained_name_modified_for_standalone
+po_tax_issue,project_owner_review,checkbox,"1, Missing or inadequately represented category | 2, Ambiguous or overlapping category boundaries | 5, Other taxonomy problem",,(([record_type] = '2') and [po_ack] = '1') and ([po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'),y,,yes,yes,standard,retained_name_modified_for_standalone
+po_note,project_owner_review,notes,,,(([record_type] = '2') and [po_ack] = '1') and ([po_d01_fit] = '2' or [po_d01_fit] = '3' or [po_d01_vis] = '2' or [po_d01_vis] = '3' or [po_d01_vis] = '4' or [po_d02_fit] = '2' or [po_d02_fit] = '3' or [po_d02_vis] = '2' or [po_d02_vis] = '3' or [po_d02_vis] = '4' or [po_d03_fit] = '2' or [po_d03_fit] = '3' or [po_d03_vis] = '2' or [po_d03_vis] = '3' or [po_d03_vis] = '4' or [po_d04_fit] = '2' or [po_d04_fit] = '3' or [po_d04_vis] = '2' or [po_d04_vis] = '3' or [po_d04_vis] = '4' or [po_d05_fit] = '2' or [po_d05_fit] = '3' or [po_d05_vis] = '2' or [po_d05_vis] = '3' or [po_d05_vis] = '4' or [po_d06_fit] = '2' or [po_d06_fit] = '3' or [po_d06_vis] = '2' or [po_d06_vis] = '3' or [po_d06_vis] = '4' or [po_d07_fit] = '2' or [po_d07_fit] = '3' or [po_d07_vis] = '2' or [po_d07_vis] = '3' or [po_d07_vis] = '4' or [po_d08_fit] = '2' or [po_d08_fit] = '3' or [po_d08_vis] = '2' or [po_d08_vis] = '3' or [po_d08_vis] = '4' or [po_d09_fit] = '2' or [po_d09_fit] = '3' or [po_d09_vis] = '2' or [po_d09_vis] = '3' or [po_d09_vis] = '4' or [po_d10_fit] = '2' or [po_d10_fit] = '3' or [po_d10_vis] = '2' or [po_d10_vis] = '3' or [po_d10_vis] = '4' or [po_d11_fit] = '2' or [po_d11_fit] = '3' or [po_d11_vis] = '2' or [po_d11_vis] = '3' or [po_d11_vis] = '4' or [po_d12_fit] = '2' or [po_d12_fit] = '3' or [po_d12_vis] = '2' or [po_d12_vis] = '3' or [po_d12_vis] = '4' or [po_p01_fit] = '2' or [po_p01_fit] = '3' or [po_p01_vis] = '2' or [po_p01_vis] = '3' or [po_p01_vis] = '4' or [po_p02_fit] = '2' or [po_p02_fit] = '3' or [po_p02_vis] = '2' or [po_p02_vis] = '3' or [po_p02_vis] = '4' or [po_p03_fit] = '2' or [po_p03_fit] = '3' or [po_p03_vis] = '2' or [po_p03_vis] = '3' or [po_p03_vis] = '4' or [po_p04_fit] = '2' or [po_p04_fit] = '3' or [po_p04_vis] = '2' or [po_p04_vis] = '3' or [po_p04_vis] = '4' or [po_p05_fit] = '2' or [po_p05_fit] = '3' or [po_p05_vis] = '2' or [po_p05_vis] = '3' or [po_p05_vis] = '4' or [po_p06_fit] = '2' or [po_p06_fit] = '3' or [po_p06_vis] = '2' or [po_p06_vis] = '3' or [po_p06_vis] = '4' or [po_p07_fit] = '2' or [po_p07_fit] = '3' or [po_p07_vis] = '2' or [po_p07_vis] = '3' or [po_p07_vis] = '4' or [po_p08_fit] = '2' or [po_p08_fit] = '3' or [po_p08_vis] = '2' or [po_p08_vis] = '3' or [po_p08_vis] = '4' or [po_t01_correct] = '0' or [po_t01_correct] = '2' or [po_t01_det] = '2' or [po_t01_det] = '0' or [po_t01_det] = '3' or [po_t02_correct] = '0' or [po_t02_correct] = '2' or [po_t02_det] = '2' or [po_t02_det] = '0' or [po_t02_det] = '3' or [po_miss_domain] = '1' or [po_miss_purpose] = '1' or [po_miss_tag] = '1' or [po_sufficiency] = '2' or [po_sufficiency] = '3' or [po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'),y,,yes,yes,restricted_qualitative,retained_name_modified_for_standalone
+po_nonpublic,project_owner_review,radio,"0, No | 1, Yes",,([record_type] = '2') and [po_ack] = '1',y,,yes,yes,standard,new
+po_nonpublic_note,project_owner_review,notes,,,(([record_type] = '2') and [po_ack] = '1') and [po_nonpublic] = '1',y,,yes,yes,restricted_qualitative,new
+po_quote_permission,project_owner_review,radio,"1, Yes | 0, No | 2, Please contact me before using a quotation",,([record_type] = '2') and [po_ack] = '1',,,yes,yes,standard,new
+po_other_comment,project_owner_review,notes,,,([record_type] = '2') and [po_ack] = '1',,,yes,yes,restricted_qualitative,new

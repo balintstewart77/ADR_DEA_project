@@ -1,0 +1,211 @@
+version: owner-redcap-candidate-0.1
+status: development_candidate_unfrozen_live_qa_pending
+classic_non_longitudinal: true
+forms:
+- owner_contact_admin
+- owner_assignment_admin
+- project_owner_review
+field_counts:
+  owner_contact_admin: 27
+  owner_assignment_admin: 39
+  project_owner_review: 86
+record_type:
+  1: Contact
+  2: Assignment
+guards:
+  contact: '[record_type] = ''1'''
+  assignment: '[record_type] = ''2'''
+  review: ([record_type] = '2') and [po_ack] = '1'
+only_survey_instrument: project_owner_review
+contact_instrument_is_survey: false
+record_specific_links_only: true
+link_release_requires_affirmative_interest: true
+direct_identifier_fields:
+- oc_name
+- oc_email
+- oc_affiliation
+- oc_contact_issue_note
+- oc_ack_name
+- oc_ack_affiliation
+- oc_ack_permission_source
+label_mapping:
+- variable: d01
+  layer: domain
+  flag: prop_d01
+  verdict: po_d01_fit
+  visibility: po_d01_vis
+  label: Labour Market & Employment
+- variable: d02
+  layer: domain
+  flag: prop_d02
+  verdict: po_d02_fit
+  visibility: po_d02_vis
+  label: Education & Skills
+- variable: d03
+  layer: domain
+  flag: prop_d03
+  verdict: po_d03_fit
+  visibility: po_d03_vis
+  label: Health & Social Care
+- variable: d04
+  layer: domain
+  flag: prop_d04
+  verdict: po_d04_fit
+  visibility: po_d04_vis
+  label: Crime & Justice
+- variable: d05
+  layer: domain
+  flag: prop_d05
+  verdict: po_d05_fit
+  visibility: po_d05_vis
+  label: Business & Productivity
+- variable: d06
+  layer: domain
+  flag: prop_d06
+  verdict: po_d06_fit
+  visibility: po_d06_vis
+  label: Poverty, Wealth & Living Standards
+- variable: d07
+  layer: domain
+  flag: prop_d07
+  verdict: po_d07_fit
+  visibility: po_d07_vis
+  label: Housing & Planning
+- variable: d08
+  layer: domain
+  flag: prop_d08
+  verdict: po_d08_fit
+  visibility: po_d08_vis
+  label: Migration & Demographics
+- variable: d09
+  layer: domain
+  flag: prop_d09
+  verdict: po_d09_fit
+  visibility: po_d09_vis
+  label: Environment & Agriculture
+- variable: d10
+  layer: domain
+  flag: prop_d10
+  verdict: po_d10_fit
+  visibility: po_d10_vis
+  label: Public Finance & Taxation
+- variable: d11
+  layer: domain
+  flag: prop_d11
+  verdict: po_d11_fit
+  visibility: po_d11_vis
+  label: Data Infrastructure & Methodology
+- variable: d12
+  layer: domain
+  flag: prop_d12
+  verdict: po_d12_fit
+  visibility: po_d12_vis
+  label: Unclear from Register Entry
+- variable: p01
+  layer: purpose
+  flag: prop_p01
+  verdict: po_p01_fit
+  visibility: po_p01_vis
+  label: Descriptive Monitoring
+- variable: p02
+  layer: purpose
+  flag: prop_p02
+  verdict: po_p02_fit
+  visibility: po_p02_vis
+  label: Outcome Tracking
+- variable: p03
+  layer: purpose
+  flag: prop_p03
+  verdict: po_p03_fit
+  visibility: po_p03_vis
+  label: Life-Course / Trajectory Analysis
+- variable: p04
+  layer: purpose
+  flag: prop_p04
+  verdict: po_p04_fit
+  visibility: po_p04_vis
+  label: Service Interaction / Systems Analysis
+- variable: p05
+  layer: purpose
+  flag: prop_p05
+  verdict: po_p05_fit
+  visibility: po_p05_vis
+  label: Policy Evaluation / Impact Analysis
+- variable: p06
+  layer: purpose
+  flag: prop_p06
+  verdict: po_p06_fit
+  visibility: po_p06_vis
+  label: Risk Prediction / Early Identification
+- variable: p07
+  layer: purpose
+  flag: prop_p07
+  verdict: po_p07_fit
+  visibility: po_p07_vis
+  label: Methodological / Infrastructure Research
+- variable: p08
+  layer: purpose
+  flag: prop_p08
+  verdict: po_p08_fit
+  visibility: po_p08_vis
+  label: Unclear from Register Entry
+- variable: t01
+  layer: tag
+  flag: prop_t01
+  verdict: po_t01_correct
+  visibility: po_t01_det
+  label: Demographic disparities / equity tag
+- variable: t02
+  layer: tag
+  flag: prop_t02
+  verdict: po_t02_correct
+  visibility: po_t02_det
+  label: COVID-19 & Pandemic
+domain_slots: 12
+purpose_slots: 8
+purpose_maximum: 2
+binary_tags_always_reviewed: true
+tag_correctness_codes:
+  1: 'Yes'
+  0: 'No'
+  2: Unsure
+tag_determinability_codes:
+  1: 'Yes'
+  2: Partly
+  0: 'No'
+  3: Unsure
+owner_taxonomy_fit_codes:
+  1: Fit
+  2: Partial Fit
+  3: No Fit
+quotation_permission_optional: true
+named_acknowledgement_contact_level_only: true
+withdrawal_wording: You may request withdrawal of your submitted responses until {{WITHDRAWAL_DATE}}
+  by contacting {{STUDY_EMAIL}} and quoting the survey reference. After that date,
+  de-identified responses may already have been incorporated into the analysis and
+  may no longer be removable.
+configuration_placeholders:
+- '{{DASHBOARD_URL}}'
+- '{{ESTIMATED_MINUTES_PER_PROJECT}}'
+- '{{WITHDRAWAL_DATE}}'
+- '{{STUDY_EMAIL}}'
+analytical_completion:
+  participation: po_ack == 1
+  domains: every prop_dNN == 1 has po_dNN_fit in 1,2,3
+  purposes: every prop_pNN == 1 has po_pNN_fit in 1,2,3
+  tags: po_t01_correct and po_t02_correct in 1,0,2
+  sufficiency: po_sufficiency in 1,2,3
+  not_required:
+  - po_quote_permission
+  - po_other_comment
+prohibited_architecture:
+- repeating instruments
+- longitudinal events
+- respondent accounts
+- respondent DAGs
+- shared public survey link
+live_project:
+  pid: 9149
+  title: DEA Validation Study – Project Owner Review
+  status: Development
+  connection_performed: false

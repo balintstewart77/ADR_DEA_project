@@ -27,7 +27,7 @@ def rows() -> list[dict[str, str]]:
 
 def test_manifest_structure_statuses_and_relationships() -> None:
     manifest_rows = rows()
-    assert len(manifest_rows) == 203
+    assert len(manifest_rows) == 216
     identifiers = [row["artifact_id"] for row in manifest_rows]
     assert len(identifiers) == len(set(identifiers))
     identifier_set = set(identifiers)

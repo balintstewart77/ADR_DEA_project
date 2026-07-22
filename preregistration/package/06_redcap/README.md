@@ -1,10 +1,17 @@
 # REDCap instruments
 
-This folder contains the frozen Phase 5 formal instrument for one non-longitudinal
-REDCap project with assignment_admin, coder_declaration, scratch_coder, and
-project_owner instruments. A project assignment is one REDCap record and export
-row. A coder declaration is a separate governance record. The current
-formal-instrument repository version is redcap-candidate-0.7.
+This folder contains the frozen redcap-candidate-0.7 scratch instrument source and its
+historical combined owner form, plus the separate unfrozen standalone Project
+Owner development candidate required by Protocol v0.15. Candidate 0.7 remains
+the frozen scratch-coder version; its historical `project_owner` form was never
+independently live-QA tested for the standalone owner workflow.
+
+`owner-redcap-candidate-0.1` is a separate 152-field, three-instrument Classic
+project candidate with restricted contact records, owner-project assignment
+records and one respondent survey. It is intended for later synthetic-only live
+QA in Development PID 9149. It has not been imported, live tested or frozen and
+does not authorise real contacts, invitations, assignments or data collection.
+Its canonical guide is `project_owner_redcap_candidate_0.1_README.md`.
 
 Candidate 0.7 passed repository validation and completed live REDCap QA on 22
 July 2026. It is frozen for preregistration and subsequent formal scratch

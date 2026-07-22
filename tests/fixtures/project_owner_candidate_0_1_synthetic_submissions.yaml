@@ -1,0 +1,390 @@
+fixture_status: synthetic_only
+candidate_version: owner-redcap-candidate-0.1
+contains_real_researchers: false
+contains_real_emails: false
+contains_real_record_ids: false
+contacts:
+- owner_record_id: A1B2C3D4
+  record_type: 1
+  owner_id: SYN-OWNER-01
+  oc_name: Avery Example
+  oc_email: avery.example@example.invalid
+  oc_affiliation: Example Research Institute
+  oc_contact_source: 2
+  oc_contactability: 1
+  oc_eligible_projects: 3
+  oc_projects_offered: 3
+  oc_minutes_per_project: 10
+  oc_est_total_minutes: 30
+  oc_eoi_invite_date: '2026-07-01'
+  oc_eoi_status: 2
+  oc_eoi_response_date: '2026-07-02'
+  oc_projects_accepted: 2
+  oc_contact_suppression: 0
+  oc_recruit_route: 1
+  oc_sequence_pos: 1
+  oc_ack_permission: 1
+  oc_ack_name: Avery Example
+  oc_ack_affiliation: Example Research Institute
+  oc_ack_permission_date: '2026-07-03'
+  oc_ack_permission_source: Synthetic affirmative email record
+- owner_record_id: B2C3D4E5
+  record_type: 1
+  owner_id: SYN-OWNER-02
+  oc_name: Blair Example
+  oc_email: blair.example@example.invalid
+  oc_affiliation: Fictional Policy Centre
+  oc_contact_source: 3
+  oc_contactability: 1
+  oc_eligible_projects: 1
+  oc_projects_offered: 1
+  oc_minutes_per_project: 10
+  oc_est_total_minutes: 10
+  oc_eoi_invite_date: '2026-07-01'
+  oc_eoi_status: 2
+  oc_eoi_response_date: '2026-07-04'
+  oc_projects_accepted: 1
+  oc_contact_suppression: 0
+  oc_recruit_route: 2
+  oc_supp_reason: Synthetic supplementary coverage rationale fixed before contact.
+  oc_ack_permission: 2
+  oc_ack_permission_date: '2026-07-04'
+  oc_ack_permission_source: Synthetic email record
+- owner_record_id: C3D4E5F6
+  record_type: 1
+  owner_id: SYN-OWNER-03
+  oc_name: Casey Example
+  oc_email: casey.example@example.invalid
+  oc_affiliation: Example University
+  oc_contact_source: 2
+  oc_contactability: 1
+  oc_eligible_projects: 2
+  oc_projects_offered: 2
+  oc_minutes_per_project: 10
+  oc_est_total_minutes: 20
+  oc_eoi_invite_date: '2026-07-01'
+  oc_eoi_status: 3
+  oc_eoi_response_date: '2026-07-02'
+  oc_contact_suppression: 1
+  oc_recruit_route: 1
+  oc_sequence_pos: 2
+  oc_ack_permission: 0
+- owner_record_id: D4E5F6G7
+  record_type: 1
+  owner_id: SYN-OWNER-04
+  oc_name: Devon Example
+  oc_email: devon.example@example.invalid
+  oc_affiliation: Fictional Institute
+  oc_contact_source: 4
+  oc_contactability: 4
+  oc_contact_issue_note: Synthetic do-not-contact instruction.
+  oc_eligible_projects: 1
+  oc_projects_offered: 0
+  oc_minutes_per_project: 10
+  oc_est_total_minutes: 0
+  oc_eoi_status: 0
+  oc_contact_suppression: 2
+  oc_recruit_route: 1
+  oc_sequence_pos: 3
+  oc_ack_permission: 0
+- owner_record_id: E5F6G7H8
+  record_type: 1
+  owner_id: SYN-OWNER-05
+  oc_name: Emery Example
+  oc_affiliation: Unknown fictional affiliation
+  oc_contact_source: 5
+  oc_contactability: 3
+  oc_contact_issue_note: Synthetic ambiguous identity; no contact attempted.
+  oc_eligible_projects: 1
+  oc_projects_offered: 0
+  oc_minutes_per_project: 10
+  oc_est_total_minutes: 0
+  oc_eoi_status: 0
+  oc_contact_suppression: 0
+  oc_recruit_route: 2
+  oc_supp_reason: Synthetic unresolved supplementary candidate retained for QA only.
+  oc_ack_permission: 0
+- owner_record_id: F6G7H8J9
+  record_type: 1
+  owner_id: SYN-OWNER-06
+  oc_name: Finley Example
+  oc_email: finley.example@example.invalid
+  oc_affiliation: Example Data Lab
+  oc_contact_source: 1
+  oc_contactability: 1
+  oc_eligible_projects: 1
+  oc_projects_offered: 1
+  oc_minutes_per_project: 10
+  oc_est_total_minutes: 10
+  oc_eoi_invite_date: '2026-07-01'
+  oc_eoi_status: 2
+  oc_eoi_response_date: '2026-07-02'
+  oc_projects_accepted: 1
+  oc_followup_date: '2026-07-11'
+  oc_contact_suppression: 3
+  oc_recruit_route: 1
+  oc_sequence_pos: 4
+  oc_ack_permission: 3
+  oc_ack_permission_date: '2026-07-12'
+  oc_ack_permission_source: Synthetic withdrawal email record
+assignments:
+- owner_record_id: G7H8J9K2
+  record_type: 2
+  owner_id: SYN-OWNER-01
+  owner_assignment_id: SYN-ASG-001
+  source_record_id: SYNTHETIC-RECORD-001
+  official_project_id: SYNTHETIC-PROJECT-001
+  project_title: Synthetic employment pathways study
+  datasets_used: Synthetic workforce dataset
+  public_register_url: https://example.invalid/register/001
+  production_ver: synthetic-production-1
+  taxonomy_ver: dict-1.0-rc2
+  proposal_output_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  owner_recruit_route: 1
+  owner_sequence_pos: 1
+  owner_invite_batch: 1
+  owner_link_release: 2
+  owner_invite_date: '2026-07-05'
+  owner_withdrawal_status: 0
+  instrument_ver: owner-redcap-candidate-0.1
+  prop_d01: 1
+  prop_d02: 0
+  prop_d03: 0
+  prop_d04: 0
+  prop_d05: 0
+  prop_d06: 0
+  prop_d07: 0
+  prop_d08: 0
+  prop_d09: 0
+  prop_d10: 0
+  prop_d11: 0
+  prop_d12: 0
+  prop_p01: 1
+  prop_p02: 0
+  prop_p03: 0
+  prop_p04: 0
+  prop_p05: 0
+  prop_p06: 0
+  prop_p07: 0
+  prop_p08: 0
+  prop_t01: 1
+  prop_t02: 0
+- owner_record_id: H8J9K2L3
+  record_type: 2
+  owner_id: SYN-OWNER-01
+  owner_assignment_id: SYN-ASG-002
+  source_record_id: SYNTHETIC-RECORD-002
+  official_project_id: SYNTHETIC-PROJECT-002
+  project_title: Synthetic education and health linkage study
+  datasets_used: Synthetic education dataset; Synthetic health dataset
+  public_register_url: https://example.invalid/register/002
+  production_ver: synthetic-production-1
+  taxonomy_ver: dict-1.0-rc2
+  proposal_output_sha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  owner_recruit_route: 1
+  owner_sequence_pos: 1
+  owner_invite_batch: 1
+  owner_link_release: 2
+  owner_invite_date: '2026-07-05'
+  owner_reminder_date: '2026-07-15'
+  owner_withdrawal_status: 0
+  instrument_ver: owner-redcap-candidate-0.1
+  prop_d01: 0
+  prop_d02: 1
+  prop_d03: 1
+  prop_d04: 0
+  prop_d05: 0
+  prop_d06: 0
+  prop_d07: 0
+  prop_d08: 0
+  prop_d09: 0
+  prop_d10: 0
+  prop_d11: 0
+  prop_d12: 0
+  prop_p01: 1
+  prop_p02: 1
+  prop_p03: 0
+  prop_p04: 0
+  prop_p05: 0
+  prop_p06: 0
+  prop_p07: 0
+  prop_p08: 0
+  prop_t01: 0
+  prop_t02: 1
+- owner_record_id: J9K2L3M4
+  record_type: 2
+  owner_id: SYN-OWNER-02
+  owner_assignment_id: SYN-ASG-003
+  source_record_id: SYNTHETIC-RECORD-003
+  official_project_id: SYNTHETIC-PROJECT-003
+  project_title: Synthetic justice systems study
+  datasets_used: Synthetic courts dataset
+  public_register_url: https://example.invalid/register/003
+  production_ver: synthetic-production-1
+  taxonomy_ver: dict-1.0-rc2
+  proposal_output_sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+  owner_recruit_route: 2
+  owner_invite_batch: 5
+  owner_link_release: 2
+  owner_invite_date: '2026-07-06'
+  owner_withdrawal_status: 0
+  instrument_ver: owner-redcap-candidate-0.1
+  prop_d01: 0
+  prop_d02: 0
+  prop_d03: 0
+  prop_d04: 1
+  prop_d05: 0
+  prop_d06: 0
+  prop_d07: 0
+  prop_d08: 0
+  prop_d09: 0
+  prop_d10: 0
+  prop_d11: 0
+  prop_d12: 0
+  prop_p01: 0
+  prop_p02: 0
+  prop_p03: 0
+  prop_p04: 1
+  prop_p05: 0
+  prop_p06: 0
+  prop_p07: 0
+  prop_p08: 0
+  prop_t01: 1
+  prop_t02: 1
+- owner_record_id: K2L3M4N5
+  record_type: 2
+  owner_id: SYN-OWNER-06
+  owner_assignment_id: SYN-ASG-004
+  source_record_id: SYNTHETIC-RECORD-004
+  official_project_id: SYNTHETIC-PROJECT-004
+  project_title: Synthetic environmental methods study
+  datasets_used: Synthetic environmental dataset
+  public_register_url: https://example.invalid/register/004
+  production_ver: synthetic-production-1
+  taxonomy_ver: dict-1.0-rc2
+  proposal_output_sha256: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+  owner_recruit_route: 1
+  owner_sequence_pos: 4
+  owner_invite_batch: 1
+  owner_link_release: 2
+  owner_invite_date: '2026-07-05'
+  owner_withdrawal_status: 2
+  instrument_ver: owner-redcap-candidate-0.1
+  prop_d01: 0
+  prop_d02: 0
+  prop_d03: 0
+  prop_d04: 0
+  prop_d05: 0
+  prop_d06: 0
+  prop_d07: 0
+  prop_d08: 0
+  prop_d09: 1
+  prop_d10: 0
+  prop_d11: 0
+  prop_d12: 0
+  prop_p01: 0
+  prop_p02: 0
+  prop_p03: 0
+  prop_p04: 0
+  prop_p05: 0
+  prop_p06: 0
+  prop_p07: 1
+  prop_p08: 0
+  prop_t01: 0
+  prop_t02: 0
+responses:
+- case_id: complete_fit_quote_yes
+  owner_record_id: G7H8J9K2
+  expected_valid: true
+  expected_analytical_complete: true
+  data:
+    po_ack: 1
+    po_d01_fit: 1
+    po_d01_vis: 1
+    po_p01_fit: 1
+    po_p01_vis: 1
+    po_t01_correct: 1
+    po_t01_det: 1
+    po_t02_correct: 1
+    po_t02_det: 1
+    po_miss_domain: 0
+    po_miss_purpose: 0
+    po_miss_tag: 0
+    po_sufficiency: 1
+    po_taxonomy_fit: 1
+    po_nonpublic: 0
+    po_quote_permission: 1
+- case_id: complete_disagreement_nonpublic_quote_no
+  owner_record_id: H8J9K2L3
+  expected_valid: true
+  expected_analytical_complete: true
+  data:
+    po_ack: 1
+    po_d02_fit: 2
+    po_d02_vis: 2
+    po_d03_fit: 3
+    po_d03_vis: 3
+    po_p01_fit: 1
+    po_p01_vis: 1
+    po_p02_fit: 2
+    po_p02_vis: 4
+    po_t01_correct: 0
+    po_t01_det: 2
+    po_t02_correct: 2
+    po_t02_det: 0
+    po_miss_domain: 1
+    po_miss_domains:
+    - 4
+    po_miss_purpose: 0
+    po_miss_tag: 1
+    po_miss_tags:
+    - 1
+    po_sufficiency: 2
+    po_taxonomy_fit: 2
+    po_tax_issue:
+    - 1
+    po_note: Synthetic explanation identifying affected labels without non-public
+      content.
+    po_nonpublic: 1
+    po_nonpublic_note: Synthetic prior project involvement.
+    po_quote_permission: 0
+- case_id: complete_insufficient_taxonomy_no_fit_contact_quote
+  owner_record_id: J9K2L3M4
+  expected_valid: true
+  expected_analytical_complete: true
+  data:
+    po_ack: 1
+    po_d04_fit: 1
+    po_d04_vis: 4
+    po_p04_fit: 3
+    po_p04_vis: 3
+    po_t01_correct: 1
+    po_t01_det: 3
+    po_t02_correct: 0
+    po_t02_det: 1
+    po_miss_domain: 0
+    po_miss_purpose: 1
+    po_miss_purposes:
+    - 5
+    po_miss_tag: 0
+    po_sufficiency: 3
+    po_taxonomy_fit: 3
+    po_tax_issue:
+    - 2
+    - 5
+    po_note: Synthetic explanation of register and taxonomy limitations.
+    po_nonpublic: 0
+    po_quote_permission: 2
+- case_id: incomplete_partial_response
+  owner_record_id: K2L3M4N5
+  expected_valid: true
+  expected_analytical_complete: false
+  data:
+    po_ack: 1
+    po_d09_fit: 1
+- case_id: declined_before_questions
+  owner_record_id: K2L3M4N5
+  expected_valid: true
+  expected_analytical_complete: false
+  data:
+    po_ack: 0
