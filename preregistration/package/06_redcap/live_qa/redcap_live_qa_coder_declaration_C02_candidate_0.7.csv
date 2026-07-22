@@ -1,0 +1,2 @@
+"assignment_id","record_kind","review_stream","reviewer_id","validation_included","sample_status","assignment_batch","source_pop_ver","production_ver","instrument_ver"
+"DECL-C02-QA","2","1","C02","0","3","coder_access_qa_candidate07","qa-synthetic","qa-synthetic","redcap-candidate-0.7"

@@ -2,9 +2,22 @@
 
 ## redcap-candidate-0.7 — 2026-07-22
 
-- Supersedes candidate 0.6 before final live runtime QA. Candidate 0.7 remains a
-  review candidate: it is not frozen, has not passed fresh live runtime QA, and
-  is not authorised for formal coding.
+- Supersedes candidate 0.6 before final live runtime QA. Candidate 0.7 passed
+  repository and live REDCap QA and was frozen on 22 July 2026 for
+  preregistration and subsequent formal scratch coding. It has not been
+  populated with formal validation assignments; preregistration completion is
+  the next permitted step, and formal sampling/import remain prohibited until
+  preregistration is final.
+- The generated source and final live dictionary are not textually identical.
+  The strict comparison found 65 cells: 52 exact live-only leading ASCII spaces
+  in Field Annotation, 12 one-pass HTML-entity decodings in project-owner
+  descriptive labels with unchanged markup structure, and the omission of the
+  hidden `assignment_id` section header. A deterministic narrow verifier
+  accepted only those transformations and left zero residual mismatches.
+- The immutable repository copy
+  `redcap_data_dictionary_frozen_0.7_2026-07-22.csv` was created directly from
+  the verified canonical generated source; both have SHA-256
+  `1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc`.
 - Adds hidden, read-only `record_kind`: 1 Project assignment; 2 Coder
   declaration; 3 Synthetic QA. Blank is reserved for historical
   candidate-0.3 records and is treated as a project assignment for display.

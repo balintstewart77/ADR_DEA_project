@@ -19,7 +19,6 @@ DEFAULT_VERSION = "v0.12"
 FULL_COMMIT = re.compile(r"[0-9a-f]{40}")
 GIT_OBJECT = re.compile(r"[0-9a-f]{40,64}")
 REQUIRED_PENDING_GATES = (
-    "Complete fresh live REDCap runtime QA and freeze the formal instrument",
     "Complete Jo's final substantive review",
     "Resolve and propagate all resulting changes",
     "Complete final cross-document and repository consistency checks",
@@ -116,6 +115,8 @@ def verify_protocol_entry(
         notes = (row.get("notes") or "").strip()
         if "candidate 0.7" not in notes:
             issues.append("v0.12 notes must identify candidate 0.7 as the current instrument")
+        if "live QA complete" not in notes or "frozen formal instrument" not in notes:
+            issues.append("v0.12 notes must record candidate 0.7 live QA and instrument freeze")
         if "candidate 0.6" not in notes or "imported" not in notes or "superseded before final runtime QA" not in notes:
             issues.append("v0.12 notes must record candidate 0.6 as an imported intermediate superseded before final runtime QA")
         if "candidate 0.5" in notes:

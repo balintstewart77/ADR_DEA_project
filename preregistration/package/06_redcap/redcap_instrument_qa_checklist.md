@@ -1,5 +1,9 @@
 # REDCap instrument QA checklist — redcap-candidate-0.7
 
+Completion is recorded authoritatively in
+`redcap_live_runtime_qa_20260722.md`; this file remains the reusable test
+template rather than a duplicate result log.
+
 - [ ] Confirm every candidate-0.3 pilot response is complete, exported and
       archived before candidate 0.7 is imported.
 - [ ] Candidate 0.6 remains documented as imported and partially inspected,

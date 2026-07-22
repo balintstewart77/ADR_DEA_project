@@ -16,7 +16,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
     for path in PACKAGE.glob("*.csv"):
         with path.open(encoding="utf-8", newline="") as handle:
             rows = list(csv.reader(handle))
-        expected_rows = 3 if path.name == "instrument_change_log.csv" else 2 if path.name == "coding_clarification_log.csv" else 1
+        expected_rows = 4 if path.name == "instrument_change_log.csv" else 2 if path.name == "coding_clarification_log.csv" else 1
         assert len(rows) == expected_rows
         assert rows[0]
     with (PACKAGE / "coding_clarification_log.csv").open(
@@ -39,8 +39,8 @@ def test_required_log_files_and_post_pilot_governance_entry():
         encoding="utf-8", newline=""
     ) as handle:
         instrument_entries = list(csv.DictReader(handle))
-    assert len(instrument_entries) == 2
-    historical, instrument = instrument_entries
+    assert len(instrument_entries) == 3
+    historical, instrument, freeze = instrument_entries
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -51,6 +51,12 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "Candidate-0.3 pilot responses" in instrument["pilot_or_formal_data_effect"]
     assert "remain unchanged" in instrument["pilot_or_formal_data_effect"]
     assert "live-runtime-QA" in instrument["status"]
+    assert freeze["change_id"] == "REDCAP-008"
+    assert freeze["instrument_version"] == "redcap-candidate-0.7"
+    assert freeze["classification_rule_change"] == "no"
+    assert "residual mismatches were zero" in freeze["evidence_or_reason"]
+    assert "no formal sample" in freeze["pilot_or_formal_data_effect"]
+    assert "Frozen; live-QA complete" in freeze["status"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

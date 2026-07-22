@@ -20,8 +20,9 @@ def test_canonical_v0_12_working_candidate_metadata_verifies_offline():
 def test_feedback_closure_is_removed_from_pending_protocol_gates():
     assert not any("feedback" in gate.lower() for gate in REQUIRED_PENDING_GATES)
     assert REQUIRED_PENDING_GATES[0] == (
-        "Complete fresh live REDCap runtime QA and freeze the formal instrument"
+        "Complete Jo's final substantive review"
     )
+    assert not any("REDCap" in gate or "instrument" in gate for gate in REQUIRED_PENDING_GATES)
 
 
 def test_review_candidate_cannot_be_frozen():

@@ -1,10 +1,18 @@
 # REDCap instruments
 
-This folder contains the Phase 5 working candidate for one non-longitudinal
+This folder contains the frozen Phase 5 formal instrument for one non-longitudinal
 REDCap project with assignment_admin, coder_declaration, scratch_coder, and
 project_owner instruments. A project assignment is one REDCap record and export
 row. A coder declaration is a separate governance record. The current
 formal-instrument repository version is redcap-candidate-0.7.
+
+Candidate 0.7 passed repository validation and completed live REDCap QA on 22
+July 2026. It is frozen for preregistration and subsequent formal scratch
+coding, but it has not been populated with formal validation assignments and
+does not authorise sampling or import before preregistration is final. The
+authoritative completed QA record is `redcap_live_runtime_qa_20260722.md`; its
+source-to-live audit records 65 textual round-trip differences and zero
+residual semantic differences under three narrow, enumerated transformations.
 
 The excluded pilot was launched under redcap-candidate-0.3. Existing pilot
 assignment imports and instrument_ver values remain candidate 0.3; collected
@@ -67,11 +75,11 @@ Candidate 0.7 retains candidate 0.5's hidden owner recruitment-route, sequence-p
 invitation/checkpoint, disposition, supplementary-reason, and response-status
 administration. It also records the 50-record target, 25-record minimum, 10
 supplementary-invitation maximum, 42-day close, and absence of a fixed owner
-reserve. It remains provisional pending Jo's review, formal-instrument freeze,
-and fresh live runtime QA. Candidate 0.7 is a review candidate: it is not
-frozen, live-runtime-QA approved, or authorised for formal coding. The dated 16
-July record and the partial candidate-0.6 live inspection do not establish
-candidate-0.7 readiness.
+reserve. Candidate 0.7 completed fresh live runtime QA and was frozen on 22
+July 2026. This resolves the instrument gate only: Jo's final review,
+preregistration completion, and all other preregistration gates remain. Formal
+sampling and assignment import remain prohibited until preregistration is
+final.
 
 No coder-facing start pack currently exists in this repository. When created,
 its instructions must explain that the declaration is completed once; the
@@ -82,7 +90,7 @@ evidence. Screenshot-based taxonomy-fit guidance remains planned for that pack.
 The deterministic builder and validator remain in scripts; synthetic fixtures
 remain under tests/fixtures and contain no real Record ID. Candidate-0.7 import
 fixtures under `live_qa/` are explicitly synthetic, review-only and excluded
-from validation. This folder must
-never contain completed responses, response exports, formal assignments, live
-survey links or project identifiers, API tokens, personal information, or
-contacts.
+from validation. The dated files under `live_snapshots/` and `live_qa/audit/`
+are the deliberately retained read-only freeze evidence. No additional
+completed response export, formal assignment, live survey link, project
+credential, API token, personal information or contact file belongs here.

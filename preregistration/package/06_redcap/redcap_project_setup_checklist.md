@@ -1,5 +1,9 @@
 # REDCap project setup checklist — candidate 0.7
 
+Candidate-0.7 completion is recorded in `redcap_live_runtime_qa_20260722.md`.
+The boxes below remain the reusable setup-control template rather than a second
+authoritative completion log.
+
 - [ ] Complete, export and archive all candidate-0.3 pilot responses before
       changing the live project.
 - [ ] Preserve pilot assignment IDs, survey links, DAG mappings and
@@ -24,7 +28,9 @@
 - [ ] Confirm scratch content is hidden on declaration records and visible on
       formal, synthetic-QA and blank historical records.
 - [ ] Confirm one assignment per export row and hidden project clustering.
-- [ ] Delete candidate-0.7 synthetic records after QA.
-- [ ] Do not begin formal coding until candidate-0.7 runtime QA is signed off
-      and the instrument is formally frozen.
+- [ ] Move pilot and synthetic QA records to the no-user archive DAG after QA;
+      do not treat them as formal records.
+- [ ] Do not sample, import formal assignments or begin formal coding until
+      preregistration is final. Candidate-0.7 runtime QA and instrument freeze
+      are complete.
 - [ ] Store no API token, live URL, project identifier or contact file in Git.

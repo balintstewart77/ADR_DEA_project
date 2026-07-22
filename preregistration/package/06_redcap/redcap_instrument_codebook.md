@@ -1,9 +1,12 @@
 # REDCap instrument codebook
 
-Status: working formal-instrument candidate redcap-candidate-0.7. The pilot used
-redcap-candidate-0.3. Candidate 0.6 was imported and partially inspected, then
-superseded before final runtime QA. Fresh candidate 0.7 live runtime QA remains
-pending; candidate 0.7 is not frozen or authorised for formal coding.
+Status: live-QA-complete frozen formal instrument redcap-candidate-0.7. The
+pilot used redcap-candidate-0.3. Candidate 0.6 was imported and partially
+inspected, then superseded before final runtime QA. Candidate 0.7 is frozen for
+preregistration and subsequent formal scratch coding but has no formal
+assignments populated. Preregistration completion is the next permitted step;
+sampling and assignment import remain prohibited until preregistration is
+final.
 
 ## Architecture and visibility
 

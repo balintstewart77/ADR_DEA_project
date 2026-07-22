@@ -273,7 +273,8 @@ class CandidateTests(unittest.TestCase):
    'redcap_project_setup_checklist.md':['candidate 0.7','four-form order and 150 fields'],
    'redcap_instrument_qa_checklist.md':['redcap-candidate-0.7','field count is 150'],
    'redcap_live_runtime_qa_template.md':['candidate-0.7','Four forms and 150 fields confirmed'],
-   'redcap_version_history.md':['redcap-candidate-0.7','superseded before final runtime QA by candidate 0.7'],
+   'redcap_version_history.md':['redcap-candidate-0.7','superseded before final runtime QA by candidate 0.7','frozen on 22 July 2026','zero residual mismatches'],
+   'redcap_live_runtime_qa_20260722.md':['live-runtime QA and candidate-0.7 freeze','Restricted C02 QA — passed','pilot_and_qa_archi','Residual mismatches are zero','formal sampling and assignment import remain prohibited'],
   }
   for name,needles in docs.items():
    text=' '.join((self.package/name).read_text(encoding='utf-8').split())
@@ -284,5 +285,10 @@ class CandidateTests(unittest.TestCase):
   self.assertEqual(manifest['RED-001']['supersedes_or_superseded_by'],'redcap-candidate-0.6')
   self.assertEqual(manifest['RED-022']['version'],v.VERSION)
   self.assertEqual(manifest['RED-023']['version'],v.VERSION)
+  self.assertEqual(manifest['RED-026']['sha256'],'bb1de2b9ea811afc8b0f23fcb489c1e01eb94d6677d45a64c273140532c5293f')
+  self.assertEqual(manifest['RED-036']['frozen'],'true')
+  self.assertEqual(manifest['RED-036']['registered'],'false')
+  frozen=self.package/'redcap_data_dictionary_frozen_0.7_2026-07-22.csv'
+  self.assertEqual(frozen.read_bytes(),(self.package/'redcap_data_dictionary_candidate.csv').read_bytes())
 
 if __name__=='__main__': unittest.main()

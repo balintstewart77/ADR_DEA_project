@@ -18,3 +18,11 @@ Record ID, response export, live URL, project identifier, or credential.
 The candidate-0.7 records are review-only and must be deleted from the live
 project after QA. They do not alter sample membership and must not be reused as
 formal declarations or formal assignments.
+
+Candidate-0.7 live QA was completed on 22 July 2026. The synthetic and pilot
+records were retained in the no-user `Pilot and QA archive` DAG rather than
+treated as formal records. The authoritative result is
+`../redcap_live_runtime_qa_20260722.md`; `audit/` contains the immutable archive
+exports and the two-level source/live comparison. The comparison preserves 65
+raw textual differences while verifying zero residual differences under its
+three explicitly limited round-trip predicates.
