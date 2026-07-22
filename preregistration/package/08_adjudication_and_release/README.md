@@ -1,11 +1,11 @@
 # Adjudication and release
 
-This folder contains the blank v0.14 adjudication instrument, deterministic
+This folder contains the blank v0.15 adjudication instrument, deterministic
 secondary-audit selector, and blank evidence-pack and senior sign-off templates.
 They contain no study record, completed adjudication, reviewer contact detail, or
 release decision.
 
-The adjudication population and eight issue families follow protocol v0.14.
+The adjudication population and eight issue families follow protocol v0.15.
 Stage 1 presents duplicate label sets once and masks their sources; Stage 2 reveals
 sources only after the provisional diagnosis. Owner-only Stage 1 does not invent an
 artificial comparator, and recurring-trigger independence remains explicit.

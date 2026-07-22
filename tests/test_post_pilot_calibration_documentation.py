@@ -21,7 +21,7 @@ GPT = Path(
 )
 GPT_SHA256 = "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
 PROTOCOL = Path(
-    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.14.docx"
+    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.15.docx"
 )
 MANIFEST = Path("preregistration/preregistration_artifact_manifest.csv")
 EXCLUSIONS = Path(
@@ -213,13 +213,17 @@ def test_exclusions_and_manifest_entries_remain_coherent():
     assert EXPECTED_IDS <= excluded_ids
     manifest_rows = _csv_rows(MANIFEST)
     by_id = {row["artifact_id"]: row for row in manifest_rows}
+    assert by_id["PRO-012"]["version"] == "v0.15"
+    assert by_id["PRO-012"]["current_implementation_basis"] == "true"
     assert by_id["PRO-008"]["version"] == "v0.14"
-    assert by_id["PRO-008"]["current_implementation_basis"] == "true"
+    assert by_id["PRO-008"]["current_state"] == "historical_git_only"
+    assert by_id["PRO-008"]["current_implementation_basis"] == "false"
+    assert by_id["PRO-008"]["superseded_by"] == "v0.15"
     assert by_id["PRO-006"]["version"] == "v0.13"
     assert by_id["PRO-006"]["current_implementation_basis"] == "false"
     assert by_id["PRO-006"]["superseded_by"] == "v0.14"
     assert by_id["PRO-005"]["superseded_by"] == "v0.13"
-    for artifact_id in ("PRO-008", "TRN-008", "TRN-012", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
+    for artifact_id in ("PRO-012", "TRN-008", "TRN-012", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
         row = by_id[artifact_id]
         path = Path(row["current_path"])
         assert path.is_file()

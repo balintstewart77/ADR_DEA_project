@@ -27,7 +27,7 @@ from analysis.validation.instrument_sensitivity import validate_formal_candidate
 from analysis.validation.output_schemas import verify_header_only_shells
 
 
-PROTOCOL_VERSION = "v0.14"
+PROTOCOL_VERSION = "v0.15"
 INSTRUMENT_VERSION = "redcap-candidate-0.7"
 TYPE_7_METHOD = "Hyndman-Fan Type 7 (NumPy/Pandas linear interpolation)"
 MANIFEST = ROOT / "preregistration/preregistration_artifact_manifest.csv"
@@ -94,7 +94,7 @@ def static_check() -> dict[str, object]:
     if hashlib.sha256(protocol_bytes).hexdigest() != row.get("sha256"):
         raise AnalysisReadinessError("Current protocol hash differs from its manifest row")
     if row.get("protocol_status") != "review_candidate":
-        raise AnalysisReadinessError("v0.14 must remain a review_candidate in this release")
+        raise AnalysisReadinessError("v0.15 must remain a review_candidate in this release")
     state = gate_state()
     if state.frozen or state.registered or state.official_sample_draw_authorised:
         raise AnalysisReadinessError("Review candidate has a prematurely open execution gate")
@@ -103,7 +103,7 @@ def static_check() -> dict[str, object]:
     basis = specification["protocol_basis"]
     boundary = specification["prospective_boundary"]
     if basis["version"] != PROTOCOL_VERSION:
-        raise AnalysisReadinessError("Sampling specification is not bound to protocol v0.14")
+        raise AnalysisReadinessError("Sampling specification is not bound to protocol v0.15")
     if boundary["official_draw_executed"] or boundary["official_sample_exists"]:
         raise AnalysisReadinessError("Sampling specification claims an official sample exists")
 

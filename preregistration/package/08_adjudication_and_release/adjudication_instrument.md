@@ -1,6 +1,6 @@
 # Validation adjudication instrument — blank preregistration schema
 
-Status: blank operational template for protocol v0.14. It contains no study record, reviewer decision, sample identity, or completed adjudication.
+Status: blank operational template for protocol v0.15. It contains no study record, reviewer decision, sample identity, or completed adjudication.
 
 ## Administrative fields
 

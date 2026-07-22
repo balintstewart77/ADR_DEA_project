@@ -12,9 +12,9 @@ sys.modules[SPEC.name] = runner
 SPEC.loader.exec_module(runner)
 
 
-def test_static_check_validates_v0_14_frozen_instrument_and_closed_gate():
+def test_static_check_validates_v0_15_frozen_instrument_and_closed_gate():
     result = runner.static_check()
-    assert result["protocol_version"] == "v0.14"
+    assert result["protocol_version"] == "v0.15"
     assert result["instrument_version"] == "redcap-candidate-0.7"
     assert result["dictionary_fields"] == 150
     assert result["bootstrap_replicates"] == 2000

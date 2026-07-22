@@ -11,7 +11,7 @@ artefact.
 
 ## 2. Current study status
 
-- `Validation_Protocol_PreReg_v0.14.docx` is the current lean review candidate and
+- `Validation_Protocol_PreReg_v0.15.docx` is the current lean review candidate and
   collaborator-review candidate. It is not frozen or registered and authorises
   no formal sampling, assignment import, or coding.
 - REDCap candidate 0.7 passed completed administrator and restricted-user live
@@ -115,6 +115,8 @@ The manifest uses these columns and controlled values.
 - `missing`: expected from prior work but not located.
 - `placeholder`: category or planned template represented without study data.
 - `superseded`: retained only for history and not current use.
+- `historical_git_only`: superseded unregistered protocol draft retained through
+  Git history and manifest metadata, with no physical working-tree path.
 - `needs_verification`: present, but identity, completeness, or provenance is
   unresolved.
 - `not_yet_generated`: prospective output or template that should not yet exist.

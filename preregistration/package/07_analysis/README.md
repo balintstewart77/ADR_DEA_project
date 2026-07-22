@@ -1,7 +1,7 @@
 # Confirmatory analysis
 
 This folder contains version-controlled schemas, ten blank output shells, the
-v0.14 read-only analysis-preflight scaffold and a direct-runtime dependency record. It
+v0.15 read-only analysis-preflight scaffold and a direct-runtime dependency record. It
 contains no formal data, sample identity, empirical result, completed adjudication,
 or release decision.
 
@@ -12,7 +12,7 @@ adjudication, Wilson intervals, 2,000-project-block bootstrap mechanics and blan
 output validation. Percentile calculations use Hyndman–Fan Type 7, equivalent to
 NumPy/Pandas linear interpolation.
 
-`run_validation_analysis.py --check` validates the v0.14 protocol metadata,
+`run_validation_analysis.py --check` validates the v0.15 protocol metadata,
 candidate-0.7 150-field frozen dictionary, sampling gate, output schemas,
 dependency lock, Type-7 bootstrap contract and matched-panel sensitivity contract.
 Formal execution is not implemented in this preregistration scaffold; `--run`

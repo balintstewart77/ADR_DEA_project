@@ -112,6 +112,30 @@ class ManifestUpdaterTest(unittest.TestCase):
         for column in COMPUTED_COLUMNS:
             self.assertEqual(after[column], row[column])
 
+    def test_historical_git_only_row_needs_no_working_tree_file(self) -> None:
+        row = self.row(
+            current_path="",
+            current_state="historical_git_only",
+            registration_inclusion="exclude",
+            sha256="f" * 64,
+            created_or_modified_at="2026-07-22T12:00:00+00:00",
+            source_commit="b" * 40,
+            size_bytes="1234",
+        )
+        self.write_manifest([row])
+        result = refresh_manifest(self.manifest, self.root, source_commit=TEST_COMMIT)
+        self.assertEqual(result.checked, 0)
+        self.assertEqual(result.updated, 0)
+        self.assertIn("ART-001: no existing path to hash", result.skipped)
+        after = self.read_rows()[0]
+        for column in COMPUTED_COLUMNS:
+            self.assertEqual(after[column], row[column])
+
+    def test_ordinary_existing_row_still_requires_its_file(self) -> None:
+        self.write_manifest([self.row(current_path="absent.txt")])
+        result = refresh_manifest(self.manifest, self.root, source_commit=TEST_COMMIT)
+        self.assertTrue(any("existing path is not a file" in issue for issue in result.issues))
+
     def test_manual_columns_are_preserved(self) -> None:
         (self.root / "example.txt").write_text("content", encoding="utf-8")
         before = self.row()

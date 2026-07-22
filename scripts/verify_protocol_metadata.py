@@ -15,13 +15,13 @@ from typing import Mapping
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = Path("preregistration/preregistration_artifact_manifest.csv")
-DEFAULT_VERSION = "v0.14"
+DEFAULT_VERSION = "v0.15"
 FULL_COMMIT = re.compile(r"[0-9a-f]{40}")
 GIT_OBJECT = re.compile(r"[0-9a-f]{40,64}")
 REQUIRED_PENDING_GATES = (
+    "Complete project-owner instrument implementation, live QA and freeze",
     "Complete Jo's final substantive review",
     "Record Jo approval",
-    "Complete the dedicated manifest and package-integrity reconciliation",
     "Create and freeze the final preregistration protocol",
     "Submit and verify the official preregistration",
     "Record the subsequent formal-sampling authorisation gate",
@@ -103,7 +103,7 @@ def verify_protocol_entry(
     row = _load_protocol_row(manifest_path.resolve(), version)
     issues = validate_protocol_status(row)
     expected_predecessor = {
-        "v0.14": "v0.13", "v0.13": "v0.12",
+        "v0.15": "v0.14", "v0.14": "v0.13", "v0.13": "v0.12",
         "v0.12": "v0.11", "v0.11": "v0.10",
     }.get(version)
     if expected_predecessor is None:
@@ -115,18 +115,20 @@ def verify_protocol_entry(
     }.items():
         if (row.get(field) or "").strip() != expected:
             issues.append(f"{field} must be {expected!r} for {version}")
-    if version == "v0.14":
+    if version == "v0.15":
         notes = (row.get("notes") or "").strip()
         if "candidate 0.7" not in notes:
-            issues.append("v0.14 notes must identify candidate 0.7 as the current instrument")
+            issues.append("v0.15 notes must identify candidate 0.7 as the frozen scratch instrument")
         if "live QA complete" not in notes or "frozen formal instrument" not in notes:
-            issues.append("v0.14 notes must record candidate 0.7 live QA and instrument freeze")
+            issues.append("v0.15 notes must record candidate 0.7 live QA and instrument freeze")
         if "candidate 0.6" not in notes or "imported" not in notes or "superseded before final runtime QA" not in notes:
-            issues.append("v0.14 notes must record candidate 0.6 as an imported intermediate superseded before final runtime QA")
+            issues.append("v0.15 notes must record candidate 0.6 as an imported intermediate superseded before final runtime QA")
         if "candidate 0.5" in notes:
-            issues.append("v0.14 notes retain a stale current-candidate 0.5 reference")
+            issues.append("v0.15 notes retain a stale current-candidate 0.5 reference")
         if "closed coder feedback" not in notes:
-            issues.append("v0.14 notes must record closed coder feedback")
+            issues.append("v0.15 notes must record closed coder feedback")
+        if "separate project-owner" not in notes or "live QA" not in notes:
+            issues.append("v0.15 notes must record the separate project-owner instrument gate")
 
     relative = (row.get("current_path") or "").strip()
     posix_path = PurePosixPath(relative)

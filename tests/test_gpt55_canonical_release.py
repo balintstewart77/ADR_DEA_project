@@ -156,7 +156,7 @@ def test_receipt_attributes_and_formal_pointers_designate_the_release():
 
 def test_lean_protocol_and_formal_docs_have_no_recovery_blocker():
     protocol = _docx_text(
-        Path("preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.14.docx")
+        Path("preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.15.docx")
     )
     assert "must be reverified against the canonical 1,308-row artefact" not in protocol
     formal_text = "\n".join(

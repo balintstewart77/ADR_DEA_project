@@ -44,7 +44,7 @@ class BootstrapResult:
 def percentile(values: Sequence[float], probability: float) -> float:
     """Type-7 linear percentile: rank=(n-1)*p.
 
-    Protocol v0.14 Section 8.9 fixes Hyndman-Fan Type 7 interpolation. This is
+    Protocol v0.15 Section 8.9 fixes Hyndman-Fan Type 7 interpolation. This is
     equivalent to NumPy/Pandas ``linear`` quantile interpolation.
     """
 

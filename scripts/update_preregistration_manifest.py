@@ -30,7 +30,7 @@ REQUIRED_COLUMNS = (
     "access_class",
     *COMPUTED_COLUMNS,
 )
-SKIP_STATES = {"missing", "placeholder", "not_yet_generated"}
+SKIP_STATES = {"missing", "placeholder", "not_yet_generated", "historical_git_only"}
 RESTRICTED_ACCESS = {"restricted", "temporarily_embargoed"}
 PERSONAL_DATA_ACCESS = "contains_personal_data"
 RESTRICTED_DIRECTORY = "preregistration_restricted"

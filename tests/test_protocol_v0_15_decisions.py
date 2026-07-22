@@ -7,7 +7,7 @@ import yaml
 
 
 PROTOCOL = Path(
-    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.14.docx"
+    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.15.docx"
 )
 SPECIFICATION = Path(
     "preregistration/package/04_exclusions_and_sampling/sampling_specification.yaml"
@@ -30,9 +30,9 @@ def manifest_rows() -> dict[str, dict[str, str]]:
         return {row["artifact_id"]: row for row in csv.DictReader(handle)}
 
 
-def test_v0_14_is_the_lean_unfrozen_review_candidate():
+def test_v0_15_is_the_lean_unfrozen_review_candidate():
     text = protocol_text()
-    assert "Review candidate v0.14 | prepared 22 July 2026" in text
+    assert "Review candidate v0.15 | prepared 22 July 2026" in text
     assert "not frozen, registered, or authorised for formal sampling" in text
     assert "1,308 retained register record-units representing 1,304 unique official Project IDs" in text
     assert "yielding 675 coder–project classifications in total" in text
@@ -41,7 +41,7 @@ def test_v0_14_is_the_lean_unfrozen_review_candidate():
     assert "No formal validation assignments have been populated" in text
 
 
-def test_v0_14_preserves_type_7_and_matched_panel_sensitivity():
+def test_v0_15_preserves_type_7_and_matched_panel_sensitivity():
     text = protocol_text()
     assert "Hyndman–Fan Type 7 interpolation" in text
     assert "equivalent to NumPy/Pandas linear quantile interpolation" in text
@@ -53,7 +53,7 @@ def test_v0_14_preserves_type_7_and_matched_panel_sensitivity():
     assert "does not apply to the project-owner stream" in text
 
 
-def test_v0_14_adjudication_and_sampling_rules_remain_explicit():
+def test_v0_15_adjudication_and_sampling_rules_remain_explicit():
     text = protocol_text()
     assert "project completing primary adjudication" in text
     assert "If N = 0 the random audit size is zero; otherwise it is ceil(0.20 × N)" in text
@@ -66,8 +66,8 @@ def test_v0_14_adjudication_and_sampling_rules_remain_explicit():
 def test_sampling_design_is_rebound_without_execution_or_design_change():
     specification = yaml.safe_load(SPECIFICATION.read_text(encoding="utf-8"))
     assert specification["protocol_basis"] == {
-        "version": "v0.14",
-        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.14.docx",
+        "version": "v0.15",
+        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.15.docx",
         "status": "review_candidate",
         "current_implementation_basis": True,
         "frozen": False,
@@ -107,15 +107,29 @@ def test_sam_003_manifest_row_is_column_aligned():
     assert row["supersedes_or_superseded_by"] == "SAM-001"
 
 
-def test_manifest_has_one_current_v0_14_protocol_and_v0_13_history():
+def test_manifest_has_one_current_v0_15_protocol_and_v0_14_git_history():
     rows = manifest_rows()
-    current = rows["PRO-008"]
-    assert current["version"] == "v0.14"
+    current = rows["PRO-012"]
+    assert current["version"] == "v0.15"
     assert current["protocol_status"] == "review_candidate"
     assert current["current_implementation_basis"] == "true"
     assert current["frozen"] == current["registered"] == "false"
     assert current["official_sample_draw_authorised"] == "false"
-    assert rows["PRO-006"]["version"] == "v0.13"
-    assert rows["PRO-006"]["superseded_by"] == "v0.14"
-    assert rows["PRO-006"]["current_implementation_basis"] == "false"
+    assert rows["PRO-008"]["version"] == "v0.14"
+    assert rows["PRO-008"]["current_state"] == "historical_git_only"
+    assert rows["PRO-008"]["current_path"] == ""
+    assert rows["PRO-008"]["superseded_by"] == "v0.15"
+    assert rows["PRO-008"]["current_implementation_basis"] == "false"
     assert rows["PRO-007"]["supersedes_or_superseded_by"] == ""
+
+
+def test_v0_15_uses_separate_scratch_and_owner_redcap_projects():
+    text = protocol_text()
+    assert "scratch-coder and project-owner streams will be implemented in separate REDCap projects" in text
+    assert "scratch-coder project contains the assignment-administration, coder-declaration and scratch-coder workflow" in text
+    assert "project-owner project contains a separate owner-assignment and survey workflow" in text
+    assert "linked across streams by the stable Record ID" in text
+    assert "Scratch coders do not see any other record information" in text
+    assert "Owners will see the public entry, proposed labels, short taxonomy definitions" in text
+    assert "contact and recruitment-administration fields will be hidden from respondents" in text
+    assert "project-owner instrument will be live-QA tested and frozen before registration" in text

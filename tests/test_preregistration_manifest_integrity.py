@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import re
 import subprocess
 from collections import defaultdict
@@ -10,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "preregistration/preregistration_artifact_manifest.csv"
 FUTURE_STATES = {"not_yet_generated", "placeholder"}
+HISTORICAL_STATE = "historical_git_only"
 RESTRICTED_ACCESS = {"restricted", "temporarily_embargoed", "contains_personal_data"}
 RELATIONSHIP_SPLIT = re.compile(r"\s*[;|]\s*")
 
@@ -25,7 +27,7 @@ def rows() -> list[dict[str, str]]:
 
 def test_manifest_structure_statuses_and_relationships() -> None:
     manifest_rows = rows()
-    assert len(manifest_rows) == 200
+    assert len(manifest_rows) == 201
     identifiers = [row["artifact_id"] for row in manifest_rows]
     assert len(identifiers) == len(set(identifiers))
     identifier_set = set(identifiers)
@@ -39,9 +41,9 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     current_protocols = [
         row for row in manifest_rows if row["protocol_status"] == "review_candidate"
     ]
-    assert [row["artifact_id"] for row in current_protocols] == ["PRO-008"]
+    assert [row["artifact_id"] for row in current_protocols] == ["PRO-012"]
     protocol = current_protocols[0]
-    assert protocol["version"] == "v0.14"
+    assert protocol["version"] == "v0.15"
     assert protocol["frozen"] == "false"
     assert protocol["registered"] == "false"
     assert protocol["official_sample_draw_authorised"] == "false"
@@ -62,6 +64,13 @@ def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
         if row["current_state"] in FUTURE_STATES:
             assert not current_path
             assert not (ROOT / proposed_path).exists()
+        elif row["current_state"] == HISTORICAL_STATE:
+            assert not current_path
+            assert not proposed_path
+            assert row["registration_inclusion"] == "exclude"
+            assert len(row["sha256"]) == 64
+            assert row["size_bytes"].isdigit()
+            assert row["source_commit"]
         elif current_path:
             assert (ROOT / current_path).is_file(), (row["artifact_id"], current_path)
 
@@ -85,6 +94,10 @@ def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
     excluded_structure = {
         "preregistration/preregistration_artifact_manifest.csv",
         *[path for path in tracked if path.endswith("/.gitkeep")],
+        *[
+            f"preregistration/package/00_protocol/{row['filename']}"
+            for row in manifest_rows if row["current_state"] == HISTORICAL_STATE
+        ],
     }
     assert not [path for path in tracked if path not in covered | excluded_structure]
 
@@ -93,7 +106,7 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
     manifest_rows = rows()
     for row in manifest_rows:
         current_path = row["current_path"]
-        if not current_path or row["current_state"] in FUTURE_STATES:
+        if not current_path or row["current_state"] in FUTURE_STATES | {HISTORICAL_STATE}:
             continue
         if row["access_class"] in RESTRICTED_ACCESS:
             assert row["registration_inclusion"] != "include"
@@ -108,6 +121,29 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
     assert len(pilot_rows) == 14
     assert all(row["access_class"] == "restricted" for row in pilot_rows)
     assert all(row["registration_inclusion"] == "exclude" for row in pilot_rows)
+
+    protocol = next(row for row in manifest_rows if row["artifact_id"] == "PRO-012")
+    protocol_path = ROOT / protocol["current_path"]
+    assert protocol_path.is_file()
+    assert protocol["size_bytes"] == str(protocol_path.stat().st_size) == "3223383"
+    assert protocol["sha256"] == "5eff044b4f8d488e84a5b49720d35318add4f29ef53136cb6ce9c2b197409ee7"
+
+    historical = [row for row in manifest_rows if row["current_state"] == HISTORICAL_STATE]
+    assert {row["version"] for row in historical} == {
+        "0.9", "0.10", "v0.11", "v0.12", "v0.13", "v0.14"
+    }
+    assert all(row["current_path"] == "" for row in historical)
+    assert all(row["sha256"] and row["size_bytes"] and row["source_commit"] for row in historical)
+    for row in historical:
+        historical_path = f"preregistration/package/00_protocol/{row['filename']}"
+        content = subprocess.run(
+            ["git", "show", f"{row['source_commit']}:{historical_path}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert hashlib.sha256(content).hexdigest() == row["sha256"]
+        assert len(content) == int(row["size_bytes"])
 
 
 def test_no_package_detritus_or_generated_scientific_outputs() -> None:
