@@ -91,7 +91,7 @@ prospective_boundary:
 
 notes:
   limitations:
-    - The production prompt was assembled dynamically by the hashed classifier code from the hashed taxonomy; no separate exact rendered prompt file exists.
+    - The production prompt remains assembled by the frozen classifier code from the frozen taxonomy. A byte-exact offline rendering now exists at preregistration/package/02_taxonomy_prompt_and_model/production_prompt_dict-1.0-rc2.txt with SHA-256 8fd34b5e80a748dce114ebe636d9861662c4cd8d3f0ce053ef458b95d9593861.
     - The source register manifest stores the LF Git-blob hash while the protected Windows worktree snapshot has the documented CRLF hash.
   unresolved_post_pilot_items:
     - Complete the preregistration pilot and collaborator review.

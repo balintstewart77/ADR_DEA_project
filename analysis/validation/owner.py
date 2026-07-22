@@ -1,4 +1,4 @@
-"""Project-owner completion, route, and denominator primitives for v0.11."""
+"""Project-owner completion, route, and denominator primitives for v0.14."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ def complete_owner_review(review: OwnerReview) -> bool:
 
 
 def owner_response_denominators(reviews: tuple[OwnerReview, ...]) -> dict[str, int]:
-    """Return the distinct v0.11 owner-label and owner-record denominators."""
+    """Return the distinct v0.14 owner-label and owner-record denominators."""
 
     completed_verdicts = sum(
         value in VERDICTS

@@ -8,6 +8,7 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 
 from analysis.crossmodel_comparison import CANONICAL_TAGS, split_label_set
+from analysis.llm_theme_analysis_v3 import _build_static_prompt
 from analysis.validation.schema import DOMAIN_LABELS, PURPOSE_LABELS, UNCLEAR
 
 
@@ -23,6 +24,11 @@ RECEIPT = RELEASE.with_name("release_receipt.json")
 EXPECTED_SHA256 = "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
 POPULATION_SHA256 = "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1"
 RETAINED_PAIRS = {"2020/030", "2022/036", "2024/014", "2024/095"}
+PROMPT = Path(
+    "preregistration/package/02_taxonomy_prompt_and_model/"
+    "production_prompt_dict-1.0-rc2.txt"
+)
+PROMPT_SHA256 = "8fd34b5e80a748dce114ebe636d9861662c4cd8d3f0ce053ef458b95d9593861"
 
 
 def _rows(path: Path) -> list[dict[str, str]]:
@@ -49,6 +55,14 @@ def test_release_is_the_exact_recovered_source_bytes():
     assert hashlib.sha256(release).hexdigest() == EXPECTED_SHA256
     assert release.count(b"\r\n") == 1309
     assert release.count(b"\n") - release.count(b"\r\n") == 333
+
+
+def test_standalone_prompt_is_byte_exact_frozen_builder_output():
+    stored = PROMPT.read_bytes()
+    rendered = _build_static_prompt().encode("utf-8")
+    assert stored == rendered
+    assert len(stored) == len(rendered) == 28551
+    assert hashlib.sha256(stored).hexdigest() == PROMPT_SHA256
 
 
 def test_release_matches_the_canonical_population_and_duplicate_structure():
@@ -140,14 +154,10 @@ def test_receipt_attributes_and_formal_pointers_designate_the_release():
         assert "classifications_1309_precollapse_PROVISIONAL.csv" not in text
 
 
-def test_protocol_and_formal_docs_no_longer_have_a_recovery_blocker():
+def test_lean_protocol_and_formal_docs_have_no_recovery_blocker():
     protocol = _docx_text(
-        Path("preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.12.docx")
+        Path("preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.14.docx")
     )
-    assert (
-        "The model-direction check was reverified against the frozen canonical "
-        "1,308-row GPT-5.5 artefact before preregistration."
-    ) in protocol
     assert "must be reverified against the canonical 1,308-row artefact" not in protocol
     formal_text = "\n".join(
         path.read_text(encoding="utf-8")

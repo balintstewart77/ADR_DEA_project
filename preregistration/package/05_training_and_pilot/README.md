@@ -37,24 +37,20 @@ study artefact; formal provenance and validation use the canonical release.
 
 The formal-coding versions add Scratch Coder choice 4, `Cannot assess from
 register entry`, and consolidate taxonomy-issue codes to 1, 2, and 5. They do
-not alter domain, purpose, COVID, equity, sample, or exclusion rules. The two
-decisions and their pilot/formal-coding impacts are recorded in
-`pilot_feedback_log_20260717.md`. The pilot was launched under
-`redcap-candidate-0.3`; candidate 0.4 records the post-training diagnostic
-changes, and candidate 0.6 is the current formal-instrument repository candidate.
-Candidate 0.6 adds only point-of-use help for the revised scratch-coder
-taxonomy-fit field; candidate-0.3 pilot responses and mappings remain unchanged.
-All three coders responded to the feedback request. No additional substantive
-taxonomy or instrument concerns were raised; one operational clarification was
-resolved in candidate 0.6. Screenshot-based guidance remains planned for the
-coder start pack. Candidate 0.6 has passed offline repository validation but
-remains gated by Jo's review, formal-instrument freeze, and fresh live runtime
-QA.
+not alter domain, purpose, COVID, equity, sample, or exclusion rules. The pilot
+was conducted under candidate 0.3, whose responses and mappings remain unchanged.
+Candidate 0.6 is retained only as intermediate live-QA history and collected no
+formal data. Candidate 0.7 passed completed administrator and restricted-user live
+QA on 22 July 2026 and is the frozen 150-field formal instrument. No formal
+validation assignments are populated. Screenshot-based start-pack guidance remains
+an operational task before coding. Formal sampling and REDCap import remain
+prohibited until preregistration and the subsequent authorisation gate are complete.
 
 The dated pilot-feedback window is closed because all three coders responded.
 The original deadline of close of play on Wednesday 22 July 2026 is retained as
-historical metadata. Their responses are not described as formal approval or
-endorsement; formal-instrument freeze and live REDCap QA remain outstanding.
+historical metadata. Their responses are not described as formal approval or endorsement. Candidate
+0.7 instrument freeze and live QA were completed subsequently and are recorded in
+the dated REDCap QA and instrument-change records.
 
 Exact membership is checked offline with
 `scripts/verify_training_exclusion_membership.py`. It parses the designated
@@ -66,9 +62,8 @@ IDs). The current verified P4, P7, and T1 IDs are respectively `2025/039`,
 
 `training_material_record_manifest.csv` provides one row per unique exclusion,
 including semicolon-delimited repeated card appearances, material role, keyed
-status, document sections and exclusion status. It has exactly 22 rows and is a
-verified working candidate pending the post-pilot freeze; creating it does not
-freeze or alter the coder, trainer or pilot documents.
+status, document sections and exclusion status. It has exactly 22 rows and verified membership; creating it does not freeze or
+alter the coder, trainer or pilot documents.
 
 The exact-membership checker also enforces the protocol-authoritative REDCap
 blinding description: the visible assignment code is neutral and opaque,
@@ -78,5 +73,5 @@ coder handout despite an earlier README claim. The as-delivered file is not
 silently overwritten; the wording is included and machine-checked in v3. The
 protocol, teaching examples, answer content, taxonomy rules, and exact
 22-record membership remain unchanged. The historical handouts remain the
-as-delivered record, and the revised handouts remain working candidates pending
-the formal-coding freeze.
+as-delivered record, and the revised handouts remain reviewed pre-formal materials pending final
+preregistration approval and the coding authorisation gate.

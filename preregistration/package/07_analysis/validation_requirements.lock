@@ -1,0 +1,5 @@
+# Direct runtime dependencies for the preregistered validation analysis.
+# Python 3.13.2 standard-library dependencies are not repeated here.
+numpy==2.2.5
+pandas==2.2.3
+PyYAML==6.0.2

@@ -204,8 +204,9 @@ def validate_project(project: ProjectRatings) -> ValidationReport:
 
     A fatal issue prevents interpretation of the named dimension.  A retained
     inconsistency is readable but violates the instrument rules and is kept in
-    the unconditional analysis unless a prespecified sensitivity analysis later
-    excludes it before analysis lock (protocol Section 8.8).
+    the unconditional analysis. Protocol v0.14 Section 8.10 separately excludes
+    every project containing an affected human response in the matched-panel
+    instrument-validity sensitivity analysis.
     """
 
     issues: list[ValidationIssue] = []

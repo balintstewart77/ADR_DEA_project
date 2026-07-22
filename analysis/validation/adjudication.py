@@ -1,4 +1,4 @@
-"""Source-masked adjudication and recurring-trigger primitives for v0.11."""
+"""Source-masked adjudication and recurring-trigger primitives for v0.14."""
 
 from __future__ import annotations
 

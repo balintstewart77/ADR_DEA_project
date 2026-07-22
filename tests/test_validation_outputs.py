@@ -55,7 +55,7 @@ def test_traceability_covers_every_section_8_subsection_and_allowed_statuses():
         "Not applicable in Batch 1",
     }
     assert {row["implementation_status"] for row in rows} <= allowed
-    assert any(row["implementation_status"] == "Genuine protocol ambiguity" for row in rows)
+    assert all(row["implementation_status"] != "Genuine protocol ambiguity" for row in rows)
     assert any(row["implementation_status"] == "Deferred to Batch 2" for row in rows)
 
 

@@ -7,10 +7,12 @@ IDs and the Phase 4 sampling-system package. The sampling engine remains at
 paths rather than creating competing copies.
 
 `sampling_specification.yaml`, `sampling_output_schema.json` and
-`official_sampling_runbook.md` are tested working candidates ready for Gate 1
-freeze. The engine implements the v0.11 candidate 150/100 baseline draw, forced
+`official_sampling_runbook.md` are tested working candidates bound to protocol
+v0.14. The engine implements the unchanged 150/100 baseline draw, forced
 accompanying-tag inclusion in the 25/25/25 active hard allocation, and the
-seed-governed 17/17/16 reserve allocation with deterministic fallback.
+seed-governed 17/17/16 reserve allocation with deterministic fallback. Protocol
+v0.14 remains a review candidate, so this binding does not freeze or authorise a
+draw.
 
 The official seed is `SEED_DRAW = 20260713`. It is public preregistration
 metadata, but was not used against the real frames in Phase 4. `--check` and
@@ -18,7 +20,7 @@ metadata, but was not used against the real frames in Phase 4. `--check` and
 guarded by canonical protocol metadata authorising the draw, a real registration
 receipt, Gate 2 confirmation, matching frozen commit and hashes, a clean
 worktree, restricted storage, an empty output location and a typed confirmation
-token. The current v0.11 metadata fails that guard by design.
+token. The current v0.14 review-candidate metadata fails that guard by design.
 
 Only scratch-coder reserves are defined: 100 baseline and 50 hard-case records.
 There is no fixed project-owner reserve. Any later owner review follows the

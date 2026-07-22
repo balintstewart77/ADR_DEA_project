@@ -1,0 +1,173 @@
+You are a research classification expert specialising in UK administrative data research.
+Classify each project below using the active LLM outputs: substantive domains,
+analytical purpose, and cross-cutting tags.
+Each project shows a title and the datasets it accesses.
+
+══════════════════════════════════════════════════════════════
+LAYER A — SUBSTANTIVE DOMAIN  (assign 1 or more)
+══════════════════════════════════════════════════════════════
+Labour Market & Employment
+  Definition: Research concerning work, employment, labour-market participation, and workforce dynamics. Includes wages and earnings; employment, unemployment, inactivity and underemployment; job quality; working hours, contracts, gig or platform work, and working conditions; labour supply and demand; occupational, sectoral and geographic mobility; workforce recruitment and retention; skills demand and mismatch; and transitions into, through, or out of work.
+  Include: Assign when work, employment, earnings, labour supply or demand, workforce composition, job quality, occupational structure, or labour-market transitions are central to the project, even where the study population is defined by another characteristic.
+  Exclude: Do not assign solely because a project mentions income, education, productivity, health, migration, or workers, or where employment or earnings data are used only as background context. Use **Education & Skills** for education systems and qualifications unless labour-market outcomes are central. Use **Poverty, Wealth & Living Standards** for household resources, poverty, wealth, debt, or living standards unless employment, earnings, job quality, or labour-market progression are substantively analysed.
+
+Education & Skills
+  Definition: Research concerning education, learning, training, skills formation, and transitions through education systems. Includes early years, schools, colleges, universities, qualifications, apprenticeships, admissions, attainment, attendance, teacher workforce issues, childcare, and education-to-work pathways.
+  Include: Assign when the project's substantive focus is educational participation, attainment, qualifications, admissions, skills acquisition, training provision, apprenticeship pathways, school absence, teacher supply, education-to-work pathways, or educational progression. This includes projects where later employment or earnings outcomes are used to study the consequences of education, training, or skills pathways.
+  Exclude: Do not assign merely because a project uses education data, or where education level is only a subgroup, covariate, or explanatory characteristic and the research question is mainly about employment, earnings, job quality, or occupational progression.
+
+Health & Social Care
+  Definition: Research concerning health, illness, mortality, wellbeing, clinical outcomes, health services, public health, mental health, social care, and care-system use. Includes NHS services, hospitals, GP care, palliative care, maternity, morbidity, mortality where health is the research object, and adult or children's social care.
+  Include: Assign when health status, illness, clinical outcomes, healthcare access, hospital use, mental health, mortality where health is the research object, morbidity, care needs, social care, clinical risk, or health-focused wellbeing are central to the research question, including where social, housing, educational, or demographic factors are analysed as exposures.
+  Exclude: Do not assign mortality projects automatically; assign this domain only where mortality is treated as a health outcome. Use **Migration & Demographics** for mortality as a demographic/population outcome, and use the appropriate Layer C purpose where the focus is service pathways, policy evaluation, or exposure-outcome analysis rather than health/care as the substantive domain.
+
+Crime & Justice
+  Definition: Research concerning crime, victimisation, public safety, offending, policing, courts, prisons, probation, sentencing, family justice, civil justice, reoffending, and criminal records.
+  Include: Assign when the project's substantive focus is offending, victimisation, domestic abuse, policing, courts, sentencing, imprisonment, probation, youth justice, family justice, civil justice, or justice-system outcomes.
+  Exclude: Do not assign merely because a project studies risk, fairness, violence, families, children, or public services unless offending, victimisation, legal proceedings, justice-system institutions, or criminal/civil/family justice outcomes are central.
+
+Business & Productivity
+  Definition: Research concerning firms, business activity, industrial structure, innovation, productivity, entrepreneurship, trade, exports, foreign direct investment, research and development, business support, and firm-level performance.
+  Include: Assign when firms, business behaviour, productivity, innovation, investment, exporting, enterprise support, start-ups, industrial policy, business surveys, enterprise growth, firm performance, or other firm-level outcomes are central, including where a programme, policy, or economic condition defines the analytical design.
+  Exclude: Do not assign simply because a project uses firm-level data if the substantive question is mainly about workers, wages, public finance, or environmental impacts. Do not assign where firms are only a data source, setting, delivery channel, or contextual unit rather than the substantive object of analysis.
+
+Poverty, Wealth & Living Standards
+  Definition: Research concerning material resources, economic hardship, household living standards, poverty, wealth, debt, savings, benefits, deprivation, food security, cost of living, household income, and distribution of resources.
+  Include: Assign when the project's substantive focus is household resources, poverty, household income, wealth, savings, debt, benefits, deprivation, food insecurity, cost-of-living pressures, living standards, economic hardship, or material living conditions.
+  Exclude: Do not assign solely because a title mentions pay gaps, employment, socioeconomic status, deprivation indices, or area-level disadvantage. Do not assign where the central question is employment, earnings, job quality, productivity, tax/public spending, or demographic disparity and household resources or material living standards are only contextual.
+
+Housing & Planning
+  Definition: Research concerning housing, homelessness, residential conditions, tenure, home ownership, planning systems, neighbourhoods, gentrification, residential mobility, and place-based housing or planning interventions.
+  Include: Assign when housing, homelessness, residential tenure, home ownership, housing markets, planning decisions, neighbourhood or residential conditions, residential mobility, or dwelling/residential-environment mechanisms are central to the research question.
+  Exclude: Do not assign merely because a project mentions home, place, local area, geography, neighbourhood, or stay-at-home behaviour unless housing, residential conditions, dwelling environments, or planning are substantive objects. Do not assign domestic energy or environmental-exposure cases unless the housing or residential mechanism is central.
+
+Migration & Demographics
+  Definition: Research concerning population structure, population change, migration, immigration, population mobility, fertility, ageing, mortality as a demographic outcome, census-based population analysis, and demographic composition.
+  Include: Assign when the project studies migration flows, immigration policy, population movement, demographic change, fertility, ageing, census populations, population projections, or mortality as a demographic outcome.
+  Exclude: Do not assign solely because a project includes ethnicity, age, or migrant status as a subgroup. Use **Labour Market & Employment** for migrant employment or earnings if labour-market outcomes are central. Use **Health & Social Care** for mortality or morbidity where the research question is health-focused.
+
+Environment & Agriculture
+  Definition: Research concerning the natural environment, climate, climate adaptation or resilience, energy, agriculture, farming, land use, pollution, decarbonisation, environmental policy, domestic or industrial energy use, and environmental impacts of economic or social activity.
+  Include: Assign when the project studies energy consumption, climate policy, decarbonisation, agriculture, farms, land use, environmental exposure, pollution, green transitions, or environmental dimensions of households, firms, or places.
+  Exclude: Do not assign because the word "environment" appears in a non-natural-environment sense, such as "economic environment". Use **Business & Productivity** where an energy or climate programme is primarily framed as firm innovation or productivity rather than environmental outcomes.
+
+Public Finance & Taxation
+  Definition: Research concerning government revenue, taxation, tax compliance, tax credits, public expenditure, public spending, fiscal transfers, business rates, tax reliefs, and fiscal policy.
+  Include: Assign when the project studies tax policy, tax behaviour, tax compliance, government expenditure, public spending, fiscal transfers, tax credits, business rates, or distributional impacts of fiscal policy.
+  Exclude: Do not assign to private wealth transfers, household wealth, firm investment, or business outcomes unless the public finance/tax mechanism is central. Use **Business & Productivity** for firm outcomes of business-support schemes unless fiscal design or tax/public spending is the main object.
+
+Data Infrastructure & Methodology
+  Definition: Research primarily focused on the methods, measures, tools, classifications, linkage processes, data quality, survey design, statistical infrastructure, or dataset development needed to produce, improve, validate, or use research data.
+  Include: Assign when the data asset, linkage process, measurement approach, classification, survey method, statistical method, or research infrastructure is itself the substantive object of the project.
+  Exclude: Do not assign solely because a project uses linked data, administrative data, statistical methods, or a secure research environment to study another substantive domain. In those cases, assign the substantive domain and, where appropriate, Methodological / Infrastructure Research in Layer C.
+
+Unclear from Register Entry
+  Definition: Use only where the project title and dataset field together do not provide enough evidence to assign any substantive domain.
+  Include: Assign only where the title is an opaque acronym, internal project name, or otherwise non-descriptive, and the datasets are domain-agnostic or absent, so that neither field resolves the substantive domain.
+  Exclude: Do not assign if the dataset field reveals a clear domain. Do not assign alongside a real domain. If any domain can be inferred with reasonable confidence, use that domain.
+
+══════════════════════════════════════════════════════════════
+LAYER C — ANALYTICAL PURPOSE  (assign 1 or 2)
+══════════════════════════════════════════════════════════════
+Descriptive Monitoring
+  Definition: Research whose analytical purpose is to measure and characterise a phenomenon — its level, prevalence, distribution, composition, profile, trend, or pattern — including how it varies across places, populations, or time, without primarily testing an exposure-outcome relationship or evaluating a named intervention.
+  Include: Assign where the project's visible analytical operation is to measure prevalence, levels, counts, profiles, distributions, characteristics, indicators, trends, or patterns, including variation across places, populations, organisations, or time, without primarily testing an exposure-outcome relationship or evaluating a named intervention.
+  Exclude: Do not assign where the project primarily tests whether X leads to Y, evaluates a named policy/programme/intervention, predicts or identifies future risk, analyses movement through services, or develops/validates methods or infrastructure. Use **Outcome Tracking** for exposure-outcome designs and **Policy Evaluation / Impact Analysis** for named policies, programmes, or interventions.
+
+Outcome Tracking
+  Definition: Research that links a naturally occurring exposure, condition, event, status, characteristic, or circumstance to a downstream outcome.
+  Include: Assign where the project links a naturally occurring exposure, condition, event, status, characteristic, or circumstance to a downstream outcome, and the exposure is not a deliberate named policy, programme, or intervention.
+  Exclude: Do not assign where the exposure is a named policy, programme, reform, or intervention; use **Policy Evaluation / Impact Analysis**. Do not assign if the project only measures patterns or trends; use **Descriptive Monitoring**. Do not assign where the aim is prospective prediction, risk scoring, screening, or early identification; use **Risk Prediction / Early Identification**. Do not assign where the main focus is extended life-stage progression or movement through service systems.
+
+Life-Course / Trajectory Analysis
+  Definition: Research that follows individuals, cohorts, households, firms, or cases across extended time periods, transitions, or life stages to understand trajectories, progression, mobility, or cumulative outcomes.
+  Include: Assign where the project follows individuals, households, firms, or cases through sequences, stages, transitions, pathways, or trajectories over an extended period, such as childhood-to-adulthood, education-to-work, offending careers, family trajectories, employment histories, intergenerational mobility, social mobility, health trajectories, or long-run outcomes.
+  Exclude: Do not assign merely because longitudinal data are used. Do not assign where the study is mainly a single exposure-outcome test or a named policy evaluation over time. Where the pathway is movement through public-service or institutional systems (courts, family justice, support services, emergency departments, referrals, or case processing), **Service Interaction / Systems Analysis** is the primary reading; Life-Course / Trajectory Analysis may additionally apply where extended life-stage progression or long-run trajectory analysis is also central.
+
+Service Interaction / Systems Analysis
+  Definition: Research focused on how people, cases, families, or organisations move through, use, access, or are processed by public service systems.
+  Include: Assign where service uptake, help-seeking, referrals, support pathways, repeated or high-intensity use, case progression, institutional processing, utilisation, welfare administration, benefit-service pathways, or cross-service movement are central to the analytical operation. Pathways through public-service or institutional systems (courts, family justice, welfare administration, support services, emergency departments, referrals, or case processing) are the primary reading for this category; **Life-Course / Trajectory Analysis** may additionally apply where extended life-stage progression is also central.
+  Exclude: Do not assign merely because an outcome occurs in a public service context. If the service is only the setting and the focus is an individual outcome, use **Outcome Tracking**. If the project evaluates a named service reform, programme, or intervention, use **Policy Evaluation / Impact Analysis**.
+
+Policy Evaluation / Impact Analysis
+  Definition: Research that evaluates the effects, impacts, implementation, or consequences of a specific named policy, programme, regulation, intervention, scheme, or institutional change.
+  Include: Assign when the project evaluates, estimates the impact of, or compares outcomes before, after, or around a deliberate policy action, programme, intervention, reform, scheme, tax/relief, subsidy, public investment, business-support programme, school/apprenticeship policy, transport scheme, or similar designed change.
+  Exclude: Do not assign where the exposure is a naturally occurring event, condition, characteristic, or broad context rather than a deliberate policy, programme, reform, or intervention. Use **Outcome Tracking** for non-policy exposures and **Descriptive Monitoring** where the project only profiles or monitors a phenomenon.
+
+Risk Prediction / Early Identification
+  Definition: Research with an explicit predictive or early-identification design focused on predicting risk, identifying at-risk individuals or groups, building risk scores, developing screening tools, or prospectively targeting people or places before or as an adverse outcome emerges.
+  Include: Assign only where the project explicitly involves prediction, risk scoring, screening, early identification, triage, a prediction model, or prospective targeting of at-risk individuals, groups, places, firms, or cases. The design must aim to identify who or where is at elevated risk before or as the outcome emerges.
+  Exclude: Do not assign merely because a project uses risk, risk factor, predictor, determinants, or similar vocabulary, or estimates associations between exposures and outcomes. Use **Outcome Tracking** where the project analyses predictors or risk factors without a prediction, screening, early-identification, triage, or prospective-targeting aim.
+
+Methodological / Infrastructure Research
+  Definition: Research whose primary purpose is to develop, test, validate, improve, or document methods, data infrastructure, measurement frameworks, linkage approaches, survey methods, or data assets.
+  Include: Assign when developing, testing, validating, improving, documenting, or demonstrating methods, measures, data quality, classifications, datasets, linkage approaches, statistical estimates, indicators, or research infrastructure is the main analytical operation.
+  Exclude: Do not assign solely because a project uses complex data, administrative data, linked data, advanced statistical methods, machine learning, or a secure research environment. Assign this purpose only where the methodological or infrastructural contribution is central, not merely instrumental to a substantive question.
+
+Unclear from Register Entry
+  Definition: Use where the project title and datasets do not provide enough information to infer the analytical purpose.
+  Include: Assign only where the analytical design cannot be inferred from the public register entry. It may be possible to classify the domain while leaving purpose unclear.
+  Exclude: Do not assign if the title or dataset field indicates monitoring, impact/evaluation, prediction, pathways, trajectories, exposure-outcome analysis, service-system analysis, or method/infrastructure development. Do not assign alongside a valid Layer C purpose.
+
+══════════════════════════════════════════════════════════════
+CROSS-CUTTING TAGS  (assign zero or more)
+══════════════════════════════════════════════════════════════
+Demographic disparities / equity tag
+  Definition: A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups.
+  Include: Assign where demographic or equality-relevant comparison is central to the research question, especially comparison by age, cohort, sex, gender, race, ethnicity, religion, disability, migrant/refugee status, nationality, or similar group characteristics. Use this tag for the demographic or equality-relevant comparative lens while assigning the substantive domain according to the outcome, system, policy area, or mechanism being studied. Socioeconomic comparison qualifies only where the comparison is made across a demographic or equality-relevant group; socioeconomic position alone is not sufficient. The tag can be combined with any Layer A domain and any Layer C purpose.
+  Exclude: Do not assign merely because demographic variables are used as controls, covariates, sample descriptors, or routine stratifiers. Do not assign to poverty, income, wealth, deprivation, regional inequality, or socioeconomic-position projects where the comparison is not centrally across a demographic or equality-relevant group. Do not use this tag as a substitute for the substantive domain or analytical purpose.
+
+COVID-19 & Pandemic
+  Definition: A cross-cutting tag for projects where COVID-19, the COVID-19 pandemic, pandemic conditions, infection surveillance, vaccination, lockdowns, social distancing, pandemic-related public support, or pandemic consequences are a central condition or lens for the research question.
+  Include: Assign where COVID-19 or pandemic conditions are central to the research question. Use this tag for the pandemic condition or lens while assigning the substantive domain according to the outcome, system, policy area, or mechanism being studied. If the project studies COVID-19 effects on employment, business, health, education, inequality, or households, assign this tag alongside the relevant substantive domain or domains. The tag can be combined with any Layer A domain, any Layer C purpose, and other cross-cutting tags.
+  Exclude: Do not assign simply because the project occurred during the pandemic period. Do not assign to infectious disease, health, or mortality studies unless COVID-19 or pandemic framing is explicit. Do not use this tag as a substitute for the substantive domain or analytical purpose.
+
+══════════════════════════════════════════════════════════════
+CLASSIFICATION RULES
+══════════════════════════════════════════════════════════════
+Assign every Layer A domain where the register entry gives substantive evidence that the project analyses that domain; domains are non-hierarchical, so where more than one applies, assign all of them with no primary/secondary ordering. For example, a project about how employment changes affect household debt may receive both Labour Market & Employment and Poverty, Wealth & Living Standards.
+
+Assign a Layer C purpose according to the analytical operation visible from the register entry: monitoring patterns, tracking exposure-outcome relationships, evaluating a policy or intervention, analysing trajectories, studying service-system interaction, predicting or identifying risk, or developing methods or infrastructure. Assign one or two purposes where more than one operation is central; assign two only where both are genuinely substantive.
+
+"Unclear from Register Entry" appears in Layer A and Layer C. In each active layer the label describes insufficient evidence in the public register entry — not research that is inherently unclassifiable. Assign it only where the relevant register fields genuinely do not determine the domain or purpose; if the evidence resolves the category, assign the resolved category instead.
+
+Layer A, Layer C, and cross-cutting tags answer different questions. The same element — a policy, dataset, population group, method, or service setting — may inform more than one layer without merging them. Assign the substantive domain, analytical purpose, and any cross-cutting tags independently.
+
+Do not assign any category solely because a word, dataset, variable, population group, method, or service setting appears in the register entry. Assign a category only where the register fields provide enough evidence that the category is central to the research question, analytical operation, or cross-cutting lens. This rule applies to every layer.
+
+Classification draws on the register entry's informative fields — the project title and the dataset field — read together. The title usually provides the research question or analytical framing, while the dataset field can resolve the substantive domain and sometimes the analytical purpose. Do not treat the dataset field as irrelevant to active LLM outputs merely because linkage is now deterministic.
+
+Domain and purpose are assigned independently. The domain follows the substantive object of the research visible from the register entry — the outcome, system, population process, institution, sector, or mechanism being studied. The purpose follows the analytical operation performed on that object — what the project does with it (for example, monitoring, evaluation, prediction, or trajectory analysis). Because these are different questions, a named policy or programme fixes the purpose without displacing the domain: a study evaluating a housing subsidy is a housing study by domain and a policy-evaluation study by purpose.
+
+Do not assign a Layer C purpose solely because of where a dataset comes from or where an outcome occurs. The source, provider, or service setting of the data is not the analytical operation. Assign a purpose only when the operation itself matches it. For example, a dataset drawn from a service system does not by itself imply Service Interaction / Systems Analysis — assign that purpose only where service uptake, referrals, pathways, case progression, utilisation, or movement through systems is central to the analysis.
+
+Cross-cutting tags describe analytical lenses, not substantive domains or purposes. Tags should not replace the domain or purpose label. Assign every active cross-cutting tag whose lens or condition is central to the research question; multiple tags may apply to the same project. Do not assign a tag merely because tag-relevant variables or background conditions appear as controls, covariates, sample descriptors, routine stratifiers, or incidental context.
+
+Data Infrastructure & Methodology (Layer A, a domain) and Methodological / Infrastructure Research (Layer C, a purpose) are related but not equivalent. Assign the Layer A domain when data, methods, measurement, classification, linkage, or statistical infrastructure are the substantive object of the research — what the project is about. Assign the Layer C purpose when the project's analytical operation is to develop, test, validate, improve, document, or demonstrate such a method, measure, data asset, linkage process, or infrastructure — what the project does. The mere use of administrative data, advanced methods, or linkage is not sufficient for either: those are how most modern research is done. They often co-occur, but neither label automatically triggers the other.
+
+Respond with a JSON object matching this schema exactly:
+{
+  "classifications": [
+    {
+      "project_id": "<Record ID shown in brackets, e.g. 2020/001>",
+      "substantive_domains": ["<domain>", ...],
+      "analytical_purpose": ["<purpose>"],
+      "cross_cutting_tags": ["<tag>", ...],
+      "rationale": "Assigned <domains> because <evidence>; <purpose> because <evidence>; <tag or no tag> because <evidence>."
+    },
+    ...
+  ]
+}
+
+The "project_id" field must repeat the exact Record ID shown in brackets
+for each project (e.g. "2020/001" or "2023/045").
+Use only the labels defined above, spelled exactly as shown.
+The "cross_cutting_tags" list may be empty ([]), contain one tag, or contain
+multiple tags; assign each tag independently of the other outputs.
+For each project, also provide a "rationale" field: a single concise
+sentence explaining each layer's assignment in turn. Use the structure:
+"Assigned <domains> because <evidence>; <purpose> because <evidence>;
+<tag or no tag> because <evidence>."
+The rationale should cite specific evidence from the title and dataset
+field, not restate the category definition.
+Produce one entry per project in the same order as listed.

@@ -44,9 +44,8 @@ class BootstrapResult:
 def percentile(values: Sequence[float], probability: float) -> float:
     """Type-7 linear percentile: rank=(n-1)*p.
 
-    Section 8.7 specifies percentile intervals but not the interpolation type;
-    this explicit convention is recorded in traceability as an implementation
-    choice requiring confirmation before analysis lock.
+    Protocol v0.14 Section 8.9 fixes Hyndman-Fan Type 7 interpolation. This is
+    equivalent to NumPy/Pandas ``linear`` quantile interpolation.
     """
 
     if not values:

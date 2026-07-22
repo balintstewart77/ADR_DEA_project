@@ -483,7 +483,7 @@ def build_contactability_aware_sequence(
     *,
     scratch_coder_keys: Iterable[str] = (),
 ) -> ContactabilitySequenceResult:
-    """Build the v0.11 greedy sequence from explicit offline dispositions.
+    """Build the v0.14 greedy sequence from explicit offline dispositions.
 
     No contact route or personal detail is accepted or emitted. An unreachable
     leading candidate is removed without covering records and the next position

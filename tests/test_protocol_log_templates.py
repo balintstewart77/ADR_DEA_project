@@ -16,15 +16,17 @@ def test_required_log_files_and_post_pilot_governance_entry():
     for path in PACKAGE.glob("*.csv"):
         with path.open(encoding="utf-8", newline="") as handle:
             rows = list(csv.reader(handle))
-        expected_rows = 4 if path.name == "instrument_change_log.csv" else 2 if path.name == "coding_clarification_log.csv" else 1
+        expected_rows = 4 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
         assert len(rows) == expected_rows
         assert rows[0]
     with (PACKAGE / "coding_clarification_log.csv").open(
         encoding="utf-8", newline=""
     ) as handle:
         entries = list(csv.DictReader(handle))
-    assert len(entries) == 1
-    entry = entries[0]
+    assert len(entries) == 2
+    by_id = {row["clarification_id"]: row for row in entries}
+    assert set(by_id) == {"CAL-PILOT-001", "CAL-STATUS-002"}
+    entry = by_id["CAL-PILOT-001"]
     assert entry["phase"] == "pre-formal pilot calibration"
     assert entry["circulation_status"] == "circulated"
     assert entry["circulated_at"] == "2026-07-21"
@@ -34,6 +36,12 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert entry["no_pilot_recoding_requested"] == "yes"
     assert entry["no_coder_specific_performance_circulated"] == "yes"
     assert entry["no_model_output_shown"] == "yes"
+    status = by_id["CAL-STATUS-002"]
+    assert status["date_raised"] == "2026-07-22"
+    assert "candidate 0.7" in status["general_clarification"].lower()
+    assert "150-field formal instrument" in status["general_clarification"]
+    assert "no formal assignments are populated" in status["general_clarification"].lower()
+    assert "formal sampling and assignment import remain prohibited" in status["status"]
 
     with (PACKAGE / "instrument_change_log.csv").open(
         encoding="utf-8", newline=""

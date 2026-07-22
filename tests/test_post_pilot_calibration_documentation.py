@@ -21,7 +21,7 @@ GPT = Path(
 )
 GPT_SHA256 = "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
 PROTOCOL = Path(
-    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.12.docx"
+    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.14.docx"
 )
 MANIFEST = Path("preregistration/preregistration_artifact_manifest.csv")
 EXCLUSIONS = Path(
@@ -164,36 +164,33 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
     )
     instrument_paragraph = (
         "Pilot-driven instrument changes have been resolved and documented in the "
-        "instrument-change log. The formal instrument will not be frozen or used for "
-        "coding until the current candidate has passed fresh live REDCap runtime QA. The "
-        "model-direction check was reverified against the frozen canonical 1,308-row "
-        "GPT-5.5 artefact before preregistration."
+        "instrument-change log. REDCap scratch-coder candidate 0.7 passed administrator "
+        "and restricted-user live QA and was frozen before registration. No formal "
+        "validation assignments have been populated, and formal sampling and assignment "
+        "import remain prohibited until preregistration is complete and the subsequent "
+        "authorisation gate has passed."
     )
     assert calibration_paragraph in paragraphs
     assert instrument_paragraph in paragraphs
-    assert any(
-        "The trained-panel benchmark reflects coders calibrated through both the initial "
-        "training and a shared post-pilot clarification note." in paragraph
-        for paragraph in paragraphs
-    )
     assert "candidate 0.5" not in protocol
     assert "prepared for equal circulation" not in protocol
     assert "candidate 0.3" not in instrument_paragraph
     assert "provisional 1,309-row" not in protocol
     assert "must be reverified" not in protocol
-    assert "each coder will complete one declaration" in protocol
-    assert "Every coder–project assignment" in protocol
-    assert "prior involvement in or familiarity with the project" in protocol
-    assert "A flagged coder will still complete the classification" in protocol
-    assert "Exposure-flagged coder–project responses will also remain in the primary analysis" in protocol
-    assert "a sensitivity analysis excluding flagged responses" in protocol
+    assert "records the permitted-material declaration once before formal coding" in protocol
+    assert "For every coder–project assignment" in protocol
+    assert "prior project involvement or familiarity" in protocol
+    assert "A Yes response does not cause the project to be skipped" in protocol
+    assert "Exposure-flagged responses remain in the primary analysis" in protocol
+    assert "exclude every project containing at least one exposure-flagged" in protocol
     assert "residual influence from prior project knowledge cannot be eliminated" in protocol
     with Path(
         "preregistration/package/09_logs_and_templates/coding_clarification_log.csv"
     ).open(encoding="utf-8", newline="") as handle:
         entries = list(csv.DictReader(handle))
-    assert len(entries) == 1
-    entry = entries[0]
+    assert len(entries) == 2
+    entry = next(row for row in entries if row["clarification_id"] == "CAL-PILOT-001")
+    status_entry = next(row for row in entries if row["clarification_id"] == "CAL-STATUS-002")
     assert entry["circulation_status"] == "circulated"
     assert entry["circulated_at"] == "2026-07-21"
     assert entry["all_coders_notified"] == "yes"
@@ -202,6 +199,8 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
     assert entry["no_further_substantive_concerns"] == "yes"
     assert "coder feedback resolved" in entry["status"]
     assert "live REDCap QA pending" in entry["status"]
+    assert "live QA complete and frozen" in status_entry["status"]
+    assert "formal sampling and assignment import remain prohibited" in status_entry["status"]
     assert "qualitative bias check" in entry["conclusion"]
     assert "frozen canonical 1,308-row GPT-5.5 release" in entry["check_performed"]
     assert f"gpt55_canonical={GPT_SHA256}" in entry["source_hashes"]
@@ -214,10 +213,13 @@ def test_exclusions_and_manifest_entries_remain_coherent():
     assert EXPECTED_IDS <= excluded_ids
     manifest_rows = _csv_rows(MANIFEST)
     by_id = {row["artifact_id"]: row for row in manifest_rows}
-    assert by_id["PRO-005"]["version"] == "v0.12"
-    assert by_id["PRO-005"]["current_implementation_basis"] == "true"
-    assert by_id["PRO-004"]["superseded_by"] == "v0.12"
-    for artifact_id in ("PRO-005", "TRN-008", "TRN-012", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
+    assert by_id["PRO-008"]["version"] == "v0.14"
+    assert by_id["PRO-008"]["current_implementation_basis"] == "true"
+    assert by_id["PRO-006"]["version"] == "v0.13"
+    assert by_id["PRO-006"]["current_implementation_basis"] == "false"
+    assert by_id["PRO-006"]["superseded_by"] == "v0.14"
+    assert by_id["PRO-005"]["superseded_by"] == "v0.13"
+    for artifact_id in ("PRO-008", "TRN-008", "TRN-012", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
         row = by_id[artifact_id]
         path = Path(row["current_path"])
         assert path.is_file()

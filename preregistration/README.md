@@ -11,16 +11,16 @@ artefact.
 
 ## 2. Current study status
 
-- `Validation_Protocol_PreReg_v0.11.docx` is the current implementation and
-  collaborator-review candidate. It is present but is not finally frozen or
-  registered, and it does not authorise an official sample draw.
-- Phase 3 is complete: the source, cleaned population, taxonomy/production
-  classification release, pre-existing model evidence and exact exclusions are
-  frozen and tied together by a machine-readable release manifest.
-- Protocol, training, REDCap and other prospective validation artefacts remain
-  absent or working candidates pending collaborator review and the pilot.
-- No official active or reserve sample has been drawn.
-- Formal human coding has not begun.
+- `Validation_Protocol_PreReg_v0.14.docx` is the current lean review candidate and
+  collaborator-review candidate. It is not frozen or registered and authorises
+  no formal sampling, assignment import, or coding.
+- REDCap candidate 0.7 passed completed administrator and restricted-user live
+  QA and is the frozen 150-field formal instrument. No formal assignments are
+  populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.
+- Phase 3 source, model, taxonomy, evidence and exclusion artefacts remain frozen.
+- No official active or reserve sample has been drawn, and formal coding has not begun.
+- Formal sampling and REDCap import remain prohibited until preregistration and
+  the subsequent authorisation gate are complete.
 - Nothing in this workspace has been uploaded to OSF.
 
 The current cleaned population is 1,308 retained register records representing
@@ -53,10 +53,9 @@ not official Project ID.
   clarification, and review-decision logs.
 - `post_registration/`: outputs and amendments created only after registration.
 
-The numbered package folders currently contain scope READMEs, not frozen copies
-of the proposed artefacts. Proposed destinations are recorded in
-`preregistration_artifact_manifest.csv`; copying is deferred until authority and
-completeness decisions are resolved.
+The numbered package folders contain the current reviewed artefacts, historical
+versions, operational templates and scope READMEs. Their status and proposed
+registration treatment are recorded in `preregistration_artifact_manifest.csv`.
 
 Phase 3 follows this reference-based convention. Exact current paths and hashes
 are recorded in
@@ -223,12 +222,13 @@ manifest. A 16-ID boundary-whitespace defect in the previous cleaned population
 was corrected before registration without changing the raw source or any
 classification content.
 
-The exact production prompt is dynamically assembled by the hashed classifier
-code from the hashed taxonomy; no separate rendered prompt file exists. This is
-an explicit packaging limitation, not an unresolved production identity.
-Remaining work concerns the future protocol, pilot and training freeze,
-REDCap, Gate 1/Gate 2 execution, prospective analysis, adjudication and
-log-template artefacts. No official active or reserve validation sample
+The exact static production prompt has been rendered offline from the unchanged
+hashed classifier code and hashed taxonomy and is now hash-bound as MOD-003.
+Record-specific project blocks remain separately fingerprinted; no model or API
+was called to create the static rendering. Remaining work concerns final
+substantive review and Jo approval, the dedicated manifest/package-integrity
+reconciliation, final protocol freeze and registration, and the subsequent
+sampling authorisation gate. No official active or reserve validation sample
 manifests exist, as expected at this stage.
 
 ## 12. Phase 4 sampling-system completion
@@ -259,13 +259,13 @@ visible assignment IDs are opaque, while reviewer/source IDs and all sampling,
 model, comparison, reserve, and other-response metadata are hidden. No teaching
 answer or exclusion ID changed.
 
-Package 06 now contains a locally validated candidate for one REDCap project
-with hidden administration, scratch-coder, and project-owner instruments. The
-dictionary is generated from the frozen taxonomy, and its branching,
-assignment-import, export, blinding, and synthetic-response rules are checked
-offline. No formal assignment or response exists. Live import, user-rights,
-action-tag, rendering, routing, and export QA remain mandatory before the
-excluded pilot; the candidate is not frozen.
+Package 06 contains frozen candidate 0.7: one combined 150-field dictionary
+covering Assignment Admin, Coder Declaration, Scratch Coder and Project Owner.
+Completed administrator and restricted-user live QA, source/live equivalence,
+archive controls and dashboard permissions are documented. No formal validation
+assignment is populated. Candidate 0.3 pilot and candidate 0.6 intermediate-QA
+materials are explicitly historical. Sampling and import remain prohibited until
+preregistration and the subsequent authorisation gate are complete.
 
 ## 14. How to update the manifest
 

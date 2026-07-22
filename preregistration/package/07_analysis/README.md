@@ -1,28 +1,33 @@
 # Confirmatory analysis
 
-This folder contains the version-controlled schemas and blank output shells for
-the prospective validation analysis. It must not contain generated results,
-exploratory output, real REDCap exports, pilot responses, active or reserve
-sample identities, or changes to the existing dashboard analysis.
+This folder contains version-controlled schemas, ten blank output shells, the
+v0.14 read-only analysis-preflight scaffold and a direct-runtime dependency record. It
+contains no formal data, sample identity, empirical result, completed adjudication,
+or release decision.
 
-Batch 1 foundations are implemented in `analysis/validation/` and tested only
-with `SYN-*` fixtures. They cover the immutable project-rating model, raw-code
-wide-export parsing, exact-set/Jaccard/MASI primitives, transparent
-Krippendorff alpha, replacement panels, register-sufficiency subsets,
-labelwise majority support, categorical diagnostic majorities with an explicit
-three-way split state, macro-average eligibility, owner completion and
-denominators, source-masked adjudication scaffolding, project-level bootstrap
-mechanics, Wilson intervals, and output-shell validation. They do not implement
-empirical analysis, release decisions, formal owner recruitment, or official
-sampling.
+The tested foundations in `analysis/validation/` cover raw-code parsing,
+exact-set/Jaccard/MASI measures, Krippendorff alpha, replacement panels,
+register-sufficiency subsets, labelwise support, owner denominators, source-masked
+adjudication, Wilson intervals, 2,000-project-block bootstrap mechanics and blank
+output validation. Percentile calculations use Hyndman–Fan Type 7, equivalent to
+NumPy/Pandas linear interpolation.
 
-`protocol_analysis_traceability.csv` maps every requirement in protocol
-Sections 8.1-8.10 to the current foundation, test, output shell, explicit
-deferral, or unresolved ambiguity. The ten result CSVs are header-only and
-`figure_output_manifest.csv` describes intended figures without generating
-empty plots.
+`run_validation_analysis.py --check` validates the v0.14 protocol metadata,
+candidate-0.7 150-field frozen dictionary, sampling gate, output schemas,
+dependency lock, Type-7 bootstrap contract and matched-panel sensitivity contract.
+Formal execution is not implemented in this preregistration scaffold; `--run`
+fails explicitly without reading formal data. The final executable orchestration
+will be completed and verified before analysis lock without changing the
+preregistered rules. The scaffold has no network, API, LLM, REDCap, sampling,
+RNG, or assignment-import behaviour and never substitutes synthetic data.
 
-These foundations are not the final frozen analysis program or dependency
-lock. Full per-label/tag reporting, empirical owner summaries, audit selection,
-and release logic remain deferred. Code and dependencies are frozen only at registration;
-results are post-registration and analysis begins only after Gate 3.
+The instrument-validity sensitivity uses the frozen candidate-0.7 validator as
+authoritative. The primary analysis retains affected responses
+exactly as recorded; the sensitivity excludes every project containing an affected
+human response so matched panels remain complete. Project-owner analysis is
+separate. `protocol_analysis_traceability.csv` records the implemented foundation
+and remaining prospective empirical reporting work. Classifying this file as a
+supporting preflight scaffold resolves the earlier readiness-audit option without
+pretending that a complete executable pipeline is frozen. Analysis begins only
+after the registered protocol, later gates, and the separately verified executable
+orchestration permit it.

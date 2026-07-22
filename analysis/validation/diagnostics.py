@@ -34,7 +34,7 @@ def taxonomy_issue_denominator(taxonomy_fits: Iterable[str]) -> int:
 
 
 def support_band(positive_records: int) -> str:
-    """Return the Section 8.6 random-baseline reporting band."""
+    """Return the Section 8.8 random-baseline support/reporting band."""
 
     if not isinstance(positive_records, int) or positive_records < 0:
         raise ValueError("positive_records must be a non-negative integer")
