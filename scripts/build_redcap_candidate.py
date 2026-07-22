@@ -8,13 +8,27 @@ import yaml
 ROOT=Path(__file__).resolve().parents[1]
 PACKAGE=ROOT/'preregistration/package/06_redcap'
 FIXTURES=ROOT/'tests/fixtures'
-VERSION='redcap-candidate-0.6'
+VERSION='redcap-candidate-0.7'
 HISTORICAL_VERSION='redcap-candidate-0.3'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
 SAMPLE_SET_CHOICES='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
 PURPOSE_ANNOTATION="@MAXCHECKED=2 @NONEOFTHEABOVE='8'"
-SC_NOTE_BRANCH="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
+PROJECT_RECORD_GUARD="[record_kind] <> '2' or [record_kind] = ''"
+SC_BLIND_BRANCH=f"({PROJECT_RECORD_GUARD}) and [instrument_ver] = '{HISTORICAL_VERSION}'"
+SC_EXPOSURE_BRANCH=f"({PROJECT_RECORD_GUARD}) and [sc_exposure] = '1'"
+SC_TAX_ISSUE_CONDITION="[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'"
+SC_TAX_ISSUE_BRANCH=f"({PROJECT_RECORD_GUARD}) and ({SC_TAX_ISSUE_CONDITION})"
+SC_NOTE_CONDITION="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
+SC_NOTE_BRANCH=f"({PROJECT_RECORD_GUARD}) and ({SC_NOTE_CONDITION})"
 SC_NOTE_HELP='Required for partial or insufficient evidence, low confidence, or a taxonomy concern.'
+SC_EXPOSURE_LABEL=('Before or during coding this project, did you have access to information about it beyond the permitted public-register title, '
+                   'datasets-used entry and approved training materials?')
+SC_EXPOSURE_HELP=("Select Yes if you had any additional knowledge, including prior involvement in or familiarity with the project, professional or institutional knowledge, "
+                  "or accidental exposure to another reviewer’s information. Still complete the classification, basing your answer only on the permitted register evidence and approved training materials.")
+SC_EXPOSURE_NOTE_LABEL='Briefly identify the source of the additional knowledge—for example, prior project involvement, professional familiarity or accidental exposure to reviewer information.'
+SC_EXPOSURE_NOTE_HELP='Do not reproduce restricted content or another reviewer’s classification.'
+CD_DECLARATION_LABEL=('I confirm that, throughout formal coding, I will base each classification only on the permitted public-register title, datasets-used entry and approved training materials, '
+                      'and will flag any project for which I have additional prior, professional or accidentally acquired information.')
 SC_TAXONOMY_FIT_CHOICES='1, Fit | 2, Partial Fit | 3, No Fit | 4, Cannot assess from register entry'
 SC_TAXONOMY_FIT_HELP=('Taxonomy fit asks whether the taxonomy can adequately represent the project, not whether the public register entry contains enough information to judge this. '
                       'Select “Cannot assess from register entry” when the entry is too limited to determine taxonomy fit. '
@@ -40,7 +54,7 @@ def build_dictionary():
  domains,purposes,tags=tax(); dl=[x['label'] for x in domains]; pl=[x['label'] for x in purposes]; tl=[x['label'] for x in tags]
  hidden='@HIDDEN-SURVEY @READONLY'; rows=[]
  admin=[
- ('assignment_id','Neutral opaque assignment identifier','text','', ''),('review_stream','Review stream','radio','1, Scratch coder | 2, Project owner',''),('reviewer_id','Administrative reviewer identifier','text','',''),('source_record_id','Stable source Record ID','text','',''),('official_project_id','Official Project ID','text','',''),('project_title','Frozen public-register project title','notes','',''),('datasets_used','Frozen public-register datasets-used entry','notes','',''),('sample_set','Sample set','radio',SAMPLE_SET_CHOICES,''),('hard_stratum','Hard-case stratum','radio','0, Not applicable | 1, Domain only | 2, Purpose only | 3, Both',''),('validation_included','Included in validation analysis','yesno','',''),('sample_status','Active or reserve status','radio','1, Active | 2, Reserve | 3, Review only',''),('display_order','Reviewer display order','text','','integer'),('assignment_batch','Assignment batch','text','',''),('source_pop_ver','Source-population version','text','',''),('production_ver','Production-output version','text','',''),('instrument_ver','Instrument version','text','',''),('cluster_id','Project-level clustering identifier','text','',''),('owner_resp_id','Owner respondent identifier','text','',''),('owner_project_id','Owner project identifier','text','',''),
+ ('assignment_id','Neutral opaque assignment identifier','text','', ''),('record_kind','Administrative record type','radio','1, Project assignment | 2, Coder declaration | 3, Synthetic QA',''),('review_stream','Review stream','radio','1, Scratch coder | 2, Project owner',''),('reviewer_id','Administrative reviewer identifier','text','',''),('source_record_id','Stable source Record ID','text','',''),('official_project_id','Official Project ID','text','',''),('project_title','Frozen public-register project title','notes','',''),('datasets_used','Frozen public-register datasets-used entry','notes','',''),('sample_set','Sample set','radio',SAMPLE_SET_CHOICES,''),('hard_stratum','Hard-case stratum','radio','0, Not applicable | 1, Domain only | 2, Purpose only | 3, Both',''),('validation_included','Included in validation analysis','yesno','',''),('sample_status','Active or reserve status','radio','1, Active | 2, Reserve | 3, Review only',''),('display_order','Reviewer display order','text','','integer'),('assignment_batch','Assignment batch','text','',''),('source_pop_ver','Source-population version','text','',''),('production_ver','Production-output version','text','',''),('instrument_ver','Instrument version','text','',''),('cluster_id','Project-level clustering identifier','text','',''),('owner_resp_id','Owner respondent identifier','text','',''),('owner_project_id','Owner project identifier','text','',''),
  ('owner_recruit_route','Owner recruitment route','radio','0, Not applicable | 1, Sequence based | 2, Supplementary purposive | 3, Post-revision',''),
  ('owner_sequence_pos','Owner greedy-sequence position','text','','integer'),
  ('owner_invite_batch','Owner invitation batch or checkpoint','text','',''),
@@ -54,10 +68,14 @@ def build_dictionary():
  for i,x in enumerate(tags,1): admin.append((f'prop_t{i:02d}',f"Proposed tag flag: {x['label']}",'yesno','',''))
  for i,(n,l,t,c,v) in enumerate(admin): rows.append(field(n,'assignment_admin',t,l,'Hidden assignment administration' if i==0 else '',c,validation=v,required=n=='assignment_id',annotation=hidden))
  rows += [
- field('sc_intro','scratch_coder','descriptive','Classify using only the displayed title, datasets-used entry and approved training materials.','Scratch-coder review'),field('sc_assignment','scratch_coder','descriptive','Assignment: <strong>[assignment_id]</strong>'),field('sc_project_title','scratch_coder','descriptive','<strong>Project title</strong><br>[project_title]'),field('sc_datasets','scratch_coder','descriptive','<strong>Datasets used</strong><br>[datasets_used]'),
- field('sc_blind_decl','scratch_coder','radio','I confirm that I used only the permitted register evidence and training materials.',choices='1, Confirmed | 0, Cannot confirm',required=True),field('sc_exposure','scratch_coder','radio','Were you accidentally exposed to prohibited project or reviewer information?',choices='0, No | 1, Yes',required=True),field('sc_exposure_note','scratch_coder','notes','Describe the accidental exposure without copying restricted content.',branch="[sc_exposure] = '1'",required=True),
- field('sc_domains','scratch_coder','checkbox','Research Domain(s)','Classification',choice(dl),'Select every supported substantive domain, or Unclear alone.',required=True,annotation="@NONEOFTHEABOVE='12'"),field('sc_purposes','scratch_coder','checkbox','Analytical Purpose(s)',choices=choice(pl),note='Select one or at most two purposes, or Unclear alone.',required=True,annotation=PURPOSE_ANNOTATION),field('sc_covid','scratch_coder','radio','COVID-19 & Pandemic',choices='0, No | 1, Yes',required=True),field('sc_equity','scratch_coder','radio','Demographic disparities / equity tag',choices='0, No | 1, Yes',required=True),
- field('sc_sufficiency','scratch_coder','radio','Register-entry sufficiency','Evidence and confidence','1, Sufficient | 2, Partial | 3, Insufficient',required=True),field('sc_taxonomy_fit','scratch_coder','radio','Taxonomy fit',choices=SC_TAXONOMY_FIT_CHOICES,note=SC_TAXONOMY_FIT_HELP,required=True),field('sc_tax_issue','scratch_coder','checkbox','Taxonomy issue type',choices=TAXONOMY_ISSUE_CHOICES,branch="[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'",required=True),field('sc_confidence','scratch_coder','radio','Classification confidence',choices='1, High | 2, Medium | 3, Low',required=True),field('sc_note','scratch_coder','notes','Explanatory note',note=SC_NOTE_HELP,branch=SC_NOTE_BRANCH,required=True)]
+ field('cd_intro','coder_declaration','descriptive','Complete this declaration once before beginning formal project coding.','Formal coding declaration',branch="[record_kind] = '2'"),
+ field('cd_reviewer','coder_declaration','descriptive','<strong>Coder:</strong> [reviewer_id]',branch="[record_kind] = '2'"),
+ field('cd_declaration','coder_declaration','radio',CD_DECLARATION_LABEL,choices='1, Confirmed | 0, Cannot confirm',branch="[record_kind] = '2'",required=True),
+ field('cd_nonconfirm_note','coder_declaration','notes','Briefly explain why you cannot make the declaration. Do not include passwords, restricted data or identifiable information about another reviewer.',branch="[record_kind] = '2' and [cd_declaration] = '0'",required=True),
+ field('sc_intro','scratch_coder','descriptive','Classify using only the displayed title, datasets-used entry and approved training materials.','Scratch-coder review',branch=PROJECT_RECORD_GUARD),field('sc_assignment','scratch_coder','descriptive','Assignment: <strong>[assignment_id]</strong>',branch=PROJECT_RECORD_GUARD),field('sc_project_title','scratch_coder','descriptive','<strong>Project title</strong><br>[project_title]',branch=PROJECT_RECORD_GUARD),field('sc_datasets','scratch_coder','descriptive','<strong>Datasets used</strong><br>[datasets_used]',branch=PROJECT_RECORD_GUARD),
+ field('sc_blind_decl','scratch_coder','radio','I confirm that I used only the permitted register evidence and training materials.',choices='1, Confirmed | 0, Cannot confirm',branch=SC_BLIND_BRANCH,required=True),field('sc_exposure','scratch_coder','radio',SC_EXPOSURE_LABEL,choices='0, No | 1, Yes',note=SC_EXPOSURE_HELP,branch=PROJECT_RECORD_GUARD,required=True),field('sc_exposure_note','scratch_coder','notes',SC_EXPOSURE_NOTE_LABEL,note=SC_EXPOSURE_NOTE_HELP,branch=SC_EXPOSURE_BRANCH,required=True),
+ field('sc_domains','scratch_coder','checkbox','Research Domain(s)','Classification',choice(dl),'Select every supported substantive domain, or Unclear alone.',branch=PROJECT_RECORD_GUARD,required=True,annotation="@NONEOFTHEABOVE='12'"),field('sc_purposes','scratch_coder','checkbox','Analytical Purpose(s)',choices=choice(pl),note='Select one or at most two purposes, or Unclear alone.',branch=PROJECT_RECORD_GUARD,required=True,annotation=PURPOSE_ANNOTATION),field('sc_covid','scratch_coder','radio','COVID-19 & Pandemic',choices='0, No | 1, Yes',branch=PROJECT_RECORD_GUARD,required=True),field('sc_equity','scratch_coder','radio','Demographic disparities / equity tag',choices='0, No | 1, Yes',branch=PROJECT_RECORD_GUARD,required=True),
+ field('sc_sufficiency','scratch_coder','radio','Register-entry sufficiency','Evidence and confidence','1, Sufficient | 2, Partial | 3, Insufficient',branch=PROJECT_RECORD_GUARD,required=True),field('sc_taxonomy_fit','scratch_coder','radio','Taxonomy fit',choices=SC_TAXONOMY_FIT_CHOICES,note=SC_TAXONOMY_FIT_HELP,branch=PROJECT_RECORD_GUARD,required=True),field('sc_tax_issue','scratch_coder','checkbox','Taxonomy issue type',choices=TAXONOMY_ISSUE_CHOICES,branch=SC_TAX_ISSUE_BRANCH,required=True),field('sc_confidence','scratch_coder','radio','Classification confidence',choices='1, High | 2, Medium | 3, Low',branch=PROJECT_RECORD_GUARD,required=True),field('sc_note','scratch_coder','notes','Explanatory note',note=SC_NOTE_HELP,branch=SC_NOTE_BRANCH,required=True)]
  rows += [field('po_intro','project_owner','descriptive','Review proposed labels separately for actual-project fit and visibility in the public register entry.','Project-owner review'),field('po_assignment','project_owner','descriptive','Assignment: <strong>[assignment_id]</strong>'),field('po_project_title','project_owner','descriptive','<strong>Project title</strong><br>[project_title]'),field('po_datasets','project_owner','descriptive','<strong>Datasets used</strong><br>[datasets_used]')]
  mapping=[]; triggers=[]
  for prefix,layer,items in [('d','domain',domains),('p','purpose',purposes),('t','tag',tags)]:
@@ -89,16 +107,25 @@ def build_specs(rows,meta):
     'no_destructive_recode':True,
    }
   },
-  'forms':['assignment_admin','scratch_coder','project_owner'],
+  'forms':['assignment_admin','coder_declaration','scratch_coder','project_owner'],
+  'coder_declaration':{
+   'record_kind':2,
+   'frequency':'one declaration record per scratch coder before formal coding',
+   'declaration_field':'cd_declaration',
+   'nonconfirmation_note_rule':'record_kind == 2 and cd_declaration == 0',
+   'audit_record':'REDCap audit trail and form-completion timestamp; no manually entered declaration date',
+  },
   'scratch':{
+   'project_record_guard':'record_kind != 2 or record_kind is blank',
    'domain_field':'sc_domains','domain_unclear_code':12,'domain_unclear_exclusive':True,
    'purpose_field':'sc_purposes','purpose_unclear_code':8,'purpose_min':1,'purpose_max':2,'purpose_unclear_exclusive':True,
    'taxonomy_fit_codes':{1:'Fit',2:'Partial Fit',3:'No Fit',4:'Cannot assess from register entry'},
    'taxonomy_issue_codes':{1:'Missing or inadequately represented category',2:'Ambiguous or overlapping category boundaries',5:'Other taxonomy problem'},
    'cannot_assess_requires_sufficiency':[2,3],
-   'required_core':['sc_blind_decl','sc_exposure','sc_domains','sc_purposes','sc_covid','sc_equity','sc_sufficiency','sc_taxonomy_fit','sc_confidence'],
+   'historical_per_project_declaration':{'field':'sc_blind_decl','visible_only_when':f'instrument_ver == {HISTORICAL_VERSION}','response_mapping_unchanged':True},
+   'required_core':['sc_exposure','sc_domains','sc_purposes','sc_covid','sc_equity','sc_sufficiency','sc_taxonomy_fit','sc_confidence'],
    'conditional_required':{
-    'sc_exposure_note':'sc_exposure == 1',
+    'sc_exposure_note':'record_kind != 2 and sc_exposure == 1',
     'sc_tax_issue':'sc_taxonomy_fit in [2,3]',
     'sc_note':'sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence == 3',
     'other_taxonomy_problem_note':'5 in sc_tax_issue',
@@ -117,9 +144,12 @@ def build_specs(rows,meta):
    'completion_rule':'Every proposed-label verdict and public-entry sufficiency are complete.',
   },
   'neutral_assignment_id':{'pattern':'^[A-Z0-9]{8}$','forbidden_tokens':['baseline','hard','reserve','active','coder','owner'],'must_not_derive_from_hidden_id':True},
-  'completion':{'generated_fields':['assignment_admin_complete','scratch_coder_complete','project_owner_complete'],'invalid_if_trigger_unresolved':True},
+  'completion':{'generated_fields':['assignment_admin_complete','coder_declaration_complete','scratch_coder_complete','project_owner_complete'],'invalid_if_trigger_unresolved':True},
  }
  spec['administration']={
+  'record_kind_codes':{1:'Project assignment',2:'Coder declaration',3:'Synthetic QA'},
+  'record_kind_use':{1:'formal project assignments',2:'one declaration record per coder',3:'synthetic runtime-QA records','blank':'historical candidate-0.3 records only'},
+  'record_kind_does_not_change_scientific_sample_membership':True,
   'sample_set_codes':{1:'Baseline',2:'Hard case',3:'Owner review',4:'Pilot'},
   'pilot_validation_included':0,
   'owner_recruitment_route_codes':{0:'Not applicable',1:'Sequence based',2:'Supplementary purposive',3:'Post-revision'},
@@ -141,13 +171,13 @@ def build_templates(rows,meta):
   if r['Field Type']=='checkbox':
    for part in ch.split(' | '):
     code,label=part.split(', ',1); out.append({'variable':f'{n}___{code}','source_form':r['Form Name'],'redcap_generated_or_user_defined':'REDCap checkbox export','data_type':'integer','allowed_values':'0,1','analysis_role':'classification/diagnostic','project_level_or_assignment_level':'assignment','required_at_lock':r['Required Field?'],'restricted_public_status':'restricted response data','notes':label})
-  else: out.append({'variable':n,'source_form':r['Form Name'],'redcap_generated_or_user_defined':'user-defined','data_type':'string' if r['Field Type'] in ('text','notes') else 'integer','allowed_values':ch,'analysis_role':'identifier/provenance' if r['Form Name']=='assignment_admin' else 'classification/diagnostic','project_level_or_assignment_level':'project' if n in ('cluster_id','owner_project_id') else 'assignment','required_at_lock':r['Required Field?'],'restricted_public_status':'restricted response data','notes':'Hidden from reviewers' if r['Form Name']=='assignment_admin' else ''})
- for form in ('assignment_admin','scratch_coder','project_owner'): out.append({'variable':f'{form}_complete','source_form':form,'redcap_generated_or_user_defined':'REDCap-generated','data_type':'integer','allowed_values':'0, Incomplete | 1, Unverified | 2, Complete','analysis_role':'completion/lock','project_level_or_assignment_level':'assignment','required_at_lock':'y','restricted_public_status':'restricted response data','notes':'Standard REDCap form status; no redundant custom completion field.'})
+  else: out.append({'variable':n,'source_form':r['Form Name'],'redcap_generated_or_user_defined':'user-defined','data_type':'string' if r['Field Type'] in ('text','notes') else 'integer','allowed_values':ch,'analysis_role':'identifier/provenance' if r['Form Name']=='assignment_admin' else 'governance' if r['Form Name']=='coder_declaration' else 'classification/diagnostic','project_level_or_assignment_level':'coder declaration' if r['Form Name']=='coder_declaration' else 'project' if n in ('cluster_id','owner_project_id') else 'assignment','required_at_lock':r['Required Field?'],'restricted_public_status':'restricted response data','notes':'Hidden from reviewers' if r['Form Name']=='assignment_admin' else ''})
+ for form in ('assignment_admin','coder_declaration','scratch_coder','project_owner'): out.append({'variable':f'{form}_complete','source_form':form,'redcap_generated_or_user_defined':'REDCap-generated','data_type':'integer','allowed_values':'0, Incomplete | 1, Unverified | 2, Complete','analysis_role':'completion/lock','project_level_or_assignment_level':'assignment','required_at_lock':'y','restricted_public_status':'restricted response data','notes':'Standard REDCap form status; no redundant custom completion field.'})
  write_csv(PACKAGE/'redcap_expected_export_schema.csv',h,out)
 
 def build_preview(rows):
  forms=[]
- for form in ('scratch_coder','project_owner'):
+ for form in ('coder_declaration','scratch_coder','project_owner'):
   fs=[]
   for r in rows:
    if r['Form Name']!=form: continue
@@ -159,16 +189,21 @@ def build_preview(rows):
  (PACKAGE/'redcap_candidate_instrument_preview.html').write_text(doc,encoding='utf-8')
 
 def build_fixtures():
- adm={'assignment_id':'B6J4K8M2','review_stream':1,'sample_set':1,'validation_included':1,'instrument_ver':VERSION}
- sc={'assignment_id':'A7K3M9Q2','instrument_ver':VERSION,'sc_blind_decl':1,'sc_exposure':0,'sc_domains':[1],'sc_purposes':[1],'sc_covid':0,'sc_equity':0,'sc_sufficiency':1,'sc_taxonomy_fit':1,'sc_confidence':1}
+ adm={'assignment_id':'B6J4K8M2','record_kind':3,'review_stream':1,'sample_set':1,'validation_included':0,'sample_status':3,'instrument_ver':VERSION}
+ declaration={'assignment_id':'D7C4L8R2','record_kind':2,'reviewer_id':'QA01','validation_included':0,'sample_status':3,'instrument_ver':VERSION,'cd_declaration':1}
+ sc={'assignment_id':'A7K3M9Q2','record_kind':3,'instrument_ver':VERSION,'sc_exposure':0,'sc_domains':[1],'sc_purposes':[1],'sc_covid':0,'sc_equity':0,'sc_sufficiency':1,'sc_taxonomy_fit':1,'sc_confidence':1}
+ historical_sc=dict(sc,record_kind='',instrument_ver=HISTORICAL_VERSION,sc_blind_decl=1)
  po={'assignment_id':'Q4N8Z2L7','instrument_ver':VERSION,'cluster_id':'SYNTH-PROJECT-A','owner_resp_id':'SYNTH-OWNER-A','prop_d01':1,'po_d01_fit':1,'po_d01_vis':1,'po_miss_domain':0,'po_miss_purpose':0,'po_miss_tag':0,'po_sufficiency':1,'po_taxonomy_fit':1}
  cases=[]
  def add(cid,stream,valid,base,**kw):
   d=dict(base); d.update(kw); cases.append({'case_id':cid,'stream':stream,'expected_valid':valid,'data':d})
  add('admin_01_baseline','admin',True,adm)
- add('admin_02_pilot_excluded','admin',True,adm,sample_set=4,validation_included=0,instrument_ver=HISTORICAL_VERSION)
+ add('admin_02_pilot_excluded','admin',True,adm,record_kind='',sample_set=4,validation_included=0,instrument_ver=HISTORICAL_VERSION)
  add('admin_03_unknown_sample_set','admin',False,adm,sample_set=9)
- add('admin_04_pilot_included','admin',False,adm,sample_set=4,validation_included=1,instrument_ver=HISTORICAL_VERSION)
+ add('admin_04_pilot_included','admin',False,adm,record_kind='',sample_set=4,validation_included=1,instrument_ver=HISTORICAL_VERSION)
+ add('cd_01_confirmed','declaration',True,declaration)
+ add('cd_02_nonconfirm_with_note','declaration',True,declaration,cd_declaration=0,cd_nonconfirm_note='Synthetic governance explanation only.')
+ add('cd_03_nonconfirm_without_note','declaration',False,declaration,cd_declaration=0)
  add('sc_01_ordinary','scratch',True,sc)
  add('sc_02_multi_domain','scratch',True,sc,sc_domains=[1,2])
  add('sc_03_two_purpose','scratch',True,sc,sc_purposes=[1,2])
@@ -194,9 +229,9 @@ def build_fixtures():
  add('sc_23_exposure','scratch',True,sc,sc_exposure=1,sc_exposure_note='Unexpected non-permitted context was visible.')
  incomplete=dict(sc); incomplete.pop('sc_purposes')
  add('sc_24_incomplete_core','scratch',False,incomplete)
- add('sc_25_historical_issue_3','scratch',True,sc,instrument_ver=HISTORICAL_VERSION,sc_taxonomy_fit=2,sc_tax_issue=[3],sc_note='Historical response retained exactly.')
- add('sc_26_historical_issue_4','scratch',True,sc,instrument_ver=HISTORICAL_VERSION,sc_taxonomy_fit=2,sc_tax_issue=[4],sc_note='Historical response retained exactly.')
- add('sc_27_historical_issue_6','scratch',True,sc,instrument_ver=HISTORICAL_VERSION,sc_taxonomy_fit=2,sc_tax_issue=[6],sc_note='Historical response retained exactly.')
+ add('sc_25_historical_issue_3','scratch',True,historical_sc,sc_taxonomy_fit=2,sc_tax_issue=[3],sc_note='Historical response retained exactly.')
+ add('sc_26_historical_issue_4','scratch',True,historical_sc,sc_taxonomy_fit=2,sc_tax_issue=[4],sc_note='Historical response retained exactly.')
+ add('sc_27_historical_issue_6','scratch',True,historical_sc,sc_taxonomy_fit=2,sc_tax_issue=[6],sc_note='Historical response retained exactly.')
  add('po_28_all_fit','owner',True,po)
  add('po_29_not_fit','owner',True,po,po_d01_fit=2,po_note='The proposed domain does not fit.')
  add('po_30_unsure','owner',True,po,po_d01_fit=3,po_note='I am unsure.')
@@ -216,6 +251,13 @@ def build_fixtures():
  FIXTURES.mkdir(parents=True,exist_ok=True)
  (FIXTURES/'redcap_candidate_synthetic_submissions.yaml').write_text(yaml.safe_dump({'fixture_status':'synthetic_only','contains_real_record_ids':False,'cases':cases},sort_keys=False),encoding='utf-8')
 
+def build_live_qa_fixtures():
+ qa=PACKAGE/'live_qa'; qa.mkdir(parents=True,exist_ok=True)
+ headers=['assignment_id','record_kind','review_stream','reviewer_id','validation_included','sample_status','assignment_batch','source_pop_ver','production_ver','instrument_ver']
+ write_csv(qa/'redcap_live_qa_coder_declaration_candidate_0.7.csv',headers,[{'assignment_id':'DECL-QA01','record_kind':2,'review_stream':1,'reviewer_id':'QA01','validation_included':0,'sample_status':3,'assignment_batch':'live_qa_candidate07','source_pop_ver':'qa-synthetic','production_ver':'qa-synthetic','instrument_ver':VERSION}])
+ project_headers=headers[:4]+['source_record_id','official_project_id','project_title','datasets_used']+headers[4:]
+ write_csv(qa/'redcap_live_qa_synthetic_project_assignment_candidate_0.7.csv',project_headers,[{'assignment_id':'PROJ-QA01','record_kind':3,'review_stream':1,'reviewer_id':'QA01','source_record_id':'QA-SYNTHETIC-01','official_project_id':'QA-SYNTHETIC-01','project_title':'Synthetic candidate 0.7 project-assignment QA record','datasets_used':'Synthetic public-register dataset entry','validation_included':0,'sample_status':3,'assignment_batch':'live_qa_candidate07','source_pop_ver':'qa-synthetic','production_ver':'qa-synthetic','instrument_ver':VERSION}])
+
 def main():
- PACKAGE.mkdir(parents=True,exist_ok=True); rows,meta=build_dictionary(); write_csv(PACKAGE/'redcap_data_dictionary_candidate.csv',HEADERS,rows); build_specs(rows,meta); build_templates(rows,meta); build_preview(rows); build_fixtures(); print(json.dumps({'status':'built','dictionary_rows':len(rows)}))
+ PACKAGE.mkdir(parents=True,exist_ok=True); rows,meta=build_dictionary(); write_csv(PACKAGE/'redcap_data_dictionary_candidate.csv',HEADERS,rows); build_specs(rows,meta); build_templates(rows,meta); build_preview(rows); build_fixtures(); build_live_qa_fixtures(); print(json.dumps({'status':'built','dictionary_rows':len(rows)}))
 if __name__=='__main__': main()

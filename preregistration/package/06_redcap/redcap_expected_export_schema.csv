@@ -1,5 +1,6 @@
 variable,source_form,redcap_generated_or_user_defined,data_type,allowed_values,analysis_role,project_level_or_assignment_level,required_at_lock,restricted_public_status,notes
 assignment_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,y,restricted response data,Hidden from reviewers
+record_kind,assignment_admin,user-defined,integer,"1, Project assignment | 2, Coder declaration | 3, Synthetic QA",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 review_stream,assignment_admin,user-defined,integer,"1, Scratch coder | 2, Project owner",identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 reviewer_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 source_record_id,assignment_admin,user-defined,string,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
@@ -48,6 +49,8 @@ prop_p07,assignment_admin,user-defined,integer,,identifier/provenance,assignment
 prop_p08,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 prop_t01,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
 prop_t02,assignment_admin,user-defined,integer,,identifier/provenance,assignment,,restricted response data,Hidden from reviewers
+cd_declaration,coder_declaration,user-defined,integer,"1, Confirmed | 0, Cannot confirm",governance,coder declaration,y,restricted response data,
+cd_nonconfirm_note,coder_declaration,user-defined,string,,governance,coder declaration,y,restricted response data,
 sc_blind_decl,scratch_coder,user-defined,integer,"1, Confirmed | 0, Cannot confirm",classification/diagnostic,assignment,y,restricted response data,
 sc_exposure,scratch_coder,user-defined,integer,"0, No | 1, Yes",classification/diagnostic,assignment,y,restricted response data,
 sc_exposure_note,scratch_coder,user-defined,string,,classification/diagnostic,assignment,y,restricted response data,
@@ -154,5 +157,6 @@ po_tax_issue___2,project_owner,REDCap checkbox export,integer,"0,1",classificati
 po_tax_issue___5,project_owner,REDCap checkbox export,integer,"0,1",classification/diagnostic,assignment,y,restricted response data,Other taxonomy problem
 po_note,project_owner,user-defined,string,,classification/diagnostic,assignment,y,restricted response data,
 assignment_admin_complete,assignment_admin,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.
+coder_declaration_complete,coder_declaration,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.
 scratch_coder_complete,scratch_coder,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.
 project_owner_complete,project_owner,REDCap-generated,integer,"0, Incomplete | 1, Unverified | 2, Complete",completion/lock,assignment,y,restricted response data,Standard REDCap form status; no redundant custom completion field.

@@ -1,0 +1,2 @@
+assignment_id,review_stream,reviewer_id,source_record_id,official_project_id,project_title,datasets_used,sample_set,hard_stratum,validation_included,sample_status,display_order,assignment_batch,source_pop_ver,production_ver,instrument_ver,cluster_id
+QA-C06-001,1,QA01,QA/001,QA/001,Synthetic unclear-domain test project,National synthetic longitudinal dataset,4,0,0,3,1,live_qa_candidate06,qa-synthetic,qa-synthetic,redcap-candidate-0.6,QA/001

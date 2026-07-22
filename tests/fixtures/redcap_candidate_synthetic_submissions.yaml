@@ -6,44 +6,86 @@ cases:
   expected_valid: true
   data:
     assignment_id: B6J4K8M2
+    record_kind: 3
     review_stream: 1
     sample_set: 1
-    validation_included: 1
-    instrument_ver: redcap-candidate-0.6
+    validation_included: 0
+    sample_status: 3
+    instrument_ver: redcap-candidate-0.7
 - case_id: admin_02_pilot_excluded
   stream: admin
   expected_valid: true
   data:
     assignment_id: B6J4K8M2
+    record_kind: ''
     review_stream: 1
     sample_set: 4
     validation_included: 0
+    sample_status: 3
     instrument_ver: redcap-candidate-0.3
 - case_id: admin_03_unknown_sample_set
   stream: admin
   expected_valid: false
   data:
     assignment_id: B6J4K8M2
+    record_kind: 3
     review_stream: 1
     sample_set: 9
-    validation_included: 1
-    instrument_ver: redcap-candidate-0.6
+    validation_included: 0
+    sample_status: 3
+    instrument_ver: redcap-candidate-0.7
 - case_id: admin_04_pilot_included
   stream: admin
   expected_valid: false
   data:
     assignment_id: B6J4K8M2
+    record_kind: ''
     review_stream: 1
     sample_set: 4
     validation_included: 1
+    sample_status: 3
     instrument_ver: redcap-candidate-0.3
+- case_id: cd_01_confirmed
+  stream: declaration
+  expected_valid: true
+  data:
+    assignment_id: D7C4L8R2
+    record_kind: 2
+    reviewer_id: QA01
+    validation_included: 0
+    sample_status: 3
+    instrument_ver: redcap-candidate-0.7
+    cd_declaration: 1
+- case_id: cd_02_nonconfirm_with_note
+  stream: declaration
+  expected_valid: true
+  data:
+    assignment_id: D7C4L8R2
+    record_kind: 2
+    reviewer_id: QA01
+    validation_included: 0
+    sample_status: 3
+    instrument_ver: redcap-candidate-0.7
+    cd_declaration: 0
+    cd_nonconfirm_note: Synthetic governance explanation only.
+- case_id: cd_03_nonconfirm_without_note
+  stream: declaration
+  expected_valid: false
+  data:
+    assignment_id: D7C4L8R2
+    record_kind: 2
+    reviewer_id: QA01
+    validation_included: 0
+    sample_status: 3
+    instrument_ver: redcap-candidate-0.7
+    cd_declaration: 0
 - case_id: sc_01_ordinary
   stream: scratch
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: &id002
     - 1
@@ -59,8 +101,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains:
     - 1
@@ -76,8 +118,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes:
@@ -93,8 +135,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains:
     - 12
@@ -109,8 +151,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains:
     - 1
@@ -126,8 +168,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes:
@@ -144,8 +186,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -160,8 +202,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -176,8 +218,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -192,8 +234,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -210,8 +252,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -228,8 +270,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -246,8 +288,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -262,8 +304,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -278,8 +320,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -293,8 +335,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -311,8 +353,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -328,8 +370,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -344,8 +386,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -362,8 +404,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -380,8 +422,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -398,8 +440,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -415,8 +457,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 1
     sc_domains: *id002
     sc_purposes: *id001
@@ -431,8 +473,8 @@ cases:
   expected_valid: false
   data:
     assignment_id: A7K3M9Q2
-    instrument_ver: redcap-candidate-0.6
-    sc_blind_decl: 1
+    record_kind: 3
+    instrument_ver: redcap-candidate-0.7
     sc_exposure: 0
     sc_domains: *id002
     sc_covid: 0
@@ -445,8 +487,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    record_kind: ''
     instrument_ver: redcap-candidate-0.3
-    sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -455,6 +497,7 @@ cases:
     sc_sufficiency: 1
     sc_taxonomy_fit: 2
     sc_confidence: 1
+    sc_blind_decl: 1
     sc_tax_issue:
     - 3
     sc_note: Historical response retained exactly.
@@ -463,8 +506,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    record_kind: ''
     instrument_ver: redcap-candidate-0.3
-    sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -473,6 +516,7 @@ cases:
     sc_sufficiency: 1
     sc_taxonomy_fit: 2
     sc_confidence: 1
+    sc_blind_decl: 1
     sc_tax_issue:
     - 4
     sc_note: Historical response retained exactly.
@@ -481,8 +525,8 @@ cases:
   expected_valid: true
   data:
     assignment_id: A7K3M9Q2
+    record_kind: ''
     instrument_ver: redcap-candidate-0.3
-    sc_blind_decl: 1
     sc_exposure: 0
     sc_domains: *id002
     sc_purposes: *id001
@@ -491,6 +535,7 @@ cases:
     sc_sufficiency: 1
     sc_taxonomy_fit: 2
     sc_confidence: 1
+    sc_blind_decl: 1
     sc_tax_issue:
     - 6
     sc_note: Historical response retained exactly.
@@ -499,7 +544,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -515,7 +560,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -532,7 +577,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -549,7 +594,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -566,7 +611,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -585,7 +630,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -604,7 +649,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -623,7 +668,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -642,7 +687,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -661,7 +706,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -680,7 +725,7 @@ cases:
   expected_valid: false
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -696,7 +741,7 @@ cases:
   expected_valid: false
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -713,7 +758,7 @@ cases:
   expected_valid: false
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -731,7 +776,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1
@@ -747,7 +792,7 @@ cases:
   expected_valid: true
   data:
     assignment_id: R5T9X3C8
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-B
     prop_d01: 1
@@ -763,7 +808,7 @@ cases:
   expected_valid: false
   data:
     assignment_id: Q4N8Z2L7
-    instrument_ver: redcap-candidate-0.6
+    instrument_ver: redcap-candidate-0.7
     cluster_id: SYNTH-PROJECT-A
     owner_resp_id: SYNTH-OWNER-A
     prop_d01: 1

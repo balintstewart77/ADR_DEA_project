@@ -66,6 +66,7 @@ INSTRUMENT_VERSIONS = frozenset({
     "redcap-candidate-0.4",
     "redcap-candidate-0.5",
     "redcap-candidate-0.6",
+    "redcap-candidate-0.7",
 })
 SAMPLE_SETS = frozenset({"random_baseline", "hard_case", "owner_review", "pilot"})
 
@@ -125,6 +126,8 @@ class CoderRating:
     taxonomy_fit: str | None
     taxonomy_issues: frozenset[str] = frozenset()
     explanatory_note: str | None = None
+    exposure_flag: bool | None = None
+    exposure_source_note: str | None = None
     complete: bool = True
     response_valid: bool = True
 
@@ -309,6 +312,7 @@ def validate_project(project: ProjectRatings) -> ValidationReport:
             "redcap-candidate-0.4",
             "redcap-candidate-0.5",
             "redcap-candidate-0.6",
+            "redcap-candidate-0.7",
         }:
             if coder.taxonomy_fit == "Cannot assess from register entry" and coder.register_sufficiency == "Sufficient":
                 issues.append(

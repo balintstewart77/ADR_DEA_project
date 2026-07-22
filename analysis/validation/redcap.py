@@ -55,6 +55,10 @@ FIT_CODES = {
         1: "Fit", 2: "Partial Fit", 3: "No Fit",
         4: "Cannot assess from register entry",
     },
+    "redcap-candidate-0.7": {
+        1: "Fit", 2: "Partial Fit", 3: "No Fit",
+        4: "Cannot assess from register entry",
+    },
 }
 ISSUE_CODES = {
     "redcap-candidate-0.3": {
@@ -76,6 +80,11 @@ ISSUE_CODES = {
         5: "Other taxonomy problem",
     },
     "redcap-candidate-0.6": {
+        1: "Missing or inadequately represented category",
+        2: "Ambiguous or overlapping category boundaries",
+        5: "Other taxonomy problem",
+    },
+    "redcap-candidate-0.7": {
         1: "Missing or inadequately represented category",
         2: "Ambiguous or overlapping category boundaries",
         5: "Other taxonomy problem",
@@ -180,6 +189,7 @@ def decode_scratch_row(row: Mapping[str, object]) -> DecodedScratchAssignment:
     sufficiency_code = _integer(row.get("sc_sufficiency"), "sc_sufficiency", allow_blank=True)
     if sufficiency_code is not None and sufficiency_code not in SUFFICIENCY_CODES:
         raise ExportParseError(f"Unknown sc_sufficiency code: {sufficiency_code}")
+    exposure_code = _binary(row.get("sc_exposure"), "sc_exposure", allow_blank=True)
     issues = _checkbox_set(row, "sc_tax_issue", ISSUE_CODES[version], required=False)
     rating = CoderRating(
         reviewer_id=reviewer_id,
@@ -191,6 +201,8 @@ def decode_scratch_row(row: Mapping[str, object]) -> DecodedScratchAssignment:
         taxonomy_fit=FIT_CODES[version].get(fit_code),
         taxonomy_issues=issues or frozenset(),
         explanatory_note=(str(row.get("sc_note", "")).strip() or None),
+        exposure_flag=(None if exposure_code is None else exposure_code == 1),
+        exposure_source_note=(str(row.get("sc_exposure_note", "")).strip() or None),
         complete=_integer(row.get("scratch_coder_complete"), "scratch_coder_complete", allow_blank=True) == 2,
         response_valid=True,
     )
@@ -224,6 +236,13 @@ def parse_scratch_export_rows(
     for row in rows:
         if str(row.get("review_stream", "")).strip() != "1":
             continue
+        version = str(row.get("instrument_ver", "")).strip()
+        record_kind = str(row.get("record_kind", "")).strip()
+        if record_kind in {"2", "3"}:
+            excluded += 1
+            continue
+        if version == "redcap-candidate-0.7" and record_kind != "1":
+            raise ExportParseError("Candidate-0.7 project rows require record_kind 1")
         item = decode_scratch_row(row)
         prior_record = assignment_records.setdefault(item.assignment_id, item.record_id)
         if prior_record != item.record_id:

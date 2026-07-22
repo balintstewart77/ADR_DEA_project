@@ -87,7 +87,7 @@ def valid_project(**changes):
             0,
             0,
         ),
-        instrument_version="redcap-candidate-0.6",
+        instrument_version="redcap-candidate-0.7",
     )
     values.update(changes)
     return ProjectRatings(**values)
@@ -155,6 +155,38 @@ def test_candidate_0_6_uses_the_existing_post_pilot_response_mapping():
     decoded = decode_scratch_row(row)
     assert decoded.rating.taxonomy_fit == "Cannot assess from register entry"
     assert not decoded.rating.taxonomy_issues
+
+
+def test_candidate_0_7_preserves_mapping_and_exposure_for_analysis():
+    row = deepcopy(load_wide_export(FIXTURE)[0])
+    row.update(
+        instrument_ver="redcap-candidate-0.7",
+        record_kind="1",
+        sc_taxonomy_fit="4",
+        sc_exposure="1",
+        sc_exposure_note="Synthetic prior-involvement source.",
+    )
+    decoded = decode_scratch_row(row)
+    assert decoded.rating.taxonomy_fit == "Cannot assess from register entry"
+    assert decoded.rating.exposure_flag is True
+    assert decoded.rating.exposure_source_note == "Synthetic prior-involvement source."
+
+
+def test_declaration_and_synthetic_qa_records_are_excluded_before_project_decoding():
+    base = deepcopy(load_wide_export(FIXTURE)[0])
+    declaration = dict(base, instrument_ver="redcap-candidate-0.7", record_kind="2", sample_set="", source_record_id="")
+    qa = dict(base, instrument_ver="redcap-candidate-0.7", record_kind="3", sample_set="", source_record_id="")
+    result = parse_scratch_export_rows([declaration, qa], model_by_record={}, coder_slot_by_reviewer=SLOTS)
+    assert not result.projects
+    assert result.decoded_assignment_count == 0
+    assert result.excluded_assignment_count == 2
+
+
+def test_candidate_0_7_project_rows_require_record_kind_1():
+    row = deepcopy(load_wide_export(FIXTURE)[0])
+    row["instrument_ver"] = "redcap-candidate-0.7"
+    with pytest.raises(ExportParseError, match="require record_kind 1"):
+        parse_scratch_export_rows([row], model_by_record={}, coder_slot_by_reviewer=SLOTS)
 
 
 def test_duplicate_reviewer_project_and_inconsistent_assignment_ids_fail():

@@ -1,20 +1,45 @@
 # REDCap instrument codebook
 
-Status: working formal-instrument candidate redcap-candidate-0.6. The pilot used
-redcap-candidate-0.3; fresh candidate 0.6 live runtime QA remains pending.
+Status: working formal-instrument candidate redcap-candidate-0.7. The pilot used
+redcap-candidate-0.3. Candidate 0.6 was imported and partially inspected, then
+superseded before final runtime QA. Fresh candidate 0.7 live runtime QA remains
+pending; candidate 0.7 is not frozen or authorised for formal coding.
 
 ## Architecture and visibility
 
-One non-longitudinal REDCap project contains assignment_admin, scratch_coder,
-and project_owner. assignment_id is the record key. Multiple coders or owners
-reviewing one project have distinct opaque assignment IDs and share hidden
-project clustering identifiers.
+One non-longitudinal REDCap project contains assignment_admin,
+coder_declaration, scratch_coder, and project_owner. assignment_id is the record
+key. Multiple coders or owners reviewing one project have distinct opaque
+assignment IDs and share hidden project clustering identifiers. A declaration
+is a separate record rather than a project assignment.
 
 Scratch coders see only a neutral assignment code, title, datasets used, and
 scratch questions. Owners additionally see proposed labels and definitions.
 The owner stream separates actual-project fit from whether the public register
 entry visibly supports the label. Administrative fields remain hidden and
-read-only.
+read-only. `record_kind` uses 1 Project assignment, 2 Coder declaration and 3
+Synthetic QA. Blank is permitted only for historical candidate-0.3 records and
+is treated as a project-assignment record for display. The field is
+administrative and does not alter scientific sample membership.
+
+## One-time coder declaration and per-project exposure
+
+Before formal coding, each scratch coder completes one `coder_declaration`
+record. `cd_declaration` confirms that classifications will use only the
+permitted public-register title, datasets-used entry and approved training
+materials, and that additional prior, professional or accidentally acquired
+information will be flagged per project. `cd_nonconfirm_note` is required only
+for Cannot confirm. REDCap's audit trail and form-completion timestamp provide
+the operational completion record; there is no manually entered declaration
+date.
+
+Every coder–project assignment requires `sc_exposure` (0 No, 1 Yes). Yes covers
+prior involvement or familiarity with the project, professional or
+institutional knowledge, and accidental exposure to another reviewer's
+information. `sc_exposure_note` then records the source of additional knowledge
+without reproducing restricted content, another reviewer's classification, or
+the substantive knowledge itself. The coder still completes the project using
+only the visible permitted evidence.
 
 ## Current response codes
 
@@ -66,8 +91,9 @@ Both candidate-0.3 issue fields used:
 
 Archived pilot exports must be decoded by instrument_ver. Codes 3, 4 and 6 are
 preserved exactly for candidate-0.3 data and are not silently mapped to the
-candidate-0.6 categories. The current expected export schema lists only
-candidate-0.6 checkbox columns 1, 2 and 5.
+candidate-0.7 categories. `sc_blind_decl` retains its original label, codes and
+historical values and is shown only for candidate-0.3 records. The current
+expected export schema lists only candidate-0.7 checkbox columns 1, 2 and 5.
 
 ## Reporting
 
@@ -78,6 +104,12 @@ register-sufficiency diagnostics; it is not counted as No Fit, a taxonomy
 defect, or in the taxonomy-issue denominator. Taxonomy-issue frequencies use
 only cases with Partial Fit or No Fit.
 
-REDCap generates the three standard form-completion fields. The local validator
+Exposure-flagged coder–project responses remain in the primary analysis. Their
+frequency is reported, with qualitative source summaries where appropriate. A
+sensitivity analysis excluding flagged responses is presented where their
+number and pattern make that informative; a flag is not automatically missing
+or invalid.
+
+REDCap generates the four standard form-completion fields. The local validator
 blocks unresolved conditional requirements and applies instrument-version-aware
 response validation.

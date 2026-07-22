@@ -1,4 +1,4 @@
-version: redcap-candidate-0.6
+version: redcap-candidate-0.7
 historical_versions:
   redcap-candidate-0.3:
     scratch_taxonomy_fit_codes:
@@ -16,9 +16,18 @@ historical_versions:
     no_destructive_recode: true
 forms:
 - assignment_admin
+- coder_declaration
 - scratch_coder
 - project_owner
+coder_declaration:
+  record_kind: 2
+  frequency: one declaration record per scratch coder before formal coding
+  declaration_field: cd_declaration
+  nonconfirmation_note_rule: record_kind == 2 and cd_declaration == 0
+  audit_record: REDCap audit trail and form-completion timestamp; no manually entered
+    declaration date
 scratch:
+  project_record_guard: record_kind != 2 or record_kind is blank
   domain_field: sc_domains
   domain_unclear_code: 12
   domain_unclear_exclusive: true
@@ -39,8 +48,11 @@ scratch:
   cannot_assess_requires_sufficiency:
   - 2
   - 3
+  historical_per_project_declaration:
+    field: sc_blind_decl
+    visible_only_when: instrument_ver == redcap-candidate-0.3
+    response_mapping_unchanged: true
   required_core:
-  - sc_blind_decl
   - sc_exposure
   - sc_domains
   - sc_purposes
@@ -50,7 +62,7 @@ scratch:
   - sc_taxonomy_fit
   - sc_confidence
   conditional_required:
-    sc_exposure_note: sc_exposure == 1
+    sc_exposure_note: record_kind != 2 and sc_exposure == 1
     sc_tax_issue: sc_taxonomy_fit in [2,3]
     sc_note: sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence
       == 3
@@ -274,10 +286,21 @@ neutral_assignment_id:
 completion:
   generated_fields:
   - assignment_admin_complete
+  - coder_declaration_complete
   - scratch_coder_complete
   - project_owner_complete
   invalid_if_trigger_unresolved: true
 administration:
+  record_kind_codes:
+    1: Project assignment
+    2: Coder declaration
+    3: Synthetic QA
+  record_kind_use:
+    1: formal project assignments
+    2: one declaration record per coder
+    3: synthetic runtime-QA records
+    blank: historical candidate-0.3 records only
+  record_kind_does_not_change_scientific_sample_membership: true
   sample_set_codes:
     1: Baseline
     2: Hard case

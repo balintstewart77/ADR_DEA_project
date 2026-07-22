@@ -1,5 +1,42 @@
 # REDCap candidate version history
 
+## redcap-candidate-0.7 — 2026-07-22
+
+- Supersedes candidate 0.6 before final live runtime QA. Candidate 0.7 remains a
+  review candidate: it is not frozen, has not passed fresh live runtime QA, and
+  is not authorised for formal coding.
+- Adds hidden, read-only `record_kind`: 1 Project assignment; 2 Coder
+  declaration; 3 Synthetic QA. Blank is reserved for historical
+  candidate-0.3 records and is treated as a project assignment for display.
+  `record_kind` does not alter scientific sample membership.
+- Adds the `coder_declaration` instrument with `cd_intro`, `cd_reviewer`,
+  `cd_declaration`, and conditional `cd_nonconfirm_note`. Each scratch coder
+  completes one declaration record before formal project coding. REDCap's audit
+  trail and form-completion timestamp provide the operational completion
+  record; no manually entered declaration date was added.
+- Preserves `sc_blind_decl` and its 1 Confirmed / 0 Cannot confirm mapping for
+  historical pilot responses. It is now displayed only for
+  `instrument_ver = redcap-candidate-0.3` and hidden for candidate-0.7 formal
+  assignments. No stored pilot response or historical export mapping changed.
+- Revises required per-project `sc_exposure` to cover additional information
+  from prior project involvement or familiarity, professional or institutional
+  knowledge, and accidental exposure to reviewer information. A Yes response
+  does not end coding: the coder completes the classification using only the
+  permitted visible evidence and approved training materials.
+- Revises `sc_exposure_note` to request only the source of possible exposure,
+  not the substantive information, and retains it as required when exposure is
+  Yes. It prohibits reproduction of restricted content or another reviewer's
+  classification.
+- Applies the common declaration-record guard to every scratch field while
+  preserving all existing conditional logic. Scratch content is hidden on
+  record kind 2 and remains visible for formal project assignments, synthetic
+  QA records, and blank historical pilot records.
+- Adds excluded, review-only synthetic declaration and project-assignment import
+  fixtures. No formal declaration, sample, or project assignment was created.
+- This is a formal instrument and governance clarification. It changes no
+  taxonomy, sampling design, original pilot data, model output, exclusion,
+  seed, quota, or project-owner scientific field.
+
 ## redcap-candidate-0.6 — 2026-07-21
 
 - Created from intermediate formal candidate 0.5 in response to final coder
@@ -30,10 +67,12 @@
   the stated close-of-play deadline on Wednesday 22 July 2026. Their responses
   are not treated as formal approval or endorsement. Screenshot-based guidance
   remains planned for the coder start pack.
-- Candidate 0.6 is the current working formal-instrument review candidate. It
-  has passed offline repository validation, but it has not been imported into
-  REDCap, has not passed fresh live runtime QA, and is not frozen or authorised
-  for formal coding.
+- Candidate 0.6 was imported into the live scratch project and partially
+  inspected, then superseded before final runtime QA by candidate 0.7. It
+  collected no formal data and was never frozen, live-runtime-QA approved, or
+  authorised for formal coding. The live post-import dictionary snapshot and
+  synthetic candidate-0.6 QA fixture are retained as historical evidence of
+  the intermediate test.
 
 ## redcap-candidate-0.5 — 2026-07-18
 

@@ -114,8 +114,10 @@ def verify_protocol_entry(
             issues.append(f"{field} must be {expected!r} for {version}")
     if version == "v0.12":
         notes = (row.get("notes") or "").strip()
-        if "candidate 0.6" not in notes:
-            issues.append("v0.12 notes must identify candidate 0.6 as the current instrument")
+        if "candidate 0.7" not in notes:
+            issues.append("v0.12 notes must identify candidate 0.7 as the current instrument")
+        if "candidate 0.6" not in notes or "imported" not in notes or "superseded before final runtime QA" not in notes:
+            issues.append("v0.12 notes must record candidate 0.6 as an imported intermediate superseded before final runtime QA")
         if "candidate 0.5" in notes:
             issues.append("v0.12 notes retain a stale current-candidate 0.5 reference")
         if "closed coder feedback" not in notes:

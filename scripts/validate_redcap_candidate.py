@@ -17,16 +17,29 @@ EXPORT_SCHEMA=PACKAGE/'redcap_expected_export_schema.csv'
 PREVIEW=PACKAGE/'redcap_candidate_instrument_preview.html'
 FIXTURES=ROOT/'tests/fixtures/redcap_candidate_synthetic_submissions.yaml'
 HEADERS=['Variable / Field Name','Form Name','Section Header','Field Type','Field Label','Choices, Calculations, OR Slider Labels','Field Note','Text Validation Type OR Show Slider Number','Text Validation Min','Text Validation Max','Identifier?','Branching Logic (Show field only if...)','Required Field?','Custom Alignment','Question Number (surveys only)','Matrix Group Name','Matrix Ranking?','Field Annotation']
-FORMS={'assignment_admin','scratch_coder','project_owner'}
+FORMS={'assignment_admin','coder_declaration','scratch_coder','project_owner'}
 TYPES={'text','notes','radio','dropdown','checkbox','yesno','truefalse','descriptive','calc','slider','file','signature'}
-VERSION='redcap-candidate-0.6'
+VERSION='redcap-candidate-0.7'
 HISTORICAL_VERSION='redcap-candidate-0.3'
 SAMPLE_SET_CHOICES={'1':'Baseline','2':'Hard case','3':'Owner review','4':'Pilot'}
 SAMPLE_SET_TEXT='1, Baseline | 2, Hard case | 3, Owner review | 4, Pilot'
 PURPOSE_ANNOTATION="@MAXCHECKED=2 @NONEOFTHEABOVE='8'"
-SC_EXPOSURE_BRANCH="[sc_exposure] = '1'"
-SC_NOTE_BRANCH="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
+PROJECT_RECORD_GUARD="[record_kind] <> '2' or [record_kind] = ''"
+SC_BLIND_BRANCH=f"({PROJECT_RECORD_GUARD}) and [instrument_ver] = '{HISTORICAL_VERSION}'"
+SC_EXPOSURE_BRANCH=f"({PROJECT_RECORD_GUARD}) and [sc_exposure] = '1'"
+SC_TAX_ISSUE_CONDITION="[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'"
+SC_TAX_ISSUE_BRANCH=f"({PROJECT_RECORD_GUARD}) and ({SC_TAX_ISSUE_CONDITION})"
+SC_NOTE_CONDITION="[sc_sufficiency] = '2' or [sc_sufficiency] = '3' or [sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3' or [sc_confidence] = '3'"
+SC_NOTE_BRANCH=f"({PROJECT_RECORD_GUARD}) and ({SC_NOTE_CONDITION})"
 SC_NOTE_HELP='Required for partial or insufficient evidence, low confidence, or a taxonomy concern.'
+SC_EXPOSURE_LABEL=('Before or during coding this project, did you have access to information about it beyond the permitted public-register title, '
+                   'datasets-used entry and approved training materials?')
+SC_EXPOSURE_HELP=("Select Yes if you had any additional knowledge, including prior involvement in or familiarity with the project, professional or institutional knowledge, "
+                  "or accidental exposure to another reviewer’s information. Still complete the classification, basing your answer only on the permitted register evidence and approved training materials.")
+SC_EXPOSURE_NOTE_LABEL='Briefly identify the source of the additional knowledge—for example, prior project involvement, professional familiarity or accidental exposure to reviewer information.'
+SC_EXPOSURE_NOTE_HELP='Do not reproduce restricted content or another reviewer’s classification.'
+CD_DECLARATION_LABEL=('I confirm that, throughout formal coding, I will base each classification only on the permitted public-register title, datasets-used entry and approved training materials, '
+                      'and will flag any project for which I have additional prior, professional or accidentally acquired information.')
 SC_TAXONOMY_FIT_HELP=('Taxonomy fit asks whether the taxonomy can adequately represent the project, not whether the public register entry contains enough information to judge this. '
                       'Select “Cannot assess from register entry” when the entry is too limited to determine taxonomy fit. '
                       'Do not select “Partial Fit” or “No Fit” solely because the entry lacks information.')
@@ -63,7 +76,7 @@ def validate_dictionary(path=DICTIONARY):
  if header!=HEADERS: errors.append(f'Standard dictionary headers differ: {header}')
  if not rows: errors.append('Dictionary is empty'); raise CandidateError('\n'.join(errors))
  names=[r.get('Variable / Field Name','') for r in rows]
- if len(rows)!=145: errors.append(f'Candidate dictionary must contain 145 fields, found {len(rows)}')
+ if len(rows)!=150: errors.append(f'Candidate dictionary must contain 150 fields, found {len(rows)}')
  if names[0]!='assignment_id': errors.append('First dictionary field must be assignment_id')
  if len(names)!=len(set(names)): errors.append('Duplicate variable name')
  for n in names:
@@ -90,7 +103,7 @@ def validate_dictionary(path=DICTIONARY):
   row=by.get(variable,{})
   if choices(row.get('Choices, Calculations, OR Slider Labels',''))!=CURRENT_TAXONOMY_ISSUE_CHOICES: errors.append(f'{prefix} taxonomy-issue choices differ')
   if row.get('Field Annotation'): errors.append(f'{prefix} taxonomy-issue field must not carry an action tag')
- if by.get('sc_tax_issue',{}).get('Branching Logic (Show field only if...)')!="[sc_taxonomy_fit] = '2' or [sc_taxonomy_fit] = '3'": errors.append('Scratch taxonomy-issue branching differs')
+ if by.get('sc_tax_issue',{}).get('Branching Logic (Show field only if...)')!=SC_TAX_ISSUE_BRANCH: errors.append('Scratch taxonomy-issue branching differs')
  if by.get('po_tax_issue',{}).get('Branching Logic (Show field only if...)')!="[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'": errors.append('Owner taxonomy-issue branching differs')
  obsolete={'Gender, Race & Ethnicity','Inequality / Disparities Analysis','Single-Dataset','Within-Domain Linkage','Cross-Domain Linkage'}
  all_choice_labels={v for r in rows for v in choices(r.get('Choices, Calculations, OR Slider Labels','')).values()}
@@ -105,9 +118,29 @@ def validate_dictionary(path=DICTIONARY):
  if by.get('sc_purposes',{}).get('Field Annotation')!=PURPOSE_ANNOTATION: errors.append('Scratch purpose action tags differ')
  if by.get('sc_domains',{}).get('Field Annotation')!="@NONEOFTHEABOVE='12'": errors.append('Scratch domain action tag differs')
  if choices(by.get('sample_set',{}).get('Choices, Calculations, OR Slider Labels',''))!=SAMPLE_SET_CHOICES: errors.append('Administrative sample_set choices differ')
+ if choices(by.get('record_kind',{}).get('Choices, Calculations, OR Slider Labels',''))!={'1':'Project assignment','2':'Coder declaration','3':'Synthetic QA'}: errors.append('Administrative record_kind choices differ')
  if choices(by.get('owner_recruit_route',{}).get('Choices, Calculations, OR Slider Labels',''))!={'0':'Not applicable','1':'Sequence based','2':'Supplementary purposive','3':'Post-revision'}: errors.append('Owner recruitment-route choices differ')
+ declaration_expected={
+  'cd_intro':('descriptive','Complete this declaration once before beginning formal project coding.',"[record_kind] = '2'",''),
+  'cd_reviewer':('descriptive','<strong>Coder:</strong> [reviewer_id]',"[record_kind] = '2'",''),
+  'cd_declaration':('radio',CD_DECLARATION_LABEL,"[record_kind] = '2'",'y'),
+  'cd_nonconfirm_note':('notes','Briefly explain why you cannot make the declaration. Do not include passwords, restricted data or identifiable information about another reviewer.',"[record_kind] = '2' and [cd_declaration] = '0'",'y'),
+ }
+ for name,(typ,label,branch,required_flag) in declaration_expected.items():
+  row=by.get(name,{})
+  if row.get('Form Name')!='coder_declaration' or row.get('Field Type')!=typ or row.get('Field Label')!=label or row.get('Branching Logic (Show field only if...)')!=branch or row.get('Required Field?')!=required_flag: errors.append(f'Coder declaration field differs: {name}')
+ if choices(by.get('cd_declaration',{}).get('Choices, Calculations, OR Slider Labels',''))!={'1':'Confirmed','0':'Cannot confirm'}: errors.append('Coder declaration choices differ')
+ if by.get('cd_intro',{}).get('Section Header')!='Formal coding declaration': errors.append('Coder declaration section header differs')
+ scratch_expected={r.get('Variable / Field Name'):PROJECT_RECORD_GUARD for r in rows if r.get('Form Name')=='scratch_coder'}
+ scratch_expected.update({'sc_blind_decl':SC_BLIND_BRANCH,'sc_exposure_note':SC_EXPOSURE_BRANCH,'sc_tax_issue':SC_TAX_ISSUE_BRANCH,'sc_note':SC_NOTE_BRANCH})
+ for name,expected_branch in scratch_expected.items():
+  if by[name].get('Branching Logic (Show field only if...)')!=expected_branch: errors.append(f'Scratch project-record guard differs: {name}')
+ blind=by.get('sc_blind_decl',{})
+ if blind.get('Field Label')!='I confirm that I used only the permitted register evidence and training materials.' or choices(blind.get('Choices, Calculations, OR Slider Labels',''))!={'1':'Confirmed','0':'Cannot confirm'}: errors.append('Historical sc_blind_decl wording or mapping differs')
+ exposure=by.get('sc_exposure',{})
+ if exposure.get('Field Label')!=SC_EXPOSURE_LABEL or exposure.get('Field Note')!=SC_EXPOSURE_HELP or choices(exposure.get('Choices, Calculations, OR Slider Labels',''))!={'0':'No','1':'Yes'} or exposure.get('Required Field?')!='y': errors.append('Scratch per-project exposure field differs')
  exposure_note=by.get('sc_exposure_note',{})
- if exposure_note.get('Branching Logic (Show field only if...)')!=SC_EXPOSURE_BRANCH or exposure_note.get('Required Field?')!='y': errors.append('Dedicated exposure description must remain required when sc_exposure = 1')
+ if exposure_note.get('Field Label')!=SC_EXPOSURE_NOTE_LABEL or exposure_note.get('Field Note')!=SC_EXPOSURE_NOTE_HELP or exposure_note.get('Branching Logic (Show field only if...)')!=SC_EXPOSURE_BRANCH or exposure_note.get('Required Field?')!='y': errors.append('Dedicated exposure source note must remain required when sc_exposure = 1')
  sc_note=by.get('sc_note',{})
  if sc_note.get('Branching Logic (Show field only if...)')!=SC_NOTE_BRANCH: errors.append('Scratch generic note branching differs')
  if sc_note.get('Field Note')!=SC_NOTE_HELP: errors.append('Scratch generic note help text differs')
@@ -121,7 +154,7 @@ def expected_exports(rows):
   n=r['Variable / Field Name']
   if r['Field Type']=='checkbox': out|={f'{n}___{c}' for c in choices(r['Choices, Calculations, OR Slider Labels'])}
   else: out.add(n)
- out|={'assignment_admin_complete','scratch_coder_complete','project_owner_complete'}; return out
+ out|={'assignment_admin_complete','coder_declaration_complete','scratch_coder_complete','project_owner_complete'}; return out
 
 def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  errors=[]
@@ -134,15 +167,19 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  if not fit_spec or any(r.get('notes')!=SC_TAXONOMY_FIT_HELP for r in fit_spec): errors.append('Field specification Scratch taxonomy-fit help differs')
  spec=yaml.safe_load((package/'redcap_branching_validation_specification.yaml').read_text(encoding='utf-8'))
  if spec.get('version')!=VERSION: errors.append('Branch specification candidate version differs')
- if spec.get('forms')!=['assignment_admin','scratch_coder','project_owner']: errors.append('Branch specification form order differs')
+ if spec.get('forms')!=['assignment_admin','coder_declaration','scratch_coder','project_owner']: errors.append('Branch specification form order differs')
  admin_spec=spec.get('administration',{})
+ if admin_spec.get('record_kind_codes')!={1:'Project assignment',2:'Coder declaration',3:'Synthetic QA'}: errors.append('Branch specification record_kind codes differ')
+ if admin_spec.get('record_kind_use')!={1:'formal project assignments',2:'one declaration record per coder',3:'synthetic runtime-QA records','blank':'historical candidate-0.3 records only'}: errors.append('Branch specification record_kind use differs')
+ if admin_spec.get('record_kind_does_not_change_scientific_sample_membership') is not True: errors.append('record_kind must not change scientific sample membership')
  if admin_spec.get('sample_set_codes')!={1:'Baseline',2:'Hard case',3:'Owner review',4:'Pilot'}: errors.append('Branch specification sample_set codes differ')
  if admin_spec.get('pilot_validation_included')!=0: errors.append('Branch specification pilot exclusion rule differs')
  if admin_spec.get('owner_sequence_target_unique_records')!=50 or admin_spec.get('owner_sequence_minimum_viable_unique_records')!=25: errors.append('Owner sequence target/minimum differs')
  if admin_spec.get('owner_supplementary_invitation_maximum')!=10 or admin_spec.get('owner_data_collection_close_day')!=42: errors.append('Owner supplementary maximum or close day differs')
  if admin_spec.get('no_fixed_owner_reserve') is not True: errors.append('Owner reserve must be explicitly absent')
  scratch_spec=spec.get('scratch',{})
- if scratch_spec.get('conditional_required',{}).get('sc_exposure_note')!='sc_exposure == 1': errors.append('Branch specification exposure-note rule differs')
+ if scratch_spec.get('project_record_guard')!='record_kind != 2 or record_kind is blank': errors.append('Branch specification scratch project-record guard differs')
+ if scratch_spec.get('conditional_required',{}).get('sc_exposure_note')!='record_kind != 2 and sc_exposure == 1': errors.append('Branch specification exposure-note rule differs')
  if scratch_spec.get('conditional_required',{}).get('sc_note')!='sc_sufficiency in [2,3] or sc_taxonomy_fit in [2,3] or sc_confidence == 3': errors.append('Branch specification generic-note rule differs')
  if scratch_spec.get('taxonomy_fit_codes')!={1:'Fit',2:'Partial Fit',3:'No Fit',4:'Cannot assess from register entry'}: errors.append('Branch specification Scratch taxonomy-fit codes differ')
  if scratch_spec.get('taxonomy_issue_codes')!={1:'Missing or inadequately represented category',2:'Ambiguous or overlapping category boundaries',5:'Other taxonomy problem'}: errors.append('Branch specification current taxonomy-issue codes differ')
@@ -150,6 +187,10 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  historical=spec.get('historical_versions',{}).get(HISTORICAL_VERSION,{})
  if historical.get('taxonomy_issue_codes')!={1:'Missing category',2:'Ambiguous/overlapping categories',3:'Too broad',4:'Too narrow',5:'Other',6:'None'}: errors.append('Candidate-0.3 historical taxonomy-issue mapping differs')
  if not historical.get('decode_only') or not historical.get('no_destructive_recode'): errors.append('Candidate-0.3 historical mapping must be decode-only')
+ historical_decl=scratch_spec.get('historical_per_project_declaration',{})
+ if historical_decl!={'field':'sc_blind_decl','visible_only_when':f'instrument_ver == {HISTORICAL_VERSION}','response_mapping_unchanged':True}: errors.append('Candidate-0.3 historical declaration specification differs')
+ declaration_spec=spec.get('coder_declaration',{})
+ if declaration_spec.get('record_kind')!=2 or declaration_spec.get('frequency')!='one declaration record per scratch coder before formal coding' or declaration_spec.get('declaration_field')!='cd_declaration': errors.append('Coder declaration specification differs')
  if scratch_spec.get('action_tags_for_live_confirmation',{}).get('sc_purposes')!=PURPOSE_ANNOTATION: errors.append('Branch specification purpose action tags differ')
  mapping=spec.get('owner',{}).get('label_mapping',[]); labels=taxonomy_labels()
  if spec.get('owner',{}).get('taxonomy_fit_codes')!={1:'Fit',2:'Partial Fit',3:'No Fit'}: errors.append('Branch specification Owner taxonomy-fit codes differ')
@@ -173,6 +214,17 @@ def validate_supporting(rows,by,package=PACKAGE,fixture_path=FIXTURES):
  if not (parser.html and parser.h1): errors.append('Static preview is not parseable HTML')
  if html.escape(SC_NOTE_BRANCH) not in preview: errors.append('Static preview lacks corrected generic-note branch')
  if html.escape(SC_TAXONOMY_FIT_HELP) not in preview: errors.append('Static preview lacks Scratch taxonomy-fit help text')
+ if html.escape(CD_DECLARATION_LABEL) not in preview or html.escape(SC_EXPOSURE_LABEL) not in preview or html.escape(SC_EXPOSURE_HELP) not in preview: errors.append('Static preview lacks declaration or exposure wording')
+ qa=package/'live_qa'
+ qa_files=[qa/'redcap_live_qa_coder_declaration_candidate_0.7.csv',qa/'redcap_live_qa_synthetic_project_assignment_candidate_0.7.csv']
+ qa_rows=[]
+ for qa_path in qa_files:
+  if not qa_path.is_file(): errors.append(f'Missing synthetic live-QA fixture: {qa_path.name}'); continue
+  rows_qa,_=read_csv(qa_path); qa_rows.extend(rows_qa)
+ if qa_rows:
+  if {r.get('record_kind') for r in qa_rows}!={'2','3'}: errors.append('Live-QA fixtures must contain one declaration and one project QA record kind')
+  if any(r.get('instrument_ver')!=VERSION or r.get('validation_included')!='0' or r.get('sample_status')!='3' for r in qa_rows): errors.append('Live-QA fixtures must be candidate 0.7 review-only records excluded from validation')
+  if any(r.get('record_kind')=='1' for r in qa_rows): errors.append('Live-QA fixtures must not create formal project assignments')
  fixture=fixture_path.read_text(encoding='utf-8')
  if REAL_ID_RE.search(fixture): errors.append('Real Record ID in synthetic fixture')
  if re.search(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',fixture): errors.append('Email address in synthetic fixture')
@@ -192,20 +244,39 @@ def required(data,names,errors):
 def validate_admin(data):
  e=[]
  if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
- if data.get('instrument_ver') not in (VERSION,HISTORICAL_VERSION): e.append('invalid or missing instrument_ver')
- required(data,['review_stream','sample_set','validation_included'],e)
+ version=data.get('instrument_ver'); kind=data.get('record_kind')
+ if version not in (VERSION,HISTORICAL_VERSION): e.append('invalid or missing instrument_ver')
+ if version==VERSION and kind not in (1,2,3): e.append('invalid or missing record_kind')
+ if version==HISTORICAL_VERSION and kind not in ('',None): e.append('historical candidate-0.3 record_kind must remain blank')
+ if kind==2: required(data,['review_stream','reviewer_id','validation_included','sample_status'],e)
+ else: required(data,['review_stream','sample_set','validation_included'],e)
  if data.get('review_stream') not in (1,2): e.append('invalid review_stream code')
- if data.get('sample_set') not in (1,2,3,4): e.append('invalid sample_set code')
+ if kind!=2 and data.get('sample_set') not in (1,2,3,4): e.append('invalid sample_set code')
  if data.get('validation_included') not in (0,1): e.append('invalid validation_included code')
  if data.get('sample_set')==4 and data.get('validation_included')!=0: e.append('pilot assignments must be excluded from validation')
+ if kind in (2,3) and (data.get('validation_included')!=0 or data.get('sample_status')!=3): e.append('declaration and synthetic QA records must be review-only and excluded from validation')
+ return e
+def validate_declaration(data):
+ e=[]
+ if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
+ if data.get('instrument_ver')!=VERSION: e.append('declaration must use the current candidate version')
+ if data.get('record_kind')!=2: e.append('declaration must use record_kind 2')
+ required(data,['reviewer_id','cd_declaration'],e)
+ if data.get('cd_declaration') not in (0,1): e.append('invalid declaration response code')
+ if data.get('cd_declaration')==0 and not data.get('cd_nonconfirm_note'): e.append('nonconfirmation requires explanation')
  return e
 def validate_scratch(data):
  e=[]
  if not neutral(data.get('assignment_id')): e.append('assignment_id is not neutral opaque')
  version=data.get('instrument_ver')
  if version not in (VERSION,HISTORICAL_VERSION): e.append('invalid or missing instrument_ver')
- required(data,['sc_blind_decl','sc_exposure','sc_domains','sc_purposes','sc_covid','sc_equity','sc_sufficiency','sc_taxonomy_fit','sc_confidence'],e)
- if data.get('sc_blind_decl')!=1: e.append('blinding declaration not confirmed')
+ if version==VERSION and data.get('record_kind') not in (1,3): e.append('current scratch response must be a project-assignment or synthetic-QA record')
+ if version==HISTORICAL_VERSION and data.get('record_kind') not in ('',None): e.append('historical candidate-0.3 record_kind must remain blank')
+ required(data,['sc_exposure','sc_domains','sc_purposes','sc_covid','sc_equity','sc_sufficiency','sc_taxonomy_fit','sc_confidence'],e)
+ if version==HISTORICAL_VERSION:
+  required(data,['sc_blind_decl'],e)
+  if data.get('sc_blind_decl')!=1: e.append('historical blinding declaration not confirmed')
+ if version==VERSION and data.get('sc_blind_decl') not in ('',None): e.append('historical per-project declaration must be hidden for candidate 0.7')
  domains=data.get('sc_domains') or []; purposes=data.get('sc_purposes') or []
  if any(x not in range(1,13) for x in domains): e.append('invalid domain response code')
  if 12 in domains and len(domains)>1: e.append('Unclear domain plus substantive domain')
@@ -213,7 +284,8 @@ def validate_scratch(data):
  if any(x not in range(1,9) for x in purposes): e.append('invalid purpose response code')
  if 8 in purposes and len(purposes)>1: e.append('Unclear purpose plus substantive purpose')
  if data.get('sc_sufficiency') not in (1,2,3): e.append('invalid register-sufficiency code')
- if data.get('sc_exposure')==1 and not data.get('sc_exposure_note'): e.append('accidental exposure requires explanation')
+ if data.get('sc_exposure') not in (0,1): e.append('invalid exposure response code')
+ if data.get('sc_exposure')==1 and not data.get('sc_exposure_note'): e.append('additional knowledge requires a source explanation')
  fit=data.get('sc_taxonomy_fit')
  allowed_fit=(1,2,3,4) if version==VERSION else (1,2,3)
  if fit not in allowed_fit: e.append('invalid scratch taxonomy-fit code')
@@ -267,6 +339,7 @@ def validate_submissions(path=FIXTURES,spec_path=BRANCH_SPEC):
   cid=case.get('case_id'); data=case.get('data',{}); aid=data.get('assignment_id')
   stream=case.get('stream')
   if stream=='admin': actual=validate_admin(data)
+  elif stream=='declaration': actual=validate_declaration(data)
   elif stream=='scratch': actual=validate_scratch(data)
   elif stream=='owner': actual=validate_owner(data,spec['owner']['label_mapping'])
   else: actual=[f'unknown synthetic stream: {stream}']

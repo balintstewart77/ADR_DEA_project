@@ -1,0 +1,2 @@
+assignment_id,record_kind,review_stream,reviewer_id,source_record_id,official_project_id,project_title,datasets_used,validation_included,sample_status,assignment_batch,source_pop_ver,production_ver,instrument_ver
+PROJ-QA01,3,1,QA01,QA-SYNTHETIC-01,QA-SYNTHETIC-01,Synthetic candidate 0.7 project-assignment QA record,Synthetic public-register dataset entry,0,3,live_qa_candidate07,qa-synthetic,qa-synthetic,redcap-candidate-0.7

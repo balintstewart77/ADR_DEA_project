@@ -181,6 +181,13 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
     assert "candidate 0.3" not in instrument_paragraph
     assert "provisional 1,309-row" not in protocol
     assert "must be reverified" not in protocol
+    assert "each coder will complete one declaration" in protocol
+    assert "Every coder–project assignment" in protocol
+    assert "prior involvement in or familiarity with the project" in protocol
+    assert "A flagged coder will still complete the classification" in protocol
+    assert "Exposure-flagged coder–project responses will also remain in the primary analysis" in protocol
+    assert "a sensitivity analysis excluding flagged responses" in protocol
+    assert "residual influence from prior project knowledge cannot be eliminated" in protocol
     with Path(
         "preregistration/package/09_logs_and_templates/coding_clarification_log.csv"
     ).open(encoding="utf-8", newline="") as handle:
