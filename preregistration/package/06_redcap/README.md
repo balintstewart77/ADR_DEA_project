@@ -6,12 +6,18 @@ Owner development candidate required by Protocol v0.15. Candidate 0.7 remains
 the frozen scratch-coder version; its historical `project_owner` form was never
 independently live-QA tested for the standalone owner workflow.
 
-`owner-redcap-candidate-0.1` is a separate 152-field, three-instrument Classic
-project candidate with restricted contact records, owner-project assignment
-records and one respondent survey. It is intended for later synthetic-only live
-QA in Development PID 9149. It has not been imported, live tested or frozen and
-does not authorise real contacts, invitations, assignments or data collection.
-Its canonical guide is `project_owner_redcap_candidate_0.1_README.md`.
+`owner-redcap-candidate-0.2` is the current separate 167-field, four-instrument
+Classic project candidate. It adds one contact-record consent survey so
+affirmative, versioned informed consent is obtained once per researcher before
+any project-review links are released. Later reviews remain voluntary without
+repeating full consent. It is intended for later synthetic-only live QA in
+Development PID 9149. It has not been imported, live tested or frozen and does
+not authorise real contacts, invitations, assignments or data collection. Its
+canonical guide is `project_owner_redcap_candidate_0.2_README.md`.
+
+`owner-redcap-candidate-0.1` remains unchanged as an unfrozen, never-imported
+historical candidate. It used a per-assignment participation acknowledgement
+and was superseded by candidate 0.2 before live QA.
 
 Candidate 0.7 passed repository validation and completed live REDCap QA on 22
 July 2026. It is frozen for preregistration and subsequent formal scratch

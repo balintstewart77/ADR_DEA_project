@@ -1,0 +1,212 @@
+version: owner-redcap-candidate-0.2
+status: development_candidate_unfrozen_live_qa_pending
+classic_non_longitudinal: true
+forms:
+- owner_contact_admin
+- project_owner_consent
+- owner_assignment_admin
+- project_owner_review
+field_counts:
+  owner_contact_admin: 31
+  project_owner_consent: 12
+  owner_assignment_admin: 39
+  project_owner_review: 85
+record_type:
+  1: Contact
+  2: Assignment
+guards:
+  contact: '[record_type] = ''1'''
+  consent: '[record_type] = ''1'''
+  assignment: '[record_type] = ''2'''
+  review: '[record_type] = ''2'''
+survey_instruments:
+- project_owner_consent
+- project_owner_review
+admin_only_instruments:
+- owner_contact_admin
+- owner_assignment_admin
+consent_once_per_owner_id: true
+consent_information_version: owner-information-0.2
+consent_timestamp: project_owner_consent_timestamp
+reconsent_trigger: oc_reconsent_required == 1 after substantial activity or intended-use
+  change
+link_release_requires:
+- oc_eoi_status == 2
+- pc_decision == 1
+- pc_info_version == owner-information-0.2
+- oc_reconsent_required == 0
+- oc_consent_withdrawal == 0
+- oc_contact_suppression == 0
+record_specific_links_only: true
+label_mapping:
+- variable: d01
+  layer: domain
+  flag: prop_d01
+  verdict: po_d01_fit
+  visibility: po_d01_vis
+  label: Labour Market & Employment
+- variable: d02
+  layer: domain
+  flag: prop_d02
+  verdict: po_d02_fit
+  visibility: po_d02_vis
+  label: Education & Skills
+- variable: d03
+  layer: domain
+  flag: prop_d03
+  verdict: po_d03_fit
+  visibility: po_d03_vis
+  label: Health & Social Care
+- variable: d04
+  layer: domain
+  flag: prop_d04
+  verdict: po_d04_fit
+  visibility: po_d04_vis
+  label: Crime & Justice
+- variable: d05
+  layer: domain
+  flag: prop_d05
+  verdict: po_d05_fit
+  visibility: po_d05_vis
+  label: Business & Productivity
+- variable: d06
+  layer: domain
+  flag: prop_d06
+  verdict: po_d06_fit
+  visibility: po_d06_vis
+  label: Poverty, Wealth & Living Standards
+- variable: d07
+  layer: domain
+  flag: prop_d07
+  verdict: po_d07_fit
+  visibility: po_d07_vis
+  label: Housing & Planning
+- variable: d08
+  layer: domain
+  flag: prop_d08
+  verdict: po_d08_fit
+  visibility: po_d08_vis
+  label: Migration & Demographics
+- variable: d09
+  layer: domain
+  flag: prop_d09
+  verdict: po_d09_fit
+  visibility: po_d09_vis
+  label: Environment & Agriculture
+- variable: d10
+  layer: domain
+  flag: prop_d10
+  verdict: po_d10_fit
+  visibility: po_d10_vis
+  label: Public Finance & Taxation
+- variable: d11
+  layer: domain
+  flag: prop_d11
+  verdict: po_d11_fit
+  visibility: po_d11_vis
+  label: Data Infrastructure & Methodology
+- variable: d12
+  layer: domain
+  flag: prop_d12
+  verdict: po_d12_fit
+  visibility: po_d12_vis
+  label: Unclear from Register Entry
+- variable: p01
+  layer: purpose
+  flag: prop_p01
+  verdict: po_p01_fit
+  visibility: po_p01_vis
+  label: Descriptive Monitoring
+- variable: p02
+  layer: purpose
+  flag: prop_p02
+  verdict: po_p02_fit
+  visibility: po_p02_vis
+  label: Outcome Tracking
+- variable: p03
+  layer: purpose
+  flag: prop_p03
+  verdict: po_p03_fit
+  visibility: po_p03_vis
+  label: Life-Course / Trajectory Analysis
+- variable: p04
+  layer: purpose
+  flag: prop_p04
+  verdict: po_p04_fit
+  visibility: po_p04_vis
+  label: Service Interaction / Systems Analysis
+- variable: p05
+  layer: purpose
+  flag: prop_p05
+  verdict: po_p05_fit
+  visibility: po_p05_vis
+  label: Policy Evaluation / Impact Analysis
+- variable: p06
+  layer: purpose
+  flag: prop_p06
+  verdict: po_p06_fit
+  visibility: po_p06_vis
+  label: Risk Prediction / Early Identification
+- variable: p07
+  layer: purpose
+  flag: prop_p07
+  verdict: po_p07_fit
+  visibility: po_p07_vis
+  label: Methodological / Infrastructure Research
+- variable: p08
+  layer: purpose
+  flag: prop_p08
+  verdict: po_p08_fit
+  visibility: po_p08_vis
+  label: Unclear from Register Entry
+- variable: t01
+  layer: tag
+  flag: prop_t01
+  verdict: po_t01_correct
+  visibility: po_t01_det
+  label: Demographic disparities / equity tag
+- variable: t02
+  layer: tag
+  flag: prop_t02
+  verdict: po_t02_correct
+  visibility: po_t02_det
+  label: COVID-19 & Pandemic
+domain_slots: 12
+purpose_slots: 8
+purpose_maximum: 2
+binary_tags_always_reviewed: true
+quotation_permission_response_level: true
+named_acknowledgement_contact_level_only: true
+withdrawal_wording: You may request withdrawal of your submitted responses until {{WITHDRAWAL_DATE}}
+  by contacting {{STUDY_EMAIL}} and quoting the survey reference. After that date,
+  de-identified responses may already have been incorporated into the analysis and
+  may no longer be removable.
+configuration_placeholders:
+- '{{DASHBOARD_URL}}'
+- '{{ESTIMATED_MINUTES_PER_PROJECT}}'
+- '{{WITHDRAWAL_DATE}}'
+- '{{STUDY_EMAIL}}'
+analytical_completion:
+  consent: linked contact has current affirmative consent
+  domains: every prop_dNN == 1 has po_dNN_fit in 1,2,3
+  purposes: every prop_pNN == 1 has po_pNN_fit in 1,2,3
+  tags: po_t01_correct and po_t02_correct in 1,0,2
+  sufficiency: po_sufficiency in 1,2,3
+  not_required:
+  - po_quote_permission
+  - po_other_comment
+difference_from_candidate_0.1:
+  field_source_counts:
+    retained_unchanged_from_candidate_0.1: 65
+    new_for_one_time_consent: 16
+    modified_for_one_time_consent: 86
+  removed_fields:
+  - po_ack
+  renamed_fields: {}
+  reason: one-time researcher-level informed consent replaces per-assignment participation
+    acknowledgement
+live_project:
+  pid: 9149
+  title: DEA Validation Study – Project Owner Review
+  status: Development
+  connection_performed: false
