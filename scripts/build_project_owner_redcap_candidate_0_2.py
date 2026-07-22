@@ -18,7 +18,9 @@ PACKAGE = ROOT / "preregistration/package/06_redcap"
 FIXTURES = ROOT / "tests/fixtures"
 LIVE_QA = PACKAGE / "live_qa"
 VERSION = "owner-redcap-candidate-0.2"
-CONSENT_INFO_VERSION = "owner-information-0.2"
+CONSENT_INFO_VERSION = "project-owner-information-v1"
+OLD_CONSENT_INFO_VERSION = "owner-information-0.2"
+QUESTIONNAIRE_VERSION = "project-owner-review-questionnaire-v1"
 V01_DICTIONARY = PACKAGE / "project_owner_redcap_data_dictionary_candidate_0.1.csv"
 V01_SHA256 = "e3b59478ff9e37a52964790340dc1a65daccb5381293a42883ed7eaf398c3114"
 SCRATCH_DICTIONARY = PACKAGE / "redcap_data_dictionary_candidate.csv"
@@ -323,6 +325,13 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             "notes": "REDCap-native consent survey completion timestamp; operational consent date/time",
         },
         {
+            "variable": "project_owner_review_questionnaire_version",
+            "source_form": "configuration",
+            "include_in_ordinary_analytical_export": "yes",
+            "restricted_or_public": "internal_analysis",
+            "notes": f"Readable participant-facing review tool: {QUESTIONNAIRE_VERSION}",
+        },
+        {
             "variable": "owner_current_consent",
             "source_form": "derived_contact_consent_join",
             "include_in_ordinary_analytical_export": "yes",
@@ -372,6 +381,7 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
         "admin_only_instruments": ["owner_contact_admin", "owner_assignment_admin"],
         "consent_once_per_owner_id": True,
         "consent_information_version": CONSENT_INFO_VERSION,
+        "review_questionnaire_version": QUESTIONNAIRE_VERSION,
         "consent_timestamp": "project_owner_consent_timestamp",
         "reconsent_trigger": "oc_reconsent_required == 1 after substantial activity or intended-use change",
         "link_release_requires": [
@@ -469,7 +479,7 @@ def build_fixtures(rows: list[dict[str, str]]) -> None:
         _contact("A1B2C3D4", "SYN-OWNER-01", "Avery Example", "avery@example.invalid", pc_info_version=CONSENT_INFO_VERSION, pc_decision=1, oc_ack_permission=1, oc_ack_name="Avery Example", oc_ack_affiliation="Fictional Research Institute", oc_ack_permission_date="2026-07-04", oc_ack_permission_source="Synthetic post-participation email"),
         _contact("B2C3D4E5", "SYN-OWNER-02", "Blair Example", "blair@example.invalid", pc_info_version=CONSENT_INFO_VERSION, pc_decision=0),
         _contact("C3D4E5F6", "SYN-OWNER-03", "Casey Example", "casey@example.invalid"),
-        _contact("D4E5F6G7", "SYN-OWNER-04", "Devon Example", "devon@example.invalid", pc_info_version=CONSENT_INFO_VERSION, pc_decision=1, oc_reconsent_required=1),
+        _contact("D4E5F6G7", "SYN-OWNER-04", "Devon Example", "devon@example.invalid", pc_info_version=OLD_CONSENT_INFO_VERSION, pc_decision=1, oc_reconsent_required=1),
         _contact("E5F6G7H8", "SYN-OWNER-05", "Emery Example", "emery@example.invalid", pc_info_version=CONSENT_INFO_VERSION, pc_decision=1, oc_consent_withdrawal=2, oc_consent_withdraw_date="2026-07-12"),
         _contact("F6G7H8J9", "SYN-OWNER-06", "Finley Example", "finley@example.invalid", oc_eoi_status=3, oc_eoi_response_date="2026-07-02", oc_projects_accepted="", oc_contact_suppression=1),
         _contact("G7H8J9K2", "SYN-OWNER-07", "Gray Example", "gray@example.invalid", pc_info_version=CONSENT_INFO_VERSION, pc_decision=1, oc_eligible_projects=1, oc_projects_offered=1, oc_projects_accepted=1, oc_est_total_minutes=10, oc_recruit_route=2, oc_sequence_pos="", oc_supp_reason="Synthetic supplementary coverage rationale fixed before contact."),
@@ -502,6 +512,7 @@ def build_fixtures(rows: list[dict[str, str]]) -> None:
         "fixture_status": "synthetic_only",
         "candidate_version": VERSION,
         "consent_information_version": CONSENT_INFO_VERSION,
+        "review_questionnaire_version": QUESTIONNAIRE_VERSION,
         "contains_real_researchers": False,
         "contains_real_emails": False,
         "contains_real_record_ids": False,

@@ -171,6 +171,7 @@ project_owner_consent_complete,project_owner_consent,yes,internal_analysis,REDCa
 owner_assignment_admin_complete,owner_assignment_admin,yes,internal_analysis,REDCap-generated form status
 project_owner_review_complete,project_owner_review,yes,internal_analysis,REDCap-generated form status
 project_owner_consent_timestamp,project_owner_consent,yes,internal_analysis,REDCap-native consent survey completion timestamp; operational consent date/time
+project_owner_review_questionnaire_version,configuration,yes,internal_analysis,Readable participant-facing review tool: project-owner-review-questionnaire-v1
 owner_current_consent,derived_contact_consent_join,yes,internal_analysis,"Deterministic: interested; pc_decision=1; current pc_info_version; no re-consent, consent-withdrawal or contact-suppression block"
 project_owner_review_timestamp,project_owner_review,yes,internal_analysis,REDCap-native review survey completion timestamp
 owner_analytical_complete,derived,yes,internal_analysis,Deterministic: current contact-level consent; every populated domain/purpose verdict; both tag-correctness responses; public-entry sufficiency. Quote/comments excluded.

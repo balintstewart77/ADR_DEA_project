@@ -25,8 +25,8 @@ amendment.
 
 project_owner_redcap_data_dictionary_candidate_0.2.csv
 
-- SHA-256: 210a951b92bdde500fef7ee0ccc7b69fbb08e18ae1a1760f7660b0dc92be3338
-- size: 41,746 bytes
+- SHA-256: 8225aec9afaae533151fa66e484b7361d8292777e9398b5a722fdc58b1fd52ec
+- size: 41,753 bytes
 - Owner Contact Admin: 31
 - Project Owner Consent: 12
 - Owner Assignment Admin: 39
@@ -54,6 +54,17 @@ interest and current affirmative consent. Eligibility never sends a link.
 Acknowledgement remains researcher-level; quotation permission remains
 project-response-level.
 
+## Separate version namespaces
+
+- REDCap schema and workflow: owner-redcap-candidate-0.2
+- Participant information and consent: project-owner-information-v1
+- Readable review questionnaire: project-owner-review-questionnaire-v1
+
+The instrument version remains stored in instrument_ver. The contact-record
+pc_info_version stores the participant-information identifier and controls
+current-consent eligibility. Questionnaire version is documented as export and
+configuration provenance without adding a new response field.
+
 ## Exact field-level difference
 
 - 65 fields retained byte-for-byte;
@@ -75,9 +86,9 @@ quotation permission do not affect completion.
 ## Status
 
 The synthetic import fixture SHA-256 is
-9fab3c13d0a800d2ffcf0fc5d614a8122ca06719001c0dba614b378107977f32.
+1a0c61835fca6866196905f274908dc2f333be699d25066dbf4e19cb1e7d5346.
 The response fixture SHA-256 is
-0b0b4454eb503afd957cfd538ecb5fe4558616714e2a6ca174a0f8a3d11a43c8.
+7afe706a04d8f9ad40a167a303e507f67276543d545bcd4e663ad17a4c339733.
 
 PID 9149 is the intended future synthetic live-QA target only. No connection or
 import occurred. No frozen owner dictionary exists.

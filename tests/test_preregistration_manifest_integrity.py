@@ -27,7 +27,7 @@ def rows() -> list[dict[str, str]]:
 
 def test_manifest_structure_statuses_and_relationships() -> None:
     manifest_rows = rows()
-    assert len(manifest_rows) == 228
+    assert len(manifest_rows) == 230
     owner02 = {row["artifact_id"]: row for row in manifest_rows if row["artifact_id"].startswith("RED-0")}
     assert set(f"RED-{number:03d}" for number in range(54, 66)) <= set(owner02)
     assert owner02["RED-054"]["version"] == "owner-redcap-candidate-0.2"

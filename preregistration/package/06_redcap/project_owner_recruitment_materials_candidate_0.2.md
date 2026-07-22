@@ -4,6 +4,16 @@ Status: development templates for review and synthetic QA only. Replace every
 double-braced placeholder before approved use. These templates do not authorise
 contact, invitation or data collection.
 
+Controlled participant documents:
+
+- Project Owner Participant Information and Consent — Version 1
+  (project-owner-information-v1)
+- Project Owner Review Questionnaire — Version 1
+  (project-owner-review-questionnaire-v1)
+
+These document identifiers are separate from the REDCap implementation version
+owner-redcap-candidate-0.2.
+
 Configuration placeholders include {{RESEARCHER_NAME}}, {{STUDY_NAME}},
 {{STUDY_EMAIL}}, {{DASHBOARD_URL}}, {{PARTICIPANT_INFORMATION_URL}},
 {{CONSENT_SURVEY_LINK}}, {{PROJECT_LINK_LIST}}, {{PROJECTS_OFFERED}},
@@ -48,9 +58,10 @@ Subject: Participant information and consent — DEA project-owner validation
 
 Dear {{RESEARCHER_NAME}},
 
-Thank you for indicating that you are interested. Please read the participant
-information at {{PARTICIPANT_INFORMATION_URL}} and complete the record-specific
-one-time consent survey:
+Thank you for indicating that you are interested. Please read Project Owner
+Participant Information and Consent — Version 1 at
+{{PARTICIPANT_INFORMATION_URL}} and complete the record-specific one-time
+consent survey:
 
 {{CONSENT_SURVEY_LINK}}
 

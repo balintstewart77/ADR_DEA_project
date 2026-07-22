@@ -3,7 +3,9 @@ from __future__ import annotations
 import csv
 import hashlib
 import io
+import re
 import sys
+import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -38,6 +40,8 @@ def assignments() -> dict[str, dict]:
 
 def test_version_status_and_exact_four_instrument_structure() -> None:
     assert builder.VERSION == "owner-redcap-candidate-0.2"
+    assert builder.CONSENT_INFO_VERSION == "project-owner-information-v1"
+    assert builder.QUESTIONNAIRE_VERSION == "project-owner-review-questionnaire-v1"
     assert builder.FORMS == (
         "owner_contact_admin", "project_owner_consent",
         "owner_assignment_admin", "project_owner_review",
@@ -144,6 +148,15 @@ def test_missing_declined_withdrawn_and_stale_consent_block_release() -> None:
             assert assignment["owner_link_release"] == 0
 
 
+def test_old_information_0_2_token_is_stale_and_requires_reconsent() -> None:
+    stale = contacts()["SYN-OWNER-04"]
+    assert stale["pc_info_version"] == builder.OLD_CONSENT_INFO_VERSION
+    assert stale["oc_reconsent_required"] == 1
+    assert not validator.current_consent(stale)
+    current = dict(stale, pc_info_version=builder.CONSENT_INFO_VERSION, oc_reconsent_required=0)
+    assert validator.current_consent(current)
+
+
 def test_official_release_validator_cannot_accept_stale_consent() -> None:
     item = dict(assignments()["M4N5P6Q7"])
     item["owner_link_release"] = 1
@@ -246,6 +259,52 @@ def test_export_spec_has_native_consent_timestamp_and_derived_flags() -> None:
     assert export["project_owner_consent_timestamp"]["source_form"] == "project_owner_consent"
     assert export["owner_current_consent"]["source_form"] == "derived_contact_consent_join"
     assert "current contact-level consent" in export["owner_analytical_complete"]["notes"]
+    assert builder.QUESTIONNAIRE_VERSION in export["project_owner_review_questionnaire_version"]["notes"]
+
+
+def _visible_docx_text(path: Path) -> str:
+    with zipfile.ZipFile(path) as archive:
+        xml = archive.read("word/document.xml").decode("utf-8")
+    return " ".join(re.sub(r"<[^>]+>", " ", xml).split())
+
+
+def test_participant_documents_are_version_1_and_manifestable_without_exact_case() -> None:
+    materials = builder.PACKAGE / "participant_materials"
+    information = materials / "Project_Owner_Participant_Information_and_consent_v1.docx"
+    questionnaire = materials / "Project_Owner_Review_questionnaire_v1.docx"
+    assert information.exists() and questionnaire.exists()
+    assert "v1" in information.name.lower() and "v1" in questionnaire.name.lower()
+    info_text = _visible_docx_text(information).lower()
+    questionnaire_text = _visible_docx_text(questionnaire).lower()
+    assert "project owner participant information and consent" in info_text
+    assert "version 1" in info_text
+    assert "project owner review questionnaire" in questionnaire_text
+    assert re.search(r"\b(?:version\s*)?v?1\b", questionnaire_text)
+    assert "candidate 0.2" not in info_text
+    assert "candidate 0.2" not in questionnaire_text
+    manifest = {
+        row["artifact_id"]: row
+        for row in csv.DictReader(
+            (ROOT / "preregistration/preregistration_artifact_manifest.csv").open(
+                encoding="utf-8", newline=""
+            )
+        )
+    }
+    for artifact_id, path, version in (
+        ("RED-066", information, builder.CONSENT_INFO_VERSION),
+        ("RED-067", questionnaire, builder.QUESTIONNAIRE_VERSION),
+    ):
+        row = manifest[artifact_id]
+        assert row["version"] == version
+        assert row["current_state"] == "working_candidate"
+        assert row["authoritative_status"] == "current_ethics_review_material"
+        assert row["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest()
+        assert int(row["size_bytes"]) == path.stat().st_size
+
+
+def test_protocol_v0_15_is_byte_identical() -> None:
+    protocol = ROOT / "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.15.docx"
+    assert hashlib.sha256(protocol.read_bytes()).hexdigest() == "5eff044b4f8d488e84a5b49720d35318add4f29ef53136cb6ce9c2b197409ee7"
 
 
 def test_recruitment_materials_have_three_distinct_stages() -> None:

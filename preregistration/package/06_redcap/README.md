@@ -19,6 +19,13 @@ canonical guide is `project_owner_redcap_candidate_0.2_README.md`.
 historical candidate. It used a per-assignment participation acknowledgement
 and was superseded by candidate 0.2 before live QA.
 
+Participant-facing version identifiers are separate from the REDCap candidate:
+`project-owner-information-v1` identifies Project Owner Participant
+Information and Consent — Version 1, while
+`project-owner-review-questionnaire-v1` identifies Project Owner Review
+Questionnaire — Version 1. The approved Word files are retained byte-for-byte
+under `participant_materials/`.
+
 Candidate 0.7 passed repository validation and completed live REDCap QA on 22
 July 2026. It is frozen for preregistration and subsequent formal scratch
 coding, but it has not been populated with formal validation assignments and

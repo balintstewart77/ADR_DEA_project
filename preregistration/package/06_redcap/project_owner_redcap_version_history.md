@@ -2,6 +2,13 @@
 
 ## owner-redcap-candidate-0.2 - 2026-07-22
 
+- Follow-up documentation correction after the initial candidate-0.2 commit:
+  the participant-information identifier changes from owner-information-0.2 to
+  project-owner-information-v1, and the readable questionnaire is identified
+  separately as project-owner-review-questionnaire-v1. The REDCap instrument
+  remains owner-redcap-candidate-0.2. No survey question, consent requirement,
+  branching rule, response code or scientific design changed. The correction
+  creates distinct, auditable instrument and participant-document namespaces.
 - Current four-instrument development candidate: Owner Contact Admin (31),
   Project Owner Consent (12), Owner Assignment Admin (39), and Project Owner
   Review (85), totalling 167 fields.

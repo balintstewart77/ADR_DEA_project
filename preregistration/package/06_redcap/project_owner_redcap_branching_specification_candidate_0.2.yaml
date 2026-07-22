@@ -26,14 +26,15 @@ admin_only_instruments:
 - owner_contact_admin
 - owner_assignment_admin
 consent_once_per_owner_id: true
-consent_information_version: owner-information-0.2
+consent_information_version: project-owner-information-v1
+review_questionnaire_version: project-owner-review-questionnaire-v1
 consent_timestamp: project_owner_consent_timestamp
 reconsent_trigger: oc_reconsent_required == 1 after substantial activity or intended-use
   change
 link_release_requires:
 - oc_eoi_status == 2
 - pc_decision == 1
-- pc_info_version == owner-information-0.2
+- pc_info_version == project-owner-information-v1
 - oc_reconsent_required == 0
 - oc_consent_withdrawal == 0
 - oc_contact_suppression == 0

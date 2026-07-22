@@ -123,6 +123,8 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
     ):
         if required not in calc:
             errors.append(f"link-eligibility calculation omits: {required}")
+    if builder.OLD_CONSENT_INFO_VERSION in calc:
+        errors.append("link-eligibility calculation still accepts the superseded information token")
     intro = by.get("po_intro", {}).get("Field Label", "")
     if "previously agreed" not in intro.lower() or "remains voluntary" not in intro.lower():
         errors.append("review survey lacks the brief voluntary-participation reminder")
@@ -284,6 +286,12 @@ def validate_fixtures(path: Path = builder.RESPONSE_FIXTURE) -> dict[str, int]:
         release = _integer(row.get("owner_link_release"))
         if not consent and release != 0:
             errors.append("non-current consent fixture has an unblocked assignment")
+    stale = [
+        row for row in payload["contacts"]
+        if row.get("pc_info_version") == builder.OLD_CONSENT_INFO_VERSION
+    ]
+    if not stale or any(current_consent(row) for row in stale):
+        errors.append("fixture does not prove that the old information token is stale")
     for case in payload["responses"]:
         assignment = assignments.get(str(case["owner_record_id"]))
         if assignment is None:

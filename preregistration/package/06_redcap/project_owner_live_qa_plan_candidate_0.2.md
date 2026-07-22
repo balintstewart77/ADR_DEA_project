@@ -3,6 +3,12 @@
 Status: unfrozen development candidate. PID 9149 is documented only as the
 intended blank Development target. No connection, import or live test occurred.
 
+Version namespaces under test:
+
+- REDCap implementation: owner-redcap-candidate-0.2
+- participant information and consent: project-owner-information-v1
+- readable review questionnaire: project-owner-review-questionnaire-v1
+
 Candidate 0.2 cannot be frozen until all applicable live tests pass, evidence is
 archived, and all synthetic records are removed or moved to an approved no-user
 archive.
@@ -32,7 +38,8 @@ Offline validation does not establish REDCap runtime behaviour.
 5. Create synthetic contact and assignment records only.
 6. Confirm consent appears only for contact records and review only for assignments.
 7. Confirm direct identifiers/contact administration never appear in consent.
-8. Confirm participant-information version displays read-only.
+8. Confirm project-owner-information-v1 displays read-only and that the old
+   owner-information-0.2 token is treated as stale.
 9. Submit Yes and verify native timestamp, form status, version and decision.
 10. Submit No and verify survey end and blocked assignment links.
 11. Confirm interest alone does not make links eligible.
@@ -51,6 +58,8 @@ Offline validation does not establish REDCap runtime behaviour.
 - Respondent cannot see admin instruments, other contacts or assignments.
 - Review link opens only its own assignment.
 - Later reviews show the voluntary reminder and no repeated consent checkbox.
+- The readable participant-facing review tool is identified as Project Owner
+  Review Questionnaire — Version 1, separately from the REDCap candidate.
 - One owner can access several assignments after one consent.
 - Review save-and-return, partial and completed responses.
 - All label-slot, tag-status, conditional-note, missing-label, sufficiency and
