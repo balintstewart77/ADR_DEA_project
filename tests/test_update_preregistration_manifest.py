@@ -8,6 +8,7 @@ from pathlib import Path
 
 from scripts.update_preregistration_manifest import (
     COMPUTED_COLUMNS,
+    ManifestError,
     refresh_manifest,
     sha256_file,
 )
@@ -32,6 +33,7 @@ FIELDNAMES = [
     "authoritative_status",
     "supersedes_or_superseded_by",
     "notes",
+    "size_bytes",
 ]
 TEST_COMMIT = "a" * 40
 
@@ -89,6 +91,8 @@ class ManifestUpdaterTest(unittest.TestCase):
         )
         self.assertEqual(result.updated, 1)
         self.assertEqual(self.read_rows()[0]["sha256"], expected)
+        self.assertEqual(self.read_rows()[0]["size_bytes"], "12")
+        self.assertNotIn(b"\r\n", self.manifest.read_bytes())
 
     def test_missing_row_is_left_unchanged(self) -> None:
         row = self.row(
@@ -97,6 +101,7 @@ class ManifestUpdaterTest(unittest.TestCase):
             sha256="manual-placeholder",
             created_or_modified_at="manual-time",
             source_commit="manual-commit",
+            size_bytes="manual-size",
         )
         self.write_manifest([row])
         result = refresh_manifest(
@@ -153,6 +158,14 @@ class ManifestUpdaterTest(unittest.TestCase):
         )
         self.assertTrue(any("stale sha256" in issue for issue in result.issues))
         self.assertEqual(self.read_rows()[0], recorded)
+
+    def test_extra_cells_are_rejected_as_a_shifted_row(self) -> None:
+        self.manifest.write_text(
+            ",".join(FIELDNAMES) + "\n" + ",".join(["ART-001", *([""] * len(FIELDNAMES))]) + "\n",
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(ManifestError, "beyond the declared columns"):
+            refresh_manifest(self.manifest, self.root, source_commit=TEST_COMMIT)
 
 
 if __name__ == "__main__":

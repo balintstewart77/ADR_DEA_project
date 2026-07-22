@@ -282,7 +282,8 @@ class CandidateTests(unittest.TestCase):
   with (v.ROOT/'preregistration/preregistration_artifact_manifest.csv').open(encoding='utf-8',newline='') as handle:
    manifest={r['artifact_id']:r for r in csv.DictReader(handle)}
   self.assertEqual(manifest['RED-001']['version'],v.VERSION)
-  self.assertEqual(manifest['RED-001']['supersedes_or_superseded_by'],'redcap-candidate-0.6')
+  self.assertEqual(manifest['RED-001']['supersedes_or_superseded_by'],'RED-020')
+  self.assertEqual(manifest['RED-020']['version'],'redcap-candidate-0.6-live-intermediate')
   self.assertEqual(manifest['RED-022']['version'],v.VERSION)
   self.assertEqual(manifest['RED-023']['version'],v.VERSION)
   self.assertEqual(manifest['RED-026']['sha256'],'bb1de2b9ea811afc8b0f23fcb489c1e01eb94d6677d45a64c273140532c5293f')

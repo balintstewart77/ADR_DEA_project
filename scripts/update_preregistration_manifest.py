@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Refresh or check computed provenance in the preregistration manifest.
 
-Only ``sha256``, ``created_or_modified_at``, and ``source_commit`` are changed.
-Descriptions, classifications, proposed paths, and notes are preserved.
+Only ``sha256``, ``created_or_modified_at``, ``source_commit``, and
+``size_bytes`` are changed. Descriptions, classifications, proposed paths, and
+notes are preserved.
 """
 
 from __future__ import annotations
@@ -21,7 +22,7 @@ from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = Path("preregistration/preregistration_artifact_manifest.csv")
-COMPUTED_COLUMNS = ("sha256", "created_or_modified_at", "source_commit")
+COMPUTED_COLUMNS = ("sha256", "created_or_modified_at", "source_commit", "size_bytes")
 REQUIRED_COLUMNS = (
     "artifact_id",
     "current_path",
@@ -97,6 +98,13 @@ def _load_manifest(path: Path) -> tuple[list[str], list[dict[str, str]]]:
     except OSError as exc:
         raise ManifestError(f"Cannot read manifest {path}: {exc}") from exc
 
+    shifted_rows = [index for index, row in enumerate(rows, start=2) if None in row]
+    if shifted_rows:
+        raise ManifestError(
+            "Manifest rows contain values beyond the declared columns: "
+            + ", ".join(str(index) for index in shifted_rows)
+        )
+
     identifiers = [row.get("artifact_id", "").strip() for row in rows]
     if any(not identifier for identifier in identifiers):
         raise ManifestError("Every manifest row must have a non-empty artifact_id")
@@ -118,7 +126,12 @@ def _write_manifest(path: Path, fieldnames: list[str], rows: list[dict[str, str]
             delete=False,
         ) as handle:
             temporary = Path(handle.name)
-            writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="raise")
+            writer = csv.DictWriter(
+                handle,
+                fieldnames=fieldnames,
+                extrasaction="raise",
+                lineterminator="\n",
+            )
             writer.writeheader()
             writer.writerows(rows)
         os.replace(temporary, path)
@@ -191,6 +204,7 @@ def refresh_manifest(
             "sha256": digest,
             "created_or_modified_at": modified,
             "source_commit": commit,
+            "size_bytes": str(path.stat().st_size),
         }
         stale = [column for column, value in expected.items() if row.get(column, "") != value]
         if check:
@@ -213,7 +227,7 @@ def refresh_manifest(
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Refresh SHA-256, file modification time, and Git commit metadata "
+            "Refresh SHA-256, file size, modification time, and Git commit metadata "
             "for existing non-sensitive preregistration artefacts."
         )
     )

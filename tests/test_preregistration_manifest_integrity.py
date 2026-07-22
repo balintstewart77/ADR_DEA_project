@@ -1,0 +1,132 @@
+from __future__ import annotations
+
+import csv
+import re
+import subprocess
+from collections import defaultdict
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+MANIFEST = ROOT / "preregistration/preregistration_artifact_manifest.csv"
+FUTURE_STATES = {"not_yet_generated", "placeholder"}
+RESTRICTED_ACCESS = {"restricted", "temporarily_embargoed", "contains_personal_data"}
+RELATIONSHIP_SPLIT = re.compile(r"\s*[;|]\s*")
+
+
+def rows() -> list[dict[str, str]]:
+    with MANIFEST.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        assert reader.fieldnames is not None
+        parsed = list(reader)
+    assert all(None not in row for row in parsed)
+    return parsed
+
+
+def test_manifest_structure_statuses_and_relationships() -> None:
+    manifest_rows = rows()
+    assert len(manifest_rows) == 200
+    identifiers = [row["artifact_id"] for row in manifest_rows]
+    assert len(identifiers) == len(set(identifiers))
+    identifier_set = set(identifiers)
+    assert not any(row["current_state"] in {"missing", "needs_verification"} for row in manifest_rows)
+    assert not any(row["registration_inclusion"] == "undecided" for row in manifest_rows)
+
+    for row in manifest_rows:
+        for token in filter(None, RELATIONSHIP_SPLIT.split(row["supersedes_or_superseded_by"])):
+            assert token in identifier_set, (row["artifact_id"], token)
+
+    current_protocols = [
+        row for row in manifest_rows if row["protocol_status"] == "review_candidate"
+    ]
+    assert [row["artifact_id"] for row in current_protocols] == ["PRO-008"]
+    protocol = current_protocols[0]
+    assert protocol["version"] == "v0.14"
+    assert protocol["frozen"] == "false"
+    assert protocol["registered"] == "false"
+    assert protocol["official_sample_draw_authorised"] == "false"
+
+
+def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
+    manifest_rows = rows()
+    owners: dict[str, list[dict[str, str]]] = defaultdict(list)
+    covered: set[str] = set()
+    for row in manifest_rows:
+        current_path = row["current_path"]
+        proposed_path = row["proposed_package_path"]
+        if current_path:
+            owners[current_path].append(row)
+            covered.add(current_path)
+        if proposed_path:
+            covered.add(proposed_path)
+        if row["current_state"] in FUTURE_STATES:
+            assert not current_path
+            assert not (ROOT / proposed_path).exists()
+        elif current_path:
+            assert (ROOT / current_path).is_file(), (row["artifact_id"], current_path)
+
+    duplicates = {path: group for path, group in owners.items() if len(group) > 1}
+    assert set(duplicates) == {"analysis/register_cleaning.py"}
+    duplicate_rows = duplicates["analysis/register_cleaning.py"]
+    physical = [row for row in duplicate_rows if row["authoritative_status"] != "conceptual_alias"]
+    aliases = [row for row in duplicate_rows if row["authoritative_status"] == "conceptual_alias"]
+    assert [row["artifact_id"] for row in physical] == ["SRC-004"]
+    assert [row["artifact_id"] for row in aliases] == ["SRC-007"]
+    assert aliases[0]["registration_inclusion"] == "exclude"
+    assert aliases[0]["proposed_package_path"] == ""
+
+    tracked = subprocess.run(
+        ["git", "ls-files", "preregistration"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    excluded_structure = {
+        "preregistration/preregistration_artifact_manifest.csv",
+        *[path for path in tracked if path.endswith("/.gitkeep")],
+    }
+    assert not [path for path in tracked if path not in covered | excluded_structure]
+
+
+def test_computed_metadata_and_restricted_pilot_treatment() -> None:
+    manifest_rows = rows()
+    for row in manifest_rows:
+        current_path = row["current_path"]
+        if not current_path or row["current_state"] in FUTURE_STATES:
+            continue
+        if row["access_class"] in RESTRICTED_ACCESS:
+            assert row["registration_inclusion"] != "include"
+            assert row["sha256"] == ""
+            assert row["size_bytes"] == ""
+            continue
+        path = ROOT / current_path
+        assert row["size_bytes"] == str(path.stat().st_size), row["artifact_id"]
+        assert len(row["sha256"]) == 64, row["artifact_id"]
+
+    pilot_rows = [row for row in manifest_rows if "TRN-018" <= row["artifact_id"] <= "TRN-031"]
+    assert len(pilot_rows) == 14
+    assert all(row["access_class"] == "restricted" for row in pilot_rows)
+    assert all(row["registration_inclusion"] == "exclude" for row in pilot_rows)
+
+
+def test_no_package_detritus_or_generated_scientific_outputs() -> None:
+    tracked = subprocess.run(
+        ["git", "ls-files", "preregistration"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    prohibited = [
+        path for path in tracked
+        if Path(path).name == ".Rhistory"
+        or Path(path).name.startswith("~$")
+        or "__pycache__" in Path(path).parts
+        or path.endswith((".pyc", ".tmp"))
+    ]
+    assert not prohibited
+    for row in rows():
+        if row["current_state"] == "not_yet_generated":
+            assert not (ROOT / row["proposed_package_path"]).exists()
+    assert not (ROOT / "preregistration/package/00_protocol/Validation_Protocol_PreReg_final.pdf").exists()

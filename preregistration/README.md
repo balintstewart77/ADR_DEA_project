@@ -96,8 +96,8 @@ The manifest uses these columns and controlled values.
 - `proposed_package_path`: proposed destination, not evidence that copying has
   occurred.
 - `description`, `version`, `notes`: manually maintained explanatory fields.
-- `sha256`, `created_or_modified_at`, `source_commit`: legacy exact-content and
-  inventory-refresh provenance for existing non-sensitive files.
+- `sha256`, `size_bytes`, `created_or_modified_at`, `source_commit`: exact-
+  content and inventory-refresh provenance for existing non-sensitive files.
 - Protocol rows additionally use `size_bytes`, `git_blob_oid`,
   `protocol_source_commit`, `protocol_source_commit_date`,
   `protocol_source_commit_message`, and `implementation_last_checked_commit`.
@@ -172,8 +172,15 @@ inventory metadata, not proof of authorship or authority.
 
 Sensitive content, secrets, environment files, contact lists, reserve IDs,
 trainer keys, and blinded assignments must not be hashed into this public
-manifest. Restricted categories are represented without paths or hashes unless
+manifest. A repository-controlled restricted artefact may be represented by a
+non-sensitive repository-relative path and classification, but its content hash
+is omitted and the file is excluded from the public registration package unless
 a separately approved commitment procedure is adopted.
+
+The manifest does not hash itself because doing so would be recursive. Tracked
+`.gitkeep` directory markers are repository structure rather than study
+artefacts and are outside manifest coverage. Office lock files, `.Rhistory`,
+caches and temporary exports are prohibited package detritus.
 
 ## 8. Authority and versioning
 
@@ -187,11 +194,12 @@ gates are complete. After registration, changes require a new version;
 substantive changes also require a preregistration amendment recorded under
 `post_registration/amendments/`.
 
-The v7 training/pilot exclusion file is superseded by design and must never be
-labelled as the final exclusion set. The current v8 list contains 22 unique
-stable Record IDs and is verified for exact equality with the canonical coder,
-trainer, discussion, and pilot/debrief materials. No physical v7 file has been
-located.
+The current v8 training/pilot exclusion list contains 22 unique stable Record
+IDs and is verified for exact equality with the canonical coder, trainer,
+discussion, and pilot/debrief materials. No physical v7 file has been located
+in the worktree or Git history, so the manifest does not invent a historical
+file row for it. The same rule applies to previously inventoried but unlocated
+taxonomy-backup, trainer-guide and pilot-assignment filenames.
 
 ## 9. Blinding and embargo
 
