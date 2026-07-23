@@ -120,6 +120,10 @@ def test_consent_wording_branching_and_optional_acknowledgement_once() -> None:
     assert validator.parse_choices(
         by["intended_recipient"]["Choices, Calculations, OR Slider Labels"]
     ) == {"1": "Yes", "0": "No"}
+    assert by["intended_recipient"]["Field Note"] == ""
+    assert by["intended_recipient"]["Field Label"] == (
+        "I confirm that I am the researcher to whom this personalised link was sent."
+    )
     assert validator.parse_choices(
         by["owner_consent"]["Choices, Calculations, OR Slider Labels"]
     ) == {
@@ -146,6 +150,18 @@ def test_consent_wording_branching_and_optional_acknowledgement_once() -> None:
         for row in rows()
         if row["Form Name"] == "project_review"
     )
+
+
+def test_participant_facing_dictionary_has_no_internal_disposition_note() -> None:
+    visible_rows = [
+        row for row in rows()
+        if "@HIDDEN-SURVEY" not in row["Field Annotation"]
+    ]
+    participant_text = "\n".join(
+        f"{row['Field Label']}\n{row['Field Note']}" for row in visible_rows
+    ).lower()
+    assert "restricted recruitment/contact system" not in participant_text
+    assert "dispositioned" not in participant_text
 
 
 def test_candidate_document_token_and_manual_stop_configuration() -> None:
@@ -647,9 +663,9 @@ def test_fixture_column_validation_resolves_checkbox_expansions() -> None:
     ) == "descriptive field is not importable: po_intro"
 
 
-def test_fixture_correction_preserves_generated_dictionary_bytes() -> None:
+def test_generated_dictionary_matches_current_canonical_bytes() -> None:
     assert hashlib.sha256(builder.DICTIONARY.read_bytes()).hexdigest() == (
-        "2ba744b07c7f0f1c171aad88b95f37b39d6eea815f861edcdf445f00bce0c3fa"
+        "63d64d8794b869e503abdc3b3b9f559c9c2953ae4744417ee1e3179df72cf3d9"
     )
 
 
@@ -809,7 +825,14 @@ def test_candidate_status_is_unfrozen_pending_controlled_import_and_live_qa() ->
     assert branch["project"]["connection_performed"] is False
     assert branch["repeating_instruments"] == ["project_review"]
     assert branch["repeat_survey_button_enabled"] is False
-    assert "ack_pref" not in branch["survey_queue"]["project_review"]["condition"]
+    queue_condition = branch["survey_queue"]["project_review"]["condition"]
+    assert queue_condition == (
+        "[owner_consent_complete] = '2' and [owner_consent] = '1' and "
+        "[intended_recipient] = '1'"
+    )
+    assert "ack_pref" not in queue_condition
+    assert branch["stop_actions_manual_after_import"]["intended_recipient"] == "No"
+    assert branch["stop_actions_manual_after_import"]["owner_consent"] == "No"
     assert branch["tag_reviews"]["always_review_both"] is True
 
 

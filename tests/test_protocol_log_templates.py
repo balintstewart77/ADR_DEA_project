@@ -16,7 +16,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
     for path in PACKAGE.glob("*.csv"):
         with path.open(encoding="utf-8", newline="") as handle:
             rows = list(csv.reader(handle))
-        expected_rows = 10 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
+        expected_rows = 11 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
         assert len(rows) == expected_rows
         assert rows[0]
     with (PACKAGE / "coding_clarification_log.csv").open(
@@ -47,7 +47,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         encoding="utf-8", newline=""
     ) as handle:
         instrument_entries = list(csv.DictReader(handle))
-    assert len(instrument_entries) == 9
+    assert len(instrument_entries) == 10
     (
         historical,
         instrument,
@@ -58,6 +58,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         taxonomy_approval,
         import_correction,
         fixture_correction,
+        participant_note_correction,
     ) = instrument_entries
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
@@ -115,6 +116,12 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "descriptive fields" in fixture_correction["change_description"]
     assert "unexpanded checkbox base variables" in fixture_correction["change_description"]
     assert "three owners, 19 pre-created assignments and 22 rows" in fixture_correction["pilot_or_formal_data_effect"]
+    assert participant_note_correction["change_id"] == "REDCAP-015"
+    assert participant_note_correction["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert participant_note_correction["field_or_component"] == "intended_recipient participant-visible field note"
+    assert participant_note_correction["classification_rule_change"] == "no"
+    assert "Field Note is now blank" in participant_note_correction["change_description"]
+    assert "manual Stop Action" in participant_note_correction["protocol_effect"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

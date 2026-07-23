@@ -574,6 +574,17 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
         "0": "No",
     }:
         errors.append("intended_recipient is not required Yes/No")
+    if by["intended_recipient"]["Field Note"]:
+        errors.append("intended_recipient field note must remain blank")
+    participant_visible_text = "\n".join(
+        f"{row['Field Label']}\n{row['Field Note']}"
+        for row in rows
+        if builder.HIDDEN_ADMIN not in row["Field Annotation"]
+    ).lower()
+    if "restricted recruitment/contact system" in participant_visible_text:
+        errors.append("participant-facing dictionary text exposes restricted contact administration")
+    if "dispositioned" in participant_visible_text:
+        errors.append("participant-facing dictionary text exposes internal disposition language")
     if parse_choices(by["owner_consent"]["Choices, Calculations, OR Slider Labels"]) != {
         "1": "Yes, I agree to take part",
         "0": "No, I do not wish to take part",

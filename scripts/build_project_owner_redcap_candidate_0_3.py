@@ -617,7 +617,6 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "I confirm that I am the researcher to whom this personalised link was sent.",
             choices="1, Yes | 0, No",
             required=True,
-            note="A No response stops the survey and must be dispositioned in the separate restricted recruitment/contact system.",
         ),
         field(
             "wrong_recipient_stop",
@@ -1701,6 +1700,8 @@ The same YAML generates inline definitions, menu option text, `project_owner_tax
 `participant_info_ver` uses the explicit candidate token `{PARTICIPANT_INFO_VERSION}`. It must be replaced with the approved participant-document version before production. The descriptive field is only a clearly marked attachment/link placeholder.
 
 `intended_recipient` and `owner_consent` are required Yes/No gateways. Participant information precedes them. `owner_consent` appears only for the intended recipient; the two concise stop messages branch on their respective No values. The Project Review queue condition requires completed Owner Consent plus both affirmative values. REDCap Survey Stop Actions for each No response must be configured manually after import and verified live. No automatic deletion, retention-period, recruitment-system or reminder-suppression behaviour is claimed by the dictionary.
+
+The participant-visible `intended_recipient` field note is intentionally blank. Administrative disposition instructions remain outside participant-facing dictionary text; this does not alter the No-response Stop Action, wrong-recipient termination message, consent branching or Survey Queue condition.
 
 `ack_pref` is optional, appears once after affirmative intended-recipient confirmation and consent, and offers Yes / No / Decide later. It does not affect consent, Survey Queue access or analytical completion. PID 9149 does not collect a preferred acknowledgement name or affiliation.
 

@@ -5,7 +5,7 @@ participant_info_link,owner_consent,,descriptive,"<strong>Participant Informatio
 participant_info_ver,owner_consent,,text,Participant-information version token,,,,,,,,y,,,,,@HIDDEN-SURVEY @READONLY
 consent_form_ver,owner_consent,,text,Owner-consent form version,,,,,,,,y,,,,,@HIDDEN-SURVEY @READONLY
 owner_instr_ver,owner_consent,,text,Project Owner REDCap candidate version,,,,,,,,y,,,,,@HIDDEN-SURVEY @READONLY
-intended_recipient,owner_consent,,radio,I confirm that I am the researcher to whom this personalised link was sent.,"1, Yes | 0, No",A No response stops the survey and must be dispositioned in the separate restricted recruitment/contact system.,,,,,,y,,,,,
+intended_recipient,owner_consent,,radio,I confirm that I am the researcher to whom this personalised link was sent.,"1, Yes | 0, No",,,,,,,y,,,,,
 wrong_recipient_stop,owner_consent,,descriptive,This personalised link is intended only for the researcher to whom it was sent. Please do not complete or forward it. No project reviews will be displayed.,,,,,,,[intended_recipient] = '0',,,,,,
 owner_consent,owner_consent,,radio,"I confirm that I have read and understood the Participant Information Sheet provided with this survey, have had the opportunity to ask questions, and agree to take part in the Project Owner Review.","1, Yes, I agree to take part | 0, No, I do not wish to take part",A No response stops the survey and prevents Project Review from appearing in the Survey Queue.,,,,,[intended_recipient] = '1',y,,,,,
 consent_decline_stop,owner_consent,,descriptive,"Thank you for considering the study. You have chosen not to take part, and no project reviews will be displayed. This will have no adverse consequences.",,,,,,,[owner_consent] = '0',,,,,,

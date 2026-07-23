@@ -85,6 +85,12 @@
   version/provenance values, repeat instrument/instance values, three owners,
   19 assignments and 22 rows are unchanged. The 97-field REDCap dictionary is
   byte-identical to the pre-correction dictionary.
+- Removes the internal administrative `intended_recipient` field note exposed
+  during synthetic live QA. The note is now blank; the field label, Yes/No
+  choices, requiredness, instrument placement, wrong-recipient branch, manual
+  Stop Action and Project Review Survey Queue condition are unchanged. The
+  deliberate participant-information and taxonomy-reference attachment
+  placeholders remain pending final document configuration.
 - Adds participant guidance beside the missing-purpose menu and uses the
   repository-validated `@MAXCHECKED=2` action tag. Analysis derives the implied
   corrected-purpose count and treats counts above two as a cardinality/taxonomy
