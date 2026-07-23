@@ -6,7 +6,7 @@ Project Owner development candidates. Candidate 0.7 remains the frozen
 scratch-coder version; its historical `project_owner` form was never
 independently live-QA tested for the standalone owner workflow.
 
-`owner-redcap-candidate-0.3` is the current separate 97-field, two-instrument
+`owner-redcap-candidate-0.3` is the current separate 104-field, two-instrument
 Classic project candidate. It uses one pseudonymous record per owner, a
 non-repeating Owner Consent survey, and a repeating Project Review survey with
 one administrator-created instance per owner–project assignment. One
@@ -33,6 +33,13 @@ Tracking, and both cross-cutting tags) are explicitly recorded as frozen
 definitions plus imported inclusion/exclusion boundary clauses with exact
 taxonomy source fields and paths; the other 18 remain verbatim after whitespace
 normalisation.
+Continuing synthetic live QA produced a coordinated participant-facing and
+branching correction: the review opening is concise and semantically formatted,
+the duplicate taxonomy-fit textbox is removed, and all eight proposed-label
+blocks now separate actual-project correctness explanations from public-entry
+visibility explanations. The generated formatting audit records every one of
+the 17 participant-visible descriptive fields. The revised dictionary must be
+re-imported before live QA continues.
 Live QA and coordinated Participant Information, Questionnaire,
 invitation, protocol, ethics and governance alignment remain required before
 recruitment.

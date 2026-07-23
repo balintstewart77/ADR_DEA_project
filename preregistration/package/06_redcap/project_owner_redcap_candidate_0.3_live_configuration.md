@@ -34,7 +34,7 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 14. Do not use a public survey URL for recruitment. Use only the participant/record-specific Survey Queue URL, which must reopen the same owner queue and preserve progress.
 15. After approval, replace `project-owner-information-pending-approval-candidate-0.3` with the approved participant-information version in controlled import data and attach/link the final approved PDF at `participant_info_link`.
 16. After coordinated participant-document alignment, format and attach/link the final taxonomy-reference PDF at `po_taxonomy_ref`; the repository Markdown is the author-approved wording source.
-17. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows across 80 importable columns; descriptive fields and unexpanded checkbox base variables are excluded.
+17. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows across 87 importable columns; descriptive fields and unexpanded checkbox base variables are excluded, and participant explanation fields are blank.
 18. Confirm `assignment_id` is displayed as the survey-read-only **Review reference**, contains no personal identifier, and remains stable when repeat instances are reordered.
 19. Confirm the specific-review withdrawal wording uses `[assignment_id]`; confirm the all-reviews wording requires no visible owner identifier. Configure no production deadline outside the approved Participant Information Sheet.
 20. Test desktop and mobile, then export and verify row structure before any real recruitment.
@@ -52,14 +52,14 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 - Intended-recipient No and consent No each stop as specified and suppress Project Review.
 - Owner-level `ack_pref` appears once only; no acknowledgement field appears inside Project Review.
 - `ack_pref` is optional and has no effect on Survey Queue access, submission or analytical completeness.
-- Empty proposed-label slots are absent, and populated definitions/conditional basis fields behave correctly.
-- Both canonical tag blocks appear on every repeat, including Not applied statuses; each has required correctness and preserved four-level visibility, and neither branches on status.
+- Empty proposed-label slots are absent, and populated definitions plus separately triggered correctness/visibility explanations behave correctly.
+- Both canonical tag blocks appear on every repeat, including Not applied statuses; each has required correctness, preserved four-level visibility and separate conditional explanations, and neither branches on status.
 - Missing menus contain 11 domains, seven purposes and two tags with definitions; no menu contains `Unclear from Register Entry`.
 - Missing checkbox menus appear only for Yes, are required when shown, and enforce at least one selection; Unsure does not reveal a required menu. Treat at-least-one behaviour as a live-QA assertion.
 - The missing-purpose guidance appears directly before its menu; `@MAXCHECKED=2` limits that menu to two selections. Confirm the action tag live, and verify analysis flags fitted-proposal-plus-missing selections above two as a cardinality/taxonomy issue.
 - The missing-tag gateway functions as a summary cross-check after both primary per-tag correctness judgements and is not presented as a replacement assessment.
 - The required project-knowledge gateway appears once; its optional note appears for Yes or Unsure and warns against confidential or non-public detail.
-- Domain/purpose and tag basis fields retain the four-level visibility triggers: Partly visible, Not visible or Unsure; Clearly visible alone does not reveal them.
+- In every domain, purpose and tag block, negative/unsure correctness reveals only its correctness explanation and Partly visible/Not visible/Unsure reveals only its visibility explanation; both appear when both triggers apply, while Fits/Yes plus Clearly visible reveals neither.
 - `assignment_id` is visible as Review reference near project information, is included in completion and specific-withdrawal wording, and the REDCap repeat-instance number is not the sole participant reference.
 - An untouched pre-created assignment exports as a row with `redcap_repeat_instrument = project_review`, its numbered instance and incomplete status.
 - Each repeat exports separately; owner consent remains on the non-repeating owner row and is blank on repeated rows.

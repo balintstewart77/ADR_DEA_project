@@ -1,4 +1,5 @@
 import csv
+import re
 from pathlib import Path
 
 
@@ -9,22 +10,38 @@ EXPECTED = {
     "coding_clarification_log.csv",
     "jo_review_decision_log.csv",
 }
+INSTRUMENT_LOG_REQUIRED_COLUMNS = {
+    "change_id",
+    "date_identified",
+    "instrument_version",
+    "field_or_component",
+    "change_description",
+    "evidence_or_reason",
+    "classification_rule_change",
+    "protocol_effect",
+    "pilot_or_formal_data_effect",
+    "approval",
+    "implemented_version",
+    "implemented_date",
+    "status",
+}
+INSTRUMENT_CHANGE_ID = re.compile(r"^REDCAP-(\d{3})$")
+NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-016"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
     assert {path.name for path in PACKAGE.glob("*.csv")} == EXPECTED
     for path in PACKAGE.glob("*.csv"):
         with path.open(encoding="utf-8", newline="") as handle:
-            rows = list(csv.reader(handle))
-        expected_rows = 11 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
-        assert len(rows) == expected_rows
-        assert rows[0]
+            reader = csv.DictReader(handle)
+            assert reader.fieldnames
     with (PACKAGE / "coding_clarification_log.csv").open(
         encoding="utf-8", newline=""
     ) as handle:
         entries = list(csv.DictReader(handle))
-    assert len(entries) == 2
     by_id = {row["clarification_id"]: row for row in entries}
+    assert len(entries) == len(by_id)
+    assert all(re.fullmatch(r"CAL-[A-Z]+-\d{3}", entry_id) for entry_id in by_id)
     assert set(by_id) == {"CAL-PILOT-001", "CAL-STATUS-002"}
     entry = by_id["CAL-PILOT-001"]
     assert entry["phase"] == "pre-formal pilot calibration"
@@ -46,20 +63,33 @@ def test_required_log_files_and_post_pilot_governance_entry():
     with (PACKAGE / "instrument_change_log.csv").open(
         encoding="utf-8", newline=""
     ) as handle:
-        instrument_entries = list(csv.DictReader(handle))
-    assert len(instrument_entries) == 10
-    (
-        historical,
-        instrument,
-        freeze,
-        owner,
-        owner_preimport,
-        taxonomy_correction,
-        taxonomy_approval,
-        import_correction,
-        fixture_correction,
-        participant_note_correction,
-    ) = instrument_entries
+        reader = csv.DictReader(handle)
+        assert reader.fieldnames is not None
+        assert INSTRUMENT_LOG_REQUIRED_COLUMNS <= set(reader.fieldnames)
+        instrument_entries = list(reader)
+    instrument_ids = [row["change_id"] for row in instrument_entries]
+    assert all(INSTRUMENT_CHANGE_ID.fullmatch(entry_id) for entry_id in instrument_ids)
+    assert len(instrument_entries) == len(instrument_ids) == len(set(instrument_ids))
+    sequence = [int(INSTRUMENT_CHANGE_ID.fullmatch(entry_id).group(1)) for entry_id in instrument_ids]
+    assert sequence == list(range(sequence[0], sequence[-1] + 1))
+    assert instrument_ids[-1] == NEWEST_INSTRUMENT_CHANGE_ID
+    assert all(
+        row[column].strip()
+        for row in instrument_entries
+        for column in INSTRUMENT_LOG_REQUIRED_COLUMNS
+    )
+    instrument_by_id = {row["change_id"]: row for row in instrument_entries}
+    historical = instrument_by_id["REDCAP-006"]
+    instrument = instrument_by_id["REDCAP-007"]
+    freeze = instrument_by_id["REDCAP-008"]
+    owner = instrument_by_id["REDCAP-009"]
+    owner_preimport = instrument_by_id["REDCAP-010"]
+    taxonomy_correction = instrument_by_id["REDCAP-011"]
+    taxonomy_approval = instrument_by_id["REDCAP-012"]
+    import_correction = instrument_by_id["REDCAP-013"]
+    fixture_correction = instrument_by_id["REDCAP-014"]
+    participant_note_correction = instrument_by_id["REDCAP-015"]
+    current_live_qa_correction = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -122,6 +152,10 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert participant_note_correction["classification_rule_change"] == "no"
     assert "Field Note is now blank" in participant_note_correction["change_description"]
     assert "manual Stop Action" in participant_note_correction["protocol_effect"]
+    assert current_live_qa_correction["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert current_live_qa_correction["classification_rule_change"] == "no"
+    assert "eight combined proposed-classification basis fields" in current_live_qa_correction["change_description"]
+    assert "controlled synthetic dictionary re-import" in current_live_qa_correction["status"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

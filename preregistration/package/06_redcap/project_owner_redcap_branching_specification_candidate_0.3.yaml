@@ -11,7 +11,7 @@ forms:
 - project_review
 field_counts:
   owner_consent: 11
-  project_review: 86
+  project_review: 93
 repeating_instruments:
 - project_review
 repeat_custom_label: '[assignment_id] — [project_title]'
@@ -78,7 +78,7 @@ proposed_slot_visibility:
     '1': Partly visible
     '0': Not visible
     '3': Unsure
-  basis_required_when:
+  explanations_required_when:
     domain_or_purpose_verdict:
     - '2: Does not fit'
     - '3: Unsure'
@@ -98,13 +98,15 @@ tag_reviews:
     t01:
       proposed_status: prop_t01_status
       correctness: po_t01_correct
+      correctness_explanation: po_t01_correct_explain
       visibility: po_t01_vis
-      basis: po_t01_basis
+      visibility_explanation: po_t01_vis_explain
     t02:
       proposed_status: prop_t02_status
       correctness: po_t02_correct
+      correctness_explanation: po_t02_correct_explain
       visibility: po_t02_vis
-      basis: po_t02_basis
+      visibility_explanation: po_t02_vis_explain
   missing_tag_summary_role: Summary cross-check after the two primary per-tag proposed-status
     assessments; retained for later protocol and participant-document alignment.
 missing_label_branching:
@@ -123,8 +125,9 @@ analytical_completion:
   - intended_recipient = 1
   - owner_consent = 1
   domains_and_purposes: verdict and visibility for every populated slot, plus every
-    triggered basis
-  tags: correctness and visibility for both tags, plus every triggered basis
+    separately triggered correctness and visibility explanation
+  tags: correctness and visibility for both tags, plus every separately triggered
+    correctness and visibility explanation
   missing_labels: all three gateways, and every triggered menu and basis
   overall: public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus
     every triggered explanation/issue field

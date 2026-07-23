@@ -13,10 +13,13 @@ Record ID, response export, live URL, project identifier, or credential.
   every repeat, and no name, email or real Record ID is present. Its inline
   definitions use the 22 author-approved owner microdefinitions recorded on
   2026-07-23. Following the first PID 9149 import rejection, the canonical
-  fixture was corrected to 80 importable columns: descriptive fields and all
+  fixture was corrected to 87 importable columns: descriptive fields and all
   unexpanded checkbox base variables are excluded, while no participant
-  checkbox responses are pre-populated. Controlled live QA remains required
-  before freeze or recruitment.
+  checkbox or explanation responses are pre-populated. Continuing live QA also
+  led to the REDCAP-016 Project Review wording/formatting and explanation-field
+  correction; the regenerated 104-field dictionary must be re-imported before
+  testing resumes. Controlled live QA remains required before freeze or
+  recruitment.
 - `redcap_live_qa_synthetic_assignments_candidate_0.6.csv` is retained unchanged
   as historical evidence of the intermediate candidate-0.6 live test. Candidate
   0.6 was imported and partially inspected, then superseded before final runtime

@@ -16,10 +16,10 @@ Candidate 0.3 is a substantial pre-recruitment architecture change:
 - owner-level consent and acknowledgement preference collected once;
 - each review independently completable and exported as one long-format row.
 
-The dictionary contains exactly two instruments and 97 fields:
+The dictionary contains exactly two instruments and 104 fields:
 
 - `owner_consent`: 11 fields;
-- `project_review`: 86 fields.
+- `project_review`: 93 fields.
 
 Candidate 0.2 remains unchanged and unfrozen. Candidate 0.3 is not frozen and does not authorise recruitment.
 
@@ -59,17 +59,17 @@ The participant-visible `intended_recipient` field note is intentionally blank. 
 
 Every repeat contains neutral assignment/source identifiers, frozen register text, production/taxonomy provenance and fixed proposed-label slots. `assignment_id` is a stable, survey-read-only participant-facing Review reference; it contains no participant name, email or direct identifier in the fixture or design contract. `owner_id` and internal source/provenance fields remain survey-hidden. Empty domain/purpose proposal slots are completely hidden through `[prop_*_label] <> ''`.
 
-The Project Review introduction states: “A project may have several Research Domains. Each proposed Domain should be judged independently; the Domains are not ranked.” This is descriptive guidance only and adds no response field.
+The Project Review introduction gives separate concise guidance for Research Domains, Analytical Purposes and cross-cutting tags. It explains that Domains may be multiple and unranked, Purposes may be multiple but are capped at two, and either, both or neither tag may apply. The privacy warning and synthetic-QA taxonomy-reference placeholder remain separate descriptive fields immediately after the introduction, in that order. This is descriptive guidance only and adds no response field. The former long withdrawal paragraph was removed from the repeat opening; no short reminder is retained in the survey because the Participant Information Sheet is the authoritative withdrawal source.
 
 Each populated domain/purpose slot has an inline label/definition and a Fits / Does not fit / Unsure verdict. Domain and purpose slots ask, “Is the basis for this classification visible in the public project title and datasets listed above?”
 
-Both canonical cross-cutting tags are reviewed on every assignment, including when their pre-populated status is Not applied. Each block shows its common-source definition, a survey-read-only Applied/Not applied proposed status, required Yes/No/Unsure correctness, the preserved question “Could the correct status for this tag reasonably be determined from the public project title and datasets listed above?”, and a conditional required basis. Neither block branches on proposed status.
+Both canonical cross-cutting tags are reviewed on every assignment, including when their pre-populated status is Not applied. Each block shows its common-source definition, a survey-read-only Applied/Not applied proposed status, required Yes/No/Unsure correctness, the preserved question “Could the correct status for this tag reasonably be determined from the public project title and datasets listed above?”, and separate conditional required correctness and visibility explanations. Neither block branches on proposed status.
 
-Every visibility field uses `2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure`. A domain/purpose basis is shown and required for Does not fit/Unsure or Partly visible/Not visible/Unsure. A tag basis is shown and required for correctness No/Unsure or the same three non-clear visibility responses. Clearly visible alone never reveals a basis field.
+Every visibility field uses `2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure`. Across all eight proposed-classification blocks, the correctness explanation is shown and required only for a negative or unsure verdict/correctness response, and the visibility explanation is shown and required only for Partly visible, Not visible or Unsure. If both conditions apply, both explanations are required; Fits/Yes plus Clearly visible reveals neither. The two field families are analytically distinct: actual-project classification disagreement/uncertainty versus public-register evidence limitation/uncertainty.
 
 All three missing-label gateways are required Yes/No/Unsure items. The complete 11/7/2 definition-bearing checkbox menus appear only after Yes and are required when displayed; Unsure does not force a label selection. One basis field per dimension is shown and required when at least one checkbox is selected. The missing-purpose construct displays the maximum-two guidance immediately before its checkbox and applies `@MAXCHECKED=2`. REDCap checkbox requiredness, at-least-one behaviour and the maximum-two action tag must be confirmed in live QA. The missing-tag gateway is retained as an explicit summary cross-check; the two per-tag correctness judgements are the primary status assessments. This deliberate redundancy requires later protocol and participant-document alignment but is not a contradictory coding rule.
 
-Overall review fields retain public-entry sufficiency, taxonomy fit and issue type, conditional explanations, optional final comments and response-specific quotation permission. Existing `po_nonpublic`/`po_nonpublic_note` fields are aligned as the required project-knowledge gateway and optional conditional context note. Warnings prohibit confidential or non-public content. Named acknowledgement is not repeated.
+Overall review fields retain public-entry sufficiency, taxonomy fit and issue type, one conditional taxonomy-fit explanation, optional final comments and response-specific quotation permission. `po_tax_explain` is required for Partial Fit or No Fit and also covers the approved “Other taxonomy problem” issue choice; no duplicate `po_tax_other` field remains. Existing `po_nonpublic`/`po_nonpublic_note` fields are aligned as the required project-knowledge gateway and optional conditional context note. Warnings prohibit confidential or non-public content. Named acknowledgement is not repeated.
 
 ## Long-format export and analysis preparation
 
@@ -82,7 +82,7 @@ Assignment-response states are defined independently:
 - **Offered:** a pre-created repeat exists.
 - **Untouched:** the repeat exists with no participant response.
 - **Partial:** at least one response exists but the analytical-completion rule fails.
-- **Analytically complete:** joined intended-recipient and consent are affirmative; every populated domain/purpose has verdict and visibility; both tags have correctness and visibility; all three missing-label gateways, sufficiency, project-knowledge gateway and taxonomy fit are answered; and every triggered menu, basis, issue type or explanation is present.
+- **Analytically complete:** joined intended-recipient and consent are affirmative; every populated domain/purpose has verdict and visibility; both tags have correctness and visibility; all three missing-label gateways, sufficiency, project-knowledge gateway and taxonomy fit are answered; and every triggered menu, missing-label basis, correctness explanation, visibility explanation, issue type or overall explanation is present.
 - **Submitted:** `project_review_complete = 2`.
 
 A submitted review should normally be analytically complete because requiredness and branching operate in REDCap, but analysis derives and verifies analytical completeness rather than relying on form status alone. Optional `ack_pref`, project-knowledge note, final comments and quotation permission do not determine it.
@@ -138,13 +138,13 @@ This substantial instrument architecture change is made before recruitment and b
 | `source_record_id`, `official_project_id`, `project_title`, `datasets_used`, `public_register_url`, `production_ver`, `taxonomy_ver`, `proposal_output_sha256` | Retained per assignment on repeating `project_review`; administrative provenance is survey-hidden, while public register text is survey-read-only. |
 | `owner_recruit_route`, `owner_sequence_pos`, `owner_invite_batch`, `owner_link_release`, `owner_invite_date`, `owner_reminder_date`, `owner_withdrawal_status` | Removed from PID 9149 and moved to restricted recruitment/response administration. |
 | `instrument_ver` | Split into `owner_instr_ver` and `review_instr_ver`; `consent_form_ver` and `taxonomy_display_ver` add document/display provenance. |
-| `prop_d01`–`prop_d12`, `po_d01_label`–`po_d12_vis` | Replaced by four pre-populated domain value/definition slots (`prop_d01_*`–`prop_d04_*`) and paired display/verdict/visibility/basis fields. The capacity equals the frozen maximum. |
+| `prop_d01`–`prop_d12`, `po_d01_label`–`po_d12_vis` | Replaced by four pre-populated domain value/definition slots (`prop_d01_*`–`prop_d04_*`) and paired display/verdict/visibility fields with separate conditional correctness and visibility explanations. The capacity equals the frozen maximum. |
 | `prop_p01`–`prop_p08`, `po_p01_label`–`po_p08_vis` | Replaced by two pre-populated purpose slots (`prop_p01_*`–`prop_p02_*`) with the same paired response structure. |
-| `prop_t01`, `prop_t02`, `po_t01_label`–`po_t02_det` | Retained in substance as two always-present tag blocks: canonical label/definition, pre-populated Applied/Not applied status, required correctness, four-level visibility and conditional basis. |
+| `prop_t01`, `prop_t02`, `po_t01_label`–`po_t02_det` | Retained in substance as two always-present tag blocks: canonical label/definition, pre-populated Applied/Not applied status, required correctness, four-level visibility and separate conditional correctness and visibility explanations. |
 | `po_intro`, `po_privacy`, `po_assignment`, `po_project_title`, `po_datasets` | Retained in substance; consolidated/renamed as `po_intro`, `po_privacy`, taxonomy-reference placeholder and read-only assignment fields. |
 | `po_miss_domain`, `po_miss_purpose`, `po_miss_tag` | Retained as required gateways and expanded to Yes / No / Unsure. |
 | `po_miss_domains`, `po_miss_purposes`, `po_miss_tags` | Retained with definitions added to every option and with `Unclear from Register Entry` excluded. |
-| `po_note` | Split into one conditional basis field per proposed slot, one basis per missing-label dimension, `po_suff_explain`, `po_tax_explain`, and `po_tax_other`. |
+| `po_note` | Split into separate conditional correctness and visibility explanation fields per proposed slot, one basis per missing-label dimension, `po_suff_explain`, and `po_tax_explain`. The redundant `po_tax_other` textbox was removed before import. |
 | `po_sufficiency`, `po_taxonomy_fit`, `po_tax_issue` | Retained with the requested codes and explicit conditional explanations. |
 | `po_nonpublic`, `po_nonpublic_note` | Retained; `po_nonpublic` adds Unsure and the note remains optional to reduce disclosure pressure. |
 | `po_quote_permission`, `po_other_comment` | Retained at repeating review-instance level; quotation permission remains response-specific. |
@@ -152,4 +152,4 @@ This substantial instrument architecture change is made before recruitment and b
 
 ## Files and status
 
-The dictionary, field/branch/export specifications, display/reference/review sources and synthetic fixture are deterministic repository artefacts. The 80-column synthetic Data Import Tool fixture contains only stored non-checkbox dictionary fields and valid REDCap structural/completion fields; descriptive fields and unexpanded checkbox base variables are deliberately absent, and no participant checkbox responses are pre-populated. Project-level Survey Queue, repeating-instrument, Stop Action, checkbox requiredness, survey completion and attachment settings cannot be guaranteed by the CSV and are mandatory live-QA assertions. Candidate 0.3 is technically ready for controlled synthetic import and its taxonomy wording is approved for participant use. It remains unfrozen and is not ready for recruitment until live QA and coordinated participant-document, invitation, protocol, ethics and governance alignment are complete.
+The dictionary, field/branch/export specifications, participant-formatting audit, display/reference/review sources and synthetic fixture are deterministic repository artefacts. The 87-column synthetic Data Import Tool fixture contains only stored non-checkbox dictionary fields and valid REDCap structural/completion fields; descriptive fields and unexpanded checkbox base variables are deliberately absent, and no participant checkbox or explanation responses are pre-populated. Project-level Survey Queue, repeating-instrument, Stop Action, checkbox requiredness, survey completion, HTML rendering and attachment settings cannot be guaranteed by the CSV and are mandatory live-QA assertions. Candidate 0.3 is technically ready for controlled synthetic import and its taxonomy wording is approved for participant use. It remains unfrozen and is not ready for recruitment until live QA and coordinated participant-document, invitation, protocol, ethics and governance alignment are complete.

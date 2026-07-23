@@ -188,9 +188,13 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
         "preregistration/package/09_logs_and_templates/coding_clarification_log.csv"
     ).open(encoding="utf-8", newline="") as handle:
         entries = list(csv.DictReader(handle))
-    assert len(entries) == 2
-    entry = next(row for row in entries if row["clarification_id"] == "CAL-PILOT-001")
-    status_entry = next(row for row in entries if row["clarification_id"] == "CAL-STATUS-002")
+    clarification_ids = [row["clarification_id"] for row in entries]
+    assert all(re.fullmatch(r"CAL-[A-Z]+-\d{3}", entry_id) for entry_id in clarification_ids)
+    assert len(entries) == len(clarification_ids) == len(set(clarification_ids))
+    by_clarification_id = {row["clarification_id"]: row for row in entries}
+    assert set(by_clarification_id) == {"CAL-PILOT-001", "CAL-STATUS-002"}
+    entry = by_clarification_id["CAL-PILOT-001"]
+    status_entry = by_clarification_id["CAL-STATUS-002"]
     assert entry["circulation_status"] == "circulated"
     assert entry["circulated_at"] == "2026-07-21"
     assert entry["all_coders_notified"] == "yes"

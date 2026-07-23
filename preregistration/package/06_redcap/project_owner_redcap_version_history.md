@@ -3,7 +3,7 @@
 ## owner-redcap-candidate-0.3 - 2026-07-23
 
 - Current two-instrument development candidate: Owner Consent (11) and
-  Project Review (86), totalling 97 dictionary fields.
+  Project Review (93), totalling 104 dictionary fields.
 - Substantially changes the record architecture before recruitment: one
   pseudonymous `owner_id` record per owner, one non-repeating consent survey,
   and one pre-created repeating Project Review instance per owner–project
@@ -23,11 +23,13 @@
   independently, and keeps optional acknowledgement outside consent and Survey
   Queue access.
 - Preserves the four-level public-entry visibility scale (Clearly visible,
-  Partly visible, Not visible, Unsure) and its conditional basis logic for all
-  four domain, two purpose and two tag reviews.
+  Partly visible, Not visible, Unsure) for all four domain, two purpose and two
+  tag reviews. Live-QA correction REDCAP-016 replaces each combined basis field
+  with separate required correctness and public-visibility explanations.
 - Presents both canonical cross-cutting tags on every assignment with an
-  Applied/Not applied proposed status, correctness, visibility and conditional
-  basis; the missing-tag item is retained as a documented summary cross-check.
+  Applied/Not applied proposed status, correctness, visibility and separate
+  conditional explanations; the missing-tag item is retained as a documented
+  summary cross-check.
 - Aligns the existing `po_nonpublic`/`po_nonpublic_note` pair to the explicit
   project-knowledge gateway and optional non-public-context warning.
 - Documents offered, untouched, partial, analytically complete and submitted
@@ -78,19 +80,33 @@
   lower-case validation-type allow-list. No response code, field structure,
   participant-facing meaning or analytical rule changed.
 - Corrects the subsequent PID 9149 synthetic Data Import Tool rejection caused
-  by non-storage columns. The 80-column fixture now excludes all descriptive
-  fields and the four unexpanded checkbox base variables; it contains no
-  expanded checkbox columns because the pristine QA fixture pre-populates no
-  participant checkbox responses. Assignment metadata, proposed labels,
-  version/provenance values, repeat instrument/instance values, three owners,
-  19 assignments and 22 rows are unchanged. The 97-field REDCap dictionary is
-  byte-identical to the pre-correction dictionary.
+  by non-storage columns. At that correction the 80-column fixture excluded all
+  descriptive fields and the four unexpanded checkbox base variables; it
+  contained no expanded checkbox columns because the pristine QA fixture
+  pre-populates no participant checkbox responses. Assignment metadata,
+  proposed labels, version/provenance values, repeat instrument/instance
+  values, three owners, 19 assignments and 22 rows were unchanged. The
+  then-97-field REDCap dictionary was byte-identical to the pre-correction
+  dictionary; REDCAP-016 later regenerated the importable schema to 87 columns
+  alongside the permitted 104-field instrument correction.
 - Removes the internal administrative `intended_recipient` field note exposed
   during synthetic live QA. The note is now blank; the field label, Yes/No
   choices, requiredness, instrument placement, wrong-recipient branch, manual
   Stop Action and Project Review Survey Queue condition are unchanged. The
   deliberate participant-information and taxonomy-reference attachment
   placeholders remain pending final document configuration.
+- Corrects four linked participant-facing defects identified in continuing
+  synthetic live QA. The Project Review opening now gives concise Domain,
+  Purpose and tag guidance without repeating withdrawal arrangements; privacy
+  and non-production reference placeholders remain separate semantic-HTML
+  blocks. A 17-row formatting audit verifies balanced minimal HTML and no
+  wholly bold descriptive block. The redundant `po_tax_other` textbox is
+  removed, while `po_tax_explain` covers all Partial/No Fit issue types.
+  Across all eight proposed-classification blocks, each former combined
+  `*_basis` field is replaced by a correctness explanation immediately after
+  the fit/correctness item and a visibility explanation immediately after the
+  four-level visibility item. This changes Project Review from 86 to 93 fields
+  and requires dictionary re-import before continued PID 9149 live QA.
 - Adds participant guidance beside the missing-purpose menu and uses the
   repository-validated `@MAXCHECKED=2` action tag. Analysis derives the implied
   corrected-purpose count and treats counts above two as a cardinality/taxonomy

@@ -27,13 +27,17 @@ def rows() -> list[dict[str, str]]:
 
 def test_manifest_structure_statuses_and_relationships() -> None:
     manifest_rows = rows()
-    assert len(manifest_rows) == 244
+    identifiers = [row["artifact_id"] for row in manifest_rows]
+    assert all(re.fullmatch(r"[A-Z]+-\d{3}", artifact_id) for artifact_id in identifiers)
+    assert len(manifest_rows) == len(identifiers) == len(set(identifiers))
     redcap = {
         row["artifact_id"]: row
         for row in manifest_rows
         if row["artifact_id"].startswith("RED-0")
     }
-    assert set(f"RED-{number:03d}" for number in range(54, 82)) <= set(redcap)
+    redcap_sequence = sorted(int(artifact_id.split("-")[1]) for artifact_id in redcap)
+    assert redcap_sequence == list(range(redcap_sequence[0], redcap_sequence[-1] + 1))
+    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-082"
     assert redcap["RED-054"]["version"] == "owner-redcap-candidate-0.2"
     assert redcap["RED-054"]["current_state"] == "historical_candidate"
     assert redcap["RED-054"]["authoritative_status"] == "superseded_unfrozen_candidate"
@@ -42,6 +46,10 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert redcap["RED-068"]["authoritative_status"] == "current_candidate"
     assert redcap["RED-080"]["version"] == "owner-redcap-candidate-0.3"
     assert redcap["RED-080"]["authoritative_status"] == "supporting_current_candidate"
+    formatting_audit = redcap["RED-082"]
+    assert formatting_audit["version"] == "owner-redcap-candidate-0.3"
+    assert formatting_audit["authoritative_status"] == "supporting_current_candidate"
+    assert "17 participant-visible descriptive fields" in formatting_audit["notes"]
     invitation = redcap["RED-081"]
     assert invitation["version"] == ""
     assert invitation["current_state"] == "working_candidate"
@@ -54,8 +62,6 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert invitation["registered"] == "false"
     assert "not approved for participant use" in invitation["notes"]
     assert "not yet aligned" in invitation["notes"]
-    identifiers = [row["artifact_id"] for row in manifest_rows]
-    assert len(identifiers) == len(set(identifiers))
     identifier_set = set(identifiers)
     assert not any(row["current_state"] in {"missing", "needs_verification"} for row in manifest_rows)
     assert not any(row["registration_inclusion"] == "undecided" for row in manifest_rows)
@@ -144,7 +150,10 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
         assert len(row["sha256"]) == 64, row["artifact_id"]
 
     pilot_rows = [row for row in manifest_rows if "TRN-018" <= row["artifact_id"] <= "TRN-031"]
-    assert len(pilot_rows) == 14
+    pilot_sequence = sorted(int(row["artifact_id"].split("-")[1]) for row in pilot_rows)
+    assert pilot_sequence[0] == 18
+    assert pilot_sequence[-1] == 31
+    assert pilot_sequence == list(range(pilot_sequence[0], pilot_sequence[-1] + 1))
     assert all(row["access_class"] == "restricted" for row in pilot_rows)
     assert all(row["registration_inclusion"] == "exclude" for row in pilot_rows)
 
