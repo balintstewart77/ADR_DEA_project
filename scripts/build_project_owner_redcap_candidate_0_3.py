@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "preregistration/package/06_redcap"
 LIVE_QA = PACKAGE / "live_qa"
 VERSION = "owner-redcap-candidate-0.3"
+CANDIDATE_SOURCE_COMMIT = "69cf6665b845428fa2abd855c0445ae20589579f"
 STATUS = "development_candidate_unfrozen_controlled_import_and_live_qa_pending"
 PARTICIPANT_INFO_VERSION = "project-owner-information-pending-approval-candidate-0.3"
 CONSENT_FORM_VERSION = "owner-consent-candidate-0.3"
@@ -704,7 +705,6 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "project_review",
             "text",
             "Public register URL",
-            validation="url",
             annotation=READONLY_SURVEY,
         ),
         field(
@@ -1783,6 +1783,7 @@ The dictionary, field/branch/export specifications, display/reference/review sou
         f"""# Project Owner REDCap candidate 0.3 — PID 9149 live configuration
 
 Version: {VERSION}  
+Candidate source commit: `{CANDIDATE_SOURCE_COMMIT}`
 Status: manual controlled-import checklist; unfrozen; live QA pending.  
 Target: UCL REDCap PID 9149, “DEA Validation Study – Project Owner Review”.
 

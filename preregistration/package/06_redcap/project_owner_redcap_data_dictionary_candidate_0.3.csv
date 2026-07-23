@@ -15,7 +15,7 @@ source_record_id,project_review,,text,Stable DEA source Record ID,,,,,,,,y,,,,,@
 official_project_id,project_review,,text,Official Project ID,,,,,,,,,,,,,@HIDDEN-SURVEY @READONLY
 project_title,project_review,,notes,Public-register project title,,,,,,,,y,,,,,@READONLY-SURVEY
 datasets_used,project_review,,notes,Datasets listed in the public register,,,,,,,,y,,,,,@READONLY-SURVEY
-public_register_url,project_review,,text,Public register URL,,,url,,,,,,,,,,@READONLY-SURVEY
+public_register_url,project_review,,text,Public register URL,,,,,,,,,,,,,@READONLY-SURVEY
 source_pop_ver,project_review,,text,Frozen source-population version,,,,,,,,y,,,,,@HIDDEN-SURVEY @READONLY
 production_ver,project_review,,text,Frozen production-classification release,,,,,,,,y,,,,,@HIDDEN-SURVEY @READONLY
 taxonomy_ver,project_review,,text,Frozen taxonomy/dictionary version,,,,,,,,y,,,,,@HIDDEN-SURVEY @READONLY

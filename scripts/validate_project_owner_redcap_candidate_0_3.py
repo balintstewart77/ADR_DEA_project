@@ -37,6 +37,30 @@ ALLOWED_TYPES = {
     "file",
     "slider",
 }
+ALLOWED_VALIDATION_TYPES = {
+    "date_dmy",
+    "date_mdy",
+    "date_ymd",
+    "datetime_dmy",
+    "datetime_mdy",
+    "datetime_ymd",
+    "datetime_seconds_dmy",
+    "datetime_seconds_mdy",
+    "datetime_seconds_ymd",
+    "email",
+    "integer",
+    "alpha_only",
+    "number",
+    "number_1dp",
+    "number_2dp",
+    "number_3dp",
+    "number_4dp",
+    "orcid",
+    "phone",
+    "time_hh_mm_ss",
+    "time",
+    "zipcode",
+}
 OWNER_RESPONSE_FIELDS = {"intended_recipient", "owner_consent", "ack_pref"}
 
 
@@ -508,6 +532,20 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
         errors.append("dictionary marks one or more direct identifier fields")
     if any(row["Field Type"] not in ALLOWED_TYPES for row in rows):
         errors.append("dictionary contains an unsupported field type")
+    validation_column = "Text Validation Type OR Show Slider Number"
+    validation_types = [row[validation_column] for row in rows if row[validation_column]]
+    if any(value != value.lower() for value in validation_types):
+        errors.append("dictionary validation types must be lower-case")
+    unsupported_validation_types = sorted(
+        set(validation_types) - ALLOWED_VALIDATION_TYPES
+    )
+    if unsupported_validation_types:
+        errors.append(
+            "dictionary contains validation types unsupported by the target REDCap instance: "
+            f"{unsupported_validation_types}"
+        )
+    if by.get("public_register_url", {}).get(validation_column):
+        errors.append("public_register_url validation type must remain blank")
 
     expected_counts = {"owner_consent": 11, "project_review": 86}
     if dict(form_counts) != expected_counts:
@@ -1317,6 +1355,7 @@ def validate_documentation() -> dict[str, object]:
             errors.append(f"specification omits: {phrase}")
     required_config = (
         "PID 9149",
+        f"Candidate source commit: `{builder.CANDIDATE_SOURCE_COMMIT}`",
         "Classic/non-longitudinal",
         "[assignment_id] — [project_title]",
         "Repeat the Survey disabled",

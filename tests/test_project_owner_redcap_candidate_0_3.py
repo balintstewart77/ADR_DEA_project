@@ -514,6 +514,32 @@ def test_prepopulated_action_tags_are_survey_specific() -> None:
     assert all(by[name]["Field Annotation"] == "@HIDDEN-SURVEY @READONLY" for name in hidden)
 
 
+def test_redcap_instance_validation_types_and_public_url_structure() -> None:
+    dictionary_rows = rows()
+    validation_column = "Text Validation Type OR Show Slider Number"
+    validation_types = {
+        row[validation_column] for row in dictionary_rows if row[validation_column]
+    }
+    assert "url" not in validation_types
+    assert validation_types <= validator.ALLOWED_VALIDATION_TYPES
+    assert all(value == value.lower() for value in validation_types)
+
+    public_url = by_name()["public_register_url"]
+    assert public_url[validation_column] == ""
+    assert public_url["Field Type"] == "text"
+    assert public_url["Field Label"] == "Public register URL"
+    assert public_url["Field Note"] == ""
+    assert public_url["Choices, Calculations, OR Slider Labels"] == ""
+    assert public_url["Branching Logic (Show field only if...)"] == ""
+    assert public_url["Required Field?"] == ""
+    assert public_url["Field Annotation"] == "@READONLY-SURVEY"
+    assert all(
+        row["public_register_url"].startswith("https://example.invalid/synthetic/")
+        for row in validator.load_fixture()
+        if row["redcap_repeat_instrument"] == "project_review"
+    )
+
+
 def test_overall_assessment_fields_and_conditional_explanations() -> None:
     by = by_name()
     assert validator.parse_choices(
@@ -687,6 +713,8 @@ def test_visibility_scale_is_documented_across_generated_specifications() -> Non
 
 def test_live_configuration_records_non_csv_runtime_assertions() -> None:
     config = builder.LIVE_CONFIG.read_text(encoding="utf-8")
+    assert builder.CANDIDATE_SOURCE_COMMIT == "69cf6665b845428fa2abd855c0445ae20589579f"
+    assert f"Candidate source commit: `{builder.CANDIDATE_SOURCE_COMMIT}`" in config
     for phrase in (
         "Classic/non-longitudinal",
         "only** repeating instrument",

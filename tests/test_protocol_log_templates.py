@@ -16,7 +16,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
     for path in PACKAGE.glob("*.csv"):
         with path.open(encoding="utf-8", newline="") as handle:
             rows = list(csv.reader(handle))
-        expected_rows = 8 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
+        expected_rows = 9 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
         assert len(rows) == expected_rows
         assert rows[0]
     with (PACKAGE / "coding_clarification_log.csv").open(
@@ -47,7 +47,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         encoding="utf-8", newline=""
     ) as handle:
         instrument_entries = list(csv.DictReader(handle))
-    assert len(instrument_entries) == 7
+    assert len(instrument_entries) == 8
     (
         historical,
         instrument,
@@ -56,6 +56,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         owner_preimport,
         taxonomy_correction,
         taxonomy_approval,
+        import_correction,
     ) = instrument_entries
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
@@ -99,6 +100,13 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "eight exact microdefinition revisions" in taxonomy_approval["change_description"]
     assert "No protocol or participant-facing Word document was edited" in taxonomy_approval["protocol_effect"]
     assert "taxonomy wording approved for participant use" in taxonomy_approval["status"]
+    assert import_correction["change_id"] == "REDCAP-013"
+    assert import_correction["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert import_correction["field_or_component"] == "public_register_url Text Validation Type"
+    assert import_correction["classification_rule_change"] == "no"
+    assert "unsupported url validation type" in import_correction["change_description"]
+    assert "No protocol, taxonomy, participant-facing document" in import_correction["protocol_effect"]
+    assert "pre-import correction" in import_correction["protocol_effect"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

@@ -71,6 +71,12 @@
   actual-project fit and public-entry visibility, and a framework-definition
   lead-in distinguishes the two traceable Unclear definitions from participant
   selection instructions. No response field was added.
+- Corrects the first controlled-import compatibility issue reported by UCL
+  REDCap: `public_register_url` remains a survey-read-only text field with its
+  existing values and presentation, but its unsupported `url` Text Validation
+  Type is now blank. Candidate validation now enforces the target instance's
+  lower-case validation-type allow-list. No response code, field structure,
+  participant-facing meaning or analytical rule changed.
 - Adds participant guidance beside the missing-purpose menu and uses the
   repository-validated `@MAXCHECKED=2` action tag. Analysis derives the implied
   corrected-purpose count and treats counts above two as a cardinality/taxonomy

@@ -1,6 +1,7 @@
 # Project Owner REDCap candidate 0.3 — PID 9149 live configuration
 
 Version: owner-redcap-candidate-0.3  
+Candidate source commit: `69cf6665b845428fa2abd855c0445ae20589579f`
 Status: manual controlled-import checklist; unfrozen; live QA pending.  
 Target: UCL REDCap PID 9149, “DEA Validation Study – Project Owner Review”.
 

@@ -27,13 +27,13 @@ def rows() -> list[dict[str, str]]:
 
 def test_manifest_structure_statuses_and_relationships() -> None:
     manifest_rows = rows()
-    assert len(manifest_rows) == 243
+    assert len(manifest_rows) == 244
     redcap = {
         row["artifact_id"]: row
         for row in manifest_rows
         if row["artifact_id"].startswith("RED-0")
     }
-    assert set(f"RED-{number:03d}" for number in range(54, 81)) <= set(redcap)
+    assert set(f"RED-{number:03d}" for number in range(54, 82)) <= set(redcap)
     assert redcap["RED-054"]["version"] == "owner-redcap-candidate-0.2"
     assert redcap["RED-054"]["current_state"] == "historical_candidate"
     assert redcap["RED-054"]["authoritative_status"] == "superseded_unfrozen_candidate"
@@ -42,6 +42,18 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert redcap["RED-068"]["authoritative_status"] == "current_candidate"
     assert redcap["RED-080"]["version"] == "owner-redcap-candidate-0.3"
     assert redcap["RED-080"]["authoritative_status"] == "supporting_current_candidate"
+    invitation = redcap["RED-081"]
+    assert invitation["version"] == ""
+    assert invitation["current_state"] == "working_candidate"
+    assert invitation["status_at_registration"] == "draft_template"
+    assert invitation["pre_existing_or_prospective"] == "prospective"
+    assert invitation["access_class"] == "public"
+    assert invitation["registration_inclusion"] == "include"
+    assert invitation["authoritative_status"] == "supporting_current_candidate"
+    assert invitation["frozen"] == "false"
+    assert invitation["registered"] == "false"
+    assert "not approved for participant use" in invitation["notes"]
+    assert "not yet aligned" in invitation["notes"]
     identifiers = [row["artifact_id"] for row in manifest_rows]
     assert len(identifiers) == len(set(identifiers))
     identifier_set = set(identifiers)
