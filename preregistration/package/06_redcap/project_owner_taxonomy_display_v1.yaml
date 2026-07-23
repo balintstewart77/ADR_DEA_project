@@ -1,0 +1,849 @@
+display_version: project-owner-taxonomy-display-v1
+status: author_approved_display_unfrozen_live_qa_pending
+approval:
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+  scope: owner microdefinitions and participant-reference definitions only; frozen
+    taxonomy remains authoritative
+source:
+  path: taxonomy_data_dictionary.yaml
+  sha256: 7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de
+  dictionary_version: 1.0-rc2
+  ontology_version: v3.4-rc2
+selection:
+  include_in_prompt: true
+  layers:
+  - Layer A -- domain
+  - Layer C -- purpose
+  - Cross-cutting tag
+  effective_active_rule: include_in_prompt is true; layer is current; source status
+    does not begin 'removed'
+  source_status_note: Poverty, Wealth & Living Standards is 'relabelled v3.4'; Demographic
+    disparities / equity tag is 'new v3.4'. Exact source statuses are retained.
+  missing_menu_exclusion: Unclear from Register Entry is a public-evidence fallback,
+    not an owner-addable substantive label.
+  menu_counts:
+    domain: 11
+    purpose: 7
+    tag: 2
+  proposed_display_counts:
+    domain: 12
+    purpose: 8
+    tag: 2
+  unique_key:
+  - owner_layer
+  - canonical_label
+  removed_linkage_unclear_excluded: true
+labels:
+- code: 1
+  canonical_label: Labour Market & Employment
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Work, employment, earnings, job quality, workforce dynamics,
+    skills demand and labour-market transitions.
+  owner_reference_definition: Research concerning work, employment, labour-market
+    participation, and workforce dynamics. Includes wages and earnings; employment,
+    unemployment, inactivity and underemployment; job quality; working hours, contracts,
+    gig or platform work, and working conditions; labour supply and demand; occupational,
+    sectoral and geographic mobility; workforce recruitment and retention; skills
+    demand and mismatch; and transitions into, through, or out of work.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning work, employment, labour-market participation,
+    and workforce dynamics. Includes wages and earnings; employment, unemployment,
+    inactivity and underemployment; job quality; working hours, contracts, gig or
+    platform work, and working conditions; labour supply and demand; occupational,
+    sectoral and geographic mobility; workforce recruitment and retention; skills
+    demand and mismatch; and transitions into, through, or out of work.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 2
+  canonical_label: Education & Skills
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Education, learning, training, skills formation and transitions
+    through education systems and into work.
+  owner_reference_definition: Research concerning education, learning, training, skills
+    formation, and transitions through education systems. Includes early years, schools,
+    colleges, universities, qualifications, apprenticeships, admissions, attainment,
+    attendance, teacher workforce issues, childcare, and education-to-work pathways.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning education, learning, training, skills formation,
+    and transitions through education systems. Includes early years, schools, colleges,
+    universities, qualifications, apprenticeships, admissions, attainment, attendance,
+    teacher workforce issues, childcare, and education-to-work pathways.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 3
+  canonical_label: Health & Social Care
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Health, illness, mental health, wellbeing, mortality as a
+    health outcome, healthcare services and social care.
+  owner_reference_definition: Research concerning health, illness, mortality, wellbeing,
+    clinical outcomes, health services, public health, mental health, social care,
+    and care-system use. Includes NHS services, hospitals, GP care, palliative care,
+    maternity, morbidity, mortality where health is the research object, and adult
+    or children's social care.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning health, illness, mortality, wellbeing, clinical
+    outcomes, health services, public health, mental health, social care, and care-system
+    use. Includes NHS services, hospitals, GP care, palliative care, maternity, morbidity,
+    mortality where health is the research object, and adult or children's social
+    care.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 4
+  canonical_label: Crime & Justice
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Crime, victimisation, public safety, policing, courts, sentencing,
+    prisons, probation and justice outcomes.
+  owner_reference_definition: Research concerning crime, victimisation, public safety,
+    offending, policing, courts, prisons, probation, sentencing, family justice, civil
+    justice, reoffending, and criminal records.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning crime, victimisation, public safety, offending,
+    policing, courts, prisons, probation, sentencing, family justice, civil justice,
+    reoffending, and criminal records.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 5
+  canonical_label: Business & Productivity
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Firms, business activity, innovation, productivity, entrepreneurship,
+    trade, investment and business performance.
+  owner_reference_definition: Research concerning firms, business activity, industrial
+    structure, innovation, productivity, entrepreneurship, trade, exports, foreign
+    direct investment, research and development, business support, and firm-level
+    performance.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning firms, business activity, industrial structure,
+    innovation, productivity, entrepreneurship, trade, exports, foreign direct investment,
+    research and development, business support, and firm-level performance.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 6
+  canonical_label: Poverty, Wealth & Living Standards
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: relabelled v3.4
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Material resources, poverty, wealth, debt, benefits, deprivation,
+    cost of living and household income.
+  owner_reference_definition: Research concerning material resources, economic hardship,
+    household living standards, poverty, wealth, debt, savings, benefits, deprivation,
+    food security, cost of living, household income, and distribution of resources.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning material resources, economic hardship, household
+    living standards, poverty, wealth, debt, savings, benefits, deprivation, food
+    security, cost of living, household income, and distribution of resources.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 7
+  canonical_label: Housing & Planning
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Housing, homelessness, tenure, residential conditions and
+    mobility, neighbourhood change and planning systems.
+  owner_reference_definition: Research concerning housing, homelessness, residential
+    conditions, tenure, home ownership, planning systems, neighbourhoods, gentrification,
+    residential mobility, and place-based housing or planning interventions.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning housing, homelessness, residential conditions,
+    tenure, home ownership, planning systems, neighbourhoods, gentrification, residential
+    mobility, and place-based housing or planning interventions.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 8
+  canonical_label: Migration & Demographics
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Population structure and change, migration, fertility, ageing
+    and mortality as a demographic outcome.
+  owner_reference_definition: Research concerning population structure, population
+    change, migration, immigration, population mobility, fertility, ageing, mortality
+    as a demographic outcome, census-based population analysis, and demographic composition.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning population structure, population change,
+    migration, immigration, population mobility, fertility, ageing, mortality as a
+    demographic outcome, census-based population analysis, and demographic composition.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 9
+  canonical_label: Environment & Agriculture
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Environment, climate, energy, agriculture, land use, pollution,
+    decarbonisation and environmental impacts.
+  owner_reference_definition: Research concerning the natural environment, climate,
+    climate adaptation or resilience, energy, agriculture, farming, land use, pollution,
+    decarbonisation, environmental policy, domestic or industrial energy use, and
+    environmental impacts of economic or social activity.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning the natural environment, climate, climate
+    adaptation or resilience, energy, agriculture, farming, land use, pollution, decarbonisation,
+    environmental policy, domestic or industrial energy use, and environmental impacts
+    of economic or social activity.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 10
+  canonical_label: Public Finance & Taxation
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Taxation, government revenue, public spending, fiscal transfers,
+    tax reliefs and fiscal policy.
+  owner_reference_definition: Research concerning government revenue, taxation, tax
+    compliance, tax credits, public expenditure, public spending, fiscal transfers,
+    business rates, tax reliefs, and fiscal policy.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research concerning government revenue, taxation, tax compliance,
+    tax credits, public expenditure, public spending, fiscal transfers, business rates,
+    tax reliefs, and fiscal policy.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 11
+  canonical_label: Data Infrastructure & Methodology
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Data or methodology as the primary research object, rather
+    than tools used for another question.
+  owner_reference_definition: Research primarily focused on the methods, measures,
+    tools, classifications, linkage processes, data quality, survey design, statistical
+    infrastructure, or dataset development needed to produce, improve, validate, or
+    use research data. This applies where data infrastructure, linkage, measurement
+    or methodology is itself the primary research object, not merely a tool used to
+    answer another substantive question.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research primarily focused on the methods, measures, tools, classifications,
+    linkage processes, data quality, survey design, statistical infrastructure, or
+    dataset development needed to produce, improve, validate, or use research data.
+  traceability: Reference definition combines the frozen definition with an imported
+    exclusion/boundary clause approved in the 2026-07-23 addendum; inline microdefinition
+    is unchanged.
+  wording_origin: frozen_definition_plus_imported_exclusion_boundary_clause
+  reference_definition_provenance: frozen_definition_plus_imported_exclusion_boundary_clause
+  imported_boundary_source_field:
+  - inclusion_rules
+  - exclusion_rules
+  imported_boundary_source_path:
+  - taxonomy_data_dictionary.yaml::categories[layer="Layer A -- domain",label="Data
+    Infrastructure & Methodology"].inclusion_rules
+  - taxonomy_data_dictionary.yaml::categories[layer="Layer A -- domain",label="Data
+    Infrastructure & Methodology"].exclusion_rules
+  imported_boundary_source_text:
+  - Assign when the data asset, linkage process, measurement approach, classification,
+    survey method, statistical method, or research infrastructure is itself the substantive
+    object of the project.
+  - Do not assign solely because a project uses linked data, administrative data,
+    statistical methods, or a secure research environment to study another substantive
+    domain. In those cases, assign the substantive domain and, where appropriate,
+    Methodological / Infrastructure Research in Layer C.
+  imported_boundary_note: Participant-reference wording imports an authoritative inclusion
+    or exclusion boundary; it is not a verbatim source definition.
+  reused_or_condensed: approved_microdefinition_with_frozen_definition_plus_imported_boundary_clause
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: true
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 1
+  canonical_label: Descriptive Monitoring
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Measuring and describing levels, distributions, patterns
+    or trends across places, populations or time, without primarily testing an exposure–outcome
+    relationship.
+  owner_reference_definition: Research whose analytical purpose is to measure and
+    characterise a phenomenon — its level, prevalence, distribution, composition,
+    profile, trend, or pattern — including how it varies across places, populations,
+    or time, without primarily testing an exposure-outcome relationship or evaluating
+    a named intervention.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research whose analytical purpose is to measure and characterise
+    a phenomenon — its level, prevalence, distribution, composition, profile, trend,
+    or pattern — including how it varies across places, populations, or time, without
+    primarily testing an exposure-outcome relationship or evaluating a named intervention.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 2
+  canonical_label: Outcome Tracking
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Linking a naturally occurring exposure, condition or event
+    to a later outcome, where the exposure is not a deliberate policy or programme.
+  owner_reference_definition: Research that links a naturally occurring exposure,
+    condition, event, status, characteristic, or circumstance to a downstream outcome.
+    This does not apply where the exposure is a deliberate named policy, programme,
+    reform or intervention; that is Policy Evaluation / Impact Analysis.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research that links a naturally occurring exposure, condition,
+    event, status, characteristic, or circumstance to a downstream outcome.
+  traceability: Reference definition combines the frozen definition with an imported
+    exclusion/boundary clause approved in the 2026-07-23 addendum; inline microdefinition
+    is unchanged.
+  wording_origin: frozen_definition_plus_imported_exclusion_boundary_clause
+  reference_definition_provenance: frozen_definition_plus_imported_exclusion_boundary_clause
+  imported_boundary_source_field:
+  - inclusion_rules
+  - exclusion_rules
+  imported_boundary_source_path:
+  - taxonomy_data_dictionary.yaml::categories[layer="Layer C -- purpose",label="Outcome
+    Tracking"].inclusion_rules
+  - taxonomy_data_dictionary.yaml::categories[layer="Layer C -- purpose",label="Outcome
+    Tracking"].exclusion_rules
+  imported_boundary_source_text:
+  - Assign where the project links a naturally occurring exposure, condition, event,
+    status, characteristic, or circumstance to a downstream outcome, and the exposure
+    is not a deliberate named policy, programme, or intervention.
+  - Do not assign where the exposure is a named policy, programme, reform, or intervention;
+    use **Policy Evaluation / Impact Analysis**. Do not assign if the project only
+    measures patterns or trends; use **Descriptive Monitoring**. Do not assign where
+    the aim is prospective prediction, risk scoring, screening, or early identification;
+    use **Risk Prediction / Early Identification**. Do not assign where the main focus
+    is extended life-stage progression or movement through service systems.
+  imported_boundary_note: Participant-reference wording imports an authoritative inclusion
+    or exclusion boundary; it is not a verbatim source definition.
+  reused_or_condensed: approved_microdefinition_with_frozen_definition_plus_imported_boundary_clause
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: true
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 3
+  canonical_label: Life-Course / Trajectory Analysis
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Following people, households, firms or cases over time to
+    understand trajectories, transitions or cumulative outcomes.
+  owner_reference_definition: Research that follows individuals, cohorts, households,
+    firms, or cases across extended time periods, transitions, or life stages to understand
+    trajectories, progression, mobility, or cumulative outcomes.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research that follows individuals, cohorts, households, firms,
+    or cases across extended time periods, transitions, or life stages to understand
+    trajectories, progression, mobility, or cumulative outcomes.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 4
+  canonical_label: Service Interaction / Systems Analysis
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: How people, cases or organisations access, use, move through
+    or are processed by public services.
+  owner_reference_definition: Research focused on how people, cases, families, or
+    organisations move through, use, access, or are processed by public service systems.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research focused on how people, cases, families, or organisations
+    move through, use, access, or are processed by public service systems.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 5
+  canonical_label: Policy Evaluation / Impact Analysis
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Assessing the implementation, effects or consequences of
+    a specific named policy, programme, regulation or intervention.
+  owner_reference_definition: Research that evaluates the effects, impacts, implementation,
+    or consequences of a specific named policy, programme, regulation, intervention,
+    scheme, or institutional change.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research that evaluates the effects, impacts, implementation,
+    or consequences of a specific named policy, programme, regulation, intervention,
+    scheme, or institutional change.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 6
+  canonical_label: Risk Prediction / Early Identification
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Predicting risk or identifying at-risk people, groups or
+    places for screening or early targeting.
+  owner_reference_definition: Research with an explicit predictive or early-identification
+    design focused on predicting risk, identifying at-risk individuals or groups,
+    building risk scores, developing screening tools, or prospectively targeting people
+    or places before or as an adverse outcome emerges.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research with an explicit predictive or early-identification
+    design focused on predicting risk, identifying at-risk individuals or groups,
+    building risk scores, developing screening tools, or prospectively targeting people
+    or places before or as an adverse outcome emerges.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 7
+  canonical_label: Methodological / Infrastructure Research
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Developing, testing, validating or improving research methods,
+    measures, linkage approaches, infrastructure or data assets.
+  owner_reference_definition: Research whose primary purpose is to develop, test,
+    validate, improve, or document methods, data infrastructure, measurement frameworks,
+    linkage approaches, survey methods, or data assets.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Research whose primary purpose is to develop, test, validate,
+    improve, or document methods, data infrastructure, measurement frameworks, linkage
+    approaches, survey methods, or data assets.
+  traceability: Reference definition is verbatim after whitespace normalisation from
+    the frozen dictionary and Project Owner Review Questionnaire v1; inline microdefinition
+    was approved by the author on 2026-07-23.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 1
+  canonical_label: Demographic disparities / equity tag
+  owner_layer: tag
+  source_layer: Cross-cutting tag
+  source_status: new v3.4
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: Comparisons across demographic or equality-relevant groups
+    are central; socioeconomic inequality alone or routine subgroup breakdowns do
+    not qualify.
+  owner_reference_definition: A cross-cutting tag for projects whose research question
+    centres on comparing outcomes, experiences, risks, access, or trajectories across
+    demographic or equality-relevant groups. Routine subgroup breakdowns do not qualify,
+    and socioeconomic or deprivation-based inequality alone is insufficient unless
+    comparison across demographic or equality-relevant groups is central.
+  source_dictionary_version: 1.0-rc2
+  source_definition: A cross-cutting tag for projects whose research question centres
+    on comparing outcomes, experiences, risks, access, or trajectories across demographic
+    or equality-relevant groups.
+  traceability: Reference definition combines the frozen definition with an imported
+    exclusion/boundary clause approved in the 2026-07-23 addendum; inline microdefinition
+    is unchanged.
+  wording_origin: frozen_definition_plus_imported_exclusion_boundary_clause
+  reference_definition_provenance: frozen_definition_plus_imported_exclusion_boundary_clause
+  imported_boundary_source_field:
+  - inclusion_rules
+  - exclusion_rules
+  imported_boundary_source_path:
+  - taxonomy_data_dictionary.yaml::categories[layer="Cross-cutting tag",label="Demographic
+    disparities / equity tag"].inclusion_rules
+  - taxonomy_data_dictionary.yaml::categories[layer="Cross-cutting tag",label="Demographic
+    disparities / equity tag"].exclusion_rules
+  imported_boundary_source_text:
+  - Assign where demographic or equality-relevant comparison is central to the research
+    question, especially comparison by age, cohort, sex, gender, race, ethnicity,
+    religion, disability, migrant/refugee status, nationality, or similar group characteristics.
+    Use this tag for the demographic or equality-relevant comparative lens while assigning
+    the substantive domain according to the outcome, system, policy area, or mechanism
+    being studied. Socioeconomic comparison qualifies only where the comparison is
+    made across a demographic or equality-relevant group; socioeconomic position alone
+    is not sufficient. The tag can be combined with any Layer A domain and any Layer
+    C purpose.
+  - Do not assign merely because demographic variables are used as controls, covariates,
+    sample descriptors, or routine stratifiers. Do not assign to poverty, income,
+    wealth, deprivation, regional inequality, or socioeconomic-position projects where
+    the comparison is not centrally across a demographic or equality-relevant group.
+    Do not use this tag as a substitute for the substantive domain or analytical purpose.
+  imported_boundary_note: Participant-reference wording imports an authoritative inclusion
+    or exclusion boundary; it is not a verbatim source definition.
+  reused_or_condensed: approved_microdefinition_with_frozen_definition_plus_imported_boundary_clause
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: true
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- code: 2
+  canonical_label: COVID-19 & Pandemic
+  owner_layer: tag
+  source_layer: Cross-cutting tag
+  source_status: active
+  effective_status: active_current_prompt_category
+  include_in_prompt: true
+  include_in_owner_missing_menu: true
+  owner_microdefinition: COVID-19 or pandemic conditions are a central research focus
+    or lens, not merely the period covered by the data.
+  owner_reference_definition: A cross-cutting tag for projects where COVID-19, the
+    COVID-19 pandemic, pandemic conditions, infection surveillance, vaccination, lockdowns,
+    social distancing, pandemic-related public support, or pandemic consequences are
+    a central condition or lens for the research question. Research does not qualify
+    merely because its data cover the pandemic period or because COVID-19 is mentioned
+    incidentally.
+  source_dictionary_version: 1.0-rc2
+  source_definition: A cross-cutting tag for projects where COVID-19, the COVID-19
+    pandemic, pandemic conditions, infection surveillance, vaccination, lockdowns,
+    social distancing, pandemic-related public support, or pandemic consequences are
+    a central condition or lens for the research question.
+  traceability: Reference definition combines the frozen definition with an imported
+    exclusion/boundary clause approved in the 2026-07-23 addendum; inline microdefinition
+    is unchanged.
+  wording_origin: frozen_definition_plus_imported_exclusion_boundary_clause
+  reference_definition_provenance: frozen_definition_plus_imported_exclusion_boundary_clause
+  imported_boundary_source_field:
+  - exclusion_rules
+  imported_boundary_source_path:
+  - taxonomy_data_dictionary.yaml::categories[layer="Cross-cutting tag",label="COVID-19
+    & Pandemic"].exclusion_rules
+  imported_boundary_source_text:
+  - Do not assign simply because the project occurred during the pandemic period.
+    Do not assign to infectious disease, health, or mortality studies unless COVID-19
+    or pandemic framing is explicit. Do not use this tag as a substitute for the substantive
+    domain or analytical purpose.
+  imported_boundary_note: Participant-reference wording imports an authoritative inclusion
+    or exclusion boundary; it is not a verbatim source definition.
+  reused_or_condensed: approved_microdefinition_with_frozen_definition_plus_imported_boundary_clause
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: true
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+proposed_only_fallbacks:
+- canonical_label: Unclear from Register Entry
+  owner_layer: domain
+  source_layer: Layer A -- domain
+  source_status: active
+  effective_status: active_current_prompt_proposed_only_fallback
+  include_in_prompt: true
+  include_in_owner_missing_menu: false
+  include_as_proposed_label: true
+  owner_microdefinition: The public title and datasets do not provide enough evidence
+    to assign a substantive Research Domain.
+  owner_reference_definition: Use only where the project title and dataset field together
+    do not provide enough evidence to assign any substantive domain.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Use only where the project title and dataset field together do
+    not provide enough evidence to assign any substantive domain.
+  traceability: Reference definition is the verbatim frozen public-evidence fallback;
+    inline microdefinition was approved by the author on 2026-07-23 and is supported
+    only for pre-populated production proposals.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'
+- canonical_label: Unclear from Register Entry
+  owner_layer: purpose
+  source_layer: Layer C -- purpose
+  source_status: active
+  effective_status: active_current_prompt_proposed_only_fallback
+  include_in_prompt: true
+  include_in_owner_missing_menu: false
+  include_as_proposed_label: true
+  owner_microdefinition: The public title and datasets do not provide enough information
+    to infer the Analytical Purpose.
+  owner_reference_definition: Use where the project title and datasets do not provide
+    enough information to infer the analytical purpose.
+  source_dictionary_version: 1.0-rc2
+  source_definition: Use where the project title and datasets do not provide enough
+    information to infer the analytical purpose.
+  traceability: Reference definition is the verbatim frozen public-evidence fallback;
+    inline microdefinition was approved by the author on 2026-07-23 and is supported
+    only for pre-populated production proposals.
+  wording_origin: frozen_definition_verbatim_after_whitespace_normalisation
+  reference_definition_provenance: frozen_definition_verbatim_after_whitespace_normalisation
+  imported_boundary_source_field: []
+  imported_boundary_source_path: []
+  imported_boundary_source_text: []
+  imported_boundary_note: ''
+  reused_or_condensed: approved_microdefinition_with_verbatim_source_reference
+  microdefinition_material_simplification: true
+  reference_definition_material_simplification: false
+  reference_definition_boundary_clause_imported: false
+  review_status: approved_by_author
+  reviewer: Balint Stewart
+  review_date: '2026-07-23'

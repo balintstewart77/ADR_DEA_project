@@ -1,0 +1,151 @@
+version: owner-redcap-candidate-0.3
+status: development_candidate_unfrozen_controlled_import_and_live_qa_pending
+project:
+  pid: 9149
+  title: DEA Validation Study – Project Owner Review
+  connection_performed: false
+  classic_non_longitudinal: true
+  record_id: owner_id
+forms:
+- owner_consent
+- project_review
+field_counts:
+  owner_consent: 11
+  project_review: 86
+repeating_instruments:
+- project_review
+repeat_custom_label: '[assignment_id] — [project_title]'
+repeat_survey_button_enabled: false
+survey_queue:
+  visible: true
+  owner_consent:
+    active: true
+    condition: '[owner_id] <> '''''
+    auto_start: true
+  project_review:
+    active: true
+    condition: '[owner_consent_complete] = ''2'' and [owner_consent] = ''1'' and [intended_recipient]
+      = ''1'''
+    auto_start: false
+stop_actions_manual_after_import:
+  intended_recipient: 'No'
+  owner_consent: 'No'
+  offline_equivalent: Downstream consent content is branched on affirmative answers;
+    queue logic suppresses Project Review.
+  minimum_external_disposition: No automatic deletion, retention, reminder-suppression
+    or contact-table action is encoded or claimed; follow the separately approved
+    recruitment-administration process.
+production_cardinalities:
+  domain:
+    column: substantive_domains
+    maximum: 4
+    rows_at_maximum: 1
+    distribution:
+      1: 840
+      2: 442
+      3: 25
+      4: 1
+  purpose:
+    column: analytical_purpose
+    maximum: 2
+    rows_at_maximum: 128
+    distribution:
+      1: 1180
+      2: 128
+  tag:
+    column: cross_cutting_tags
+    maximum: 2
+    rows_at_maximum: 9
+    distribution:
+      0: 1061
+      1: 238
+      2: 9
+slot_capacity:
+  domain: 4
+  purpose: 2
+  tag: 2
+taxonomy_menu_counts:
+  domain: 11
+  purpose: 7
+  tag: 2
+proposed_slot_visibility:
+  domain_and_purpose_question: Is the basis for this classification visible in the
+    public project title and datasets listed above?
+  tag_question: Could the correct status for this tag reasonably be determined from
+    the public project title and datasets listed above?
+  choices:
+    '2': Clearly visible
+    '1': Partly visible
+    '0': Not visible
+    '3': Unsure
+  basis_required_when:
+    domain_or_purpose_verdict:
+    - '2: Does not fit'
+    - '3: Unsure'
+    tag_correctness:
+    - '0: No'
+    - '2: Unsure'
+    visibility:
+    - '1: Partly visible'
+    - '0: Not visible'
+    - '3: Unsure'
+tag_reviews:
+  always_review_both: true
+  canonical_order:
+  - Demographic disparities / equity tag
+  - COVID-19 & Pandemic
+  fields:
+    t01:
+      proposed_status: prop_t01_status
+      correctness: po_t01_correct
+      visibility: po_t01_vis
+      basis: po_t01_basis
+    t02:
+      proposed_status: prop_t02_status
+      correctness: po_t02_correct
+      visibility: po_t02_vis
+      basis: po_t02_basis
+  missing_tag_summary_role: Summary cross-check after the two primary per-tag proposed-status
+    assessments; retained for later protocol and participant-document alignment.
+missing_label_branching:
+  gateways_required: true
+  checkbox_menus_show_only_for_yes: true
+  checkbox_menus_required_when_shown: true
+  at_least_one_checkbox_requires_live_qa: true
+  unsure_does_not_show_menu: true
+  purpose_guidance_field: po_miss_purpose_guidance
+  purpose_max_checked_annotation: '@MAXCHECKED=2'
+  purpose_cardinality_analysis: Derive retained fitted proposed purposes plus selected
+    missing purposes; flag an implied corrected count above two as a cardinality/taxonomy
+    issue, not a directly comparable corrected classification.
+analytical_completion:
+  owner_join:
+  - intended_recipient = 1
+  - owner_consent = 1
+  domains_and_purposes: verdict and visibility for every populated slot, plus every
+    triggered basis
+  tags: correctness and visibility for both tags, plus every triggered basis
+  missing_labels: all three gateways, and every triggered menu and basis
+  overall: public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus
+    every triggered explanation/issue field
+  excluded_optional_fields:
+  - ack_pref
+  - po_nonpublic_note
+  - po_other_comment
+  - po_quote_permission
+  submitted_is_separate: project_review_complete = 2 is submission status, not the
+    analytical-completion definition
+participant_reference:
+  field: assignment_id
+  display_label: Review reference
+  survey_read_only: true
+  owner_id_survey_hidden: true
+  repeat_instance_not_sole_reference: true
+live_qa_assertions:
+- one owner-specific Survey Queue link reopens the queue and preserves progress
+- pre-created repeated Project Review instances appear separately with the custom
+  label
+- participants cannot create blank repeat instances
+- each repeated instance exports as a separate long-format row
+- untouched pre-created instances remain present as incomplete repeated rows
+- completion returns to the visible Survey Queue

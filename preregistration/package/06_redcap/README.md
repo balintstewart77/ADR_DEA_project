@@ -1,30 +1,59 @@
 # REDCap instruments
 
-This folder contains the frozen redcap-candidate-0.7 scratch instrument source and its
-historical combined owner form, plus the separate unfrozen standalone Project
-Owner development candidate required by Protocol v0.15. Candidate 0.7 remains
-the frozen scratch-coder version; its historical `project_owner` form was never
+This folder contains the frozen redcap-candidate-0.7 scratch instrument source
+and its historical combined owner form, plus the separate unfrozen standalone
+Project Owner development candidates. Candidate 0.7 remains the frozen
+scratch-coder version; its historical `project_owner` form was never
 independently live-QA tested for the standalone owner workflow.
 
-`owner-redcap-candidate-0.2` is the current separate 167-field, four-instrument
-Classic project candidate. It adds one contact-record consent survey so
-affirmative, versioned informed consent is obtained once per researcher before
-any project-review links are released. Later reviews remain voluntary without
-repeating full consent. It is intended for later synthetic-only live QA in
-Development PID 9149. It has not been imported, live tested or frozen and does
-not authorise real contacts, invitations, assignments or data collection. Its
-canonical guide is `project_owner_redcap_candidate_0.2_README.md`.
+`owner-redcap-candidate-0.3` is the current separate 97-field, two-instrument
+Classic project candidate. It uses one pseudonymous record per owner, a
+non-repeating Owner Consent survey, and a repeating Project Review survey with
+one administrator-created instance per owner–project assignment. One
+participant-specific Survey Queue link gives each owner access to their
+pre-created reviews. Direct identifiers and recruitment/contact administration
+are absent from the research project. The canonical specification is
+`project_owner_redcap_candidate_0.3_spec.md`, and the project-level manual setup
+is `project_owner_redcap_candidate_0.3_live_configuration.md`.
+
+Candidate 0.3 is intended for controlled synthetic-only live QA in Development
+PID 9149. It has not been imported, live tested or frozen and does not authorise
+real contacts, invitations, assignments or data collection. The instrument is
+technically ready for that controlled synthetic import. All 22 owner-facing
+taxonomy microdefinitions and participant-reference definitions were approved
+by Balint Stewart on 2026-07-23. Taxonomy wording is approved for participant
+use. The participant taxonomy-reference Markdown contains only participant
+content plus its document version/date; definition provenance and approval
+metadata remain in the display YAML, review CSV, specification and manifest.
+The reference and Project Review introduction state that Research Domains may
+be multi-label and are unranked, while Analytical Purposes may also be
+multi-label but are limited to two main analytical aims. Four expanded
+participant-reference definitions (Data Infrastructure & Methodology, Outcome
+Tracking, and both cross-cutting tags) are explicitly recorded as frozen
+definitions plus imported inclusion/exclusion boundary clauses with exact
+taxonomy source fields and paths; the other 18 remain verbatim after whitespace
+normalisation.
+Live QA and coordinated Participant Information, Questionnaire,
+invitation, protocol, ethics and governance alignment remain required before
+recruitment.
+
+`owner-redcap-candidate-0.2` remains byte-for-byte unchanged as an unfrozen,
+never-imported historical candidate. Its four-instrument contact/assignment
+architecture was superseded before recruitment by candidate 0.3.
 
 `owner-redcap-candidate-0.1` remains unchanged as an unfrozen, never-imported
 historical candidate. It used a per-assignment participation acknowledgement
 and was superseded by candidate 0.2 before live QA.
 
-Participant-facing version identifiers are separate from the REDCap candidate:
+The existing participant-facing Word files remain unchanged and are not yet
+aligned to candidate 0.3. Participant-facing version identifiers are separate
+from the REDCap candidate:
 `project-owner-information-v1` identifies Project Owner Participant
 Information and Consent — Version 1, while
 `project-owner-review-questionnaire-v1` identifies Project Owner Review
-Questionnaire — Version 1. The approved Word files are retained byte-for-byte
-under `participant_materials/`.
+Questionnaire — Version 1. The Word files are retained byte-for-byte under
+`participant_materials/`; candidate 0.3 uses an explicit pending-approval
+participant-information token until the later coordinated alignment task.
 
 Candidate 0.7 passed repository validation and completed live REDCap QA on 22
 July 2026. It is frozen for preregistration and subsequent formal scratch

@@ -1,5 +1,93 @@
 # Standalone Project Owner REDCap version history
 
+## owner-redcap-candidate-0.3 - 2026-07-23
+
+- Current two-instrument development candidate: Owner Consent (11) and
+  Project Review (86), totalling 97 dictionary fields.
+- Substantially changes the record architecture before recruitment: one
+  pseudonymous `owner_id` record per owner, one non-repeating consent survey,
+  and one pre-created repeating Project Review instance per owner–project
+  assignment.
+- Uses one participant-specific Survey Queue link per owner. Project Review is
+  the only repeating instrument, its custom label is
+  `[assignment_id] — [project_title]`, Auto Start is disabled, and participants
+  must not be allowed to create additional instances.
+- Removes direct identifiers and all recruitment/contact administration from
+  the research project. Those data remain in a separately restricted layer
+  keyed by `owner_id`.
+- Collects `ack_pref` once at owner level without collecting an
+  acknowledgement name or affiliation; quotation permission remains
+  review-instance-specific.
+- Records one affirmative Yes/No consent decision after intended-recipient
+  confirmation, branches wrong-recipient and consent-decline messages
+  independently, and keeps optional acknowledgement outside consent and Survey
+  Queue access.
+- Preserves the four-level public-entry visibility scale (Clearly visible,
+  Partly visible, Not visible, Unsure) and its conditional basis logic for all
+  four domain, two purpose and two tag reviews.
+- Presents both canonical cross-cutting tags on every assignment with an
+  Applied/Not applied proposed status, correctness, visibility and conditional
+  basis; the missing-tag item is retained as a documented summary cross-check.
+- Aligns the existing `po_nonpublic`/`po_nonpublic_note` pair to the explicit
+  project-knowledge gateway and optional non-public-context warning.
+- Documents offered, untouched, partial, analytically complete and submitted
+  assignment-response states; submission status alone is not analytical
+  completeness.
+- Displays stable `assignment_id` as the neutral Review reference and uses it
+  in completion and specific-response withdrawal instructions.
+- Recalculates frozen production maxima as four domains, two purposes and two
+  cross-cutting tags, and fails offline validation if display capacity is
+  lower.
+- Adds a single traced owner-facing taxonomy source with 11 substantive
+  domains, seven purposes and two tags in missing-label menus, plus distinct
+  proposed-only Domain and Purpose `Unclear from Register Entry` definitions.
+  The layer-qualified display key prevents their duplicate label text from
+  collapsing and excludes the removed linkage-layer entry.
+- Expands the human-review table to 22 rows (12/8/2), leaves ordinary ambiguity
+  fields blank and provides targeted review prompts for the data-infrastructure
+  domain, Outcome Tracking/Policy Evaluation boundary and
+  demographic-disparities tag.
+- Records the final owner-facing taxonomy-display pass approved by Balint
+  Stewart on 2026-07-23: 22 `approved_by_author`, zero pending and zero requiring
+  revision. The display source now separates immutable `source_definition`,
+  compact `owner_microdefinition` and participant-reference
+  `owner_reference_definition`; inline REDCap uses the microdefinition and the
+  Markdown reference uses the reference definition.
+- Strengthens the participant-reference definitions for Data Infrastructure &
+  Methodology, Outcome Tracking and both cross-cutting tags with imported
+  inclusion/exclusion boundary clauses while leaving all approved inline
+  microdefinitions unchanged. Their wording origin is recorded as frozen
+  definition plus imported clause, with exact authoritative taxonomy source
+  fields, paths and text; the other 18 reference definitions are verified
+  verbatim after whitespace normalisation. The
+  participant Markdown adds explanatory framing for the two Unclear entries
+  and removes repository filenames, build/review status and audit footers;
+  technical traceability remains outside participant-visible content.
+- Clarifies in both the participant reference and Project Review introduction
+  that multiple Research Domains may validly apply and are judged independently
+  without ranking. The participant reference separately retains the maximum of
+  two Analytical Purposes and states that more than one may describe the main
+  analytical aims. Its usage guidance now prepares participants to judge both
+  actual-project fit and public-entry visibility, and a framework-definition
+  lead-in distinguishes the two traceable Unclear definitions from participant
+  selection instructions. No response field was added.
+- Adds participant guidance beside the missing-purpose menu and uses the
+  repository-validated `@MAXCHECKED=2` action tag. Analysis derives the implied
+  corrected-purpose count and treats counts above two as a cardinality/taxonomy
+  issue rather than a directly comparable corrected classification.
+- Adds a 22-row long-format synthetic fixture for three owners and 19
+  pre-created assignments (1, 3 and 15 projects).
+- Supersedes candidate 0.2 as the current development candidate. Candidate 0.2
+  remains byte-for-byte unchanged and retains its provenance as an unfrozen,
+  never-imported historical candidate.
+- This is a substantial instrument architecture change made before recruitment
+  and before final participant-document, protocol and ethics alignment.
+- Status: unfrozen development candidate; no REDCap connection or import;
+  technically ready for controlled synthetic import into Development PID 9149
+  and taxonomy wording approved for participant use. Live QA and coordinated
+  participant-document, invitation, protocol, ethics and governance alignment
+  remain pending before recruitment.
+
 ## owner-redcap-candidate-0.2 - 2026-07-22
 
 - Follow-up documentation correction after the initial candidate-0.2 commit:

@@ -4,6 +4,15 @@ This directory contains import-only synthetic records for live REDCap runtime
 QA. It contains no formal coder declaration, sampled project assignment, real
 Record ID, response export, live URL, project identifier, or credential.
 
+- `project_owner_synthetic_import_candidate_0.3.csv` is the unfrozen Project
+  Owner candidate-0.3 long-format fixture for future controlled manual import
+  into Development PID 9149. It contains one non-repeating row per synthetic
+  owner and 1, 3 or 15 pre-created `project_review` repeat rows (three owners,
+  19 assignments, 22 rows total). Participant responses are blank, repeat
+  instances are numbered 1...N, both canonical tag statuses are pre-populated on
+  every repeat, and no name, email or real Record ID is present. Its inline
+  definitions use the 22 author-approved owner microdefinitions recorded on
+  2026-07-23; controlled live QA remains required before freeze or recruitment.
 - `redcap_live_qa_synthetic_assignments_candidate_0.6.csv` is retained unchanged
   as historical evidence of the intermediate candidate-0.6 live test. Candidate
   0.6 was imported and partially inspected, then superseded before final runtime

@@ -16,7 +16,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
     for path in PACKAGE.glob("*.csv"):
         with path.open(encoding="utf-8", newline="") as handle:
             rows = list(csv.reader(handle))
-        expected_rows = 4 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
+        expected_rows = 8 if path.name == "instrument_change_log.csv" else 3 if path.name == "coding_clarification_log.csv" else 1
         assert len(rows) == expected_rows
         assert rows[0]
     with (PACKAGE / "coding_clarification_log.csv").open(
@@ -47,8 +47,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
         encoding="utf-8", newline=""
     ) as handle:
         instrument_entries = list(csv.DictReader(handle))
-    assert len(instrument_entries) == 3
-    historical, instrument, freeze = instrument_entries
+    assert len(instrument_entries) == 7
+    (
+        historical,
+        instrument,
+        freeze,
+        owner,
+        owner_preimport,
+        taxonomy_correction,
+        taxonomy_approval,
+    ) = instrument_entries
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -65,6 +73,32 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "residual mismatches were zero" in freeze["evidence_or_reason"]
     assert "no formal sample" in freeze["pilot_or_formal_data_effect"]
     assert "Frozen; live-QA complete" in freeze["status"]
+    assert owner["change_id"] == "REDCAP-009"
+    assert owner["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert owner["classification_rule_change"] == "no"
+    assert "4 domains, 2 purposes and 2 tags" in owner["evidence_or_reason"]
+    assert owner["pilot_or_formal_data_effect"].startswith("No real participant data")
+    assert "REDCap connection was created" in owner["pilot_or_formal_data_effect"]
+    assert "unfrozen" in owner["status"]
+    assert owner_preimport["change_id"] == "REDCAP-010"
+    assert owner_preimport["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert owner_preimport["classification_rule_change"] == "no"
+    assert "four-level visibility scale" in owner_preimport["change_description"]
+    assert "No protocol or participant-facing Word document was edited" in owner_preimport["protocol_effect"]
+    assert "20 taxonomy definitions remain pending human approval" in owner_preimport["status"]
+    assert taxonomy_correction["change_id"] == "REDCAP-011"
+    assert taxonomy_correction["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert taxonomy_correction["classification_rule_change"] == "no"
+    assert "Layer-qualified mapping" in taxonomy_correction["evidence_or_reason"]
+    assert "@MAXCHECKED=2" in taxonomy_correction["change_description"]
+    assert "all 22 taxonomy definitions remain pending human approval" in taxonomy_correction["status"]
+    assert taxonomy_approval["change_id"] == "REDCAP-012"
+    assert taxonomy_approval["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert taxonomy_approval["classification_rule_change"] == "no"
+    assert "Balint Stewart's approval of all 22" in taxonomy_approval["change_description"]
+    assert "eight exact microdefinition revisions" in taxonomy_approval["change_description"]
+    assert "No protocol or participant-facing Word document was edited" in taxonomy_approval["protocol_effect"]
+    assert "taxonomy wording approved for participant use" in taxonomy_approval["status"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

@@ -1,0 +1,87 @@
+variable,row_type,source,analysis_role,notes
+owner_id,owner_and_review,record_id,join_key,Pseudonymous owner identifier; join owner consent onto repeating reviews.
+redcap_repeat_instrument,system,redcap_generated,row_split,Blank on owner row; project_review on review rows.
+redcap_repeat_instance,system,redcap_generated,assignment_instance,Blank on owner row; 1...N on pre-created review rows.
+participant_info_ver,owner,owner_consent,owner_consent,Blank on the other row type in REDCap long export.
+consent_form_ver,owner,owner_consent,owner_consent,Blank on the other row type in REDCap long export.
+owner_instr_ver,owner,owner_consent,owner_consent,Blank on the other row type in REDCap long export.
+intended_recipient,owner,owner_consent,owner_consent,Blank on the other row type in REDCap long export.
+owner_consent,owner,owner_consent,owner_consent,Blank on the other row type in REDCap long export.
+ack_pref,owner,owner_consent,owner_consent,Blank on the other row type in REDCap long export.
+assignment_id,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+source_record_id,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+official_project_id,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+project_title,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+datasets_used,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+public_register_url,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+source_pop_ver,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+production_ver,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+taxonomy_ver,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+proposal_output_sha256,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+review_instr_ver,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+taxonomy_display_ver,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_d01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_d01_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+po_d01_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_d01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_d01_basis,project_review,project_review,owner_response,Required for Does not fit/Unsure verdicts or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+prop_d02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_d02_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+po_d02_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_d02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_d02_basis,project_review,project_review,owner_response,Required for Does not fit/Unsure verdicts or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+prop_d03_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_d03_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+po_d03_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_d03_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_d03_basis,project_review,project_review,owner_response,Required for Does not fit/Unsure verdicts or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+prop_d04_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_d04_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+po_d04_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_d04_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_d04_basis,project_review,project_review,owner_response,Required for Does not fit/Unsure verdicts or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+prop_p01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_p01_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+po_p01_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_p01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_p01_basis,project_review,project_review,owner_response,Required for Does not fit/Unsure verdicts or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+prop_p02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_p02_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+po_p02_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_p02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_p02_basis,project_review,project_review,owner_response,Required for Does not fit/Unsure verdicts or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+prop_t01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_t01_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_t01_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
+po_t01_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_t01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_t01_basis,project_review,project_review,owner_response,Required for No/Unsure tag-correctness responses or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+prop_t02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_t02_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_t02_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
+po_t02_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_t02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
+po_t02_basis,project_review,project_review,owner_response,Required for No/Unsure tag-correctness responses or Partly visible/Not visible/Unsure public-evidence responses; blank on the owner row.
+po_miss_domain,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_domains,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_domain_basis,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_purpose,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_purposes,project_review,project_review,owner_response,Missing-purpose checkboxes; @MAXCHECKED=2 limits this menu. Analysis must add selected missing purposes to proposed purposes judged Fits and flag an implied corrected count above two as a cardinality/taxonomy issue rather than a directly comparable corrected classification.
+po_miss_purpose_basis,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_tag,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_tags,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_tag_basis,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_sufficiency,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_suff_explain,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_taxonomy_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_tax_issue,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_tax_explain,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_tax_other,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_nonpublic,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_nonpublic_note,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_other_comment,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_quote_permission,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+owner_consent_timestamp,owner,redcap_survey_timestamp,consent_provenance,Native Owner Consent survey completion timestamp.
+owner_consent_complete,owner,redcap_form_status,consent_completion,REDCap-generated form completion status.
+project_review_timestamp,project_review,redcap_survey_timestamp,review_provenance,Native repeating Project Review survey completion timestamp.
+project_review_complete,project_review,redcap_form_status,review_completion,REDCap submission status: 2=Submitted. Derive offered/untouched/partial/analytically complete separately; do not treat 2 alone as analytical completeness.

@@ -1,0 +1,98 @@
+variable,form,field_type,scope,prepopulated,participant_response,branching,required,annotation,notes
+owner_id,owner_consent,text,owner_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+owner_intro,owner_consent,descriptive,owner_row,no,no,,,,Generated display/wording field
+participant_info_link,owner_consent,descriptive,owner_row,no,no,,,,Generated display/wording field
+participant_info_ver,owner_consent,text,owner_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+consent_form_ver,owner_consent,text,owner_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+owner_instr_ver,owner_consent,text,owner_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+intended_recipient,owner_consent,radio,owner_row,no,yes,,y,,REDCap field
+wrong_recipient_stop,owner_consent,descriptive,owner_row,no,no,[intended_recipient] = '0',,,Generated display/wording field
+owner_consent,owner_consent,radio,owner_row,no,yes,[intended_recipient] = '1',y,,REDCap field
+consent_decline_stop,owner_consent,descriptive,owner_row,no,no,[owner_consent] = '0',,,Generated display/wording field
+ack_pref,owner_consent,radio,owner_row,no,yes,[intended_recipient] = '1' and [owner_consent] = '1',,,REDCap field
+assignment_id,project_review,text,project_review_repeat_row,yes,no,,y,@READONLY-SURVEY,REDCap field
+source_record_id,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+official_project_id,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+project_title,project_review,notes,project_review_repeat_row,yes,no,,y,@READONLY-SURVEY,REDCap field
+datasets_used,project_review,notes,project_review_repeat_row,yes,no,,y,@READONLY-SURVEY,REDCap field
+public_register_url,project_review,text,project_review_repeat_row,yes,no,,,@READONLY-SURVEY,REDCap field
+source_pop_ver,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+production_ver,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+taxonomy_ver,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+proposal_output_sha256,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+review_instr_ver,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+taxonomy_display_ver,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+po_intro,project_review,descriptive,project_review_repeat_row,no,no,,,,Generated display/wording field
+po_taxonomy_ref,project_review,descriptive,project_review_repeat_row,no,no,,,,Generated display/wording field
+po_privacy,project_review,descriptive,project_review_repeat_row,no,no,,,,Generated display/wording field
+prop_d01_label,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_d01_def,project_review,notes,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+po_d01_display,project_review,descriptive,project_review_repeat_row,no,no,[prop_d01_label] <> '',,,Generated display/wording field
+po_d01_fit,project_review,radio,project_review_repeat_row,no,yes,[prop_d01_label] <> '',y,,REDCap field
+po_d01_vis,project_review,radio,project_review_repeat_row,no,yes,[prop_d01_label] <> '',y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_d01_basis,project_review,notes,project_review_repeat_row,no,yes,[po_d01_fit] = '2' or [po_d01_fit] = '3' or [po_d01_vis] = '1' or [po_d01_vis] = '0' or [po_d01_vis] = '3',y,,Required when verdict is Does not fit/Unsure or visibility is Partly visible/Not visible/Unsure.
+prop_d02_label,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_d02_def,project_review,notes,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+po_d02_display,project_review,descriptive,project_review_repeat_row,no,no,[prop_d02_label] <> '',,,Generated display/wording field
+po_d02_fit,project_review,radio,project_review_repeat_row,no,yes,[prop_d02_label] <> '',y,,REDCap field
+po_d02_vis,project_review,radio,project_review_repeat_row,no,yes,[prop_d02_label] <> '',y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_d02_basis,project_review,notes,project_review_repeat_row,no,yes,[po_d02_fit] = '2' or [po_d02_fit] = '3' or [po_d02_vis] = '1' or [po_d02_vis] = '0' or [po_d02_vis] = '3',y,,Required when verdict is Does not fit/Unsure or visibility is Partly visible/Not visible/Unsure.
+prop_d03_label,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_d03_def,project_review,notes,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+po_d03_display,project_review,descriptive,project_review_repeat_row,no,no,[prop_d03_label] <> '',,,Generated display/wording field
+po_d03_fit,project_review,radio,project_review_repeat_row,no,yes,[prop_d03_label] <> '',y,,REDCap field
+po_d03_vis,project_review,radio,project_review_repeat_row,no,yes,[prop_d03_label] <> '',y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_d03_basis,project_review,notes,project_review_repeat_row,no,yes,[po_d03_fit] = '2' or [po_d03_fit] = '3' or [po_d03_vis] = '1' or [po_d03_vis] = '0' or [po_d03_vis] = '3',y,,Required when verdict is Does not fit/Unsure or visibility is Partly visible/Not visible/Unsure.
+prop_d04_label,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_d04_def,project_review,notes,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+po_d04_display,project_review,descriptive,project_review_repeat_row,no,no,[prop_d04_label] <> '',,,Generated display/wording field
+po_d04_fit,project_review,radio,project_review_repeat_row,no,yes,[prop_d04_label] <> '',y,,REDCap field
+po_d04_vis,project_review,radio,project_review_repeat_row,no,yes,[prop_d04_label] <> '',y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_d04_basis,project_review,notes,project_review_repeat_row,no,yes,[po_d04_fit] = '2' or [po_d04_fit] = '3' or [po_d04_vis] = '1' or [po_d04_vis] = '0' or [po_d04_vis] = '3',y,,Required when verdict is Does not fit/Unsure or visibility is Partly visible/Not visible/Unsure.
+prop_p01_label,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_p01_def,project_review,notes,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+po_p01_display,project_review,descriptive,project_review_repeat_row,no,no,[prop_p01_label] <> '',,,Generated display/wording field
+po_p01_fit,project_review,radio,project_review_repeat_row,no,yes,[prop_p01_label] <> '',y,,REDCap field
+po_p01_vis,project_review,radio,project_review_repeat_row,no,yes,[prop_p01_label] <> '',y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_p01_basis,project_review,notes,project_review_repeat_row,no,yes,[po_p01_fit] = '2' or [po_p01_fit] = '3' or [po_p01_vis] = '1' or [po_p01_vis] = '0' or [po_p01_vis] = '3',y,,Required when verdict is Does not fit/Unsure or visibility is Partly visible/Not visible/Unsure.
+prop_p02_label,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_p02_def,project_review,notes,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,REDCap field
+po_p02_display,project_review,descriptive,project_review_repeat_row,no,no,[prop_p02_label] <> '',,,Generated display/wording field
+po_p02_fit,project_review,radio,project_review_repeat_row,no,yes,[prop_p02_label] <> '',y,,REDCap field
+po_p02_vis,project_review,radio,project_review_repeat_row,no,yes,[prop_p02_label] <> '',y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_p02_basis,project_review,notes,project_review_repeat_row,no,yes,[po_p02_fit] = '2' or [po_p02_fit] = '3' or [po_p02_vis] = '1' or [po_p02_vis] = '0' or [po_p02_vis] = '3',y,,Required when verdict is Does not fit/Unsure or visibility is Partly visible/Not visible/Unsure.
+prop_t01_label,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_t01_def,project_review,notes,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+po_t01_display,project_review,descriptive,project_review_repeat_row,no,no,,,,Generated display/wording field
+prop_t01_status,project_review,radio,project_review_repeat_row,yes,no,,y,@READONLY-SURVEY,Pre-populated Applied/Not applied status; always participant-visible and survey-read-only.
+po_t01_correct,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_t01_vis,project_review,radio,project_review_repeat_row,no,yes,,y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_t01_basis,project_review,notes,project_review_repeat_row,no,yes,[po_t01_correct] = '0' or [po_t01_correct] = '2' or [po_t01_vis] = '1' or [po_t01_vis] = '0' or [po_t01_vis] = '3',y,,Required when tag correctness is No/Unsure or visibility is Partly visible/Not visible/Unsure.
+prop_t02_label,project_review,text,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+prop_t02_def,project_review,notes,project_review_repeat_row,yes,no,,y,@HIDDEN-SURVEY @READONLY,REDCap field
+po_t02_display,project_review,descriptive,project_review_repeat_row,no,no,,,,Generated display/wording field
+prop_t02_status,project_review,radio,project_review_repeat_row,yes,no,,y,@READONLY-SURVEY,Pre-populated Applied/Not applied status; always participant-visible and survey-read-only.
+po_t02_correct,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_t02_vis,project_review,radio,project_review_repeat_row,no,yes,,y,,Required proposed-label public-evidence response: 2 Clearly visible; 1 Partly visible; 0 Not visible; 3 Unsure.
+po_t02_basis,project_review,notes,project_review_repeat_row,no,yes,[po_t02_correct] = '0' or [po_t02_correct] = '2' or [po_t02_vis] = '1' or [po_t02_vis] = '0' or [po_t02_vis] = '3',y,,Required when tag correctness is No/Unsure or visibility is Partly visible/Not visible/Unsure.
+po_miss_domain,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_miss_domains,project_review,checkbox,project_review_repeat_row,no,yes,[po_miss_domain] = '1',y,,REDCap field
+po_miss_domain_basis,project_review,notes,project_review_repeat_row,no,yes,[po_miss_domains(1)] = '1' or [po_miss_domains(2)] = '1' or [po_miss_domains(3)] = '1' or [po_miss_domains(4)] = '1' or [po_miss_domains(5)] = '1' or [po_miss_domains(6)] = '1' or [po_miss_domains(7)] = '1' or [po_miss_domains(8)] = '1' or [po_miss_domains(9)] = '1' or [po_miss_domains(10)] = '1' or [po_miss_domains(11)] = '1',y,,REDCap field
+po_miss_purpose,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_miss_purpose_guidance,project_review,descriptive,project_review_repeat_row,no,no,[po_miss_purpose] = '1',,,Generated display/wording field
+po_miss_purposes,project_review,checkbox,project_review_repeat_row,no,yes,[po_miss_purpose] = '1',y,@MAXCHECKED=2,REDCap field
+po_miss_purpose_basis,project_review,notes,project_review_repeat_row,no,yes,[po_miss_purposes(1)] = '1' or [po_miss_purposes(2)] = '1' or [po_miss_purposes(3)] = '1' or [po_miss_purposes(4)] = '1' or [po_miss_purposes(5)] = '1' or [po_miss_purposes(6)] = '1' or [po_miss_purposes(7)] = '1',y,,REDCap field
+po_miss_tag,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_miss_tags,project_review,checkbox,project_review_repeat_row,no,yes,[po_miss_tag] = '1',y,,REDCap field
+po_miss_tag_basis,project_review,notes,project_review_repeat_row,no,yes,[po_miss_tags(1)] = '1' or [po_miss_tags(2)] = '1',y,,REDCap field
+po_sufficiency,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_suff_explain,project_review,notes,project_review_repeat_row,no,yes,[po_sufficiency] = '2' or [po_sufficiency] = '3',y,,REDCap field
+po_taxonomy_fit,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_tax_issue,project_review,checkbox,project_review_repeat_row,no,yes,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',y,,REDCap field
+po_tax_explain,project_review,notes,project_review_repeat_row,no,yes,[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3',y,,REDCap field
+po_tax_other,project_review,notes,project_review_repeat_row,no,yes,[po_tax_issue(5)] = '1',y,,REDCap field
+po_nonpublic,project_review,radio,project_review_repeat_row,no,yes,,y,,REDCap field
+po_nonpublic_note,project_review,notes,project_review_repeat_row,no,yes,[po_nonpublic] = '1' or [po_nonpublic] = '2',,,REDCap field
+po_final_warning,project_review,descriptive,project_review_repeat_row,no,no,,,,Generated display/wording field
+po_other_comment,project_review,notes,project_review_repeat_row,no,yes,,,,REDCap field
+po_quote_permission,project_review,radio,project_review_repeat_row,no,yes,,,,REDCap field

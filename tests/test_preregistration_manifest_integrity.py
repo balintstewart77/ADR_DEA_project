@@ -27,11 +27,21 @@ def rows() -> list[dict[str, str]]:
 
 def test_manifest_structure_statuses_and_relationships() -> None:
     manifest_rows = rows()
-    assert len(manifest_rows) == 230
-    owner02 = {row["artifact_id"]: row for row in manifest_rows if row["artifact_id"].startswith("RED-0")}
-    assert set(f"RED-{number:03d}" for number in range(54, 66)) <= set(owner02)
-    assert owner02["RED-054"]["version"] == "owner-redcap-candidate-0.2"
-    assert owner02["RED-054"]["authoritative_status"] == "current_candidate"
+    assert len(manifest_rows) == 243
+    redcap = {
+        row["artifact_id"]: row
+        for row in manifest_rows
+        if row["artifact_id"].startswith("RED-0")
+    }
+    assert set(f"RED-{number:03d}" for number in range(54, 81)) <= set(redcap)
+    assert redcap["RED-054"]["version"] == "owner-redcap-candidate-0.2"
+    assert redcap["RED-054"]["current_state"] == "historical_candidate"
+    assert redcap["RED-054"]["authoritative_status"] == "superseded_unfrozen_candidate"
+    assert redcap["RED-068"]["version"] == "owner-redcap-candidate-0.3"
+    assert redcap["RED-068"]["current_state"] == "working_candidate"
+    assert redcap["RED-068"]["authoritative_status"] == "current_candidate"
+    assert redcap["RED-080"]["version"] == "owner-redcap-candidate-0.3"
+    assert redcap["RED-080"]["authoritative_status"] == "supporting_current_candidate"
     identifiers = [row["artifact_id"] for row in manifest_rows]
     assert len(identifiers) == len(set(identifiers))
     identifier_set = set(identifiers)
