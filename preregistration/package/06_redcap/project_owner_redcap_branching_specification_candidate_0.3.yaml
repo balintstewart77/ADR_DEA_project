@@ -11,13 +11,19 @@ forms:
 - project_review
 field_counts:
   owner_consent: 11
-  project_review: 93
+  project_review: 97
 repeating_instruments:
 - project_review
 repeat_custom_label: '[assignment_id] — [project_title]'
 repeat_survey_button_enabled: false
 survey_queue:
   visible: true
+  introduction_html: <strong>Project Owner Review</strong><br>Please begin by completing
+    <strong>Participant Information and Consent</strong> below. If you agree to take
+    part, your available project reviews will then appear in this list. You may complete
+    all, some or none, in any order. To pause an unfinished review, use <strong>Save
+    & Return Later</strong> before leaving. You can return using the same personalised
+    link. Please do not forward this link.
   owner_consent:
     active: true
     condition: '[owner_id] <> '''''
@@ -27,6 +33,17 @@ survey_queue:
     condition: '[owner_consent_complete] = ''2'' and [owner_consent] = ''1'' and [intended_recipient]
       = ''1'''
     auto_start: false
+project_review_survey_settings_required:
+  repository_documented_not_live_verified: true
+  save_and_return_later_enabled: true
+  return_without_separate_return_code_enabled: true
+  completed_response_modification_enabled: false
+  automatically_continue_to_next_survey_enabled: false
+  redirect_url: ''
+  participant_repeat_the_survey_enabled: false
+  security_note: Possession of the personalised link permits access to an unfinished
+    review; participants must not forward it, and direct contact identifiers are absent
+    from the REDCap response project.
 stop_actions_manual_after_import:
   intended_recipient: 'No'
   owner_consent: 'No'
@@ -64,6 +81,20 @@ slot_capacity:
   domain: 4
   purpose: 2
   tag: 2
+classification_overview:
+  display_field: po_classification_overview
+  summary_fields:
+  - prop_domain_summary
+  - prop_purpose_summary
+  - prop_tag_summary
+  display_support_only: true
+  participant_editable: false
+  analytical_completion_requirement: false
+  domain_and_purpose_order: first populated proposal-slot order with blanks omitted
+    and duplicates removed
+  tag_order:
+  - Demographic disparities / equity
+  - COVID-19 & Pandemic
 taxonomy_menu_counts:
   domain: 11
   purpose: 7
@@ -71,24 +102,23 @@ taxonomy_menu_counts:
 proposed_slot_visibility:
   domain_and_purpose_question: Is the basis for this classification visible in the
     public project title and datasets listed above?
-  tag_question: Could the correct status for this tag reasonably be determined from
-    the public project title and datasets listed above?
+  tag_question: Is the basis for this tag status visible in the public project title
+    and datasets listed above?
   choices:
     '2': Clearly visible
     '1': Partly visible
     '0': Not visible
     '3': Unsure
-  explanations_required_when:
+  explanation_required_when:
     domain_or_purpose_verdict:
     - '2: Does not fit'
-    - '3: Unsure'
     tag_correctness:
     - '0: No'
-    - '2: Unsure'
-    visibility:
-    - '1: Partly visible'
-    - '0: Not visible'
-    - '3: Unsure'
+  optional_visibility_explanation_shown_when:
+  - '1: Partly visible'
+  - '0: Not visible'
+  - '3: Unsure'
+  unsure_correctness_explanation_displayed: false
 tag_reviews:
   always_review_both: true
   canonical_order:
@@ -124,18 +154,37 @@ analytical_completion:
   owner_join:
   - intended_recipient = 1
   - owner_consent = 1
-  domains_and_purposes: verdict and visibility for every populated slot, plus every
-    separately triggered correctness and visibility explanation
-  tags: correctness and visibility for both tags, plus every separately triggered
-    correctness and visibility explanation
-  missing_labels: all three gateways, and every triggered menu and basis
+  domains_and_purposes: verdict and visibility for every populated slot, plus correctness
+    explanation only for Does not fit
+  tags: correctness and visibility for both tags, plus correctness explanation only
+    for No
+  missing_labels: all three gateways and every triggered checkbox menu; prose bases
+    are optional
   overall: public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus
-    every triggered explanation/issue field
+    taxonomy issue for Partial Fit/No Fit
   excluded_optional_fields:
   - ack_pref
+  - po_d01_vis_explain
+  - po_d02_vis_explain
+  - po_d03_vis_explain
+  - po_d04_vis_explain
+  - po_p01_vis_explain
+  - po_p02_vis_explain
+  - po_t01_vis_explain
+  - po_t02_vis_explain
+  - po_miss_domain_basis
+  - po_miss_purpose_basis
+  - po_miss_tag_basis
+  - po_suff_explain
   - po_nonpublic_note
+  - po_tax_explain
   - po_other_comment
   - po_quote_permission
+  excluded_display_support_fields:
+  - prop_domain_summary
+  - prop_purpose_summary
+  - prop_tag_summary
+  - po_classification_overview
   submitted_is_separate: project_review_complete = 2 is submission status, not the
     analytical-completion definition
 participant_reference:

@@ -15,7 +15,7 @@ def candidate_row() -> dict[str, str]:
     }
 
 
-def test_canonical_v0_15_working_candidate_metadata_verifies_offline():
+def test_canonical_v0_17_working_candidate_metadata_verifies_offline():
     assert verify_protocol_entry(REPOSITORY_ROOT / DEFAULT_MANIFEST, REPOSITORY_ROOT) == []
 
 
@@ -31,6 +31,16 @@ def test_review_candidate_cannot_be_frozen():
     row = candidate_row()
     row["frozen"] = "true"
     assert "review_candidate cannot be frozen" in validate_protocol_status(row)
+
+
+def test_documentation_candidate_does_not_replace_analysis_basis():
+    row = candidate_row() | {
+        "protocol_status": "documentation_review_candidate",
+        "current_implementation_basis": "false",
+    }
+    assert validate_protocol_status(row) == []
+    row["current_implementation_basis"] = "true"
+    assert "documentation review candidate cannot replace the analysis implementation basis" in validate_protocol_status(row)
 
 
 def test_registration_requires_metadata_and_freeze():
@@ -53,16 +63,18 @@ def test_official_draw_requires_freeze_and_registration():
 def test_falsely_missing_current_protocol_still_fails(tmp_path):
     manifest = tmp_path / "manifest.csv"
     row = candidate_row() | {
+        "protocol_status": "documentation_review_candidate",
+        "current_implementation_basis": "false",
         "artefact_group": "00_protocol",
-        "version": "v0.15",
-        "supersedes": "v0.14",
+        "version": "v0.17",
+        "supersedes": "v0.16",
         "superseded_by": "",
-        "notes": "candidate 0.7 live QA complete frozen formal instrument; candidate 0.6 imported and superseded before final runtime QA; closed coder feedback; separate project-owner live QA gate",
-        "current_path": "missing-v0.15.docx",
+        "notes": "candidate 0.7 live QA complete frozen formal instrument; candidate 0.6 imported and superseded before final runtime QA; closed coder feedback; separate project-owner one personalised Survey Queue alignment; live QA remains pending; optional enrichment",
+        "current_path": "missing-v0.17.docx",
     }
     with manifest.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(row))
         writer.writeheader()
         writer.writerow(row)
-    issues = verify_protocol_entry(manifest, tmp_path, version="v0.15")
-    assert "declared protocol path does not exist: missing-v0.15.docx" in issues
+    issues = verify_protocol_entry(manifest, tmp_path, version="v0.17")
+    assert "declared protocol path does not exist: missing-v0.17.docx" in issues

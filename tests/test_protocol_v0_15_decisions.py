@@ -107,14 +107,22 @@ def test_sam_003_manifest_row_is_column_aligned():
     assert row["supersedes_or_superseded_by"] == "SAM-001"
 
 
-def test_manifest_has_one_current_v0_15_protocol_and_v0_14_git_history():
+def test_manifest_retains_v0_15_analysis_basis_and_v0_17_documentation_candidate():
     rows = manifest_rows()
-    current = rows["PRO-012"]
-    assert current["version"] == "v0.15"
-    assert current["protocol_status"] == "review_candidate"
-    assert current["current_implementation_basis"] == "true"
-    assert current["frozen"] == current["registered"] == "false"
-    assert current["official_sample_draw_authorised"] == "false"
+    analysis_basis = rows["PRO-012"]
+    assert analysis_basis["version"] == "v0.15"
+    assert analysis_basis["protocol_status"] == "review_candidate"
+    assert analysis_basis["current_implementation_basis"] == "true"
+    assert analysis_basis["superseded_by"] == ""
+    archived_documentation_candidate = rows["PRO-013"]
+    assert archived_documentation_candidate["version"] == "v0.16"
+    assert archived_documentation_candidate["protocol_status"] == ""
+    documentation_candidate = rows["PRO-015"]
+    assert documentation_candidate["version"] == "v0.17"
+    assert documentation_candidate["protocol_status"] == "documentation_review_candidate"
+    assert documentation_candidate["current_implementation_basis"] == "false"
+    assert documentation_candidate["frozen"] == documentation_candidate["registered"] == "false"
+    assert documentation_candidate["official_sample_draw_authorised"] == "false"
     assert rows["PRO-008"]["version"] == "v0.14"
     assert rows["PRO-008"]["current_state"] == "historical_git_only"
     assert rows["PRO-008"]["current_path"] == ""

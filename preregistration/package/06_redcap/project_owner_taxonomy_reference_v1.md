@@ -7,7 +7,7 @@ Date: 23 July 2026
 
 Use this guide when deciding whether each proposed classification fits the actual project and how clearly its basis is visible in the public project title and listed datasets. The short definitions summarise how the framework uses each category.
 
-A project may be assigned more than one Research Domain where each is substantively part of the research; the domains are not ranked.
+A project may be assigned more than one Research Domain where each is substantively part of the research; the Domains are not ranked.
 
 The framework assigns no more than two Analytical Purposes to a project. The purposes should describe its main analytical aims. More than one Analytical Purpose may apply.
 

@@ -11,9 +11,14 @@ artefact.
 
 ## 2. Current study status
 
-- `Validation_Protocol_PreReg_v0.15.docx` is the current lean review candidate and
-  collaborator-review candidate. It is not frozen or registered and authorises
-  no formal sampling, assignment import, or coding.
+- `Validation_Protocol_PreReg_v0.17.docx` is the current ethics/DPO documentation
+  candidate.
+  It aligns only the Project Owner workflow and data structure to the current
+  one-link Survey Queue candidate. It is not frozen or registered and authorises
+  no formal sampling, assignment import, or coding. The unchanged v0.15 source
+  remains the analysis-preflight implementation basis until the later coordinated
+  preregistration update; no preregistered analysis or sampling artefact was
+  rebound in this documentation-only revision.
 - REDCap candidate 0.7 passed completed administrator and restricted-user live
   QA and is the frozen 150-field formal instrument. No formal assignments are
   populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.

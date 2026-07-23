@@ -93,7 +93,7 @@ def test_exact_two_form_architecture_and_owner_id_record_field() -> None:
     )
     assert Counter(row["Form Name"] for row in candidate) == {
         "owner_consent": 11,
-        "project_review": 93,
+        "project_review": 97,
     }
     assert candidate[0]["Variable / Field Name"] == "owner_id"
     assert candidate[0]["Form Name"] == "owner_consent"
@@ -227,10 +227,9 @@ def test_every_domain_and_purpose_slot_has_separate_conditional_explanations() -
             assert by[f"po_{stem}_vis"]["Field Label"] == expected_question
             correct = by[f"po_{stem}_correct_explain"]
             visible_explain = by[f"po_{stem}_vis_explain"]
-            assert correct["Required Field?"] == visible_explain["Required Field?"] == "y"
-            assert correct["Branching Logic (Show field only if...)"] == (
-                f"[po_{stem}_fit] = '2' or [po_{stem}_fit] = '3'"
-            )
+            assert correct["Required Field?"] == "y"
+            assert visible_explain["Required Field?"] == ""
+            assert correct["Branching Logic (Show field only if...)"] == f"[po_{stem}_fit] = '2'"
             assert visible_explain["Branching Logic (Show field only if...)"] == (
                 f"[po_{stem}_vis] = '1' or [po_{stem}_vis] = '0' or [po_{stem}_vis] = '3'"
             )
@@ -238,7 +237,7 @@ def test_every_domain_and_purpose_slot_has_separate_conditional_explanations() -
             assert expected_type in correct["Field Label"]
             assert "actual project" in correct["Field Label"]
             assert "public project" not in correct["Field Label"]
-            assert expected_type in visible_explain["Field Label"]
+            assert visible_explain["Field Label"].startswith("Optional:")
             assert "public project title and listed datasets" in visible_explain["Field Label"]
             assert "does not fit the actual project" not in visible_explain["Field Label"]
 
@@ -269,22 +268,57 @@ def test_both_tag_statuses_are_always_reviewed_with_common_definitions() -> None
             "0": "Not visible",
             "3": "Unsure",
         }
+        assert by[f"po_{stem}_vis"]["Field Label"] == (
+            "Is the basis for this tag status visible in the public project title and datasets "
+            "listed above?"
+        )
         for name in (f"po_{stem}_display", f"prop_{stem}_status", f"po_{stem}_correct", f"po_{stem}_vis"):
             assert by[name]["Branching Logic (Show field only if...)"] == ""
         correct = by[f"po_{stem}_correct_explain"]
         visible_explain = by[f"po_{stem}_vis_explain"]
-        assert correct["Branching Logic (Show field only if...)"] == (
-            f"[po_{stem}_correct] = '0' or [po_{stem}_correct] = '2'"
-        )
+        assert correct["Branching Logic (Show field only if...)"] == f"[po_{stem}_correct] = '0'"
+        assert correct["Required Field?"] == "y"
+        assert visible_explain["Required Field?"] == ""
         assert visible_explain["Branching Logic (Show field only if...)"] == (
             f"[po_{stem}_vis] = '1' or [po_{stem}_vis] = '0' or [po_{stem}_vis] = '3'"
         )
         assert item["canonical_label"] in correct["Field Label"]
         assert "actual project" in correct["Field Label"]
         assert "public project" not in correct["Field Label"]
-        assert "tag status" in visible_explain["Field Label"]
+        assert visible_explain["Field Label"].startswith("Optional:")
         assert "public project title and listed datasets" in visible_explain["Field Label"]
         assert f"[prop_{stem}_def]" in by[f"po_{stem}_display"]["Field Label"]
+
+
+def test_repeated_question_privacy_sentence_is_removed_but_central_warnings_remain() -> None:
+    by = by_name()
+    repeated = "Do not provide confidential or non-public information."
+    assert not any(
+        repeated in row["Field Label"] or repeated in row["Field Note"]
+        for row in rows()
+    )
+    expected_explanations = {
+        *(f"po_{prefix}{index:02d}_{suffix}_explain"
+          for prefix, capacity in (("d", 4), ("p", 2), ("t", 2))
+          for index in range(1, capacity + 1)
+          for suffix in ("correct", "vis")),
+        "po_miss_domain_basis",
+        "po_miss_purpose_basis",
+        "po_miss_tag_basis",
+        "po_tax_explain",
+    }
+    assert len(expected_explanations) == 20
+    assert expected_explanations <= set(by)
+    assert by["po_privacy"]["Field Label"] == (
+        "<strong>Important</strong><br>Do not enter confidential, sensitive, restricted, personally "
+        "identifying or otherwise non-public information. Describe any relevant context only at a general level."
+    )
+    assert by["po_final_warning"]["Field Label"] == (
+        "<strong>Important</strong><br>Do not include confidential, sensitive, restricted, personally "
+        "identifying or otherwise non-public information in comments.<br><br>You may request withdrawal "
+        "of this submitted review before the deadline stated in the Participant Information Sheet by "
+        "contacting the study team and quoting the Review reference shown above."
+    )
 
 
 def test_review_intro_allocation_and_semantic_html_formatting_audit() -> None:
@@ -293,7 +327,9 @@ def test_review_intro_allocation_and_semantic_html_formatting_audit() -> None:
         "This review shows a short definition beside each proposed classification. You do not "
         "need to learn the full classification framework before answering. A concise reference "
         "to all classifications is also available. You may complete all, some or none of your "
-        "listed project reviews, in any order.<br><br><strong>Research Domains</strong><br>"
+        "listed project reviews, in any order. To pause an unfinished review, select <strong>"
+        "Save & Return Later</strong> before leaving. You can then return using the same personalised "
+        "link.<br><br><strong>Research Domains</strong><br>"
         "Research Domains describe the main subjects of the project. A project may have several "
         "Research Domains where each is substantively part of the research. Judge each proposed "
         "Domain independently; the Domains are not ranked.<br><br><strong>Analytical Purposes"
@@ -307,6 +343,7 @@ def test_review_intro_allocation_and_semantic_html_formatting_audit() -> None:
     )
     assert by["po_intro"]["Field Label"] == expected_intro
     assert "withdraw" not in by["po_intro"]["Field Label"].lower()
+    assert "progress is saved" not in by["po_intro"]["Field Label"].lower()
     assert by["po_privacy"]["Field Label"] == (
         "<strong>Important</strong><br>Do not enter confidential, sensitive, restricted, personally "
         "identifying or otherwise non-public information. Describe any relevant context only at a general level."
@@ -316,10 +353,24 @@ def test_review_intro_allocation_and_semantic_html_formatting_audit() -> None:
         "[Attach or link the final formatted owner-facing taxonomy reference PDF here after participant-document alignment.]"
     )
     names = list(by)
-    assert names.index("po_intro") < names.index("po_privacy") < names.index("po_taxonomy_ref")
+    assert (
+        names.index("prop_tag_summary")
+        < names.index("po_classification_overview")
+        < names.index("po_intro")
+        < names.index("po_privacy")
+        < names.index("po_taxonomy_ref")
+    )
+    assert by["po_classification_overview"]["Field Label"] == (
+        "<strong>Classification overview</strong><br>"
+        "The proposed classifications are summarised below for context. Please judge each item "
+        "independently in the sections that follow.<br><br>"
+        "<strong>Research Domains</strong><br>[prop_domain_summary]<br><br>"
+        "<strong>Analytical Purposes</strong><br>[prop_purpose_summary]<br><br>"
+        "<strong>Cross-cutting tags</strong><br>[prop_tag_summary]"
+    )
 
     descriptive = [row for row in rows() if row["Field Type"] == "descriptive"]
-    assert len(descriptive) == 17
+    assert len(descriptive) == 18
     for row in descriptive:
         label = row["Field Label"]
         assert label.lower().count("<strong>") == label.lower().count("</strong>")
@@ -337,7 +388,7 @@ def test_review_intro_allocation_and_semantic_html_formatting_audit() -> None:
     }
     assert all(row["whole_block_bold_present_before_correction"] == "no" for row in audit)
     assert validator.validate_formatting_audit() == {
-        "participant_visible_descriptive_fields": 17,
+        "participant_visible_descriptive_fields": 18,
         "whole_block_bold": 0,
     }
 
@@ -353,14 +404,15 @@ def test_all_eight_explanation_pairs_are_independent_required_and_adjacent() -> 
             visibility = f"po_{stem}_vis"
             correct_explain = f"po_{stem}_correct_explain"
             vis_explain = f"po_{stem}_vis_explain"
-            negative_codes = ("0", "2") if prefix == "t" else ("2", "3")
+            negative_code = "0" if prefix == "t" else "2"
             assert by[correct_explain]["Branching Logic (Show field only if...)"] == (
-                f"[{response}] = '{negative_codes[0]}' or [{response}] = '{negative_codes[1]}'"
+                f"[{response}] = '{negative_code}'"
             )
             assert by[vis_explain]["Branching Logic (Show field only if...)"] == (
                 f"[{visibility}] = '1' or [{visibility}] = '0' or [{visibility}] = '3'"
             )
-            assert by[correct_explain]["Required Field?"] == by[vis_explain]["Required Field?"] == "y"
+            assert by[correct_explain]["Required Field?"] == "y"
+            assert by[vis_explain]["Required Field?"] == ""
             assert names.index(correct_explain) == names.index(response) + 1
             assert names.index(vis_explain) == names.index(visibility) + 1
             assert "public project" not in by[correct_explain]["Field Label"].lower()
@@ -394,7 +446,8 @@ def test_missing_gateways_menus_and_definition_counts() -> None:
             "purpose": "po_miss_purpose_basis",
             "tag": "po_miss_tag_basis",
         }[layer]]
-        assert basis["Required Field?"] == "y"
+        assert basis["Required Field?"] == ""
+        assert basis["Field Label"].startswith("Optional:")
         assert f"[{menu}(1)] = '1'" in basis[
             "Branching Logic (Show field only if...)"
         ]
@@ -657,18 +710,28 @@ def test_overall_assessment_fields_and_conditional_explanations() -> None:
     assert validator.parse_choices(
         by["po_sufficiency"]["Choices, Calculations, OR Slider Labels"]
     ) == {"1": "Sufficient", "2": "Partial", "3": "Insufficient"}
-    assert by["po_suff_explain"]["Required Field?"] == "y"
+    assert by["po_suff_explain"]["Required Field?"] == ""
+    assert by["po_suff_explain"]["Field Label"].startswith("Optional:")
+    assert by["po_suff_explain"]["Branching Logic (Show field only if...)"] == (
+        "[po_sufficiency] = '2' or [po_sufficiency] = '3'"
+    )
+    assert not any(
+        f"[po_{stem}_{suffix}]" in by["po_suff_explain"]["Branching Logic (Show field only if...)"]
+        for stem in ("d01", "d02", "d03", "d04", "p01", "p02", "t01", "t02")
+        for suffix in ("fit", "correct", "vis")
+    )
     assert validator.parse_choices(
         by["po_taxonomy_fit"]["Choices, Calculations, OR Slider Labels"]
     ) == {"1": "Fit", "2": "Partial Fit", "3": "No Fit"}
     assert validator.parse_choices(
         by["po_tax_issue"]["Choices, Calculations, OR Slider Labels"]
     ) == {
-        "1": "Missing or inadequately represented category",
+        "1": "No suitable category exists in the framework",
         "2": "Ambiguous or overlapping category boundaries",
         "5": "Other taxonomy problem",
     }
-    assert by["po_tax_explain"]["Required Field?"] == "y"
+    assert by["po_tax_explain"]["Required Field?"] == ""
+    assert by["po_tax_explain"]["Field Label"].startswith("Optional:")
     assert by["po_tax_explain"]["Branching Logic (Show field only if...)"] == (
         "[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'"
     )
@@ -685,7 +748,8 @@ def test_overall_assessment_fields_and_conditional_explanations() -> None:
         "[po_nonpublic] = '1' or [po_nonpublic] = '2'"
     )
     assert by["po_nonpublic_note"]["Required Field?"] == ""
-    assert "non-public information" in by["po_nonpublic_note"]["Field Label"]
+    assert by["po_nonpublic_note"]["Field Label"].startswith("Optional:")
+    assert "public project title and listed datasets" in by["po_nonpublic_note"]["Field Label"]
 
 
 def test_synthetic_long_fixture_owner_assignment_counts_and_instances() -> None:
@@ -694,7 +758,7 @@ def test_synthetic_long_fixture_owner_assignment_counts_and_instances() -> None:
         "owners": 3,
         "assignments": 19,
         "rows": 22,
-        "columns": 87,
+        "columns": 90,
         "assignments_by_owner": {
             "OWNER_TEST_001": 1,
             "OWNER_TEST_002": 3,
@@ -711,7 +775,7 @@ def test_synthetic_fixture_contains_only_importable_redcap_columns() -> None:
     with builder.IMPORT_FIXTURE.open(encoding="utf-8-sig", newline="") as handle:
         header = next(csv.reader(handle))
     assert header == builder.fixture_import_headers(dictionary_rows)
-    assert len(header) == len(set(header)) == 87
+    assert len(header) == len(set(header)) == 90
 
     descriptive = {
         name for name, row in dictionary_by_name.items()
@@ -741,6 +805,95 @@ def test_synthetic_fixture_contains_only_importable_redcap_columns() -> None:
         }
 
 
+@pytest.mark.parametrize(
+    ("row", "expected_domains", "expected_purposes", "expected_tags"),
+    [
+        (
+            {"prop_t01_status": "0", "prop_t02_status": "1"},
+            "",
+            "",
+            "Demographic disparities / equity — Not applied; COVID-19 & Pandemic — Applied",
+        ),
+        (
+            {
+                "prop_d01_label": "Health & Social Care",
+                "prop_p01_label": "Descriptive Monitoring",
+                "prop_t01_status": "1",
+                "prop_t02_status": "0",
+            },
+            "Health & Social Care",
+            "Descriptive Monitoring",
+            "Demographic disparities / equity — Applied; COVID-19 & Pandemic — Not applied",
+        ),
+        (
+            {
+                "prop_d01_label": "Education",
+                "prop_d02_label": "",
+                "prop_d03_label": "Unclear from Register Entry",
+                "prop_d04_label": "Education",
+                "prop_p01_label": "Outcome Tracking",
+                "prop_p02_label": "Unclear from Register Entry",
+                "prop_t01_status": "1",
+                "prop_t02_status": "1",
+            },
+            "Education; Unclear from Register Entry",
+            "Outcome Tracking; Unclear from Register Entry",
+            "Demographic disparities / equity — Applied; COVID-19 & Pandemic — Applied",
+        ),
+    ],
+)
+def test_proposed_summary_generation_is_stable_complete_and_unranked(
+    row: dict[str, str],
+    expected_domains: str,
+    expected_purposes: str,
+    expected_tags: str,
+) -> None:
+    summary = dict(row)
+    builder.populate_proposed_summaries(summary)
+    assert summary["prop_domain_summary"] == expected_domains
+    assert summary["prop_purpose_summary"] == expected_purposes
+    assert summary["prop_tag_summary"] == expected_tags
+    for value in (
+        summary["prop_domain_summary"],
+        summary["prop_purpose_summary"],
+        summary["prop_tag_summary"],
+    ):
+        assert "primary" not in value.lower()
+        assert "secondary" not in value.lower()
+        assert not re.search(r"(^|;\s*)\d+[.)]\s", value)
+
+
+def test_fixture_summaries_are_deterministic_display_support_only() -> None:
+    dictionary = by_name()
+    fixture = validator.load_fixture()
+    repeats = [
+        row for row in fixture
+        if row["redcap_repeat_instrument"] == "project_review"
+    ]
+    assert len(repeats) == 19
+    for name in (
+        "prop_domain_summary",
+        "prop_purpose_summary",
+        "prop_tag_summary",
+    ):
+        assert dictionary[name]["Field Type"] == "notes"
+        assert dictionary[name]["Field Annotation"] == "@HIDDEN-SURVEY @READONLY"
+        assert dictionary[name]["Required Field?"] == ""
+        assert dictionary[name]["Branching Logic (Show field only if...)"] == ""
+        assert all(row[name] for row in repeats)
+    for row in repeats:
+        expected = dict(row)
+        builder.populate_proposed_summaries(expected)
+        assert row["prop_domain_summary"] == expected["prop_domain_summary"]
+        assert row["prop_purpose_summary"] == expected["prop_purpose_summary"]
+        assert row["prop_tag_summary"] == expected["prop_tag_summary"]
+    assert {
+        "prop_domain_summary",
+        "prop_purpose_summary",
+        "prop_tag_summary",
+    }.isdisjoint(validator._response_fields(rows()))
+
+
 def test_fixture_column_validation_resolves_checkbox_expansions() -> None:
     dictionary_by_name = by_name()
     assert validator.fixture_column_error(
@@ -762,7 +915,7 @@ def test_fixture_column_validation_resolves_checkbox_expansions() -> None:
 
 def test_generated_dictionary_matches_current_canonical_bytes() -> None:
     assert hashlib.sha256(builder.DICTIONARY.read_bytes()).hexdigest() == (
-        "25d0e3dfa48a8efefb6a7612e175ac5017549c3b639eeaa5177d3f821c2f79de"
+        "85e9d4e7795597cf8dc936e57ba177d32a9283271cd8e805c90e3acb7a869c3c"
     )
 
 
@@ -820,14 +973,14 @@ def test_analytical_completion_requires_both_tags_and_every_triggered_field() ->
     assert "po_t02_vis_explain" not in validator.analytical_completion_missing(review, owner)
     review["po_t02_correct_explain"] = "General non-confidential explanation."
     review["po_d01_vis"] = "1"
-    assert "po_d01_vis_explain" in validator.analytical_completion_missing(review, owner)
+    review["po_d01_vis_explain"] = ""
+    assert "po_d01_vis_explain" not in validator.analytical_completion_missing(review, owner)
     assert "po_d01_correct_explain" not in validator.analytical_completion_missing(review, owner)
-    review["po_d01_vis_explain"] = "General register limitation."
     review["po_miss_domain"] = "1"
     assert "po_miss_domains" in validator.analytical_completion_missing(review, owner)
     review["po_miss_domains___1"] = "1"
-    assert "po_miss_domain_basis" in validator.analytical_completion_missing(review, owner)
-    review["po_miss_domain_basis"] = "General missing-label basis."
+    review["po_miss_domain_basis"] = ""
+    assert "po_miss_domain_basis" not in validator.analytical_completion_missing(review, owner)
     assert validator.analytical_completion_missing(review, owner) == []
 
 
@@ -838,8 +991,102 @@ def test_submitted_does_not_override_incomplete_required_responses() -> None:
     assert joined["submitted"] is True
     assert joined["analytically_complete"] is False
     assert joined["assignment_response_state"] == "partial"
-    assert {"po_tax_issue", "po_tax_explain"} <= set(joined["analytical_completion_missing"])
+    assert set(joined["analytical_completion_missing"]) == {"po_tax_issue"}
 
+
+
+def test_requiredness_audit_covers_every_participant_free_text_field() -> None:
+    dictionary = by_name()
+    correctness = {
+        f"po_{prefix}{index:02d}_correct_explain"
+        for prefix, capacity in (("d", 4), ("p", 2), ("t", 2))
+        for index in range(1, capacity + 1)
+    }
+    optional = {
+        *(f"po_{prefix}{index:02d}_vis_explain"
+          for prefix, capacity in (("d", 4), ("p", 2), ("t", 2))
+          for index in range(1, capacity + 1)),
+        "po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis",
+        "po_suff_explain", "po_nonpublic_note", "po_tax_explain", "po_other_comment",
+    }
+    assert all(dictionary[name]["Field Type"] == "notes" for name in correctness | optional)
+    assert all(dictionary[name]["Required Field?"] == "y" for name in correctness)
+    assert all(dictionary[name]["Required Field?"] == "" for name in optional)
+    field_spec = {
+        row["variable"]: row
+        for row in csv.DictReader(builder.FIELD_SPEC.open(encoding="utf-8-sig", newline=""))
+    }
+    assert all(field_spec[name]["analytical_completion"] == "required_when_displayed_for_explicit_disagreement" for name in correctness)
+    assert all(field_spec[name]["analytical_completion"] == "excluded_optional_enrichment" for name in optional)
+
+
+def test_analytical_completion_burden_reduction_cases() -> None:
+    owner, base = complete_owner_review()
+    for name in (
+        *(f"po_{prefix}{index:02d}_vis_explain"
+          for prefix, capacity in (("d", 4), ("p", 2), ("t", 2))
+          for index in range(1, capacity + 1)),
+        "po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis",
+        "po_suff_explain", "po_nonpublic_note", "po_tax_explain", "po_other_comment",
+    ):
+        base[name] = ""
+    assert validator.analytical_completion_missing(base, owner) == []
+
+    negative = dict(base)
+    negative["po_d01_fit"] = "2"
+    negative["po_d01_correct_explain"] = ""
+    assert "po_d01_correct_explain" in validator.analytical_completion_missing(negative, owner)
+    negative["po_d01_correct_explain"] = "The proposed Domain does not describe the project."
+    assert validator.analytical_completion_missing(negative, owner) == []
+
+    unsure = dict(base)
+    unsure["po_d01_fit"] = "3"
+    unsure["po_d01_correct_explain"] = ""
+    assert "po_d01_correct_explain" not in validator.analytical_completion_missing(unsure, owner)
+    assert by_name()["po_d01_correct_explain"]["Branching Logic (Show field only if...)"] == "[po_d01_fit] = '2'"
+
+    visibility = dict(base)
+    visibility["po_d01_vis"] = "1"
+    visibility["po_d01_vis_explain"] = ""
+    assert validator.analytical_completion_missing(visibility, owner) == []
+
+    missing_ok = dict(base)
+    missing_ok["po_miss_domain"] = "1"
+    missing_ok["po_miss_domains___1"] = "1"
+    missing_ok["po_miss_domain_basis"] = ""
+    assert validator.analytical_completion_missing(missing_ok, owner) == []
+    missing_bad = dict(base)
+    missing_bad["po_miss_domain"] = "1"
+    assert "po_miss_domains" in validator.analytical_completion_missing(missing_bad, owner)
+
+    sufficiency = dict(base)
+    sufficiency["po_sufficiency"] = "2"
+    sufficiency["po_suff_explain"] = ""
+    assert validator.analytical_completion_missing(sufficiency, owner) == []
+
+    knowledge = dict(base)
+    knowledge["po_nonpublic"] = "1"
+    knowledge["po_nonpublic_note"] = ""
+    assert validator.analytical_completion_missing(knowledge, owner) == []
+
+    taxonomy_ok = dict(base)
+    taxonomy_ok["po_taxonomy_fit"] = "2"
+    taxonomy_ok["po_tax_issue___1"] = "1"
+    taxonomy_ok["po_tax_explain"] = ""
+    assert validator.analytical_completion_missing(taxonomy_ok, owner) == []
+    taxonomy_bad = dict(base)
+    taxonomy_bad["po_taxonomy_fit"] = "2"
+    assert "po_tax_issue" in validator.analytical_completion_missing(taxonomy_bad, owner)
+    assert "po_tax_explain" not in validator.analytical_completion_missing(taxonomy_bad, owner)
+
+    tag_unsure = dict(base)
+    tag_unsure["po_t01_correct"] = "2"
+    tag_unsure["po_t01_correct_explain"] = ""
+    assert "po_t01_correct_explain" not in validator.analytical_completion_missing(tag_unsure, owner)
+    tag_no = dict(base)
+    tag_no["po_t01_correct"] = "0"
+    tag_no["po_t01_correct_explain"] = ""
+    assert "po_t01_correct_explain" in validator.analytical_completion_missing(tag_no, owner)
 
 def test_expected_export_explicitly_requires_owner_join() -> None:
     export = list(
@@ -859,6 +1106,14 @@ def test_expected_export_explicitly_requires_owner_join() -> None:
     assert "join owner consent to reviews by `owner_id`" in spec
     assert "cardinality/taxonomy issue" in by["po_miss_purposes"]["notes"]
     assert "number of populated proposed purposes judged `Fits`" in spec
+    for name in (
+        "prop_domain_summary",
+        "prop_purpose_summary",
+        "prop_tag_summary",
+    ):
+        assert by[name]["analysis_role"] == "display_support"
+        assert "not a participant response" in by[name]["notes"]
+        assert "analytical-completion" in by[name]["notes"]
 
 
 def test_visibility_scale_is_documented_across_generated_specifications() -> None:
@@ -877,15 +1132,23 @@ def test_visibility_scale_is_documented_across_generated_specifications() -> Non
         "0": "Not visible",
         "3": "Unsure",
     }
+    assert branch["proposed_slot_visibility"]["domain_and_purpose_question"] == (
+        "Is the basis for this classification visible in the public project title and datasets "
+        "listed above?"
+    )
+    assert branch["proposed_slot_visibility"]["tag_question"] == (
+        "Is the basis for this tag status visible in the public project title and datasets "
+        "listed above?"
+    )
     for prefix, capacity in (("d", 4), ("p", 2), ("t", 2)):
         for index in range(1, capacity + 1):
             stem = f"{prefix}{index:02d}"
             assert "2 Clearly visible" in field_by[f"po_{stem}_vis"]["notes"]
-            assert "negative or unsure" in field_by[f"po_{stem}_correct_explain"]["notes"]
+            assert "explicit negative" in field_by[f"po_{stem}_correct_explain"]["notes"]
             assert "Partly visible/Not visible/Unsure" in field_by[f"po_{stem}_vis_explain"]["notes"]
             assert "2=Clearly visible" in export_by[f"po_{stem}_vis"]["notes"]
             assert "Actual-project classification" in export_by[f"po_{stem}_correct_explain"]["notes"]
-            assert "Public-register evidence" in export_by[f"po_{stem}_vis_explain"]["notes"]
+            assert "public-register evidence" in export_by[f"po_{stem}_vis_explain"]["notes"].lower()
             assert f"po_{stem}_basis" not in field_by
             assert f"po_{stem}_basis" not in export_by
     assert validator.validate_response_specifications() == {
@@ -915,8 +1178,18 @@ def test_live_configuration_records_non_csv_runtime_assertions() -> None:
         "Your response has been recorded under the reference [assignment_id]",
         "Both canonical tag blocks appear on every repeat",
         "at-least-one behaviour as a live-QA assertion",
+        "Save & Return Later: enabled",
+        "return without a separate Return Code: enabled",
+        "modification of completed responses: disabled",
+        "Automatically continue to next survey: disabled",
+        "redirect URL: blank",
+        "possession of the personalised link permits access to an unfinished review",
+        "90 importable columns",
+        "delete the disposable synthetic records",
+        "export and verify all 19 offered assignment rows",
     ):
         assert phrase in config
+    assert "progress is saved" not in config.lower()
     assert "cannot encode" in config
 
 
@@ -938,6 +1211,33 @@ def test_candidate_status_is_unfrozen_pending_controlled_import_and_live_qa() ->
     assert branch["stop_actions_manual_after_import"]["intended_recipient"] == "No"
     assert branch["stop_actions_manual_after_import"]["owner_consent"] == "No"
     assert branch["tag_reviews"]["always_review_both"] is True
+    queue_intro = branch["survey_queue"]["introduction_html"]
+    assert "Save & Return Later" in queue_intro
+    assert "same personalised link" in queue_intro
+    settings = branch["project_review_survey_settings_required"]
+    assert settings == {
+        "repository_documented_not_live_verified": True,
+        "save_and_return_later_enabled": True,
+        "return_without_separate_return_code_enabled": True,
+        "completed_response_modification_enabled": False,
+        "automatically_continue_to_next_survey_enabled": False,
+        "redirect_url": "",
+        "participant_repeat_the_survey_enabled": False,
+        "security_note": (
+            "Possession of the personalised link permits access to an unfinished review; "
+            "participants must not forward it, and direct contact identifiers are absent "
+            "from the REDCap response project."
+        ),
+    }
+    overview = branch["classification_overview"]
+    assert overview["display_field"] == "po_classification_overview"
+    assert overview["summary_fields"] == [
+        "prop_domain_summary",
+        "prop_purpose_summary",
+        "prop_tag_summary",
+    ]
+    assert overview["participant_editable"] is False
+    assert overview["analytical_completion_requirement"] is False
 
 
 def test_taxonomy_human_review_table_has_twenty_two_approved_rows() -> None:
@@ -1132,7 +1432,7 @@ def test_domain_and_purpose_cardinality_guidance_is_clear_without_a_new_field() 
     reference = builder.TAXONOMY_REFERENCE.read_text(encoding="utf-8")
     domain_guidance = (
         "A project may be assigned more than one Research Domain where each is substantively "
-        "part of the research; the domains are not ranked."
+        "part of the research; the Domains are not ranked."
     )
     assert domain_guidance in reference
     assert reference.index(domain_guidance) < reference.index("## Research Domains")
@@ -1141,10 +1441,10 @@ def test_domain_and_purpose_cardinality_guidance_is_clear_without_a_new_field() 
     assert "no more than two Analytical Purposes" in reference
     assert "More than one Analytical Purpose may apply." in reference
     dictionary_rows = rows()
-    assert len(dictionary_rows) == 104
+    assert len(dictionary_rows) == 108
     assert Counter(row["Form Name"] for row in dictionary_rows) == {
         "owner_consent": 11,
-        "project_review": 93,
+        "project_review": 97,
     }
     assert set(row["Variable / Field Name"] for row in dictionary_rows) == set(by_name())
     assert not any(
@@ -1160,6 +1460,14 @@ def test_participant_reference_and_withdrawal_wording_are_neutral() -> None:
     assert by["assignment_id"]["Field Annotation"] == "@READONLY-SURVEY"
     assert by["owner_id"]["Field Annotation"] == "@HIDDEN-SURVEY @READONLY"
     assert "If you later ask to withdraw this submitted project review" not in by["po_intro"]["Field Label"]
+    reminder = (
+        "You may request withdrawal of this submitted review before the deadline stated in the "
+        "Participant Information Sheet by contacting the study team and quoting the Review reference "
+        "shown above."
+    )
+    assert reminder in by["po_final_warning"]["Field Label"]
+    assert reminder not in by["po_intro"]["Field Label"]
+    assert list(by).index("po_final_warning") > list(by).index("po_quote_permission")
     config = builder.LIVE_CONFIG.read_text(encoding="utf-8")
     assert "reference [assignment_id]" in config
     assert "without knowing or quoting `owner_id`" in builder.SPEC.read_text(
@@ -1204,7 +1512,7 @@ def test_protocol_and_participant_documents_remain_byte_identical() -> None:
 def test_complete_offline_validator_passes() -> None:
     result = validator.check()
     assert result["status"] == "passed_offline_unfrozen_live_qa_required"
-    assert result["dictionary"]["fields"] == 104
+    assert result["dictionary"]["fields"] == 108
     assert result["taxonomy_display"]["counts"] == {
         "domain": 11,
         "purpose": 7,

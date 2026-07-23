@@ -2,8 +2,45 @@
 
 ## owner-redcap-candidate-0.3 - 2026-07-23
 
+- REDCAP-020 narrows each of the eight correctness-explanation branches to the
+  explicit-disagreement code only, where the field remains required. The eight
+  visibility explanations, three missing-label explanations, sufficiency
+  explanation, project-knowledge note and taxonomy explanation are optional
+  enrichment and do not determine analytical completion. Structured ratings,
+  gateways, required missing-label selections and taxonomy issue types remain
+  required. Questionnaire v3 and protocol candidate v0.17 document the same
+  rule; v0.17 also closes DEV-001. The dictionary remains 108 fields and the
+  pristine fixture remains 22 rows and 90 importable columns. PID 9149 requires
+  controlled re-import and renewed live QA.
+
+- REDCAP-019 removes the repeated sentence “Do not provide confidential or
+  non-public information.” from 20 conditional per-question labels while
+  retaining the central `po_privacy` and `po_final_warning` warnings. It also
+  changes both tag visibility stems to “Is the basis for this tag status visible
+  in the public project title and datasets listed above?” so the question matches
+  the unchanged four-level scale. Field count, field order, choices, codes,
+  branching, requiredness, fixture and analytical completion are unchanged.
+  Those wording corrections are now carried into versioned Questionnaire v3
+  and protocol candidate v0.17 under REDCAP-020; v2 and v0.16 remain archived.
+- REDCAP-018 adds one participant-visible classification overview and three
+  survey-hidden deterministic summary fields. The overview shows every proposed
+  Domain and Purpose and both tag statuses without ranking, definitions or an
+  overall correctness question. It also corrects Save & Return Later guidance,
+  documents the required survey settings and security implication, isolates
+  `po_suff_explain` to Partial/Insufficient public-entry sufficiency, places a
+  concise withdrawal reminder near submission and aligns the Domain-cardinality
+  sentence in the unfrozen taxonomy reference. The dictionary is now 108 fields
+  and the import fixture 90 columns; PID 9149 must be re-imported and retested.
+- Documentation alignment for ethics/DPO submission created Participant
+  Information and Consent v2, Project Owner Review Questionnaire v2 and protocol
+  candidate v0.16. These replace stale separate-link and record-per-assignment
+  descriptions with one personalised Survey Queue link, consent once and
+  pre-created repeating reviews. The invitation email is unchanged. This is a
+  documentation correction only: participant population, substantive study
+  purpose, owner sampling design, scratch sampling design and candidate-0.3
+  REDCap fields are unchanged; controlled live QA remains incomplete.
 - Current two-instrument development candidate: Owner Consent (11) and
-  Project Review (93), totalling 104 dictionary fields.
+  Project Review (97), totalling 108 dictionary fields.
 - Substantially changes the record architecture before recruitment: one
   pseudonymous `owner_id` record per owner, one non-repeating consent survey,
   and one pre-created repeating Project Review instance per owner–project

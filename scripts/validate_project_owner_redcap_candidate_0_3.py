@@ -547,10 +547,10 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
     if by.get("public_register_url", {}).get(validation_column):
         errors.append("public_register_url validation type must remain blank")
 
-    expected_counts = {"owner_consent": 11, "project_review": 93}
+    expected_counts = {"owner_consent": 11, "project_review": 97}
     if dict(form_counts) != expected_counts:
         errors.append(f"field counts differ: {dict(form_counts)}")
-    if len(rows) != 104:
+    if len(rows) != 108:
         errors.append(f"total field count differs: {len(rows)}")
     review_intro = by.get("po_intro", {}).get("Field Label", "")
     for phrase in (
@@ -561,22 +561,56 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
         "More than one may apply, but the framework assigns no more than two to a project",
         "<strong>Cross-cutting tags</strong>",
         "Either, both or neither may apply",
+        "select <strong>Save & Return Later</strong> before leaving",
+        "same personalised link",
     ):
         if phrase not in review_intro:
             errors.append(f"Project Review introduction omits: {phrase}")
     if "If you later ask to withdraw this submitted project review" in review_intro:
         errors.append("Project Review introduction retains the long withdrawal paragraph")
+    if "progress is saved" in review_intro.lower() or "automatically saved" in review_intro.lower():
+        errors.append("Project Review introduction incorrectly implies automatic saving")
     project_descriptive_order = [
         name for name in names if by[name]["Form Name"] == "project_review"
     ]
     if not (
-        project_descriptive_order.index("po_intro")
+        project_descriptive_order.index("po_classification_overview")
+        < project_descriptive_order.index("po_intro")
         < project_descriptive_order.index("po_privacy")
         < project_descriptive_order.index("po_taxonomy_ref")
     ):
         errors.append("privacy/reference descriptive fields are not ordered after po_intro")
+    expected_overview = (
+        "<strong>Classification overview</strong><br>"
+        "The proposed classifications are summarised below for context. Please judge each item "
+        "independently in the sections that follow.<br><br>"
+        "<strong>Research Domains</strong><br>[prop_domain_summary]<br><br>"
+        "<strong>Analytical Purposes</strong><br>[prop_purpose_summary]<br><br>"
+        "<strong>Cross-cutting tags</strong><br>[prop_tag_summary]"
+    )
+    if by.get("po_classification_overview", {}).get("Field Label") != expected_overview:
+        errors.append("classification overview HTML differs")
+    for name in ("prop_domain_summary", "prop_purpose_summary", "prop_tag_summary"):
+        summary = by.get(name)
+        if summary is None:
+            errors.append(f"classification summary field is missing: {name}")
+            continue
+        if summary["Field Type"] != "notes" or summary["Field Annotation"] != builder.HIDDEN_ADMIN:
+            errors.append(f"classification summary field is not stored and survey-hidden: {name}")
+        if summary["Required Field?"] or summary["Branching Logic (Show field only if...)"]:
+            errors.append(f"classification summary field became required/branched: {name}")
+    overview_lower = expected_overview.lower()
+    if "primary domain" in overview_lower or "secondary domain" in overview_lower or "definition" in overview_lower:
+        errors.append("classification overview introduces ranking or repeats definitions")
     if "Do not enter confidential" not in by["po_privacy"]["Field Label"]:
         errors.append("Project Review privacy warning is absent")
+    repeated_privacy_sentence = "Do not provide confidential or non-public information."
+    for row in rows:
+        if repeated_privacy_sentence in row["Field Label"] or repeated_privacy_sentence in row["Field Note"]:
+            errors.append(
+                "repeated per-question privacy sentence remains in participant-facing dictionary text: "
+                f"{row['Variable / Field Name']}"
+            )
     if "not for production" not in by["po_taxonomy_ref"]["Field Label"]:
         errors.append("taxonomy reference placeholder is not marked non-production")
 
@@ -666,7 +700,7 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
     for phrase in (
         "named as a researcher on one or more projects in the UK Statistics Authority public register",
         "one, some, all or none",
-        "Your progress is saved",
+        "Save & Return Later",
         "same personalised link",
     ):
         if phrase not in intro:
@@ -680,6 +714,8 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
     ):
         if prohibited.lower() in intro.lower():
             errors.append(f"owner_intro retains prohibited technical/link wording: {prohibited}")
+    if "progress is saved" in intro.lower() or "automatically saved" in intro.lower():
+        errors.append("owner_intro incorrectly implies automatic saving")
     if by["owner_id"]["Field Annotation"] != builder.HIDDEN_ADMIN:
         errors.append("owner_id does not use the supported survey-hidden action tag")
     for name in ("participant_info_ver", "consent_form_ver", "owner_instr_ver"):
@@ -776,7 +812,7 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
             )
             if by[visibility]["Field Label"] != expected_visibility_question:
                 errors.append(f"visibility wording differs: {visibility}")
-            expected_correctness_branch = f"[{fit}] = '2' or [{fit}] = '3'"
+            expected_correctness_branch = f"[{fit}] = '2'"
             expected_visibility_branch = (
                 f"[{visibility}] = '1' or [{visibility}] = '0' or [{visibility}] = '3'"
             )
@@ -788,9 +824,10 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
                 errors.append(f"slot correctness explanation is not immediately after verdict: {correctness_explain}")
             if names.index(visibility_explain) != names.index(visibility) + 1:
                 errors.append(f"slot visibility explanation is not immediately after visibility: {visibility_explain}")
-            for explanation in (correctness_explain, visibility_explain):
-                if by[explanation]["Required Field?"] != "y":
-                    errors.append(f"conditional slot explanation is not required: {explanation}")
+            if by[correctness_explain]["Required Field?"] != "y":
+                errors.append(f"slot disagreement explanation is not required: {correctness_explain}")
+            if by[visibility_explain]["Required Field?"]:
+                errors.append(f"slot visibility explanation is not optional: {visibility_explain}")
             correct_text = by[correctness_explain]["Field Label"]
             vis_text = by[visibility_explain]["Field Label"]
             expected_type = "Research Domain" if layer == "domain" else "Analytical Purpose"
@@ -798,7 +835,7 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
                 errors.append(f"slot correctness explanation wording differs: {correctness_explain}")
             if any(term in correct_text.lower() for term in ("public project", "public register", "register sufficiency", "visible")):
                 errors.append(f"slot correctness explanation conflates public visibility: {correctness_explain}")
-            if expected_type not in vis_text or "public project title and listed datasets" not in vis_text:
+            if not vis_text.startswith("Optional:") or "public project title and listed datasets" not in vis_text:
                 errors.append(f"slot visibility explanation wording differs: {visibility_explain}")
             if "does not fit the actual project" in vis_text:
                 errors.append(f"slot visibility explanation conflates correctness: {visibility_explain}")
@@ -844,11 +881,11 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
         }:
             errors.append(f"tag visibility choices differ: {visibility}")
         if by[visibility]["Field Label"] != (
-            "Could the correct status for this tag reasonably be determined from the public project "
-            "title and datasets listed above?"
+            "Is the basis for this tag status visible in the public project title and datasets "
+            "listed above?"
         ):
             errors.append(f"tag visibility wording differs: {visibility}")
-        expected_correctness_branch = f"[{correctness}] = '0' or [{correctness}] = '2'"
+        expected_correctness_branch = f"[{correctness}] = '0'"
         expected_visibility_branch = (
             f"[{visibility}] = '1' or [{visibility}] = '0' or [{visibility}] = '3'"
         )
@@ -860,16 +897,17 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
             errors.append(f"tag correctness explanation is not immediately after correctness: {correctness_explain}")
         if names.index(visibility_explain) != names.index(visibility) + 1:
             errors.append(f"tag visibility explanation is not immediately after visibility: {visibility_explain}")
-        for explanation in (correctness_explain, visibility_explain):
-            if by[explanation]["Required Field?"] != "y":
-                errors.append(f"tag explanation is not required: {explanation}")
+        if by[correctness_explain]["Required Field?"] != "y":
+            errors.append(f"tag disagreement explanation is not required: {correctness_explain}")
+        if by[visibility_explain]["Required Field?"]:
+            errors.append(f"tag visibility explanation is not optional: {visibility_explain}")
         correct_text = by[correctness_explain]["Field Label"]
         vis_text = by[visibility_explain]["Field Label"]
         if item["canonical_label"] not in correct_text or "actual project" not in correct_text:
             errors.append(f"tag correctness explanation wording differs: {correctness_explain}")
         if any(term in correct_text.lower() for term in ("public project", "public register", "register sufficiency", "visible")):
             errors.append(f"tag correctness explanation conflates public visibility: {correctness_explain}")
-        if "tag status" not in vis_text or "public project title and listed datasets" not in vis_text:
+        if not vis_text.startswith("Optional:") or "public project title and listed datasets" not in vis_text:
             errors.append(f"tag visibility explanation wording differs: {visibility_explain}")
         if "does not fit the actual project" in vis_text:
             errors.append(f"tag visibility explanation conflates correctness: {visibility_explain}")
@@ -953,8 +991,10 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
         ]
         if by[basis]["Branching Logic (Show field only if...)"] != builder.checkbox_trigger(menu, entries):
             errors.append(f"missing-label basis branching differs: {basis}")
-        if by[basis]["Required Field?"] != "y":
-            errors.append(f"missing-label basis is not required: {basis}")
+        if by[basis]["Required Field?"]:
+            errors.append(f"missing-label basis is not optional: {basis}")
+        if not by[basis]["Field Label"].startswith("Optional:"):
+            errors.append(f"missing-label basis wording does not signal optionality: {basis}")
     purpose_guidance = by.get("po_miss_purpose_guidance")
     expected_purpose_guidance = (
         "The framework assigns a maximum of two Analytical Purposes to each project. "
@@ -1027,7 +1067,7 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
     )):
         errors.append("taxonomy fit contains a prohibited evidence-sufficiency option")
     if parse_choices(by["po_tax_issue"]["Choices, Calculations, OR Slider Labels"]) != {
-        "1": "Missing or inadequately represented category",
+        "1": "No suitable category exists in the framework",
         "2": "Ambiguous or overlapping category boundaries",
         "5": "Other taxonomy problem",
     }:
@@ -1036,16 +1076,38 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
     for name in ("po_tax_issue", "po_tax_explain"):
         if by[name]["Branching Logic (Show field only if...)"] != fit_branch:
             errors.append(f"taxonomy problem branching differs: {name}")
-        if by[name]["Required Field?"] != "y":
-            errors.append(f"taxonomy problem field is not required: {name}")
+    if by["po_tax_issue"]["Required Field?"] != "y":
+        errors.append("taxonomy issue type is not required")
+    if by["po_tax_explain"]["Required Field?"]:
+        errors.append("taxonomy explanation is not optional")
+    expected_tax_note = (
+        "This question concerns the available classification framework itself. If an "
+        "existing category fits but was omitted from the proposed classification, "
+        "report it in the missing-classification section instead."
+    )
+    if by["po_tax_issue"]["Field Note"] != expected_tax_note:
+        errors.append("taxonomy issue note does not distinguish framework gaps from omissions")
     if "po_tax_other" in by:
         errors.append("duplicate po_tax_other field survives")
     if "If you selected 'Other taxonomy problem', describe it here." not in by["po_tax_explain"]["Field Label"]:
         errors.append("po_tax_explain does not cover the Other taxonomy problem choice")
     if by["po_suff_explain"]["Branching Logic (Show field only if...)"] != (
         "[po_sufficiency] = '2' or [po_sufficiency] = '3'"
-    ) or by["po_suff_explain"]["Required Field?"] != "y":
+    ) or by["po_suff_explain"]["Required Field?"]:
         errors.append("public-entry sufficiency explanation logic differs")
+    suff_branch = by["po_suff_explain"]["Branching Logic (Show field only if...)"]
+    proposed_response_fields = {
+        f"po_{prefix}{index:02d}_{suffix}"
+        for prefix, capacity, suffixes in (
+            ("d", builder.DOMAIN_SLOTS, ("fit", "vis")),
+            ("p", builder.PURPOSE_SLOTS, ("fit", "vis")),
+            ("t", builder.TAG_SLOTS, ("correct", "vis")),
+        )
+        for index in range(1, capacity + 1)
+        for suffix in suffixes
+    }
+    if any(f"[{name}]" in suff_branch for name in proposed_response_fields):
+        errors.append("po_suff_explain is controlled by a proposed-classification response")
     if parse_choices(by["po_nonpublic"]["Choices, Calculations, OR Slider Labels"]) != {
         "0": "No", "1": "Yes", "2": "Unsure"
     }:
@@ -1058,21 +1120,32 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
         errors.append("project-knowledge note branching differs")
     if by["po_nonpublic_note"]["Required Field?"]:
         errors.append("project-knowledge note must remain optional")
-    if not all(term in by["po_nonpublic_note"]["Field Label"].lower() for term in (
-        "confidential", "non-public"
-    )):
-        errors.append("project-knowledge note lacks disclosure warning")
+    if not by["po_nonpublic_note"]["Field Label"].startswith("Optional:"):
+        errors.append("project-knowledge note does not signal optionality")
+    if "public project title and listed datasets" not in by["po_nonpublic_note"]["Field Label"]:
+        errors.append("project-knowledge note does not identify the public evidence source")
     for optional in ("po_other_comment", "po_quote_permission"):
         if by[optional]["Required Field?"]:
             errors.append(f"optional review field became required: {optional}")
     if parse_choices(by["po_tax_issue"]["Choices, Calculations, OR Slider Labels"]) != {
-        "1": "Missing or inadequately represented category",
+        "1": "No suitable category exists in the framework",
         "2": "Ambiguous or overlapping category boundaries",
         "5": "Other taxonomy problem",
     }:
         errors.append("taxonomy issue choices differ")
     if "confidential" not in by["po_final_warning"]["Field Label"].lower():
         errors.append("final comments lack a confidentiality warning")
+    withdrawal_reminder = (
+        "You may request withdrawal of this submitted review before the deadline stated in the "
+        "Participant Information Sheet by contacting the study team and quoting the Review reference "
+        "shown above."
+    )
+    if withdrawal_reminder not in by["po_final_warning"]["Field Label"]:
+        errors.append("near-submission withdrawal reminder differs")
+    if withdrawal_reminder in review_intro:
+        errors.append("withdrawal reminder incorrectly appears in po_intro")
+    if names.index("po_final_warning") < names.index("po_quote_permission"):
+        errors.append("withdrawal reminder is not after quotation permission near submission")
     if by["po_quote_permission"]["Form Name"] != "project_review":
         errors.append("quotation permission is not review-instance-specific")
 
@@ -1230,6 +1303,9 @@ def validate_fixture(path: Path = builder.IMPORT_FIXTURE) -> dict[str, object]:
             "proposal_output_sha256",
             "review_instr_ver",
             "taxonomy_display_ver",
+            "prop_domain_summary",
+            "prop_purpose_summary",
+            "prop_tag_summary",
         ):
             if not row[name]:
                 errors.append(f"pre-created repeat row lacks {name}: {row['assignment_id']}")
@@ -1272,6 +1348,20 @@ def validate_fixture(path: Path = builder.IMPORT_FIXTURE) -> dict[str, object]:
                 errors.append(f"fixture tag definition drift: {row['assignment_id']}:{stem}")
             if row[f"prop_{stem}_status"] not in {"0", "1"}:
                 errors.append(f"fixture tag status is not Applied/Not applied: {row['assignment_id']}:{stem}")
+        expected_summaries = {
+            "prop_domain_summary": builder.proposed_label_summary(
+                row, "d", builder.DOMAIN_SLOTS
+            ),
+            "prop_purpose_summary": builder.proposed_label_summary(
+                row, "p", builder.PURPOSE_SLOTS
+            ),
+            "prop_tag_summary": builder.proposed_tag_summary(row),
+        }
+        for name, expected_summary in expected_summaries.items():
+            if row.get(name, "") != expected_summary:
+                errors.append(
+                    f"fixture classification summary drift: {row['assignment_id']}:{name}"
+                )
     if errors:
         raise OwnerCandidate03Error("\n".join(errors))
     return {
@@ -1316,14 +1406,10 @@ def analytical_completion_missing(
                 missing.append(f"po_{stem}_fit")
             if visibility not in {"2", "1", "0", "3"}:
                 missing.append(f"po_{stem}_vis")
-            if fit in {"2", "3"} and not str(
+            if fit == "2" and not str(
                 review.get(f"po_{stem}_correct_explain", "")
             ).strip():
                 missing.append(f"po_{stem}_correct_explain")
-            if visibility in {"1", "0", "3"} and not str(
-                review.get(f"po_{stem}_vis_explain", "")
-            ).strip():
-                missing.append(f"po_{stem}_vis_explain")
     for index in range(1, builder.TAG_SLOTS + 1):
         stem = f"t{index:02d}"
         correctness = str(review.get(f"po_{stem}_correct", ""))
@@ -1332,14 +1418,10 @@ def analytical_completion_missing(
             missing.append(f"po_{stem}_correct")
         if visibility not in {"2", "1", "0", "3"}:
             missing.append(f"po_{stem}_vis")
-        if correctness in {"0", "2"} and not str(
+        if correctness == "0" and not str(
             review.get(f"po_{stem}_correct_explain", "")
         ).strip():
             missing.append(f"po_{stem}_correct_explain")
-        if visibility in {"1", "0", "3"} and not str(
-            review.get(f"po_{stem}_vis_explain", "")
-        ).strip():
-            missing.append(f"po_{stem}_vis_explain")
     missing_config = (
         ("po_miss_domain", "po_miss_domains", "po_miss_domain_basis", 11),
         ("po_miss_purpose", "po_miss_purposes", "po_miss_purpose_basis", 7),
@@ -1352,13 +1434,9 @@ def analytical_completion_missing(
         selected = _checkbox_selected(review, menu, count)
         if gateway_value == "1" and not selected:
             missing.append(menu)
-        if selected and not str(review.get(basis, "")).strip():
-            missing.append(basis)
     sufficiency = str(review.get("po_sufficiency", ""))
     if sufficiency not in {"1", "2", "3"}:
         missing.append("po_sufficiency")
-    if sufficiency in {"2", "3"} and not str(review.get("po_suff_explain", "")).strip():
-        missing.append("po_suff_explain")
     if str(review.get("po_nonpublic", "")) not in {"0", "1", "2"}:
         missing.append("po_nonpublic")
     taxonomy_fit = str(review.get("po_taxonomy_fit", ""))
@@ -1369,8 +1447,6 @@ def analytical_completion_missing(
     if taxonomy_fit in {"2", "3"}:
         if not approved_issues:
             missing.append("po_tax_issue")
-        if not str(review.get("po_tax_explain", "")).strip():
-            missing.append("po_tax_explain")
     return missing
 
 
@@ -1494,7 +1570,7 @@ def validate_documentation() -> dict[str, object]:
         "Field-level traceability",
         "substantial instrument architecture change",
         "2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure",
-        "Could the correct status for this tag reasonably be determined",
+        "Is the basis for this tag status visible in the public project title and datasets listed above?",
         "Both canonical cross-cutting tags are reviewed on every assignment",
         "Analytically complete",
         "Submitted",
@@ -1503,6 +1579,10 @@ def validate_documentation() -> dict[str, object]:
         "technically ready for controlled synthetic import",
         "unique display key is `(owner_layer, canonical_label)`",
         "purpose-cardinality/taxonomy issue",
+        "po_classification_overview",
+        "display support only",
+        "po_suff_explain` is isolated from proposed-classification branching",
+        "select Save & Return Later before leaving an unfinished review",
     )
     for phrase in required_spec:
         if phrase not in spec:
@@ -1525,6 +1605,16 @@ def validate_documentation() -> dict[str, object]:
         "Both canonical tag blocks appear on every repeat",
         "all 22 taxonomy definitions are author-approved",
         "@MAXCHECKED=2",
+        "Save & Return Later: enabled",
+        "respondents may return without a separate Return Code: enabled",
+        "modification of completed responses: disabled",
+        "Automatically continue to next survey: disabled",
+        "redirect URL: blank",
+        "participant “Repeat the Survey” option: disabled",
+        "repository documentation as proof of the live state",
+        "delete the disposable synthetic records",
+        "export and verify all 19 offered assignment rows",
+        "Please begin by completing <strong>Participant Information and Consent</strong>",
     )
     for phrase in required_config:
         if phrase not in config:
@@ -1534,7 +1624,7 @@ def validate_documentation() -> dict[str, object]:
         f"Date: {builder.TAXONOMY_REFERENCE_DATE}",
         "How to use this guide",
         "Use this guide when deciding whether each proposed classification fits the actual project and how clearly its basis is visible in the public project title and listed datasets. The short definitions summarise how the framework uses each category.",
-        "A project may be assigned more than one Research Domain where each is substantively part of the research; the domains are not ranked.",
+        "A project may be assigned more than one Research Domain where each is substantively part of the research; the Domains are not ranked.",
         "The framework assigns no more than two Analytical Purposes to a project",
         "More than one Analytical Purpose may apply.",
         "About ‘Unclear from Register Entry’",
@@ -1611,6 +1701,31 @@ def validate_response_specifications() -> dict[str, object]:
         errors.append("branching specification omits missing-purpose guidance")
     if missing_spec.get("purpose_max_checked_annotation") != "@MAXCHECKED=2":
         errors.append("branching specification omits missing-purpose maximum")
+    overview = branch.get("classification_overview", {})
+    if overview.get("summary_fields") != [
+        "prop_domain_summary", "prop_purpose_summary", "prop_tag_summary"
+    ]:
+        errors.append("branching specification overview summary fields differ")
+    if overview.get("display_support_only") is not True or overview.get(
+        "analytical_completion_requirement"
+    ) is not False:
+        errors.append("branching specification does not exclude overview from analytical completion")
+    settings = branch.get("project_review_survey_settings_required", {})
+    expected_settings = {
+        "repository_documented_not_live_verified": True,
+        "save_and_return_later_enabled": True,
+        "return_without_separate_return_code_enabled": True,
+        "completed_response_modification_enabled": False,
+        "automatically_continue_to_next_survey_enabled": False,
+        "redirect_url": "",
+        "participant_repeat_the_survey_enabled": False,
+    }
+    for name, expected in expected_settings.items():
+        if settings.get(name) != expected:
+            errors.append(f"branching specification survey setting differs: {name}")
+    queue_text = branch.get("survey_queue", {}).get("introduction_html", "")
+    if "Save & Return Later" not in queue_text or "Please do not forward this link" not in queue_text:
+        errors.append("branching specification queue text omits save/return security wording")
     if "cardinality/taxonomy issue" not in missing_spec.get("purpose_cardinality_analysis", ""):
         errors.append("branching specification omits corrected-purpose cardinality treatment")
     if field_rows.get("po_miss_purposes", {}).get("annotation") != "@MAXCHECKED=2":
@@ -1633,18 +1748,31 @@ def validate_response_specifications() -> dict[str, object]:
             visibility_explain = f"po_{stem}_vis_explain"
             if "2 Clearly visible" not in field_rows.get(visibility, {}).get("notes", ""):
                 errors.append(f"field specification omits visibility coding: {visibility}")
-            if "negative or unsure" not in field_rows.get(correctness_explain, {}).get("notes", ""):
+            if "explicit negative" not in field_rows.get(correctness_explain, {}).get("notes", ""):
                 errors.append(f"field specification omits correctness triggers: {correctness_explain}")
             if "Partly visible/Not visible/Unsure" not in field_rows.get(visibility_explain, {}).get("notes", ""):
                 errors.append(f"field specification omits visibility-explanation triggers: {visibility_explain}")
+            if field_rows.get(correctness_explain, {}).get("analytical_completion") != "required_when_displayed_for_explicit_disagreement":
+                errors.append(f"field specification misstates analytical requiredness: {correctness_explain}")
+            if field_rows.get(visibility_explain, {}).get("analytical_completion") != "excluded_optional_enrichment":
+                errors.append(f"field specification misstates optional enrichment: {visibility_explain}")
             if "2=Clearly visible" not in export_rows.get(visibility, {}).get("notes", ""):
                 errors.append(f"expected export omits visibility coding: {visibility}")
             if "Actual-project classification" not in export_rows.get(correctness_explain, {}).get("notes", ""):
                 errors.append(f"expected export omits correctness interpretation: {correctness_explain}")
-            if "Public-register evidence" not in export_rows.get(visibility_explain, {}).get("notes", ""):
+            if "public-register evidence" not in export_rows.get(visibility_explain, {}).get("notes", "").lower():
                 errors.append(f"expected export omits visibility interpretation: {visibility_explain}")
             if f"po_{stem}_basis" in field_rows or f"po_{stem}_basis" in export_rows:
                 errors.append(f"obsolete combined basis survives specifications: po_{stem}_basis")
+    for name in ("prop_domain_summary", "prop_purpose_summary", "prop_tag_summary"):
+        field_spec = field_rows.get(name, {})
+        export_spec = export_rows.get(name, {})
+        if field_spec.get("prepopulated") != "yes" or field_spec.get("participant_response") != "no":
+            errors.append(f"field specification misclassifies display summary: {name}")
+        if export_spec.get("analysis_role") != "display_support":
+            errors.append(f"expected export misclassifies display summary: {name}")
+        if "not a participant response" not in export_spec.get("notes", ""):
+            errors.append(f"expected export omits display-support exclusion: {name}")
     if errors:
         raise OwnerCandidate03Error("\n".join(errors))
     return {

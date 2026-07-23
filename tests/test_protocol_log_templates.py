@@ -26,7 +26,7 @@ INSTRUMENT_LOG_REQUIRED_COLUMNS = {
     "status",
 }
 INSTRUMENT_CHANGE_ID = re.compile(r"^REDCAP-(\d{3})$")
-NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-016"
+NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-020"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
@@ -89,7 +89,11 @@ def test_required_log_files_and_post_pilot_governance_entry():
     import_correction = instrument_by_id["REDCAP-013"]
     fixture_correction = instrument_by_id["REDCAP-014"]
     participant_note_correction = instrument_by_id["REDCAP-015"]
-    current_live_qa_correction = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
+    current_live_qa_correction = instrument_by_id["REDCAP-016"]
+    documentation_alignment = instrument_by_id["REDCAP-017"]
+    overview_live_qa_correction = instrument_by_id["REDCAP-018"]
+    wording_only_correction = instrument_by_id["REDCAP-019"]
+    burden_reduction = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -156,6 +160,58 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert current_live_qa_correction["classification_rule_change"] == "no"
     assert "eight combined proposed-classification basis fields" in current_live_qa_correction["change_description"]
     assert "controlled synthetic dictionary re-import" in current_live_qa_correction["status"]
+    assert documentation_alignment["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert documentation_alignment["classification_rule_change"] == "no"
+    assert "one personalised Survey Queue link" in documentation_alignment["change_description"]
+    assert "final 22-record exclusion set" in documentation_alignment["protocol_effect"]
+    assert "invitation email are preserved unchanged" in documentation_alignment["pilot_or_formal_data_effect"]
+    assert "live QA" in documentation_alignment["status"]
+    assert overview_live_qa_correction["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert overview_live_qa_correction["classification_rule_change"] == "no"
+    assert "classification overview" in overview_live_qa_correction["change_description"]
+    assert "Save & Return Later" in overview_live_qa_correction["change_description"]
+    assert "po_suff_explain" in overview_live_qa_correction["change_description"]
+    assert "display support only" in overview_live_qa_correction["protocol_effect"]
+    assert "19 assignments and 22 rows" in overview_live_qa_correction["pilot_or_formal_data_effect"]
+    assert "controlled dictionary/fixture re-import" in overview_live_qa_correction["approval"]
+    assert wording_only_correction["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert wording_only_correction["classification_rule_change"] == "no"
+    assert "20 conditional per-question labels" in wording_only_correction["change_description"]
+    assert "Is the basis for this tag status visible" in wording_only_correction["change_description"]
+    assert "108 fields" in wording_only_correction["pilot_or_formal_data_effect"]
+    assert "DEV-001" in wording_only_correction["protocol_effect"]
+    assert burden_reduction["instrument_version"] == "owner-redcap-candidate-0.3"
+    assert burden_reduction["classification_rule_change"] == "no"
+    assert "explicit disagreement" in burden_reduction["change_description"]
+    assert "optional" in burden_reduction["change_description"]
+    assert "Questionnaire v3" in burden_reduction["change_description"]
+    assert "protocol candidate v0.17" in burden_reduction["change_description"]
+    assert "108 fields" in burden_reduction["pilot_or_formal_data_effect"]
+    assert burden_reduction["date_identified"] == "2026-07-23"
+
+    with (PACKAGE / "protocol_deviation_log.csv").open(
+        encoding="utf-8", newline=""
+    ) as handle:
+        deviation_reader = csv.DictReader(handle)
+        assert deviation_reader.fieldnames is not None
+        deviation_entries = list(deviation_reader)
+    required_deviation_columns = {
+        "deviation_id", "date_identified", "study_stage", "protocol_section",
+        "description", "reason", "affected_records_or_outputs", "temporary_action",
+        "substantive", "amendment_required", "resolution", "resolved_date",
+        "reviewer", "status",
+    }
+    assert required_deviation_columns <= set(deviation_reader.fieldnames)
+    assert [row["deviation_id"] for row in deviation_entries] == ["DEV-001"]
+    deviation = deviation_entries[0]
+    assert all(deviation[column].strip() for column in required_deviation_columns)
+    assert deviation["substantive"] == "no"
+    assert deviation["amendment_required"] == "no"
+    assert deviation["status"] == "applied"
+    assert deviation["resolved_date"] == "2026-07-23"
+    assert deviation["reviewer"] == "Balint Stewart"
+    assert "Validation_Protocol_PreReg_v0.17.docx" in deviation["resolution"]
+    assert "before analysis begins" in deviation["resolution"] or "before analysis begins" in deviation["description"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

@@ -10,7 +10,7 @@ import re
 import html
 from collections import Counter
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
 
 import yaml
 
@@ -77,6 +77,10 @@ READONLY_SURVEY = "@READONLY-SURVEY"
 DOMAIN_SLOTS = 4
 PURPOSE_SLOTS = 2
 TAG_SLOTS = 2
+TAG_SUMMARY_LABELS = (
+    "Demographic disparities / equity",
+    "COVID-19 & Pandemic",
+)
 MENU_COUNTS = {"domain": 11, "purpose": 7, "tag": 2}
 PROPOSED_DISPLAY_COUNTS = {"domain": 12, "purpose": 8, "tag": 2}
 LAYER_NAMES = {
@@ -212,7 +216,7 @@ FROZEN_OUTPUT_SHA256 = "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503
 V02_HASHES = {
     "scripts/build_project_owner_redcap_candidate_0_2.py": "71ba2557a76454e608148f776c7241ef77ea7f08dd6892f4e78b6bff11c374fc",
     "scripts/validate_project_owner_redcap_candidate_0_2.py": "bac416e76762ba2d644b8cfbe22b1b8f87c0a5db081360ed8e5a0d423cdf0c4f",
-    "tests/test_project_owner_redcap_candidate_0_2.py": "b6152a420dd1da7432838cd06c74fe642716d87ea3e7ab96ed1a24803091ec44",
+    "tests/test_project_owner_redcap_candidate_0_2.py": "85c0761401eb48c2fd94e4c024ab86844fc02fc96feeee857bbc065bb80619e9",
     "tests/fixtures/project_owner_candidate_0_2_synthetic_submissions.yaml": "7afe706a04d8f9ad40a167a303e507f67276543d545bcd4e663ad17a4c339733",
     "preregistration/package/06_redcap/project_owner_redcap_data_dictionary_candidate_0.2.csv": "8225aec9afaae533151fa66e484b7361d8292777e9398b5a722fdc58b1fd52ec",
     "preregistration/package/06_redcap/project_owner_redcap_field_specification_candidate_0.2.csv": "97d73d402dd18f9b5312b997cb278fe90c3326d9a83a0838a2d6f0f265d7d014",
@@ -547,6 +551,43 @@ def checkbox_trigger(name: str, entries: list[dict[str, object]]) -> str:
     return " or ".join(f"[{name}({item['code']})] = '1'" for item in entries)
 
 
+def stable_unique_summary(values: Iterable[object]) -> str:
+    """Return non-empty labels once each, preserving first-slot order."""
+
+    seen: set[str] = set()
+    labels: list[str] = []
+    for value in values:
+        label = str(value or "").strip()
+        if label and label not in seen:
+            labels.append(label)
+            seen.add(label)
+    return "; ".join(labels)
+
+
+def proposed_label_summary(row: Mapping[str, object], prefix: str, capacity: int) -> str:
+    return stable_unique_summary(
+        row.get(f"prop_{prefix}{index:02d}_label", "")
+        for index in range(1, capacity + 1)
+    )
+
+
+def proposed_tag_summary(row: Mapping[str, object]) -> str:
+    values: list[str] = []
+    for index, label in enumerate(TAG_SUMMARY_LABELS, 1):
+        status = str(row.get(f"prop_t{index:02d}_status", "")).strip()
+        display_status = {"1": "Applied", "0": "Not applied"}.get(status, "")
+        values.append(f"{label} — {display_status}" if display_status else "")
+    return "; ".join(value for value in values if value)
+
+
+def populate_proposed_summaries(row: dict[str, object]) -> None:
+    """Populate deterministic display-support summaries from proposal fields."""
+
+    row["prop_domain_summary"] = proposed_label_summary(row, "d", DOMAIN_SLOTS)
+    row["prop_purpose_summary"] = proposed_label_summary(row, "p", PURPOSE_SLOTS)
+    row["prop_tag_summary"] = proposed_tag_summary(row)
+
+
 def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
     source = display_source()
     groups = {
@@ -577,7 +618,8 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "all or none of the listed projects, in any order.<br><br>"
             "Please do not forward this personalised link and do not enter confidential, sensitive or "
             "otherwise non-public information. Each project review normally takes approximately 3–5 minutes. "
-            "Your progress is saved and you may return using the same personalised link.",
+            "To pause an unfinished review, select <strong>Save & Return Later</strong> before leaving. "
+            "You can then return using the same personalised link.",
         ),
         field(
             "participant_info_link",
@@ -755,13 +797,47 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             annotation=HIDDEN_ADMIN,
         ),
         field(
+            "prop_domain_summary",
+            "project_review",
+            "notes",
+            "Deterministic proposed Research Domain summary",
+            annotation=HIDDEN_ADMIN,
+        ),
+        field(
+            "prop_purpose_summary",
+            "project_review",
+            "notes",
+            "Deterministic proposed Analytical Purpose summary",
+            annotation=HIDDEN_ADMIN,
+        ),
+        field(
+            "prop_tag_summary",
+            "project_review",
+            "notes",
+            "Deterministic proposed cross-cutting tag-status summary",
+            annotation=HIDDEN_ADMIN,
+        ),
+        field(
+            "po_classification_overview",
+            "project_review",
+            "descriptive",
+            "<strong>Classification overview</strong><br>"
+            "The proposed classifications are summarised below for context. Please judge each item "
+            "independently in the sections that follow.<br><br>"
+            "<strong>Research Domains</strong><br>[prop_domain_summary]<br><br>"
+            "<strong>Analytical Purposes</strong><br>[prop_purpose_summary]<br><br>"
+            "<strong>Cross-cutting tags</strong><br>[prop_tag_summary]",
+        ),
+        field(
             "po_intro",
             "project_review",
             "descriptive",
             "This review shows a short definition beside each proposed classification. "
             "You do not need to learn the full classification framework before answering. "
             "A concise reference to all classifications is also available. "
-            "You may complete all, some or none of your listed project reviews, in any order.<br><br>"
+            "You may complete all, some or none of your listed project reviews, in any order. "
+            "To pause an unfinished review, select <strong>Save & Return Later</strong> before leaving. "
+            "You can then return using the same personalised link.<br><br>"
             "<strong>Research Domains</strong><br>"
             "Research Domains describe the main subjects of the project. A project may have several "
             "Research Domains where each is substantively part of the research. Judge each proposed "
@@ -848,9 +924,8 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
                     "notes",
                     "Please briefly explain why this proposed "
                     f"{'Research Domain' if layer == 'domain' else 'Analytical Purpose'} does not fit "
-                    "the actual project, or why you are unsure. Do not provide confidential or "
-                    "non-public information.",
-                    branch=f"[{fit}] = '2' or [{fit}] = '3'",
+                    "the actual project.",
+                    branch=f"[{fit}] = '2'",
                     required=True,
                 ),
                 field(
@@ -866,14 +941,11 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
                     f"po_{stem}_vis_explain",
                     "project_review",
                     "notes",
-                    "Please briefly explain why the basis for this "
-                    f"{'Research Domain' if layer == 'domain' else 'Analytical Purpose'} is only partly "
-                    "visible, not visible, or unclear in the public project title and listed datasets. "
-                    "Do not provide confidential or non-public information.",
+                    "Optional: Please briefly explain what is only partly visible, not visible or "
+                    "unclear in the public project title and listed datasets.",
                     branch=(
                         f"[{visibility}] = '1' or [{visibility}] = '0' or [{visibility}] = '3'"
                     ),
-                    required=True,
                 ),
             ]
 
@@ -931,17 +1003,16 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
                 "notes",
                 "Please briefly explain why the proposed status for the "
                 f"{'Demographic disparities / equity tag' if index == 1 else 'COVID-19 & Pandemic tag'} "
-                "does not fit the actual project, or why you are unsure. Do not provide confidential "
-                "or non-public information.",
-                branch=f"[{correctness}] = '0' or [{correctness}] = '2'",
+                "does not fit the actual project.",
+                branch=f"[{correctness}] = '0'",
                 required=True,
             ),
             field(
                 visibility,
                 "project_review",
                 "radio",
-                "Could the correct status for this tag reasonably be determined from the public project "
-                "title and datasets listed above?",
+                "Is the basis for this tag status visible in the public project title and datasets "
+                "listed above?",
                 choices="2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure",
                 required=True,
             ),
@@ -949,13 +1020,11 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
                 f"po_{stem}_vis_explain",
                 "project_review",
                 "notes",
-                "Please briefly explain why the basis for this tag status is only partly visible, not "
-                "visible, or unclear in the public project title and listed datasets. Do not provide "
-                "confidential or non-public information.",
+                "Optional: Please briefly explain what is only partly visible, not visible or "
+                "unclear in the public project title and listed datasets.",
                 branch=(
                     f"[{visibility}] = '1' or [{visibility}] = '0' or [{visibility}] = '3'"
                 ),
-                required=True,
             ),
         ]
 
@@ -1027,10 +1096,8 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
                 basis,
                 "project_review",
                 "notes",
-                "Please briefly explain why the selected label or labels should be included. "
-                "Do not provide confidential or non-public information.",
+                "Optional: Please briefly explain why the selected label or labels should be included.",
                 branch=checkbox_trigger(menu, entries),
-                required=True,
             ),
             ]
         )
@@ -1050,10 +1117,8 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "po_suff_explain",
             "project_review",
             "notes",
-            "What important information is missing or unclear in the public register entry? "
-            "Please answer at a general level and do not disclose confidential or non-public information.",
+            "Optional: Please briefly explain what information is missing or unclear in the public entry.",
             branch="[po_sufficiency] = '2' or [po_sufficiency] = '3'",
-            required=True,
         ),
         field(
             "po_taxonomy_fit",
@@ -1069,9 +1134,14 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "checkbox",
             "What type of taxonomy problem applies?",
             choices=(
-                "1, Missing or inadequately represented category | "
+                "1, No suitable category exists in the framework | "
                 "2, Ambiguous or overlapping category boundaries | "
                 "5, Other taxonomy problem"
+            ),
+            note=(
+                "This question concerns the available classification framework itself. If an "
+                "existing category fits but was omitted from the proposed classification, report "
+                "it in the missing-classification section instead."
             ),
             branch="[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'",
             required=True,
@@ -1080,10 +1150,9 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "po_tax_explain",
             "project_review",
             "notes",
-            "Please briefly explain the taxonomy-fit problem. If you selected 'Other taxonomy problem', "
-            "describe it here. Do not provide confidential or non-public information.",
+            "Optional: Please briefly explain the taxonomy-fit problem. If you selected "
+            "'Other taxonomy problem', describe it here.",
             branch="[po_taxonomy_fit] = '2' or [po_taxonomy_fit] = '3'",
-            required=True,
         ),
         field(
             "po_nonpublic",
@@ -1098,23 +1167,16 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "po_nonpublic_note",
             "project_review",
             "notes",
-            "Please briefly describe the type of additional project context that informed your answer. Do not "
-            "provide confidential, sensitive or otherwise non-public information.",
+            "Optional: At a general level, please describe the relevant project knowledge that was not "
+            "visible in the public project title and listed datasets.",
             branch="[po_nonpublic] = '1' or [po_nonpublic] = '2'",
-        ),
-        field(
-            "po_final_warning",
-            "project_review",
-            "descriptive",
-            "<strong>Important</strong><br>Do not include confidential, sensitive, restricted, personally "
-            "identifying or otherwise non-public information in comments.",
-            section="Final comments and quotation permission",
         ),
         field(
             "po_other_comment",
             "project_review",
             "notes",
             "Optional final comments about the proposed classifications, public register entry, or taxonomy",
+            section="Final comments and quotation permission",
         ),
         field(
             "po_quote_permission",
@@ -1124,6 +1186,16 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "provided that it does not identify you or your project and does not disclose non-public information?",
             choices="1, Yes | 0, No | 2, Please contact me before using a quotation",
             note="This response-specific permission is optional and does not affect whether the review is analytically complete.",
+        ),
+        field(
+            "po_final_warning",
+            "project_review",
+            "descriptive",
+            "<strong>Important</strong><br>Do not include confidential, sensitive, restricted, personally "
+            "identifying or otherwise non-public information in comments.<br><br>"
+            "You may request withdrawal of this submitted review before the deadline stated in the "
+            "Participant Information Sheet by contacting the study team and quoting the Review reference "
+            "shown above.",
         ),
     ]
 
@@ -1310,7 +1382,7 @@ def build_taxonomy_outputs() -> None:
         "project and how clearly its basis is visible in the public project title and listed "
         "datasets. The short definitions summarise how the framework uses each category.\n\n"
         "A project may be assigned more than one Research Domain where each is substantively "
-        "part of the research; the domains are not ranked.\n\n"
+        "part of the research; the Domains are not ranked.\n\n"
         "The framework assigns no more than two Analytical Purposes to a project. "
         "The purposes should describe its main analytical aims. More than one Analytical "
         "Purpose may apply.\n\n"
@@ -1357,20 +1429,57 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             )
         elif re.fullmatch(r"po_[dpt]\d{2}_correct_explain", name):
             notes = (
-                "Required only when the block correctness/verdict is negative or unsure; records "
-                "actual-project classification disagreement or uncertainty."
+                "Required only when the block correctness/verdict is the explicit negative value; "
+                "records actual-project classification disagreement. Unsure shows no explanation field."
             )
         elif re.fullmatch(r"po_[dpt]\d{2}_vis_explain", name):
             notes = (
-                "Required only when visibility is Partly visible/Not visible/Unsure; records a "
-                "public-register evidence limitation or uncertainty."
+                "Optional enrichment shown when visibility is Partly visible/Not visible/Unsure; "
+                "records a public-register evidence limitation or uncertainty and is excluded from completion."
             )
         elif re.fullmatch(r"prop_t\d{2}_status", name):
             notes = "Pre-populated Applied/Not applied status; always participant-visible and survey-read-only."
+        elif name in {"prop_domain_summary", "prop_purpose_summary", "prop_tag_summary"}:
+            notes = (
+                "Pre-populated deterministic display-support summary; survey-hidden, not participant-editable, "
+                "not an analytical outcome and excluded from analytical completion."
+            )
         elif row["Field Type"] == "descriptive":
             notes = "Generated display/wording field"
         else:
             notes = "REDCap field"
+        construct = ""
+        analytical_completion = "not_applicable"
+        requiredness_rationale = ""
+        if row["Field Type"] == "notes" and name.startswith("po_"):
+            if re.fullmatch(r"po_[dpt]\d{2}_correct_explain", name):
+                construct = "actual_project_disagreement_explanation"
+                analytical_completion = "required_when_displayed_for_explicit_disagreement"
+                requiredness_rationale = "Explicit disagreement needs adjudicable context; Unsure does not display this field."
+            elif re.fullmatch(r"po_[dpt]\d{2}_vis_explain", name):
+                construct = "public_entry_visibility_enrichment"
+                analytical_completion = "excluded_optional_enrichment"
+                requiredness_rationale = "The required four-level visibility rating captures the primary evidence judgement."
+            elif name in {"po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis"}:
+                construct = "missing_classification_enrichment"
+                analytical_completion = "excluded_optional_enrichment"
+                requiredness_rationale = "The required gateway and checkbox selection capture the omission."
+            elif name == "po_suff_explain":
+                construct = "public_entry_sufficiency_enrichment"
+                analytical_completion = "excluded_optional_enrichment"
+                requiredness_rationale = "The required sufficiency rating captures the primary judgement."
+            elif name == "po_nonpublic_note":
+                construct = "project_knowledge_enrichment"
+                analytical_completion = "excluded_optional_enrichment"
+                requiredness_rationale = "The required project-knowledge gateway captures reliance on non-public context."
+            elif name == "po_tax_explain":
+                construct = "taxonomy_fit_enrichment"
+                analytical_completion = "excluded_optional_enrichment"
+                requiredness_rationale = "Taxonomy fit and required issue type capture the structured taxonomy diagnosis."
+            elif name == "po_other_comment":
+                construct = "final_comment"
+                analytical_completion = "excluded_optional_enrichment"
+                requiredness_rationale = "Optional final comment."
         field_rows.append(
             {
                 "variable": name,
@@ -1385,6 +1494,9 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 "branching": row["Branching Logic (Show field only if...)"],
                 "required": row["Required Field?"],
                 "annotation": row["Field Annotation"],
+                "construct": construct,
+                "analytical_completion": analytical_completion,
+                "requiredness_rationale": requiredness_rationale,
                 "notes": notes,
             }
         )
@@ -1400,6 +1512,9 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             "branching",
             "required",
             "annotation",
+            "construct",
+            "analytical_completion",
+            "requiredness_rationale",
             "notes",
         ],
         field_rows,
@@ -1422,6 +1537,14 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
         "repeat_survey_button_enabled": False,
         "survey_queue": {
             "visible": True,
+            "introduction_html": (
+                "<strong>Project Owner Review</strong><br>"
+                "Please begin by completing <strong>Participant Information and Consent</strong> below. "
+                "If you agree to take part, your available project reviews will then appear in this list. "
+                "You may complete all, some or none, in any order. To pause an unfinished review, use "
+                "<strong>Save & Return Later</strong> before leaving. You can return using the same "
+                "personalised link. Please do not forward this link."
+            ),
             "owner_consent": {
                 "active": True,
                 "condition": "[owner_id] <> ''",
@@ -1436,6 +1559,19 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 "auto_start": False,
             },
         },
+        "project_review_survey_settings_required": {
+            "repository_documented_not_live_verified": True,
+            "save_and_return_later_enabled": True,
+            "return_without_separate_return_code_enabled": True,
+            "completed_response_modification_enabled": False,
+            "automatically_continue_to_next_survey_enabled": False,
+            "redirect_url": "",
+            "participant_repeat_the_survey_enabled": False,
+            "security_note": (
+                "Possession of the personalised link permits access to an unfinished review; participants "
+                "must not forward it, and direct contact identifiers are absent from the REDCap response project."
+            ),
+        },
         "stop_actions_manual_after_import": {
             "intended_recipient": "No",
             "owner_consent": "No",
@@ -1444,6 +1580,19 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
         },
         "production_cardinalities": meta["production_cardinalities"],
         "slot_capacity": SLOT_CAPACITY,
+        "classification_overview": {
+            "display_field": "po_classification_overview",
+            "summary_fields": [
+                "prop_domain_summary",
+                "prop_purpose_summary",
+                "prop_tag_summary",
+            ],
+            "display_support_only": True,
+            "participant_editable": False,
+            "analytical_completion_requirement": False,
+            "domain_and_purpose_order": "first populated proposal-slot order with blanks omitted and duplicates removed",
+            "tag_order": list(TAG_SUMMARY_LABELS),
+        },
         "taxonomy_menu_counts": MENU_COUNTS,
         "proposed_slot_visibility": {
             "domain_and_purpose_question": (
@@ -1451,8 +1600,8 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 "listed above?"
             ),
             "tag_question": (
-                "Could the correct status for this tag reasonably be determined from the public project "
-                "title and datasets listed above?"
+                "Is the basis for this tag status visible in the public project title and datasets "
+                "listed above?"
             ),
             "choices": {
                 "2": "Clearly visible",
@@ -1460,11 +1609,14 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 "0": "Not visible",
                 "3": "Unsure",
             },
-            "explanations_required_when": {
-                "domain_or_purpose_verdict": ["2: Does not fit", "3: Unsure"],
-                "tag_correctness": ["0: No", "2: Unsure"],
-                "visibility": ["1: Partly visible", "0: Not visible", "3: Unsure"],
+            "explanation_required_when": {
+                "domain_or_purpose_verdict": ["2: Does not fit"],
+                "tag_correctness": ["0: No"],
             },
+            "optional_visibility_explanation_shown_when": [
+                "1: Partly visible", "0: Not visible", "3: Unsure"
+            ],
+            "unsure_correctness_explanation_displayed": False,
         },
         "tag_reviews": {
             "always_review_both": True,
@@ -1503,11 +1655,21 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
         },
         "analytical_completion": {
             "owner_join": ["intended_recipient = 1", "owner_consent = 1"],
-            "domains_and_purposes": "verdict and visibility for every populated slot, plus every separately triggered correctness and visibility explanation",
-            "tags": "correctness and visibility for both tags, plus every separately triggered correctness and visibility explanation",
-            "missing_labels": "all three gateways, and every triggered menu and basis",
-            "overall": "public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus every triggered explanation/issue field",
-            "excluded_optional_fields": ["ack_pref", "po_nonpublic_note", "po_other_comment", "po_quote_permission"],
+            "domains_and_purposes": "verdict and visibility for every populated slot, plus correctness explanation only for Does not fit",
+            "tags": "correctness and visibility for both tags, plus correctness explanation only for No",
+            "missing_labels": "all three gateways and every triggered checkbox menu; prose bases are optional",
+            "overall": "public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus taxonomy issue for Partial Fit/No Fit",
+            "excluded_optional_fields": [
+                "ack_pref", "po_d01_vis_explain", "po_d02_vis_explain",
+                "po_d03_vis_explain", "po_d04_vis_explain", "po_p01_vis_explain",
+                "po_p02_vis_explain", "po_t01_vis_explain", "po_t02_vis_explain",
+                "po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis",
+                "po_suff_explain", "po_nonpublic_note", "po_tax_explain",
+                "po_other_comment", "po_quote_permission"
+            ],
+            "excluded_display_support_fields": [
+                "prop_domain_summary", "prop_purpose_summary", "prop_tag_summary", "po_classification_overview"
+            ],
             "submitted_is_separate": "project_review_complete = 2 is submission status, not the analytical-completion definition",
         },
         "participant_reference": {
@@ -1565,18 +1727,23 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             )
         elif re.fullmatch(r"po_[dpt]\d{2}_correct_explain", name):
             export_notes = (
-                "Actual-project classification disagreement/uncertainty explanation; required for "
-                "Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row."
+                "Actual-project classification disagreement explanation; required only for Does not fit "
+                "verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row."
             )
         elif re.fullmatch(r"po_[dpt]\d{2}_vis_explain", name):
             export_notes = (
-                "Public-register evidence limitation/uncertainty explanation; required for Partly "
-                "visible/Not visible/Unsure responses; blank on the owner row."
+                "Optional public-register evidence limitation/uncertainty explanation, shown for Partly "
+                "visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
             )
         elif re.fullmatch(r"prop_t\d{2}_status", name):
             export_notes = (
                 "Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; "
                 "blank on the owner row."
+            )
+        elif name in {"prop_domain_summary", "prop_purpose_summary", "prop_tag_summary"}:
+            export_notes = (
+                "Deterministic display-support derivative of the existing proposed labels/statuses; "
+                "not a participant response, analytical outcome or analytical-completion requirement."
             )
         elif name == "po_miss_purposes":
             export_notes = (
@@ -1595,7 +1762,11 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 "source": row["Form Name"],
                 "analysis_role": "owner_consent"
                 if row["Form Name"] == "owner_consent"
-                else ("assignment_or_proposal" if name in prepop else "owner_response"),
+                else (
+                    "display_support"
+                    if name in {"prop_domain_summary", "prop_purpose_summary", "prop_tag_summary"}
+                    else ("assignment_or_proposal" if name in prepop else "owner_response")
+                ),
                 "notes": export_notes,
             }
         )
@@ -1645,12 +1816,16 @@ def build_formatting_audit(rows: list[dict[str, str]]) -> None:
         "wrong_recipient_stop": "Wrong-recipient termination message",
         "consent_decline_stop": "Consent-decline termination message",
         "po_intro": "Project Review overview and classification-dimension guidance",
+        "po_classification_overview": "Read-only summary of every proposed Domain, Purpose and both tag statuses",
         "po_privacy": "Confidentiality and non-public-information warning",
         "po_taxonomy_ref": "Non-production placeholder for the optional classification reference",
         "po_miss_purpose_guidance": "Maximum-two Analytical Purposes selection guidance",
         "po_final_warning": "Final confidentiality and non-public-information reminder",
     }
-    corrected = {"participant_info_link", "po_intro", "po_privacy", "po_taxonomy_ref", "po_final_warning"}
+    corrected = {
+        "participant_info_link", "po_classification_overview", "po_intro", "po_privacy",
+        "po_taxonomy_ref", "po_final_warning"
+    }
     audit_rows: list[dict[str, str]] = []
     for row in rows:
         if row["Field Type"] != "descriptive":
@@ -1809,17 +1984,21 @@ The participant-visible `intended_recipient` field note is intentionally blank. 
 
 Every repeat contains neutral assignment/source identifiers, frozen register text, production/taxonomy provenance and fixed proposed-label slots. `assignment_id` is a stable, survey-read-only participant-facing Review reference; it contains no participant name, email or direct identifier in the fixture or design contract. `owner_id` and internal source/provenance fields remain survey-hidden. Empty domain/purpose proposal slots are completely hidden through `[prop_*_label] <> ''`.
 
-The Project Review introduction gives separate concise guidance for Research Domains, Analytical Purposes and cross-cutting tags. It explains that Domains may be multiple and unranked, Purposes may be multiple but are capped at two, and either, both or neither tag may apply. The privacy warning and synthetic-QA taxonomy-reference placeholder remain separate descriptive fields immediately after the introduction, in that order. This is descriptive guidance only and adds no response field. The former long withdrawal paragraph was removed from the repeat opening; no short reminder is retained in the survey because the Participant Information Sheet is the authoritative withdrawal source.
+After the visible Review reference and public project information, three survey-hidden stored fields provide deterministic summaries of all proposed Domains, all proposed Purposes and both tag statuses. `po_classification_overview` pipes those values as a compact participant-visible overview before the framework guidance and detailed judgement blocks. Domain and Purpose summaries follow first populated proposal-slot order, omit blanks and remove duplicates without ranking; the tag summary always shows Demographic disparities / equity followed by COVID-19 & Pandemic with explicit Applied/Not applied statuses. These four fields are display support only: they are not participant-editable, analytical outcomes or analytical-completion requirements.
+
+The Project Review introduction gives separate concise guidance for Research Domains, Analytical Purposes and cross-cutting tags. It explains that Domains may be multiple and unranked, Purposes may be multiple but are capped at two, and either, both or neither tag may apply. It also instructs participants to select Save & Return Later before leaving an unfinished review and to return through the same personalised link; it does not claim automatic saving. The privacy warning and synthetic-QA taxonomy-reference placeholder remain separate descriptive fields immediately after the introduction, in that order. The former long withdrawal paragraph remains absent from the repeat opening. A single short reminder is placed in `po_final_warning` after quotation permission and immediately before submission; it points to the Participant Information Sheet and the visible Review reference without repeating the all-reviews procedure.
 
 Each populated domain/purpose slot has an inline label/definition and a Fits / Does not fit / Unsure verdict. Domain and purpose slots ask, “Is the basis for this classification visible in the public project title and datasets listed above?”
 
-Both canonical cross-cutting tags are reviewed on every assignment, including when their pre-populated status is Not applied. Each block shows its common-source definition, a survey-read-only Applied/Not applied proposed status, required Yes/No/Unsure correctness, the preserved question “Could the correct status for this tag reasonably be determined from the public project title and datasets listed above?”, and separate conditional required correctness and visibility explanations. Neither block branches on proposed status.
+Both canonical cross-cutting tags are reviewed on every assignment, including when their pre-populated status is Not applied. Each block shows its common-source definition, a survey-read-only Applied/Not applied proposed status, required Yes/No/Unsure correctness, the visibility question “Is the basis for this tag status visible in the public project title and datasets listed above?”, a required correctness explanation shown only for No, and an optional visibility explanation shown for non-clear visibility. Neither block branches on proposed status.
 
-Every visibility field uses `2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure`. Across all eight proposed-classification blocks, the correctness explanation is shown and required only for a negative or unsure verdict/correctness response, and the visibility explanation is shown and required only for Partly visible, Not visible or Unsure. If both conditions apply, both explanations are required; Fits/Yes plus Clearly visible reveals neither. The two field families are analytically distinct: actual-project classification disagreement/uncertainty versus public-register evidence limitation/uncertainty.
+Every visibility field uses `2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure`. Across all eight proposed-classification blocks, the correctness explanation is shown and required only for explicit disagreement (Does not fit/No); Unsure shows no correctness explanation. The visibility explanation is optional enrichment shown for Partly visible, Not visible or Unsure. The two field families remain analytically distinct: actual-project classification disagreement versus public-register evidence limitation or uncertainty.
 
-All three missing-label gateways are required Yes/No/Unsure items. The complete 11/7/2 definition-bearing checkbox menus appear only after Yes and are required when displayed; Unsure does not force a label selection. One basis field per dimension is shown and required when at least one checkbox is selected. The missing-purpose construct displays the maximum-two guidance immediately before its checkbox and applies `@MAXCHECKED=2`. REDCap checkbox requiredness, at-least-one behaviour and the maximum-two action tag must be confirmed in live QA. The missing-tag gateway is retained as an explicit summary cross-check; the two per-tag correctness judgements are the primary status assessments. This deliberate redundancy requires later protocol and participant-document alignment but is not a contradictory coding rule.
+All three missing-label gateways are required Yes/No/Unsure items. The complete 11/7/2 definition-bearing checkbox menus appear only after Yes and are required when displayed; Unsure does not force a label selection. One optional basis field per dimension is shown when at least one checkbox is selected; the required gateway and at least one selected label determine completion. The missing-purpose construct displays the maximum-two guidance immediately before its checkbox and applies `@MAXCHECKED=2`. REDCap checkbox requiredness, at-least-one behaviour and the maximum-two action tag must be confirmed in live QA. The missing-tag gateway is retained as an explicit summary cross-check; the two per-tag correctness judgements are the primary status assessments. This deliberate redundancy requires later protocol and participant-document alignment but is not a contradictory coding rule.
 
-Overall review fields retain public-entry sufficiency, taxonomy fit and issue type, one conditional taxonomy-fit explanation, optional final comments and response-specific quotation permission. `po_tax_explain` is required for Partial Fit or No Fit and also covers the approved “Other taxonomy problem” issue choice; no duplicate `po_tax_other` field remains. Existing `po_nonpublic`/`po_nonpublic_note` fields are aligned as the required project-knowledge gateway and optional conditional context note. Warnings prohibit confidential or non-public content. Named acknowledgement is not repeated.
+Overall review fields retain required public-entry sufficiency, taxonomy fit and conditional issue type, with optional explanatory enrichment, optional final comments and response-specific quotation permission. `po_tax_explain` is optional for Partial Fit or No Fit and covers any elaboration on the “Other taxonomy problem” issue choice; no duplicate `po_tax_other` field remains. Existing `po_nonpublic`/`po_nonpublic_note` fields remain the required project-knowledge gateway and optional conditional context note. The repeated sentence “Do not provide confidential or non-public information.” is removed from the 20 conditional per-question explanations; the instrument-level warnings in `po_privacy` and `po_final_warning` remain unchanged. Named acknowledgement is not repeated.
+
+`po_suff_explain` is isolated from proposed-classification branching: it is shown as optional enrichment only when `po_sufficiency` is Partial (`2`) or Insufficient (`3`). No Domain, Purpose or tag fit, correctness or visibility response controls it. Before REDCAP-016, each negative/unsure proposed-classification response revealed its own combined `po_d01_basis`–`po_t02_basis` field; after this revision only explicit disagreement reveals the matching required `*_correct_explain` field. The public-entry sufficiency explanation was not part of that split.
 
 ## Long-format export and analysis preparation
 
@@ -1832,10 +2011,10 @@ Assignment-response states are defined independently:
 - **Offered:** a pre-created repeat exists.
 - **Untouched:** the repeat exists with no participant response.
 - **Partial:** at least one response exists but the analytical-completion rule fails.
-- **Analytically complete:** joined intended-recipient and consent are affirmative; every populated domain/purpose has verdict and visibility; both tags have correctness and visibility; all three missing-label gateways, sufficiency, project-knowledge gateway and taxonomy fit are answered; and every triggered menu, missing-label basis, correctness explanation, visibility explanation, issue type or overall explanation is present.
+- **Analytically complete:** joined intended-recipient and consent are affirmative; every populated domain/purpose has verdict and visibility, with a correctness explanation for Does not fit; both tags have correctness and visibility, with a correctness explanation for No; all three missing-label gateways are answered and every Yes has at least one valid selection; sufficiency, project-knowledge gateway and taxonomy fit are answered; and Partial Fit/No Fit has at least one taxonomy issue type. Optional explanatory text is not required.
 - **Submitted:** `project_review_complete = 2`.
 
-A submitted review should normally be analytically complete because requiredness and branching operate in REDCap, but analysis derives and verifies analytical completeness rather than relying on form status alone. Optional `ack_pref`, project-knowledge note, final comments and quotation permission do not determine it.
+A submitted review should normally be analytically complete because requiredness and branching operate in REDCap, but analysis derives and verifies analytical completeness rather than relying on form status alone. Optional visibility explanations, missing-label bases, `po_suff_explain`, `po_nonpublic_note`, `po_tax_explain`, `ack_pref`, final comments and quotation permission do not determine it. Neither the three stored classification summaries nor the descriptive overview determines analytical completion.
 
 Analysis preparation must:
 
@@ -1875,7 +2054,7 @@ This substantial instrument architecture change is made before recruitment and b
 
 ## Files and status
 
-The dictionary, field/branch/export specifications, participant-formatting audit, display/reference/review sources and synthetic fixture are deterministic repository artefacts. The 87-column synthetic Data Import Tool fixture contains only stored non-checkbox dictionary fields and valid REDCap structural/completion fields; descriptive fields and unexpanded checkbox base variables are deliberately absent, and no participant checkbox or explanation responses are pre-populated. Project-level Survey Queue, repeating-instrument, Stop Action, checkbox requiredness, survey completion, HTML rendering and attachment settings cannot be guaranteed by the CSV and are mandatory live-QA assertions. Candidate 0.3 is technically ready for controlled synthetic import and its taxonomy wording is approved for participant use. It remains unfrozen and is not ready for recruitment until live QA and coordinated participant-document, invitation, protocol, ethics and governance alignment are complete.
+The dictionary, field/branch/export specifications, participant-formatting audit, display/reference/review sources and synthetic fixture are deterministic repository artefacts. The {meta['fixture_columns']}-column synthetic Data Import Tool fixture contains only stored non-checkbox dictionary fields and valid REDCap structural/completion fields; descriptive fields and unexpanded checkbox base variables are deliberately absent, and no participant checkbox or explanation responses are pre-populated. Project-level Survey Queue, repeating-instrument, Stop Action, checkbox requiredness, survey completion, Save & Return Later, HTML rendering and attachment settings cannot be guaranteed by the CSV and are mandatory live-QA assertions. Candidate 0.3 is technically ready for controlled synthetic import and its taxonomy wording is approved for participant use. It remains unfrozen and is not ready for recruitment until live QA and coordinated participant-document, invitation, protocol, ethics and governance alignment are complete.
 """,
         encoding="utf-8",
     )
@@ -1911,16 +2090,25 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 11. Configure a Survey Stop Action for `owner_consent = No`. Expected behaviour: show the decline text, end the survey, collect no `ack_pref` and show no Project Review queue entries. Do not infer or claim automatic deletion, retention or reminder-suppression behaviour.
 12. Add this concise queue-top text:
 
-   > You may review the listed projects in any order and may complete all, some or none. Progress is saved, and this personalised link returns you to the same queue. Short definitions appear inside each review and an optional taxonomy reference is available. Please do not forward this personalised link.
+   > <strong>Project Owner Review</strong><br>Please begin by completing <strong>Participant Information and Consent</strong> below. If you agree to take part, your available project reviews will then appear in this list. You may complete all, some or none, in any order. To pause an unfinished review, use <strong>Save & Return Later</strong> before leaving. You can return using the same personalised link. Please do not forward this link.
 
-13. Configure the Project Review completion text exactly or equivalently as: “Thank you for reviewing this project. Your response has been recorded under the reference [assignment_id]. Please return to your personalised project list to review another project or to finish.” Return the participant to the visible Survey Queue and do not auto-start another review.
-14. Do not use a public survey URL for recruitment. Use only the participant/record-specific Survey Queue URL, which must reopen the same owner queue and preserve progress.
-15. After approval, replace `{PARTICIPANT_INFO_VERSION}` with the approved participant-information version in controlled import data and attach/link the final approved PDF at `participant_info_link`.
-16. After coordinated participant-document alignment, format and attach/link the final taxonomy-reference PDF at `po_taxonomy_ref`; the repository Markdown is the author-approved wording source.
-17. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows across 87 importable columns; descriptive fields and unexpanded checkbox base variables are excluded, and participant explanation fields are blank.
-18. Confirm `assignment_id` is displayed as the survey-read-only **Review reference**, contains no personal identifier, and remains stable when repeat instances are reordered.
-19. Confirm the specific-review withdrawal wording uses `[assignment_id]`; confirm the all-reviews wording requires no visible owner identifier. Configure no production deadline outside the approved Participant Information Sheet.
-20. Test desktop and mobile, then export and verify row structure before any real recruitment.
+13. Configure the Project Review survey settings as required, without treating repository documentation as proof of the live state:
+   - **Save & Return Later: enabled**;
+   - **respondents may return without a separate Return Code: enabled**;
+   - **modification of completed responses: disabled**;
+   - **Automatically continue to next survey: disabled**;
+   - **redirect URL: blank**;
+   - **participant “Repeat the Survey” option: disabled**.
+14. Security implication: possession of the personalised link permits access to an unfinished review. Participants are instructed not to forward it, and direct contact identifiers are not held in the REDCap response project. Verify the live behaviour; do not describe it as confirmed from repository artefacts.
+15. Configure the Project Review completion text exactly or equivalently as: “Thank you for reviewing this project. Your response has been recorded under the reference [assignment_id]. Please return to your personalised project list to review another project or to finish.” Return the participant to the visible Survey Queue and do not auto-start another review.
+16. Confirm the near-submission `po_final_warning` reminder reads: “You may request withdrawal of this submitted review before the deadline stated in the Participant Information Sheet by contacting the study team and quoting the Review reference shown above.” Do not add the all-reviews procedure to the repeat.
+17. Do not use a public survey URL for recruitment. Use only the participant/record-specific Survey Queue URL, which must reopen the same owner queue after Save & Return Later has been selected.
+18. After approval, replace `{PARTICIPANT_INFO_VERSION}` with the approved participant-information version in controlled import data and attach/link the final approved PDF at `participant_info_link`.
+19. After coordinated participant-document alignment, format and attach/link the final taxonomy-reference PDF at `po_taxonomy_ref`; the repository Markdown is the author-approved wording source.
+20. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows across {meta['fixture_columns']} importable columns; the three stored classification summaries are populated on every assignment, descriptive fields and unexpanded checkbox base variables are excluded, and participant explanation fields are blank.
+21. Confirm `assignment_id` is displayed as the survey-read-only **Review reference**, contains no personal identifier, states its specific-withdrawal purpose near submission, and remains stable when repeat instances are reordered.
+22. Confirm the specific-review withdrawal wording uses `[assignment_id]`; confirm the all-reviews wording requires no visible owner identifier. Configure no production deadline outside the approved Participant Information Sheet.
+23. Test desktop and mobile, then export and verify row structure before any real recruitment.
 
 ## Required live-QA assertions
 
@@ -1928,7 +2116,8 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 - OWNER_TEST_002 shows consent once and three separately labelled instances.
 - OWNER_TEST_003 remains usable with 15 separately labelled instances.
 - The custom labels show `[assignment_id] — [project_title]`.
-- The same owner-specific queue link reopens the queue and preserves saved progress.
+- Save & Return Later is enabled; an unfinished review is recoverable through the same owner-specific queue link only after the participant selects Save & Return Later before leaving.
+- Return without a separate Return Code is enabled; completed-response modification and Automatically continue to next survey are disabled; redirect URL is blank.
 - One, some, all or none of the reviews can be completed independently.
 - Completing one review returns to the visible queue and does not auto-start another.
 - Participants cannot create an extra repeat instance and never see a Repeat the Survey control.
@@ -1936,19 +2125,47 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 - Owner-level `ack_pref` appears once only; no acknowledgement field appears inside Project Review.
 - `ack_pref` is optional and has no effect on Survey Queue access, submission or analytical completeness.
 - Empty proposed-label slots are absent, and populated definitions plus separately triggered correctness/visibility explanations behave correctly.
-- Both canonical tag blocks appear on every repeat, including Not applied statuses; each has required correctness, preserved four-level visibility and separate conditional explanations, and neither branches on status.
+- The classification overview follows the Review reference/public project information and precedes detailed judgements; it shows every populated Domain and Purpose once, without ranking, and both tags in fixed order with Applied/Not applied status. The three stored summaries remain survey-hidden and participant-read-only through the overview.
+- Both canonical tag blocks appear on every repeat, including Not applied statuses; each has required correctness, preserved four-level visibility, a required explanation only for No and an optional explanation for non-clear visibility, and neither branches on status.
+- Both tag visibility questions use “Is the basis for this tag status visible in the public project title and datasets listed above?” with the unchanged four-level response scale.
 - Missing menus contain 11 domains, seven purposes and two tags with definitions; no menu contains `Unclear from Register Entry`.
 - Missing checkbox menus appear only for Yes, are required when shown, and enforce at least one selection; Unsure does not reveal a required menu. Treat at-least-one behaviour as a live-QA assertion.
 - The missing-purpose guidance appears directly before its menu; `@MAXCHECKED=2` limits that menu to two selections. Confirm the action tag live, and verify analysis flags fitted-proposal-plus-missing selections above two as a cardinality/taxonomy issue.
 - The missing-tag gateway functions as a summary cross-check after both primary per-tag correctness judgements and is not presented as a replacement assessment.
-- The required project-knowledge gateway appears once; its optional note appears for Yes or Unsure and warns against confidential or non-public detail.
-- In every domain, purpose and tag block, negative/unsure correctness reveals only its correctness explanation and Partly visible/Not visible/Unsure reveals only its visibility explanation; both appear when both triggers apply, while Fits/Yes plus Clearly visible reveals neither.
+- The required project-knowledge gateway appears once; its optional note appears for Yes or Unsure and asks only for general-level context.
+- In every domain, purpose and tag block, explicit disagreement reveals its required correctness explanation; Unsure reveals no correctness explanation; Partly visible/Not visible/Unsure reveals an optional visibility explanation; Fits/Yes plus Clearly visible reveals neither.
+- The repeated sentence “Do not provide confidential or non-public information.” is absent from participant-visible field labels and notes; the central warnings in `po_privacy` and `po_final_warning` remain visible.
+- `po_suff_explain` appears only as optional enrichment for Partial or Insufficient `po_sufficiency` and is not controlled by any proposed-classification fit, correctness or visibility response.
+- Does not fit/No cannot be submitted without the corresponding correctness explanation; Unsure shows no correctness-explanation textbox.
+- Non-clear visibility can be submitted with its optional explanation blank.
+- Missing-label Yes requires at least one selected label but not prose.
+- Partial/Insufficient sufficiency can be submitted with `po_suff_explain` blank.
+- Project-knowledge Yes/Unsure can be submitted with `po_nonpublic_note` blank.
+- Partial Fit/No Fit requires at least one `po_tax_issue` selection but not `po_tax_explain`.
+- Live REDCap Required Field behaviour and the offline analytical-completion derivation agree; repository metadata is not proof that these runtime checks passed.
 - `assignment_id` is visible as Review reference near project information, is included in completion and specific-withdrawal wording, and the REDCap repeat-instance number is not the sole participant reference.
+- The short specific-review withdrawal reminder appears in `po_final_warning` after quotation permission and before submission, is absent from `po_intro`, and refers to the Participant Information Sheet and the Review reference.
 - An untouched pre-created assignment exports as a row with `redcap_repeat_instrument = project_review`, its numbered instance and incomplete status.
 - Each repeat exports separately; owner consent remains on the non-repeating owner row and is blank on repeated rows.
 - The analysis test join by `owner_id` supplies consent to repeated reviews; no direct repeated-row consent filter is used.
 - Export preparation distinguishes offered, untouched, partial, analytically complete and submitted; a submitted row is not accepted as analytically complete unless every condition in the specification is met.
 - PID 9149 contains no participant name, email, affiliation, organisation/contact field, public recruitment URL, real record or real response.
+
+## Required live migration after repository validation
+
+Do not perform these actions from the repository task. In PID 9149 an authorised administrator must:
+
+1. delete the disposable synthetic records;
+2. re-import the regenerated candidate-0.3 dictionary;
+3. confirm that `project_review` remains the repeating instrument;
+4. confirm the custom repeat-instance label `[assignment_id] — [project_title]`;
+5. verify Survey Queue conditions and both Stop Actions;
+6. enable and verify Save & Return Later;
+7. enable return without a separate Return Code;
+8. confirm completed-response modification remains disabled;
+9. import the regenerated synthetic fixture;
+10. rerun the affected desktop/mobile, queue, overview, branching and return-flow live-QA tests;
+11. export and verify all 19 offered assignment rows and their stored summaries.
 
 ## Evidence and exit gate
 
@@ -2050,6 +2267,7 @@ def build_fixture(rows: list[dict[str, str]]) -> None:
                 repeat[f"prop_t{slot:02d}_status"] = (
                     "1" if item["canonical_label"] in applied_tags else "0"
                 )
+            populate_proposed_summaries(repeat)
             output.append(repeat)
     write_csv(IMPORT_FIXTURE, headers, output)
 
@@ -2077,6 +2295,7 @@ def main() -> int:
     check_frozen_sources()
     build_taxonomy_outputs()
     rows, meta = build_dictionary()
+    meta["fixture_columns"] = len(fixture_import_headers(rows))
     write_csv(DICTIONARY, HEADERS, rows)
     build_specs(rows, meta)
     build_formatting_audit(rows)

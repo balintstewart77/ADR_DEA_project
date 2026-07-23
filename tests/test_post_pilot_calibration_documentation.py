@@ -219,6 +219,11 @@ def test_exclusions_and_manifest_entries_remain_coherent():
     by_id = {row["artifact_id"]: row for row in manifest_rows}
     assert by_id["PRO-012"]["version"] == "v0.15"
     assert by_id["PRO-012"]["current_implementation_basis"] == "true"
+    assert by_id["PRO-013"]["version"] == "v0.16"
+    assert by_id["PRO-013"]["current_implementation_basis"] == "false"
+    assert by_id["PRO-015"]["version"] == "v0.17"
+    assert by_id["PRO-015"]["current_implementation_basis"] == "false"
+    assert by_id["PRO-015"]["protocol_status"] == "documentation_review_candidate"
     assert by_id["PRO-008"]["version"] == "v0.14"
     assert by_id["PRO-008"]["current_state"] == "historical_git_only"
     assert by_id["PRO-008"]["current_implementation_basis"] == "false"
@@ -227,7 +232,7 @@ def test_exclusions_and_manifest_entries_remain_coherent():
     assert by_id["PRO-006"]["current_implementation_basis"] == "false"
     assert by_id["PRO-006"]["superseded_by"] == "v0.14"
     assert by_id["PRO-005"]["superseded_by"] == "v0.13"
-    for artifact_id in ("PRO-012", "TRN-008", "TRN-012", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
+    for artifact_id in ("PRO-012", "PRO-013", "PRO-015", "TRN-008", "TRN-012", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
         row = by_id[artifact_id]
         path = Path(row["current_path"])
         assert path.is_file()

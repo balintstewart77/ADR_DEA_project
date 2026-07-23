@@ -37,7 +37,7 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     }
     redcap_sequence = sorted(int(artifact_id.split("-")[1]) for artifact_id in redcap)
     assert redcap_sequence == list(range(redcap_sequence[0], redcap_sequence[-1] + 1))
-    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-082"
+    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-085"
     assert redcap["RED-054"]["version"] == "owner-redcap-candidate-0.2"
     assert redcap["RED-054"]["current_state"] == "historical_candidate"
     assert redcap["RED-054"]["authoritative_status"] == "superseded_unfrozen_candidate"
@@ -49,7 +49,18 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     formatting_audit = redcap["RED-082"]
     assert formatting_audit["version"] == "owner-redcap-candidate-0.3"
     assert formatting_audit["authoritative_status"] == "supporting_current_candidate"
-    assert "17 participant-visible descriptive fields" in formatting_audit["notes"]
+    assert "18 participant-visible descriptive fields" in formatting_audit["notes"]
+    information_v2 = redcap["RED-083"]
+    questionnaire_v2 = redcap["RED-084"]
+    questionnaire_v3 = redcap["RED-085"]
+    assert information_v2["version"] == "project-owner-information-v2"
+    assert questionnaire_v2["version"] == "project-owner-review-questionnaire-v2"
+    assert information_v2["authoritative_status"] == "current_ethics_review_material"
+    assert questionnaire_v2["authoritative_status"] == "superseded_ethics_review_material"
+    assert questionnaire_v3["version"] == "project-owner-review-questionnaire-v3"
+    assert questionnaire_v3["authoritative_status"] == "current_ethics_review_material"
+    assert redcap["RED-066"]["authoritative_status"] == "superseded_ethics_review_material"
+    assert redcap["RED-067"]["authoritative_status"] == "superseded_ethics_review_material"
     invitation = redcap["RED-081"]
     assert invitation["version"] == ""
     assert invitation["current_state"] == "working_candidate"
@@ -60,8 +71,8 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert invitation["authoritative_status"] == "supporting_current_candidate"
     assert invitation["frozen"] == "false"
     assert invitation["registered"] == "false"
-    assert "not approved for participant use" in invitation["notes"]
-    assert "not yet aligned" in invitation["notes"]
+    assert "not approved for participant use" in invitation["notes"].lower()
+    assert "retained byte-for-byte" in invitation["notes"]
     identifier_set = set(identifiers)
     assert not any(row["current_state"] in {"missing", "needs_verification"} for row in manifest_rows)
     assert not any(row["registration_inclusion"] == "undecided" for row in manifest_rows)
@@ -70,15 +81,23 @@ def test_manifest_structure_statuses_and_relationships() -> None:
         for token in filter(None, RELATIONSHIP_SPLIT.split(row["supersedes_or_superseded_by"])):
             assert token in identifier_set, (row["artifact_id"], token)
 
-    current_protocols = [
+    analysis_protocols = [
         row for row in manifest_rows if row["protocol_status"] == "review_candidate"
     ]
-    assert [row["artifact_id"] for row in current_protocols] == ["PRO-012"]
-    protocol = current_protocols[0]
-    assert protocol["version"] == "v0.15"
-    assert protocol["frozen"] == "false"
-    assert protocol["registered"] == "false"
-    assert protocol["official_sample_draw_authorised"] == "false"
+    assert [row["artifact_id"] for row in analysis_protocols] == ["PRO-012"]
+    assert analysis_protocols[0]["current_implementation_basis"] == "true"
+    documentation_protocols = [
+        row for row in manifest_rows
+        if row["protocol_status"] == "documentation_review_candidate"
+    ]
+    assert [row["artifact_id"] for row in documentation_protocols] == ["PRO-015"]
+    documentation_protocol = documentation_protocols[0]
+    assert documentation_protocol["version"] == "v0.17"
+    assert documentation_protocol["current_implementation_basis"] == "false"
+    assert documentation_protocol["frozen"] == "false"
+    assert documentation_protocol["registered"] == "false"
+    assert documentation_protocol["official_sample_draw_authorised"] == "false"
+
 
 
 def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
@@ -157,11 +176,17 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
     assert all(row["access_class"] == "restricted" for row in pilot_rows)
     assert all(row["registration_inclusion"] == "exclude" for row in pilot_rows)
 
-    protocol = next(row for row in manifest_rows if row["artifact_id"] == "PRO-012")
+    protocol = next(row for row in manifest_rows if row["artifact_id"] == "PRO-013")
     protocol_path = ROOT / protocol["current_path"]
     assert protocol_path.is_file()
-    assert protocol["size_bytes"] == str(protocol_path.stat().st_size) == "3223383"
-    assert protocol["sha256"] == "5eff044b4f8d488e84a5b49720d35318add4f29ef53136cb6ce9c2b197409ee7"
+    assert protocol["size_bytes"] == str(protocol_path.stat().st_size)
+    assert protocol["sha256"] == hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+    analysis_basis = next(row for row in manifest_rows if row["artifact_id"] == "PRO-012")
+    assert analysis_basis["version"] == "v0.15"
+    assert analysis_basis["current_state"] == "working_candidate"
+    assert analysis_basis["current_implementation_basis"] == "true"
+    assert analysis_basis["superseded_by"] == ""
+    assert analysis_basis["sha256"] == "5eff044b4f8d488e84a5b49720d35318add4f29ef53136cb6ce9c2b197409ee7"
 
     historical = [row for row in manifest_rows if row["current_state"] == HISTORICAL_STATE]
     assert {row["version"] for row in historical} == {

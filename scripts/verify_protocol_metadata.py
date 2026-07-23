@@ -15,7 +15,7 @@ from typing import Mapping
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = Path("preregistration/preregistration_artifact_manifest.csv")
-DEFAULT_VERSION = "v0.15"
+DEFAULT_VERSION = "v0.17"
 FULL_COMMIT = re.compile(r"[0-9a-f]{40}")
 GIT_OBJECT = re.compile(r"[0-9a-f]{40,64}")
 REQUIRED_PENDING_GATES = (
@@ -75,6 +75,8 @@ def validate_protocol_status(row: Mapping[str, str]) -> list[str]:
         issues.append("official sample draw cannot be authorised before registration")
     if status == "review_candidate" and implementation_basis is not True:
         issues.append("current review candidate must be the current implementation basis")
+    if status == "documentation_review_candidate" and implementation_basis is not False:
+        issues.append("documentation review candidate cannot replace the analysis implementation basis")
     return issues
 
 
@@ -103,32 +105,40 @@ def verify_protocol_entry(
     row = _load_protocol_row(manifest_path.resolve(), version)
     issues = validate_protocol_status(row)
     expected_predecessor = {
-        "v0.15": "v0.14", "v0.14": "v0.13", "v0.13": "v0.12",
+        "v0.17": "v0.16", "v0.16": "v0.15", "v0.15": "v0.14", "v0.14": "v0.13", "v0.13": "v0.12",
         "v0.12": "v0.11", "v0.11": "v0.10",
     }.get(version)
     if expected_predecessor is None:
         raise ProtocolMetadataError(f"No protocol predecessor rule is defined for {version}")
+    expected_status = "documentation_review_candidate" if version in {"v0.16", "v0.17"} else "review_candidate"
     for field, expected in {
-        "protocol_status": "review_candidate",
+        "protocol_status": expected_status,
         "supersedes": expected_predecessor,
         "superseded_by": "",
     }.items():
         if (row.get(field) or "").strip() != expected:
             issues.append(f"{field} must be {expected!r} for {version}")
-    if version == "v0.15":
+    if version in {"v0.15", "v0.16", "v0.17"}:
         notes = (row.get("notes") or "").strip()
         if "candidate 0.7" not in notes:
-            issues.append("v0.15 notes must identify candidate 0.7 as the frozen scratch instrument")
+            issues.append(f"{version} notes must identify candidate 0.7 as the frozen scratch instrument")
         if "live QA complete" not in notes or "frozen formal instrument" not in notes:
-            issues.append("v0.15 notes must record candidate 0.7 live QA and instrument freeze")
+            issues.append(f"{version} notes must record candidate 0.7 live QA and instrument freeze")
         if "candidate 0.6" not in notes or "imported" not in notes or "superseded before final runtime QA" not in notes:
-            issues.append("v0.15 notes must record candidate 0.6 as an imported intermediate superseded before final runtime QA")
+            issues.append(f"{version} notes must record candidate 0.6 as an imported intermediate superseded before final runtime QA")
         if "candidate 0.5" in notes:
-            issues.append("v0.15 notes retain a stale current-candidate 0.5 reference")
+            issues.append(f"{version} notes retain a stale current-candidate 0.5 reference")
         if "closed coder feedback" not in notes:
-            issues.append("v0.15 notes must record closed coder feedback")
+            issues.append(f"{version} notes must record closed coder feedback")
         if "separate project-owner" not in notes or "live QA" not in notes:
-            issues.append("v0.15 notes must record the separate project-owner instrument gate")
+            issues.append(f"{version} notes must record the separate project-owner instrument gate")
+        if version in {"v0.16", "v0.17"}:
+            if "one personalised Survey Queue" not in notes:
+                issues.append(f"{version} notes must record the one-link Project Owner alignment")
+            if "live QA remains pending" not in notes:
+                issues.append(f"{version} notes must not imply Project Owner live QA is complete")
+        if version == "v0.17" and "optional enrichment" not in notes:
+            issues.append("v0.17 notes must record the reduced mandatory free-text rule")
 
     relative = (row.get("current_path") or "").strip()
     posix_path = PurePosixPath(relative)

@@ -6,7 +6,7 @@ Project Owner development candidates. Candidate 0.7 remains the frozen
 scratch-coder version; its historical `project_owner` form was never
 independently live-QA tested for the standalone owner workflow.
 
-`owner-redcap-candidate-0.3` is the current separate 104-field, two-instrument
+`owner-redcap-candidate-0.3` is the current separate 108-field, two-instrument
 Classic project candidate. It uses one pseudonymous record per owner, a
 non-repeating Owner Consent survey, and a repeating Project Review survey with
 one administrator-created instance per owner–project assignment. One
@@ -37,12 +37,24 @@ Continuing synthetic live QA produced a coordinated participant-facing and
 branching correction: the review opening is concise and semantically formatted,
 the duplicate taxonomy-fit textbox is removed, and all eight proposed-label
 blocks now separate actual-project correctness explanations from public-entry
-visibility explanations. The generated formatting audit records every one of
-the 17 participant-visible descriptive fields. The revised dictionary must be
-re-imported before live QA continues.
-Live QA and coordinated Participant Information, Questionnaire,
-invitation, protocol, ethics and governance alignment remain required before
-recruitment.
+visibility explanations. REDCAP-018 adds a contextual read-only classification
+overview backed by three survey-hidden deterministic summary fields, accurate
+Save & Return Later instructions and required live survey settings, and a short
+withdrawal reminder near submission. The generated formatting audit records
+all 18 participant-visible descriptive fields. The revised dictionary and
+90-column synthetic fixture must be re-imported before live QA continues.
+REDCAP-019 subsequently removes 20 repeated per-question privacy sentences and
+aligns both tag visibility stems to the unchanged four-level scale. The central
+privacy warnings survive unchanged; field count and structure remain 108.
+The Participant Information and Consent v2 and Project Owner Review
+Questionnaire v3 are the current participant-document candidates for ethics/DPO
+review. Questionnaire v3 retains the one-link workflow and documents REDCAP-020:
+required prose only for explicit classification disagreement, with other
+conditional explanations optional. Protocol candidate v0.17 records the same
+analytical-completion rule and closes the withdrawal-wording deviation. Archived
+Questionnaire v2 and protocol v0.16 remain byte-identical. The invitation email was reviewed and retained
+byte-for-byte. Controlled REDCap live QA, ethics/governance review and later
+coordinated finalisation remain required before recruitment.
 
 `owner-redcap-candidate-0.2` remains byte-for-byte unchanged as an unfrozen,
 never-imported historical candidate. Its four-instrument contact/assignment
@@ -52,15 +64,13 @@ architecture was superseded before recruitment by candidate 0.3.
 historical candidate. It used a per-assignment participation acknowledgement
 and was superseded by candidate 0.2 before live QA.
 
-The existing participant-facing Word files remain unchanged and are not yet
-aligned to candidate 0.3. Participant-facing version identifiers are separate
-from the REDCap candidate:
-`project-owner-information-v1` identifies Project Owner Participant
-Information and Consent — Version 1, while
-`project-owner-review-questionnaire-v1` identifies Project Owner Review
-Questionnaire — Version 1. The Word files are retained byte-for-byte under
-`participant_materials/`; candidate 0.3 uses an explicit pending-approval
-participant-information token until the later coordinated alignment task.
+Participant-facing document versions remain separate from the REDCap candidate.
+`Project_Owner_Participant_Information_and_Consent_v2.docx` and
+`Project_Owner_Review_Questionnaire_v3.docx` are the current ethics/DPO review
+copies. Their v1 predecessors remain byte-for-byte under
+`participant_materials/`. Candidate 0.3 continues to use its explicit
+pre-production participant-information token until the controlled live project
+is configured and the approved final document version is entered.
 
 Candidate 0.7 passed repository validation and completed live REDCap QA on 22
 July 2026. It is frozen for preregistration and subsequent formal scratch

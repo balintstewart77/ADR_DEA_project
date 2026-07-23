@@ -20,56 +20,59 @@ taxonomy_ver,project_review,project_review,assignment_or_proposal,Blank on the o
 proposal_output_sha256,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 review_instr_ver,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 taxonomy_display_ver,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_domain_summary,project_review,project_review,display_support,"Deterministic display-support derivative of the existing proposed labels/statuses; not a participant response, analytical outcome or analytical-completion requirement."
+prop_purpose_summary,project_review,project_review,display_support,"Deterministic display-support derivative of the existing proposed labels/statuses; not a participant response, analytical outcome or analytical-completion requirement."
+prop_tag_summary,project_review,project_review,display_support,"Deterministic display-support derivative of the existing proposed labels/statuses; not a participant response, analytical outcome or analytical-completion requirement."
 prop_d01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_d01_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 po_d01_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_d01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_d01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_d01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_d01_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_d01_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 prop_d02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_d02_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 po_d02_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_d02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_d02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_d02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_d02_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_d02_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 prop_d03_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_d03_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 po_d03_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_d03_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_d03_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_d03_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_d03_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_d03_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 prop_d04_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_d04_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 po_d04_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_d04_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_d04_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_d04_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_d04_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_d04_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 prop_p01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_p01_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 po_p01_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_p01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_p01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_p01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_p01_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_p01_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 prop_p02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_p02_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 po_p02_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_p02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_p02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_p02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_p02_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_p02_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 prop_t01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_t01_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_t01_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
 po_t01_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_t01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_t01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_t01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_t01_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_t01_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 prop_t02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_t02_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
 prop_t02_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
 po_t02_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_t02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement/uncertainty explanation; required for Does not fit/Unsure verdicts or No/Unsure tag correctness; blank on the owner row.
+po_t02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; required only for Does not fit verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row.
 po_t02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
-po_t02_vis_explain,project_review,project_review,owner_response,Public-register evidence limitation/uncertainty explanation; required for Partly visible/Not visible/Unsure responses; blank on the owner row.
+po_t02_vis_explain,project_review,project_review,owner_response,"Optional public-register evidence limitation/uncertainty explanation, shown for Partly visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
 po_miss_domain,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_miss_domains,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_miss_domain_basis,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.

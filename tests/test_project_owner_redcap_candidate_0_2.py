@@ -290,16 +290,51 @@ def test_participant_documents_are_version_1_and_manifestable_without_exact_case
             )
         )
     }
-    for artifact_id, path, version in (
-        ("RED-066", information, builder.CONSENT_INFO_VERSION),
-        ("RED-067", questionnaire, builder.QUESTIONNAIRE_VERSION),
-    ):
+    archived = (
+        (
+            "RED-066",
+            information,
+            builder.CONSENT_INFO_VERSION,
+            "Project_Owner_Participant_Information_and_consent_v1.docx",
+            "912e4c05e5b0deae30f3024d9ca0c60eef5d91a2b43169c7df3dc631c79c1df7",
+            "project-owner-information-v2",
+        ),
+        (
+            "RED-067",
+            questionnaire,
+            builder.QUESTIONNAIRE_VERSION,
+            "Project_Owner_Review_questionnaire_v1.docx",
+            "a02aabe2d953d568b0abebe23531de86ad694b4d227e7b74b35bf53e65e2e154",
+            "project-owner-review-questionnaire-v2; project-owner-review-questionnaire-v3",
+        ),
+    )
+    for artifact_id, path, version, filename, protected_sha256, superseded_by in archived:
         row = manifest[artifact_id]
+        assert row["artifact_id"] == artifact_id
+        assert row["filename"] == filename
+        assert Path(row["current_path"]).name == filename
         assert row["version"] == version
         assert row["current_state"] == "working_candidate"
-        assert row["authoritative_status"] == "current_ethics_review_material"
-        assert row["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest()
+        assert row["authoritative_status"] == "superseded_ethics_review_material"
+        assert row["superseded_by"] == superseded_by
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == protected_sha256
+        assert row["sha256"] == protected_sha256
         assert int(row["size_bytes"]) == path.stat().st_size
+
+    information_v2 = manifest["RED-083"]
+    assert information_v2["filename"] == "Project_Owner_Participant_Information_and_Consent_v2.docx"
+    assert information_v2["authoritative_status"] == "current_ethics_review_material"
+    assert information_v2["supersedes"] == "project-owner-information-v1"
+
+    questionnaire_v2 = manifest["RED-084"]
+    questionnaire_v3 = manifest["RED-085"]
+    assert questionnaire_v2["filename"] == "Project_Owner_Review_Questionnaire_v2.docx"
+    assert questionnaire_v2["authoritative_status"] == "superseded_ethics_review_material"
+    assert questionnaire_v2["supersedes"] == "project-owner-review-questionnaire-v1"
+    assert questionnaire_v2["superseded_by"] == "project-owner-review-questionnaire-v3"
+    assert questionnaire_v3["filename"] == "Project_Owner_Review_Questionnaire_v3.docx"
+    assert questionnaire_v3["authoritative_status"] == "current_ethics_review_material"
+    assert questionnaire_v3["supersedes"] == "project-owner-review-questionnaire-v2"
 
 
 def test_protocol_v0_15_is_byte_identical() -> None:

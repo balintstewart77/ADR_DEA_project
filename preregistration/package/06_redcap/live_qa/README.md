@@ -17,9 +17,32 @@ Record ID, response export, live URL, project identifier, or credential.
   unexpanded checkbox base variables are excluded, while no participant
   checkbox or explanation responses are pre-populated. Continuing live QA also
   led to the REDCAP-016 Project Review wording/formatting and explanation-field
-  correction; the regenerated 104-field dictionary must be re-imported before
-  testing resumes. Controlled live QA remains required before freeze or
-  recruitment.
+  correction. REDCAP-018 adds three importable, deterministic classification-
+  summary fields and one non-importable descriptive overview, bringing the
+  current fixture to 90 columns and dictionary to 108 fields. All 19 repeat rows
+  contain summaries matching their proposal slots and both tag statuses; owner
+  rows remain structurally valid. The regenerated dictionary and fixture must
+  be re-imported before testing resumes. Controlled live QA remains required
+  before freeze or recruitment.
+
+For that controlled retry, delete disposable synthetic records, re-import the
+dictionary, reconfirm `project_review` as the only repeating instrument and its
+custom label, verify Survey Queue conditions and Stop Actions, enable Save &
+Return Later and return without a separate Return Code, keep completed-response
+modification and participant-created repeats disabled, import the regenerated
+fixture, rerun affected desktop/mobile checks, and export all 19 offered
+assignment rows. These are required live steps; this repository record does not
+claim they are already configured in PID 9149.
+
+After the REDCAP-020 dictionary re-import, live QA must also verify that Does not
+fit/No requires its correctness explanation; Unsure displays no correctness
+explanation and can submit without one; non-clear visibility permits blank
+optional prose; missing-label Yes requires a valid selection but not prose;
+Partial/Insufficient sufficiency permits a blank explanation; project-knowledge
+Yes/Unsure permits a blank note; and Partial Fit/No Fit requires an issue type
+but not a taxonomy explanation. Confirm that live REDCap requiredness and the
+repository analytical-completion derivation agree. None of these checks is
+recorded as passed until directly retested in PID 9149.
 - `redcap_live_qa_synthetic_assignments_candidate_0.6.csv` is retained unchanged
   as historical evidence of the intermediate candidate-0.6 live test. Candidate
   0.6 was imported and partially inspected, then superseded before final runtime
