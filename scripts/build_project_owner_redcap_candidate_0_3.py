@@ -1774,7 +1774,7 @@ This substantial instrument architecture change is made before recruitment and b
 
 ## Files and status
 
-The dictionary, field/branch/export specifications, display/reference/review sources and synthetic fixture are deterministic repository artefacts. Project-level Survey Queue, repeating-instrument, Stop Action, checkbox requiredness, survey completion and attachment settings cannot be guaranteed by the CSV and are mandatory live-QA assertions. Candidate 0.3 is technically ready for controlled synthetic import and its taxonomy wording is approved for participant use. It remains unfrozen and is not ready for recruitment until live QA and coordinated participant-document, invitation, protocol, ethics and governance alignment are complete.
+The dictionary, field/branch/export specifications, display/reference/review sources and synthetic fixture are deterministic repository artefacts. The 80-column synthetic Data Import Tool fixture contains only stored non-checkbox dictionary fields and valid REDCap structural/completion fields; descriptive fields and unexpanded checkbox base variables are deliberately absent, and no participant checkbox responses are pre-populated. Project-level Survey Queue, repeating-instrument, Stop Action, checkbox requiredness, survey completion and attachment settings cannot be guaranteed by the CSV and are mandatory live-QA assertions. Candidate 0.3 is technically ready for controlled synthetic import and its taxonomy wording is approved for participant use. It remains unfrozen and is not ready for recruitment until live QA and coordinated participant-document, invitation, protocol, ethics and governance alignment are complete.
 """,
         encoding="utf-8",
     )
@@ -1816,7 +1816,7 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 14. Do not use a public survey URL for recruitment. Use only the participant/record-specific Survey Queue URL, which must reopen the same owner queue and preserve progress.
 15. After approval, replace `{PARTICIPANT_INFO_VERSION}` with the approved participant-information version in controlled import data and attach/link the final approved PDF at `participant_info_link`.
 16. After coordinated participant-document alignment, format and attach/link the final taxonomy-reference PDF at `po_taxonomy_ref`; the repository Markdown is the author-approved wording source.
-17. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows.
+17. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows across 80 importable columns; descriptive fields and unexpanded checkbox base variables are excluded.
 18. Confirm `assignment_id` is displayed as the survey-read-only **Review reference**, contains no personal identifier, and remains stable when repeat instances are reordered.
 19. Confirm the specific-review withdrawal wording uses `[assignment_id]`; confirm the all-reviews wording requires no visible owner identifier. Configure no production deadline outside the approved Participant Information Sheet.
 20. Test desktop and mobile, then export and verify row structure before any real recruitment.
@@ -1857,21 +1857,29 @@ Archive the post-import live dictionary, configuration screenshots/notes, deskto
     )
 
 
+def fixture_import_headers(rows: list[dict[str, str]]) -> list[str]:
+    importable_names = [
+        row["Variable / Field Name"]
+        for row in rows
+        if row["Field Type"] not in {"descriptive", "checkbox"}
+    ]
+    return [
+        "owner_id",
+        "redcap_repeat_instrument",
+        "redcap_repeat_instance",
+        *[name for name in importable_names if name != "owner_id"],
+        "owner_consent_complete",
+        "project_review_complete",
+    ]
+
+
 def build_fixture(rows: list[dict[str, str]]) -> None:
     display = display_source()
     menu = {
         layer: [item for item in display["labels"] if item["owner_layer"] == layer]
         for layer in LAYER_NAMES
     }
-    field_names = [row["Variable / Field Name"] for row in rows]
-    headers = [
-        "owner_id",
-        "redcap_repeat_instrument",
-        "redcap_repeat_instance",
-        *[name for name in field_names if name != "owner_id"],
-        "owner_consent_complete",
-        "project_review_complete",
-    ]
+    headers = fixture_import_headers(rows)
     output: list[dict[str, object]] = []
     owners = (("OWNER_TEST_001", 1), ("OWNER_TEST_002", 3), ("OWNER_TEST_003", 15))
     project_number = 0

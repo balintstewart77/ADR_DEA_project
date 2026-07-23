@@ -581,12 +581,76 @@ def test_synthetic_long_fixture_owner_assignment_counts_and_instances() -> None:
         "owners": 3,
         "assignments": 19,
         "rows": 22,
+        "columns": 80,
         "assignments_by_owner": {
             "OWNER_TEST_001": 1,
             "OWNER_TEST_002": 3,
             "OWNER_TEST_003": 15,
         },
     }
+
+
+def test_synthetic_fixture_contains_only_importable_redcap_columns() -> None:
+    dictionary_rows = rows()
+    dictionary_by_name = {
+        row["Variable / Field Name"]: row for row in dictionary_rows
+    }
+    with builder.IMPORT_FIXTURE.open(encoding="utf-8-sig", newline="") as handle:
+        header = next(csv.reader(handle))
+    assert header == builder.fixture_import_headers(dictionary_rows)
+    assert len(header) == len(set(header)) == 80
+
+    descriptive = {
+        name for name, row in dictionary_by_name.items()
+        if row["Field Type"] == "descriptive"
+    }
+    checkbox_bases = {
+        name for name, row in dictionary_by_name.items()
+        if row["Field Type"] == "checkbox"
+    }
+    assert not descriptive.intersection(header)
+    assert not checkbox_bases.intersection(header)
+    assert not any("___" in column for column in header)
+
+    structural = {
+        "redcap_repeat_instrument",
+        "redcap_repeat_instance",
+        "owner_consent_complete",
+        "project_review_complete",
+    }
+    for column in header:
+        if column in structural:
+            continue
+        assert column in dictionary_by_name
+        assert dictionary_by_name[column]["Field Type"] not in {
+            "descriptive",
+            "checkbox",
+        }
+
+
+def test_fixture_column_validation_resolves_checkbox_expansions() -> None:
+    dictionary_by_name = by_name()
+    assert validator.fixture_column_error(
+        "po_miss_domains___1", dictionary_by_name
+    ) is None
+    assert validator.fixture_column_error(
+        "po_miss_domains___999", dictionary_by_name
+    ) == "expanded checkbox column has an invalid option code: po_miss_domains___999"
+    assert validator.fixture_column_error(
+        "not_a_checkbox___1", dictionary_by_name
+    ) == "expanded checkbox column has no checkbox base field: not_a_checkbox___1"
+    assert validator.fixture_column_error(
+        "po_miss_domains", dictionary_by_name
+    ) == "checkbox base variable is not importable: po_miss_domains"
+    assert validator.fixture_column_error(
+        "po_intro", dictionary_by_name
+    ) == "descriptive field is not importable: po_intro"
+
+
+def test_fixture_correction_preserves_generated_dictionary_bytes() -> None:
+    assert hashlib.sha256(builder.DICTIONARY.read_bytes()).hexdigest() == (
+        "2ba744b07c7f0f1c171aad88b95f37b39d6eea815f861edcdf445f00bce0c3fa"
+    )
 
 
 def test_synthetic_fixture_has_no_prefilled_responses_or_personal_data() -> None:

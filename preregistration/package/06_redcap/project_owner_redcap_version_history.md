@@ -77,6 +77,14 @@
   Type is now blank. Candidate validation now enforces the target instance's
   lower-case validation-type allow-list. No response code, field structure,
   participant-facing meaning or analytical rule changed.
+- Corrects the subsequent PID 9149 synthetic Data Import Tool rejection caused
+  by non-storage columns. The 80-column fixture now excludes all descriptive
+  fields and the four unexpanded checkbox base variables; it contains no
+  expanded checkbox columns because the pristine QA fixture pre-populates no
+  participant checkbox responses. Assignment metadata, proposed labels,
+  version/provenance values, repeat instrument/instance values, three owners,
+  19 assignments and 22 rows are unchanged. The 97-field REDCap dictionary is
+  byte-identical to the pre-correction dictionary.
 - Adds participant guidance beside the missing-purpose menu and uses the
   repository-validated `@MAXCHECKED=2` action tag. Analysis derives the implied
   corrected-purpose count and treats counts above two as a cardinality/taxonomy

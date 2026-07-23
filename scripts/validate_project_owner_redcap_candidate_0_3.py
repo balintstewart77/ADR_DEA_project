@@ -997,6 +997,40 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
     }
 
 
+FIXTURE_STRUCTURAL_FIELDS = {
+    "redcap_repeat_instrument",
+    "redcap_repeat_instance",
+    "owner_consent_complete",
+    "project_review_complete",
+}
+
+
+def fixture_column_error(
+    column: str, dictionary_by_name: Mapping[str, Mapping[str, str]]
+) -> str | None:
+    if column in FIXTURE_STRUCTURAL_FIELDS:
+        return None
+    dictionary_field = dictionary_by_name.get(column)
+    if dictionary_field is not None:
+        if dictionary_field["Field Type"] == "descriptive":
+            return f"descriptive field is not importable: {column}"
+        if dictionary_field["Field Type"] == "checkbox":
+            return f"checkbox base variable is not importable: {column}"
+        return None
+    expanded_checkbox = re.fullmatch(r"([a-z][a-z0-9_]*)___(.+)", column)
+    if expanded_checkbox:
+        base_name, option_code = expanded_checkbox.groups()
+        base_field = dictionary_by_name.get(base_name)
+        if base_field is None or base_field["Field Type"] != "checkbox":
+            return f"expanded checkbox column has no checkbox base field: {column}"
+        if option_code not in parse_choices(
+            base_field["Choices, Calculations, OR Slider Labels"]
+        ):
+            return f"expanded checkbox column has an invalid option code: {column}"
+        return None
+    return f"fixture column is not an importable REDCap field: {column}"
+
+
 def validate_fixture(path: Path = builder.IMPORT_FIXTURE) -> dict[str, object]:
     dictionary = load_dictionary()
     by = _dictionary_by_name(dictionary)
@@ -1011,6 +1045,7 @@ def validate_fixture(path: Path = builder.IMPORT_FIXTURE) -> dict[str, object]:
             row["Variable / Field Name"]
             for row in dictionary
             if row["Variable / Field Name"] != "owner_id"
+            and row["Field Type"] not in {"descriptive", "checkbox"}
         ],
         "owner_consent_complete",
         "project_review_complete",
@@ -1019,6 +1054,26 @@ def validate_fixture(path: Path = builder.IMPORT_FIXTURE) -> dict[str, object]:
         header = next(csv.reader(handle))
     if header != expected_header:
         errors.append("synthetic import header differs from long-format contract")
+    if len(header) != len(set(header)):
+        errors.append("synthetic import header contains duplicate columns")
+    for column in header:
+        column_error = fixture_column_error(column, by)
+        if column_error:
+            errors.append(column_error)
+    descriptive_names = {
+        row["Variable / Field Name"]
+        for row in dictionary
+        if row["Field Type"] == "descriptive"
+    }
+    checkbox_names = {
+        row["Variable / Field Name"]
+        for row in dictionary
+        if row["Field Type"] == "checkbox"
+    }
+    if descriptive_names & set(header):
+        errors.append("synthetic import header contains descriptive fields")
+    if checkbox_names & set(header):
+        errors.append("synthetic import header contains checkbox base variables")
     raw = path.read_text(encoding="utf-8")
     if EMAIL.search(raw):
         errors.append("synthetic fixture contains an email address")
@@ -1131,6 +1186,7 @@ def validate_fixture(path: Path = builder.IMPORT_FIXTURE) -> dict[str, object]:
         "owners": len(owner_rows),
         "assignments": len(repeat_rows),
         "rows": len(rows),
+        "columns": len(header),
         "assignments_by_owner": expected,
     }
 

@@ -34,7 +34,7 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 14. Do not use a public survey URL for recruitment. Use only the participant/record-specific Survey Queue URL, which must reopen the same owner queue and preserve progress.
 15. After approval, replace `project-owner-information-pending-approval-candidate-0.3` with the approved participant-information version in controlled import data and attach/link the final approved PDF at `participant_info_link`.
 16. After coordinated participant-document alignment, format and attach/link the final taxonomy-reference PDF at `po_taxonomy_ref`; the repository Markdown is the author-approved wording source.
-17. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows.
+17. Load only `live_qa/project_owner_synthetic_import_candidate_0.3.csv`. It contains three owner rows and 19 pre-created Project Review repeat rows across 80 importable columns; descriptive fields and unexpanded checkbox base variables are excluded.
 18. Confirm `assignment_id` is displayed as the survey-read-only **Review reference**, contains no personal identifier, and remains stable when repeat instances are reordered.
 19. Confirm the specific-review withdrawal wording uses `[assignment_id]`; confirm the all-reviews wording requires no visible owner identifier. Configure no production deadline outside the approved Participant Information Sheet.
 20. Test desktop and mobile, then export and verify row structure before any real recruitment.
