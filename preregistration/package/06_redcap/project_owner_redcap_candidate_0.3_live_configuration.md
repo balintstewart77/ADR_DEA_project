@@ -74,12 +74,15 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 - In every domain, purpose and tag block, explicit disagreement reveals its required correctness explanation; Unsure reveals no correctness explanation; Partly visible/Not visible/Unsure reveals an optional visibility explanation; Fits/Yes plus Clearly visible reveals neither.
 - The repeated sentence “Do not provide confidential or non-public information.” is absent from participant-visible field labels and notes; the central warnings in `po_privacy` and `po_final_warning` remain visible.
 - `po_suff_explain` appears only as optional enrichment for Partial or Insufficient `po_sufficiency` and is not controlled by any proposed-classification fit, correctness or visibility response.
+- Changing a parent response hides its former child field without necessarily deleting the stored value. Live QA must verify the display transition; analysis preserves the raw value but ignores it under the final inapplicable state.
 - Does not fit/No cannot be submitted without the corresponding correctness explanation; Unsure shows no correctness-explanation textbox.
 - Non-clear visibility can be submitted with its optional explanation blank.
 - Missing-label Yes requires at least one selected label but not prose.
 - Partial/Insufficient sufficiency can be submitted with `po_suff_explain` blank.
 - Project-knowledge Yes/Unsure can be submitted with `po_nonpublic_note` blank.
 - Partial Fit/No Fit requires at least one `po_tax_issue` selection but not `po_tax_explain`.
+- Exercise final-state transitions: Does not fit→Unsure, missing-label Yes→No/Unsure, Partial/No Fit→Fit, non-clear→Clearly visible and project-knowledge Yes/Unsure→No. Confirm hidden values do not enter completion or derived analysis variables.
+- Confirm blank optional prose is treated as not provided, never as a structured negative response.
 - Live REDCap Required Field behaviour and the offline analytical-completion derivation agree; repository metadata is not proof that these runtime checks passed.
 - `assignment_id` is visible as Review reference near project information, is included in completion and specific-withdrawal wording, and the REDCap repeat-instance number is not the sole participant reference.
 - The short specific-review withdrawal reminder appears in `po_final_warning` after quotation permission and before submission, is absent from `po_intro`, and refers to the Participant Information Sheet and the Review reference.
@@ -102,8 +105,8 @@ Do not perform these actions from the repository task. In PID 9149 an authorised
 7. enable return without a separate Return Code;
 8. confirm completed-response modification remains disabled;
 9. import the regenerated synthetic fixture;
-10. rerun the affected desktop/mobile, queue, overview, branching and return-flow live-QA tests;
-11. export and verify all 19 offered assignment rows and their stored summaries.
+10. rerun the affected desktop/mobile, queue, overview, branching, final-state transition and return-flow live-QA tests;
+11. export and verify all 19 offered assignment rows, their stored summaries and the separation of raw retained values from final-applicable analysis values.
 
 ## Evidence and exit gate
 

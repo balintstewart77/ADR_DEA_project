@@ -6,8 +6,10 @@ import io
 import json
 import re
 import sys
+import zipfile
 from collections import Counter
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 import pytest
 import yaml
@@ -285,8 +287,10 @@ def test_both_tag_statuses_are_always_reviewed_with_common_definitions() -> None
         assert item["canonical_label"] in correct["Field Label"]
         assert "actual project" in correct["Field Label"]
         assert "public project" not in correct["Field Label"]
-        assert visible_explain["Field Label"].startswith("Optional:")
-        assert "public project title and listed datasets" in visible_explain["Field Label"]
+        assert visible_explain["Field Label"] == (
+            "Optional: Please briefly explain what about this tag status is only partly visible, "
+            "not visible or unclear in the public project title and listed datasets."
+        )
         assert f"[prop_{stem}_def]" in by[f"po_{stem}_display"]["Field Label"]
 
 
@@ -915,7 +919,7 @@ def test_fixture_column_validation_resolves_checkbox_expansions() -> None:
 
 def test_generated_dictionary_matches_current_canonical_bytes() -> None:
     assert hashlib.sha256(builder.DICTIONARY.read_bytes()).hexdigest() == (
-        "85e9d4e7795597cf8dc936e57ba177d32a9283271cd8e805c90e3acb7a869c3c"
+        "97219123588878b7a086a406d08a24e66966b7b4e38e740117335a429d2e011b"
     )
 
 
@@ -1018,6 +1022,11 @@ def test_requiredness_audit_covers_every_participant_free_text_field() -> None:
     }
     assert all(field_spec[name]["analytical_completion"] == "required_when_displayed_for_explicit_disagreement" for name in correctness)
     assert all(field_spec[name]["analytical_completion"] == "excluded_optional_enrichment" for name in optional)
+    assert all(field_spec[name]["analysis_applicability"].startswith("only_if_final_") for name in correctness)
+    assert all(
+        field_spec[name]["analysis_applicability"].startswith("only_if_final_")
+        for name in optional - {"po_other_comment"}
+    )
 
 
 def test_analytical_completion_burden_reduction_cases() -> None:
@@ -1087,6 +1096,114 @@ def test_analytical_completion_burden_reduction_cases() -> None:
     tag_no["po_t01_correct"] = "0"
     tag_no["po_t01_correct_explain"] = ""
     assert "po_t01_correct_explain" in validator.analytical_completion_missing(tag_no, owner)
+
+
+def test_final_branching_state_masks_stale_hidden_values_without_mutating_raw() -> None:
+    owner, base = complete_owner_review()
+
+    cases = []
+
+    changed_fit = dict(base)
+    changed_fit.update({"po_d01_fit": "3", "po_d01_correct_explain": "Retained disagreement text"})
+    cases.append((changed_fit, {"po_d01_correct_explain"}))
+
+    for final_gateway in ("0", "2"):
+        changed_missing = dict(base)
+        changed_missing.update({
+            "po_miss_domain": final_gateway,
+            "po_miss_domains___1": "1",
+            "po_miss_domain_basis": "Retained omission text",
+        })
+        cases.append((changed_missing, {"po_miss_domains___1", "po_miss_domain_basis"}))
+
+    changed_taxonomy = dict(base)
+    changed_taxonomy.update({
+        "po_taxonomy_fit": "1",
+        "po_tax_issue___1": "1",
+        "po_tax_explain": "Retained taxonomy text",
+    })
+    cases.append((changed_taxonomy, {"po_tax_issue___1", "po_tax_explain"}))
+
+    changed_visibility = dict(base)
+    changed_visibility.update({"po_d01_vis": "2", "po_d01_vis_explain": "Retained visibility text"})
+    cases.append((changed_visibility, {"po_d01_vis_explain"}))
+
+    for final_gateway in ("0",):
+        changed_knowledge = dict(base)
+        changed_knowledge.update({"po_nonpublic": final_gateway, "po_nonpublic_note": "Retained project context"})
+        cases.append((changed_knowledge, {"po_nonpublic_note"}))
+
+    for raw, expected_ignored in cases:
+        before = dict(raw)
+        applicable = validator.final_applicable_review_values(raw)
+        ignored = set(validator.ignored_hidden_response_fields(raw))
+        assert raw == before
+        assert expected_ignored <= ignored
+        assert all(applicable.get(name, "") == "" for name in expected_ignored)
+        assert validator.analytical_completion_missing(raw, owner) == []
+
+
+def test_long_export_preserves_stale_raw_values_and_exposes_final_applicable_view() -> None:
+    owner, review = complete_owner_review()
+    review.update({
+        "po_miss_tag": "0",
+        "po_miss_tags___1": "1",
+        "po_miss_tag_basis": "Retained hidden detail",
+    })
+    joined = validator.prepare_long_export([owner, review])[1][0]
+    assert joined["po_miss_tags___1"] == "1"
+    assert joined["po_miss_tag_basis"] == "Retained hidden detail"
+    assert joined["analysis_values"]["po_miss_tags___1"] == ""
+    assert joined["analysis_values"]["po_miss_tag_basis"] == ""
+    assert {"po_miss_tags___1", "po_miss_tag_basis"} <= set(joined["ignored_hidden_response_fields"])
+    assert joined["analytically_complete"] is True
+
+
+def test_optional_text_missingness_and_diagnostic_calibration_are_documented() -> None:
+    spec = builder.SPEC.read_text(encoding="utf-8")
+    branch = yaml.safe_load(builder.BRANCH_SPEC.read_text(encoding="utf-8"))
+    completion = branch["analytical_completion"]
+    assert "Blank optional prose means not provided" in completion["optional_text_missingness"]
+    assert "Structured responses are primary outcomes" in completion["optional_text_missingness"]
+    assert "number of comments" in completion["qualitative_reporting"]
+    assert "prevalence estimates" in completion["qualitative_reporting"]
+    assert "final parent responses" in completion["final_branching_state_rule"]
+    assert "do not automatically establish a definitive error source" in spec
+    assert "Owner disagreement is evidence for adjudication" in spec
+    assert "attribution to public versus non-public evidence may remain unresolved" in spec
+
+
+def test_questionnaire_optionality_annotation_does_not_duplicate_redcap_marker() -> None:
+    questionnaire = (
+        builder.PACKAGE
+        / "participant_materials"
+        / "Project_Owner_Review_Questionnaire_v3.docx"
+    )
+    word_tag = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    with zipfile.ZipFile(questionnaire) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    paragraphs = [
+        "".join(node.text or "" for node in paragraph.iter(word_tag + "t"))
+        for paragraph in root.iter(word_tag + "p")
+    ]
+    mapping = {
+        "Q2d.": "po_d01_vis_explain",
+        "Q3d.": "po_p01_vis_explain",
+        "Q4d.": "po_t01_vis_explain",
+        "Q5d.": "po_t02_vis_explain",
+    }
+    dictionary = by_name()
+    for question, variable in mapping.items():
+        paragraph = next(text for text in paragraphs if text.startswith(question))
+        documented_label = re.sub(r"\s+\[Optional\]$", "", paragraph[len(question):].strip())
+        assert documented_label == dictionary[variable]["Field Label"]
+        assert dictionary[variable]["Field Label"].count("Optional:") == 1
+        assert "[Optional]" not in dictionary[variable]["Field Label"]
+        assert "[Optional]" not in dictionary[variable]["Field Note"]
+    convention = next(text for text in paragraphs if text.startswith("Text in [square brackets]"))
+    assert "documentation annotations" in convention
+    assert "not displayed by REDCap" in convention
+
 
 def test_expected_export_explicitly_requires_owner_join() -> None:
     export = list(

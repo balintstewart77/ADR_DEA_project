@@ -187,6 +187,14 @@ analytical_completion:
   - po_classification_overview
   submitted_is_separate: project_review_complete = 2 is submission status, not the
     analytical-completion definition
+  final_branching_state_rule: Derive completion and analysis variables from final
+    parent responses. Preserve raw exported values, but ignore any retained value
+    whose field is hidden under the final branching state.
+  optional_text_missingness: Blank optional prose means not provided; it does not
+    mean no issue, no missing information, no taxonomy problem or no reliance on project
+    knowledge. Structured responses are primary outcomes.
+  qualitative_reporting: Report the number of comments contributing to each qualitative
+    theme or quotation; do not interpret optional-comment themes as prevalence estimates.
 participant_reference:
   field: assignment_id
   display_label: Review reference

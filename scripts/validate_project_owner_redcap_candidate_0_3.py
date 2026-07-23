@@ -835,7 +835,11 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
                 errors.append(f"slot correctness explanation wording differs: {correctness_explain}")
             if any(term in correct_text.lower() for term in ("public project", "public register", "register sufficiency", "visible")):
                 errors.append(f"slot correctness explanation conflates public visibility: {correctness_explain}")
-            if not vis_text.startswith("Optional:") or "public project title and listed datasets" not in vis_text:
+            expected_visibility_label = (
+                f"Optional: Please briefly explain what about this {expected_type} is only partly visible, "
+                "not visible or unclear in the public project title and listed datasets."
+            )
+            if vis_text != expected_visibility_label:
                 errors.append(f"slot visibility explanation wording differs: {visibility_explain}")
             if "does not fit the actual project" in vis_text:
                 errors.append(f"slot visibility explanation conflates correctness: {visibility_explain}")
@@ -907,7 +911,11 @@ def validate_dictionary(path: Path = builder.DICTIONARY) -> dict[str, object]:
             errors.append(f"tag correctness explanation wording differs: {correctness_explain}")
         if any(term in correct_text.lower() for term in ("public project", "public register", "register sufficiency", "visible")):
             errors.append(f"tag correctness explanation conflates public visibility: {correctness_explain}")
-        if not vis_text.startswith("Optional:") or "public project title and listed datasets" not in vis_text:
+        expected_visibility_label = (
+            "Optional: Please briefly explain what about this tag status is only partly visible, "
+            "not visible or unclear in the public project title and listed datasets."
+        )
+        if vis_text != expected_visibility_label:
             errors.append(f"tag visibility explanation wording differs: {visibility_explain}")
         if "does not fit the actual project" in vis_text:
             errors.append(f"tag visibility explanation conflates correctness: {visibility_explain}")
@@ -1385,11 +1393,90 @@ def _checkbox_selected(row: Mapping[str, object], name: str, count: int) -> list
     return selected
 
 
+def _final_applicable_review_values(
+    review: Mapping[str, object],
+) -> tuple[dict[str, object], list[str]]:
+    """Return an analysis view masked to the final REDCap branching state.
+
+    Raw export values are never mutated. REDCap may retain a child value after a
+    parent response changes and hides that child; such values are listed and
+    blanked only in this derived analysis view.
+    """
+
+    applicable = dict(review)
+    ignored: list[str] = []
+
+    def mask(name: str) -> None:
+        if str(applicable.get(name, "")).strip():
+            ignored.append(name)
+        if name in applicable:
+            applicable[name] = ""
+
+    def mask_checkbox(name: str, count: int) -> None:
+        for code in range(1, count + 1):
+            for key in (f"{name}___{code}", f"{name}({code})"):
+                mask(key)
+
+    for prefix, capacity in (("d", builder.DOMAIN_SLOTS), ("p", builder.PURPOSE_SLOTS)):
+        for index in range(1, capacity + 1):
+            stem = f"{prefix}{index:02d}"
+            if not str(applicable.get(f"prop_{stem}_label", "")).strip():
+                for suffix in ("fit", "correct_explain", "vis", "vis_explain"):
+                    mask(f"po_{stem}_{suffix}")
+                continue
+            if str(applicable.get(f"po_{stem}_fit", "")) != "2":
+                mask(f"po_{stem}_correct_explain")
+            if str(applicable.get(f"po_{stem}_vis", "")) not in {"1", "0", "3"}:
+                mask(f"po_{stem}_vis_explain")
+
+    for index in range(1, builder.TAG_SLOTS + 1):
+        stem = f"t{index:02d}"
+        if str(applicable.get(f"po_{stem}_correct", "")) != "0":
+            mask(f"po_{stem}_correct_explain")
+        if str(applicable.get(f"po_{stem}_vis", "")) not in {"1", "0", "3"}:
+            mask(f"po_{stem}_vis_explain")
+
+    missing_config = (
+        ("po_miss_domain", "po_miss_domains", "po_miss_domain_basis", 11),
+        ("po_miss_purpose", "po_miss_purposes", "po_miss_purpose_basis", 7),
+        ("po_miss_tag", "po_miss_tags", "po_miss_tag_basis", 2),
+    )
+    for gateway, menu, basis, count in missing_config:
+        if str(applicable.get(gateway, "")) != "1":
+            mask_checkbox(menu, count)
+            mask(basis)
+        elif not _checkbox_selected(applicable, menu, count):
+            mask(basis)
+
+    if str(applicable.get("po_sufficiency", "")) not in {"2", "3"}:
+        mask("po_suff_explain")
+    if str(applicable.get("po_taxonomy_fit", "")) not in {"2", "3"}:
+        mask_checkbox("po_tax_issue", 5)
+        mask("po_tax_explain")
+    if str(applicable.get("po_nonpublic", "")) not in {"1", "2"}:
+        mask("po_nonpublic_note")
+
+    return applicable, sorted(set(ignored))
+
+
+def final_applicable_review_values(review: Mapping[str, object]) -> dict[str, object]:
+    """Public analysis-preparation helper preserving raw values outside its copy."""
+
+    return _final_applicable_review_values(review)[0]
+
+
+def ignored_hidden_response_fields(review: Mapping[str, object]) -> list[str]:
+    """List retained raw fields excluded by the final branching state."""
+
+    return _final_applicable_review_values(review)[1]
+
+
 def analytical_completion_missing(
     review: Mapping[str, object], owner: Mapping[str, object]
 ) -> list[str]:
-    """Return every unmet analytical-completion requirement."""
+    """Return unmet requirements using only the final applicable branching state."""
 
+    review = final_applicable_review_values(review)
     missing: list[str] = []
     if str(owner.get("intended_recipient", "")) != "1":
         missing.append("joined_intended_recipient")
@@ -1470,6 +1557,9 @@ def prepare_long_export(
     for review in review_rows:
         owner = owners.get(str(review.get("owner_id")), {})
         item = dict(review)
+        analysis_values, ignored_hidden = _final_applicable_review_values(review)
+        item["analysis_values"] = analysis_values
+        item["ignored_hidden_response_fields"] = ignored_hidden
         item["joined_intended_recipient"] = owner.get("intended_recipient", "")
         item["joined_owner_consent"] = owner.get("owner_consent", "")
         item["joined_owner_consent_complete"] = owner.get(
@@ -1477,7 +1567,7 @@ def prepare_long_export(
         )
         has_response = any(str(review.get(name, "")).strip() for name in response_fields)
         review_status = str(review.get("project_review_complete", ""))
-        completion_missing = analytical_completion_missing(review, owner)
+        completion_missing = analytical_completion_missing(analysis_values, owner)
         item["offered"] = True
         item["untouched"] = not has_response
         item["partial"] = has_response and bool(completion_missing)
@@ -1732,10 +1822,15 @@ def validate_response_specifications() -> dict[str, object]:
         errors.append("field specification omits missing-purpose @MAXCHECKED=2")
     if "cardinality/taxonomy issue" not in export_rows.get("po_miss_purposes", {}).get("notes", ""):
         errors.append("expected export omits corrected-purpose cardinality treatment")
-    if "project_review_complete = 2" not in branch.get("analytical_completion", {}).get(
-        "submitted_is_separate", ""
-    ):
+    completion_spec = branch.get("analytical_completion", {})
+    if "project_review_complete = 2" not in completion_spec.get("submitted_is_separate", ""):
         errors.append("branching specification conflates submission and analytical completion")
+    if "final parent responses" not in completion_spec.get("final_branching_state_rule", ""):
+        errors.append("branching specification omits final-state applicability")
+    if "Blank optional prose means not provided" not in completion_spec.get("optional_text_missingness", ""):
+        errors.append("branching specification misstates optional-text missingness")
+    if "prevalence estimates" not in completion_spec.get("qualitative_reporting", ""):
+        errors.append("branching specification omits qualitative reporting denominator rule")
     for prefix, capacity in (
         ("d", builder.DOMAIN_SLOTS),
         ("p", builder.PURPOSE_SLOTS),
@@ -1754,8 +1849,16 @@ def validate_response_specifications() -> dict[str, object]:
                 errors.append(f"field specification omits visibility-explanation triggers: {visibility_explain}")
             if field_rows.get(correctness_explain, {}).get("analytical_completion") != "required_when_displayed_for_explicit_disagreement":
                 errors.append(f"field specification misstates analytical requiredness: {correctness_explain}")
+            expected_correct_applicability = (
+                "only_if_final_correctness_is_0_no" if prefix == "t"
+                else "only_if_final_fit_is_2_does_not_fit"
+            )
+            if field_rows.get(correctness_explain, {}).get("analysis_applicability") != expected_correct_applicability:
+                errors.append(f"field specification misstates final applicability: {correctness_explain}")
             if field_rows.get(visibility_explain, {}).get("analytical_completion") != "excluded_optional_enrichment":
                 errors.append(f"field specification misstates optional enrichment: {visibility_explain}")
+            if field_rows.get(visibility_explain, {}).get("analysis_applicability") != "only_if_final_visibility_is_1_0_or_3":
+                errors.append(f"field specification misstates final applicability: {visibility_explain}")
             if "2=Clearly visible" not in export_rows.get(visibility, {}).get("notes", ""):
                 errors.append(f"expected export omits visibility coding: {visibility}")
             if "Actual-project classification" not in export_rows.get(correctness_explain, {}).get("notes", ""):

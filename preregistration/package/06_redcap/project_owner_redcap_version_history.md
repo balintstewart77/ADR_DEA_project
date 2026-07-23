@@ -11,7 +11,12 @@
   required. Questionnaire v3 and protocol candidate v0.17 document the same
   rule; v0.17 also closes DEV-001. The dictionary remains 108 fields and the
   pristine fixture remains 22 rows and 90 importable columns. PID 9149 requires
-  controlled re-import and renewed live QA.
+  controlled re-import and renewed live QA. The same REDCAP-020 record now also
+  documents final-branch applicability: raw retained hidden values are preserved
+  but ignored in derived completion and analysis; blank optional prose means not
+  provided; structured responses remain primary outcomes; optional-comment themes
+  report contributing counts and are not prevalence estimates. Questionnaire v3
+  and protocol v0.17 were clarified in place without a new document version.
 
 - REDCAP-019 removes the repeated sentence “Do not provide confidential or
   non-public information.” from 20 conditional per-question labels while

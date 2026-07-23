@@ -101,9 +101,17 @@ def test_questionnaire_v3_matches_candidate_0_3_content_and_logic() -> None:
         in text
     )
     assert (
-        "Optional: Please briefly explain what is only partly visible, not visible or unclear"
-        in text
+        "Optional: Please briefly explain what about this Research Domain is only partly visible, "
+        "not visible or unclear" in text
     )
+    assert (
+        "Optional: Please briefly explain what about this Analytical Purpose is only partly visible, "
+        "not visible or unclear" in text
+    )
+    assert text.count(
+        "Optional: Please briefly explain what about this tag status is only partly visible, "
+        "not visible or unclear"
+    ) == 2
     assert (
         "Please briefly explain why this proposed Analytical Purpose does not fit the "
         "actual project."
@@ -138,6 +146,11 @@ def test_questionnaire_v3_matches_candidate_0_3_content_and_logic() -> None:
     assert "Could the correct status for this tag reasonably be determined" not in text
     assert "No suitable category exists in the framework" in text
     assert "Visibility explanations, missing-label explanations" in text
+    assert "documentation annotations and are not displayed by REDCap" in text
+    assert "Blank optional prose means not provided" in text
+    assert "Structured responses are the primary analytical outcomes" in text
+    assert "ignored in derived completion and analysis variables when inapplicable" in text
+    assert "must not be treated as prevalence estimates" in text
 
 
 
@@ -183,10 +196,15 @@ def test_protocol_v0_17_aligns_owner_architecture_and_requiredness() -> None:
     assert "multi-label" in instrument or "multiple labels" in instrument
     assert ("at most two" in instrument or "no more than two" in instrument)
     assert "purpose" in instrument
-    assert "not a register-wide accuracy estimate" in instrument
-    assert "gold standard" in instrument
+    assert "register-wide accuracy estimate" in instrument
+    assert "not itself" in instrument
+    assert "gold standard" in instrument or "gold-standard" in instrument
     assert "unsure" in instrument and "no explanation" in instrument
     assert "optional" in instrument and "do not determine analytical completeness" in instrument
+    assert "public visibility is judged per proposed label" in instrument
+    assert "overall project-level diagnostics" in instrument
+    assert "do not independently explain every label decision" in instrument
+    assert "residual asymmetry" in instrument
     # Controlled participant-facing taxonomy label: exact wording is intentional.
     assert "no suitable category exists in the framework" in instrument
 

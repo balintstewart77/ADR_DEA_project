@@ -34,5 +34,8 @@ privacy warnings remain.
 REDCAP-020 records the burden-reduction correction: required per-classification
 prose is limited to explicit disagreement, while visibility, missing-label,
 sufficiency, project-knowledge and taxonomy explanations are optional. It also
-records Questionnaire v3 and protocol candidate v0.17. DEV-001 is closed by the
-v0.17 withdrawal wording; the analytical-freeze use of “analysis lock” remains.
+records Questionnaire v3 and protocol candidate v0.17. The same row records the
+subsequent in-place semantic hardening: final-branch applicability, optional-text
+missingness, calibrated diagnostic claims and measurement-level clarification.
+DEV-001 is closed by the v0.17 withdrawal wording; the analytical-freeze use of
+“analysis lock” remains.

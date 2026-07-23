@@ -51,7 +51,11 @@ Questionnaire v3 are the current participant-document candidates for ethics/DPO
 review. Questionnaire v3 retains the one-link workflow and documents REDCAP-020:
 required prose only for explicit classification disagreement, with other
 conditional explanations optional. Protocol candidate v0.17 records the same
-analytical-completion rule and closes the withdrawal-wording deviation. Archived
+analytical-completion rule and closes the withdrawal-wording deviation. The current
+REDCAP-020 semantic-hardening clarification preserves raw hidden values while
+masking them from final-applicable derived analysis, treats blank optional prose
+as not provided and calibrates owner signals as adjudication evidence rather than
+a definitive error source. Archived
 Questionnaire v2 and protocol v0.16 remain byte-identical. The invitation email was reviewed and retained
 byte-for-byte. Controlled REDCap live QA, ethics/governance review and later
 coordinated finalisation remain required before recruitment.

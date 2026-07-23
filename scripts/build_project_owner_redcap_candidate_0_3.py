@@ -941,8 +941,9 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
                     f"po_{stem}_vis_explain",
                     "project_review",
                     "notes",
-                    "Optional: Please briefly explain what is only partly visible, not visible or "
-                    "unclear in the public project title and listed datasets.",
+                    "Optional: Please briefly explain what about this "
+                    f"{'Research Domain' if layer == 'domain' else 'Analytical Purpose'} is only partly "
+                    "visible, not visible or unclear in the public project title and listed datasets.",
                     branch=(
                         f"[{visibility}] = '1' or [{visibility}] = '0' or [{visibility}] = '3'"
                     ),
@@ -1020,8 +1021,8 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
                 f"po_{stem}_vis_explain",
                 "project_review",
                 "notes",
-                "Optional: Please briefly explain what is only partly visible, not visible or "
-                "unclear in the public project title and listed datasets.",
+                "Optional: Please briefly explain what about this tag status is only partly visible, "
+                "not visible or unclear in the public project title and listed datasets.",
                 branch=(
                     f"[{visibility}] = '1' or [{visibility}] = '0' or [{visibility}] = '3'"
                 ),
@@ -1434,8 +1435,9 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             )
         elif re.fullmatch(r"po_[dpt]\d{2}_vis_explain", name):
             notes = (
-                "Optional enrichment shown when visibility is Partly visible/Not visible/Unsure; "
-                "records a public-register evidence limitation or uncertainty and is excluded from completion."
+                "Optional enrichment shown when final visibility is Partly visible/Not visible/Unsure; "
+                "blank means not provided, not absence of an evidence limitation. Retained hidden values "
+                "are ignored when final visibility is Clearly visible."
             )
         elif re.fullmatch(r"prop_t\d{2}_status", name):
             notes = "Pre-populated Applied/Not applied status; always participant-visible and survey-read-only."
@@ -1451,6 +1453,7 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
         construct = ""
         analytical_completion = "not_applicable"
         requiredness_rationale = ""
+        analysis_applicability = "always_if_row_and_field_are_applicable"
         if row["Field Type"] == "notes" and name.startswith("po_"):
             if re.fullmatch(r"po_[dpt]\d{2}_correct_explain", name):
                 construct = "actual_project_disagreement_explanation"
@@ -1480,6 +1483,22 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 construct = "final_comment"
                 analytical_completion = "excluded_optional_enrichment"
                 requiredness_rationale = "Optional final comment."
+        if re.fullmatch(r"po_[dp]\d{2}_correct_explain", name):
+            analysis_applicability = "only_if_final_fit_is_2_does_not_fit"
+        elif re.fullmatch(r"po_t\d{2}_correct_explain", name):
+            analysis_applicability = "only_if_final_correctness_is_0_no"
+        elif re.fullmatch(r"po_[dpt]\d{2}_vis_explain", name):
+            analysis_applicability = "only_if_final_visibility_is_1_0_or_3"
+        elif name in {"po_miss_domains", "po_miss_purposes", "po_miss_tags"}:
+            analysis_applicability = "only_if_final_missing_gateway_is_1_yes"
+        elif name in {"po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis"}:
+            analysis_applicability = "only_if_final_missing_gateway_is_yes_and_a_label_is_selected"
+        elif name == "po_suff_explain":
+            analysis_applicability = "only_if_final_sufficiency_is_2_partial_or_3_insufficient"
+        elif name in {"po_tax_issue", "po_tax_explain"}:
+            analysis_applicability = "only_if_final_taxonomy_fit_is_2_partial_or_3_no_fit"
+        elif name == "po_nonpublic_note":
+            analysis_applicability = "only_if_final_project_knowledge_is_1_yes_or_2_unsure"
         field_rows.append(
             {
                 "variable": name,
@@ -1497,6 +1516,7 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 "construct": construct,
                 "analytical_completion": analytical_completion,
                 "requiredness_rationale": requiredness_rationale,
+                "analysis_applicability": analysis_applicability,
                 "notes": notes,
             }
         )
@@ -1515,6 +1535,7 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             "construct",
             "analytical_completion",
             "requiredness_rationale",
+            "analysis_applicability",
             "notes",
         ],
         field_rows,
@@ -1671,6 +1692,18 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
                 "prop_domain_summary", "prop_purpose_summary", "prop_tag_summary", "po_classification_overview"
             ],
             "submitted_is_separate": "project_review_complete = 2 is submission status, not the analytical-completion definition",
+            "final_branching_state_rule": (
+                "Derive completion and analysis variables from final parent responses. Preserve raw exported "
+                "values, but ignore any retained value whose field is hidden under the final branching state."
+            ),
+            "optional_text_missingness": (
+                "Blank optional prose means not provided; it does not mean no issue, no missing information, "
+                "no taxonomy problem or no reliance on project knowledge. Structured responses are primary outcomes."
+            ),
+            "qualitative_reporting": (
+                "Report the number of comments contributing to each qualitative theme or quotation; do not "
+                "interpret optional-comment themes as prevalence estimates."
+            ),
         },
         "participant_reference": {
             "field": "assignment_id",
@@ -1727,13 +1760,13 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             )
         elif re.fullmatch(r"po_[dpt]\d{2}_correct_explain", name):
             export_notes = (
-                "Actual-project classification disagreement explanation; required only for Does not fit "
-                "verdicts or No tag correctness. Unsure shows no explanation field; blank on the owner row."
+                "Actual-project classification disagreement explanation; analyse only when the final fit is Does not fit or "
+                "final tag correctness is No. Preserve but ignore a retained hidden value after the parent changes."
             )
         elif re.fullmatch(r"po_[dpt]\d{2}_vis_explain", name):
             export_notes = (
-                "Optional public-register evidence limitation/uncertainty explanation, shown for Partly "
-                "visible/Not visible/Unsure responses and excluded from completion; blank on the owner row."
+                "Optional label-level public-register evidence explanation; analyse only when final visibility is Partly "
+                "visible, Not visible or Unsure. Blank means not provided; ignore a retained value after Clearly visible."
             )
         elif re.fullmatch(r"prop_t\d{2}_status", name):
             export_notes = (
@@ -1747,9 +1780,44 @@ def build_specs(rows: list[dict[str, str]], meta: dict[str, object]) -> None:
             )
         elif name == "po_miss_purposes":
             export_notes = (
-                "Missing-purpose checkboxes; @MAXCHECKED=2 limits this menu. Analysis must add selected "
-                "missing purposes to proposed purposes judged Fits and flag an implied corrected count above "
-                "two as a cardinality/taxonomy issue rather than a directly comparable corrected classification."
+                "Missing-purpose checkboxes; @MAXCHECKED=2 limits this menu. Analyse selections only when the "
+                "final gateway is Yes; ignore retained hidden selections after No/Unsure. Add applicable selections "
+                "to proposed purposes judged Fits and flag an implied corrected count above two as a cardinality/taxonomy issue."
+            )
+        elif name in {"po_miss_domains", "po_miss_tags"}:
+            export_notes = (
+                "Structured missing-classification selections; analyse only when the final gateway is Yes and "
+                "ignore retained hidden selections after No/Unsure."
+            )
+        elif name in {"po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis"}:
+            export_notes = (
+                "Optional missing-classification context; analyse only when the final gateway is Yes and at least "
+                "one applicable label is selected. Blank means not provided and does not negate the structured report."
+            )
+        elif name == "po_suff_explain":
+            export_notes = (
+                "Optional project-level sufficiency context; analyse only for final Partial/Insufficient. Blank means "
+                "not provided, not no missing information; ignore retained hidden text after Sufficient."
+            )
+        elif name == "po_tax_issue":
+            export_notes = (
+                "Structured project-level taxonomy issue; analyse only for final Partial Fit/No Fit and ignore "
+                "retained hidden selections after Fit."
+            )
+        elif name == "po_tax_explain":
+            export_notes = (
+                "Optional project-level taxonomy context; analyse only for final Partial Fit/No Fit. Blank means "
+                "not provided, not no taxonomy problem; ignore retained hidden text after Fit."
+            )
+        elif name == "po_nonpublic_note":
+            export_notes = (
+                "Optional project-level knowledge context; analyse only for final Yes/Unsure gateway. Blank means "
+                "not provided, not no reliance on project knowledge; ignore retained hidden text after No."
+            )
+        elif name == "po_other_comment":
+            export_notes = (
+                "Optional enrichment. Blank means not provided. Report comment counts with qualitative themes or "
+                "quotations and do not treat themes as prevalence estimates."
             )
         else:
             export_notes = "Blank on the other row type in REDCap long export."
@@ -1992,11 +2060,11 @@ Each populated domain/purpose slot has an inline label/definition and a Fits / D
 
 Both canonical cross-cutting tags are reviewed on every assignment, including when their pre-populated status is Not applied. Each block shows its common-source definition, a survey-read-only Applied/Not applied proposed status, required Yes/No/Unsure correctness, the visibility question “Is the basis for this tag status visible in the public project title and datasets listed above?”, a required correctness explanation shown only for No, and an optional visibility explanation shown for non-clear visibility. Neither block branches on proposed status.
 
-Every visibility field uses `2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure`. Across all eight proposed-classification blocks, the correctness explanation is shown and required only for explicit disagreement (Does not fit/No); Unsure shows no correctness explanation. The visibility explanation is optional enrichment shown for Partly visible, Not visible or Unsure. The two field families remain analytically distinct: actual-project classification disagreement versus public-register evidence limitation or uncertainty.
+Every visibility field uses `2, Clearly visible | 1, Partly visible | 0, Not visible | 3, Unsure`. Across all eight proposed-classification blocks, the correctness explanation is shown and required only for explicit disagreement (Does not fit/No); Unsure shows no correctness explanation. The visibility explanation is optional enrichment shown for Partly visible, Not visible or Unsure. The two field families remain analytically distinct: actual-project classification disagreement versus public-register evidence limitation or uncertainty. Public visibility is a label-level judgement; taxonomy fit and the project-knowledge gateway are overall project-level diagnostics and do not independently explain every label decision.
 
 All three missing-label gateways are required Yes/No/Unsure items. The complete 11/7/2 definition-bearing checkbox menus appear only after Yes and are required when displayed; Unsure does not force a label selection. One optional basis field per dimension is shown when at least one checkbox is selected; the required gateway and at least one selected label determine completion. The missing-purpose construct displays the maximum-two guidance immediately before its checkbox and applies `@MAXCHECKED=2`. REDCap checkbox requiredness, at-least-one behaviour and the maximum-two action tag must be confirmed in live QA. The missing-tag gateway is retained as an explicit summary cross-check; the two per-tag correctness judgements are the primary status assessments. This deliberate redundancy requires later protocol and participant-document alignment but is not a contradictory coding rule.
 
-Overall review fields retain required public-entry sufficiency, taxonomy fit and conditional issue type, with optional explanatory enrichment, optional final comments and response-specific quotation permission. `po_tax_explain` is optional for Partial Fit or No Fit and covers any elaboration on the “Other taxonomy problem” issue choice; no duplicate `po_tax_other` field remains. Existing `po_nonpublic`/`po_nonpublic_note` fields remain the required project-knowledge gateway and optional conditional context note. The repeated sentence “Do not provide confidential or non-public information.” is removed from the 20 conditional per-question explanations; the instrument-level warnings in `po_privacy` and `po_final_warning` remain unchanged. Named acknowledgement is not repeated.
+Overall review fields retain required public-entry sufficiency, taxonomy fit and conditional issue type, with optional explanatory enrichment, optional final comments and response-specific quotation permission. `po_tax_explain` is optional for Partial Fit or No Fit and covers any elaboration on the “Other taxonomy problem” issue choice; no duplicate `po_tax_other` field remains. Existing `po_nonpublic`/`po_nonpublic_note` fields remain the required project-knowledge gateway and optional conditional context note. Blank optional prose means “not provided”; it is not interpreted as no issue, no missing information, no taxonomy problem or no reliance on project knowledge. Structured responses are the primary analytical outcomes. The repeated sentence “Do not provide confidential or non-public information.” is removed from the 20 conditional per-question explanations; the instrument-level warnings in `po_privacy` and `po_final_warning` remain unchanged. Named acknowledgement is not repeated.
 
 `po_suff_explain` is isolated from proposed-classification branching: it is shown as optional enrichment only when `po_sufficiency` is Partial (`2`) or Insufficient (`3`). No Domain, Purpose or tag fit, correctness or visibility response controls it. Before REDCAP-016, each negative/unsure proposed-classification response revealed its own combined `po_d01_basis`–`po_t02_basis` field; after this revision only explicit disagreement reveals the matching required `*_correct_explain` field. The public-entry sufficiency explanation was not part of that split.
 
@@ -2011,20 +2079,23 @@ Assignment-response states are defined independently:
 - **Offered:** a pre-created repeat exists.
 - **Untouched:** the repeat exists with no participant response.
 - **Partial:** at least one response exists but the analytical-completion rule fails.
-- **Analytically complete:** joined intended-recipient and consent are affirmative; every populated domain/purpose has verdict and visibility, with a correctness explanation for Does not fit; both tags have correctness and visibility, with a correctness explanation for No; all three missing-label gateways are answered and every Yes has at least one valid selection; sufficiency, project-knowledge gateway and taxonomy fit are answered; and Partial Fit/No Fit has at least one taxonomy issue type. Optional explanatory text is not required.
+- **Analytically complete:** joined intended-recipient and consent are affirmative; every populated domain/purpose has verdict and visibility, with a correctness explanation for Does not fit; both tags have correctness and visibility, with a correctness explanation for No; all three missing-label gateways are answered and every Yes has at least one valid selection; sufficiency, project-knowledge gateway and taxonomy fit are answered; and Partial Fit/No Fit has at least one taxonomy issue type. Optional explanatory text is not required. Completion follows the final applicable branching state; retained values in fields hidden by a changed parent response neither satisfy nor prevent completion.
 - **Submitted:** `project_review_complete = 2`.
 
-A submitted review should normally be analytically complete because requiredness and branching operate in REDCap, but analysis derives and verifies analytical completeness rather than relying on form status alone. Optional visibility explanations, missing-label bases, `po_suff_explain`, `po_nonpublic_note`, `po_tax_explain`, `ack_pref`, final comments and quotation permission do not determine it. Neither the three stored classification summaries nor the descriptive overview determines analytical completion.
+A submitted review should normally be analytically complete because requiredness and branching operate in REDCap, but analysis derives and verifies analytical completeness rather than relying on form status alone. Optional visibility explanations, missing-label bases, `po_suff_explain`, `po_nonpublic_note`, `po_tax_explain`, `ack_pref`, final comments and quotation permission do not determine it. Neither the three stored classification summaries nor the descriptive overview determines analytical completion. REDCap raw exports retain any stale hidden values, but the derived analysis view masks them whenever the final parent response makes the field inapplicable.
 
 Analysis preparation must:
 
 1. split owner rows where `redcap_repeat_instrument` is blank from review rows where it equals `project_review`;
 2. join owner consent to reviews by `owner_id`;
-3. derive offered, untouched, partial, analytically complete and submitted indicators using the rule above;
-4. retain offered, untouched and partial rows for recruitment and response-rate reporting;
-5. restrict substantive complete-review summaries to analytically complete rows after the owner join.
+3. create a final-applicability analysis view that masks retained values in fields hidden under the final parent responses while preserving the raw export unchanged;
+4. derive offered, untouched, partial, analytically complete and submitted indicators from that final applicable state;
+5. retain offered, untouched and partial rows for recruitment and response-rate reporting;
+6. restrict substantive complete-review summaries to analytically complete rows after the owner join.
 
-For Analytical Purposes, derive the implied corrected-purpose count as the number of populated proposed purposes judged `Fits` plus the number of selected missing-purpose labels. If that count exceeds two, flag the response as a purpose-cardinality/taxonomy issue rather than treating it as a directly comparable corrected classification. A response containing an `Unsure` proposed-purpose verdict is not a definitive corrected-purpose set even when analytically complete.
+For Analytical Purposes, derive the implied corrected-purpose count as the number of populated proposed purposes judged `Fits` plus the number of applicable selected missing-purpose labels where the final gateway is Yes. If that count exceeds two, flag the response as a purpose-cardinality/taxonomy issue rather than treating it as a directly comparable corrected classification. A response containing an `Unsure` proposed-purpose verdict is not a definitive corrected-purpose set even when analytically complete.
+
+The instrument supplies label-level fit/correctness and public-visibility evidence, project-level sufficiency/project-knowledge/taxonomy-fit diagnostics, structured missing-label reports and optional explanatory evidence. These signals support subsequent adjudication; they do not automatically establish a definitive error source. For missing classifications, attribution to public versus non-public evidence may remain unresolved when optional context is blank. Owner disagreement is evidence for adjudication, not itself a gold-standard classification error. Report the number of comments contributing to each qualitative theme or quotation and do not interpret optional-comment themes as prevalence estimates.
 
 Do **not** filter repeated rows directly with `owner_consent = 1`: non-repeating values are blank on repeated rows.
 
@@ -2136,12 +2207,15 @@ The REDCap CSV cannot encode project mode, repeating-instrument settings, Survey
 - In every domain, purpose and tag block, explicit disagreement reveals its required correctness explanation; Unsure reveals no correctness explanation; Partly visible/Not visible/Unsure reveals an optional visibility explanation; Fits/Yes plus Clearly visible reveals neither.
 - The repeated sentence “Do not provide confidential or non-public information.” is absent from participant-visible field labels and notes; the central warnings in `po_privacy` and `po_final_warning` remain visible.
 - `po_suff_explain` appears only as optional enrichment for Partial or Insufficient `po_sufficiency` and is not controlled by any proposed-classification fit, correctness or visibility response.
+- Changing a parent response hides its former child field without necessarily deleting the stored value. Live QA must verify the display transition; analysis preserves the raw value but ignores it under the final inapplicable state.
 - Does not fit/No cannot be submitted without the corresponding correctness explanation; Unsure shows no correctness-explanation textbox.
 - Non-clear visibility can be submitted with its optional explanation blank.
 - Missing-label Yes requires at least one selected label but not prose.
 - Partial/Insufficient sufficiency can be submitted with `po_suff_explain` blank.
 - Project-knowledge Yes/Unsure can be submitted with `po_nonpublic_note` blank.
 - Partial Fit/No Fit requires at least one `po_tax_issue` selection but not `po_tax_explain`.
+- Exercise final-state transitions: Does not fit→Unsure, missing-label Yes→No/Unsure, Partial/No Fit→Fit, non-clear→Clearly visible and project-knowledge Yes/Unsure→No. Confirm hidden values do not enter completion or derived analysis variables.
+- Confirm blank optional prose is treated as not provided, never as a structured negative response.
 - Live REDCap Required Field behaviour and the offline analytical-completion derivation agree; repository metadata is not proof that these runtime checks passed.
 - `assignment_id` is visible as Review reference near project information, is included in completion and specific-withdrawal wording, and the REDCap repeat-instance number is not the sole participant reference.
 - The short specific-review withdrawal reminder appears in `po_final_warning` after quotation permission and before submission, is absent from `po_intro`, and refers to the Participant Information Sheet and the Review reference.
@@ -2164,8 +2238,8 @@ Do not perform these actions from the repository task. In PID 9149 an authorised
 7. enable return without a separate Return Code;
 8. confirm completed-response modification remains disabled;
 9. import the regenerated synthetic fixture;
-10. rerun the affected desktop/mobile, queue, overview, branching and return-flow live-QA tests;
-11. export and verify all 19 offered assignment rows and their stored summaries.
+10. rerun the affected desktop/mobile, queue, overview, branching, final-state transition and return-flow live-QA tests;
+11. export and verify all 19 offered assignment rows, their stored summaries and the separation of raw retained values from final-applicable analysis values.
 
 ## Evidence and exit gate
 
