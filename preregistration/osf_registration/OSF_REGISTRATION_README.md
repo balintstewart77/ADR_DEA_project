@@ -3,11 +3,11 @@
 ## Registration identity
 
 - **Study title:** Validation protocol for LLM-assisted classification of the DEA accredited research projects register
-- **Protocol version:** v1.0
-- **Protocol manifest ID:** PRO-017
-- **Protocol byte size:** 413327 bytes
-- **Protocol SHA-256:** `6d385f40443e96b0b8cc774610b5d0ff6947ae43dff42576aa1a84c90dc8906e`
-- **Protocol-freeze Git commit:** `200021df2d57b3c50ef0cc4eab63aac98ef03b52`
+- **Protocol version:** v1.1
+- **Protocol manifest ID:** PRO-018
+- **Protocol byte size:** 413032 bytes
+- **Protocol SHA-256:** `fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77`
+- **Protocol-freeze Git commit:** `1f7d4efc7b72e90debb2c9b8aca702c9cb35528d`
 - **Repository:** `balintstewart77/ADR_DEA_project`
 - **Branch:** `main`
 - **Preparation date:** 24 July 2026
@@ -36,15 +36,54 @@ The scoped manifest records two forms of byte provenance. `byte_size` and
 `sha256` identify the exact working-tree files prepared for OSF upload.
 `git_blob_byte_size` and `git_blob_sha256` identify the canonical repository
 blobs at the common packet-basis commit
-`f81724a7a740a7511a7bd70e0929cea6b04d9677`. For text files checked out with
+`1f7d4efc7b72e90debb2c9b8aca702c9cb35528d`. For text files checked out with
 Windows line endings, the raw upload bytes may differ from the LF-normalised Git
 blob; such cases are accepted only where Git clean-filter verification proves
 that both represent the same committed content. No scientific file was
 rewritten for this packet.
 
+For the flat OSF folder, the production files use the release-specific upload
+names `fable5_20260702_layer_classifications.csv` and
+`fable5_20260702_run_metadata.json`. Their manifest `repository_path` values
+retain the canonical repository locations; no repository file was renamed.
+
+### Commit provenance
+
+Protocol v1.1 and all 16 artefacts listed in the scoped manifest were verified
+at the same protocol-freeze and packet-verification commit:
+`1f7d4efc7b72e90debb2c9b8aca702c9cb35528d`. Protocol v1.0 and its earlier
+freeze commit remain preserved in repository history as the superseded
+predecessor. The later OSF metadata commit changes only this README and the
+scoped manifest and does not alter any listed study artefact. Exact OSF
+upload-byte hashes are recorded separately because MOD-006 has a Windows CRLF
+working-tree/upload representation of otherwise identical LF-normalised
+committed content.
+
+### Protocol v1.1 correction
+
+Protocol v1.1 differs from v1.0 only by a typographical rendering correction in
+Section 10. A malformed plain-text MathJax fallback was replaced with
+`delta_min`, consistent with the other seven references in the protocol. No
+protocol rule, estimand, threshold, sampling procedure, instrument, analysis
+method or release-decision criterion changed.
+
+### MOD-006 upload representation
+
+The MOD-006 OSF upload is 1,252,471 bytes with SHA-256
+`6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299`.
+Its canonical Git blob is 1,251,162 bytes with SHA-256
+`9827fc9f01b9e1f3e9b58fe8f41b59eb5a569c77aacb77d5140628ec04f5eeab`.
+The 1,309-byte difference is one carriage return for the header and each of
+1,308 record lines. Git attributes specify text normalisation and `eol=lf`,
+with no custom filter or working-tree-encoding transformation. Clean-filter
+object identity, direct newline-normalised comparison and parsed CSV comparison
+confirm identical content, field structure, quoting, row order and values; the
+BOM is unchanged. Repository generation and migration history does not
+establish the origin of the raw CRLF representation, so no origin is asserted.
+
 `production_release_manifest.yaml` is preserved unchanged as the historical
 frozen Phase 3 release record. Later pilot, instrument-freeze and protocol
-status is governed by protocol v1.0 and this registration README.
+status is governed by protocol v1.1 and this registration README.
 
 ### Cross-model metrics provenance
 
@@ -78,7 +117,7 @@ This scoped packet deliberately excludes:
 
 - the raw UKSA register snapshot and cleaned 1,308-record register CSV;
 - `crossmodel_comparison.csv` and Fable repeat-run caches;
-- protocol v0.18 and earlier versions;
+- protocol v1.0 and all earlier versions;
 - the full repository artefact manifest;
 - Project Owner instrument candidates; and
 - sampled-record or assignment files.
@@ -105,7 +144,7 @@ and sampling scripts, analysis code, scratch-coder coding guide, pilot-debrief
 materials, and the protocol-deviation, instrument-change and dated
 pilot-feedback logs—remain preserved in repository
 `balintstewart77/ADR_DEA_project`, branch `main`, at protocol-freeze commit
-`200021df2d57b3c50ef0cc4eab63aac98ef03b52`, and are linked rather than
+`1f7d4efc7b72e90debb2c9b8aca702c9cb35528d`, and are linked rather than
 duplicated in this scoped OSF upload.
 
 - **Comparison scripts:** `analysis/outputs/gpt55_crossmodel_stratum_run.py`; `analysis/crossmodel_comparison.py`; `analysis/regenerate_crossmodel_evidence.py`; `analysis/verify_fable_run_stability.py`
@@ -113,9 +152,24 @@ duplicated in this scoped OSF upload.
 - **Analysis code:** `preregistration/package/07_analysis/run_validation_analysis.py`; `analysis/validation/alpha.py`; `analysis/validation/bootstrap.py`; `analysis/validation/diagnostics.py`; `analysis/validation/adjudication.py`; `analysis/validation/release.py`
 - **Scratch-coder coding guide:** `preregistration/package/06_redcap/redcap_instrument_codebook.md`
 - **Pilot-debrief materials:** `preregistration/package/05_training_and_pilot/DEA_pilot_projects_trainer_debrief_reference.docx`; `preregistration/package/05_training_and_pilot/DEA_pilot_projects_trainer_debrief_reference_v2.docx`
+- **Fable repeat-run stability inputs:** `analysis/outputs/model_comparison_fable_5_run1/llm_layer_cache.json`; `analysis/outputs/model_comparison_fable_5_run2/llm_layer_cache.json`
+- **Stability recomputation script:** `analysis/verify_fable_run_stability.py`
 - **Protocol-deviation log:** `preregistration/package/09_logs_and_templates/protocol_deviation_log.csv`
 - **Instrument-change log:** `preregistration/package/09_logs_and_templates/instrument_change_log.csv`
 - **Dated pilot-feedback log:** `preregistration/package/05_training_and_pilot/pilot_feedback_log_20260717.md`
+
+Both repeat-run caches existed at the protocol-freeze commit. Their respective
+protocol-freeze Git object IDs are
+`c6a608aae4632e16447a33534c61eccb0a00a9ba` and
+`b2b9539a5ee599194cdbd906f306c836a96689af`. The local verifier recomputes the
+reported stability metrics from these caches in no-write check mode and has no
+network, API or classifier path; no new model call is required.
+
+Two historical trainer debrief reference versions are preserved in the
+repository. Neither was circulated to coders or treated as formal coder-facing
+guidance, and this registration does not assert that either was a definitive
+debrief document. The post-pilot shared calibration note is separately archived
+because it was the material circulated simultaneously to all three coders.
 
 ## Scope, reproducibility and rights
 
@@ -135,5 +189,6 @@ selected for the OSF project or registration does not supersede third-party or
 source-data rights.
 
 The reproducibility reference is repository
-`balintstewart77/ADR_DEA_project`, branch `main`, with protocol-freeze commit
-`200021df2d57b3c50ef0cc4eab63aac98ef03b52`.
+`balintstewart77/ADR_DEA_project`, branch `main`. The common prospective
+protocol/repository freeze and artefact-verification commit is
+`1f7d4efc7b72e90debb2c9b8aca702c9cb35528d`.
