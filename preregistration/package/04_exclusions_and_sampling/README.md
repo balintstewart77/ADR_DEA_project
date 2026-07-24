@@ -21,9 +21,9 @@ metadata, but was not used against the real frames in Phase 4. `--check` and
 guarded by canonical protocol metadata authorising the draw, a real registration
 receipt, Gate 2 confirmation, matching frozen commit and hashes, a clean
 worktree, restricted storage, an empty output location and a typed confirmation
-token. Registration is now satisfied, but canonical protocol metadata still has
-`official_sample_draw_authorised=false`, so the official guard remains closed by
-design.
+token. Registration and Gate 2 are now satisfied, with
+`official_sample_draw_authorised=true` and draw completion still false. No sample
+or assignment output has been created.
 
 Gate 2 uses a two-commit handshake: clean verified implementation basis A,
 followed by direct-child authorisation commit B. The tracked JSON receipt and

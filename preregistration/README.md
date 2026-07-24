@@ -21,8 +21,9 @@ may exist only after registration.
   populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.
 - Phase 3 source, model, taxonomy, evidence and exclusion artefacts remain frozen.
 - No official active or reserve sample has been drawn, and formal coding has not begun.
-- Formal sampling and REDCap import remain prohibited until the separate
-  post-registration draw-authorisation gate is explicitly completed.
+- The separate Gate 2 authorisation now permits exactly one official draw under
+  the registered design, but the draw has not been executed. Assignment
+  generation, REDCap import and formal coding remain unauthorised.
 - The durable approval receipt is
   `registration_records/osf_registration_8sn2j.yaml`; its evidence basis is
   `project_lead_reported`, not an independently verified archival status check.
@@ -242,10 +243,10 @@ classification content.
 The exact static production prompt has been rendered offline from the unchanged
 hashed classifier code and hashed taxonomy and is now hash-bound as MOD-003.
 Record-specific project blocks remain separately fingerprinted; no model or API
-was called to create the static rendering. Protocol freeze and registration are
-complete. The next operational step is the separate explicit sampling-
-authorisation gate. No official active or reserve validation sample manifests
-exist, as expected at this stage.
+was called to create the static rendering. Protocol freeze, registration and the
+separate prospective Gate 2 draw authorisation are complete. The official draw
+has not been executed, and no active or reserve validation sample manifest
+exists.
 
 ## 12. Phase 4 sampling-system completion
 
@@ -280,8 +281,9 @@ covering Assignment Admin, Coder Declaration, Scratch Coder and Project Owner.
 Completed administrator and restricted-user live QA, source/live equivalence,
 archive controls and dashboard permissions are documented. No formal validation
 assignment is populated. Candidate 0.3 pilot and candidate 0.6 intermediate-QA
-materials are explicitly historical. Sampling and import remain prohibited until
-preregistration and the subsequent authorisation gate are complete.
+materials are explicitly historical. Gate 2 authorises only the official draw;
+assignment generation and REDCap import remain prohibited until separately
+authorised after the draw.
 
 ## 14. How to update the manifest
 

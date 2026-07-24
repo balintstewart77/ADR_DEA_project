@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "receipt_type": "gate_2_official_sample_draw_authorisation",
+  "evidence_basis": "explicit_project_lead_authorisation",
+  "authorised_by_role": "project_lead",
+  "authorised_at_local": "2026-07-24T15:36:26+01:00",
+  "authorised_at_utc": "2026-07-24T14:36:26Z",
+  "timezone": "Europe/London",
+  "scope": "one_official_registered_validation_sample_draw",
+  "osf_registration_identifier_or_url": "8sn2j",
+  "registration_timestamp": "2026-07-24T13:45:00Z",
+  "registration_state_commit": "ec4bb7f05848842f984b66e00f4d4d76a296bd4d",
+  "frozen_git_commit": "abfdc3e83078fc0c510a30e699592074202c3525",
+  "gate_2_passed": true,
+  "official_sample_draw_completed": false,
+  "expected_hashes": {
+    "sampling_specification": "d926d4911f626a72ceab71f2ed37879dbe960f100bf2d5c075812617b63ef63b",
+    "cleaned_population": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+    "exclusion": "cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6",
+    "disagreement_frame": "e21c113913beb5f70bb45080808c7d4d78df95798f32db16aecf718b10cb93af"
+  },
+  "protocol": {
+    "manifest_id": "PRO-018",
+    "version": "v1.1",
+    "repository_path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx",
+    "sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+    "freeze_commit": "1f7d4efc7b72e90debb2c9b8aca702c9cb35528d"
+  },
+  "frozen_inputs": {
+    "population": {
+      "repository_path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+      "byte_size": 606350,
+      "sha256": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+      "git_object_id": "498200eda67dc71744c2eaf27ae37e8b3c1cbd6e",
+      "retained_record_ids": 1308,
+      "unique_record_ids": 1308,
+      "unique_project_ids": 1304
+    },
+    "exclusions": {
+      "repository_path": "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv",
+      "byte_size": 7145,
+      "sha256": "cf36e6d34375d0e68bac31df8169207fc0602bc7291a64e995b9cd86141413a6",
+      "git_object_id": "cb88f861af5a68b94c6a754f06160a1c67cef3ac",
+      "unique_record_ids": 22,
+      "all_present_in_population": true
+    },
+    "disagreement_frame": {
+      "repository_path": "preregistration/package/03_preexisting_model_evidence/gpt55_disagreement_frame_380.csv",
+      "byte_size": 434022,
+      "sha256": "e21c113913beb5f70bb45080808c7d4d78df95798f32db16aecf718b10cb93af",
+      "git_object_id": "432a3d5593e2bed560dceaa1d4e709517eddd341",
+      "unique_record_ids": 380,
+      "strata": {
+        "domain_only": 182,
+        "purpose_only": 143,
+        "domain_and_purpose": 55
+      },
+      "accompanying_tag_disagreements": 11,
+      "excluded_record_id_overlap": 0,
+      "all_present_in_population": true
+    },
+    "sampling_specification": {
+      "repository_path": "preregistration/package/04_exclusions_and_sampling/sampling_specification.yaml",
+      "byte_size": 4357,
+      "sha256": "d926d4911f626a72ceab71f2ed37879dbe960f100bf2d5c075812617b63ef63b",
+      "git_object_id": "0195bc6fd2583db43b7e7629dfba03163bbbaea9"
+    },
+    "draw_script": {
+      "repository_path": "scripts/draw_validation_samples.py",
+      "byte_size": 44212,
+      "sha256": "5a655299b79e5a4af08c1b599212f68f5ff2f8ff7220f992cc12bd147c0f0df1",
+      "git_object_id": "3d383df193f6b1f55c8b99c2ee8a0749924f1aa1"
+    }
+  },
+  "design": {
+    "draw_seed": 20260713,
+    "active_random_baseline": 150,
+    "reserve_random_baseline": 100,
+    "active_hard_case": {
+      "total": 75,
+      "domain_only": 25,
+      "purpose_only": 25,
+      "domain_and_purpose": 25
+    },
+    "reserve_hard_case": {
+      "total": 50,
+      "allocation_rule": "seeded_17_17_16"
+    },
+    "total_active": 225,
+    "total_reserve": 150,
+    "total_drawn": 375,
+    "baseline_first": true,
+    "tag_only_supplement": false
+  },
+  "later_seeds_recorded_not_executed": {
+    "coder_shuffle": {
+      "C01": 101,
+      "C02": 102,
+      "C03": 103
+    },
+    "bootstrap": 20260714,
+    "adjudication_audit": 20260715
+  },
+  "state_after_authorisation": {
+    "official_sample_draw_authorised": true,
+    "official_sample_draw_completed": false,
+    "active_sample_drawn": false,
+    "reserve_sample_drawn": false,
+    "formal_assignment_import_completed": false,
+    "formal_validation_coding_started": false
+  },
+  "restrictions": {
+    "one_execution_only": true,
+    "redraw_not_authorised": true,
+    "assignment_generation_authorised": false,
+    "redcap_import_authorised": false,
+    "later_seed_operations_authorised": false
+  }
+}
