@@ -107,8 +107,9 @@
     "active_sample_drawn": true,
     "reserve_sample_drawn": true,
     "formal_assignments_generated": true,
-    "formal_assignment_import_completed": false,
+    "formal_assignment_import_completed": true,
     "formal_validation_coding_started": false,
+    "reserve_activated": false,
     "project_owner_recruitment_started": false
   },
   "restrictions": {
@@ -298,6 +299,64 @@
     },
     "redcap_import_status": "not_performed",
     "formal_validation_coding_started": false,
+    "external_service_used": false
+  },
+  "formal_assignment_import": {
+    "redcap_project_pid": 9128,
+    "import_method": "manual REDCap Data Import Tool",
+    "importing_username": "sejkbst",
+    "import_completed_at_local": "2026-07-24T17:03:00+01:00",
+    "import_completed_at_utc": "2026-07-24T16:03:00Z",
+    "timezone": "Europe/London",
+    "source_file": "preregistration_restricted/assignments/formal_validation_20260724/redcap_import_validation.csv",
+    "source_sha256": "ed5a1c66e4dfa1037dfae2eb166a20fcca12ae18e77ca2b298bd5152252f5ae5",
+    "source_generation_commit": "d732b83f56b4f2b3b00f54f7f97266c3f4513d14",
+    "counts": {
+      "source_rows": 675,
+      "imported_as_new_records": 675,
+      "existing_records_updated_or_overwritten": 0,
+      "assignments": {
+        "C01": 225,
+        "C02": 225,
+        "C03": 225
+      },
+      "existing_pilot_qa_records_retained": 35,
+      "total_records_after_import": 710
+    },
+    "administrator_side_verification": {
+      "import_file_matched_frozen_sha256": true,
+      "all_675_rows_accepted_as_new_records": true,
+      "coder_dag_record_counts": {
+        "c01": 225,
+        "c02": 225,
+        "c03": 225
+      },
+      "pilot_qa_dag_records_retained": 35,
+      "coder_accounts_assigned_to_corresponding_dag": true,
+      "coder_user_rights_restricted": true,
+      "administrator_account_no_dag_project_wide_access": true,
+      "formal_coding_dashboard_initial_empty_cause": "filter required unpopulated field [sample_status] = '1'",
+      "formal_coding_dashboard_filter_corrected": true,
+      "corrected_dashboard_displays_formal_batch": true,
+      "records_also_visible_in_default_dashboard": true,
+      "default_dashboard_visibility_indicates_duplication": false,
+      "access_separation_by_dag_not_dashboard": true,
+      "effective_dashboard_filter_basis": "[assignment_batch] = 'formal_validation_20260724'"
+    },
+    "restricted_user_live_qa": {
+      "full_login_testing_through_coder_accounts_performed": false,
+      "administrator_side_rights_dag_and_record_checks_performed": true,
+      "first_login_confirmation_required_before_coding": true,
+      "coders_instructed_to_stop_if_anything_unexpected": true
+    },
+    "operational_state_after_import": {
+      "formal_assignments_generated": true,
+      "formal_assignment_import_completed": true,
+      "formal_validation_coding_started": false,
+      "reserve_activated": false,
+      "project_owner_recruitment_started": false
+    },
+    "redcap_connection_used": false,
     "external_service_used": false
   }
 }

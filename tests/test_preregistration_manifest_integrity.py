@@ -187,8 +187,9 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
     assert state["active_sample_drawn"] is True
     assert state["reserve_sample_drawn"] is True
     assert state["formal_assignments_generated"] is True
-    assert state["formal_assignment_import_completed"] is False
+    assert state["formal_assignment_import_completed"] is True
     assert state["formal_validation_coding_started"] is False
+    assert state["reserve_activated"] is False
     assert state["project_owner_recruitment_started"] is False
     execution = draw_receipt["official_draw_execution"]
     assert execution["official_draw_execution_count"] == 1
@@ -227,6 +228,37 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
     assert assignments["redcap_import_status"] == "not_performed"
     assert assignments["formal_validation_coding_started"] is False
     assert assignments["external_service_used"] is False
+
+    imp = draw_receipt["formal_assignment_import"]
+    assert imp["redcap_project_pid"] == 9128
+    assert imp["importing_username"] == "sejkbst"
+    import_local = datetime.fromisoformat(imp["import_completed_at_local"])
+    import_utc = datetime.fromisoformat(imp["import_completed_at_utc"].replace("Z", "+00:00"))
+    assert import_local.astimezone(timezone.utc) == import_utc
+    assert imp["source_sha256"] == (
+        "ed5a1c66e4dfa1037dfae2eb166a20fcca12ae18e77ca2b298bd5152252f5ae5"
+    )
+    counts = imp["counts"]
+    assert counts["assignments"] == {"C01": 225, "C02": 225, "C03": 225}
+    assert sum(counts["assignments"].values()) == counts["source_rows"] == 675
+    assert counts["imported_as_new_records"] == 675
+    assert counts["existing_records_updated_or_overwritten"] == 0
+    assert counts["existing_pilot_qa_records_retained"] == 35
+    assert (
+        counts["source_rows"] + counts["existing_pilot_qa_records_retained"]
+        == counts["total_records_after_import"]
+        == 710
+    )
+    assert imp["administrator_side_verification"]["coder_dag_record_counts"] == {
+        "c01": 225,
+        "c02": 225,
+        "c03": 225,
+    }
+    qa = imp["restricted_user_live_qa"]
+    assert qa["full_login_testing_through_coder_accounts_performed"] is False
+    assert qa["first_login_confirmation_required_before_coding"] is True
+    assert imp["redcap_connection_used"] is False
+    assert imp["external_service_used"] is False
 
 
 
