@@ -8,49 +8,92 @@
 - **Protocol byte size:** 413327 bytes
 - **Protocol SHA-256:** `6d385f40443e96b0b8cc774610b5d0ff6947ae43dff42576aa1a84c90dc8906e`
 - **Protocol-freeze Git commit:** `200021df2d57b3c50ef0cc4eab63aac98ef03b52`
-- **Packet preparation date:** 24 July 2026
+- **Repository:** `balintstewart77/ADR_DEA_project`
+- **Branch:** `main`
+- **Preparation date:** 24 July 2026
 
-The protocol identity above was verified directly from the current file bytes.
-This packet prepares the OSF upload; it does not state that the registration has
+This packet prepares the OSF upload. It does not state that the registration has
 already been submitted, approved or assigned an OSF registration identifier.
 
-## Status represented by this packet
+## Packet contents and purpose
 
-- The cleaned 1,308-record population and Fable 5 classification release were frozen.
-- Scratch-coder REDCap candidate 0.7 had completed training/pilot QA and was frozen.
-- Shared training, the ten-record pilot and post-pilot calibration had already occurred.
-- Every training, discussion and pilot record was permanently excluded from validation and reserve samples.
-- No active validation or reserve sample had been drawn.
-- No formal 675-row assignment import had occurred, and official sampling and assignment import remained unauthorised until OSF registration and the subsequent authorization gate.
-- No formal scratch-coder validation responses existed.
-- Project Owner recruitment and data collection had not begun. Project Owner activity remained conditional on ethics approval, live QA and instrument freeze.
+The scoped manifest lists 16 scientific, design and provenance artefacts:
 
-## Packet scope
+- the frozen preregistration protocol, sampling specification and 22-record training/pilot exclusion list;
+- the frozen taxonomy and exact production prompt;
+- the frozen Fable 5 classifications under validation and their run metadata;
+- source and population provenance plus reviewed duplicate rulings;
+- the exact pre-existing GPT-5.5 comparison output;
+- cross-model metrics and the canonical 380-record disagreement frame used for hard-case sampling;
+- production-model repeat-run stability metrics;
+- the frozen scratch-coder REDCap dictionary; and
+- the post-pilot shared calibration note.
 
-`osf_registration_manifest.csv` lists the eight scientific artefacts intended
-for separate upload and records hashes computed from their current repository
-bytes. Together they identify the preregistered design, exclusions and frozen
-classification system. The full repository contains additional provenance,
-tests, scripts and pre-existing evidence.
+The 16 listed artefacts, this README and `osf_registration_manifest.csv` make
+exactly 18 OSF files. The manifest does not list or hash itself or this README.
 
-The full repository artefact manifest is intentionally not included because it
-is a broader internal inventory rather than the scoped OSF upload list. This
-README and `osf_registration_manifest.csv` are administrative packet files and
-will also accompany the upload, but neither is listed as a scientific artefact;
-the packet manifest therefore does not hash itself or this README.
+`production_release_manifest.yaml` is preserved unchanged as the historical
+frozen Phase 3 release record. Later pilot, instrument-freeze and protocol
+status is governed by protocol v1.0 and this registration README.
 
-The coder handout is omitted. Repository metadata identifies the delivered v2
-training handout as superseded and v3 as a working candidate/draft template
-pending final approval and the coding authorization gate. The repository does
-not demonstrate that v3 was both frozen and supplied to all coders, so no coder
-handout identity is asserted here.
+### Cross-model metrics provenance
 
-## Reproducibility reference
+The frozen Phase 3 production-release manifest records SHA-256
+`c7ae2c262b0c6da67320c65881b5c973d979f7a22967461afc8eefbf2f4d0c7d`
+for the cross-model metrics file. Those exact bytes occur at repository commit
+`e0c322fd77ae93a574a0dfcee076757d294de0d2`, rather than at the manifest's
+top-level repository commit
+`e9d53023417348ad2784e629c855bf8d04f38df8`. The registration archives the
+later provenance-refreshed version with SHA-256
+`d84c3d497d3c556f7d59aaf1471738ff455d6edcf626d39f0f618b97bd136e7a`.
+Direct JSON comparison confirmed that only the canonical GPT-5.5 source path
+changed; all scientific metrics, counts and referenced model-output hashes are
+unchanged. The frozen production-release manifest is preserved without
+modification.
 
-- **Repository:** `ADR_DEA_project`
-- **Branch at packet preparation:** `main`
-- **Freeze commit:** `200021df2d57b3c50ef0cc4eab63aac98ef03b52`
-- **Public repository:** https://github.com/balintstewart77/ADR_DEA_project
+## Prospective boundary
 
-Hashes in `osf_registration_manifest.csv` identify the exact scientific
-artefacts intended for upload.
+At the time represented by this packet:
+
+- shared training, the ten-record pilot and post-pilot calibration had occurred, and every associated record was permanently excluded from validation and reserve samples;
+- no active validation sample or reserve sample had been drawn;
+- no formal 675-row assignment import had occurred;
+- no formal scratch-coder validation responses existed;
+- official sampling and assignment import remained unauthorised pending registration and the subsequent authorization gate; and
+- Project Owner recruitment and data collection had not begun, and owner activity remained conditional on ethics approval, live QA and instrument freeze.
+
+## Deliberate exclusions
+
+This scoped packet deliberately excludes:
+
+- the raw UKSA register snapshot and cleaned 1,308-record register CSV;
+- `crossmodel_comparison.csv` and Fable repeat-run caches;
+- trainer and coder handouts;
+- protocol v0.18 and earlier versions;
+- the full repository artefact manifest;
+- Project Owner instrument candidates; and
+- sampled-record or assignment files.
+
+Population identity remains fixed through the source-provenance record,
+production-release manifest, reviewed duplicate rulings, hashes and repository
+commit. The exact frozen production and comparison-model outputs are included.
+The canonical 380-record disagreement frame and cross-model metrics are
+included, so the full comparison table is not required. Historical training
+materials remain preserved in the repository but are not part of this minimum
+registration packet.
+
+## Scope, reproducibility and rights
+
+The packet is deliberately scoped rather than a complete repository export.
+The repository contains additional scripts, tests, logs, caches and historical
+materials. Hashes in `osf_registration_manifest.csv` identify the exact files
+archived with the registration.
+
+Register-derived fields are adapted from data published by the UK Statistics
+Authority and remain subject to the Open Government Licence v3.0. Any licence
+selected for the OSF project or registration does not supersede third-party or
+source-data rights.
+
+The reproducibility reference is repository
+`balintstewart77/ADR_DEA_project`, branch `main`, with protocol-freeze commit
+`200021df2d57b3c50ef0cc4eab63aac98ef03b52`.
