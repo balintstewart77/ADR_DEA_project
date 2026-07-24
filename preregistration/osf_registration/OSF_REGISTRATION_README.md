@@ -32,6 +32,16 @@ The scoped manifest lists 16 scientific, design and provenance artefacts:
 The 16 listed artefacts, this README and `osf_registration_manifest.csv` make
 exactly 18 OSF files. The manifest does not list or hash itself or this README.
 
+The scoped manifest records two forms of byte provenance. `byte_size` and
+`sha256` identify the exact working-tree files prepared for OSF upload.
+`git_blob_byte_size` and `git_blob_sha256` identify the canonical repository
+blobs at the common packet-basis commit
+`f81724a7a740a7511a7bd70e0929cea6b04d9677`. For text files checked out with
+Windows line endings, the raw upload bytes may differ from the LF-normalised Git
+blob; such cases are accepted only where Git clean-filter verification proves
+that both represent the same committed content. No scientific file was
+rewritten for this packet.
+
 `production_release_manifest.yaml` is preserved unchanged as the historical
 frozen Phase 3 release record. Later pilot, instrument-freeze and protocol
 status is governed by protocol v1.0 and this registration README.
@@ -68,7 +78,6 @@ This scoped packet deliberately excludes:
 
 - the raw UKSA register snapshot and cleaned 1,308-record register CSV;
 - `crossmodel_comparison.csv` and Fable repeat-run caches;
-- trainer and coder handouts;
 - protocol v0.18 and earlier versions;
 - the full repository artefact manifest;
 - Project Owner instrument candidates; and
@@ -78,16 +87,47 @@ Population identity remains fixed through the source-provenance record,
 production-release manifest, reviewed duplicate rulings, hashes and repository
 commit. The exact frozen production and comparison-model outputs are included.
 The canonical 380-record disagreement frame and cross-model metrics are
-included, so the full comparison table is not required. Historical training
-materials remain preserved in the repository but are not part of this minimum
-registration packet.
+included, so the full comparison table is not required.
+
+### Training-material identity limitation
+
+No definitive coder- or trainer-handout identity is asserted by this
+registration. Historical and working handout versions remain preserved in the
+repository, but this registration does not identify any one file as the
+definitive byte-exact handout governing formal validation coding. The post-pilot
+shared calibration note is archived separately because its identity and
+simultaneous circulation to all three coders are established.
+
+### Other protocol §11 materials
+
+Other reproducibility materials named in protocol §11—including the comparison
+and sampling scripts, analysis code, scratch-coder coding guide, pilot-debrief
+materials, and the protocol-deviation, instrument-change and dated
+pilot-feedback logs—remain preserved in repository
+`balintstewart77/ADR_DEA_project`, branch `main`, at protocol-freeze commit
+`200021df2d57b3c50ef0cc4eab63aac98ef03b52`, and are linked rather than
+duplicated in this scoped OSF upload.
+
+- **Comparison scripts:** `analysis/outputs/gpt55_crossmodel_stratum_run.py`; `analysis/crossmodel_comparison.py`; `analysis/regenerate_crossmodel_evidence.py`; `analysis/verify_fable_run_stability.py`
+- **Sampling scripts:** `scripts/draw_validation_samples.py`
+- **Analysis code:** `preregistration/package/07_analysis/run_validation_analysis.py`; `analysis/validation/alpha.py`; `analysis/validation/bootstrap.py`; `analysis/validation/diagnostics.py`; `analysis/validation/adjudication.py`; `analysis/validation/release.py`
+- **Scratch-coder coding guide:** `preregistration/package/06_redcap/redcap_instrument_codebook.md`
+- **Pilot-debrief materials:** `preregistration/package/05_training_and_pilot/DEA_pilot_projects_trainer_debrief_reference.docx`; `preregistration/package/05_training_and_pilot/DEA_pilot_projects_trainer_debrief_reference_v2.docx`
+- **Protocol-deviation log:** `preregistration/package/09_logs_and_templates/protocol_deviation_log.csv`
+- **Instrument-change log:** `preregistration/package/09_logs_and_templates/instrument_change_log.csv`
+- **Dated pilot-feedback log:** `preregistration/package/05_training_and_pilot/pilot_feedback_log_20260717.md`
 
 ## Scope, reproducibility and rights
 
-The packet is deliberately scoped rather than a complete repository export.
-The repository contains additional scripts, tests, logs, caches and historical
-materials. Hashes in `osf_registration_manifest.csv` identify the exact files
-archived with the registration.
+The 18-file OSF packet is a deliberately scoped archival packet rather than a
+complete repository export. The items in the deliberate-exclusions section are
+omitted by design. Separately, the handout omission reflects an unresolved
+byte-identity limitation. The other protocol §11 materials are accounted for
+through their concrete repository paths and the protocol-freeze commit rather
+than duplicated in the OSF folder. The repository also contains additional
+tests, logs, caches and historical materials. Hashes in
+`osf_registration_manifest.csv` identify the exact files archived with the
+registration.
 
 Register-derived fields are adapted from data published by the UK Statistics
 Authority and remain subject to the Open Government Licence v3.0. Any licence
