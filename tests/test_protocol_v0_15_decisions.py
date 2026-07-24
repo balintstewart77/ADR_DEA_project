@@ -66,11 +66,11 @@ def test_v0_15_adjudication_and_sampling_rules_remain_explicit():
 def test_sampling_design_is_rebound_without_execution_or_design_change():
     specification = yaml.safe_load(SPECIFICATION.read_text(encoding="utf-8"))
     assert specification["protocol_basis"] == {
-        "version": "v0.15",
-        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v0.15.docx",
-        "status": "review_candidate",
+        "version": "v1.0",
+        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.0.docx",
+        "status": "frozen",
         "current_implementation_basis": True,
-        "frozen": False,
+        "frozen": True,
         "registered": False,
         "official_sample_draw_authorised": False,
     }
@@ -107,20 +107,21 @@ def test_sam_003_manifest_row_is_column_aligned():
     assert row["supersedes_or_superseded_by"] == "SAM-001"
 
 
-def test_manifest_retains_v0_15_analysis_basis_and_v0_17_documentation_candidate():
+def test_manifest_retains_v0_15_and_v0_17_as_superseded_predecessors():
     rows = manifest_rows()
     analysis_basis = rows["PRO-012"]
     assert analysis_basis["version"] == "v0.15"
-    assert analysis_basis["protocol_status"] == "review_candidate"
-    assert analysis_basis["current_implementation_basis"] == "true"
-    assert analysis_basis["superseded_by"] == ""
+    assert analysis_basis["protocol_status"] == "superseded_review_candidate"
+    assert analysis_basis["current_implementation_basis"] == "false"
+    assert analysis_basis["superseded_by"] == "v0.16"
     archived_documentation_candidate = rows["PRO-013"]
     assert archived_documentation_candidate["version"] == "v0.16"
     assert archived_documentation_candidate["protocol_status"] == ""
     documentation_candidate = rows["PRO-015"]
     assert documentation_candidate["version"] == "v0.17"
-    assert documentation_candidate["protocol_status"] == "documentation_review_candidate"
+    assert documentation_candidate["protocol_status"] == "superseded_review_candidate"
     assert documentation_candidate["current_implementation_basis"] == "false"
+    assert documentation_candidate["superseded_by"] == "v0.18"
     assert documentation_candidate["frozen"] == documentation_candidate["registered"] == "false"
     assert documentation_candidate["official_sample_draw_authorised"] == "false"
     assert rows["PRO-008"]["version"] == "v0.14"

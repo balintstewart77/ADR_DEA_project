@@ -11,14 +11,11 @@ artefact.
 
 ## 2. Current study status
 
-- `Validation_Protocol_PreReg_v0.17.docx` is the current ethics/DPO documentation
-  candidate.
-  It aligns only the Project Owner workflow and data structure to the current
-  one-link Survey Queue candidate. It is not frozen or registered and authorises
-  no formal sampling, assignment import, or coding. The unchanged v0.15 source
-  remains the analysis-preflight implementation basis until the later coordinated
-  preregistration update; no preregistered analysis or sampling artefact was
-  rebound in this documentation-only revision.
+- `Validation_Protocol_PreReg_v1.0.docx` is the sole current preregistration
+  protocol. It was manually reviewed and frozen on 24 July 2026, superseding the
+  preserved v0.18 review candidate, and is ready for OSF registration. It is not
+  yet registered and does not by itself authorise formal sampling, assignment
+  import or coding.
 - REDCap candidate 0.7 passed completed administrator and restricted-user live
   QA and is the frozen 150-field formal instrument. No formal assignments are
   populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.
@@ -195,9 +192,9 @@ The manifest distinguishes authoritative, candidate, supporting, superseded,
 ambiguous, and missing artefacts. A higher version number or later timestamp is
 not, by itself, evidence of authority. Phase 3 source, cleaning, production and
 pre-existing-evidence artefacts are frozen only after their completed offline
-cross-document audit. Protocol, teaching, REDCap and other prospective
-materials are not finally frozen until their collaborator-review and pilot
-gates are complete. After registration, changes require a new version;
+cross-document audit. Prospective materials are finally frozen only after their
+applicable collaborator-review and pilot gates are complete; protocol v1.0 now
+records completion of the protocol freeze. After registration, changes require a new version;
 substantive changes also require a preregistration amendment recorded under
 `post_registration/amendments/`.
 

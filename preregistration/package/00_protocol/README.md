@@ -1,36 +1,33 @@
 # Protocol
 
-This folder contains the current ethics/DPO documentation candidate, the
-unchanged analysis-preflight protocol basis and, after approval, the final
+This folder contains the frozen preregistration protocol, its preserved
+unregistered predecessors and, after registration packaging, the final
 registration PDF. It must
 not contain coder assignments, contact details, or post-registration amendments.
 
-`Validation_Protocol_PreReg_v0.17.docx` is the current ethics/DPO documentation
-candidate, prepared on 23 July 2026. It makes only the factual Project Owner
-alignment from separate assignment records/links to one pseudonymous owner
-record, one personalised Survey Queue link, owner-level consent and repeating
-Project Review rows. The population, exclusions, scratch sampling design,
-seeds, analysis and release rules are unchanged. It remains unfrozen and
-unregistered and authorises no formal sampling, assignment import, or coding.
-Jo's final substantive review, final package QA, protocol freeze and registration
-remain pending.
+`Validation_Protocol_PreReg_v1.0.docx` is the sole current preregistration
+protocol. It was frozen on 24 July 2026 after manual review and is ready for OSF
+registration. It is not yet OSF-registered: the registration identifier and
+timestamp remain blank until the actual registration is completed. Freezing the
+protocol does not itself authorise formal sampling, assignment import or coding;
+the separate post-registration authorisation gate remains closed.
 
-DEV-001 is closed in v0.17: the Project Owner participant-withdrawal sentence
-now says “before analysis begins”. The other use of “analysis lock” concerns the
-analytical freeze and remains valid. V0.17 also aligns the owner analytical-
-completion description to REDCAP-020: only explicit-disagreement explanations
-are required; other conditional explanations are optional enrichment.
+`Validation_Protocol_PreReg_v0_18.docx` is the immediate predecessor: the final
+review candidate prepared on 24 July 2026. It is preserved byte-for-byte and is
+superseded by frozen v1.0. V0.18 was never frozen, registered or authorised for
+formal study activity.
 
-`Validation_Protocol_PreReg_v0.15.docx` is retained byte-for-byte as the
-analysis-preflight and formal-sampling implementation basis. The v0.17
-documentation alignment does not rebind the preregistered analysis or sampling
-artefacts. Older unregistered drafts v0.9 through v0.14 remain recoverable
-through Git history.
+## Version history
 
-The v0.17 documentation candidate, archived v0.16 predecessor and v0.15
-implementation basis are physical DOCX files. Earlier unregistered drafts remain documented through Git history and
-manifest metadata. An actually registered protocol, or a later formal
-amendment, may be retained as an immutable physical artefact.
+- **v1.0 (24 July 2026):** promoted from manually reviewed candidate v0.18 and
+  frozen as the sole current preregistration protocol; not yet OSF-registered.
+- **v0.18 (24 July 2026):** final review candidate; superseded directly by v1.0.
+- **v0.17 (23 July 2026):** ethics/DPO documentation candidate; superseded by
+  v0.18. DEV-001 was closed in this version.
+- **v0.16:** archived ethics/DPO documentation predecessor; superseded by v0.17.
+- **v0.15:** preserved analysis-preflight predecessor; superseded by v0.16.
+- **v0.9–v0.14:** earlier unregistered review candidates retained through Git
+  history and manifest metadata.
 
 Candidate 0.3 is referenced only as historical pilot evidence. Candidate 0.6 is
 referenced only as historical intermediate live-QA evidence; it collected no

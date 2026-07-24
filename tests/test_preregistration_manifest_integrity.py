@@ -81,22 +81,22 @@ def test_manifest_structure_statuses_and_relationships() -> None:
         for token in filter(None, RELATIONSHIP_SPLIT.split(row["supersedes_or_superseded_by"])):
             assert token in identifier_set, (row["artifact_id"], token)
 
-    analysis_protocols = [
-        row for row in manifest_rows if row["protocol_status"] == "review_candidate"
+    current_protocols = [
+        row for row in manifest_rows
+        if row["current_implementation_basis"] == "true"
     ]
-    assert [row["artifact_id"] for row in analysis_protocols] == ["PRO-012"]
-    assert analysis_protocols[0]["current_implementation_basis"] == "true"
+    assert [row["artifact_id"] for row in current_protocols] == ["PRO-017"]
+    current_protocol = current_protocols[0]
+    assert current_protocol["version"] == "v1.0"
+    assert current_protocol["protocol_status"] == "frozen"
+    assert current_protocol["frozen"] == "true"
+    assert current_protocol["registered"] == "false"
+    assert current_protocol["official_sample_draw_authorised"] == "false"
     documentation_protocols = [
         row for row in manifest_rows
         if row["protocol_status"] == "documentation_review_candidate"
     ]
-    assert [row["artifact_id"] for row in documentation_protocols] == ["PRO-015"]
-    documentation_protocol = documentation_protocols[0]
-    assert documentation_protocol["version"] == "v0.17"
-    assert documentation_protocol["current_implementation_basis"] == "false"
-    assert documentation_protocol["frozen"] == "false"
-    assert documentation_protocol["registered"] == "false"
-    assert documentation_protocol["official_sample_draw_authorised"] == "false"
+    assert documentation_protocols == []
 
 
 
@@ -181,12 +181,19 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
     assert protocol_path.is_file()
     assert protocol["size_bytes"] == str(protocol_path.stat().st_size)
     assert protocol["sha256"] == hashlib.sha256(protocol_path.read_bytes()).hexdigest()
-    analysis_basis = next(row for row in manifest_rows if row["artifact_id"] == "PRO-012")
-    assert analysis_basis["version"] == "v0.15"
-    assert analysis_basis["current_state"] == "working_candidate"
-    assert analysis_basis["current_implementation_basis"] == "true"
-    assert analysis_basis["superseded_by"] == ""
-    assert analysis_basis["sha256"] == "5eff044b4f8d488e84a5b49720d35318add4f29ef53136cb6ce9c2b197409ee7"
+    predecessor = next(row for row in manifest_rows if row["artifact_id"] == "PRO-016")
+    assert predecessor["version"] == "v0.18"
+    assert predecessor["current_state"] == "superseded"
+    assert predecessor["current_implementation_basis"] == "false"
+    assert predecessor["superseded_by"] == "v1.0"
+    assert predecessor["sha256"] == "d12dca15723c702028e5f73634b8b147abb584a22362aea6d5586d26ee3d3a19"
+    assert predecessor["size_bytes"] == "3228034"
+    assert hashlib.sha256((ROOT / predecessor["current_path"]).read_bytes()).hexdigest() == predecessor["sha256"]
+    current = next(row for row in manifest_rows if row["artifact_id"] == "PRO-017")
+    assert current["version"] == "v1.0"
+    assert current["supersedes"] == "v0.18"
+    assert current["sha256"] == "6d385f40443e96b0b8cc774610b5d0ff6947ae43dff42576aa1a84c90dc8906e"
+    assert current["size_bytes"] == "413327"
 
     historical = [row for row in manifest_rows if row["current_state"] == HISTORICAL_STATE]
     assert {row["version"] for row in historical} == {

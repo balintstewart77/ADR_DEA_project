@@ -15,16 +15,16 @@ def candidate_row() -> dict[str, str]:
     }
 
 
-def test_canonical_v0_17_working_candidate_metadata_verifies_offline():
+def test_canonical_v1_0_frozen_metadata_verifies_offline():
     assert verify_protocol_entry(REPOSITORY_ROOT / DEFAULT_MANIFEST, REPOSITORY_ROOT) == []
 
 
 def test_feedback_closure_is_removed_from_pending_protocol_gates():
     assert not any("feedback" in gate.lower() for gate in REQUIRED_PENDING_GATES)
-    assert REQUIRED_PENDING_GATES[0] == (
-        "Complete project-owner instrument implementation, live QA and freeze"
+    assert REQUIRED_PENDING_GATES == (
+        "Submit and verify the official preregistration",
+        "Record the subsequent formal-sampling authorisation gate",
     )
-    assert "Complete Jo's final substantive review" in REQUIRED_PENDING_GATES
 
 
 def test_review_candidate_cannot_be_frozen():
@@ -41,6 +41,17 @@ def test_documentation_candidate_does_not_replace_analysis_basis():
     assert validate_protocol_status(row) == []
     row["current_implementation_basis"] = "true"
     assert "documentation review candidate cannot replace the analysis implementation basis" in validate_protocol_status(row)
+
+
+def test_frozen_protocol_is_the_current_unregistered_basis():
+    row = candidate_row() | {
+        "protocol_status": "frozen",
+        "current_implementation_basis": "true",
+        "frozen": "true",
+    }
+    assert validate_protocol_status(row) == []
+    row["current_implementation_basis"] = "false"
+    assert "frozen protocol must be the current implementation basis" in validate_protocol_status(row)
 
 
 def test_registration_requires_metadata_and_freeze():
