@@ -78,8 +78,9 @@ is configured and the approved final document version is entered.
 
 Candidate 0.7 passed repository validation and completed live REDCap QA on 22
 July 2026. It is frozen for preregistration and subsequent formal scratch
-coding, but it has not been populated with formal validation assignments and
-does not authorise sampling or import before preregistration is final. The
+coding. A deterministic 675-row formal import was generated from the 225 active
+records for review, but candidate 0.7 has not been populated with those
+assignments and no REDCap import was performed. The
 authoritative completed QA record is `redcap_live_runtime_qa_20260722.md`; its
 source-to-live audit records 65 textual round-trip differences and zero
 residual semantic differences under three narrow, enumerated transformations.
@@ -146,10 +147,10 @@ invitation/checkpoint, disposition, supplementary-reason, and response-status
 administration. It also records the 50-record target, 25-record minimum, 10
 supplementary-invitation maximum, 42-day close, and absence of a fixed owner
 reserve. Candidate 0.7 completed fresh live runtime QA and was frozen on 22
-July 2026. This resolves the instrument gate only: Jo's final review,
-preregistration completion, and all other preregistration gates remain. Formal
-sampling and assignment import remain prohibited until preregistration is
-final.
+July 2026. This resolved the instrument gate only. Preregistration was later
+approved and the single official sample draw completed. Formal assignments have
+now been generated for review, but assignment import and coding remain separate
+later actions and have not occurred.
 
 No coder-facing start pack currently exists in this repository. When created,
 its instructions must explain that the declaration is completed once; the
@@ -162,5 +163,7 @@ remain under tests/fixtures and contain no real Record ID. Candidate-0.7 import
 fixtures under `live_qa/` are explicitly synthetic, review-only and excluded
 from validation. The dated files under `live_snapshots/` and `live_qa/audit/`
 are the deliberately retained read-only freeze evidence. No additional
-completed response export, formal assignment, live survey link, project
-credential, API token, personal information or contact file belongs here.
+completed response export, restricted formal assignment or import file, live
+survey link, project credential, API token, personal information or contact
+file belongs in this public package. The restricted assignment artefacts are
+identified by aggregate provenance in the canonical receipt and manifest.

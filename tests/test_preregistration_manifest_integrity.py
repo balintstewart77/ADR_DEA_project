@@ -25,6 +25,12 @@ OFFICIAL_DRAW_RESTRICTED_IDS = {
     "POST-009", "POST-010", "POST-011", "POST-012",
     "POST-013", "POST-014", "POST-015",
 }
+FORMAL_ASSIGNMENT_RESTRICTED_IDS = {
+    "POST-019", "POST-020", "POST-021", "POST-022",
+}
+HASH_COMMITTED_RESTRICTED_IDS = (
+    OFFICIAL_DRAW_RESTRICTED_IDS | FORMAL_ASSIGNMENT_RESTRICTED_IDS
+)
 RELATIONSHIP_SPLIT = re.compile(r"\s*[;|]\s*")
 
 
@@ -167,6 +173,10 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
     assert by_id["POST-002"]["current_state"] == "superseded"
     assert by_id["POST-003"]["current_state"] == "not_yet_generated"
     assert all(by_id[artifact_id]["current_state"] == "completed" for artifact_id in OFFICIAL_DRAW_RESTRICTED_IDS)
+    assert all(
+        by_id[artifact_id]["current_state"] == "completed"
+        for artifact_id in FORMAL_ASSIGNMENT_RESTRICTED_IDS
+    )
 
     draw_receipt = json.loads(DRAW_RECEIPT.read_text(encoding="utf-8"))
     assert draw_receipt["gate_2_passed"] is True
@@ -176,6 +186,7 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
     assert state["official_sample_draw_completed"] is True
     assert state["active_sample_drawn"] is True
     assert state["reserve_sample_drawn"] is True
+    assert state["formal_assignments_generated"] is True
     assert state["formal_assignment_import_completed"] is False
     assert state["formal_validation_coding_started"] is False
     assert state["project_owner_recruitment_started"] is False
@@ -192,6 +203,30 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
         "purpose_only": 20,
         "domain_and_purpose": 11,
     }
+    assignments = draw_receipt["formal_assignment_generation"]
+    assert assignments["source_draw_completion_commit"] == (
+        "6500c92148d97043a7826b684f5885127fd22814"
+    )
+    assert assignments["randomisation"]["seeds"] == {
+        "C01": 101,
+        "C02": 102,
+        "C03": 103,
+    }
+    assert assignments["counts"] == {
+        "unique_active_record_ids": 225,
+        "rows_per_coder": {"C01": 225, "C02": 225, "C03": 225},
+        "total_assignment_rows": 675,
+    }
+    assert assignments["validation"] == {
+        "every_active_record_once_per_coder": True,
+        "no_reserve_input_read": True,
+        "no_reserve_record_assigned": True,
+        "coder_facing_import_contains_sampling_or_model_fields": False,
+        "coding_responses_prepopulated": False,
+    }
+    assert assignments["redcap_import_status"] == "not_performed"
+    assert assignments["formal_validation_coding_started"] is False
+    assert assignments["external_service_used"] is False
 
 
 
@@ -258,7 +293,7 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
             continue
         if row["access_class"] in RESTRICTED_ACCESS:
             assert row["registration_inclusion"] != "include"
-            if row["artifact_id"] in OFFICIAL_DRAW_RESTRICTED_IDS:
+            if row["artifact_id"] in HASH_COMMITTED_RESTRICTED_IDS:
                 path = ROOT / current_path
                 assert path.is_file(), row["artifact_id"]
                 assert row["size_bytes"] == str(path.stat().st_size), row["artifact_id"]

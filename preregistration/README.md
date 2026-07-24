@@ -17,14 +17,16 @@ may exist only after registration.
   2026-07-24 14:45 Europe/London. The approval record does not by itself
   authorise formal sampling, assignment import or coding.
 - REDCap candidate 0.7 passed completed administrator and restricted-user live
-  QA and is the frozen 150-field formal instrument. No formal assignments are
-  populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.
+  QA and is the frozen 150-field formal instrument. The restricted 675-row
+  formal import was generated for review but has not been imported; candidates
+  0.3 and 0.6 remain historical pilot/QA references only.
 - Phase 3 source, model, taxonomy, evidence and exclusion artefacts remain frozen.
 - The single authorised official draw was executed once on 24 July 2026. It
   produced 225 active and 150 reserve records; all sampled identities remain
   restricted, and the reserve is not activated.
-- Assignment generation, REDCap import, formal validation coding and Project
-  Owner recruitment remain unauthorised or unstarted as applicable.
+- Deterministic assignment generation is complete for C01, C02 and C03. REDCap
+  import, formal validation coding and Project Owner recruitment remain
+  unperformed or unstarted as applicable.
 - The durable approval receipt is
   `registration_records/osf_registration_8sn2j.yaml`; its evidence basis is
   `project_lead_reported`, not an independently verified archival status check.
@@ -281,11 +283,11 @@ answer or exclusion ID changed.
 Package 06 contains frozen candidate 0.7: one combined 150-field dictionary
 covering Assignment Admin, Coder Declaration, Scratch Coder and Project Owner.
 Completed administrator and restricted-user live QA, source/live equivalence,
-archive controls and dashboard permissions are documented. No formal validation
-assignment is populated. Candidate 0.3 pilot and candidate 0.6 intermediate-QA
-materials are explicitly historical. Gate 2 authorised only the now-completed
-official draw; assignment generation and REDCap import remain prohibited until
-separately authorised after the draw.
+archive controls and dashboard permissions are documented. Formal assignment
+and import files have been generated in restricted storage, but the live REDCap
+project is not populated. Candidate 0.3 pilot and candidate 0.6 intermediate-QA
+materials are explicitly historical. The now-completed draw and assignment
+generation do not authorise REDCap import or formal coding.
 
 ## 14. How to update the manifest
 

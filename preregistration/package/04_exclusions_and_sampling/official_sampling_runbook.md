@@ -9,7 +9,7 @@ This runbook records the controlled procedure used after excluded pilot completi
 - Active hard allocation: 25/25/25.
 - The seeded reserve target 16/17/17 encountered six unavailable Domain-and-Purpose seats after baseline-first and active selection. The registered deterministic fallback produced 19/20/11 with no total shortfall.
 - Restricted outputs remain at `preregistration_restricted/sampling/official_draw_20260724/`; hashes and aggregate checks are recorded in the canonical receipt and post-registration execution log.
-- Assignment generation, REDCap import, formal coding, reserve activation and Project Owner recruitment were not authorised or performed.
+- Deterministic assignments were generated later from the 225 active records only. REDCap import, formal coding, reserve activation and Project Owner recruitment remain unperformed; reserve records were not assigned.
 
 ## Before execution
 
@@ -41,3 +41,12 @@ This runbook records the controlled procedure used after excluded pilot completi
 - Import only authorised active assignments into REDCap; preserve reserve manifests untouched.
 - Public metadata may report aggregate counts and strata without identities.
 - Log any deviation immediately. Never redraw because selected records are inconvenient.
+
+## Subsequent assignment generation
+
+The active baseline and active hard-case files were combined only for
+deterministic assignment generation. Each of C01, C02 and C03 received all 225
+active records once, using registered shuffle seeds 101, 102 and 103. The
+restricted assignment crosswalk and `redcap_import_validation.csv` are preserved
+outside this public package. No reserve file was used as an assignment input,
+and no REDCap import or formal coding action occurred.

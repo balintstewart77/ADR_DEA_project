@@ -14,7 +14,9 @@ evidence basis is `project_lead_reported`, and independent archival-status
 verification is not claimed. Registration does not itself authorise formal
 sampling, assignment import or coding. The separate post-registration Gate 2
 authorisation permitted exactly one official draw. That draw was executed once
-on 24 July 2026; assignment import and formal coding remain unauthorised.
+on 24 July 2026. Deterministic formal assignments were subsequently generated
+from the active sample for review; REDCap import and formal coding remain
+unperformed and unauthorised.
 
 `Validation_Protocol_PreReg_v1.0.docx` is the immediate predecessor. It remains
 preserved byte-for-byte and is superseded directly by frozen v1.1. V1.1 replaces
@@ -48,10 +50,11 @@ formal data. REDCap candidate 0.7 passed completed administrator and restricted-
 live QA on 22 July 2026 and is the frozen 150-field scratch-coder source instrument.
 The separate project-owner candidate 0.3 is implemented but remains subject to
 controlled live QA and freeze before registration. No formal validation
-assignments are populated.
+assignments are populated in REDCap.
 
 The official draw was prospectively authorised and completed exactly once.
-Active and reserve identities remain restricted; assignment generation, REDCap
-import and formal coding remain separately unauthorised. The canonical
-machine-readable status and exact protocol provenance are in
+Active and reserve identities remain restricted. Deterministic assignments for
+the 225 active records were generated for C01, C02 and C03; reserve records were
+not assigned. REDCap import and formal coding remain separately unauthorised
+and unperformed. The canonical machine-readable status and exact protocol provenance are in
 `../../preregistration_artifact_manifest.csv`.

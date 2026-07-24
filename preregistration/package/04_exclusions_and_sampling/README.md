@@ -24,7 +24,9 @@ receipt, Gate 2 confirmation, matching frozen commit and hashes, a clean
 worktree, restricted storage, an empty output location and a typed confirmation
 token. Registration and Gate 2 are satisfied, and the one authorised draw is
 complete. The restricted outputs contain 225 active and 150 reserve records;
-no assignment or REDCap import output was created.
+deterministic formal assignments were subsequently generated from the active
+records only. A restricted REDCap import file exists for review but has not been
+imported; reserve records remain unassigned and inactive.
 
 Gate 2 uses a two-commit handshake: clean verified implementation basis A,
 followed by direct-child authorisation commit B. The tracked JSON receipt and
