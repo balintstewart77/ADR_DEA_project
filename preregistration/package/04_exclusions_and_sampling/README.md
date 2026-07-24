@@ -25,6 +25,14 @@ token. Registration is now satisfied, but canonical protocol metadata still has
 `official_sample_draw_authorised=false`, so the official guard remains closed by
 design.
 
+Gate 2 uses a two-commit handshake: clean verified implementation basis A,
+followed by direct-child authorisation commit B. The tracked JSON receipt and
+the manifest record `frozen_git_commit=A`, while execution requires clean
+`HEAD=B` and `HEAD^=A`. B is not self-recorded. Its diff is restricted to the
+receipt, manifest and enumerated administrative status files; any later commit,
+sampling-code change, frozen-input change or unrelated file invalidates the
+authorisation.
+
 Only scratch-coder reserves are defined: 100 baseline and 50 hard-case records.
 There is no fixed project-owner reserve. Any later owner review follows the
 separate post-revision recruitment rule in the protocol.

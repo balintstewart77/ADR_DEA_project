@@ -7,10 +7,12 @@ Use this runbook only after excluded pilot completion and debrief, closure of th
 - Confirm coder training and the excluded pilot are complete and all pilot-driven changes are resolved.
 - Confirm Gate 1 passed and the final preregistration package is frozen.
 - Confirm the recorded OSF registration identity and timestamp against the public approval receipt.
-- Confirm Gate 2 passed, record the frozen Git commit, and verify that HEAD equals it.
+- Confirm the clean implementation-basis commit A. The later Gate 2 authorisation commit B must be its direct child, and official execution must occur at clean `HEAD=B` with `HEAD^=A`.
 - Verify a clean worktree and activate the recorded Python environment (Python 3.13.2, NumPy 2.2.5, pandas 2.2.3 for this candidate).
 - Verify the sampling specification and all three input hashes.
-- Only after explicit Gate 2 authorisation, create `preregistration_restricted/registration_receipt.json` with the real registration identity, timestamp, authorised commit, Gate 2 confirmation and the expected hashes. Do not fabricate these values or reuse the public approval receipt as the execution credential.
+- Only after explicit Gate 2 authorisation, create and force-track `preregistration_restricted/registration_receipt.json` in commit B with the real registration identity and timestamp, `frozen_git_commit=A`, Gate 2 confirmation, `official_sample_draw_completed=false` and the expected hashes. Commit B deliberately does not record its own hash. Do not fabricate these values or reuse the public approval receipt as the execution credential.
+- Restrict commit B to the tracked Gate 2 receipt, the canonical manifest and necessary current administrative status documentation. The guard rejects sampling code, frozen-input, protocol, output, assignment or unrelated changes.
+- Do not add any later commit before the draw. Any descendant after B invalidates the authorisation and requires a new explicit Gate 2 authorisation commit directly above a newly verified basis.
 - Confirm `preregistration_restricted/sampling/<official-output-directory>/` does not already contain an official draw.
 
 ## Execution

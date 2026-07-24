@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import tempfile
 import unittest
+from contextlib import contextmanager
 from pathlib import Path
 from unittest import mock
 
@@ -51,6 +53,129 @@ def make_inputs(
         input_hashes={"cleaned_population": "a" * 64, "exclusion": "b" * 64, "disagreement_frame": "c" * 64},
         source_paths={"cleaned_population": "cleaned.csv", "exclusion": "exclusions.csv", "disagreement_frame": "hard.csv"},
     )
+
+
+def _git(root: Path, *arguments: str) -> str:
+    return subprocess.run(
+        ["git", *arguments],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+
+
+def _guard_manifest(*, authorised: bool, basis_commit: str) -> str:
+    return (
+        "artefact_group,current_implementation_basis,frozen,registered,"
+        "official_sample_draw_authorised,registration_identifier,"
+        "registration_timestamp,implementation_last_checked_commit\n"
+        f"00_protocol,true,true,true,{str(authorised).lower()},8sn2j,"
+        f"2026-07-24T13:45:00Z,{basis_commit}\n"
+    )
+
+
+@contextmanager
+def git_guard_repository(
+    *,
+    make_authorisation_commit: bool = True,
+    receipt_basis: str | None = None,
+    manifest_basis: str | None = None,
+    authorised: bool = True,
+    gate_2_passed: bool = True,
+    completed: bool = False,
+    malformed_receipt: bool = False,
+    track_receipt: bool = True,
+    unrelated_change: bool = False,
+    script_change: bool = False,
+    frozen_input_change: bool = False,
+):
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        _git(root, "init", "-q")
+        _git(root, "config", "user.name", "Synthetic Gate Test")
+        _git(root, "config", "user.email", "synthetic@example.invalid")
+        _git(root, "config", "core.autocrlf", "false")
+        (root / ".gitignore").write_text("/preregistration_restricted/\n", encoding="utf-8")
+        _git(root, "add", ".gitignore")
+        _git(root, "commit", "-q", "-m", "bootstrap")
+        bootstrap = _git(root, "rev-parse", "HEAD")
+
+        script = root / sampler.DRAW_SCRIPT_PATH
+        script.parent.mkdir(parents=True)
+        script.write_text("# synthetic draw guard fixture\n", encoding="utf-8")
+        specification = root / "spec.yaml"
+        specification.write_text("guard-test\n", encoding="utf-8")
+        frozen_input = root / sampler.REAL_CLEANED_PATH
+        frozen_input.parent.mkdir(parents=True)
+        frozen_input.write_text("synthetic frozen input\n", encoding="utf-8")
+        manifest = root / sampler.PROTOCOL_MANIFEST_PATH
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(
+            _guard_manifest(authorised=False, basis_commit=bootstrap),
+            encoding="utf-8",
+        )
+        _git(root, "add", "--all")
+        _git(root, "commit", "-q", "-m", "implementation basis A")
+        basis = _git(root, "rev-parse", "HEAD")
+
+        inputs = make_inputs()
+        output = root / sampler.RESTRICTED_SAMPLING_ROOT / "official"
+        receipt = root / sampler.GATE_2_RECEIPT_PATH
+        expected = {
+            "sampling_specification": sampler.sha256_file(specification),
+            **inputs.input_hashes,
+        }
+
+        if make_authorisation_commit:
+            manifest.write_text(
+                _guard_manifest(
+                    authorised=authorised,
+                    basis_commit=manifest_basis or basis,
+                ),
+                encoding="utf-8",
+            )
+            receipt.parent.mkdir(parents=True, exist_ok=True)
+            if malformed_receipt:
+                receipt.write_text("{not-json\n", encoding="utf-8")
+            else:
+                receipt.write_text(
+                    json.dumps(
+                        {
+                            "osf_registration_identifier_or_url": "8sn2j",
+                            "registration_timestamp": "2026-07-24T13:45:00Z",
+                            "frozen_git_commit": receipt_basis or basis,
+                            "gate_2_passed": gate_2_passed,
+                            "official_sample_draw_completed": completed,
+                            "expected_hashes": expected,
+                        },
+                        indent=2,
+                        sort_keys=True,
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+            if unrelated_change:
+                (root / "unrelated.txt").write_text("not authorised\n", encoding="utf-8")
+            if script_change:
+                script.write_text("# changed during authorisation\n", encoding="utf-8")
+            if frozen_input_change:
+                frozen_input.write_text("changed frozen input\n", encoding="utf-8")
+            _git(root, "add", "--all")
+            if track_receipt:
+                _git(root, "add", "-f", sampler.GATE_2_RECEIPT_PATH.as_posix())
+            _git(root, "commit", "-q", "-m", "Gate 2 authorisation B")
+
+        yield {
+            "root": root,
+            "bootstrap": bootstrap,
+            "basis": basis,
+            "head": _git(root, "rev-parse", "HEAD"),
+            "inputs": inputs,
+            "specification": specification,
+            "output": output,
+            "receipt": receipt,
+        }
 
 
 def signature(result: sampler.SamplingResult) -> dict[str, list[str]]:
@@ -227,23 +352,6 @@ class InputAndSafetyTests(unittest.TestCase):
         with self.assertRaisesRegex(sampler.SamplingError, "registration-receipt"):
             sampler.main(args)
 
-    def _guard_fixture(self, root: Path) -> tuple[sampler.ValidatedInputs, Path, Path, Path]:
-        spec = root / "spec.yaml"
-        spec.write_text("guard-test\n", encoding="utf-8")
-        inputs = make_inputs()
-        output = root / sampler.RESTRICTED_SAMPLING_ROOT / "official"
-        receipt = root / "receipt.json"
-        expected = {"sampling_specification": sampler.sha256_file(spec), **inputs.input_hashes}
-        receipt.write_text(json.dumps({"osf_registration_identifier_or_url": "https://osf.invalid/registered", "registration_timestamp": "2030-01-01T00:00:00Z", "frozen_git_commit": "abc123", "gate_2_passed": True, "expected_hashes": expected}), encoding="utf-8")
-        manifest = root / sampler.PROTOCOL_MANIFEST_PATH
-        manifest.parent.mkdir(parents=True)
-        manifest.write_text(
-            "artefact_group,current_implementation_basis,frozen,registered,official_sample_draw_authorised,registration_identifier,registration_timestamp,implementation_last_checked_commit\n"
-            "00_protocol,true,true,true,true,https://osf.invalid/registered,2030-01-01T00:00:00Z,abc123\n",
-            encoding="utf-8",
-        )
-        return inputs, spec, output, receipt
-
     def test_27_registered_v1_1_manifest_blocks_draw_until_authorisation(self) -> None:
         receipt = {
             "osf_registration_identifier_or_url": "synthetic",
@@ -255,27 +363,105 @@ class InputAndSafetyTests(unittest.TestCase):
                 sampler.ROOT / sampler.PROTOCOL_MANIFEST_PATH, receipt
             )
 
-    def test_28_official_guard_rejects_dirty_worktree(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            inputs, spec, output, receipt = self._guard_fixture(Path(tmp))
+    def _validate_git_guard(self, fixture: dict[str, object]) -> dict[str, object]:
+        return sampler.validate_official_guard(
+            receipt_path=fixture["receipt"],
+            output_directory=fixture["output"],
+            confirmation_token=sampler.CONFIRMATION_TOKEN,
+            specification_path=fixture["specification"],
+            inputs=fixture["inputs"],
+            root=fixture["root"],
+        )
+
+    def test_28_direct_child_authorisation_passes_without_self_hash(self) -> None:
+        with git_guard_repository() as fixture:
+            receipt = self._validate_git_guard(fixture)
+            self.assertEqual(receipt["frozen_git_commit"], fixture["basis"])
+            self.assertNotEqual(receipt["frozen_git_commit"], fixture["head"])
+            self.assertEqual(_git(fixture["root"], "rev-parse", "HEAD^"), fixture["basis"])
+
+    def test_29_no_authorisation_commit_fails(self) -> None:
+        with git_guard_repository(make_authorisation_commit=False) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "does not exist"):
+                self._validate_git_guard(fixture)
+
+    def test_30_receipt_and_manifest_basis_mismatch_fails(self) -> None:
+        with git_guard_repository(receipt_basis="0" * 40) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "implementation-check commit"):
+                self._validate_git_guard(fixture)
+
+    def test_31_receipt_basis_must_equal_head_parent(self) -> None:
+        with git_guard_repository(
+            receipt_basis="0" * 40, manifest_basis="0" * 40
+        ) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "direct Gate 2 authorisation child"):
+                self._validate_git_guard(fixture)
+
+    def test_32_grandchild_execution_fails(self) -> None:
+        with git_guard_repository() as fixture:
+            readme = fixture["root"] / "preregistration/README.md"
+            readme.write_text("later administrative commit\n", encoding="utf-8")
+            _git(fixture["root"], "add", readme.relative_to(fixture["root"]).as_posix())
+            _git(fixture["root"], "commit", "-q", "-m", "later commit C")
+            with self.assertRaisesRegex(sampler.SamplingError, "direct Gate 2 authorisation child"):
+                self._validate_git_guard(fixture)
+
+    def test_33_unrelated_authorisation_change_fails(self) -> None:
+        with git_guard_repository(unrelated_change=True) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "not permitted"):
+                self._validate_git_guard(fixture)
+
+    def test_34_draw_script_change_in_authorisation_fails(self) -> None:
+        with git_guard_repository(script_change=True) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "not permitted"):
+                self._validate_git_guard(fixture)
+
+    def test_35_frozen_input_change_in_authorisation_fails(self) -> None:
+        with git_guard_repository(frozen_input_change=True) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "not permitted"):
+                self._validate_git_guard(fixture)
+
+    def test_36_dirty_worktree_fails(self) -> None:
+        with git_guard_repository() as fixture:
+            (fixture["root"] / "dirty.txt").write_text("dirty\n", encoding="utf-8")
             with self.assertRaisesRegex(sampler.SamplingError, "clean Git worktree"):
-                sampler.validate_official_guard(receipt_path=receipt, output_directory=output, confirmation_token=sampler.CONFIRMATION_TOKEN, specification_path=spec, inputs=inputs, root=Path(tmp), head_commit="abc123", worktree_clean=False)
+                self._validate_git_guard(fixture)
 
-    def test_29_official_guard_rejects_head_mismatch(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            inputs, spec, output, receipt = self._guard_fixture(Path(tmp))
-            with self.assertRaisesRegex(sampler.SamplingError, "frozen receipt commit"):
-                sampler.validate_official_guard(receipt_path=receipt, output_directory=output, confirmation_token=sampler.CONFIRMATION_TOKEN, specification_path=spec, inputs=inputs, root=Path(tmp), head_commit="different", worktree_clean=True)
+    def test_37_authorisation_false_fails(self) -> None:
+        with git_guard_repository(authorised=False) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "does not authorise"):
+                self._validate_git_guard(fixture)
 
-    def test_30_official_guard_rejects_existing_output(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            inputs, spec, output, receipt = self._guard_fixture(Path(tmp))
-            output.mkdir(parents=True)
-            (output / "baseline_active.csv").write_text("identity\n", encoding="utf-8")
+    def test_38_draw_already_completed_fails(self) -> None:
+        with git_guard_repository(completed=True) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "already completed"):
+                self._validate_git_guard(fixture)
+
+    def test_39_gate_2_false_fails(self) -> None:
+        with git_guard_repository(gate_2_passed=False) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "does not confirm Gate 2"):
+                self._validate_git_guard(fixture)
+
+    def test_40_malformed_json_receipt_fails(self) -> None:
+        with git_guard_repository(malformed_receipt=True) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "not valid JSON"):
+                self._validate_git_guard(fixture)
+
+    def test_41_untracked_receipt_fails(self) -> None:
+        with git_guard_repository(track_receipt=False) as fixture:
+            with self.assertRaisesRegex(sampler.SamplingError, "required tracked changes"):
+                self._validate_git_guard(fixture)
+
+    def test_42_existing_output_fails(self) -> None:
+        with git_guard_repository() as fixture:
+            fixture["output"].mkdir(parents=True)
+            (fixture["output"] / "baseline_active.csv").write_text(
+                "identity\n", encoding="utf-8"
+            )
             with self.assertRaisesRegex(sampler.SamplingError, "already contains"):
-                sampler.validate_official_guard(receipt_path=receipt, output_directory=output, confirmation_token=sampler.CONFIRMATION_TOKEN, specification_path=spec, inputs=inputs, root=Path(tmp), head_commit="abc123", worktree_clean=True)
+                self._validate_git_guard(fixture)
 
-    def test_31_output_metadata_and_hashes_match(self) -> None:
+    def test_43_output_metadata_and_hashes_match(self) -> None:
         result = sampler.draw_samples(make_inputs(), 28)
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "synthetic"
@@ -285,7 +471,7 @@ class InputAndSafetyTests(unittest.TestCase):
                 self.assertEqual(digest, sampler.sha256_file(output / filename))
             self.assertEqual(hashes["sampling_metadata.json"], sampler.sha256_file(output / "sampling_metadata.json"))
 
-    def test_32_specification_and_output_schema_parse(self) -> None:
+    def test_44_specification_and_output_schema_parse(self) -> None:
         specification = yaml.safe_load((sampler.ROOT / sampler.SPECIFICATION_PATH).read_text(encoding="utf-8"))
         schema = json.loads((sampler.ROOT / "preregistration/package/04_exclusions_and_sampling/sampling_output_schema.json").read_text(encoding="utf-8"))
         self.assertEqual(
@@ -304,7 +490,7 @@ class InputAndSafetyTests(unittest.TestCase):
         self.assertFalse(specification["project_owner_review"]["fixed_reserve_exists"])
         self.assertIn("record_fields", schema["required"])
 
-    def test_33_runbook_uses_placeholders_not_fabricated_receipt(self) -> None:
+    def test_45_runbook_uses_placeholders_not_fabricated_receipt(self) -> None:
         runbook = (sampler.ROOT / "preregistration/package/04_exclusions_and_sampling/official_sampling_runbook.md").read_text(encoding="utf-8")
         self.assertIn("Do not fabricate", runbook)
         self.assertNotIn("--registration-receipt fake", runbook)

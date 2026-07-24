@@ -47,6 +47,21 @@ REAL_HARD_PATH = Path(
 )
 RESTRICTED_SAMPLING_ROOT = Path("preregistration_restricted/sampling")
 PROTOCOL_MANIFEST_PATH = Path("preregistration/preregistration_artifact_manifest.csv")
+GATE_2_RECEIPT_PATH = Path("preregistration_restricted/registration_receipt.json")
+DRAW_SCRIPT_PATH = Path("scripts/draw_validation_samples.py")
+GATE_2_AUTHORISATION_ALLOWED_PATHS = frozenset(
+    {
+        GATE_2_RECEIPT_PATH.as_posix(),
+        PROTOCOL_MANIFEST_PATH.as_posix(),
+        "preregistration/README.md",
+        "preregistration/package/00_protocol/README.md",
+        "preregistration/package/04_exclusions_and_sampling/README.md",
+        "preregistration/package/04_exclusions_and_sampling/official_sampling_runbook.md",
+    }
+)
+GATE_2_AUTHORISATION_REQUIRED_PATHS = frozenset(
+    {GATE_2_RECEIPT_PATH.as_posix(), PROTOCOL_MANIFEST_PATH.as_posix()}
+)
 OFFICIAL_OUTPUT_NAMES = (
     "baseline_active.csv",
     "baseline_reserve.csv",
@@ -650,6 +665,107 @@ def _git_clean(root: Path) -> bool:
     return not subprocess.run(["git", "status", "--porcelain"], cwd=root, check=True, capture_output=True, text=True).stdout.strip()
 
 
+def _git_text(root: Path, *arguments: str) -> str:
+    try:
+        return subprocess.run(
+            ["git", *arguments],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError) as exc:
+        command = " ".join(arguments[:2])
+        raise SamplingError(
+            f"Cannot verify Gate 2 Git provenance with git {command}"
+        ) from exc
+
+
+def validate_gate_2_authorisation_commit(
+    *, root: Path, head_commit: str, basis_commit: str, receipt_path: Path
+) -> None:
+    """Validate the direct-child Gate 2 authorisation commit without self-reference."""
+
+    try:
+        receipt_relative = receipt_path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError as exc:
+        raise SamplingError("Gate 2 receipt is outside the repository") from exc
+    if receipt_relative != GATE_2_RECEIPT_PATH.as_posix():
+        raise SamplingError(
+            f"Gate 2 receipt must use {GATE_2_RECEIPT_PATH.as_posix()}"
+        )
+
+    parent_commit = _git_text(root, "rev-parse", f"{head_commit}^")
+    if parent_commit != basis_commit:
+        raise SamplingError(
+            "Execution HEAD must be the direct Gate 2 authorisation child of "
+            "the frozen implementation basis"
+        )
+
+    changed: dict[str, str] = {}
+    output = _git_text(
+        root,
+        "diff-tree",
+        "--no-commit-id",
+        "--name-status",
+        "-r",
+        "--no-renames",
+        basis_commit,
+        head_commit,
+    )
+    for line in output.splitlines():
+        status, separator, path = line.partition("\t")
+        if not separator or not path:
+            raise SamplingError("Cannot parse Gate 2 authorisation commit diff")
+        changed[path] = status
+
+    unexpected = sorted(set(changed) - GATE_2_AUTHORISATION_ALLOWED_PATHS)
+    if unexpected:
+        raise SamplingError(
+            "Gate 2 authorisation commit changes paths that are not permitted: "
+            + ", ".join(unexpected)
+        )
+    invalid_status = sorted(
+        path for path, status in changed.items() if status not in {"A", "M"}
+    )
+    if invalid_status:
+        raise SamplingError(
+            "Gate 2 authorisation commit may only add or modify allowed paths: "
+            + ", ".join(invalid_status)
+        )
+    missing = sorted(GATE_2_AUTHORISATION_REQUIRED_PATHS - set(changed))
+    if missing:
+        raise SamplingError(
+            "Gate 2 authorisation commit lacks required tracked changes: "
+            + ", ".join(missing)
+        )
+
+    try:
+        receipt_blob = _git_text(root, "rev-parse", f"{head_commit}:{receipt_relative}")
+        worktree_receipt_blob = _git_text(
+            root, "hash-object", f"--path={receipt_relative}", receipt_relative
+        )
+    except SamplingError as exc:
+        raise SamplingError(
+            "Gate 2 receipt must be tracked in the authorisation commit"
+        ) from exc
+    if receipt_blob != worktree_receipt_blob:
+        raise SamplingError(
+            "Working-tree Gate 2 receipt differs from the authorisation commit"
+        )
+
+    basis_script_blob = _git_text(
+        root, "rev-parse", f"{basis_commit}:{DRAW_SCRIPT_PATH.as_posix()}"
+    )
+    head_script_blob = _git_text(
+        root, "rev-parse", f"{head_commit}:{DRAW_SCRIPT_PATH.as_posix()}"
+    )
+    if basis_script_blob != head_script_blob:
+        raise SamplingError(
+            "Draw script differs between the implementation basis and authorisation commit"
+        )
+
+
 def validate_protocol_draw_authorisation(
     manifest_path: Path, receipt: Mapping[str, object]
 ) -> Mapping[str, str]:
@@ -699,10 +815,30 @@ def validate_official_guard(
         raise SamplingError("Official output directory is outside restricted sampling storage") from exc
     if resolved_output.exists() and any((resolved_output / name).exists() for name in OFFICIAL_OUTPUT_NAMES):
         raise SamplingError("Official output directory already contains an official draw")
+    try:
+        receipt_relative = receipt_path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError as exc:
+        raise SamplingError("Gate 2 receipt is outside the repository") from exc
+    if receipt_relative != GATE_2_RECEIPT_PATH.as_posix():
+        raise SamplingError(
+            f"Gate 2 receipt must use {GATE_2_RECEIPT_PATH.as_posix()}"
+        )
     if not receipt_path.is_file():
         raise SamplingError("Registration receipt does not exist")
-    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    required = {"osf_registration_identifier_or_url", "registration_timestamp", "frozen_git_commit", "gate_2_passed", "expected_hashes"}
+    try:
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise SamplingError("Gate 2 receipt is not valid JSON") from exc
+    if not isinstance(receipt, Mapping):
+        raise SamplingError("Gate 2 receipt must be a JSON object")
+    required = {
+        "osf_registration_identifier_or_url",
+        "registration_timestamp",
+        "frozen_git_commit",
+        "gate_2_passed",
+        "official_sample_draw_completed",
+        "expected_hashes",
+    }
     missing = sorted(required - set(receipt))
     if missing:
         raise SamplingError(f"Registration receipt lacks fields: {missing}")
@@ -710,15 +846,21 @@ def validate_official_guard(
         raise SamplingError("Registration receipt has a blank registration identity or timestamp")
     if receipt["gate_2_passed"] is not True:
         raise SamplingError("Registration receipt does not confirm Gate 2")
+    if receipt["official_sample_draw_completed"] is not False:
+        raise SamplingError("Registration receipt says the official draw is already completed")
     validate_protocol_draw_authorisation(
         protocol_manifest_path or root / PROTOCOL_MANIFEST_PATH, receipt
     )
     actual_head = head_commit if head_commit is not None else _git_head(root)
-    if receipt["frozen_git_commit"] != actual_head:
-        raise SamplingError("Current HEAD differs from the frozen receipt commit")
     clean = worktree_clean if worktree_clean is not None else _git_clean(root)
     if not clean:
         raise SamplingError("Official draw requires a clean Git worktree")
+    validate_gate_2_authorisation_commit(
+        root=root,
+        head_commit=actual_head,
+        basis_commit=str(receipt["frozen_git_commit"]),
+        receipt_path=receipt_path,
+    )
     expected_hashes = receipt["expected_hashes"]
     if not isinstance(expected_hashes, Mapping):
         raise SamplingError("Registration receipt expected_hashes is invalid")

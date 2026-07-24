@@ -39,3 +39,8 @@ subsequent in-place semantic hardening: final-branch applicability, optional-tex
 missingness, calibrated diagnostic claims and measurement-level clarification.
 DEV-001 is closed by the v0.17 withdrawal wording; the analytical-freeze use of
 “analysis lock” remains.
+
+DEV-002 records the post-registration, pre-draw correction of the Gate 2 Git
+provenance guard. It replaces an unsatisfiable self-reference with a direct-
+parent implementation-basis check and a narrow authorisation-commit allowlist.
+No protocol or sampling rule changed, and no sample existed when it was applied.
