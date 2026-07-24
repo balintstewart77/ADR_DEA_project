@@ -2,28 +2,30 @@
 
 ## 1. Purpose
 
-This directory prepares the proposed immutable preregistration package for the
-validation study of classifications applied to the Digital Economy Act (DEA)
-accredited-project register. It separates materials intended for registration
-from restricted operational material and from outputs that may exist only after
-registration. Creating this workspace does not itself freeze or register an
-artefact.
+This directory contains the frozen preregistration materials and current
+administrative state for the validation study of classifications applied to the
+Digital Economy Act (DEA) accredited-project register. It separates the scoped
+registered packet from restricted operational material and from outputs that
+may exist only after registration.
 
 ## 2. Current study status
 
 - `Validation_Protocol_PreReg_v1.1.docx` is the sole current preregistration
   protocol. It was frozen on 24 July 2026 after a typographical rendering
   correction to v1.0, which remains preserved as its superseded predecessor.
-  V1.1 is ready for OSF registration but is not yet registered and does not by
-  itself authorise formal sampling, assignment import or coding.
+  OSF registration `8sn2j` was reported approved by the project lead at
+  2026-07-24 14:45 Europe/London. The approval record does not by itself
+  authorise formal sampling, assignment import or coding.
 - REDCap candidate 0.7 passed completed administrator and restricted-user live
   QA and is the frozen 150-field formal instrument. No formal assignments are
   populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.
 - Phase 3 source, model, taxonomy, evidence and exclusion artefacts remain frozen.
 - No official active or reserve sample has been drawn, and formal coding has not begun.
-- Formal sampling and REDCap import remain prohibited until preregistration and
-  the subsequent authorisation gate are complete.
-- Nothing in this workspace has been uploaded to OSF.
+- Formal sampling and REDCap import remain prohibited until the separate
+  post-registration draw-authorisation gate is explicitly completed.
+- The durable approval receipt is
+  `registration_records/osf_registration_8sn2j.yaml`; its evidence basis is
+  `project_lead_reported`, not an independently verified archival status check.
 
 The current cleaned population is 1,308 retained register records representing
 1,304 unique official Project IDs. Four Project IDs occur on two retained
@@ -53,6 +55,8 @@ not official Project ID.
   audit-selection code, and blank evidence/sign-off templates.
 - `package/09_logs_and_templates/`: blank deviation, instrument-change, coding-
   clarification, and review-decision logs.
+- `registration_records/`: durable public administrative receipts recorded
+  after registration; never a substitute for restricted draw authorisation.
 - `post_registration/`: outputs and amendments created only after registration.
 
 The numbered package folders contain the current reviewed artefacts, historical
@@ -66,11 +70,13 @@ parallel authoritative copies were created.
 
 ## 4. Public, restricted and post-registration materials
 
-`preregistration/package/` is the proposed immutable public registration
-package. `preregistration_restricted/` is a separate, Git-ignored local area for
-restricted operational material. `preregistration/post_registration/` is for
-outputs produced only after registration. Material must not be moved between
-these areas merely for convenience: access and study timing determine location.
+The scoped 18-file OSF packet references selected files from
+`preregistration/package/` and the repository; the broader package directory is
+not itself the scoped upload list. `preregistration_restricted/` is a separate,
+Git-ignored local area for restricted operational material.
+`preregistration/post_registration/` is for outputs produced only after
+registration. Material must not be moved between these areas merely for
+convenience: access and study timing determine location.
 
 Reserve Record IDs, trainer-only answer keys, personal contact details, and
 blinded assignment files belong only in `preregistration_restricted/`. Formal
@@ -213,16 +219,15 @@ complete or the reserve is formally retired. Trainer answer keys and personal
 contact data remain restricted. Empty restricted folders are not invitations to
 populate them before the protocol permits the corresponding operation.
 
-## 10. OSF mapping
+## 10. OSF registration record
 
-The intended mapping, to be performed only after explicit approval, is:
-
-- `preregistration/package/` -> immutable registration package;
-- `preregistration_restricted/` -> private/restricted storage, not the public
-  registration;
-- `preregistration/post_registration/` -> associated working-project outputs.
-
-This phase performs no OSF operation and uploads nothing.
+The scoped 18-file packet for protocol v1.1 is recorded as approved on OSF under
+registration ID `8sn2j`. The machine-readable public receipt is
+`registration_records/osf_registration_8sn2j.yaml`. The project lead supplied
+the approval time and status; the repository does not claim an independently
+verified archival timestamp. Restricted operational material was not part of
+the public registration. Recording this approval does not authorise the sample
+draw or create a Gate 2 execution receipt.
 
 ## 11. Phase 3 completion and unresolved artefacts
 
@@ -237,11 +242,10 @@ classification content.
 The exact static production prompt has been rendered offline from the unchanged
 hashed classifier code and hashed taxonomy and is now hash-bound as MOD-003.
 Record-specific project blocks remain separately fingerprinted; no model or API
-was called to create the static rendering. Remaining work concerns final
-substantive review and Jo approval, the dedicated manifest/package-integrity
-reconciliation, final protocol freeze and registration, and the subsequent
-sampling authorisation gate. No official active or reserve validation sample
-manifests exist, as expected at this stage.
+was called to create the static rendering. Protocol freeze and registration are
+complete. The next operational step is the separate explicit sampling-
+authorisation gate. No official active or reserve validation sample manifests
+exist, as expected at this stage.
 
 ## 12. Phase 4 sampling-system completion
 

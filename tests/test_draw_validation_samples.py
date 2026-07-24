@@ -244,13 +244,13 @@ class InputAndSafetyTests(unittest.TestCase):
         )
         return inputs, spec, output, receipt
 
-    def test_27_frozen_v1_0_manifest_blocks_draw_until_registration(self) -> None:
+    def test_27_registered_v1_1_manifest_blocks_draw_until_authorisation(self) -> None:
         receipt = {
             "osf_registration_identifier_or_url": "synthetic",
             "registration_timestamp": "2030-01-01T00:00:00Z",
             "frozen_git_commit": "a" * 40,
         }
-        with self.assertRaisesRegex(sampler.SamplingError, "not registered"):
+        with self.assertRaisesRegex(sampler.SamplingError, "does not authorise"):
             sampler.validate_protocol_draw_authorisation(
                 sampler.ROOT / sampler.PROTOCOL_MANIFEST_PATH, receipt
             )

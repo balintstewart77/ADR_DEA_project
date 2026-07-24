@@ -15,14 +15,13 @@ def candidate_row() -> dict[str, str]:
     }
 
 
-def test_canonical_v1_1_frozen_metadata_verifies_offline():
+def test_canonical_v1_1_registered_metadata_verifies_offline():
     assert verify_protocol_entry(REPOSITORY_ROOT / DEFAULT_MANIFEST, REPOSITORY_ROOT) == []
 
 
 def test_feedback_closure_is_removed_from_pending_protocol_gates():
     assert not any("feedback" in gate.lower() for gate in REQUIRED_PENDING_GATES)
     assert REQUIRED_PENDING_GATES == (
-        "Submit and verify the official preregistration",
         "Record the subsequent formal-sampling authorisation gate",
     )
 

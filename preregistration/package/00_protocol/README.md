@@ -7,11 +7,13 @@ not contain coder assignments, contact details, or post-registration amendments.
 
 `Validation_Protocol_PreReg_v1.1.docx` is the sole current preregistration
 protocol. It was frozen on 24 July 2026 after a typographical rendering
-correction to v1.0 and is ready for OSF registration. It is not yet
-OSF-registered: the registration identifier and timestamp remain blank until
-the actual registration is completed. Freezing the protocol does not itself
-authorise formal sampling, assignment import or coding; the separate
-post-registration authorisation gate remains closed.
+correction to v1.0. OSF registration `8sn2j` was reported approved by the
+project lead at 2026-07-24 14:45 Europe/London. The durable administrative
+receipt is `../../registration_records/osf_registration_8sn2j.yaml`; its
+evidence basis is `project_lead_reported`, and independent archival-status
+verification is not claimed. Registration does not itself authorise formal
+sampling, assignment import or coding; the separate post-registration
+authorisation gate remains closed.
 
 `Validation_Protocol_PreReg_v1.0.docx` is the immediate predecessor. It remains
 preserved byte-for-byte and is superseded directly by frozen v1.1. V1.1 replaces
@@ -27,8 +29,8 @@ frozen, registered or authorised for formal study activity.
 
 - **v1.1 (24 July 2026):** typographical rendering correction in Section 10:
   replaced malformed plain-text MathJax fallback with `delta_min`; no scientific
-  or procedural change. Frozen as the sole current preregistration protocol and
-  not yet OSF-registered.
+  or procedural change. Frozen as the sole current preregistration protocol;
+  OSF registration `8sn2j` subsequently reported approved by the project lead.
 - **v1.0 (24 July 2026):** promoted from manually reviewed candidate v0.18 and
   frozen; superseded directly by v1.1.
 - **v0.18 (24 July 2026):** final review candidate; superseded directly by v1.0.
@@ -47,6 +49,7 @@ The separate project-owner candidate 0.3 is implemented but remains subject to
 controlled live QA and freeze before registration. No formal validation
 assignments are populated.
 
-Formal sampling and REDCap import remain prohibited until preregistration and the
-subsequent authorisation gate are complete. The canonical machine-readable status
-and exact protocol provenance are in `../../preregistration_artifact_manifest.csv`.
+Formal sampling and REDCap import remain prohibited until the subsequent
+authorisation gate is explicitly completed. The canonical machine-readable
+status and exact protocol provenance are in
+`../../preregistration_artifact_manifest.csv`.

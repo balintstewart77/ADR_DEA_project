@@ -19,7 +19,6 @@ DEFAULT_VERSION = "v1.1"
 FULL_COMMIT = re.compile(r"[0-9a-f]{40}")
 GIT_OBJECT = re.compile(r"[0-9a-f]{40,64}")
 REQUIRED_PENDING_GATES = (
-    "Submit and verify the official preregistration",
     "Record the subsequent formal-sampling authorisation gate",
 )
 
@@ -157,8 +156,10 @@ def verify_protocol_entry(
         if version == "v1.0" and "superseded directly by frozen v1.1" not in notes:
             issues.append("v1.0 notes must record direct supersession by frozen v1.1")
         if version == "v1.1":
-            if "ready for OSF registration" not in notes:
-                issues.append("v1.1 notes must record OSF-registration readiness")
+            if "OSF registration 8sn2j approved" not in notes:
+                issues.append("v1.1 notes must record the approved OSF registration")
+            if "project_lead_reported" not in notes:
+                issues.append("v1.1 notes must record the registration evidence basis")
             if "Typographical rendering correction only" not in notes:
                 issues.append("v1.1 notes must identify the typographical-only correction")
 

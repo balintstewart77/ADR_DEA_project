@@ -1,0 +1,36 @@
+schema_version: 1
+platform: OSF
+registration_id: 8sn2j
+registration_url: https://osf.io/8sn2j/
+overview_url: https://osf.io/8sn2j/overview
+
+status:
+  submitted: true
+  approved: true
+  approved_at_local: "2026-07-24T14:45:00+01:00"
+  approved_at_utc: "2026-07-24T13:45:00Z"
+  timezone: Europe/London
+  evidence_basis: project_lead_reported
+  archived_public_status_independently_verified: false
+
+protocol:
+  manifest_id: PRO-018
+  version: v1.1
+  repository_path: preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx
+  sha256: fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77
+  freeze_commit: 1f7d4efc7b72e90debb2c9b8aca702c9cb35528d
+
+registered_packet:
+  metadata_commit: 970d1a36c52c0db362faf84c0f982a3da844e5dd
+  listed_artefact_count: 16
+  total_file_count: 18
+  first_registration_for_study: true
+
+prospective_state_at_approval:
+  active_sample_drawn: false
+  reserve_sample_drawn: false
+  official_sample_draw_authorised: false
+  official_sample_draw_completed: false
+  formal_assignment_import_completed: false
+  formal_validation_coding_started: false
+  project_owner_recruitment_started: false

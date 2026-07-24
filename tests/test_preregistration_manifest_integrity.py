@@ -5,11 +5,17 @@ import hashlib
 import re
 import subprocess
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
+
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "preregistration/preregistration_artifact_manifest.csv"
+REGISTRATION_RECEIPT = (
+    ROOT / "preregistration/registration_records/osf_registration_8sn2j.yaml"
+)
 FUTURE_STATES = {"not_yet_generated", "placeholder"}
 HISTORICAL_STATE = "historical_git_only"
 RESTRICTED_ACCESS = {"restricted", "temporarily_embargoed", "contains_personal_data"}
@@ -90,13 +96,70 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert current_protocol["version"] == "v1.1"
     assert current_protocol["protocol_status"] == "frozen"
     assert current_protocol["frozen"] == "true"
-    assert current_protocol["registered"] == "false"
+    assert current_protocol["registered"] == "true"
+    assert current_protocol["registration_identifier"] == "8sn2j"
+    assert current_protocol["registration_timestamp"] == "2026-07-24T13:45:00Z"
     assert current_protocol["official_sample_draw_authorised"] == "false"
     documentation_protocols = [
         row for row in manifest_rows
         if row["protocol_status"] == "documentation_review_candidate"
     ]
     assert documentation_protocols == []
+
+
+def test_osf_registration_receipt_and_post_registration_gates() -> None:
+    receipt = yaml.safe_load(REGISTRATION_RECEIPT.read_text(encoding="utf-8"))
+    assert receipt["schema_version"] == 1
+    assert receipt["platform"] == "OSF"
+    assert receipt["registration_id"] == "8sn2j"
+    assert receipt["registration_url"] == "https://osf.io/8sn2j/"
+    assert receipt["overview_url"] == "https://osf.io/8sn2j/overview"
+    status = receipt["status"]
+    assert status == {
+        "submitted": True,
+        "approved": True,
+        "approved_at_local": "2026-07-24T14:45:00+01:00",
+        "approved_at_utc": "2026-07-24T13:45:00Z",
+        "timezone": "Europe/London",
+        "evidence_basis": "project_lead_reported",
+        "archived_public_status_independently_verified": False,
+    }
+    local = datetime.fromisoformat(status["approved_at_local"])
+    utc = datetime.fromisoformat(status["approved_at_utc"].replace("Z", "+00:00"))
+    assert local.astimezone(timezone.utc) == utc
+    assert receipt["protocol"] == {
+        "manifest_id": "PRO-018",
+        "version": "v1.1",
+        "repository_path": (
+            "preregistration/package/00_protocol/"
+            "Validation_Protocol_PreReg_v1.1.docx"
+        ),
+        "sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+        "freeze_commit": "1f7d4efc7b72e90debb2c9b8aca702c9cb35528d",
+    }
+    assert receipt["registered_packet"] == {
+        "metadata_commit": "970d1a36c52c0db362faf84c0f982a3da844e5dd",
+        "listed_artefact_count": 16,
+        "total_file_count": 18,
+        "first_registration_for_study": True,
+    }
+    assert receipt["prospective_state_at_approval"] == {
+        "active_sample_drawn": False,
+        "reserve_sample_drawn": False,
+        "official_sample_draw_authorised": False,
+        "official_sample_draw_completed": False,
+        "formal_assignment_import_completed": False,
+        "formal_validation_coding_started": False,
+        "project_owner_recruitment_started": False,
+    }
+    by_id = {row["artifact_id"]: row for row in rows()}
+    assert by_id["POST-007"]["current_path"] == (
+        "preregistration/registration_records/osf_registration_8sn2j.yaml"
+    )
+    assert by_id["POST-007"]["authoritative_status"] == "authoritative"
+    assert by_id["POST-001"]["current_state"] == "not_yet_generated"
+    assert by_id["POST-002"]["current_state"] == "not_yet_generated"
+    assert by_id["POST-003"]["current_state"] == "not_yet_generated"
 
 
 

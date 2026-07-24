@@ -1,16 +1,16 @@
 # Official sampling execution runbook
 
-Use this runbook only after excluded pilot completion and debrief, closure of the dated pilot-feedback log, Jo's final substantive review, propagation of resulting changes, final package QA, Gate 1 freeze, official preregistration verification, and Gate 2 authorisation. The canonical manifest must record one current implementation basis with `frozen`, `registered`, and `official_sample_draw_authorised` all true. Under review candidate v0.15 they remain false, so this runbook is not executable. The package does not contain a registration receipt or sampled identities.
+Use this runbook only after excluded pilot completion and debrief, closure of the dated pilot-feedback log, final package QA, Gate 1 freeze, official preregistration verification, and Gate 2 authorisation. OSF registration `8sn2j` is recorded as approved, but `official_sample_draw_authorised` remains false, so this runbook is not executable. The public approval receipt at `preregistration/registration_records/osf_registration_8sn2j.yaml` is not a Gate 2 execution credential. The registered packet contains no sampled identities.
 
 ## Before execution
 
 - Confirm coder training and the excluded pilot are complete and all pilot-driven changes are resolved.
 - Confirm Gate 1 passed and the final preregistration package is frozen.
-- Confirm OSF registration completed; record its real identifier and timestamp.
+- Confirm the recorded OSF registration identity and timestamp against the public approval receipt.
 - Confirm Gate 2 passed, record the frozen Git commit, and verify that HEAD equals it.
 - Verify a clean worktree and activate the recorded Python environment (Python 3.13.2, NumPy 2.2.5, pandas 2.2.3 for this candidate).
 - Verify the sampling specification and all three input hashes.
-- Create `preregistration_restricted/registration_receipt.json` with the real registration identity, timestamp, frozen commit, Gate 2 confirmation and the expected hashes. Do not fabricate these values.
+- Only after explicit Gate 2 authorisation, create `preregistration_restricted/registration_receipt.json` with the real registration identity, timestamp, authorised commit, Gate 2 confirmation and the expected hashes. Do not fabricate these values or reuse the public approval receipt as the execution credential.
 - Confirm `preregistration_restricted/sampling/<official-output-directory>/` does not already contain an official draw.
 
 ## Execution
