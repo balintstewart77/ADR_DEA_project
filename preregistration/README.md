@@ -20,10 +20,11 @@ may exist only after registration.
   QA and is the frozen 150-field formal instrument. No formal assignments are
   populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.
 - Phase 3 source, model, taxonomy, evidence and exclusion artefacts remain frozen.
-- No official active or reserve sample has been drawn, and formal coding has not begun.
-- The separate Gate 2 authorisation now permits exactly one official draw under
-  the registered design, but the draw has not been executed. Assignment
-  generation, REDCap import and formal coding remain unauthorised.
+- The single authorised official draw was executed once on 24 July 2026. It
+  produced 225 active and 150 reserve records; all sampled identities remain
+  restricted, and the reserve is not activated.
+- Assignment generation, REDCap import, formal validation coding and Project
+  Owner recruitment remain unauthorised or unstarted as applicable.
 - The durable approval receipt is
   `registration_records/osf_registration_8sn2j.yaml`; its evidence basis is
   `project_lead_reported`, not an independently verified archival status check.
@@ -245,8 +246,9 @@ hashed classifier code and hashed taxonomy and is now hash-bound as MOD-003.
 Record-specific project blocks remain separately fingerprinted; no model or API
 was called to create the static rendering. Protocol freeze, registration and the
 separate prospective Gate 2 draw authorisation are complete. The official draw
-has not been executed, and no active or reserve validation sample manifest
-exists.
+was executed exactly once at authorisation commit
+`9fcabc3699ae2f047b7d33460c9867ab68457455`; restricted outputs and aggregate
+provenance are recorded by POST-008 and the post-registration execution log.
 
 ## 12. Phase 4 sampling-system completion
 
@@ -265,8 +267,8 @@ mode requires registration and Gate 2 receipt evidence, hash and commit
 agreement, a clean worktree, restricted empty output storage and a typed token.
 
 At registration, the code, specification, seed, hashes, environment, output
-schema and runbook may be archived publicly. Actual sampled identities do not
-exist yet. Future active and reserve identities remain restricted under the
+schema and runbook were archived without sampled identities. The later official
+draw created active and reserve identities, which remain restricted under the
 embargo in the specification and runbook. See `phase_4_completion_report.md`.
 
 ## 13. Phase 5 REDCap candidate
@@ -281,9 +283,9 @@ covering Assignment Admin, Coder Declaration, Scratch Coder and Project Owner.
 Completed administrator and restricted-user live QA, source/live equivalence,
 archive controls and dashboard permissions are documented. No formal validation
 assignment is populated. Candidate 0.3 pilot and candidate 0.6 intermediate-QA
-materials are explicitly historical. Gate 2 authorises only the official draw;
-assignment generation and REDCap import remain prohibited until separately
-authorised after the draw.
+materials are explicitly historical. Gate 2 authorised only the now-completed
+official draw; assignment generation and REDCap import remain prohibited until
+separately authorised after the draw.
 
 ## 14. How to update the manifest
 

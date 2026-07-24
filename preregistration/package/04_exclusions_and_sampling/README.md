@@ -16,14 +16,15 @@ inclusion in the 25/25/25 active hard allocation, and the seed-governed 17/17/16
 reserve allocation with deterministic fallback.
 
 The official seed is `SEED_DRAW = 20260713`. It is public preregistration
-metadata, but was not used against the real frames in Phase 4. `--check` and
-`--validate-real-inputs` create no RNG and write nothing. Official execution is
+metadata and was used exactly once for the official draw on 24 July 2026; it
+was not used against the real frames during pre-registration Phase 4. `--check`
+and `--validate-real-inputs` create no RNG and write nothing. Official execution is
 guarded by canonical protocol metadata authorising the draw, a real registration
 receipt, Gate 2 confirmation, matching frozen commit and hashes, a clean
 worktree, restricted storage, an empty output location and a typed confirmation
-token. Registration and Gate 2 are now satisfied, with
-`official_sample_draw_authorised=true` and draw completion still false. No sample
-or assignment output has been created.
+token. Registration and Gate 2 are satisfied, and the one authorised draw is
+complete. The restricted outputs contain 225 active and 150 reserve records;
+no assignment or REDCap import output was created.
 
 Gate 2 uses a two-commit handshake: clean verified implementation basis A,
 followed by direct-child authorisation commit B. The tracked JSON receipt and
@@ -44,11 +45,18 @@ reviewed, and frozen after the remaining protocol gates; no real contact search
 or cohort sequencing has occurred.
 
 At registration, code, specification, seed, hashes, software environment,
-schema and runbook may be public. No sampled IDs exist yet. After a future
+schema and runbook were public without sampled identities. After the later
 authorised draw, all identities remain restricted; active identities may be
 released only after initial independent coding and a blinding review, while
 reserve identities, strata and ranks remain embargoed through reserve retesting
 or formal retirement. Aggregate counts and strata may be public.
+
+The seeded hard-reserve target was Domain-only 16, Purpose-only 17 and
+Domain-and-Purpose 17. Baseline-first selection and the active 25/25/25 quotas
+left 11 Domain-and-Purpose reserve cases. The registered deterministic fallback
+reallocated six unavailable seats evenly to the other strata, producing a final
+19/20/11 reserve allocation with no total shortfall. This is compliant with the
+frozen rule, is not a protocol deviation and did not trigger a redraw.
 
 ## Exclusion membership and provenance
 

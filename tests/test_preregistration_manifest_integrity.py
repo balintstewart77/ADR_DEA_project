@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import json
 import re
 import subprocess
 from collections import defaultdict
@@ -16,9 +17,14 @@ MANIFEST = ROOT / "preregistration/preregistration_artifact_manifest.csv"
 REGISTRATION_RECEIPT = (
     ROOT / "preregistration/registration_records/osf_registration_8sn2j.yaml"
 )
+DRAW_RECEIPT = ROOT / "preregistration_restricted/registration_receipt.json"
 FUTURE_STATES = {"not_yet_generated", "placeholder"}
 HISTORICAL_STATE = "historical_git_only"
 RESTRICTED_ACCESS = {"restricted", "temporarily_embargoed", "contains_personal_data"}
+OFFICIAL_DRAW_RESTRICTED_IDS = {
+    "POST-009", "POST-010", "POST-011", "POST-012",
+    "POST-013", "POST-014", "POST-015",
+}
 RELATIONSHIP_SPLIT = re.compile(r"\s*[;|]\s*")
 
 
@@ -99,7 +105,7 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert current_protocol["registered"] == "true"
     assert current_protocol["registration_identifier"] == "8sn2j"
     assert current_protocol["registration_timestamp"] == "2026-07-24T13:45:00Z"
-    assert current_protocol["official_sample_draw_authorised"] == "false"
+    assert current_protocol["official_sample_draw_authorised"] == "true"
     documentation_protocols = [
         row for row in manifest_rows
         if row["protocol_status"] == "documentation_review_candidate"
@@ -157,9 +163,35 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
         "preregistration/registration_records/osf_registration_8sn2j.yaml"
     )
     assert by_id["POST-007"]["authoritative_status"] == "authoritative"
-    assert by_id["POST-001"]["current_state"] == "not_yet_generated"
-    assert by_id["POST-002"]["current_state"] == "not_yet_generated"
+    assert by_id["POST-001"]["current_state"] == "superseded"
+    assert by_id["POST-002"]["current_state"] == "superseded"
     assert by_id["POST-003"]["current_state"] == "not_yet_generated"
+    assert all(by_id[artifact_id]["current_state"] == "completed" for artifact_id in OFFICIAL_DRAW_RESTRICTED_IDS)
+
+    draw_receipt = json.loads(DRAW_RECEIPT.read_text(encoding="utf-8"))
+    assert draw_receipt["gate_2_passed"] is True
+    assert draw_receipt["official_sample_draw_completed"] is True
+    state = draw_receipt["state_after_authorisation"]
+    assert state["official_sample_draw_authorised"] is True
+    assert state["official_sample_draw_completed"] is True
+    assert state["active_sample_drawn"] is True
+    assert state["reserve_sample_drawn"] is True
+    assert state["formal_assignment_import_completed"] is False
+    assert state["formal_validation_coding_started"] is False
+    assert state["project_owner_recruitment_started"] is False
+    execution = draw_receipt["official_draw_execution"]
+    assert execution["official_draw_execution_count"] == 1
+    assert execution["official_redraw_authorised"] is False
+    assert execution["reserve_fallback"]["initial_target"] == {
+        "domain_only": 16,
+        "purpose_only": 17,
+        "domain_and_purpose": 17,
+    }
+    assert execution["reserve_fallback"]["final_allocation"] == {
+        "domain_only": 19,
+        "purpose_only": 20,
+        "domain_and_purpose": 11,
+    }
 
 
 
@@ -226,8 +258,14 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
             continue
         if row["access_class"] in RESTRICTED_ACCESS:
             assert row["registration_inclusion"] != "include"
-            assert row["sha256"] == ""
-            assert row["size_bytes"] == ""
+            if row["artifact_id"] in OFFICIAL_DRAW_RESTRICTED_IDS:
+                path = ROOT / current_path
+                assert path.is_file(), row["artifact_id"]
+                assert row["size_bytes"] == str(path.stat().st_size), row["artifact_id"]
+                assert row["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest(), row["artifact_id"]
+            else:
+                assert row["sha256"] == ""
+                assert row["size_bytes"] == ""
             continue
         path = ROOT / current_path
         assert row["size_bytes"] == str(path.stat().st_size), row["artifact_id"]

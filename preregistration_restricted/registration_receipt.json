@@ -12,7 +12,7 @@
   "registration_state_commit": "ec4bb7f05848842f984b66e00f4d4d76a296bd4d",
   "frozen_git_commit": "abfdc3e83078fc0c510a30e699592074202c3525",
   "gate_2_passed": true,
-  "official_sample_draw_completed": false,
+  "official_sample_draw_completed": true,
   "expected_hashes": {
     "sampling_specification": "d926d4911f626a72ceab71f2ed37879dbe960f100bf2d5c075812617b63ef63b",
     "cleaned_population": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
@@ -103,11 +103,12 @@
   },
   "state_after_authorisation": {
     "official_sample_draw_authorised": true,
-    "official_sample_draw_completed": false,
-    "active_sample_drawn": false,
-    "reserve_sample_drawn": false,
+    "official_sample_draw_completed": true,
+    "active_sample_drawn": true,
+    "reserve_sample_drawn": true,
     "formal_assignment_import_completed": false,
-    "formal_validation_coding_started": false
+    "formal_validation_coding_started": false,
+    "project_owner_recruitment_started": false
   },
   "restrictions": {
     "one_execution_only": true,
@@ -115,5 +116,115 @@
     "assignment_generation_authorised": false,
     "redcap_import_authorised": false,
     "later_seed_operations_authorised": false
+  },
+  "official_draw_execution": {
+    "execution_start_local": "2026-07-24T15:56:18+01:00",
+    "execution_start_utc": "2026-07-24T14:56:18Z",
+    "output_metadata_timestamp_utc": "2026-07-24T14:56:33.517805+00:00",
+    "python_version": "3.13.2",
+    "draw_seed": 20260713,
+    "execution_time_commit": "9fcabc3699ae2f047b7d33460c9867ab68457455",
+    "frozen_implementation_basis": "abfdc3e83078fc0c510a30e699592074202c3525",
+    "script_sha256": "5a655299b79e5a4af08c1b599212f68f5ff2f8ff7220f992cc12bd147c0f0df1",
+    "process_exit_status": 0,
+    "official_draw_execution_count": 1,
+    "official_redraw_authorised": false,
+    "command": "python scripts\\draw_validation_samples.py --execute-official-draw --cleaned preregistration\\package\\01_source_and_cleaning\\dea_accredited_projects_20260601_cleaned_1308.csv --exclusions preregistration\\package\\04_exclusions_and_sampling\\training_pilot_exclusion_list_v8.csv --disagreement preregistration\\package\\03_preexisting_model_evidence\\gpt55_disagreement_frame_380.csv --output-directory preregistration_restricted\\sampling\\official_draw_20260724 --registration-receipt preregistration_restricted\\registration_receipt.json --confirmation-token EXECUTE_REGISTERED_DEA_DRAW",
+    "output_directory": "preregistration_restricted/sampling/official_draw_20260724",
+    "outputs": {
+      "baseline_active.csv": {
+        "repository_path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+        "byte_size": 18022,
+        "sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+        "row_count": 150,
+        "access_class": "temporarily_embargoed"
+      },
+      "baseline_reserve.csv": {
+        "repository_path": "preregistration_restricted/sampling/official_draw_20260724/baseline_reserve.csv",
+        "byte_size": 12230,
+        "sha256": "a30f9bc24ba8328b694a43fc7063b2a012dae2bcfe8dc65bfa60fd37b1f3171b",
+        "row_count": 100,
+        "access_class": "restricted"
+      },
+      "hard_active.csv": {
+        "repository_path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+        "byte_size": 9284,
+        "sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+        "row_count": 75,
+        "access_class": "temporarily_embargoed"
+      },
+      "hard_reserve.csv": {
+        "repository_path": "preregistration_restricted/sampling/official_draw_20260724/hard_reserve.csv",
+        "byte_size": 6412,
+        "sha256": "8409f51c55cd572d6c6837ef59b666f3a712f2a67a7086489cec7f93bfd64c4b",
+        "row_count": 50,
+        "access_class": "restricted"
+      },
+      "combined_sampling_manifest.csv": {
+        "repository_path": "preregistration_restricted/sampling/official_draw_20260724/combined_sampling_manifest.csv",
+        "byte_size": 45264,
+        "sha256": "44514c658f9c1cb535a2f82f76dc3184d29814312e5825b8f206cfffe4b4f4b3",
+        "row_count": 375,
+        "access_class": "restricted"
+      },
+      "sampling_assertion_report.json": {
+        "repository_path": "preregistration_restricted/sampling/official_draw_20260724/sampling_assertion_report.json",
+        "byte_size": 320,
+        "sha256": "a2d78e74d1d5fd91b37f86395863de8dbd41e1d3207641562f9c6930c084de4d",
+        "access_class": "restricted"
+      },
+      "sampling_metadata.json": {
+        "repository_path": "preregistration_restricted/sampling/official_draw_20260724/sampling_metadata.json",
+        "byte_size": 4350,
+        "sha256": "861e63b963b64037c1db74663ae32f3e24d9e5e283c2584b62ecc05dc86d8d3c",
+        "access_class": "restricted"
+      }
+    },
+    "observed_counts": {
+      "active_baseline": 150,
+      "active_hard_case": 75,
+      "active_total": 225,
+      "baseline_reserve": 100,
+      "hard_case_reserve": 50,
+      "reserve_total": 150,
+      "complete_draw": 375,
+      "unique_record_ids": 375,
+      "active_hard_strata": {
+        "domain_only": 25,
+        "purpose_only": 25,
+        "domain_and_purpose": 25
+      }
+    },
+    "reserve_fallback": {
+      "applied": true,
+      "initial_target": {
+        "domain_only": 16,
+        "purpose_only": 17,
+        "domain_and_purpose": 17
+      },
+      "shortfall_stratum": "Domain-and-Purpose",
+      "available_in_shortfall_stratum": 11,
+      "unavailable_seats": 6,
+      "final_allocation": {
+        "domain_only": 19,
+        "purpose_only": 20,
+        "domain_and_purpose": 11
+      },
+      "total_shortfall": 0,
+      "registered_fallback_compliant": true,
+      "protocol_deviation": false
+    },
+    "structural_validation": {
+      "all_record_ids_unique": true,
+      "all_records_in_frozen_population": true,
+      "excluded_record_ids_absent": true,
+      "active_and_reserve_disjoint": true,
+      "hard_cases_in_disagreement_frame": true,
+      "baseline_first_stages_recorded": true,
+      "tag_only_supplement_present": false,
+      "formal_assignment_file_created": false,
+      "redcap_import_created": false
+    },
+    "administrative_note": "The official draw executed successfully once with exit status 0. The seeded hard-case reserve target was 16/17/17. Following baseline-first and active 25/25/25 selection, only 11 Domain-and-Purpose reserve records remained. The frozen implementation applied the registered deterministic shortfall fallback, reallocating six seats evenly to the other strata and producing 19/20/11. Total hard-case reserve remained 50. This is compliant with the registered sampling rule and is not a protocol deviation. A post-execution orchestration instruction had incorrectly treated 17/17/16 as an unconditional final invariant; no redraw was performed."
   }
 }

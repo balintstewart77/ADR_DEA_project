@@ -13,8 +13,8 @@ receipt is `../../registration_records/osf_registration_8sn2j.yaml`; its
 evidence basis is `project_lead_reported`, and independent archival-status
 verification is not claimed. Registration does not itself authorise formal
 sampling, assignment import or coding. The separate post-registration Gate 2
-authorisation now permits exactly one official draw, which has not yet been
-executed; assignment import and formal coding remain unauthorised.
+authorisation permitted exactly one official draw. That draw was executed once
+on 24 July 2026; assignment import and formal coding remain unauthorised.
 
 `Validation_Protocol_PreReg_v1.0.docx` is the immediate predecessor. It remains
 preserved byte-for-byte and is superseded directly by frozen v1.1. V1.1 replaces
@@ -50,7 +50,8 @@ The separate project-owner candidate 0.3 is implemented but remains subject to
 controlled live QA and freeze before registration. No formal validation
 assignments are populated.
 
-The official draw is prospectively authorised but not completed. Assignment
-generation, REDCap import and formal coding remain separately unauthorised. The
-canonical machine-readable status and exact protocol provenance are in
+The official draw was prospectively authorised and completed exactly once.
+Active and reserve identities remain restricted; assignment generation, REDCap
+import and formal coding remain separately unauthorised. The canonical
+machine-readable status and exact protocol provenance are in
 `../../preregistration_artifact_manifest.csv`.

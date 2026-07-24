@@ -1,6 +1,15 @@
 # Official sampling execution runbook
 
-Use this runbook only after excluded pilot completion and debrief, closure of the dated pilot-feedback log, final package QA, Gate 1 freeze, official preregistration verification, and Gate 2 authorisation. OSF registration `8sn2j` and the prospective Gate 2 authorisation are recorded; the official draw remains unexecuted. Execution is permitted only while the Gate 2 authorisation commit is the clean current HEAD and its direct parent is the receipt's frozen implementation basis. The public approval receipt at `preregistration/registration_records/osf_registration_8sn2j.yaml` is not the Gate 2 execution credential. The registered packet contains no sampled identities.
+This runbook records the controlled procedure used after excluded pilot completion and debrief, closure of the dated pilot-feedback log, final package QA, Gate 1 freeze, official preregistration verification, and Gate 2 authorisation. OSF registration `8sn2j` and the prospective Gate 2 authorisation were recorded before execution. The single authorised official draw was executed once on 24 July 2026 at clean authorisation commit `9fcabc3699ae2f047b7d33460c9867ab68457455`, whose direct parent was frozen implementation basis `abfdc3e83078fc0c510a30e699592074202c3525`. The public approval receipt at `preregistration/registration_records/osf_registration_8sn2j.yaml` was not used as the Gate 2 execution credential. The registered packet contains no sampled identities.
+
+## Completed execution status
+
+- Exit status: 0; official execution count: 1; redraw authorised: false.
+- Aggregate output: 225 active and 150 reserve records, 375 unique records total.
+- Active hard allocation: 25/25/25.
+- The seeded reserve target 16/17/17 encountered six unavailable Domain-and-Purpose seats after baseline-first and active selection. The registered deterministic fallback produced 19/20/11 with no total shortfall.
+- Restricted outputs remain at `preregistration_restricted/sampling/official_draw_20260724/`; hashes and aggregate checks are recorded in the canonical receipt and post-registration execution log.
+- Assignment generation, REDCap import, formal coding, reserve activation and Project Owner recruitment were not authorised or performed.
 
 ## Before execution
 
