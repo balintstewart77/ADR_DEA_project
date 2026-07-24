@@ -5,22 +5,32 @@ unregistered predecessors and, after registration packaging, the final
 registration PDF. It must
 not contain coder assignments, contact details, or post-registration amendments.
 
-`Validation_Protocol_PreReg_v1.0.docx` is the sole current preregistration
-protocol. It was frozen on 24 July 2026 after manual review and is ready for OSF
-registration. It is not yet OSF-registered: the registration identifier and
-timestamp remain blank until the actual registration is completed. Freezing the
-protocol does not itself authorise formal sampling, assignment import or coding;
-the separate post-registration authorisation gate remains closed.
+`Validation_Protocol_PreReg_v1.1.docx` is the sole current preregistration
+protocol. It was frozen on 24 July 2026 after a typographical rendering
+correction to v1.0 and is ready for OSF registration. It is not yet
+OSF-registered: the registration identifier and timestamp remain blank until
+the actual registration is completed. Freezing the protocol does not itself
+authorise formal sampling, assignment import or coding; the separate
+post-registration authorisation gate remains closed.
 
-`Validation_Protocol_PreReg_v0_18.docx` is the immediate predecessor: the final
-review candidate prepared on 24 July 2026. It is preserved byte-for-byte and is
-superseded by frozen v1.0. V0.18 was never frozen, registered or authorised for
-formal study activity.
+`Validation_Protocol_PreReg_v1.0.docx` is the immediate predecessor. It remains
+preserved byte-for-byte and is superseded directly by frozen v1.1. V1.1 replaces
+the malformed plain-text MathJax fallback in Section 10 with `delta_min`; no
+protocol rule, estimand, threshold, sampling procedure, instrument, analysis
+method or release-decision criterion changed.
+
+`Validation_Protocol_PreReg_v0_18.docx` is the final review candidate that
+immediately preceded v1.0. It remains preserved byte-for-byte. V0.18 was never
+frozen, registered or authorised for formal study activity.
 
 ## Version history
 
+- **v1.1 (24 July 2026):** typographical rendering correction in Section 10:
+  replaced malformed plain-text MathJax fallback with `delta_min`; no scientific
+  or procedural change. Frozen as the sole current preregistration protocol and
+  not yet OSF-registered.
 - **v1.0 (24 July 2026):** promoted from manually reviewed candidate v0.18 and
-  frozen as the sole current preregistration protocol; not yet OSF-registered.
+  frozen; superseded directly by v1.1.
 - **v0.18 (24 July 2026):** final review candidate; superseded directly by v1.0.
 - **v0.17 (23 July 2026):** ethics/DPO documentation candidate; superseded by
   v0.18. DEV-001 was closed in this version.

@@ -211,8 +211,8 @@ def load_sampling_specification(
         raise SamplingError("Prospective boundary is incomplete or unsafe")
     protocol_basis = specification["protocol_basis"]
     expected_protocol_basis = {
-        "version": "v1.0",
-        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.0.docx",
+        "version": "v1.1",
+        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx",
         "status": "frozen",
         "current_implementation_basis": True,
         "frozen": True,
@@ -221,7 +221,7 @@ def load_sampling_specification(
     }
     if not isinstance(protocol_basis, dict) or protocol_basis != expected_protocol_basis:
         raise SamplingError(
-            "Sampling specification protocol basis must be frozen, unregistered v1.0"
+            "Sampling specification protocol basis must be frozen, unregistered v1.1"
         )
     owner_review = specification["project_owner_review"]
     if not isinstance(owner_review, dict) or owner_review.get("fixed_reserve_exists") is not False:

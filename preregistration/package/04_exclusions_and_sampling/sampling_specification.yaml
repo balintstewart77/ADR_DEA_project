@@ -1,6 +1,6 @@
 release:
   specification_version: sampling-1.0-rc1
-  status: frozen_v1.0_pre_registration
+  status: frozen_v1.1_pre_registration
   generated_at_utc: "2026-07-15T10:38:44.7179641Z"
   repository_commit: c34f963ed404c29ac299ac2b0f82f0bb5bf2bc05
   preregistration_phase: 4
@@ -8,8 +8,8 @@ release:
   numpy_version: 2.2.5
   pandas_version: 2.2.3
 protocol_basis:
-  version: v1.0
-  path: preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.0.docx
+  version: v1.1
+  path: preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx
   status: frozen
   current_implementation_basis: true
   frozen: true

@@ -85,9 +85,9 @@ def test_manifest_structure_statuses_and_relationships() -> None:
         row for row in manifest_rows
         if row["current_implementation_basis"] == "true"
     ]
-    assert [row["artifact_id"] for row in current_protocols] == ["PRO-017"]
+    assert [row["artifact_id"] for row in current_protocols] == ["PRO-018"]
     current_protocol = current_protocols[0]
-    assert current_protocol["version"] == "v1.0"
+    assert current_protocol["version"] == "v1.1"
     assert current_protocol["protocol_status"] == "frozen"
     assert current_protocol["frozen"] == "true"
     assert current_protocol["registered"] == "false"
@@ -144,6 +144,8 @@ def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
     ).stdout.splitlines()
     excluded_structure = {
         "preregistration/preregistration_artifact_manifest.csv",
+        "preregistration/osf_registration/OSF_REGISTRATION_README.md",
+        "preregistration/osf_registration/osf_registration_manifest.csv",
         *[path for path in tracked if path.endswith("/.gitkeep")],
         *[
             f"preregistration/package/00_protocol/{row['filename']}"
@@ -189,11 +191,18 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
     assert predecessor["sha256"] == "d12dca15723c702028e5f73634b8b147abb584a22362aea6d5586d26ee3d3a19"
     assert predecessor["size_bytes"] == "3228034"
     assert hashlib.sha256((ROOT / predecessor["current_path"]).read_bytes()).hexdigest() == predecessor["sha256"]
-    current = next(row for row in manifest_rows if row["artifact_id"] == "PRO-017")
-    assert current["version"] == "v1.0"
-    assert current["supersedes"] == "v0.18"
-    assert current["sha256"] == "6d385f40443e96b0b8cc774610b5d0ff6947ae43dff42576aa1a84c90dc8906e"
-    assert current["size_bytes"] == "413327"
+    superseded = next(row for row in manifest_rows if row["artifact_id"] == "PRO-017")
+    assert superseded["version"] == "v1.0"
+    assert superseded["supersedes"] == "v0.18"
+    assert superseded["superseded_by"] == "v1.1"
+    assert superseded["current_implementation_basis"] == "false"
+    assert superseded["sha256"] == "6d385f40443e96b0b8cc774610b5d0ff6947ae43dff42576aa1a84c90dc8906e"
+    assert superseded["size_bytes"] == "413327"
+    current = next(row for row in manifest_rows if row["artifact_id"] == "PRO-018")
+    assert current["version"] == "v1.1"
+    assert current["supersedes"] == "v1.0"
+    assert current["sha256"] == "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77"
+    assert current["size_bytes"] == "413032"
 
     historical = [row for row in manifest_rows if row["current_state"] == HISTORICAL_STATE]
     assert {row["version"] for row in historical} == {

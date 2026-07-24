@@ -66,8 +66,8 @@ def test_v0_15_adjudication_and_sampling_rules_remain_explicit():
 def test_sampling_design_is_rebound_without_execution_or_design_change():
     specification = yaml.safe_load(SPECIFICATION.read_text(encoding="utf-8"))
     assert specification["protocol_basis"] == {
-        "version": "v1.0",
-        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.0.docx",
+        "version": "v1.1",
+        "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx",
         "status": "frozen",
         "current_implementation_basis": True,
         "frozen": True,

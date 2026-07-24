@@ -15,7 +15,7 @@ from typing import Mapping
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = Path("preregistration/preregistration_artifact_manifest.csv")
-DEFAULT_VERSION = "v1.0"
+DEFAULT_VERSION = "v1.1"
 FULL_COMMIT = re.compile(r"[0-9a-f]{40}")
 GIT_OBJECT = re.compile(r"[0-9a-f]{40,64}")
 REQUIRED_PENDING_GATES = (
@@ -106,25 +106,32 @@ def verify_protocol_entry(
     row = _load_protocol_row(manifest_path.resolve(), version)
     issues = validate_protocol_status(row)
     expected_predecessor = {
-        "v1.0": "v0.18", "v0.18": "v0.17",
+        "v1.1": "v1.0", "v1.0": "v0.18", "v0.18": "v0.17",
         "v0.17": "v0.16", "v0.16": "v0.15", "v0.15": "v0.14", "v0.14": "v0.13", "v0.13": "v0.12",
         "v0.12": "v0.11", "v0.11": "v0.10",
     }.get(version)
     if expected_predecessor is None:
         raise ProtocolMetadataError(f"No protocol predecessor rule is defined for {version}")
     expected_status = {
-        "v1.0": "frozen",
+        "v1.1": "frozen",
+        "v1.0": "superseded_frozen_protocol",
         "v0.18": "superseded_review_candidate",
         "v0.17": "superseded_review_candidate",
     }.get(version, "review_candidate")
+    expected_successor = {
+        "v1.1": "", "v1.0": "v1.1", "v0.18": "v1.0",
+        "v0.17": "v0.18", "v0.16": "v0.17", "v0.15": "v0.16",
+        "v0.14": "v0.15", "v0.13": "v0.14", "v0.12": "v0.13",
+        "v0.11": "v0.12",
+    }[version]
     for field, expected in {
         "protocol_status": expected_status,
         "supersedes": expected_predecessor,
-        "superseded_by": "",
+        "superseded_by": expected_successor,
     }.items():
         if (row.get(field) or "").strip() != expected:
             issues.append(f"{field} must be {expected!r} for {version}")
-    if version in {"v0.15", "v0.16", "v0.17", "v0.18", "v1.0"}:
+    if version in {"v0.15", "v0.16", "v0.17", "v0.18", "v1.0", "v1.1"}:
         notes = (row.get("notes") or "").strip()
         if "candidate 0.7" not in notes:
             issues.append(f"{version} notes must identify candidate 0.7 as the frozen scratch instrument")
@@ -147,8 +154,13 @@ def verify_protocol_entry(
             issues.append("v0.17 notes must record the reduced mandatory free-text rule")
         if version == "v0.18" and "superseded directly by frozen v1.0" not in notes:
             issues.append("v0.18 notes must record direct supersession by frozen v1.0")
-        if version == "v1.0" and "ready for OSF registration" not in notes:
-            issues.append("v1.0 notes must record OSF-registration readiness")
+        if version == "v1.0" and "superseded directly by frozen v1.1" not in notes:
+            issues.append("v1.0 notes must record direct supersession by frozen v1.1")
+        if version == "v1.1":
+            if "ready for OSF registration" not in notes:
+                issues.append("v1.1 notes must record OSF-registration readiness")
+            if "Typographical rendering correction only" not in notes:
+                issues.append("v1.1 notes must identify the typographical-only correction")
 
     relative = (row.get("current_path") or "").strip()
     posix_path = PurePosixPath(relative)
@@ -231,7 +243,7 @@ def verify_protocol_entry(
     gates = tuple(
         value.strip() for value in (row.get("pending_gates") or "").split(" | ") if value.strip()
     )
-    if version == "v1.0" and gates != REQUIRED_PENDING_GATES:
+    if version == "v1.1" and gates != REQUIRED_PENDING_GATES:
         issues.append(f"pending_gates does not match the required ordered {version} gates")
     return issues
 

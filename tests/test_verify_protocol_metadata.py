@@ -15,7 +15,7 @@ def candidate_row() -> dict[str, str]:
     }
 
 
-def test_canonical_v1_0_frozen_metadata_verifies_offline():
+def test_canonical_v1_1_frozen_metadata_verifies_offline():
     assert verify_protocol_entry(REPOSITORY_ROOT / DEFAULT_MANIFEST, REPOSITORY_ROOT) == []
 
 

@@ -11,11 +11,11 @@ artefact.
 
 ## 2. Current study status
 
-- `Validation_Protocol_PreReg_v1.0.docx` is the sole current preregistration
-  protocol. It was manually reviewed and frozen on 24 July 2026, superseding the
-  preserved v0.18 review candidate, and is ready for OSF registration. It is not
-  yet registered and does not by itself authorise formal sampling, assignment
-  import or coding.
+- `Validation_Protocol_PreReg_v1.1.docx` is the sole current preregistration
+  protocol. It was frozen on 24 July 2026 after a typographical rendering
+  correction to v1.0, which remains preserved as its superseded predecessor.
+  V1.1 is ready for OSF registration but is not yet registered and does not by
+  itself authorise formal sampling, assignment import or coding.
 - REDCap candidate 0.7 passed completed administrator and restricted-user live
   QA and is the frozen 150-field formal instrument. No formal assignments are
   populated; candidates 0.3 and 0.6 remain historical pilot/QA references only.
@@ -193,7 +193,7 @@ ambiguous, and missing artefacts. A higher version number or later timestamp is
 not, by itself, evidence of authority. Phase 3 source, cleaning, production and
 pre-existing-evidence artefacts are frozen only after their completed offline
 cross-document audit. Prospective materials are finally frozen only after their
-applicable collaborator-review and pilot gates are complete; protocol v1.0 now
+applicable collaborator-review and pilot gates are complete; protocol v1.1 now
 records completion of the protocol freeze. After registration, changes require a new version;
 substantive changes also require a preregistration amendment recorded under
 `post_registration/amendments/`.
