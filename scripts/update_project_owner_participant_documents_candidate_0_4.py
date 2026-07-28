@@ -13,6 +13,11 @@ import tempfile
 import zipfile
 from pathlib import Path
 
+try:
+    import scripts.build_project_owner_redcap_candidate_0_4 as candidate
+except ModuleNotFoundError:  # Direct execution places scripts/ on sys.path.
+    import build_project_owner_redcap_candidate_0_4 as candidate
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MATERIALS = ROOT / "preregistration/package/06_redcap/participant_materials"
@@ -32,25 +37,7 @@ ACKNOWLEDGEMENT_OPTIONS = (
     "be named / I would prefer to decide later. Please contact me about this"
 )
 
-DOMAIN_CHOICES = (
-    "Labour Market & Employment — Work, employment, earnings, job quality, workforce dynamics, "
-    "skills demand and labour-market transitions. / Education & Skills — Education, learning, "
-    "training, skills formation and transitions through education systems and into work. / "
-    "Health & Social Care — Health, illness, mental health, wellbeing, mortality as a health "
-    "outcome, healthcare services and social care. / Crime & Justice — Crime, victimisation, "
-    "public safety, policing, courts, sentencing, prisons, probation and justice outcomes. / "
-    "Business & Productivity — Firms, business activity, innovation, productivity, "
-    "entrepreneurship, trade, investment and business performance. / Poverty, Wealth & Living "
-    "Standards — Material resources, poverty, wealth, debt, benefits, deprivation, cost of living "
-    "and household income. / Housing & Planning — Housing, homelessness, tenure, residential "
-    "conditions and mobility, neighbourhood change and planning systems. / Migration & "
-    "Demographics — Population structure and change, migration, fertility, ageing and mortality "
-    "as a demographic outcome. / Environment & Agriculture — Environment, climate, energy, "
-    "agriculture, land use, pollution, decarbonisation and environmental impacts. / Public "
-    "Finance & Taxation — Taxation, government revenue, public spending, fiscal transfers, tax "
-    "reliefs and fiscal policy. / Data Infrastructure & Methodology — Data or methodology as the "
-    "primary research object, rather than tools used for another question."
-)
+DOMAIN_CHOICES = candidate.owner_domain_questionnaire_choices()
 PURPOSE_CHOICES = (
     "Descriptive Monitoring — Measuring and describing levels, distributions, patterns or trends "
     "across places, populations or time, without primarily testing an exposure–outcome "
@@ -72,6 +59,44 @@ TAG_CHOICES = (
     "qualify. / COVID-19 & Pandemic — COVID-19 or pandemic conditions are a central research focus "
     "or lens, not merely the period covered by the data."
 )
+
+TAG_DEFINITIONS = {
+    "5.1 Demographic disparities / equity tag": (
+        "A cross-cutting tag for projects whose research question centres on comparing outcomes, "
+        "experiences, risks, access, or trajectories across demographic or equality-relevant "
+        "groups. Routine subgroup breakdowns do not qualify, and socioeconomic or "
+        "deprivation-based inequality alone is insufficient unless comparison across demographic "
+        "or equality-relevant groups is central."
+    ),
+    "5.2 COVID-19 & Pandemic": (
+        "A cross-cutting tag for projects where COVID-19, the COVID-19 pandemic, pandemic "
+        "conditions, infection surveillance, vaccination, lockdowns, social distancing, "
+        "pandemic-related public support, or pandemic consequences are a central condition or "
+        "lens for the research question. Research does not qualify merely because its data cover "
+        "the pandemic period or because COVID-19 is mentioned incidentally."
+    ),
+}
+
+PREVIOUS_CLASSIFICATION_INTRO_PARAGRAPHS = (
+    "How the classifications work",
+    "Research Domains describe what the project is about. Several may apply, and they are not ranked.",
+    "Analytical Purposes describe what the project is trying to do analytically. One or two may apply.",
+    (
+        "Cross-cutting tags show whether Demographic disparities / equity or COVID-19 & Pandemic "
+        "is a central feature of the research question. Either, both or neither may apply."
+    ),
+    (
+        "Each proposed classification is shown with a definition. Please judge each one "
+        "independently against the actual project and then assess whether its basis is visible "
+        "in the public register entry."
+    ),
+)
+CLASSIFICATION_INTRO_PARAGRAPHS = candidate.CLASSIFICATION_INTRO_PARAGRAPHS
+SUBSTANTIVE_FOCUS_PHRASE = candidate.SUBSTANTIVE_FOCUS_PHRASE
+MISSING_DOMAIN_REMINDER = candidate.MISSING_DOMAIN_REMINDER
+MISSING_DOMAIN_REMINDER_PHRASE = candidate.MISSING_DOMAIN_REMINDER_PHRASE
+MISSING_PURPOSE_REMINDER = candidate.MISSING_PURPOSE_REMINDER
+MISSING_PURPOSE_REMINDER_PHRASE = candidate.MISSING_PURPOSE_REMINDER_PHRASE
 
 QUESTION_REPLACEMENTS = {
     "Q2d.": (
@@ -147,6 +172,7 @@ APPENDIX_B_CONSENT = (
 
 
 PARAGRAPH_RE = re.compile(rb"<w:p(?:\s[^>]*)?>.*?</w:p>", re.DOTALL)
+RUN_RE = re.compile(rb"<w:r(?:\s[^>]*)?>.*?</w:r>", re.DOTALL)
 TEXT_RE = re.compile(rb"(<w:t(?:\s[^>]*)?>)(.*?)(</w:t>)", re.DOTALL)
 
 
@@ -173,6 +199,71 @@ def set_paragraph_text(paragraph: bytes, value: str) -> bytes:
         cursor = match.end()
     pieces.append(paragraph[cursor:])
     return b"".join(pieces)
+
+
+def set_run_text(run: bytes, value: str) -> bytes:
+    matches = list(TEXT_RE.finditer(run))
+    if not matches:
+        raise RuntimeError("target Word run contains no text nodes")
+    escaped = html.escape(value, quote=False).encode("utf-8")
+    pieces: list[bytes] = []
+    cursor = 0
+    for index, match in enumerate(matches):
+        pieces.append(run[cursor : match.start()])
+        pieces.append(match.group(1))
+        if index == 0:
+            pieces.append(escaped)
+        pieces.append(match.group(3))
+        cursor = match.end()
+    pieces.append(run[cursor:])
+    return b"".join(pieces)
+
+
+def set_run_bold(run: bytes, bold: bool) -> bytes:
+    run = re.sub(rb"<w:b(?:Cs)?(?:\s[^>]*)?\s*/>", b"", run)
+    if not bold:
+        return run
+    match = re.search(rb"<w:rPr(?:\s[^>]*)?>", run)
+    if match:
+        return run[: match.end()] + b"<w:b/><w:bCs/>" + run[match.end() :]
+    opening = re.match(rb"<w:r(?:\s[^>]*)?>", run)
+    if not opening:
+        raise RuntimeError("invalid Word run")
+    return run[: opening.end()] + b"<w:rPr><w:b/><w:bCs/></w:rPr>" + run[opening.end() :]
+
+
+def set_paragraph_parts(
+    paragraph: bytes, parts: tuple[tuple[str, bool], ...]
+) -> bytes:
+    runs = list(RUN_RE.finditer(paragraph))
+    text_runs = [match for match in runs if TEXT_RE.search(match.group())]
+    if not text_runs:
+        raise RuntimeError("target paragraph contains no Word text runs")
+    template = text_runs[0].group()
+    replacement = b"".join(
+        set_run_bold(set_run_text(template, text), bold)
+        for text, bold in parts
+        if text
+    )
+    first = text_runs[0]
+    pieces = [paragraph[: first.start()], replacement]
+    cursor = first.end()
+    for match in text_runs[1:]:
+        pieces.append(paragraph[cursor : match.start()])
+        cursor = match.end()
+    pieces.append(paragraph[cursor:])
+    return b"".join(pieces)
+
+
+def formatted_paragraph(
+    template: bytes, text: str, bold_phrase: str
+) -> bytes:
+    if text.count(bold_phrase) != 1:
+        raise RuntimeError(f"expected one bold phrase {bold_phrase!r}")
+    before, after = text.split(bold_phrase)
+    return set_paragraph_parts(
+        template, ((before, False), (bold_phrase, True), (after, False))
+    )
 
 
 def replace_unique_prefix(xml: bytes, prefix: str, replacement: str) -> bytes:
@@ -220,6 +311,104 @@ def replace_response_after_question(
     raise RuntimeError(f"no response-options paragraph after {question_prefix!r}")
 
 
+def replace_definition_after_heading(
+    xml: bytes, heading: str, replacement: str
+) -> bytes:
+    """Replace the first non-empty paragraph after a unique section heading."""
+
+    matches = list(PARAGRAPH_RE.finditer(xml))
+    heading_indexes = [
+        index
+        for index, match in enumerate(matches)
+        if paragraph_text(match.group()) == heading
+    ]
+    if len(heading_indexes) != 1:
+        raise RuntimeError(f"expected one section heading {heading!r}")
+    for match in matches[heading_indexes[0] + 1 :]:
+        text = paragraph_text(match.group()).strip()
+        if not text:
+            continue
+        if text == replacement:
+            return xml
+        if text.startswith("Q") or re.match(r"^\d+\.\d+\s", text):
+            raise RuntimeError(f"no definition paragraph after {heading!r}")
+        updated = set_paragraph_text(match.group(), replacement)
+        return xml[: match.start()] + updated + xml[match.end() :]
+    raise RuntimeError(f"no definition paragraph after {heading!r}")
+
+
+def insert_block_before_prefix(
+    xml: bytes, target_prefix: str, block: tuple[str, ...]
+) -> bytes:
+    matches = list(PARAGRAPH_RE.finditer(xml))
+    targets = [
+        match
+        for match in matches
+        if paragraph_text(match.group()).startswith(target_prefix)
+    ]
+    if len(targets) != 1:
+        raise RuntimeError(
+            f"expected one paragraph beginning {target_prefix!r}; found {len(targets)}"
+        )
+    target = targets[0]
+    before = [paragraph_text(match.group()) for match in matches if match.end() <= target.start()]
+    if tuple(before[-len(block) :]) == block:
+        return xml
+    existing = [text for text in before if text in block]
+    if existing:
+        raise RuntimeError(
+            f"classification-intro block is partially present before {target_prefix!r}: {existing}"
+        )
+    inserted = b"".join(set_paragraph_text(target.group(), text) for text in block)
+    return xml[: target.start()] + inserted + xml[target.start() :]
+
+
+def update_classification_intro(xml: bytes) -> bytes:
+    matches = list(PARAGRAPH_RE.finditer(xml))
+    targets = [
+        (index, match)
+        for index, match in enumerate(matches)
+        if paragraph_text(match.group()).startswith("Read-only classification overview:")
+    ]
+    if len(targets) != 1:
+        raise RuntimeError("expected one read-only classification overview")
+    target_index, target = targets[0]
+    preceding = matches[:target_index]
+    texts = tuple(paragraph_text(match.group()) for match in preceding)
+    if texts[-len(CLASSIFICATION_INTRO_PARAGRAPHS) :] == CLASSIFICATION_INTRO_PARAGRAPHS:
+        return xml
+    if texts[-len(PREVIOUS_CLASSIFICATION_INTRO_PARAGRAPHS) :] != PREVIOUS_CLASSIFICATION_INTRO_PARAGRAPHS:
+        raise RuntimeError("expected the aligned predecessor classification-intro block")
+    old = preceding[-len(PREVIOUS_CLASSIFICATION_INTRO_PARAGRAPHS) :]
+    substantive = formatted_paragraph(
+        old[2].group(), CLASSIFICATION_INTRO_PARAGRAPHS[3], SUBSTANTIVE_FOCUS_PHRASE
+    )
+    replacement = b"".join(
+        [old[0].group(), old[1].group(), old[2].group(), substantive, old[3].group(), old[4].group()]
+    )
+    return xml[: old[0].start()] + replacement + xml[old[-1].end() :]
+
+
+def insert_formatted_reminder(
+    xml: bytes, target_prefix: str, text: str, bold_phrase: str
+) -> bytes:
+    matches = list(PARAGRAPH_RE.finditer(xml))
+    targets = [
+        (index, match)
+        for index, match in enumerate(matches)
+        if paragraph_text(match.group()).startswith(target_prefix)
+    ]
+    if len(targets) != 1:
+        raise RuntimeError(f"expected one paragraph beginning {target_prefix!r}")
+    target_index, target = targets[0]
+    if target_index and paragraph_text(matches[target_index - 1].group()) == text:
+        return xml
+    if any(paragraph_text(match.group()) == text for match in matches):
+        raise RuntimeError(f"reminder for {target_prefix!r} is not immediately before its target")
+    reminder = formatted_paragraph(target.group(), text, bold_phrase)
+    return xml[: target.start()] + reminder + xml[target.start() :]
+
+
 def update_docx(path: Path, transform) -> None:
     resolved = path.resolve()
     if resolved.parent != MATERIALS.resolve() or not resolved.is_file():
@@ -258,6 +447,8 @@ def update_consent(xml: bytes) -> bytes:
 
 
 def update_questionnaire(xml: bytes) -> bytes:
+    for heading, definition in TAG_DEFINITIONS.items():
+        xml = replace_definition_after_heading(xml, heading, definition)
     for prefix, replacement in QUESTION_REPLACEMENTS.items():
         xml = replace_unique_prefix(xml, prefix, replacement)
     xml = replace_response_after_question(
@@ -274,6 +465,13 @@ def update_questionnaire(xml: bytes) -> bytes:
         "Q11b.",
         "Response options: Missing or inadequately represented category / Ambiguous or "
         "overlapping category boundaries / Other taxonomy problem",
+    )
+    xml = update_classification_intro(xml)
+    xml = insert_formatted_reminder(
+        xml, "Q6b.", MISSING_DOMAIN_REMINDER, MISSING_DOMAIN_REMINDER_PHRASE
+    )
+    xml = insert_formatted_reminder(
+        xml, "Q7b.", MISSING_PURPOSE_REMINDER, MISSING_PURPOSE_REMINDER_PHRASE
     )
     return replace_unique_prefix(
         xml,

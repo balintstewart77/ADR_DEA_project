@@ -6,18 +6,39 @@ Ethics trace: UCL Project ID 5004; Participant Information and Consent v3 dated 
 
 ## Architecture and field counts
 
-Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 118 dictionary fields:
+Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 119 dictionary fields:
 
 - `owner_consent`: 22 fields;
-- `project_review`: 96 fields.
+- `project_review`: 97 fields.
 
-The Project Owner instrument remains unfrozen and non-authoritative. This candidate does not authorise recruitment or live migration. Both canonical participant DOCX files are pinned by SHA-256 and byte size; generation stops if either changes without an authorised metadata refresh.
+The Project Owner instrument remains unfrozen and non-authoritative. This candidate does not authorise recruitment or live migration. Both canonical participant DOCX files are pinned by SHA-256 and byte size; generation stops if either changes without an authorised metadata refresh. The missing-Domain wording is author-approved and repository-validated; controlled migration and live semantic/display QA remain mandatory before recruitment.
+
+## Project Review orientation and reference removal
+
+After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed immediately by the otherwise unchanged read-only `po_classification_overview`, then the detailed Domain, Purpose and tag judgements. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
+
+The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder is removed without replacement. Candidate 0.4 has no taxonomy-reference PDF, attachment, external link, Appendix A link, optional guide or live-migration dependency. Definitions needed for each judgement are supplied at the point of use.
+
+Q6b contains exactly 11 author-approved, boundary-bearing missing-Domain choices generated from `OWNER_DOMAIN_DISPLAY`. The mapping keys are the exact eligible frozen Research Domain labels; `Unclear from Register Entry` is excluded. Each entry pairs the existing full proposed-label definition with one approved compressed missing-label aid and documents its frozen source fields and boundary summary. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic and display QA remains pending.
+
+Immediately before Q6b and Q7b, display-only descriptive fields restate the same substantive-focus threshold for missing Domains and Purposes. Only `a substantive subject of the project` and `a substantive analytical aim of the project` are strongly emphasised. These additions do not change the checkbox choices, codes, order, branching, requiredness or exports.
+
+## Operational cross-cutting-tag invariant
+
+The operational set contains exactly two frozen machine values, in this order:
+
+- `Demographic disparities / equity tag` (`prop_t01_status`);
+- `COVID-19 & Pandemic` (`prop_t02_status`).
+
+Operational inclusion is determined by `include_in_prompt is true; layer is Cross-cutting tag; source status does not begin 'removed'`. Lifecycle/provenance status is not the inclusion criterion: the first tag is `new v3.4`, while the second is `active`, and both are operational because they satisfy the explicit rule. The production classifier, production outputs, dashboard and Project Owner pipeline therefore retain both tags; no one-tag bug exists. Candidate 0.4 changes neither the frozen taxonomy nor the production prompt.
+
+Each Project Review displays the canonical label and the exact two-sentence definition from `prop_t01_def` or `prop_t02_def` immediately before its Applied / Not applied proposed status. Both independent correctness and visibility blocks are always required for analytical completion. The main Questionnaire sections 5.1/5.2, Appendix A and these REDCap definition values match after whitespace normalisation.
 
 ## Ethics-to-REDCap consent traceability
 
 The participant-visible sequence is: full Participant Information Sheet v3; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The controlled live project must display or attach the full approved v3 information sheet before these fields.
 
-Participant-document alignment is complete for candidate 0.4: the canonical consent DOCX contains the ten statements, final consent decision and acknowledgement wording represented here; the canonical Questionnaire v3 reproduces the participant-facing Project Review labels, response choices and inline checkbox microdefinitions. Its Appendix B records the complete owner-level consent-validity join. Q13 and participant-facing per-project quotation permission are absent. Controlled migration and live QA remain mandatory before recruitment.
+Participant-document alignment is complete for the implemented candidate-0.4 content: the canonical consent DOCX contains the ten statements, final consent decision and acknowledgement wording represented here; the canonical Questionnaire v3 reproduces the participant-facing Project Review orientation, labels, response choices and author-approved inline checkbox microdefinitions. Its Appendix B records the complete owner-level consent-validity join. Q13, participant-facing per-project quotation permission and taxonomy-reference placeholders are absent. Controlled migration and live QA remain mandatory before recruitment.
 
 - `consent_read_info` — I have read and understood the participant information above.
 - `consent_understand_invitation` — I understand why I have been invited and what taking part involves.
@@ -58,7 +79,7 @@ Clearing a confirmation recalculates `consent_items_complete` to 0 and therefore
 
 `ack_pref` remains optional, owner-level, and excluded from consent validity and analytical completion. It appears only after intended-recipient Yes, all ten confirmations and final consent Yes. Its participant-facing wording and the full Yes / No / Decide later response labels match the canonical consent document exactly. It states that declining means the study team will not name or acknowledge the participant in resulting outputs; it does not make an absolute non-disclosure claim.
 
-Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Project Review count, branching specification, field and export specifications, fixture and analytical-completion documentation. It is not replaced. The current point-of-use policy is: if a comment is proposed for quotation, the participant is emailed the exact proposed wording and context, and it is used only after written agreement.
+Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Project Review count, branching specification, field and export specifications, fixture and analytical-completion documentation. It is not replaced. Quotation permission is not collected in REDCap. If the study team wishes to use a participant’s words, the participant will be contacted by email with the exact proposed quotation and the context in which it would appear. The quotation will be used only following written agreement.
 
 `po_final_warning` now follows `po_other_comment` immediately before submission and has no quotation-permission dependency.
 
@@ -70,4 +91,4 @@ Analysis must join the non-repeating owner row to reviews by `owner_id` and requ
 
 ## Scope exclusions and change record
 
-Reason: align live consent implementation with ethics-resubmission v3 wording. Nature: ten owner-level consent confirmations added; final affirmative consent retained; active decline preserved; obsolete per-project quotation permission removed; acknowledgement language corrected. No taxonomy, classification, assignment, sampling, project metadata or participant data changed.
+Reason: clarify and visually emphasise the existing substantive-focus threshold before proposed classifications and missing-Domain/Purpose decisions. Nature: completion of candidate 0.4; the governing Project Owner threshold now states that a Domain or Purpose applies only when it is a substantive focus, not merely because related terms, datasets, variables, methods or outcomes appear. No taxonomy rule, category, classification, response code, analytical construct, frozen taxonomy or prompt artefact, dashboard schema, assignment, sampling, project metadata or participant data changed. The approved Q6b microdefinitions remain unchanged. Candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative; migration and recruitment remain blocked pending controlled migration and successful live QA.

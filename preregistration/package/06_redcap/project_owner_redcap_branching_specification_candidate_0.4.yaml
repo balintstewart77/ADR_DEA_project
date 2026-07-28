@@ -11,7 +11,7 @@ forms:
 - project_review
 field_counts:
   owner_consent: 22
-  project_review: 96
+  project_review: 97
 repeating_instruments:
 - project_review
 repeat_custom_label: '[assignment_id] — [project_title]'
@@ -134,14 +134,54 @@ tag_reviews:
       correctness_explanation: po_t01_correct_explain
       visibility: po_t01_vis
       visibility_explanation: po_t01_vis_explain
+      label: Demographic disparities / equity tag
+      definition: A cross-cutting tag for projects whose research question centres
+        on comparing outcomes, experiences, risks, access, or trajectories across
+        demographic or equality-relevant groups. Routine subgroup breakdowns do not
+        qualify, and socioeconomic or deprivation-based inequality alone is insufficient
+        unless comparison across demographic or equality-relevant groups is central.
+      definition_field: prop_t01_def
+      display_field: po_t01_display
     t02:
       proposed_status: prop_t02_status
       correctness: po_t02_correct
       correctness_explanation: po_t02_correct_explain
       visibility: po_t02_vis
       visibility_explanation: po_t02_vis_explain
+      label: COVID-19 & Pandemic
+      definition: A cross-cutting tag for projects where COVID-19, the COVID-19 pandemic,
+        pandemic conditions, infection surveillance, vaccination, lockdowns, social
+        distancing, pandemic-related public support, or pandemic consequences are
+        a central condition or lens for the research question. Research does not qualify
+        merely because its data cover the pandemic period or because COVID-19 is mentioned
+        incidentally.
+      definition_field: prop_t02_def
+      display_field: po_t02_display
   missing_tag_summary_role: Summary cross-check after the two primary per-tag proposed-status
     assessments; retained for later protocol and participant-document alignment.
+  operational_inclusion_rule: include_in_prompt is true; layer is Cross-cutting tag;
+    source status does not begin 'removed'
+  operational_set:
+  - Demographic disparities / equity tag
+  - COVID-19 & Pandemic
+  lifecycle_statuses:
+    Demographic disparities / equity tag: new v3.4
+    COVID-19 & Pandemic: active
+  lifecycle_status_is_not_operational_inclusion: true
+  definitions:
+    Demographic disparities / equity tag: A cross-cutting tag for projects whose research
+      question centres on comparing outcomes, experiences, risks, access, or trajectories
+      across demographic or equality-relevant groups. Routine subgroup breakdowns
+      do not qualify, and socioeconomic or deprivation-based inequality alone is insufficient
+      unless comparison across demographic or equality-relevant groups is central.
+    COVID-19 & Pandemic: A cross-cutting tag for projects where COVID-19, the COVID-19
+      pandemic, pandemic conditions, infection surveillance, vaccination, lockdowns,
+      social distancing, pandemic-related public support, or pandemic consequences
+      are a central condition or lens for the research question. Research does not
+      qualify merely because its data cover the pandemic period or because COVID-19
+      is mentioned incidentally.
+  full_definition_immediately_before_status: true
+  independent_required_judgements: true
 missing_label_branching:
   gateways_required: true
   checkbox_menus_show_only_for_yes: true
@@ -199,8 +239,10 @@ analytical_completion:
     knowledge. Structured responses are primary outcomes.
   qualitative_reporting: Report the number of comments contributing to each qualitative
     theme or quotation; do not interpret optional-comment themes as prevalence estimates.
-  quotation_policy: No REDCap quotation-permission response. Exact proposed wording
-    and context are sent by email at point of use and used only after written agreement.
+  quotation_policy: Quotation permission is not collected in REDCap. If the study
+    team wishes to use a participant’s words, the participant will be contacted by
+    email with the exact proposed quotation and the context in which it would appear.
+    The quotation will be used only following written agreement.
 participant_reference:
   field: assignment_id
   display_label: Review reference
@@ -252,9 +294,108 @@ owner_consent_v3:
     participation
 project_review_v3:
   participant_document: participant_materials/Project_Owner_Review_Questionnaire_v3.docx
-  participant_document_sha256: 05f36763b3557ac4a1d65fbd529abdd50190246c7314ae22d3b0eba0fde6c524
-  participant_document_size_bytes: 19825
+  participant_document_sha256: cea613180ea2bb379f0996076d100c16fe09065098b743224e96f0d98cfa1b64
+  participant_document_size_bytes: 21038
   dictionary_alignment: Participant-facing question labels, response choices, inline
     checkbox microdefinitions, requiredness and branching are validated against candidate
     0.4.
   quotation_permission: absent; agreement is requested by email only at point of use
+  classification_orientation_field: po_intro
+  classification_orientation_paragraphs:
+  - How the classifications work
+  - Research Domains describe what the project is about. Several may apply, and they
+    are not ranked.
+  - Analytical Purposes describe what the project is trying to do analytically. One
+    or two may apply.
+  - A Research Domain or Analytical Purpose should be treated as applying only when
+    it is a substantive focus of the project’s research question or analytical aims—not
+    merely because related terms, datasets, variables, methods or outcomes are mentioned
+    or used.
+  - Cross-cutting tags show whether Demographic disparities / equity or COVID-19 &
+    Pandemic is a central feature of the research question. Either, both or neither
+    may apply.
+  - Each proposed classification is shown with a definition. Please judge each one
+    independently against the actual project and then assess whether its basis is
+    visible in the public register entry.
+  classification_orientation_order: project information -> po_intro -> po_classification_overview
+    -> detailed judgements
+  substantive_focus_rule:
+    plain_text: A Research Domain or Analytical Purpose should be treated as applying
+      only when it is a substantive focus of the project’s research question or analytical
+      aims—not merely because related terms, datasets, variables, methods or outcomes
+      are mentioned or used.
+    bold_phrase: only when it is a substantive focus of the project’s research question
+      or analytical aims
+    redcap_markup: <strong>only when it is a substantive focus of the project’s research
+      question or analytical aims</strong>
+    position: inside po_intro before po_classification_overview
+  missing_classification_reminders:
+    po_miss_domain_reminder:
+      plain_text: Select a missing Research Domain only if it represents a substantive
+        subject of the project, not merely a dataset, variable, population characteristic
+        or contextual factor used in the research.
+      bold_phrase: a substantive subject of the project
+      branching: '[po_miss_domain] = ''1'''
+      immediately_before: po_miss_domains
+    po_miss_purpose_reminder:
+      plain_text: Select a missing Analytical Purpose only if it represents a substantive
+        analytical aim of the project, not merely a method, analytical step or secondary
+        feature of the work.
+      bold_phrase: a substantive analytical aim of the project
+      branching: '[po_miss_purpose] = ''1'''
+      immediately_before: po_miss_purposes
+  taxonomy_reference: absent; no placeholder, attachment, PDF, Appendix A link or
+    external reference
+  missing_domain_microdefinitions: author-approved owner-instrument display aids generated
+    from OWNER_DOMAIN_DISPLAY; live semantic and display QA pending
+  missing_domain_labels:
+  - Labour Market & Employment
+  - Education & Skills
+  - Health & Social Care
+  - Crime & Justice
+  - Business & Productivity
+  - Poverty, Wealth & Living Standards
+  - Housing & Planning
+  - Migration & Demographics
+  - Environment & Agriculture
+  - Public Finance & Taxation
+  - Data Infrastructure & Methodology
+  missing_domain_choices: 1, Labour Market & Employment — Work, employment, earnings,
+    job quality, workforce dynamics, skills demand or labour-market transitions; not
+    employment or earnings used only to measure the consequences of education, health
+    or another substantive exposure unless labour-market outcomes are themselves a
+    central focus. | 2, Education & Skills — Educational participation, attainment,
+    qualifications, admissions, skills acquisition, training, apprenticeships or educational
+    progression, including where later employment or earnings outcomes are used to
+    study the effects of education or training; not education level used only as a
+    subgroup, covariate or worker characteristic. | 3, Health & Social Care — Health,
+    illness, mental health, wellbeing, clinical outcomes, healthcare access or use,
+    mortality as a health outcome, and social care; not mortality studied only as
+    a demographic or population outcome. | 4, Crime & Justice — Offending, victimisation,
+    public safety, policing, courts, sentencing, prisons, probation, family justice,
+    civil justice or justice-system outcomes; not general harm, risk, vulnerability
+    or public-service use without crime, legal proceedings or justice-system involvement.
+    | 5, Business & Productivity — Firms, business behaviour, innovation, productivity,
+    entrepreneurship, trade, investment or firm performance; not firm-level data used
+    only as a setting or source for another substantive question. | 6, Poverty, Wealth
+    & Living Standards — Household income and resources, poverty, wealth, savings,
+    debt, benefits, food insecurity, cost of living or material deprivation; not pay
+    gaps, employment, deprivation indices, area-level disadvantage or demographic
+    inequality unless household resources or living standards are central. | 7, Housing
+    & Planning — Housing, homelessness, tenure, housing markets, residential conditions
+    or mobility, neighbourhood change and planning; domestic energy or environmental
+    exposure belongs here only where a housing, dwelling or residential mechanism
+    is central, not merely because home, place or geography is mentioned. | 8, Migration
+    & Demographics — Population structure or change, migration, fertility, ageing
+    or mortality as a demographic outcome; not every study that includes demographic
+    characteristics or subgroup comparisons. | 9, Environment & Agriculture — The
+    natural environment, climate, energy, agriculture, land use, pollution, decarbonisation
+    or environmental impacts; not “environment” used only to mean a social, economic,
+    family or institutional context. | 10, Public Finance & Taxation — Taxation, tax
+    compliance, tax credits, business rates, public revenue or expenditure, fiscal
+    transfers, tax reliefs or fiscal policy; not private income, debt, wealth, investment
+    or household finances without a public-finance mechanism. | 11, Data Infrastructure
+    & Methodology — Research primarily about data, linkage, measurement, classifications,
+    methods or statistical infrastructure; not merely a substantive project that uses
+    linked data or advanced methods.
+  missing_domain_concordance: project_owner_domain_wording_concordance_candidate_0.4.md

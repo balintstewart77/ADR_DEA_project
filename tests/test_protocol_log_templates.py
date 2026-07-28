@@ -26,7 +26,7 @@ INSTRUMENT_LOG_REQUIRED_COLUMNS = {
     "status",
 }
 INSTRUMENT_CHANGE_ID = re.compile(r"^REDCAP-(\d{3})$")
-NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-022"
+NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-026"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
@@ -95,7 +95,11 @@ def test_required_log_files_and_post_pilot_governance_entry():
     wording_only_correction = instrument_by_id["REDCAP-019"]
     burden_reduction = instrument_by_id["REDCAP-020"]
     consent_alignment = instrument_by_id["REDCAP-021"]
-    document_alignment = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
+    document_alignment = instrument_by_id["REDCAP-022"]
+    tag_alignment = instrument_by_id["REDCAP-023"]
+    intro_reference_cleanup = instrument_by_id["REDCAP-024"]
+    approved_domain_wording = instrument_by_id["REDCAP-025"]
+    substantive_focus_clarification = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -200,6 +204,41 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "pinned both canonical DOCX files" in document_alignment["change_description"]
     assert "recruitment remains blocked" in document_alignment["approval"]
     assert "pending controlled migration/live QA" in document_alignment["status"]
+    assert tag_alignment["instrument_version"] == "owner-redcap-candidate-0.4"
+    assert tag_alignment["classification_rule_change"] == "no"
+    assert "two-tag operational invariant" in tag_alignment["change_description"]
+    assert "frozen taxonomy" in tag_alignment["pilot_or_formal_data_effect"]
+    assert "recruitment remains blocked" in tag_alignment["status"]
+    assert intro_reference_cleanup["instrument_version"] == "owner-redcap-candidate-0.4"
+    assert intro_reference_cleanup["classification_rule_change"] == "no"
+    assert "po_taxonomy_ref" in intro_reference_cleanup["change_description"]
+    assert "missing-domain" in intro_reference_cleanup["change_description"]
+    assert "not implemented" in intro_reference_cleanup["protocol_effect"]
+    assert "recruitment and migration remain blocked" in intro_reference_cleanup["status"]
+    assert approved_domain_wording["instrument_version"] == "owner-redcap-candidate-0.4"
+    assert approved_domain_wording["classification_rule_change"] == "no"
+    assert "owner-instrument-specific missing-Research-Domain microdefinitions" in (
+        approved_domain_wording["change_description"]
+    )
+    assert "explicitly approved by the project author" in approved_domain_wording[
+        "evidence_or_reason"
+    ]
+    assert "Unclear from Register Entry remains excluded" in approved_domain_wording[
+        "pilot_or_formal_data_effect"
+    ]
+    assert "frozen taxonomy" in approved_domain_wording["pilot_or_formal_data_effect"]
+    assert "live semantic/display QA" in approved_domain_wording["approval"]
+    assert "unfrozen" in approved_domain_wording["status"]
+    assert substantive_focus_clarification["instrument_version"] == (
+        "owner-redcap-candidate-0.4"
+    )
+    assert substantive_focus_clarification["classification_rule_change"] == "no"
+    assert "substantive focus" in substantive_focus_clarification["change_description"]
+    assert "existing frozen rules" in substantive_focus_clarification["evidence_or_reason"]
+    assert "approved Q6b microdefinitions remain unchanged" in (
+        substantive_focus_clarification["protocol_effect"]
+    )
+    assert "live presentation and emphasis" in substantive_focus_clarification["status"]
 
     with (PACKAGE / "protocol_deviation_log.csv").open(
         encoding="utf-8", newline=""

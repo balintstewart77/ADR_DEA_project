@@ -6,10 +6,8 @@ import io
 import json
 import re
 import sys
-import zipfile
 from collections import Counter
 from pathlib import Path
-from xml.etree import ElementTree as ET
 
 import pytest
 import yaml
@@ -1173,36 +1171,31 @@ def test_optional_text_missingness_and_diagnostic_calibration_are_documented() -
     assert "attribution to public versus non-public evidence may remain unresolved" in spec
 
 
-def test_questionnaire_optionality_annotation_does_not_duplicate_redcap_marker() -> None:
-    questionnaire = (
-        builder.PACKAGE
-        / "participant_materials"
-        / "Project_Owner_Review_Questionnaire_v3.docx"
-    )
-    word_tag = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
-    with zipfile.ZipFile(questionnaire) as archive:
-        root = ET.fromstring(archive.read("word/document.xml"))
-    paragraphs = [
-        "".join(node.text or "" for node in paragraph.iter(word_tag + "t"))
-        for paragraph in root.iter(word_tag + "p")
-    ]
-    mapping = {
-        "Q2d.": "po_d01_vis_explain",
-        "Q3d.": "po_p01_vis_explain",
-        "Q4d.": "po_t01_vis_explain",
-        "Q5d.": "po_t02_vis_explain",
+def test_historical_optionality_labels_match_pinned_candidate_0_3_expectations() -> None:
+    expected = {
+        "po_d01_vis_explain": (
+            "Optional: Please briefly explain what about this Research Domain is only partly "
+            "visible, not visible or unclear in the public project title and listed datasets."
+        ),
+        "po_p01_vis_explain": (
+            "Optional: Please briefly explain what about this Analytical Purpose is only partly "
+            "visible, not visible or unclear in the public project title and listed datasets."
+        ),
+        "po_t01_vis_explain": (
+            "Optional: Please briefly explain what about this tag status is only partly visible, "
+            "not visible or unclear in the public project title and listed datasets."
+        ),
+        "po_t02_vis_explain": (
+            "Optional: Please briefly explain what about this tag status is only partly visible, "
+            "not visible or unclear in the public project title and listed datasets."
+        ),
     }
     dictionary = by_name()
-    for question, variable in mapping.items():
-        paragraph = next(text for text in paragraphs if text.startswith(question))
-        documented_label = re.sub(r"\s+\[Optional\]$", "", paragraph[len(question):].strip())
-        assert documented_label == dictionary[variable]["Field Label"]
+    for variable, historical_label in expected.items():
+        assert dictionary[variable]["Field Label"] == historical_label
         assert dictionary[variable]["Field Label"].count("Optional:") == 1
         assert "[Optional]" not in dictionary[variable]["Field Label"]
         assert "[Optional]" not in dictionary[variable]["Field Note"]
-    convention = next(text for text in paragraphs if text.startswith("Text in [square brackets]"))
-    assert "documentation annotations" in convention
-    assert "not displayed by REDCap" in convention
 
 
 def test_expected_export_explicitly_requires_owner_join() -> None:

@@ -1,11 +1,18 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import inspect
+import zipfile
 from collections import Counter
+from pathlib import Path
 
 import yaml
 
+from analysis import llm_theme_analysis_v3 as classifier
+from dashboard import taxonomy as dashboard_taxonomy
 from scripts import build_project_owner_redcap_candidate_0_4 as builder
+from scripts import update_project_owner_participant_documents_candidate_0_4 as updater
 from scripts import validate_project_owner_redcap_candidate_0_4 as validator
 
 
@@ -42,9 +49,9 @@ def test_exact_two_instruments_and_counts():
         "project_review",
     )
     assert Counter(row["Form Name"] for row in rows) == Counter(
-        {"owner_consent": 22, "project_review": 96}
+        {"owner_consent": 22, "project_review": 97}
     )
-    assert len(rows) == 118
+    assert len(rows) == 119
 
 
 def test_ten_unique_owner_level_consent_items_match_ethics_document():
@@ -137,6 +144,228 @@ def test_both_canonical_participant_documents_are_pinned_and_aligned():
     assert builder.sha256(builder.QUESTIONNAIRE_SOURCE) == builder.QUESTIONNAIRE_SOURCE_SHA256
     assert builder.QUESTIONNAIRE_SOURCE.stat().st_size == builder.QUESTIONNAIRE_SOURCE_SIZE
     assert validator.validate_participant_documents(dictionary_by_name()) == []
+    for path in (builder.PARTICIPANT_SOURCE, builder.QUESTIONNAIRE_SOURCE):
+        with zipfile.ZipFile(path) as archive:
+            assert archive.testzip() is None
+
+
+def test_classification_orientation_matches_questionnaire_and_precedes_overview():
+    by = dictionary_by_name()
+    rows = dictionary_rows()
+    names = [row["Variable / Field Name"] for row in rows]
+    assert names.count("po_intro") == 1
+    assert by["po_intro"]["Form Name"] == "project_review"
+    assert validator.plain_redcap_label(by["po_intro"]["Field Label"]) == (
+        validator.normalise_text(" ".join(builder.CLASSIFICATION_INTRO_PARAGRAPHS))
+    )
+    paragraphs = validator.questionnaire_doc_paragraphs()
+    intro = [validator.normalise_text(item) for item in builder.CLASSIFICATION_INTRO_PARAGRAPHS]
+    start = paragraphs.index(intro[0])
+    overview = next(
+        index
+        for index, paragraph in enumerate(paragraphs)
+        if paragraph.startswith("Read-only classification overview:")
+    )
+    assert paragraphs[start : start + len(intro)] == intro
+    assert start + len(intro) == overview
+    assert names.index("datasets_used") < names.index("po_intro") < names.index(
+        "po_classification_overview"
+    )
+    assert "save & return later" not in by["po_intro"]["Field Label"].lower()
+    assert builder.CLASSIFICATION_INTRO_PARAGRAPHS.count(
+        builder.SUBSTANTIVE_FOCUS_PARAGRAPH
+    ) == 1
+    assert by["po_intro"]["Field Label"].count(
+        f"<strong>{builder.SUBSTANTIVE_FOCUS_PHRASE}</strong>"
+    ) == 1
+    assert validator.validate_exact_docx_bold_phrase(
+        builder.QUESTIONNAIRE_SOURCE,
+        builder.SUBSTANTIVE_FOCUS_PARAGRAPH,
+        builder.SUBSTANTIVE_FOCUS_PHRASE,
+        "substantive-focus rule",
+    ) == []
+
+
+def test_missing_domain_and_purpose_reminders_are_exact_bold_and_immediate():
+    by = dictionary_by_name()
+    rows = dictionary_rows()
+    names = [row["Variable / Field Name"] for row in rows]
+    paragraphs = validator.questionnaire_doc_paragraphs()
+    specs = (
+        ("po_miss_domain_reminder", "po_miss_domains", "Q6b.", builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE, builder.MISSING_DOMAIN_REMINDER_HTML, "[po_miss_domain] = '1'"),
+        ("po_miss_purpose_reminder", "po_miss_purposes", "Q7b.", builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE, builder.MISSING_PURPOSE_REMINDER_HTML, "[po_miss_purpose] = '1'"),
+    )
+    for reminder, target, question, plain, phrase, markup, branch in specs:
+        assert names.index(reminder) + 1 == names.index(target)
+        assert by[reminder]["Field Type"] == "descriptive"
+        assert by[reminder]["Field Label"] == markup
+        assert validator.plain_redcap_label(markup) == validator.normalise_text(plain)
+        assert markup.count(f"<strong>{phrase}</strong>") == 1
+        assert by[reminder]["Branching Logic (Show field only if...)"] == branch
+        assert by[reminder]["Required Field?"] == ""
+        question_index = validator._question_index(paragraphs, question)
+        assert paragraphs[question_index - 1] == validator.normalise_text(plain)
+        assert validator.validate_exact_docx_bold_phrase(
+            builder.QUESTIONNAIRE_SOURCE, plain, phrase, reminder
+        ) == []
+
+
+def test_q6b_q7b_choices_and_tag_definitions_are_unchanged():
+    by = dictionary_by_name()
+    assert hashlib.sha256(
+        by["po_miss_domains"]["Choices, Calculations, OR Slider Labels"].encode()
+    ).hexdigest() == "c7ecbf2e2ad2c9134dfd3ddb3857afc8c077d9a3f86f17fb6bcbeefba3f5cf1d"
+    assert hashlib.sha256(
+        by["po_miss_purposes"]["Choices, Calculations, OR Slider Labels"].encode()
+    ).hexdigest() == "cff79cb5e203a90a49fe0b14e6e8c10a0f7e070d1c21b8b2e177768d8b4c8724"
+    assert builder.TAG_DEFINITIONS == {
+        "Demographic disparities / equity tag": (
+            "A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups. Routine subgroup breakdowns do not qualify, and socioeconomic or deprivation-based inequality alone is insufficient unless comparison across demographic or equality-relevant groups is central."
+        ),
+        "COVID-19 & Pandemic": (
+            "A cross-cutting tag for projects where COVID-19, the COVID-19 pandemic, pandemic conditions, infection surveillance, vaccination, lockdowns, social distancing, pandemic-related public support, or pandemic consequences are a central condition or lens for the research question. Research does not qualify merely because its data cover the pandemic period or because COVID-19 is mentioned incidentally."
+        ),
+    }
+
+
+def test_nonproduction_taxonomy_reference_is_removed_without_replacement():
+    names = {row["Variable / Field Name"] for row in dictionary_rows()}
+    assert "po_taxonomy_ref" not in names
+    forbidden = (
+        "po_taxonomy_ref",
+        "synthetic-QA placeholder",
+        "Attach or link the final formatted owner-facing taxonomy reference",
+        "taxonomy reference PDF",
+    )
+    for path in (
+        builder.DICTIONARY,
+        builder.FIELD_SPEC,
+        builder.BRANCH_SPEC,
+        builder.EXPORT_SPEC,
+        builder.IMPORT_FIXTURE,
+        builder.FORMATTING_AUDIT,
+    ):
+        text = path.read_text(encoding="utf-8-sig")
+        assert not any(phrase in text for phrase in forbidden)
+    documentation = builder.SPEC.read_text(encoding="utf-8") + builder.LIVE_CONFIG.read_text(
+        encoding="utf-8"
+    )
+    assert "no taxonomy-reference PDF, attachment, external link" in documentation
+    assert "no taxonomy-reference placeholder, PDF attachment" in documentation
+
+
+def test_approved_missing_domain_mapping_is_exact_complete_and_single_source():
+    display = builder.OWNER_DOMAIN_DISPLAY
+    assert tuple(display) == builder.DOMAIN_ORDER
+    assert len(display) == 11
+    assert tuple(item["label"] for item in builder.base.taxonomy_groups()[0]["domain"]) == (
+        builder.DOMAIN_ORDER
+    )
+    assert builder.base.UNCLEAR_LABEL not in display
+    approved_digest = hashlib.sha256(
+        "\n".join(
+            str(item["missing_choice_microdefinition"])
+            for item in display.values()
+        ).encode("utf-8")
+    ).hexdigest()
+    assert approved_digest == "8d79baa97b4a1ac17bd9b19767cb37197c2b9d77d3d60f32ed766be9111bb329"
+    for label, item in display.items():
+        assert item["canonical_label"] == label
+        assert item["missing_choice_microdefinition"].startswith(f"{label} — ")
+        assert tuple(item["taxonomy_source_fields"]) == builder.DOMAIN_TAXONOMY_SOURCE_FIELDS
+        assert item["boundary_summary"]
+        assert item["author_approval"] == "Approved, 2026-07-28"
+
+    updater_source = Path(
+        "scripts/update_project_owner_participant_documents_candidate_0_4.py"
+    ).read_text(encoding="utf-8")
+    assert "candidate.owner_domain_questionnaire_choices()" in updater_source
+    assert "DOMAIN_CHOICES = (" not in updater_source
+
+
+def test_q6b_questionnaire_dictionary_specs_and_audits_are_exactly_aligned():
+    display = builder.OWNER_DOMAIN_DISPLAY
+    expected = {
+        str(index): str(item["missing_choice_microdefinition"])
+        for index, item in enumerate(display.values(), 1)
+    }
+    row = dictionary_by_name()["po_miss_domains"]
+    assert row["Field Type"] == "checkbox"
+    assert row["Branching Logic (Show field only if...)"] == "[po_miss_domain] = '1'"
+    assert row["Required Field?"] == "y"
+    assert validator.parse_choices(row["Choices, Calculations, OR Slider Labels"]) == expected
+    documented = validator._question_following(
+        validator.questionnaire_doc_paragraphs(), "Q6b.", "Response options:"
+    ).removeprefix("Response options:").strip()
+    assert documented == validator.normalise_text(" / ".join(expected.values()))
+
+    field_rows, _ = validator.read_csv(builder.FIELD_SPEC)
+    field = next(item for item in field_rows if item["variable"] == "po_miss_domains")
+    assert field["notes"] == builder.owner_domain_redcap_choices()
+    formatting, _ = validator.read_csv(builder.FORMATTING_AUDIT)
+    audit = [item for item in formatting if item["variable_name"] == "po_miss_domains"]
+    assert len(audit) == 1
+    assert audit[0]["body_text"] == builder.owner_domain_redcap_choices()
+
+
+def test_full_domain_definitions_remain_frozen_derived_and_distinct_from_q6b_aids():
+    source = {
+        item["canonical_label"]: item["owner_microdefinition"]
+        for item in builder.base.display_source()["labels"]
+        if item["owner_layer"] == "domain"
+    }
+    fixture, _ = validator.read_csv(builder.IMPORT_FIXTURE)
+    reviews = [item for item in fixture if item["redcap_repeat_instrument"] == "project_review"]
+    seen = set()
+    for label, item in builder.OWNER_DOMAIN_DISPLAY.items():
+        assert item["full_definition"] == source[label]
+        assert item["full_definition"] != item["missing_choice_microdefinition"]
+    for row in reviews:
+        for index in range(1, builder.base.DOMAIN_SLOTS + 1):
+            label = row[f"prop_d{index:02d}_label"]
+            if label:
+                seen.add(label)
+                assert row[f"prop_d{index:02d}_def"] == source[label]
+    assert seen == set(builder.DOMAIN_ORDER)
+
+
+def test_approved_review_and_concordance_records_are_complete_and_live_qa_pending():
+    review_rows = validator.missing_domain_review_rows()
+    concordance_rows = validator.domain_concordance_rows()
+    assert tuple(row["Canonical Domain"] for row in review_rows) == builder.DOMAIN_ORDER
+    assert tuple(row["Canonical Domain"] for row in concordance_rows) == builder.DOMAIN_ORDER
+    for review, concordance in zip(review_rows, concordance_rows, strict=True):
+        label = review["Canonical Domain"]
+        item = builder.OWNER_DOMAIN_DISPLAY[label]
+        assert review["Final approved Q6b wording"] == item["missing_choice_microdefinition"]
+        assert review["Author approval"] == "Approved, 2026-07-28"
+        assert review["Implementation"] == "Implemented in candidate 0.4"
+        assert concordance["Full proposed-label definition"] == item["full_definition"]
+        assert concordance["Approved Q6b wording"] == item["missing_choice_microdefinition"]
+        assert concordance["Inclusion direction aligned"].startswith("Yes")
+        assert concordance["Boundary direction aligned"].startswith("Yes")
+        assert concordance["Live-QA result"].startswith("Pending")
+    combined = validator.MISSING_DOMAIN_REVIEW.read_text(encoding="utf-8") + (
+        validator.DOMAIN_CONCORDANCE.read_text(encoding="utf-8")
+    )
+    assert "review_draft_pending_author_approval" not in combined
+    assert "| Unclear from Register Entry |" not in combined
+
+
+def test_live_qa_requires_all_eleven_semantic_and_display_checks():
+    text = builder.LIVE_CONFIG.read_text(encoding="utf-8")
+    assert "Research Domain wording concordance: For every Research Domain" in text
+    assert "Record an individual pass/fail live-QA result for all 11 Domains" in text
+    assert "no truncation or unusable rendering" in text
+    assert "line wrapping does not obscure which boundary belongs to which Domain" in text
+    assert "multi-select" in text
+    assert "Unclear from Register Entry" in text
+    assert "Migration approval fails if any Domain points in materially different directions" in text
+    assert builder.SUBSTANTIVE_FOCUS_PHRASE in text
+    assert builder.MISSING_DOMAIN_REMINDER_PHRASE in text
+    assert builder.MISSING_PURPOSE_REMINDER_PHRASE in text
+    assert "Fail migration approval if the governing rule is absent" in text
+    assert "displayed as literal HTML" in text
 
 
 def test_questionnaire_appendix_visibility_and_q11b_wording_are_exact():
@@ -154,6 +383,92 @@ def test_questionnaire_appendix_visibility_and_q11b_wording_are_exact():
     )["1"] == "Missing or inadequately represented category"
 
 
+def test_exact_two_tag_operational_invariant_uses_explicit_inclusion_rule():
+    rows = builder.operational_tag_audit()
+    assert builder.OPERATIONAL_TAGS == (
+        "Demographic disparities / equity tag",
+        "COVID-19 & Pandemic",
+    )
+    assert tuple(row["label"] for row in rows) == builder.OPERATIONAL_TAGS
+    assert tuple(classifier.CROSS_CUTTING_TAGS) == builder.OPERATIONAL_TAGS
+    assert tuple(dashboard_taxonomy.TAG_LABELS) == builder.OPERATIONAL_TAGS
+    assert all(row["include_in_prompt"] is True for row in rows)
+    assert [row["status"] for row in rows] == ["new v3.4", "active"]
+    assert [row["label"] for row in rows if row["status"] == "active"] == [
+        "COVID-19 & Pandemic"
+    ]
+    for predicate in (classifier._in_prompt_category, dashboard_taxonomy._is_active):
+        source = inspect.getsource(predicate)
+        assert "include_in_prompt" in source
+        assert "startswith(\"removed\")" in source
+
+
+def test_frozen_taxonomy_and_production_prompt_are_byte_unchanged():
+    taxonomy = Path("taxonomy_data_dictionary.yaml")
+    prompt = Path(
+        "preregistration/package/02_taxonomy_prompt_and_model/"
+        "production_prompt_dict-1.0-rc2.txt"
+    )
+    assert hashlib.sha256(taxonomy.read_bytes()).hexdigest() == (
+        "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
+    )
+    assert hashlib.sha256(prompt.read_bytes()).hexdigest() == (
+        "8fd34b5e80a748dce114ebe636d9861662c4cd8d3f0ce053ef458b95d9593861"
+    )
+
+
+def test_full_tag_definitions_match_main_questionnaire_appendix_and_redcap():
+    paragraphs = validator.questionnaire_doc_paragraphs()
+    headings = (
+        "5.1 Demographic disparities / equity tag",
+        "5.2 COVID-19 & Pandemic",
+    )
+    for heading, label in zip(headings, builder.OPERATIONAL_TAGS, strict=True):
+        definition = validator.normalise_text(builder.TAG_DEFINITIONS[label])
+        assert validator._definition_after_heading(paragraphs, heading) == definition
+        assert paragraphs.count(definition) == 2
+    assert "Routine subgroup breakdowns do not qualify" in builder.TAG_DEFINITIONS[
+        builder.OPERATIONAL_TAGS[0]
+    ]
+    assert "socioeconomic or deprivation-based inequality alone is insufficient" in (
+        builder.TAG_DEFINITIONS[builder.OPERATIONAL_TAGS[0]]
+    )
+    assert "data cover the pandemic period" in builder.TAG_DEFINITIONS[
+        builder.OPERATIONAL_TAGS[1]
+    ]
+    assert "COVID-19 is mentioned incidentally" in builder.TAG_DEFINITIONS[
+        builder.OPERATIONAL_TAGS[1]
+    ]
+
+
+def test_both_permanent_tag_blocks_are_populated_independent_and_required():
+    by = dictionary_by_name()
+    names = [row["Variable / Field Name"] for row in dictionary_rows()]
+    fixture, _ = validator.read_csv(builder.IMPORT_FIXTURE)
+    reviews = [row for row in fixture if row["redcap_repeat_instrument"] == "project_review"]
+    assert len(reviews) == 19
+    for index, label in enumerate(builder.OPERATIONAL_TAGS, 1):
+        prefix = f"t{index:02d}"
+        status = f"prop_{prefix}_status"
+        definition = f"prop_{prefix}_def"
+        display = f"po_{prefix}_display"
+        correct = f"po_{prefix}_correct"
+        visibility = f"po_{prefix}_vis"
+        assert builder.TAG_FIELD_MAPPING[status] == label
+        assert all(row[f"prop_{prefix}_label"] == label for row in reviews)
+        assert all(row[definition] == builder.TAG_DEFINITIONS[label] for row in reviews)
+        assert all(row[status] in {"0", "1"} for row in reviews)
+        assert validator.parse_choices(
+            by[status]["Choices, Calculations, OR Slider Labels"]
+        ) == {"1": "Applied", "0": "Not applied"}
+        assert names.index(display) < names.index(status) < names.index(correct)
+        for judgement in (correct, visibility):
+            assert by[judgement]["Required Field?"] == "y"
+            assert by[judgement]["Branching Logic (Show field only if...)"] == ""
+    missing = validator.analytical_completion_missing({}, affirmative_owner())
+    assert {"po_t01_correct", "po_t01_vis", "po_t02_correct", "po_t02_vis"} <= set(missing)
+
+
 def test_obsolete_per_review_quotation_permission_is_removed():
     names = {row["Variable / Field Name"] for row in dictionary_rows()}
     assert "po_quote_permission" not in names
@@ -167,8 +482,7 @@ def test_obsolete_per_review_quotation_permission_is_removed():
     ):
         assert "po_quote_permission" not in path.read_text(encoding="utf-8-sig")
     documentation = builder.SPEC.read_text(encoding="utf-8")
-    assert "exact proposed wording and context" in documentation
-    assert "used only after written agreement" in documentation
+    assert builder.QUOTATION_POLICY in documentation
     questionnaire = "\n".join(validator.questionnaire_doc_paragraphs()).lower()
     assert "q13" not in questionnaire
     assert "quotation permission" not in questionnaire
@@ -239,4 +553,28 @@ def test_no_direct_identifier_field_is_introduced():
 
 def test_project_review_is_predecessor_equivalent_except_documented_removal():
     # validate_dictionary performs the exact row-level predecessor comparison.
-    assert validator.validate_dictionary()["forms"]["project_review"] == 96
+    assert validator.validate_dictionary()["forms"]["project_review"] == 97
+
+
+def test_deterministic_build_includes_approval_and_concordance_records():
+    outputs = (
+        builder.DICTIONARY,
+        builder.SPEC,
+        builder.LIVE_CONFIG,
+        builder.IMPORT_FIXTURE,
+        builder.FIELD_SPEC,
+        builder.BRANCH_SPEC,
+        builder.EXPORT_SPEC,
+        builder.FORMATTING_AUDIT,
+        builder.MISSING_DOMAIN_REVIEW,
+        builder.DOMAIN_CONCORDANCE,
+    )
+    before = {path: path.read_bytes() for path in outputs}
+    assert builder.main() == 0
+    assert {path: path.read_bytes() for path in outputs} == before
+
+
+def test_participant_document_updater_is_idempotent():
+    before = {path: path.read_bytes() for path in (updater.CONSENT, updater.QUESTIONNAIRE)}
+    assert updater.main() == 0
+    assert {path: path.read_bytes() for path in before} == before

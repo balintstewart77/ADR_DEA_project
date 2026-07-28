@@ -40,6 +40,15 @@ missingness, calibrated diagnostic claims and measurement-level clarification.
 DEV-001 is closed by the v0.17 withdrawal wording; the analytical-freeze use of
 “analysis lock” remains.
 
+REDCAP-021 through REDCAP-026 record candidate-0.4 consent and participant-
+document alignment, the two-tag/quotation audit, removal of the non-production
+taxonomy-reference placeholder, implementation of the author-approved Q6b
+microdefinitions, and the final substantive-focus clarification. REDCAP-026
+adds two display-only reminders and exact visual-emphasis requirements without
+changing any taxonomy rule, classification, response code, branching,
+requiredness or analytical construct. Candidate 0.4 remains unfrozen and its
+migration/recruitment gates remain closed pending controlled live QA.
+
 DEV-002 records the post-registration, pre-draw correction of the Gate 2 Git
 provenance guard. It replaces an unsatisfiable self-reference with a direct-
 parent implementation-basis check and a narrow authorisation-commit allowlist.

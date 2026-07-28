@@ -11,7 +11,33 @@ Record ID, response export, live URL, project identifier, or credential.
   acknowledgement are blank; no synthetic participant is imported as
   consented. Its canonical consent and questionnaire v3 sources are aligned and
   hash/size pinned; the questionnaire reproduces the displayed labels, choices
-  and inline microdefinitions and contains no Q13 quotation-permission item.
+  inline checkbox microdefinitions and both full two-sentence cross-cutting-tag
+  definitions. Every review pre-populates both canonical machine values and
+  proposed statuses. Live QA must verify both tag blocks, definitions,
+  independent correctness/visibility behaviour and exported responses; omission
+  of either tag judgement must prevent analytical completion. No Q13 or
+  participant-facing quotation-permission item may appear.
+  The migrated Project Review must contain no `po_taxonomy_ref`, placeholder,
+  PDF attachment, Appendix A link, external taxonomy link or replacement guide.
+  Its exact “How the classifications work” orientation must appear after the
+  displayed project information and before the unchanged read-only overview,
+  without duplicating Save & Return Later, consent, confidentiality or
+withdrawal guidance. Q6b must display the 11 author-approved boundary-bearing
+missing-Domain choices in their canonical order, exclude `Unclear from Register
+Entry`, retain required multi-select behaviour after Q6a = Yes, and export the
+unchanged checkbox codes. For every Domain, live QA must compare the full
+proposed-label definition with the compressed Q6b wording, record pass/fail,
+and verify complete usable rendering on desktop and mobile. Migration approval
+fails for any substantive-direction or boundary mismatch. Migration and
+recruitment remain blocked pending controlled migration and successful live QA.
+  Before the classification overview, live QA must verify the full
+  substantive-focus rule and its exact governing phrase in visible bold on
+  desktop and mobile, with no literal or malformed HTML. The matching
+  missing-Domain and missing-Purpose reminders must appear immediately before
+  Q6b and Q7b, retain their documented branches and required checkbox
+  behaviour, and visibly emphasise only the specified governing phrase. Line
+  wrapping must not obscure the wording. Migration approval fails if the rule
+  is absent, late or not visibly emphasised.
   Candidate 0.3 remains unchanged as historical migration evidence.
 
 - `project_owner_synthetic_import_candidate_0.3.csv` is the unfrozen Project
@@ -53,6 +79,14 @@ Yes/Unsure permits a blank note; and Partial Fit/No Fit requires an issue type
 but not a taxonomy explanation. Confirm that live REDCap requiredness and the
 repository analytical-completion derivation agree. None of these checks is
 recorded as passed until directly retested in PID 9149.
+
+Candidate 0.4 migration must additionally verify that `prop_t01_status` maps to
+`Demographic disparities / equity tag`, `prop_t02_status` maps to `COVID-19 &
+Pandemic`, both full two-sentence definitions render immediately before the
+tag questions on desktop and mobile, and neither block depends on the other.
+Quotation permission is not collected in REDCap; any later quotation requires
+an email containing the exact proposed quotation and context and written
+agreement. These checks are instructions only and have not been executed.
 - `redcap_live_qa_synthetic_assignments_candidate_0.6.csv` is retained unchanged
   as historical evidence of the intermediate candidate-0.6 live test. Candidate
   0.6 was imported and partially inspected, then superseded before final runtime

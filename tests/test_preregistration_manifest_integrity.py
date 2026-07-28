@@ -51,11 +51,11 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     redcap = {
         row["artifact_id"]: row
         for row in manifest_rows
-        if row["artifact_id"].startswith("RED-0")
+        if row["artifact_id"].startswith("RED-")
     }
     redcap_sequence = sorted(int(artifact_id.split("-")[1]) for artifact_id in redcap)
     assert redcap_sequence == list(range(redcap_sequence[0], redcap_sequence[-1] + 1))
-    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-098"
+    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-102"
     assert redcap["RED-054"]["version"] == "owner-redcap-candidate-0.2"
     assert redcap["RED-054"]["current_state"] == "historical_candidate"
     assert redcap["RED-054"]["authoritative_status"] == "superseded_unfrozen_candidate"
@@ -77,12 +77,15 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert questionnaire_v2["authoritative_status"] == "superseded_ethics_review_material"
     assert questionnaire_v3["version"] == "project-owner-review-questionnaire-v3"
     assert questionnaire_v3["authoritative_status"] == "current_aligned_participant_material"
+    assert "substantive-focus" in questionnaire_v3["notes"]
+    assert "bold" in questionnaire_v3["notes"]
     owner_04 = redcap["RED-086"]
     assert owner_04["version"] == "owner-redcap-candidate-0.4"
     assert owner_04["current_state"] == "working_candidate"
     assert owner_04["authoritative_status"] == "current_unfrozen_candidate"
     assert owner_04["frozen"] == "false"
     assert owner_04["registered"] == "false"
+    assert "119-field" in owner_04["notes"]
     assert "RED-068" in owner_04["supersedes_or_superseded_by"]
     assert redcap["RED-089"]["version"] == "owner-redcap-candidate-0.4"
     assert redcap["RED-097"]["version"] == "project-owner-information-v3"
@@ -90,6 +93,24 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert redcap["RED-085"]["authoritative_status"] == "current_aligned_participant_material"
     assert redcap["RED-098"]["version"] == "owner-redcap-candidate-0.4"
     assert redcap["RED-098"]["authoritative_status"] == "supporting_current_candidate"
+    assert redcap["RED-099"]["version"] == "owner-redcap-candidate-0.4"
+    assert redcap["RED-099"]["authoritative_status"] == "supporting_current_candidate"
+    assert "two-tag" in redcap["RED-099"]["description"]
+    assert redcap["RED-100"]["version"] == "project-owner-invitation-v2"
+    assert redcap["RED-100"]["authoritative_status"] == "current_aligned_participant_material"
+    assert redcap["RED-100"]["frozen"] == "false"
+    assert redcap["RED-100"]["registered"] == "false"
+    assert redcap["RED-101"]["version"] == "owner-redcap-candidate-0.4"
+    assert redcap["RED-101"]["authoritative_status"] == "approved_instrument_wording"
+    assert redcap["RED-101"]["frozen"] == "false"
+    assert redcap["RED-101"]["registered"] == "false"
+    assert "implemented" in redcap["RED-101"]["notes"]
+    assert redcap["RED-102"]["version"] == "owner-redcap-candidate-0.4"
+    assert redcap["RED-102"]["authoritative_status"] == "approved_concordance_live_qa_pending"
+    assert redcap["RED-102"]["frozen"] == "false"
+    assert redcap["RED-102"]["registered"] == "false"
+    assert "11" in redcap["RED-102"]["notes"]
+    assert "live QA" in redcap["RED-102"]["pending_gates"]
     assert redcap["RED-066"]["authoritative_status"] == "superseded_ethics_review_material"
     assert redcap["RED-067"]["authoritative_status"] == "superseded_ethics_review_material"
     invitation = redcap["RED-081"]
@@ -185,6 +206,11 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
     assert by_id["POST-001"]["current_state"] == "superseded"
     assert by_id["POST-002"]["current_state"] == "superseded"
     assert by_id["POST-003"]["current_state"] == "not_yet_generated"
+    assert by_id["POST-025"]["version"] == "coder-declarations-20260728"
+    assert by_id["POST-025"]["authoritative_status"] == "authoritative"
+    assert by_id["POST-026"]["version"] == "coder-declarations-20260728"
+    assert by_id["POST-026"]["authoritative_status"] == "authoritative"
+    assert "POST-025" in by_id["POST-026"]["supersedes_or_superseded_by"]
     assert all(by_id[artifact_id]["current_state"] == "completed" for artifact_id in OFFICIAL_DRAW_RESTRICTED_IDS)
     assert all(
         by_id[artifact_id]["current_state"] == "completed"

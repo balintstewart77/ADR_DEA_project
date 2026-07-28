@@ -71,14 +71,14 @@ po_p02_correct_explain,project_review,project_review,owner_response,Actual-proje
 po_p02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
 po_p02_vis_explain,project_review,project_review,owner_response,"Optional label-level public-register evidence explanation; analyse only when final visibility is Partly visible, Not visible or Unsure. Blank means not provided; ignore a retained value after Clearly visible."
 prop_t01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
-prop_t01_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_t01_def,project_review,project_review,assignment_or_proposal,Exact participant-facing definition for Demographic disparities / equity tag; populated on every Project Review repeat row.
 prop_t01_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
 po_t01_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_t01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; analyse only when the final fit is Does not fit or final tag correctness is No. Preserve but ignore a retained hidden value after the parent changes.
 po_t01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
 po_t01_vis_explain,project_review,project_review,owner_response,"Optional label-level public-register evidence explanation; analyse only when final visibility is Partly visible, Not visible or Unsure. Blank means not provided; ignore a retained value after Clearly visible."
 prop_t02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
-prop_t02_def,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
+prop_t02_def,project_review,project_review,assignment_or_proposal,Exact participant-facing definition for COVID-19 & Pandemic; populated on every Project Review repeat row.
 prop_t02_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
 po_t02_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_t02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; analyse only when the final fit is Does not fit or final tag correctness is No. Preserve but ignore a retained hidden value after the parent changes.

@@ -82,15 +82,25 @@ def test_participant_information_v2_matches_owner_queue_workflow() -> None:
     assert "[withdrawal date TBC]" not in text
 
 
-def test_questionnaire_v3_matches_candidate_0_3_content_and_logic() -> None:
+def test_questionnaire_v3_matches_current_candidate_0_4_content_and_logic() -> None:
     text = docx_text(QUESTIONNAIRE)
     assert "Project Owner Review Questionnaire v3" in text
-    assert "23 July 2026" in text
+    assert "28 July 2026" in text
     assert "one personalised Survey Queue link" in text
     assert "Participant Information and Consent are completed once" in text
     assert "all, some or none, in any order" in text
     assert "Save & Return Later" in text
     assert "Read-only classification overview" in text
+    orientation = (
+        "How the classifications work",
+        "Research Domains describe what the project is about. Several may apply, and they are not ranked.",
+        "Analytical Purposes describe what the project is trying to do analytically. One or two may apply.",
+        "A Research Domain or Analytical Purpose should be treated as applying only when it is a substantive focus of the project’s research question or analytical aims—not merely because related terms, datasets, variables, methods or outcomes are mentioned or used.",
+        "Cross-cutting tags show whether Demographic disparities / equity or COVID-19 & Pandemic is a central feature of the research question. Either, both or neither may apply.",
+        "Each proposed classification is shown with a definition. Please judge each one independently against the actual project and then assess whether its basis is visible in the public register entry.",
+    )
+    assert all(paragraph in text for paragraph in orientation)
+    assert text.index(orientation[0]) < text.index("Read-only classification overview")
     assert "Several Domains may apply and they are not ranked" in text
     assert "More than one may apply, with a maximum of two" in text
     assert "Either, both or neither may apply" in text
@@ -101,38 +111,37 @@ def test_questionnaire_v3_matches_candidate_0_3_content_and_logic() -> None:
         in text
     )
     assert (
-        "Optional: Please briefly explain what about this Research Domain is only partly visible, "
-        "not visible or unclear" in text
+        "Please briefly explain why the basis for this Research Domain is only partly visible, "
+        "not visible, or unclear in the public project title and listed datasets."
+        in text
     )
     assert (
-        "Optional: Please briefly explain what about this Analytical Purpose is only partly visible, "
-        "not visible or unclear" in text
+        "Please briefly explain why the basis for this Analytical Purpose is only partly visible, "
+        "not visible, or unclear in the public project title and listed datasets."
+        in text
     )
     assert text.count(
-        "Optional: Please briefly explain what about this tag status is only partly visible, "
-        "not visible or unclear"
+        "Please briefly explain why the basis for this proposed tag status is only partly visible, "
+        "not visible, or unclear in the public project title and listed datasets."
     ) == 2
     assert (
         "Please briefly explain why this proposed Analytical Purpose does not fit the "
         "actual project."
         in text
     )
-    assert (
-        "An Unsure response shows no explanation field."
-        in text
-    )
-    assert text.count("Q4d. Optional:") == 1
-    assert text.count("Q5d. Optional:") == 1
-    assert text.count("Optional: Please briefly explain the taxonomy-fit problem") == 1
+    assert "Branching: Shown if Q4a is No." in text
+    assert "Branching: Shown if Q5a is No." in text
+    assert text.count("Q4d.") == 1
+    assert text.count("Q5d.") == 1
+    assert text.count("Q11c. Please briefly explain the taxonomy-fit problem.") == 1
     assert "If you selected 'Other taxonomy problem', describe it here" in text
     assert "Would you like to be acknowledged by name" not in text
     assert "Preferred name for acknowledgement" not in text
     assert "Preferred affiliation for acknowledgement" not in text
     assert "Please return to your personalised project list to review another project or to finish." in text
     assert (
-        "You may request withdrawal of this submitted review before the deadline stated in the "
-        "Participant Information Sheet by contacting the study team and quoting the Review reference "
-        "shown above."
+        "You may request withdrawal of this response by emailing balint.stewart@ucl.ac.uk "
+        "before Friday 2 October 2026 and quoting the reference above."
         in text
     )
     assert "[withdrawal date TBC]" not in text
@@ -140,17 +149,44 @@ def test_questionnaire_v3_matches_candidate_0_3_content_and_logic() -> None:
     assert "balint.stewart@ucl.ac.uk" in text
     assert "Unclear from Register Entry" not in text.split("Q6b.", 1)[1].split("Q6c.", 1)[0]
     assert "Unclear from Register Entry" not in text.split("Q7b.", 1)[1].split("Q7c.", 1)[0]
+    domain_reminder = (
+        "Select a missing Research Domain only if it represents a substantive subject of the "
+        "project, not merely a dataset, variable, population characteristic or contextual factor "
+        "used in the research."
+    )
+    purpose_reminder = (
+        "Select a missing Analytical Purpose only if it represents a substantive analytical aim "
+        "of the project, not merely a method, analytical step or secondary feature of the work."
+    )
+    assert text.index(domain_reminder) < text.index("Q6b.")
+    assert text.index(purpose_reminder) < text.index("Q7b.")
     assert "Appendix B. REDCap analytical-completion rule" in text
     assert "Do not provide confidential or non-public information." not in text
-    assert text.count("Is the basis for this tag status visible in the public project title and datasets listed above?") == 2
+    assert (
+        "Is the basis for the proposed status of the Demographic disparities / equity tag visible "
+        "in the public project title and datasets listed above?"
+        in text
+    )
+    assert (
+        "Is the basis for the proposed status of the COVID-19 & Pandemic tag visible in the "
+        "public project title and datasets listed above?"
+        in text
+    )
     assert "Could the correct status for this tag reasonably be determined" not in text
-    assert "No suitable category exists in the framework" in text
-    assert "Visibility explanations, missing-label explanations" in text
-    assert "documentation annotations and are not displayed by REDCap" in text
-    assert "Blank optional prose means not provided" in text
-    assert "Structured responses are the primary analytical outcomes" in text
-    assert "ignored in derived completion and analysis variables when inapplicable" in text
-    assert "must not be treated as prevalence estimates" in text
+    assert "Missing or inadequately represented category" in text
+    assert "No suitable category exists in the framework" not in text
+    assert (
+        "Affirmative intended-recipient confirmation, all ten consent confirmations and "
+        "affirmative final consent must be recorded once at owner level, with the Owner Consent "
+        "instrument complete."
+        in text
+    )
+    assert "a correctness and public-visibility judgement for both cross-cutting tag statuses" in text
+    assert (
+        "Optional final comments and the separate owner-level acknowledgement preference do not "
+        "determine analytical completion."
+        in text
+    )
 
 
 

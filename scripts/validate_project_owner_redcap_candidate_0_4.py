@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import html
 import io
 import json
 import re
@@ -21,6 +22,9 @@ import yaml
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 try:
     import scripts.build_project_owner_redcap_candidate_0_4 as builder
@@ -37,6 +41,13 @@ REDCAP_STRUCTURAL_FIELDS = {
     "owner_consent_complete",
     "project_review_complete",
 }
+MISSING_DOMAIN_REVIEW = (
+    builder.PACKAGE
+    / "project_owner_missing_domain_microdefinitions_candidate_0.4_review.md"
+)
+DOMAIN_CONCORDANCE = (
+    builder.PACKAGE / "project_owner_domain_wording_concordance_candidate_0.4.md"
+)
 
 
 class ValidationError(RuntimeError):
@@ -61,6 +72,13 @@ def normalise_text(value: str) -> str:
     return re.sub(r"\s+([.,;:!?])", r"\1", value)
 
 
+def plain_redcap_label(value: str) -> str:
+    """Return participant-visible REDCap HTML as normalised plain text."""
+    value = re.sub(r"(?i)<br\s*/?>", " ", value)
+    value = re.sub(r"<[^>]+>", "", value)
+    return normalise_text(html.unescape(value))
+
+
 def docx_paragraphs(path: Path, *, strip_checkbox: bool = False) -> list[str]:
     with zipfile.ZipFile(path) as archive:
         xml = archive.read("word/document.xml")
@@ -76,12 +94,80 @@ def docx_paragraphs(path: Path, *, strip_checkbox: bool = False) -> list[str]:
     return paragraphs
 
 
+def docx_paragraph_run_formatting(path: Path) -> list[tuple[str, list[tuple[str, bool]]]]:
+    """Return paragraph text and explicit run-level bold state from a DOCX."""
+
+    with zipfile.ZipFile(path) as archive:
+        root = ElementTree.fromstring(archive.read("word/document.xml"))
+    namespace = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
+    result: list[tuple[str, list[tuple[str, bool]]]] = []
+    for paragraph in root.findall(".//w:p", namespace):
+        runs: list[tuple[str, bool]] = []
+        for run in paragraph.findall("./w:r", namespace):
+            text = "".join(node.text or "" for node in run.findall(".//w:t", namespace))
+            if not text:
+                continue
+            bold_node = run.find("./w:rPr/w:b", namespace)
+            bold = bold_node is not None and bold_node.get(
+                "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val", "true"
+            ).lower() not in {"0", "false", "off"}
+            runs.append((text, bold))
+        text = normalise_text("".join(value for value, _ in runs))
+        if text:
+            result.append((text, runs))
+    return result
+
+
+def validate_exact_docx_bold_phrase(
+    path: Path, paragraph_text: str, bold_phrase: str, label: str
+) -> list[str]:
+    matches = [
+        runs
+        for text, runs in docx_paragraph_run_formatting(path)
+        if text == normalise_text(paragraph_text)
+    ]
+    if len(matches) != 1:
+        return [f"{label} paragraph occurs {len(matches)} times in canonical DOCX"]
+    bold_text = normalise_text("".join(text for text, bold in matches[0] if bold))
+    if bold_text != normalise_text(bold_phrase):
+        return [f"{label} DOCX bold text differs: {bold_text!r}"]
+    if all(bold for _, bold in matches[0]):
+        return [f"{label} entire paragraph is bold"]
+    return []
+
+
 def participant_doc_paragraphs() -> list[str]:
     return docx_paragraphs(builder.PARTICIPANT_SOURCE, strip_checkbox=True)
 
 
 def questionnaire_doc_paragraphs() -> list[str]:
     return docx_paragraphs(builder.QUESTIONNAIRE_SOURCE)
+
+
+def markdown_table_rows(path: Path) -> list[dict[str, str]]:
+    """Parse the first Markdown table in an audit artefact."""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    table = [line for line in lines if line.startswith("| ")]
+    if len(table) < 2:
+        raise ValidationError(f"Markdown table is absent: {path}")
+    headers = [cell.strip() for cell in table[0].strip("|").split("|")]
+    rows: list[dict[str, str]] = []
+    for line in table[1:]:
+        if set(line.replace("|", "").replace("-", "").replace(":", "").strip()) == set():
+            continue
+        cells = [cell.strip().replace("\\|", "|") for cell in line.strip("|").split("|")]
+        if len(cells) != len(headers):
+            raise ValidationError(f"Markdown table is malformed: {path}")
+        rows.append(dict(zip(headers, cells, strict=True)))
+    return rows
+
+
+def missing_domain_review_rows() -> list[dict[str, str]]:
+    return markdown_table_rows(MISSING_DOMAIN_REVIEW)
+
+
+def domain_concordance_rows() -> list[dict[str, str]]:
+    return markdown_table_rows(DOMAIN_CONCORDANCE)
 
 
 QUESTIONNAIRE_LABEL_MAP = {
@@ -180,6 +266,15 @@ def _documented_question_label(paragraphs: list[str], prefix: str) -> str:
     return re.sub(r"\s+\[(Required|Optional)\]$", "", text).strip()
 
 
+def _definition_after_heading(paragraphs: list[str], heading: str) -> str:
+    indexes = [index for index, text in enumerate(paragraphs) if text == heading]
+    if len(indexes) != 1:
+        raise ValidationError(
+            f"questionnaire has {len(indexes)} occurrences of heading {heading!r}"
+        )
+    return paragraphs[indexes[0] + 1]
+
+
 def _dictionary_label_for_document(row: Mapping[str, str]) -> str:
     text = re.sub(r"^Optional:\s*", "", row["Field Label"])
     replacements = {
@@ -222,6 +317,61 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
     for obsolete in ("q13", "po_quote_permission", "quotation permission", "may the study use a short anonymised quotation"):
         if obsolete in questionnaire_text:
             errors.append(f"questionnaire retains obsolete quotation item: {obsolete}")
+    intro = [normalise_text(item) for item in builder.CLASSIFICATION_INTRO_PARAGRAPHS]
+    intro_indexes = [
+        index for index, paragraph in enumerate(questionnaire) if paragraph == intro[0]
+    ]
+    overview_indexes = [
+        index
+        for index, paragraph in enumerate(questionnaire)
+        if paragraph.startswith("Read-only classification overview:")
+    ]
+    if len(intro_indexes) != 1:
+        errors.append("questionnaire does not contain the classification orientation exactly once")
+    elif questionnaire[intro_indexes[0] : intro_indexes[0] + len(intro)] != intro:
+        errors.append("questionnaire classification orientation is not the exact contiguous block")
+    if len(overview_indexes) != 1:
+        errors.append("questionnaire does not contain one read-only classification overview")
+    elif len(intro_indexes) == 1 and intro_indexes[0] + len(intro) != overview_indexes[0]:
+        errors.append("questionnaire orientation is not immediately before the overview")
+    if plain_redcap_label(by["po_intro"]["Field Label"]) != normalise_text(
+        " ".join(builder.CLASSIFICATION_INTRO_PARAGRAPHS)
+    ):
+        errors.append("dictionary po_intro differs from the canonical questionnaire block")
+    if by["po_intro"]["Field Label"].count(
+        f"<strong>{builder.SUBSTANTIVE_FOCUS_PHRASE}</strong>"
+    ) != 1:
+        errors.append("po_intro does not strongly emphasise the exact governing phrase once")
+    errors.extend(
+        validate_exact_docx_bold_phrase(
+            builder.QUESTIONNAIRE_SOURCE,
+            builder.SUBSTANTIVE_FOCUS_PARAGRAPH,
+            builder.SUBSTANTIVE_FOCUS_PHRASE,
+            "substantive-focus rule",
+        )
+    )
+    reminder_specs = (
+        ("Q6b.", "po_miss_domain_reminder", builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE),
+        ("Q7b.", "po_miss_purpose_reminder", builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE),
+    )
+    for prefix, variable, reminder, phrase in reminder_specs:
+        question_index = _question_index(questionnaire, prefix)
+        if not question_index or questionnaire[question_index - 1] != normalise_text(reminder):
+            errors.append(f"questionnaire {variable} is not immediately before {prefix}")
+        errors.extend(
+            validate_exact_docx_bold_phrase(
+                builder.QUESTIONNAIRE_SOURCE, reminder, phrase, variable
+            )
+        )
+    if "save & return later" in by["po_intro"]["Field Label"].lower():
+        errors.append("po_intro duplicates Save & Return Later guidance")
+    for obsolete in (
+        "synthetic-qa placeholder",
+        "attach or link the final formatted owner-facing taxonomy reference",
+        "taxonomy reference pdf",
+    ):
+        if obsolete in questionnaire_text:
+            errors.append(f"questionnaire retains taxonomy-reference text: {obsolete}")
     for prefix, variable in QUESTIONNAIRE_LABEL_MAP.items():
         documented = _documented_question_label(questionnaire, prefix)
         expected = normalise_text(_dictionary_label_for_document(by[variable]))
@@ -246,6 +396,18 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
         errors.append("Q3d does not include or unclear")
     if "or unclear" not in _documented_question_label(questionnaire, "Q4d."):
         errors.append("Q4d does not include or unclear")
+    headings = {
+        "5.1 Demographic disparities / equity tag": builder.OPERATIONAL_TAGS[0],
+        "5.2 COVID-19 & Pandemic": builder.OPERATIONAL_TAGS[1],
+    }
+    for heading, label in headings.items():
+        expected = normalise_text(builder.TAG_DEFINITIONS[label])
+        if _definition_after_heading(questionnaire, heading) != expected:
+            errors.append(f"questionnaire {heading} full definition differs")
+        if questionnaire.count(expected) != 2:
+            errors.append(
+                f"questionnaire main section and Appendix A do not contain two exact {label} definitions"
+            )
     return errors
 
 
@@ -352,9 +514,9 @@ def validate_dictionary() -> dict[str, object]:
     counts = Counter(row["Form Name"] for row in rows)
     if tuple(dict.fromkeys(row["Form Name"] for row in rows)) != builder.base.FORMS:
         errors.append("dictionary does not contain exactly the intended two instruments")
-    if counts != Counter({"owner_consent": 22, "project_review": 96}):
+    if counts != Counter({"owner_consent": 22, "project_review": 97}):
         errors.append(f"field counts differ: {dict(counts)}")
-    if len(rows) != 118 or len(names) != len(set(names)):
+    if len(rows) != 119 or len(names) != len(set(names)):
         errors.append("total field count or uniqueness differs")
     by = {row["Variable / Field Name"]: row for row in rows}
     if set(builder.CONSENT_NAMES) - set(by):
@@ -404,6 +566,35 @@ def validate_dictionary() -> dict[str, object]:
         errors.append("acknowledgement response labels differ")
     if "po_quote_permission" in by:
         errors.append("obsolete quotation-permission field retained")
+    if "po_taxonomy_ref" in by:
+        errors.append("non-production taxonomy-reference field retained")
+    if names.count("po_intro") != 1 or by["po_intro"]["Form Name"] != "project_review":
+        errors.append("po_intro is not exactly one Project Review field")
+    if not (
+        names.index("datasets_used")
+        < names.index("po_intro")
+        < names.index("po_classification_overview")
+    ):
+        errors.append("participant-visible orientation/overview order differs")
+    reminder_expectations = (
+        ("po_miss_domain_reminder", "po_miss_domains", builder.MISSING_DOMAIN_REMINDER_HTML, builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE, "[po_miss_domain] = '1'"),
+        ("po_miss_purpose_reminder", "po_miss_purposes", builder.MISSING_PURPOSE_REMINDER_HTML, builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE, "[po_miss_purpose] = '1'"),
+    )
+    for reminder, target, markup, plain, phrase, branch in reminder_expectations:
+        row = by.get(reminder, {})
+        if names.count(reminder) != 1 or row.get("Form Name") != "project_review":
+            errors.append(f"{reminder} is not exactly one Project Review field")
+            continue
+        if row.get("Field Type") != "descriptive" or row.get("Required Field?"):
+            errors.append(f"{reminder} field type/requiredness differs")
+        if row.get("Field Label") != markup or plain_redcap_label(row.get("Field Label", "")) != normalise_text(plain):
+            errors.append(f"{reminder} wording or markup differs")
+        if row.get("Field Label", "").count(f"<strong>{phrase}</strong>") != 1:
+            errors.append(f"{reminder} does not strongly emphasise only its governing phrase")
+        if row.get("Branching Logic (Show field only if...)") != branch:
+            errors.append(f"{reminder} branching differs")
+        if names.index(reminder) + 1 != names.index(target):
+            errors.append(f"{reminder} is not immediately before {target}")
     if names[-2:] != ["po_other_comment", "po_final_warning"]:
         errors.append("final warning is not immediately after final comments")
     if "quotation permission" in by["po_final_warning"]["Field Label"].lower():
@@ -419,7 +610,8 @@ def validate_dictionary() -> dict[str, object]:
     old_review = {
         row["Variable / Field Name"]: row
         for row in predecessor_rows
-        if row["Form Name"] == "project_review" and row["Variable / Field Name"] != "po_quote_permission"
+        if row["Form Name"] == "project_review"
+        and row["Variable / Field Name"] not in {"po_quote_permission", "po_taxonomy_ref"}
     }
     new_review = {
         row["Variable / Field Name"]: row
@@ -431,6 +623,14 @@ def validate_dictionary() -> dict[str, object]:
     for name, label in builder.QUESTIONNAIRE_FIELD_LABELS.items():
         old_review[name] = dict(old_review[name])
         old_review[name]["Field Label"] = label
+    old_review["po_intro"] = dict(old_review["po_intro"])
+    old_review["po_intro"]["Field Label"] = builder.CLASSIFICATION_INTRO_LABEL
+    for reminder in ("po_miss_domain_reminder", "po_miss_purpose_reminder"):
+        old_review[reminder] = new_review[reminder]
+    old_review["po_miss_domains"] = dict(old_review["po_miss_domains"])
+    old_review["po_miss_domains"][
+        "Choices, Calculations, OR Slider Labels"
+    ] = builder.owner_domain_redcap_choices()
     old_review["po_tax_issue"] = dict(old_review["po_tax_issue"])
     old_review["po_tax_issue"]["Choices, Calculations, OR Slider Labels"] = (
         "1, Missing or inadequately represented category | "
@@ -462,8 +662,52 @@ def validate_specs_and_fixture() -> dict[str, object]:
         errors.append("branch specification questionnaire hash differs")
     if review_document.get("participant_document_size_bytes") != builder.QUESTIONNAIRE_SOURCE_SIZE:
         errors.append("branch specification questionnaire size differs")
+    if review_document.get("classification_orientation_field") != "po_intro":
+        errors.append("branch specification orientation field differs")
+    if review_document.get("classification_orientation_paragraphs") != list(
+        builder.CLASSIFICATION_INTRO_PARAGRAPHS
+    ):
+        errors.append("branch specification orientation wording differs")
+    if review_document.get("classification_orientation_order") != (
+        "project information -> po_intro -> po_classification_overview -> detailed judgements"
+    ):
+        errors.append("branch specification participant-visible order differs")
+    if review_document.get("substantive_focus_rule") != {
+        "plain_text": builder.SUBSTANTIVE_FOCUS_PARAGRAPH,
+        "bold_phrase": builder.SUBSTANTIVE_FOCUS_PHRASE,
+        "redcap_markup": f"<strong>{builder.SUBSTANTIVE_FOCUS_PHRASE}</strong>",
+        "position": "inside po_intro before po_classification_overview",
+    }:
+        errors.append("branch specification substantive-focus rule differs")
+    expected_reminders = {
+        "po_miss_domain_reminder": {
+            "plain_text": builder.MISSING_DOMAIN_REMINDER,
+            "bold_phrase": builder.MISSING_DOMAIN_REMINDER_PHRASE,
+            "branching": "[po_miss_domain] = '1'",
+            "immediately_before": "po_miss_domains",
+        },
+        "po_miss_purpose_reminder": {
+            "plain_text": builder.MISSING_PURPOSE_REMINDER,
+            "bold_phrase": builder.MISSING_PURPOSE_REMINDER_PHRASE,
+            "branching": "[po_miss_purpose] = '1'",
+            "immediately_before": "po_miss_purposes",
+        },
+    }
+    if review_document.get("missing_classification_reminders") != expected_reminders:
+        errors.append("branch specification missing-classification reminders differ")
+    if not str(review_document.get("taxonomy_reference", "")).startswith("absent;"):
+        errors.append("branch specification does not make taxonomy-reference absence explicit")
     if "po_quote_permission" in builder.BRANCH_SPEC.read_text(encoding="utf-8"):
         errors.append("quotation field retained in branch specification")
+    tag_spec = branch.get("tag_reviews", {})
+    if tag_spec.get("operational_set") != list(builder.OPERATIONAL_TAGS):
+        errors.append("branch specification operational tag set differs")
+    if tag_spec.get("operational_inclusion_rule") != builder.OPERATIONAL_INCLUSION_RULE:
+        errors.append("branch specification operational inclusion rule differs")
+    if tag_spec.get("definitions") != builder.TAG_DEFINITIONS:
+        errors.append("branch specification full tag definitions differ")
+    if not tag_spec.get("lifecycle_status_is_not_operational_inclusion"):
+        errors.append("branch specification conflates lifecycle and operational status")
     fixture, header = read_csv(builder.IMPORT_FIXTURE)
     if len(fixture) != 22:
         errors.append("fixture does not contain 22 rows")
@@ -483,6 +727,8 @@ def validate_specs_and_fixture() -> dict[str, object]:
             errors.append(f"fixture does not keep {name} blank")
     if "po_quote_permission" in header:
         errors.append("fixture retains quotation-permission field")
+    if "po_taxonomy_ref" in header:
+        errors.append("fixture retains taxonomy-reference field")
     if any(row["owner_instr_ver"] != builder.VERSION for row in owners):
         errors.append("owner fixture version differs")
     if any(row["review_instr_ver"] != builder.VERSION for row in repeats):
@@ -493,6 +739,24 @@ def validate_specs_and_fixture() -> dict[str, object]:
         if any(row[name] for name in blank_fields):
             errors.append("owner-level consent value appears on repeat row")
             break
+    for index, label in enumerate(builder.OPERATIONAL_TAGS, 1):
+        label_field = f"prop_t{index:02d}_label"
+        definition_field = f"prop_t{index:02d}_def"
+        status_field = f"prop_t{index:02d}_status"
+        if any(row[label_field] != label for row in repeats):
+            errors.append(f"fixture {label_field} does not contain the canonical value")
+        if any(row[definition_field] != builder.TAG_DEFINITIONS[label] for row in repeats):
+            errors.append(f"fixture {definition_field} full definition differs")
+        if any(row[status_field] not in {"0", "1"} for row in repeats):
+            errors.append(f"fixture {status_field} is not populated on every review")
+    for row in repeats:
+        for index in range(1, builder.base.DOMAIN_SLOTS + 1):
+            label = row[f"prop_d{index:02d}_label"]
+            definition = row[f"prop_d{index:02d}_def"]
+            if label:
+                entry = builder.OWNER_DOMAIN_DISPLAY.get(label)
+                if entry is None or definition != entry["full_definition"]:
+                    errors.append(f"fixture proposed-Domain full definition differs: {label}")
     raw = builder.IMPORT_FIXTURE.read_text(encoding="utf-8")
     buffer = io.StringIO(newline="")
     writer = csv.DictWriter(buffer, fieldnames=header, lineterminator="\n")
@@ -509,14 +773,205 @@ def validate_specs_and_fixture() -> dict[str, object]:
         text = path.read_text(encoding="utf-8-sig")
         if "po_quote_permission" in text:
             errors.append(f"quotation field retained in {path.name}")
+        if "po_taxonomy_ref" in text:
+            errors.append(f"taxonomy-reference field retained in {path.name}")
+    current_missing = next(
+        row for row in load_dictionary() if row["Variable / Field Name"] == "po_miss_domains"
+    )
+    display = builder.OWNER_DOMAIN_DISPLAY
+    if tuple(display) != builder.DOMAIN_ORDER or len(display) != 11:
+        errors.append("owner-domain display mapping label set/order differs")
+    taxonomy_labels = tuple(
+        str(item["label"])
+        for item in builder.base.taxonomy_groups()[0]["domain"]
+    )
+    if tuple(display) != taxonomy_labels:
+        errors.append("owner-domain mapping keys differ from eligible frozen Domains")
+    if builder.base.UNCLEAR_LABEL in display:
+        errors.append("Unclear from Register Entry is present in owner-domain mapping")
+    expected_choices = {
+        str(index): str(entry["missing_choice_microdefinition"])
+        for index, entry in enumerate(display.values(), 1)
+    }
+    if parse_choices(current_missing["Choices, Calculations, OR Slider Labels"]) != expected_choices:
+        errors.append("Q6b is not generated exactly from OWNER_DOMAIN_DISPLAY")
+    display_source = {
+        str(item["canonical_label"]): str(item["owner_microdefinition"])
+        for item in builder.base.display_source()["labels"]
+        if item["owner_layer"] == "domain"
+    }
+    taxonomy_source = {
+        str(item["label"]): item
+        for item in builder.base.taxonomy_groups()[0]["domain"]
+    }
+    required_mapping_fields = {
+        "canonical_label",
+        "full_definition",
+        "missing_choice_microdefinition",
+        "taxonomy_source_fields",
+        "boundary_summary",
+        "author_approval",
+    }
+    for label, entry in display.items():
+        if not required_mapping_fields <= set(entry):
+            errors.append(f"owner-domain mapping fields incomplete: {label}")
+            continue
+        if entry["canonical_label"] != label:
+            errors.append(f"owner-domain canonical label differs: {label}")
+        if entry["full_definition"] != display_source.get(label):
+            errors.append(f"owner-domain full definition differs from frozen-derived display: {label}")
+        if tuple(entry["taxonomy_source_fields"]) != builder.DOMAIN_TAXONOMY_SOURCE_FIELDS:
+            errors.append(f"owner-domain frozen source-field record differs: {label}")
+        if any(not taxonomy_source[label].get(name) for name in entry["taxonomy_source_fields"]):
+            errors.append(f"owner-domain frozen source field is empty: {label}")
+        if not str(entry["missing_choice_microdefinition"]).startswith(f"{label} — "):
+            errors.append(f"Q6b choice does not retain canonical label: {label}")
+        if not entry["boundary_summary"] or entry["author_approval"] != "Approved, 2026-07-28":
+            errors.append(f"owner-domain approval/boundary metadata differs: {label}")
+
+    dictionary_text = builder.DICTIONARY.read_text(encoding="utf-8-sig")
+    for choice in expected_choices.values():
+        if dictionary_text.count(choice) != 1:
+            errors.append(f"Q6b microdefinition is absent or duplicated in dictionary: {choice.split(' — ', 1)[0]}")
+    updater_source = (builder.ROOT / "scripts/update_project_owner_participant_documents_candidate_0_4.py").read_text(encoding="utf-8")
+    if "candidate.owner_domain_questionnaire_choices()" not in updater_source or "DOMAIN_CHOICES = (" in updater_source:
+        errors.append("questionnaire updater independently maintains Q6b strings")
+
+    field_rows, _ = read_csv(builder.FIELD_SPEC)
+    field_missing = next(row for row in field_rows if row["variable"] == "po_miss_domains")
+    if field_missing["notes"] != builder.owner_domain_redcap_choices():
+        errors.append("field specification Q6b wording differs")
+    formatting_rows, _ = read_csv(builder.FORMATTING_AUDIT)
+    formatting_missing = [row for row in formatting_rows if row["variable_name"] == "po_miss_domains"]
+    if len(formatting_missing) != 1 or formatting_missing[0]["body_text"] != builder.owner_domain_redcap_choices():
+        errors.append("formatting audit Q6b wording differs")
+
+    review_text = MISSING_DOMAIN_REVIEW.read_text(encoding="utf-8")
+    if "approved instrument wording; implemented in candidate 0.4" not in review_text:
+        errors.append("missing-domain review artefact does not record approved implementation")
+    review_rows = missing_domain_review_rows()
+    if len(review_rows) != 11 or tuple(row["Canonical Domain"] for row in review_rows) != builder.DOMAIN_ORDER:
+        errors.append("missing-domain review does not contain the ordered 11 eligible Domains")
+    for row in review_rows:
+        label = row["Canonical Domain"]
+        if label not in display:
+            continue
+        choice = str(display[label]["missing_choice_microdefinition"])
+        if row["Final approved Q6b wording"] != choice:
+            errors.append(f"missing-domain review approved wording differs: {label}")
+        if row["Word count"] != str(len(choice.split())):
+            errors.append(f"missing-domain review word count differs: {label}")
+        if row["Author approval"] != "Approved, 2026-07-28":
+            errors.append(f"missing-domain review approval differs: {label}")
+        if row["Implementation"] != "Implemented in candidate 0.4":
+            errors.append(f"missing-domain review implementation status differs: {label}")
+        if not row["Boundary addressed"] or not row["Change from initial draft"]:
+            errors.append(f"missing-domain review trace fields incomplete: {label}")
+    if "| Unclear from Register Entry |" in review_text:
+        errors.append("missing-domain review incorrectly adds Unclear from Register Entry as a choice")
+
+    concordance = domain_concordance_rows()
+    if len(concordance) != 11 or tuple(row["Canonical Domain"] for row in concordance) != builder.DOMAIN_ORDER:
+        errors.append("Domain concordance does not contain the ordered 11 eligible Domains")
+    for row in concordance:
+        label = row["Canonical Domain"]
+        if label not in display:
+            continue
+        entry = display[label]
+        if row["Full proposed-label definition"] != entry["full_definition"]:
+            errors.append(f"concordance full definition differs: {label}")
+        if row["Approved Q6b wording"] != entry["missing_choice_microdefinition"]:
+            errors.append(f"concordance Q6b wording differs: {label}")
+        if row["Author approval"] != "Approved, 2026-07-28":
+            errors.append(f"concordance author approval differs: {label}")
+        if not row["Inclusion direction aligned"].startswith("Yes") or not row["Boundary direction aligned"].startswith("Yes"):
+            errors.append(f"concordance human alignment decision differs: {label}")
+        if not row["Live-QA result"].startswith("Pending"):
+            errors.append(f"concordance live-QA result is not pending: {label}")
+    live_text = builder.LIVE_CONFIG.read_text(encoding="utf-8")
+    semantic_assertion = (
+        "Research Domain wording concordance: For every Research Domain, compare the full "
+        "definition displayed when the Domain is proposed with the compressed wording displayed "
+        "in the missing-Domain checklist. Confirm that both identify the same substantive research "
+        "object and apply compatible inclusion and exclusion boundaries. Neither wording may "
+        "direct participants toward assigning the Domain in circumstances that the other wording excludes."
+    )
+    if semantic_assertion not in live_text:
+        errors.append("live configuration omits exact semantic-concordance assertion")
     docs = builder.SPEC.read_text(encoding="utf-8") + builder.LIVE_CONFIG.read_text(encoding="utf-8")
-    if "exact proposed wording and context" not in docs:
+    if builder.QUOTATION_POLICY not in docs:
         errors.append("point-of-use quotation policy absent")
     if builder.QUEUE_CONDITION not in docs:
         errors.append("queue condition absent from documentation")
     if errors:
         raise ValidationError("\n".join(errors))
     return {"fixture_rows": len(fixture), "owners": len(owners), "reviews": len(repeats)}
+
+
+def validate_operational_tags() -> dict[str, object]:
+    errors: list[str] = []
+    rows = builder.operational_tag_audit()
+    labels = tuple(str(row["label"]) for row in rows)
+    if labels != builder.OPERATIONAL_TAGS:
+        errors.append(f"owner operational tags differ: {labels!r}")
+    active_only = tuple(
+        str(row["label"])
+        for row in rows
+        if str(row.get("status", "")).lower() == "active"
+    )
+    if active_only == builder.OPERATIONAL_TAGS or len(active_only) != 1:
+        errors.append("lifecycle active subset does not demonstrate the distinct inclusion rule")
+
+    from analysis import llm_theme_analysis_v3 as classifier
+    from dashboard import taxonomy as dashboard_taxonomy
+
+    if tuple(classifier.CROSS_CUTTING_TAGS) != builder.OPERATIONAL_TAGS:
+        errors.append("production-classifier tag set differs")
+    if tuple(dashboard_taxonomy.TAG_LABELS) != builder.OPERATIONAL_TAGS:
+        errors.append("dashboard tag set differs")
+
+    dictionary = load_dictionary()
+    by = {row["Variable / Field Name"]: row for row in dictionary}
+    names = [row["Variable / Field Name"] for row in dictionary]
+    for index, label in enumerate(builder.OPERATIONAL_TAGS, 1):
+        status = f"prop_t{index:02d}_status"
+        display = f"po_t{index:02d}_display"
+        correct = f"po_t{index:02d}_correct"
+        visibility = f"po_t{index:02d}_vis"
+        if builder.TAG_FIELD_MAPPING.get(status) != label:
+            errors.append(f"{status} canonical mapping differs")
+        if parse_choices(by[status]["Choices, Calculations, OR Slider Labels"]) != {
+            "1": "Applied",
+            "0": "Not applied",
+        }:
+            errors.append(f"{status} choices differ")
+        if by[status]["Required Field?"] != "y":
+            errors.append(f"{status} is not required")
+        if not (names.index(display) < names.index(status) < names.index(correct)):
+            errors.append(f"{label} full definition is not immediately before its questions")
+        for judgement in (correct, visibility):
+            if by[judgement]["Required Field?"] != "y":
+                errors.append(f"{judgement} is not required")
+            if by[judgement]["Branching Logic (Show field only if...)"]:
+                errors.append(f"{judgement} is not independent")
+    missing = set(analytical_completion_missing({}, {
+        **{name: "1" for name in builder.CONSENT_NAMES},
+        "intended_recipient": "1",
+        "owner_consent": "1",
+        "owner_consent_complete": "2",
+    }))
+    for required in (
+        "po_t01_correct", "po_t01_vis", "po_t02_correct", "po_t02_vis"
+    ):
+        if required not in missing:
+            errors.append(f"analytical completion does not require {required}")
+    if errors:
+        raise ValidationError("\n".join(errors))
+    return {
+        "operational_set": list(labels),
+        "inclusion_rule": builder.OPERATIONAL_INCLUSION_RULE,
+        "lifecycle_active_only_subset": list(active_only),
+    }
 
 
 def validate_consent_logic() -> dict[str, object]:
@@ -551,6 +1006,7 @@ def check() -> dict[str, object]:
         "version": builder.VERSION,
         "dictionary": validate_dictionary(),
         "fixture_and_specs": validate_specs_and_fixture(),
+        "operational_tags": validate_operational_tags(),
         "consent_logic": validate_consent_logic(),
         "status": "passed",
     }

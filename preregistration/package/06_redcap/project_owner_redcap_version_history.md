@@ -20,7 +20,7 @@
 - Corrects owner-level acknowledgement wording: declining means the study team
   will not name or acknowledge the participant in resulting outputs; it does
   not claim that participation cannot otherwise be inferred.
-- Dictionary: 118 fields across Owner Consent (22) and Project Review (96).
+- Dictionary: 119 fields across Owner Consent (22) and Project Review (97).
   Synthetic fixture: three owners, 19 pre-created review instances and 22 rows;
   no consent response or confirmation is pre-populated.
 - Completes participant-document alignment: both canonical v3 DOCX files are
@@ -29,6 +29,42 @@
   dictionary; Appendix B records the full owner-level consent-validity join;
   Q13 and per-project quotation permission are absent. The former untracked
   `- Copy` questionnaire is not required.
+- Completes the cross-cutting-tag alignment while preserving the frozen machine
+  values `Demographic disparities / equity tag` and `COVID-19 & Pandemic`.
+  Both are operational through the explicit `include_in_prompt=true`, current
+  layer and non-removed-status rule; their differing lifecycle statuses are not
+  used as the sole inclusion criterion, and no one-tag bug existed.
+- Main Questionnaire sections 5.1/5.2, Appendix A and REDCap
+  `prop_t01_def`/`prop_t02_def` now use the same complete two-sentence
+  definitions. Both permanent tag blocks retain Applied / Not applied status,
+  independent required correctness and visibility judgements, and analytical-
+  completion requirements.
+- Confirms again that project-level quotation permission is absent. Any proposed
+  quotation is handled later by email with its exact wording and context and is
+  used only after written agreement.
+- Removes the inherited participant-visible `po_taxonomy_ref` synthetic-QA
+  placeholder without replacement. No taxonomy-reference PDF, attachment,
+  external link, Appendix A link, optional guide or migration dependency is
+  introduced. The exact concise “How the classifications work” orientation is
+  reproduced in Questionnaire v3 and ordered after displayed project
+  information and before the otherwise unchanged read-only overview.
+- Implements the 11 boundary-bearing Q6b missing-Domain microdefinitions
+  explicitly approved by the project author on 2026-07-28. One ordered
+  canonical-label mapping in the candidate generator supplies the questionnaire,
+  dictionary, field specification, formatting audit, approval record and
+  full-definition/microdefinition concordance record. `Unclear from Register
+  Entry` remains excluded. Automated label-set, frozen-source and exact-text
+  alignment checks are supplemented by mandatory 11-Domain human semantic and
+  desktop/mobile display QA. The frozen taxonomy, production prompt, category
+  membership, classification outputs and dashboard schema remain unchanged.
+- Clarifies and visually emphasises the existing substantive-focus threshold:
+  a Domain or Purpose applies only when it is a substantive focus of the
+  project's research question or analytical aims, not merely because related
+  terms, datasets, variables, methods or outcomes appear. The exact governing
+  phrase is bold in Questionnaire v3 and `po_intro`; two display-only reminders
+  immediately before Q6b and Q7b emphasise the corresponding missing-Domain
+  and missing-Purpose thresholds. Q6b/Q7b choices, codes, branching,
+  requiredness and analytical constructs are unchanged.
 - No taxonomy, production classification, owner sampling, project assignment,
   participant data or frozen scratch-coder artefact changed. PID 9149 was not
   contacted or modified. Controlled migration and live QA remain mandatory;

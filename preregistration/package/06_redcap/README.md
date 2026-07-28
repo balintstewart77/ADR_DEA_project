@@ -6,7 +6,7 @@ Project Owner development candidates. Candidate 0.7 remains the frozen
 scratch-coder version; its historical `project_owner` form was never
 independently live-QA tested for the standalone owner workflow.
 
-`owner-redcap-candidate-0.4` is the current separate 118-field, two-instrument
+`owner-redcap-candidate-0.4` is the current separate 119-field, two-instrument
 Classic project candidate. It uses one pseudonymous record per owner, a
 non-repeating Owner Consent survey, and a repeating Project Review survey with
 one administrator-created instance per owner–project assignment. One
@@ -26,24 +26,52 @@ agreement is now sought by email at point of use with the exact proposed
 wording and context. It also corrects the optional acknowledgement wording.
 Candidate 0.3 remains unchanged as the historical predecessor.
 
+Candidate 0.4 also enforces the operational two-tag invariant without changing
+the frozen taxonomy or production prompt: `Demographic disparities / equity
+tag` and `COVID-19 & Pandemic`. Operational inclusion is controlled by
+`include_in_prompt=true`, the current Cross-cutting tag layer and a status that
+does not begin `removed`; lifecycle/provenance values such as `new v3.4` and
+`active` are not the inclusion criterion. Each Project Review displays the full
+two-sentence authoritative definition for both tags immediately before its
+Applied / Not applied status and independent correctness and visibility
+questions. The scoped audit is
+`project_owner_cross_cutting_tag_and_quotation_audit_candidate_0.4.md`.
+
+Candidate 0.4 removes the inherited participant-visible `po_taxonomy_ref`
+synthetic-QA placeholder without replacement. No separate taxonomy-reference
+PDF, attachment, external link, Appendix A link or optional guide will be used.
+Project Review now places the concise, questionnaire-matched “How the
+classifications work” orientation after the displayed project information and
+immediately before the unchanged read-only classification overview. Eleven
+boundary-bearing Q6b missing-Domain microdefinitions were explicitly approved
+by the project author on 2026-07-28 and are generated from the canonical-label
+`OWNER_DOMAIN_DISPLAY` mapping into the questionnaire and REDCap artefacts.
+`project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records
+the approval and implementation decision;
+`project_owner_domain_wording_concordance_candidate_0.4.md` records the human
+full-definition/compressed-wording comparison. The frozen taxonomy remains the
+substantive authority and was not changed. Migration and recruitment remain
+blocked pending controlled PID 9149 migration and successful live semantic and
+display QA for all 11 Domains.
+
+The orientation now makes the governing substantive-focus threshold explicit
+before the classification overview and strongly emphasises only the phrase
+“only when it is a substantive focus of the project’s research question or
+analytical aims”. Display-only reminders immediately before Q6b and Q7b
+respectively emphasise a substantive subject and a substantive analytical aim.
+These two reminder fields account for the increase from 117 to 119 fields;
+they change no choices, codes, branching, requiredness, exports or analytical
+constructs. Their rich-text presentation remains a mandatory desktop/mobile
+live-QA gate.
+
 Candidate 0.4 is intended for controlled synthetic-only migration/live QA in Development
 PID 9149. It has not been imported or live tested and does not authorise
 real contacts, invitations, assignments or data collection. The instrument is
-unfrozen and non-authoritative. All 22 owner-facing
-taxonomy microdefinitions and participant-reference definitions were approved
-by Balint Stewart on 2026-07-23. Taxonomy wording is approved for participant
-use. The participant taxonomy-reference Markdown contains only participant
-content plus its document version/date; definition provenance and approval
-metadata remain in the display YAML, review CSV, specification and manifest.
-The reference and Project Review introduction state that Research Domains may
-be multi-label and are unranked, while Analytical Purposes may also be
-multi-label but are limited to two main analytical aims. Four expanded
-participant-reference definitions (Data Infrastructure & Methodology, Outcome
-Tracking, and both cross-cutting tags) are explicitly recorded as frozen
-definitions plus imported inclusion/exclusion boundary clauses with exact
-taxonomy source fields and paths; the other 18 remain verbatim after whitespace
-normalisation.
-Continuing synthetic live QA produced a coordinated participant-facing and
+unfrozen and non-authoritative. Historical candidate 0.3 retained the 22
+owner-facing microdefinitions approved by Balint Stewart on 2026-07-23 and its
+separate taxonomy-reference Markdown source as audit evidence. Candidate 0.4
+does not use that reference artefact or require a formatted derivative.
+Continuing candidate-0.3 synthetic live QA produced a coordinated participant-facing and
 branching correction: the review opening is concise and semantically formatted,
 the duplicate taxonomy-fit textbox is removed, and all eight proposed-label
 blocks now separate actual-project correctness explanations from public-entry
@@ -82,7 +110,7 @@ historical candidate. It used a per-assignment participation acknowledgement
 and was superseded by candidate 0.2 before live QA.
 
 Participant-facing document versions remain separate from the REDCap candidate.
-`Project_Owner_Participant_Information_and_Consent_v2.docx` and
+`Project_Owner_Participant_Information_and_Consent_v3.docx` and
 `Project_Owner_Review_Questionnaire_v3.docx` are the current ethics/DPO review
 copies. Their v1 predecessors remain byte-for-byte under
 `participant_materials/`. Candidate 0.3 continues to use its explicit
