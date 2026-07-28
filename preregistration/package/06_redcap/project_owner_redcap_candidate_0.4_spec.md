@@ -1,0 +1,73 @@
+# Project Owner REDCap candidate 0.4 specification
+
+Version: `owner-redcap-candidate-0.4`  
+Status: unfrozen development candidate; pre-recruitment; controlled PID 9149 migration and live QA pending.  
+Ethics trace: UCL Project ID 5004; Participant Information and Consent v3 dated 28 July 2026.
+
+## Architecture and field counts
+
+Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 118 dictionary fields:
+
+- `owner_consent`: 22 fields;
+- `project_review`: 96 fields.
+
+The Project Owner instrument remains unfrozen and non-authoritative. This candidate does not authorise recruitment or live migration. Both canonical participant DOCX files are pinned by SHA-256 and byte size; generation stops if either changes without an authorised metadata refresh.
+
+## Ethics-to-REDCap consent traceability
+
+The participant-visible sequence is: full Participant Information Sheet v3; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The controlled live project must display or attach the full approved v3 information sheet before these fields.
+
+Participant-document alignment is complete for candidate 0.4: the canonical consent DOCX contains the ten statements, final consent decision and acknowledgement wording represented here; the canonical Questionnaire v3 reproduces the participant-facing Project Review labels, response choices and inline checkbox microdefinitions. Its Appendix B records the complete owner-level consent-validity join. Q13 and participant-facing per-project quotation permission are absent. Controlled migration and live QA remain mandatory before recruitment.
+
+- `consent_read_info` — I have read and understood the participant information above.
+- `consent_understand_invitation` — I understand why I have been invited and what taking part involves.
+- `consent_voluntary` — I understand that participation is voluntary and that I may review all, some or none of the projects offered.
+- `consent_no_nonpublic` — I understand that I should not disclose confidential, sensitive or otherwise non-public information.
+- `consent_confidentiality_limits` — I understand that my information will be handled confidentially and that direct identifiers will not appear in research outputs, but complete anonymity cannot be guaranteed because the participant group is small and responses concern publicly identifiable projects.
+- `consent_withdrawal_deadline` — I understand that I may withdraw a submitted review by emailing the study team by Friday 2 October 2026, and that after this date responses can no longer be removed.
+- `consent_quote_process` — I understand that if the study wishes to quote my comments, I will be sent the exact proposed wording in advance and it will only be used if I agree.
+- `consent_retention_reanalysis` — I agree that my pseudonymised research data may be retained for 10 years and used by the research team for verification and further analyses directly related to this validation study and the improvement of the classification framework and dashboard.
+- `consent_complaints` — I am aware of who I should contact if I wish to lodge a complaint.
+- `consent_acknowledgement` — I understand that choosing to be acknowledged by name is optional, is separate to my decision to take part, and would make my participation in this study permanently and publicly identifiable.
+
+Every confirmation is a separate owner-level radio field with stored codes `1, Confirmed | 0, Not confirmed`, starts blank, is never pre-populated, and branches only on `[intended_recipient] = '1'`. None appears in `project_review` or counts as a Project Review analytical outcome.
+
+`consent_items_complete` is a survey-hidden calculated field with this exact expression:
+
+```text
+if([consent_read_info] = '1' and [consent_understand_invitation] = '1' and [consent_voluntary] = '1' and [consent_no_nonpublic] = '1' and [consent_confidentiality_limits] = '1' and [consent_withdrawal_deadline] = '1' and [consent_quote_process] = '1' and [consent_retention_reanalysis] = '1' and [consent_complaints] = '1' and [consent_acknowledgement] = '1', 1, 0)
+```
+
+Valid affirmative consent is the composite condition:
+
+```text
+[intended_recipient] = '1' and [consent_items_complete] = '1' and [owner_consent] = '1' and [owner_consent_complete] = '2'
+```
+
+`owner_consent` retains the ethics-approved final decision wording and `1, Yes, I agree to take part | 0, No, I do not wish to take part`. It is shown whenever the intended-recipient response is Yes, so a participant can actively decline even when one or more confirmations are blank or Not confirmed. The existing No Stop Action ends the consent survey, hides acknowledgement and reveals no reviews. An attempted raw Yes with `consent_items_complete != 1` is not valid consent, grants no Survey Queue access and must be tested explicitly during controlled live QA. No unverified action tag or runtime claim is encoded.
+
+The Project Review Survey Queue condition is exactly:
+
+```text
+[owner_consent_complete] = '2' and [owner_consent] = '1' and [intended_recipient] = '1' and [consent_items_complete] = '1'
+```
+
+Clearing a confirmation recalculates `consent_items_complete` to 0 and therefore invalidates queue eligibility.
+
+## Acknowledgement and quotation policy
+
+`ack_pref` remains optional, owner-level, and excluded from consent validity and analytical completion. It appears only after intended-recipient Yes, all ten confirmations and final consent Yes. Its participant-facing wording and the full Yes / No / Decide later response labels match the canonical consent document exactly. It states that declining means the study team will not name or acknowledge the participant in resulting outputs; it does not make an absolute non-disclosure claim.
+
+Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Project Review count, branching specification, field and export specifications, fixture and analytical-completion documentation. It is not replaced. The current point-of-use policy is: if a comment is proposed for quotation, the participant is emailed the exact proposed wording and context, and it is used only after written agreement.
+
+`po_final_warning` now follows `po_other_comment` immediately before submission and has no quotation-permission dependency.
+
+## Fixture and long-format analysis
+
+The synthetic fixture remains three owners, 19 pre-created Project Review instances and 22 long-format rows. Owner consent responses, all ten confirmations, `consent_items_complete`, final consent and acknowledgement are blank on import. Owner consent values occur only on the non-repeating owner row; Project Review repeat rows keep them blank. No synthetic participant is imported as consented.
+
+Analysis must join the non-repeating owner row to reviews by `owner_id` and require intended-recipient Yes, all-confirmed 1, final consent Yes and Owner Consent complete. Review-row values alone must never establish consent.
+
+## Scope exclusions and change record
+
+Reason: align live consent implementation with ethics-resubmission v3 wording. Nature: ten owner-level consent confirmations added; final affirmative consent retained; active decline preserved; obsolete per-project quotation permission removed; acknowledgement language corrected. No taxonomy, classification, assignment, sampling, project metadata or participant data changed.

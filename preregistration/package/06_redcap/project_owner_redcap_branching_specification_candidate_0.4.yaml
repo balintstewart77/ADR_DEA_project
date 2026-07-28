@@ -1,0 +1,260 @@
+version: owner-redcap-candidate-0.4
+status: development_candidate_unfrozen_pre_recruitment_live_migration_and_qa_pending
+project:
+  pid: 9149
+  title: DEA Validation Study – Project Owner Review
+  connection_performed: false
+  classic_non_longitudinal: true
+  record_id: owner_id
+forms:
+- owner_consent
+- project_review
+field_counts:
+  owner_consent: 22
+  project_review: 96
+repeating_instruments:
+- project_review
+repeat_custom_label: '[assignment_id] — [project_title]'
+repeat_survey_button_enabled: false
+survey_queue:
+  visible: true
+  introduction_html: <strong>Project Owner Review</strong><br>Please begin by completing
+    <strong>Participant Information and Consent</strong> below. If you agree to take
+    part, your available project reviews will then appear in this list. You may complete
+    all, some or none, in any order. To pause an unfinished review, use <strong>Save
+    & Return Later</strong> before leaving. You can return using the same personalised
+    link. Please do not forward this link.
+  owner_consent:
+    active: true
+    condition: '[owner_id] <> '''''
+    auto_start: true
+  project_review:
+    active: true
+    condition: '[owner_consent_complete] = ''2'' and [owner_consent] = ''1'' and [intended_recipient]
+      = ''1'' and [consent_items_complete] = ''1'''
+    auto_start: false
+project_review_survey_settings_required:
+  repository_documented_not_live_verified: true
+  save_and_return_later_enabled: true
+  return_without_separate_return_code_enabled: true
+  completed_response_modification_enabled: false
+  automatically_continue_to_next_survey_enabled: false
+  redirect_url: ''
+  participant_repeat_the_survey_enabled: false
+  security_note: Possession of the personalised link permits access to an unfinished
+    review; participants must not forward it, and direct contact identifiers are absent
+    from the REDCap response project.
+stop_actions_manual_after_import:
+  intended_recipient: 'No'
+  owner_consent: 'No'
+  offline_equivalent: Downstream consent content is branched on affirmative answers;
+    queue logic suppresses Project Review.
+  minimum_external_disposition: No automatic deletion, retention, reminder-suppression
+    or contact-table action is encoded or claimed; follow the separately approved
+    recruitment-administration process.
+  invalid_affirmative: No unverified action tag is encoded. Live QA must establish
+    that an attempted Yes with any item blank or Not confirmed is not treated as valid
+    consent and reveals no Project Review.
+production_cardinalities:
+  domain:
+    column: substantive_domains
+    maximum: 4
+    rows_at_maximum: 1
+    distribution:
+      1: 840
+      2: 442
+      3: 25
+      4: 1
+  purpose:
+    column: analytical_purpose
+    maximum: 2
+    rows_at_maximum: 128
+    distribution:
+      1: 1180
+      2: 128
+  tag:
+    column: cross_cutting_tags
+    maximum: 2
+    rows_at_maximum: 9
+    distribution:
+      0: 1061
+      1: 238
+      2: 9
+slot_capacity:
+  domain: 4
+  purpose: 2
+  tag: 2
+classification_overview:
+  display_field: po_classification_overview
+  summary_fields:
+  - prop_domain_summary
+  - prop_purpose_summary
+  - prop_tag_summary
+  display_support_only: true
+  participant_editable: false
+  analytical_completion_requirement: false
+  domain_and_purpose_order: first populated proposal-slot order with blanks omitted
+    and duplicates removed
+  tag_order:
+  - Demographic disparities / equity
+  - COVID-19 & Pandemic
+taxonomy_menu_counts:
+  domain: 11
+  purpose: 7
+  tag: 2
+proposed_slot_visibility:
+  domain_and_purpose_question: Is the basis for this classification visible in the
+    public project title and datasets listed above?
+  tag_question: Is the basis for this tag status visible in the public project title
+    and datasets listed above?
+  choices:
+    '2': Clearly visible
+    '1': Partly visible
+    '0': Not visible
+    '3': Unsure
+  explanation_required_when:
+    domain_or_purpose_verdict:
+    - '2: Does not fit'
+    tag_correctness:
+    - '0: No'
+  optional_visibility_explanation_shown_when:
+  - '1: Partly visible'
+  - '0: Not visible'
+  - '3: Unsure'
+  unsure_correctness_explanation_displayed: false
+tag_reviews:
+  always_review_both: true
+  canonical_order:
+  - Demographic disparities / equity tag
+  - COVID-19 & Pandemic
+  fields:
+    t01:
+      proposed_status: prop_t01_status
+      correctness: po_t01_correct
+      correctness_explanation: po_t01_correct_explain
+      visibility: po_t01_vis
+      visibility_explanation: po_t01_vis_explain
+    t02:
+      proposed_status: prop_t02_status
+      correctness: po_t02_correct
+      correctness_explanation: po_t02_correct_explain
+      visibility: po_t02_vis
+      visibility_explanation: po_t02_vis_explain
+  missing_tag_summary_role: Summary cross-check after the two primary per-tag proposed-status
+    assessments; retained for later protocol and participant-document alignment.
+missing_label_branching:
+  gateways_required: true
+  checkbox_menus_show_only_for_yes: true
+  checkbox_menus_required_when_shown: true
+  at_least_one_checkbox_requires_live_qa: true
+  unsure_does_not_show_menu: true
+  purpose_guidance_field: po_miss_purpose_guidance
+  purpose_max_checked_annotation: '@MAXCHECKED=2'
+  purpose_cardinality_analysis: Derive retained fitted proposed purposes plus selected
+    missing purposes; flag an implied corrected count above two as a cardinality/taxonomy
+    issue, not a directly comparable corrected classification.
+analytical_completion:
+  owner_join:
+  - intended_recipient = 1
+  - consent_items_complete = 1
+  - owner_consent = 1
+  - owner_consent_complete = 2
+  domains_and_purposes: verdict and visibility for every populated slot, plus correctness
+    explanation only for Does not fit
+  tags: correctness and visibility for both tags, plus correctness explanation only
+    for No
+  missing_labels: all three gateways and every triggered checkbox menu; prose bases
+    are optional
+  overall: public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus
+    taxonomy issue for Partial Fit/No Fit
+  excluded_optional_fields:
+  - ack_pref
+  - po_d01_vis_explain
+  - po_d02_vis_explain
+  - po_d03_vis_explain
+  - po_d04_vis_explain
+  - po_p01_vis_explain
+  - po_p02_vis_explain
+  - po_t01_vis_explain
+  - po_t02_vis_explain
+  - po_miss_domain_basis
+  - po_miss_purpose_basis
+  - po_miss_tag_basis
+  - po_suff_explain
+  - po_nonpublic_note
+  - po_tax_explain
+  - po_other_comment
+  excluded_display_support_fields:
+  - prop_domain_summary
+  - prop_purpose_summary
+  - prop_tag_summary
+  - po_classification_overview
+  submitted_is_separate: project_review_complete = 2 is submission status, not the
+    analytical-completion definition
+  final_branching_state_rule: Derive completion and analysis variables from final
+    parent responses. Preserve raw exported values, but ignore any retained value
+    whose field is hidden under the final branching state.
+  optional_text_missingness: Blank optional prose means not provided; it does not
+    mean no issue, no missing information, no taxonomy problem or no reliance on project
+    knowledge. Structured responses are primary outcomes.
+  qualitative_reporting: Report the number of comments contributing to each qualitative
+    theme or quotation; do not interpret optional-comment themes as prevalence estimates.
+  quotation_policy: No REDCap quotation-permission response. Exact proposed wording
+    and context are sent by email at point of use and used only after written agreement.
+participant_reference:
+  field: assignment_id
+  display_label: Review reference
+  survey_read_only: true
+  owner_id_survey_hidden: true
+  repeat_instance_not_sole_reference: true
+live_qa_assertions:
+- one owner-specific Survey Queue link reopens the queue and preserves progress
+- pre-created repeated Project Review instances appear separately with the custom
+  label
+- participants cannot create blank repeat instances
+- each repeated instance exports as a separate long-format row
+- untouched pre-created instances remain present as incomplete repeated rows
+- completion returns to the visible Survey Queue
+owner_consent_v3:
+  participant_document: participant_materials/Project_Owner_Participant_Information_and_Consent_v3.docx
+  participant_document_sha256: 3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a
+  participant_document_size_bytes: 35369
+  intended_recipient_gate: '[intended_recipient] = ''1'''
+  confirmation_fields:
+  - consent_read_info
+  - consent_understand_invitation
+  - consent_voluntary
+  - consent_no_nonpublic
+  - consent_confidentiality_limits
+  - consent_withdrawal_deadline
+  - consent_quote_process
+  - consent_retention_reanalysis
+  - consent_complaints
+  - consent_acknowledgement
+  confirmation_choices:
+    1: Confirmed
+    0: Not confirmed
+  all_confirmed_field: consent_items_complete
+  all_confirmed_calculation: if([consent_read_info] = '1' and [consent_understand_invitation]
+    = '1' and [consent_voluntary] = '1' and [consent_no_nonpublic] = '1' and [consent_confidentiality_limits]
+    = '1' and [consent_withdrawal_deadline] = '1' and [consent_quote_process] = '1'
+    and [consent_retention_reanalysis] = '1' and [consent_complaints] = '1' and [consent_acknowledgement]
+    = '1', 1, 0)
+  final_decision_field: owner_consent
+  valid_affirmative_condition: '[intended_recipient] = ''1'' and [consent_items_complete]
+    = ''1'' and [owner_consent] = ''1'' and [owner_consent_complete] = ''2'''
+  active_decline_preserved: owner_consent remains visible when intended_recipient
+    = 1 and stores 0 without requiring every confirmation to be affirmative
+  acknowledgement_condition: '[intended_recipient] = ''1'' and [consent_items_complete]
+    = ''1'' and [owner_consent] = ''1'''
+  raw_owner_consent_1_without_all_items: not valid consent; grants no queue access
+    and must fail live QA if the production survey presents it as accepted affirmative
+    participation
+project_review_v3:
+  participant_document: participant_materials/Project_Owner_Review_Questionnaire_v3.docx
+  participant_document_sha256: 05f36763b3557ac4a1d65fbd529abdd50190246c7314ae22d3b0eba0fde6c524
+  participant_document_size_bytes: 19825
+  dictionary_alignment: Participant-facing question labels, response choices, inline
+    checkbox microdefinitions, requiredness and branching are validated against candidate
+    0.4.
+  quotation_permission: absent; agreement is requested by email only at point of use

@@ -1,5 +1,39 @@
 # Standalone Project Owner REDCap version history
 
+## owner-redcap-candidate-0.4 - 2026-07-28
+
+- Current unfrozen, pre-recruitment development candidate. Candidate 0.3 is
+  preserved unchanged as its historical predecessor.
+- Aligns the non-repeating Owner Consent survey to UCL ethics Project ID 5004
+  Participant Information and Consent v3. Adds ten separately stored
+  owner-level confirmation variables plus the survey-hidden calculated
+  `consent_items_complete` flag. The final ethics-approved consent decision is
+  retained.
+- Valid affirmative consent requires intended-recipient Yes, all ten
+  confirmations, final consent Yes and Owner Consent form status Complete.
+  Project Review Survey Queue access uses the same composite gate. Final No
+  remains available after intended-recipient Yes without affirmative
+  confirmation of all ten statements and retains its Stop Action.
+- Removes `po_quote_permission` without replacement. Quotation agreement is
+  sought only at point of use by email with exact proposed wording and context.
+  `po_final_warning` now follows final comments immediately before submission.
+- Corrects owner-level acknowledgement wording: declining means the study team
+  will not name or acknowledge the participant in resulting outputs; it does
+  not claim that participation cannot otherwise be inferred.
+- Dictionary: 118 fields across Owner Consent (22) and Project Review (96).
+  Synthetic fixture: three owners, 19 pre-created review instances and 22 rows;
+  no consent response or confirmation is pre-populated.
+- Completes participant-document alignment: both canonical v3 DOCX files are
+  hash/size pinned; acknowledgement text and response labels match exactly;
+  Questionnaire labels, response choices and inline microdefinitions match the
+  dictionary; Appendix B records the full owner-level consent-validity join;
+  Q13 and per-project quotation permission are absent. The former untracked
+  `- Copy` questionnaire is not required.
+- No taxonomy, production classification, owner sampling, project assignment,
+  participant data or frozen scratch-coder artefact changed. PID 9149 was not
+  contacted or modified. Controlled migration and live QA remain mandatory;
+  recruitment is blocked.
+
 ## owner-redcap-candidate-0.3 - 2026-07-23
 
 - REDCAP-020 narrows each of the eight correctness-explanation branches to the

@@ -4,6 +4,16 @@ This directory contains import-only synthetic records for live REDCap runtime
 QA. It contains no formal coder declaration, sampled project assignment, real
 Record ID, response export, live URL, project identifier, or credential.
 
+- `project_owner_synthetic_import_candidate_0.4.csv` is the current unfrozen
+  Project Owner controlled-migration fixture: three synthetic owners, 19
+  pre-created Project Review instances and 22 long-format rows. All ten owner
+  consent confirmations, the calculated all-confirmed flag, final consent and
+  acknowledgement are blank; no synthetic participant is imported as
+  consented. Its canonical consent and questionnaire v3 sources are aligned and
+  hash/size pinned; the questionnaire reproduces the displayed labels, choices
+  and inline microdefinitions and contains no Q13 quotation-permission item.
+  Candidate 0.3 remains unchanged as historical migration evidence.
+
 - `project_owner_synthetic_import_candidate_0.3.csv` is the unfrozen Project
   Owner candidate-0.3 long-format fixture for future controlled manual import
   into Development PID 9149. It contains one non-repeating row per synthetic

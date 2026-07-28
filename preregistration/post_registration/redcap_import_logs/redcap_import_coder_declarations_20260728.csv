@@ -1,0 +1,4 @@
+assignment_id,redcap_data_access_group,record_kind,review_stream,reviewer_id,validation_included,sample_status,assignment_batch,instrument_ver,assignment_admin_complete,cd_declaration,cd_nonconfirm_note,coder_declaration_complete
+ANXINVEY,c01,2,1,C01,0,3,post_import_coder_declarations_20260728,redcap-candidate-0.7,2,,,0
+STMHTPXQ,c02,2,1,C02,0,3,post_import_coder_declarations_20260728,redcap-candidate-0.7,2,,,0
+SEZJRBVZ,c03,2,1,C03,0,3,post_import_coder_declarations_20260728,redcap-candidate-0.7,2,,,0

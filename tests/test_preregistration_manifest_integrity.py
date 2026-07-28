@@ -55,13 +55,13 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     }
     redcap_sequence = sorted(int(artifact_id.split("-")[1]) for artifact_id in redcap)
     assert redcap_sequence == list(range(redcap_sequence[0], redcap_sequence[-1] + 1))
-    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-085"
+    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-098"
     assert redcap["RED-054"]["version"] == "owner-redcap-candidate-0.2"
     assert redcap["RED-054"]["current_state"] == "historical_candidate"
     assert redcap["RED-054"]["authoritative_status"] == "superseded_unfrozen_candidate"
     assert redcap["RED-068"]["version"] == "owner-redcap-candidate-0.3"
-    assert redcap["RED-068"]["current_state"] == "working_candidate"
-    assert redcap["RED-068"]["authoritative_status"] == "current_candidate"
+    assert redcap["RED-068"]["current_state"] == "historical_candidate"
+    assert redcap["RED-068"]["authoritative_status"] == "superseded_unfrozen_candidate"
     assert redcap["RED-080"]["version"] == "owner-redcap-candidate-0.3"
     assert redcap["RED-080"]["authoritative_status"] == "supporting_current_candidate"
     formatting_audit = redcap["RED-082"]
@@ -76,7 +76,20 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert information_v2["authoritative_status"] == "current_ethics_review_material"
     assert questionnaire_v2["authoritative_status"] == "superseded_ethics_review_material"
     assert questionnaire_v3["version"] == "project-owner-review-questionnaire-v3"
-    assert questionnaire_v3["authoritative_status"] == "current_ethics_review_material"
+    assert questionnaire_v3["authoritative_status"] == "current_aligned_participant_material"
+    owner_04 = redcap["RED-086"]
+    assert owner_04["version"] == "owner-redcap-candidate-0.4"
+    assert owner_04["current_state"] == "working_candidate"
+    assert owner_04["authoritative_status"] == "current_unfrozen_candidate"
+    assert owner_04["frozen"] == "false"
+    assert owner_04["registered"] == "false"
+    assert "RED-068" in owner_04["supersedes_or_superseded_by"]
+    assert redcap["RED-089"]["version"] == "owner-redcap-candidate-0.4"
+    assert redcap["RED-097"]["version"] == "project-owner-information-v3"
+    assert redcap["RED-097"]["authoritative_status"] == "current_aligned_participant_material"
+    assert redcap["RED-085"]["authoritative_status"] == "current_aligned_participant_material"
+    assert redcap["RED-098"]["version"] == "owner-redcap-candidate-0.4"
+    assert redcap["RED-098"]["authoritative_status"] == "supporting_current_candidate"
     assert redcap["RED-066"]["authoritative_status"] == "superseded_ethics_review_material"
     assert redcap["RED-067"]["authoritative_status"] == "superseded_ethics_review_material"
     invitation = redcap["RED-081"]

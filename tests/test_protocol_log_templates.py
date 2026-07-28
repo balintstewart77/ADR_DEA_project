@@ -26,7 +26,7 @@ INSTRUMENT_LOG_REQUIRED_COLUMNS = {
     "status",
 }
 INSTRUMENT_CHANGE_ID = re.compile(r"^REDCAP-(\d{3})$")
-NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-020"
+NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-022"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
@@ -93,7 +93,9 @@ def test_required_log_files_and_post_pilot_governance_entry():
     documentation_alignment = instrument_by_id["REDCAP-017"]
     overview_live_qa_correction = instrument_by_id["REDCAP-018"]
     wording_only_correction = instrument_by_id["REDCAP-019"]
-    burden_reduction = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
+    burden_reduction = instrument_by_id["REDCAP-020"]
+    consent_alignment = instrument_by_id["REDCAP-021"]
+    document_alignment = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -188,6 +190,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "protocol candidate v0.17" in burden_reduction["change_description"]
     assert "108 fields" in burden_reduction["pilot_or_formal_data_effect"]
     assert burden_reduction["date_identified"] == "2026-07-23"
+    assert consent_alignment["instrument_version"] == "owner-redcap-candidate-0.4"
+    assert consent_alignment["classification_rule_change"] == "no"
+    assert "ten separately auditable" in consent_alignment["change_description"]
+    assert "per-project quotation permission" in consent_alignment["change_description"]
+    assert document_alignment["instrument_version"] == "owner-redcap-candidate-0.4"
+    assert document_alignment["classification_rule_change"] == "no"
+    assert "inline checkbox microdefinitions" in document_alignment["change_description"]
+    assert "pinned both canonical DOCX files" in document_alignment["change_description"]
+    assert "recruitment remains blocked" in document_alignment["approval"]
+    assert "pending controlled migration/live QA" in document_alignment["status"]
 
     with (PACKAGE / "protocol_deviation_log.csv").open(
         encoding="utf-8", newline=""
@@ -202,7 +214,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         "reviewer", "status",
     }
     assert required_deviation_columns <= set(deviation_reader.fieldnames)
-    assert [row["deviation_id"] for row in deviation_entries] == ["DEV-001"]
+    assert [row["deviation_id"] for row in deviation_entries] == ["DEV-001", "DEV-002"]
     deviation = deviation_entries[0]
     assert all(deviation[column].strip() for column in required_deviation_columns)
     assert deviation["substantive"] == "no"
@@ -212,6 +224,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert deviation["reviewer"] == "Balint Stewart"
     assert "Validation_Protocol_PreReg_v0.17.docx" in deviation["resolution"]
     assert "before analysis begins" in deviation["resolution"] or "before analysis begins" in deviation["description"]
+
+    implementation_correction = deviation_entries[1]
+    assert all(implementation_correction[column].strip() for column in required_deviation_columns)
+    assert implementation_correction["substantive"] == "no"
+    assert implementation_correction["amendment_required"] == "no"
+    assert implementation_correction["status"] == "applied"
+    assert implementation_correction["resolved_date"] == "2026-07-24"
+    assert implementation_correction["reviewer"] == "Project lead instruction"
+    assert "direct-parent" in implementation_correction["resolution"]
+    assert "no sample" in implementation_correction["resolution"].lower()
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

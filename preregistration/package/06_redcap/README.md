@@ -6,20 +6,30 @@ Project Owner development candidates. Candidate 0.7 remains the frozen
 scratch-coder version; its historical `project_owner` form was never
 independently live-QA tested for the standalone owner workflow.
 
-`owner-redcap-candidate-0.3` is the current separate 108-field, two-instrument
+`owner-redcap-candidate-0.4` is the current separate 118-field, two-instrument
 Classic project candidate. It uses one pseudonymous record per owner, a
 non-repeating Owner Consent survey, and a repeating Project Review survey with
 one administrator-created instance per owner–project assignment. One
 participant-specific Survey Queue link gives each owner access to their
 pre-created reviews. Direct identifiers and recruitment/contact administration
 are absent from the research project. The canonical specification is
-`project_owner_redcap_candidate_0.3_spec.md`, and the project-level manual setup
-is `project_owner_redcap_candidate_0.3_live_configuration.md`.
+`project_owner_redcap_candidate_0.4_spec.md`, and the project-level controlled
+migration/live-QA guide is
+`project_owner_redcap_candidate_0.4_live_configuration.md`.
 
-Candidate 0.3 is intended for controlled synthetic-only live QA in Development
-PID 9149. It has not been imported, live tested or frozen and does not authorise
+Candidate 0.4 aligns Owner Consent to Participant Information and Consent v3:
+ten separately auditable owner-level confirmations, a deterministic
+`consent_items_complete` flag, the retained final consent decision and a
+Survey Queue gate requiring all four consent-validity conditions. It removes
+the obsolete per-project quotation-permission question because quotation
+agreement is now sought by email at point of use with the exact proposed
+wording and context. It also corrects the optional acknowledgement wording.
+Candidate 0.3 remains unchanged as the historical predecessor.
+
+Candidate 0.4 is intended for controlled synthetic-only migration/live QA in Development
+PID 9149. It has not been imported or live tested and does not authorise
 real contacts, invitations, assignments or data collection. The instrument is
-technically ready for that controlled synthetic import. All 22 owner-facing
+unfrozen and non-authoritative. All 22 owner-facing
 taxonomy microdefinitions and participant-reference definitions were approved
 by Balint Stewart on 2026-07-23. Taxonomy wording is approved for participant
 use. The participant taxonomy-reference Markdown contains only participant
@@ -46,19 +56,22 @@ all 18 participant-visible descriptive fields. The revised dictionary and
 REDCAP-019 subsequently removes 20 repeated per-question privacy sentences and
 aligns both tag visibility stems to the unchanged four-level scale. The central
 privacy warnings survive unchanged; field count and structure remain 108.
-The Participant Information and Consent v2 and Project Owner Review
-Questionnaire v3 are the current participant-document candidates for ethics/DPO
-review. Questionnaire v3 retains the one-link workflow and documents REDCAP-020:
-required prose only for explicit classification disagreement, with other
-conditional explanations optional. Protocol candidate v0.17 records the same
-analytical-completion rule and closes the withdrawal-wording deviation. The current
+The Participant Information and Consent v3 is the authoritative source for the
+ten candidate-0.4 confirmation statements. The canonical consent and Project
+Owner Review Questionnaire v3 DOCX files are aligned to candidate 0.4 and pinned
+by SHA-256 and byte size. The consent document uses the complete approved
+acknowledgement wording and response labels. The questionnaire reproduces the
+REDCap participant-facing labels, response choices and inline checkbox
+microdefinitions, records the full valid owner-consent join in Appendix B, and
+contains no Q13 or per-project quotation-permission question. The former
+untracked `- Copy` questionnaire is not required. The current
 REDCAP-020 semantic-hardening clarification preserves raw hidden values while
 masking them from final-applicable derived analysis, treats blank optional prose
 as not provided and calibrates owner signals as adjudication evidence rather than
 a definitive error source. Archived
 Questionnaire v2 and protocol v0.16 remain byte-identical. The invitation email was reviewed and retained
-byte-for-byte. Controlled REDCap live QA, ethics/governance review and later
-coordinated finalisation remain required before recruitment.
+byte-for-byte. Controlled REDCap migration/live QA and ethics/governance approval
+remain required before recruitment.
 
 `owner-redcap-candidate-0.2` remains byte-for-byte unchanged as an unfrozen,
 never-imported historical candidate. Its four-instrument contact/assignment
