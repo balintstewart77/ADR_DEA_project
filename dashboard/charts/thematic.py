@@ -73,6 +73,7 @@ def make_thematic_totals_bar(
         title=title,
         xaxis_title="Projects",
         yaxis_title="",
+        yaxis=dict(automargin=True),
         margin=dict(l=220),
     )
     return _apply_common(fig, height=height)
