@@ -16,9 +16,9 @@
       "version": "20260601",
       "csv": "dea_accredited_projects_20260601.csv",
       "xlsx": "dea_accredited_projects_20260601.xlsx",
-      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
-      "retrieved_at": "2026-06-11",
-      "sha256_csv": "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/08/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "retrieved_at": "2026-08-10",
+      "sha256_csv": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd",
       "row_count": 1450,
       "notes": "Fetched by scrape/fetch_register.py; source date 2026-06-01"
     },

@@ -1,7 +1,7 @@
 # Register refresh: version 20260601
 
-- Run at: 2026-06-12T07:39:15
-- Fetch status: skipped
+- Run at: 2026-08-10T08:27:35
+- Fetch status: fetched
 - Baseline version: 20260325
 
 - Cleaned register rows: 1,308
@@ -9,10 +9,9 @@
 - Removed projects: 1
 - Content-changed projects: 1
 - Diff report: register_diff.md
-- Dataset coverage: 3,231/3,337
-- Organisation coverage: 1,839/1,842
+- Dataset coverage: 3,233/3,334
+- Organisation coverage: 1,836/1,839
 - Curation queue: review_required.md
-- Classification run: outputs_classified_20260601
-- Dashboard pointer updated to the new classification run
+- Classification: skipped (run with --classify to update the enriched/thematic views for new projects)
 
 All validation gates passed.

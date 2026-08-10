@@ -2,7 +2,7 @@
 
 ## Scope
 
-Reference version `0.4.9` was applied to 1,309 cleaned DEA register records. Output CSV: `analysis/outputs_deterministic_rc2/register_properties.csv`.
+Reference version `0.5.7` was applied to 1,308 cleaned DEA register records. Output CSV: `analysis/outputs_deterministic_rc2/register_properties.csv`.
 
 This run is deterministic and uses no LLM calls.
 
@@ -24,8 +24,8 @@ A linked component contributes the "Migration & Demographics" domain only when t
 
 | Record linkage span | Count |
 |---|---:|
-| No record linkage | 939 |
-| Within-domain record linkage | 91 |
+| No record linkage | 936 |
+| Within-domain record linkage | 93 |
 | Cross-domain record linkage | 279 |
 
 ### Linkage edge checks
@@ -36,7 +36,7 @@ A linked component contributes the "Migration & Demographics" domain only when t
 | Education and Child Health Insights from Linked Data (ECHILD) | Education and Child Health Insights from Linked Data (ECHILD) | Cross-domain record linkage | Cross-domain record linkage | True |
 | Linked Census, HES and Mortality Data | Linked Census, HES and Mortality Data | Cross-domain record linkage | Cross-domain record linkage | True |
 | GRading and Admissions Data England (GRADE) | GRading and Admissions Data England (GRADE) | Within-domain record linkage | Within-domain record linkage | True |
-| MoJ Data First Crown Court Defendant Case Level | MoJ Data First | Within-domain record linkage | Within-domain record linkage | True |
+| MoJ Data First Crown Court Defendant Case Level | MoJ Data First Crown Court Defendant | Within-domain record linkage | Within-domain record linkage | True |
 | Administrative Data \| Agricultural Research Collection (AD\|ARC) | Administrative Data \| Agricultural Research Collection (AD\|ARC) | Cross-domain record linkage | Cross-domain record linkage | True |
 | Growing Up in England Wave 1 (GUIE) | Growing Up in England (GUIE) | Cross-domain record linkage | Cross-domain record linkage | True |
 | Annual Survey of Hours and Earnings Longitudinal |  | No record linkage | No record linkage | True |
@@ -54,10 +54,10 @@ ASHE is survey by design even though sampled from PAYE administrative records, b
 
 | Project collection-method set | Count |
 |---|---:|
-| survey | 675 |
-| administrative | 325 |
-| survey; administrative | 289 |
-| (none matched) | 20 |
+| survey | 673 |
+| administrative | 326 |
+| survey; administrative | 290 |
+| (none matched) | 19 |
 
 ## Dataset Temporal Structure
 
@@ -67,7 +67,7 @@ Temporal structure is a time-structure fact, single-label, classified by the dat
 Classify by producer design, weighting, and release, not by the raw sampling frame or by what could be constructed from the data. A dataset whose sampling frame permits longitudinal linkage but which is produced and weighted cross-sectionally is cross-sectional; a longitudinal version exists as a distinct entry only when the longitudinal construction and weighting has actually been done.
 
 
-Aggregate indicators and national or area-level time-series outputs such as CPI, GVA, PPI, and Capital Stock are not longitudinal under this facet because they follow no units. They are time series, but not unit panels, and are classified as cross-sectional point-in-time aggregate releases.
+Aggregate indicators and national or area-level time-series outputs such as CPI, GVA, PPI, and Capital Stock are not longitudinal under this facet. They may contain repeated time points, and sometimes repeated areas, industries, sectors, or product categories, but they do not follow individual people, households, businesses, or cases as units over time. Classify them as cross-sectional aggregate statistical outputs unless the released dataset is explicitly structured as a longitudinal unit-level panel.
 
 
 The former cohort category is retired because it conflated collection method with temporal structure and misnamed longitudinality. Business panels are longitudinal but are not cohort studies.
@@ -75,19 +75,19 @@ The former cohort category is retired because it conflated collection method wit
 
 | Project temporal-structure set | Count |
 |---|---:|
-| cross-sectional | 705 |
-| longitudinal | 345 |
+| cross-sectional | 704 |
+| longitudinal | 346 |
 | cross-sectional; longitudinal | 239 |
-| (none matched) | 20 |
+| (none matched) | 19 |
 
 ### Temporal distribution delta from 0.4.0
 
 | Project temporal-structure set | 0.4.0 | 0.4.1 | Delta |
 |---|---|---|---|
-| cross-sectional | 485 | 705 | +220 |
-| longitudinal | 387 | 345 | -42 |
+| cross-sectional | 485 | 704 | +219 |
+| longitudinal | 387 | 346 | -41 |
 | cross-sectional; longitudinal | 378 | 239 | -139 |
-| (none matched) | 22 | 20 | -2 |
+| (none matched) | 22 | 19 | -3 |
 
 ### Reclassified aggregate-indicator datasets
 
@@ -131,13 +131,13 @@ Census appears in three facets as survey, individual, and Migration & Demographi
 
 | Project unit set | Count |
 |---|---:|
-| individual | 706 |
+| individual | 707 |
 | business | 241 |
 | individual; business | 165 |
-| individual; household | 66 |
+| individual; household | 64 |
 | household | 45 |
-| individual; household; business | 33 |
-| (none matched) | 20 |
+| individual; household; business | 34 |
+| (none matched) | 19 |
 | household; business | 12 |
 | individual; household; business; area | 6 |
 | area | 3 |
@@ -188,7 +188,7 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 | third-sector | 105 |
 | government | 98 |
 | academic; government | 65 |
-| academic; third-sector | 53 |
+| academic; third-sector | 52 |
 | academic; commercial | 14 |
 | unclassified | 11 |
 | government; commercial | 10 |
@@ -221,9 +221,9 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 
 ## Coverage and unmatched tail
 
-Dataset reference coverage: 3,231/3,337 project-dataset mentions (96.8%), 240/339 unique canonical datasets.
+Dataset reference coverage: 3,233/3,334 project-dataset mentions (97.0%), 239/333 unique canonical datasets.
 
-Organisation reference coverage: 1,839/1,842 project-organisation mentions (99.8%), 278/281 unique canonical organisations.
+Organisation reference coverage: 1,836/1,839 project-organisation mentions (99.8%), 278/281 unique canonical organisations.
 
 Largest unmatched datasets:
 
@@ -324,7 +324,7 @@ Largest unmatched organisations:
 - Cross-table validation passed during reference load: every linked product resolves to a dataset facet record.
 - `PROMPT_VERSION` is not read or changed by this deterministic derivation; no LLM classification is run.
 - The rc1 output prefixes are checked below from git status.
-- Reference version is `0.4.9`.
+- Reference version is `0.5.7`.
 
 ## Manifests and rc1
 

@@ -1,13 +1,13 @@
 {
-  "created_at_utc": "2026-06-12T06:39:22.432152+00:00",
+  "created_at_utc": "2026-08-10T08:27:41.636166+00:00",
   "deterministic_output_dir": "analysis/outputs_deterministic_rc2",
   "git": {
-    "commit": "4da5e7c4bc304bf22240d41393b29f3ab941f02f",
+    "commit": "6740c5e2f23a5b460620e91d1efe2ba57132b2fa",
     "dirty": true,
-    "status_porcelain": "M analysis/outputs_refresh/20260601/manifest.json\n?? analysis/outputs_classified_20260601/"
+    "status_porcelain": "M analysis/outputs_deterministic_rc2/manifest.json\n M analysis/outputs_refresh/20260601/register_diff.md\n M data/dea_accredited_projects_20260601.csv\n M data/dea_accredited_projects_20260601.xlsx\n M data/register_manifest.json"
   },
   "model": null,
-  "reference_table_version": "0.4.9",
+  "reference_table_version": "0.5.7",
   "report_file": "analysis/outputs_refresh/20260601/derive_report.md",
   "run_type": "deterministic_properties_report",
   "source_file": "dea_accredited_projects_20260601.csv"

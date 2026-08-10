@@ -1,6 +1,6 @@
 # Register diff: 20260325 -> 20260601
 
-- Cleaned rows: 1,272 -> 1,309
+- Cleaned rows: 1,271 -> 1,308
 - New projects: 38
 - Removed projects: 1
 - Content-changed projects: 1

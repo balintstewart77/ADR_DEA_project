@@ -1,7 +1,7 @@
 # Review required: reference-layer coverage gaps
 
-- Dataset mentions matched: 3,231/3,337
-- Organisation mentions matched: 1,839/1,842
+- Dataset mentions matched: 3,233/3,334
+- Organisation mentions matched: 1,836/1,839
 - Known residuals (adjudicated unclassifiable, no action): 3
 
 ## Unmatched organisations (add to register_reference.yaml or alias maps)
@@ -40,4 +40,4 @@
 - UK Gross Value Added for lower layer super output areas (1 mention)
 - Skills and Employment Surveys Series (1 mention)
 - NI Annual Business Inquiry (1 mention)
-- ... and 69 more
+- ... and 64 more
