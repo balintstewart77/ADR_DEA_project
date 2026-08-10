@@ -1,18 +1,25 @@
-# Register refresh: version 20260601
+# Register refresh: snapshot 33c8ba2abd20
 
-- Run at: 2026-06-12T07:39:15
-- Fetch status: skipped
-- Baseline version: 20260325
+- Observation date: 2026-08-10
+- Nominal source date: 2026-06-01
+- Raw XLSX SHA-256: `33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014`
+- Canonical CSV SHA-256: `918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd`
 
-- Cleaned register rows: 1,308
-- New projects: 38
-- Removed projects: 1
-- Content-changed projects: 1
-- Diff report: register_diff.md
-- Dataset coverage: 3,231/3,337
-- Organisation coverage: 1,839/1,842
-- Curation queue: review_required.md
-- Classification run: outputs_classified_20260601
-- Dashboard pointer updated to the new classification run
+## Ingest/revision comparison
 
-All validation gates passed.
+Immediately preceding content hash → newly observed content hash:
+
+- Raw added / removed / changed: 0 / 0 / 1 (`2023/126`, `Researchers`)
+- Cleaned added / removed / changed: 0 / 0 / 0
+- Analytical impact: none
+
+## Nominal-release comparison
+
+Latest 2026-03-25 revision → latest 2026-06-01 revision (historical release
+comparison, not changes detected on 10 August):
+
+- Raw added / removed / changed: 38 / 1 / 2
+- Cleaned added / removed / changed: 38 / 1 / 1
+
+Deterministic facets and classifications were retained unchanged. Outcome:
+`provenance-only; no analytical impact; not a deviation`.

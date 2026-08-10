@@ -1,8 +1,11 @@
 import io
 import os
+import shutil
+import tempfile
 import sys
 import unittest
 from datetime import date
+from unittest.mock import patch
 
 import pandas as pd
 
@@ -10,7 +13,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from fetch_register import (  # noqa: E402
     find_xlsx_urls,
+    parse_upload_directory_date,
     parse_url_date,
+    run_fetch,
     select_register_url,
     validate_register_dataframe,
     xlsx_to_dataframe,
@@ -54,6 +59,11 @@ class UrlDiscoveryTest(unittest.TestCase):
 
     def test_parse_no_date(self):
         self.assertIsNone(parse_url_date("https://example.org/projects.xlsx"))
+
+    def test_upload_directory_date_is_independent_of_nominal_filename_date(self):
+        republished = PROJECTS_JUNE.replace("/2026/06/", "/2026/08/")
+        self.assertEqual(parse_url_date(republished), date(2026, 6, 1))
+        self.assertEqual(parse_upload_directory_date(republished), "2026-08")
 
     def test_selects_latest_projects_report_not_researchers_report(self):
         # The researchers report sorts after the projects report
@@ -152,6 +162,68 @@ class ValidationTest(unittest.TestCase):
         df["Accreditation Date"] = "not a date"
         problems = validate_register_dataframe(df, min_rows=None)
         self.assertTrue(any("Accreditation Date" in p for p in problems))
+
+
+class LocalDryRunTest(unittest.TestCase):
+    def test_republished_fixture_dry_run_has_no_network_or_writes(self):
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        data_dir = os.path.join(root, "data")
+        manifest_path = os.path.join(data_dir, "register_provenance_manifest.json")
+        before = open(manifest_path, "rb").read()
+        revised_xlsx = os.path.join(
+            data_dir,
+            "register_snapshots",
+            "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+            "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+        )
+        with patch("fetch_register.download_bytes", return_value=open(revised_xlsx, "rb").read()):
+            result = run_fetch(
+                url=PROJECTS_JUNE.replace("/2026/06/", "/2026/08/"),
+                data_dir=data_dir,
+                dry_run=True,
+            )
+        self.assertEqual(result["status"], "dry-run")
+        self.assertEqual(result["outcome"], "unchanged_noop")
+        self.assertEqual(
+            result["raw_xlsx_sha256"],
+            "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+        )
+        self.assertEqual(open(manifest_path, "rb").read(), before)
+
+    def test_two_identical_local_fetches_are_manifest_byte_stable_noops(self):
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        source_data = os.path.join(root, "data")
+        revised_xlsx = os.path.join(
+            source_data,
+            "register_snapshots",
+            "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+            "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+        )
+        xlsx_bytes = open(revised_xlsx, "rb").read()
+        with tempfile.TemporaryDirectory() as data_dir:
+            manifest_path = os.path.join(data_dir, "register_provenance_manifest.json")
+            shutil.copyfile(
+                os.path.join(source_data, "register_provenance_manifest.json"),
+                manifest_path,
+            )
+            before = open(manifest_path, "rb").read()
+            with patch("fetch_register.download_bytes", return_value=xlsx_bytes):
+                first = run_fetch(
+                    url=PROJECTS_JUNE.replace("/2026/06/", "/2026/08/"),
+                    data_dir=data_dir,
+                )
+                after_first = open(manifest_path, "rb").read()
+                second = run_fetch(
+                    url=PROJECTS_JUNE.replace("/2026/06/", "/2026/08/"),
+                    data_dir=data_dir,
+                )
+            self.assertEqual(first["outcome"], "unchanged_noop")
+            self.assertEqual(second["outcome"], "unchanged_noop")
+            self.assertFalse(first["created_observation"])
+            self.assertFalse(second["created_observation"])
+            self.assertEqual(before, after_first)
+            self.assertEqual(after_first, open(manifest_path, "rb").read())
+            self.assertEqual(os.listdir(data_dir), ["register_provenance_manifest.json"])
 
 
 if __name__ == "__main__":

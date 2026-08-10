@@ -1,0 +1,13 @@
+{
+  "schema_version": 2,
+  "observation_date": "2026-08-10",
+  "snapshot_id": "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+  "nominal_source_date": "2026-06-01",
+  "raw_xlsx_sha256": "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+  "canonical_csv_sha256": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd",
+  "cleaned_content_sha256": "6b8d3c5f12e1bbe957fecbada4885c450f4c3ab41d1bd1ec2fa67170494abc5f",
+  "deterministic_properties_sha256": "318bc4409a7d41c9c96b6d364e0e78b9c340165c1a0244f6243faf801565a43f",
+  "ingest_revision_report": "ingest_revision_diff.md",
+  "nominal_release_report": "nominal_release_diff.md",
+  "analytical_impact": "none"
+}

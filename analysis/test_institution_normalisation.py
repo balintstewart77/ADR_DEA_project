@@ -46,6 +46,28 @@ class InstitutionNormalisationTest(unittest.TestCase):
         )
         self.assertEqual(institutions, ["Royal Holloway, University of London"])
 
+    def test_university_of_london_umbrella_remains_distinct_from_constituents(self):
+        umbrella = describe_institution_normalisation("University of London")
+        constituent = describe_institution_normalisation(
+            "Royal Holloway, University of London"
+        )
+        explicit_variant = describe_institution_normalisation(
+            "University of London - Royal Holloway"
+        )
+
+        self.assertEqual(umbrella["institution"], "University of London")
+        self.assertEqual(
+            constituent["institution"], "Royal Holloway, University of London"
+        )
+        self.assertEqual(
+            explicit_variant["institution"], "Royal Holloway, University of London"
+        )
+        self.assertNotEqual(umbrella["institution"], constituent["institution"])
+        self.assertEqual(
+            self.parse("Nikhil Datta, University of London"),
+            ["University of London"],
+        )
+
     def test_department_names_with_commas_are_preserved(self):
         institutions = self.parse(
             "Peter Goodridge, Department for Business, Energy and Industrial Strategy\n"

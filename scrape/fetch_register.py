@@ -11,11 +11,11 @@ Replaces the dated scraper scripts. Differences that matter:
   selection downloads the wrong dataset.
 - Validates the converted table against the expected register schema and the
   previous version's row count before anything is written.
-- Idempotent: if the converted CSV matches the manifest's current version
-  (sha256), nothing is written and the script exits 0 reporting "no change".
-- On success writes dated xlsx+csv into data/ and registers the version in
-  data/register_manifest.json (the single source of truth the dashboard and
-  analysis pipeline load from).
+- Append-only for meaningful provenance: a new date, URL or content identity
+  is retained. Exact retries are successful no-ops, while known content at a
+  new URL records an observation without duplicating a snapshot.
+- Stores both raw XLSX and canonical CSV hashes plus independent nominal-file
+  and upload-directory dates.
 
 Usage:
     python scrape/fetch_register.py             # fetch, validate, register
@@ -42,9 +42,12 @@ if PROJECT_ROOT not in sys.path:
 
 from analysis.register_cleaning import COLUMN_MAP  # noqa: E402
 from analysis.register_manifest import (  # noqa: E402
+    CURRENT_POINTER,
     DATA_DIR,
-    add_version,
     load_manifest,
+    matching_fetch_observation,
+    record_fetch_observation,
+    snapshot_record,
 )
 
 PAGE_URL = (
@@ -112,6 +115,12 @@ def parse_url_date(url: str) -> date | None:
     if match:
         return date(int(match.group(1)), int(match.group(2)), 1)
     return None
+
+
+def parse_upload_directory_date(url: str) -> str | None:
+    """Return the independent WordPress upload directory (YYYY-MM), if present."""
+    match = _UPLOADS_PATH_RE.search(url)
+    return f"{match.group(1)}-{match.group(2)}" if match else None
 
 
 def select_register_url(urls: list[str]) -> tuple[str, date | None]:
@@ -239,8 +248,21 @@ def validate_register_dataframe(
 
 def _csv_bytes(df: pd.DataFrame) -> bytes:
     buffer = io.StringIO()
-    df.to_csv(buffer, index=False)
+    df.to_csv(buffer, index=False, lineterminator="\n")
     return buffer.getvalue().encode("utf-8-sig")
+
+
+def converter_metadata() -> dict:
+    import openpyxl
+
+    return {
+        "identity": "scrape.fetch_register.xlsx_to_dataframe:v1",
+        "pandas": pd.__version__,
+        "openpyxl": openpyxl.__version__,
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF",
+        "index": False,
+    }
 
 
 def run_fetch(
@@ -256,10 +278,10 @@ def run_fetch(
 ) -> dict:
     """Fetch/validate/register the latest register.
 
-    Returns a result dict with ``status`` in {"fetched", "no-change",
-    "invalid", "dry-run"} plus ``version``, ``previous_version``, ``rows``,
-    ``source_url`` and (when invalid) ``problems``. Used by the CLI below and
-    by analysis/refresh_pipeline.py.
+    Returns a result dict with a machine-readable ``outcome`` of
+    ``new_snapshot``, ``new_provenance_observation`` or ``unchanged_noop``
+    after a successful write-enabled fetch. Used by the CLI below and by
+    analysis/refresh_pipeline.py.
     """
     if url:
         xlsx_url, source_date = url, parse_url_date(url)
@@ -277,13 +299,13 @@ def run_fetch(
     print(f"Parsed {len(df):,} rows, columns: {list(df.columns)}")
 
     manifest = load_manifest(data_dir)
-    current_record = None
-    if manifest is not None:
-        current_record = next(
-            (r for r in manifest["versions"] if r["version"] == manifest["current"]),
-            None,
+    if manifest is None or manifest.get("schema_version", 1) < 2:
+        raise RuntimeError(
+            "Automated fetch requires register manifest schema 2 so observations "
+            "and immutable snapshots cannot be lost"
         )
-    previous_version = current_record["version"] if current_record else None
+    current_snapshot = snapshot_record(manifest, CURRENT_POINTER)
+    previous_version = current_snapshot["nominal_source_date"].replace("-", "")
 
     result = {
         "source_url": xlsx_url,
@@ -294,8 +316,8 @@ def run_fetch(
     }
 
     min_rows = None
-    if current_record is not None and not allow_shrink:
-        min_rows = current_record.get("row_count")
+    if not allow_shrink:
+        min_rows = current_snapshot.get("raw_row_count")
     problems = validate_register_dataframe(df, min_rows=min_rows)
     if problems:
         for problem in problems:
@@ -305,45 +327,88 @@ def run_fetch(
 
     csv_bytes = _csv_bytes(df)
     csv_sha = hashlib.sha256(csv_bytes).hexdigest()
-    if current_record is not None and csv_sha == current_record.get("sha256_csv"):
-        print(
-            f"No change: register matches current version "
-            f"{current_record['version']} (sha256 {csv_sha[:12]}...)"
-        )
-        return {**result, "status": "no-change", "version": previous_version}
-
     resolved_version = version or (source_date or date.today()).strftime("%Y%m%d")
-    xlsx_name = f"dea_accredited_projects_{resolved_version}.xlsx"
-    csv_name = f"dea_accredited_projects_{resolved_version}.csv"
+    nominal_source_date = (
+        source_date or datetime.strptime(resolved_version, "%Y%m%d").date()
+    ).isoformat()
+    raw_sha = hashlib.sha256(xlsx_bytes).hexdigest()
 
     if dry_run:
-        print(f"[dry run] would write {xlsx_name} and {csv_name} "
-              f"({len(df):,} rows) and register version {resolved_version}"
-              + (" as current" if set_current else ""))
-        return {**result, "status": "dry-run", "version": resolved_version}
+        identity = {
+            "nominal_source_date": nominal_source_date,
+            "source_url": xlsx_url,
+            "raw_xlsx_sha256": raw_sha,
+            "canonical_csv_sha256": csv_sha,
+        }
+        repeated = matching_fetch_observation(manifest, identity) is not None
+        known_content = any(
+            snapshot.get("raw_xlsx_sha256") == raw_sha
+            and snapshot.get("canonical_csv_sha256") == csv_sha
+            for snapshot in manifest["content_snapshots"]
+        )
+        if repeated:
+            action = "make no changes because this observation identity is already recorded"
+            outcome = "unchanged_noop"
+        elif known_content:
+            action = "record a provenance observation of known content"
+            outcome = "new_provenance_observation"
+        else:
+            action = "archive a new snapshot"
+            outcome = "new_snapshot"
+        print(
+            f"[dry run] would {action}: raw {raw_sha}, canonical {csv_sha}, "
+            f"{len(df):,} rows, nominal date {nominal_source_date}"
+        )
+        return {
+            **result,
+            "status": "dry-run",
+            "outcome": outcome,
+            "version": resolved_version,
+            "raw_xlsx_sha256": raw_sha,
+            "canonical_csv_sha256": csv_sha,
+        }
 
-    os.makedirs(data_dir, exist_ok=True)
-    with open(os.path.join(data_dir, xlsx_name), "wb") as f:
-        f.write(xlsx_bytes)
-    with open(os.path.join(data_dir, csv_name), "wb") as f:
-        f.write(csv_bytes)
-    print(f"Saved {xlsx_name} and {csv_name}")
-
-    record = add_version(
-        csv_name,
+    recorded = record_fetch_observation(
         data_dir=data_dir,
-        xlsx_path=xlsx_name,
         source_url=xlsx_url,
-        version=resolved_version,
-        retrieved_at=datetime.now().date().isoformat(),
-        notes=f"Fetched by scrape/fetch_register.py; source date {source_date or 'unknown'}",
+        nominal_source_date=nominal_source_date,
+        upload_directory_date=parse_upload_directory_date(xlsx_url),
+        xlsx_bytes=xlsx_bytes,
+        canonical_csv_bytes=csv_bytes,
+        raw_row_count=len(df),
+        converter=converter_metadata(),
         set_current=set_current,
     )
-    print(
-        f"Registered version {record['version']} ({record['row_count']:,} rows)"
-        + ("; manifest 'current' updated" if set_current else "")
-    )
-    return {**result, "status": "fetched", "version": resolved_version}
+    snapshot = recorded["snapshot"]
+    outcome = recorded["outcome"]
+    if outcome == "new_snapshot":
+        status = "fetched"
+        print(f"Archived immutable snapshot {snapshot['snapshot_id']}")
+    elif outcome == "new_provenance_observation":
+        status = "provenance-only"
+        print(
+            "Recorded meaningful provenance for known content "
+            f"{snapshot['snapshot_id']}"
+        )
+    else:
+        status = "no-change"
+        print(
+            "Observed identity is already recorded; no manifest, snapshot, "
+            "pointer or report changes are needed."
+        )
+    return {
+        **result,
+        "status": status,
+        "outcome": outcome,
+        "version": resolved_version,
+        "snapshot_id": snapshot["snapshot_id"],
+        "previous_snapshot_id": recorded["previous_snapshot_id"],
+        "created_snapshot": recorded["created_snapshot"],
+        "created_observation": recorded["created_observation"],
+        "observation_id": recorded["observation"]["observation_id"],
+        "raw_xlsx_sha256": raw_sha,
+        "canonical_csv_sha256": csv_sha,
+    }
 
 
 def main() -> int:
