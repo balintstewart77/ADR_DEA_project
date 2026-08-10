@@ -1,0 +1,175 @@
+{
+  "schema_version": 2,
+  "current": "20260601",
+  "pointers": {
+    "current_latest_revision": {
+      "snapshot_id": "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "raw_xlsx_sha256": "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "canonical_csv_sha256": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd"
+    },
+    "frozen_validation_snapshot": {
+      "snapshot_id": "sha256:4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
+      "raw_xlsx_sha256": "4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
+      "canonical_csv_sha256": "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d",
+      "cleaned_population_path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+      "cleaned_population_sha256": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1"
+    }
+  },
+  "versions": [
+    {
+      "version": "20260325",
+      "latest_snapshot_id": "sha256:cd4b11a055280d3ed8848a7222077c8f2bfe6f6bfa010febdf8839b971065672",
+      "csv": "dea_accredited_projects_20260325.csv",
+      "xlsx": "dea_accredited_projects_20260325.xlsx",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/digitaleconomyact-research-statistics/better-useofdata-for-research-information-for-researchers/list-of-accredited-researchers-and-research-projects-under-the-research-strand-of-the-digital-economy-act/",
+      "retrieved_at": "2026-03-25",
+      "sha256_csv": "56d148ea3e17cb8fdbe21fb6b70636dbf91c2642e9282e51c85932dd6ade5aac",
+      "sha256_xlsx": "cd4b11a055280d3ed8848a7222077c8f2bfe6f6bfa010febdf8839b971065672",
+      "row_count": 1413,
+      "notes": "Historical retained snapshot; exact workbook URL and converter dependency versions were not recorded."
+    },
+    {
+      "version": "20260601",
+      "latest_snapshot_id": "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "csv": "register_snapshots/33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014/canonical.csv",
+      "xlsx": "register_snapshots/33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/08/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "retrieved_at": "2026-08-10",
+      "sha256_csv": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd",
+      "sha256_xlsx": "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "row_count": 1450,
+      "notes": "Latest observed revision of nominal 2026-06-01 release; the original frozen files remain unchanged."
+    },
+    {
+      "version": "legacy",
+      "csv": "dea_accredited_projects.csv",
+      "xlsx": null,
+      "source_url": null,
+      "retrieved_at": "2025-05-20",
+      "sha256_csv": "ce3eab8a0eb5bd560187f8fb0aee01c38611cecce23f843e064c46d5abe84040",
+      "row_count": 1153,
+      "notes": "Pre-March-2026 HTML-table scrape; retained as fallback only"
+    }
+  ],
+  "content_snapshots": [
+    {
+      "snapshot_id": "sha256:cd4b11a055280d3ed8848a7222077c8f2bfe6f6bfa010febdf8839b971065672",
+      "raw_xlsx_path": "dea_accredited_projects_20260325.xlsx",
+      "canonical_csv_path": "dea_accredited_projects_20260325.csv",
+      "raw_xlsx_sha256": "cd4b11a055280d3ed8848a7222077c8f2bfe6f6bfa010febdf8839b971065672",
+      "canonical_csv_sha256": "56d148ea3e17cb8fdbe21fb6b70636dbf91c2642e9282e51c85932dd6ade5aac",
+      "raw_row_count": 1413,
+      "first_seen_at": "2026-03-25",
+      "nominal_source_date": "2026-03-25",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/digitaleconomyact-research-statistics/better-useofdata-for-research-information-for-researchers/list-of-accredited-researchers-and-research-projects-under-the-research-strand-of-the-digital-economy-act/",
+      "upstream_filename": "dea_accredited_projects_20260325.xlsx",
+      "converter": {
+        "identity": "historical-import:converter-metadata-not-recorded",
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF"
+      }
+    },
+    {
+      "snapshot_id": "sha256:4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
+      "raw_xlsx_path": "dea_accredited_projects_20260601.xlsx",
+      "canonical_csv_path": "dea_accredited_projects_20260601.csv",
+      "raw_xlsx_sha256": "4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
+      "canonical_csv_sha256": "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d",
+      "raw_row_count": 1450,
+      "first_seen_at": "2026-06-11",
+      "nominal_source_date": "2026-06-01",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "upstream_filename": "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "converter": {
+        "identity": "scrape.fetch_register.xlsx_to_dataframe:v1",
+        "pandas": "2.2.3",
+        "openpyxl": "3.1.5",
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF",
+        "index": false
+      }
+    },
+    {
+      "snapshot_id": "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "raw_xlsx_path": "register_snapshots/33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "canonical_csv_path": "register_snapshots/33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014/canonical.csv",
+      "raw_xlsx_sha256": "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "canonical_csv_sha256": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd",
+      "raw_row_count": 1450,
+      "first_seen_at": "2026-08-10",
+      "nominal_source_date": "2026-06-01",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/08/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "upstream_filename": "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "converter": {
+        "identity": "scrape.fetch_register.xlsx_to_dataframe:v1",
+        "pandas": "2.2.3",
+        "openpyxl": "3.1.5",
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF",
+        "index": false
+      }
+    }
+  ],
+  "fetch_observations": [
+    {
+      "observation_id": "obs-0001",
+      "observed_at": "2026-03-25",
+      "timestamp_precision": "date",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/digitaleconomyact-research-statistics/better-useofdata-for-research-information-for-researchers/list-of-accredited-researchers-and-research-projects-under-the-research-strand-of-the-digital-economy-act/",
+      "upstream_filename": "dea_accredited_projects_20260325.xlsx",
+      "nominal_source_date": "2026-03-25",
+      "upload_directory_date": null,
+      "raw_xlsx_sha256": "cd4b11a055280d3ed8848a7222077c8f2bfe6f6bfa010febdf8839b971065672",
+      "canonical_csv_sha256": "56d148ea3e17cb8fdbe21fb6b70636dbf91c2642e9282e51c85932dd6ade5aac",
+      "snapshot_id": "sha256:cd4b11a055280d3ed8848a7222077c8f2bfe6f6bfa010febdf8839b971065672"
+    },
+    {
+      "observation_id": "obs-0002",
+      "observed_at": "2026-06-11",
+      "timestamp_precision": "date",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "upstream_filename": "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "nominal_source_date": "2026-06-01",
+      "upload_directory_date": "2026-06",
+      "raw_xlsx_sha256": "4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
+      "canonical_csv_sha256": "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d",
+      "snapshot_id": "sha256:4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3"
+    },
+    {
+      "observation_id": "obs-0003",
+      "observed_at": "2026-08-10",
+      "timestamp_precision": "date",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/08/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "upstream_filename": "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
+      "nominal_source_date": "2026-06-01",
+      "upload_directory_date": "2026-08",
+      "raw_xlsx_sha256": "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "canonical_csv_sha256": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd",
+      "snapshot_id": "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014"
+    }
+  ],
+  "analytical_states": [
+    {
+      "analytical_state_id": "sha256:6b8d3c5f12e1bbe957fecbada4885c450f4c3ab41d1bd1ec2fa67170494abc5f",
+      "cleaned_content_sha256": "6b8d3c5f12e1bbe957fecbada4885c450f4c3ab41d1bd1ec2fa67170494abc5f",
+      "cleaned_row_count": 1308,
+      "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF), include_quarter_date=True",
+      "cleaning_rules": {
+        "verified_at_git_commit": "6740c5e2f23a5b460620e91d1efe2ba57132b2fa",
+        "register_cleaning_git_sha256": "4670131c3c57cec8d101db14790915a3c5e6fc2a4a68dd973acf4408fca2725c",
+        "duplicate_rulings_git_sha256": "b074283b8995ccbeb09a2c15a48d2867994fe8c3d7146ccf07fba59fa3064f73",
+        "dea_filter": "Legal Basis contains Digital Economy Act, case-insensitively",
+        "dea_filter_stage": "after required date/title fields and before duplicate handling"
+      },
+      "source_snapshot_ids": [
+        "sha256:4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
+        "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014"
+      ],
+      "deterministic_properties": {
+        "content_sha256": "318bc4409a7d41c9c96b6d364e0e78b9c340165c1a0244f6243faf801565a43f",
+        "row_count": 1308,
+        "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF)"
+      }
+    }
+  ]
+}

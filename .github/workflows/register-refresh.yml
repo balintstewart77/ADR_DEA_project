@@ -39,24 +39,27 @@ jobs:
           pip install -r requirements-dashboard.txt -r requirements-scrape.txt -r requirements-dev.txt
 
       - name: Run refresh pipeline
+        id: refresh
         run: python -m analysis.refresh_pipeline
 
       - name: Run test suite
         run: python -m pytest analysis -q
 
-      - name: Read register version for the PR title
+      - name: Read immutable snapshot identity for the PR title
         id: version
+        if: steps.refresh.outputs.outcome != 'unchanged_noop'
         run: |
-          version=$(python -c "from analysis.register_manifest import load_manifest; print(load_manifest()['current'])")
+          version=$(python -c "from analysis.register_manifest import CURRENT_POINTER,load_manifest,snapshot_record; m=load_manifest(); s=snapshot_record(m,CURRENT_POINTER); print(s['nominal_source_date'].replace('-','')+'-'+s['raw_xlsx_sha256'][:12])")
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Open pull request
+        if: steps.refresh.outputs.outcome != 'unchanged_noop'
         uses: peter-evans/create-pull-request@v6
         with:
           branch: register-refresh/${{ steps.version.outputs.version }}
-          title: "Ingest register version ${{ steps.version.outputs.version }}"
+          title: "Ingest register snapshot ${{ steps.version.outputs.version }}"
           commit-message: |
-            Ingest register version ${{ steps.version.outputs.version }}; regenerate deterministic facets
+            Ingest register snapshot ${{ steps.version.outputs.version }}
 
             Automated refresh via .github/workflows/register-refresh.yml
           body-path: analysis/outputs_refresh/latest_summary.md

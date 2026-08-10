@@ -101,7 +101,8 @@ Use cases:
 
 ## Refreshing The Data
 
-One command runs the whole flow — fetch, diff against the previous version,
+One command runs the whole flow — fetch, compare against both the preceding
+ingested content snapshot and preceding nominal release,
 deterministic facet derivation, and validation gates — and writes reports
 (register diff, curation queue, refresh summary) to
 `analysis/outputs_refresh/<version>/`:
@@ -110,7 +111,9 @@ deterministic facet derivation, and validation gates — and writes reports
 python -m analysis.refresh_pipeline
 ```
 
-It exits cleanly when the published register has not changed. Add
+It records every new stable observation identity and exits cleanly when that
+date/URL/raw-hash/canonical-hash identity is already present. New content is
+archived immutably by hash even when UKSA reuses a nominal source date. Add
 `--classify` (with `ANTHROPIC_API_KEY` set) to also run incremental LLM
 classification for new/changed projects and repoint the dashboard at the new
 run via `data/release_pointers.json`. Use `--skip-fetch --force` to re-run
@@ -123,16 +126,22 @@ is left as a local follow-up after the curation queue has been reviewed.
 
 The individual steps remain available:
 
-1. Fetch the latest register (downloads, validates the schema, saves dated
-   files into `data/`, and updates `data/register_manifest.json` — the single
-   source of truth the dashboard and analysis scripts load from):
+1. Fetch the latest register (downloads, validates the schema, archives new
+   XLSX and canonical CSV bytes under `data/register_snapshots/<hash>/`, and
+   appends the observation to `data/register_provenance_manifest.json`):
 
    ```bash
    python scrape/fetch_register.py
    ```
 
-   The fetch is idempotent: if the published register has not changed it
-   reports "no change" and writes nothing. Use `--dry-run` to preview.
+   The manifest separates fetch observations, immutable content snapshots and
+   cleaned analytical states. Its `current_latest_revision` pointer may move;
+   `frozen_validation_snapshot` is independently protected. Observation
+   identity is the nominal source date, source URL, raw XLSX hash and canonical
+   CSV hash. Exact repeats are clean no-ops (including immediate retries), so
+   scheduled runs create no timestamp-only branch, commit or PR. A new URL for
+   known content is retained as provenance without duplicating its snapshot.
+   Use `--dry-run` to preview without writing.
 
 2. Regenerate the deterministic facets and review any newly unmatched
    datasets/organisations it reports:

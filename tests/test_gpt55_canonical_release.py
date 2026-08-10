@@ -1,4 +1,5 @@
 import csv
+import copy
 import hashlib
 import json
 import subprocess
@@ -7,9 +8,22 @@ from collections import Counter
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+import pytest
+
 from analysis.crossmodel_comparison import CANONICAL_TAGS, split_label_set
 from analysis.llm_theme_analysis_v3 import _build_static_prompt
 from analysis.validation.schema import DOMAIN_LABELS, PURPOSE_LABELS, UNCLEAR
+from analysis.register_manifest import (
+    CURRENT_POINTER,
+    FROZEN_CLEANED_PATH,
+    FROZEN_CLEANED_SHA256,
+    FROZEN_SOURCE_CSV_SHA256,
+    FROZEN_SOURCE_XLSX_SHA256,
+    FROZEN_VALIDATION_POINTER,
+    _validate_v2_manifest,
+    load_manifest,
+    snapshot_record,
+)
 
 
 RELEASE = Path(
@@ -23,6 +37,8 @@ POPULATION = Path(
 RECEIPT = RELEASE.with_name("release_receipt.json")
 EXPECTED_SHA256 = "5bb4379174e1c9b9cf7faf611712c53648bc57eea7ba1d28127ecedab16b5ded"
 POPULATION_SHA256 = "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1"
+ORIGINAL_XLSX = Path("data/dea_accredited_projects_20260601.xlsx")
+ORIGINAL_CSV = Path("data/dea_accredited_projects_20260601.csv")
 RETAINED_PAIRS = {"2020/030", "2022/036", "2024/014", "2024/095"}
 PROMPT = Path(
     "preregistration/package/02_taxonomy_prompt_and_model/"
@@ -94,6 +110,99 @@ def test_release_matches_the_canonical_population_and_duplicate_structure():
         if count == 2
     }
     assert doubled == RETAINED_PAIRS
+
+
+def test_frozen_validation_source_binding_is_immutable_and_independent_of_live_pointer():
+    manifest = load_manifest()
+    live = snapshot_record(manifest, CURRENT_POINTER)
+    frozen = snapshot_record(manifest, FROZEN_VALIDATION_POINTER)
+    binding = manifest["pointers"][FROZEN_VALIDATION_POINTER]
+    assert live["canonical_csv_sha256"] == (
+        "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd"
+    )
+    assert binding["raw_xlsx_sha256"] == FROZEN_SOURCE_XLSX_SHA256
+    assert binding["canonical_csv_sha256"] == FROZEN_SOURCE_CSV_SHA256
+    assert binding["cleaned_population_sha256"] == FROZEN_CLEANED_SHA256
+    assert binding["cleaned_population_path"] == FROZEN_CLEANED_PATH
+    assert frozen["raw_xlsx_sha256"] == FROZEN_SOURCE_XLSX_SHA256
+    assert frozen["canonical_csv_sha256"] == FROZEN_SOURCE_CSV_SHA256
+    assert frozen["raw_xlsx_path"] == ORIGINAL_XLSX.name
+    assert frozen["canonical_csv_path"] == ORIGINAL_CSV.name
+    assert live["snapshot_id"] != frozen["snapshot_id"]
+    assert hashlib.sha256(ORIGINAL_XLSX.read_bytes()).hexdigest() == FROZEN_SOURCE_XLSX_SHA256
+    canonical_lf_bytes = ORIGINAL_CSV.read_bytes().replace(b"\r\n", b"\n")
+    assert hashlib.sha256(canonical_lf_bytes).hexdigest() == FROZEN_SOURCE_CSV_SHA256
+    assert hashlib.sha256(POPULATION.read_bytes()).hexdigest() == FROZEN_CLEANED_SHA256
+    assert POPULATION_SHA256 == FROZEN_CLEANED_SHA256
+
+    repointed = copy.deepcopy(manifest)
+    repointed["pointers"][FROZEN_VALIDATION_POINTER] = copy.deepcopy(
+        repointed["pointers"][CURRENT_POINTER]
+    )
+    repointed["pointers"][FROZEN_VALIDATION_POINTER].update({
+        "cleaned_population_path": POPULATION.as_posix(),
+        "cleaned_population_sha256": POPULATION_SHA256,
+    })
+    with pytest.raises(ValueError, match="Frozen validation source pointer changed"):
+        _validate_v2_manifest(repointed, "mutated test manifest")
+
+
+def test_validation_workflows_do_not_resolve_through_mutable_live_pointer():
+    from analysis.validation import owner_sampling_frame
+    from scripts import draw_validation_samples, generate_formal_validation_assignments
+
+    manifest = load_manifest()
+    frozen_input = manifest["pointers"][FROZEN_VALIDATION_POINTER][
+        "cleaned_population_path"
+    ]
+    assert frozen_input == POPULATION.as_posix()
+    declared_inputs = (
+        draw_validation_samples.REAL_CLEANED_PATH.as_posix(),
+        generate_formal_validation_assignments.POPULATION.as_posix(),
+        owner_sampling_frame.FROZEN_POPULATION.relative_to(Path.cwd()).as_posix(),
+    )
+    assert declared_inputs == (frozen_input, frozen_input, frozen_input)
+    for path in (
+        Path("scripts/draw_validation_samples.py"),
+        Path("scripts/generate_formal_validation_assignments.py"),
+        Path("analysis/validation/owner_sampling_frame.py"),
+    ):
+        text = path.read_text(encoding="utf-8")
+        assert "current_latest_revision" not in text
+        assert "CURRENT_POINTER" not in text
+        assert "register_manifest" not in text
+        assert POPULATION.name in text
+
+    changed_live = copy.deepcopy(manifest)
+    changed_live["pointers"][CURRENT_POINTER] = {
+        "snapshot_id": manifest["content_snapshots"][0]["snapshot_id"],
+        "raw_xlsx_sha256": manifest["content_snapshots"][0]["raw_xlsx_sha256"],
+        "canonical_csv_sha256": manifest["content_snapshots"][0]["canonical_csv_sha256"],
+    }
+    assert changed_live["pointers"][FROZEN_VALIDATION_POINTER] == (
+        manifest["pointers"][FROZEN_VALIDATION_POINTER]
+    )
+    assert changed_live["pointers"][FROZEN_VALIDATION_POINTER][
+        "cleaned_population_path"
+    ] == frozen_input
+
+
+def test_each_frozen_hash_entry_is_required_and_directly_protected():
+    manifest = load_manifest()
+    expected = {
+        "raw_xlsx_sha256": FROZEN_SOURCE_XLSX_SHA256,
+        "canonical_csv_sha256": FROZEN_SOURCE_CSV_SHA256,
+        "cleaned_population_sha256": FROZEN_CLEANED_SHA256,
+    }
+    assert {
+        key: manifest["pointers"][FROZEN_VALIDATION_POINTER][key]
+        for key in expected
+    } == expected
+    for key in expected:
+        changed = copy.deepcopy(manifest)
+        changed["pointers"][FROZEN_VALIDATION_POINTER][key] = "0" * 64
+        with pytest.raises(ValueError):
+            _validate_v2_manifest(changed, f"mutated {key}")
 
 
 def test_release_schema_and_dict_rc2_values_are_valid():

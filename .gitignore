@@ -15,6 +15,9 @@ requirements-mac.txt
 # Data
 data/*
 !data/register_manifest.json
+!data/register_provenance_manifest.json
+!data/register_snapshots/
+!data/register_snapshots/**
 !data/release_pointers.json
 !data/dea_accredited_projects.csv
 !data/dea_accredited_projects_*.csv
