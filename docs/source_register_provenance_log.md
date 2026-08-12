@@ -4,6 +4,13 @@ This operational log records source-publication events that affect provenance
 without changing the frozen preregistration package. Entries here are not
 protocol deviations unless they independently meet the deviation definition.
 
+The canonical provenance manifest records distinct observed source identities
+and revisions, not every polling event. A fetch is an exact no-op whenever its
+nominal release date, source URL, raw XLSX hash and canonical CSV hash match an
+existing observation, including on a later scheduled run. GitHub Actions logs
+provide the operational history of unchanged polling; those repeated checks do
+not add nodes to the canonical source-provenance DAG.
+
 ## 2026-08-10 — UKSA republication of the nominal 2026-06-01 register
 
 On 10 August 2026, UKSA republished the nominal 1 June 2026 register at a new

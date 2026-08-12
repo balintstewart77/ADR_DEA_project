@@ -138,10 +138,13 @@ The individual steps remain available:
    cleaned analytical states. Its `current_latest_revision` pointer may move;
    `frozen_validation_snapshot` is independently protected. Observation
    identity is the nominal source date, source URL, raw XLSX hash and canonical
-   CSV hash. Exact repeats are clean no-ops (including immediate retries), so
-   scheduled runs create no timestamp-only branch, commit or PR. A new URL for
-   known content is retained as provenance without duplicating its snapshot.
-   Use `--dry-run` to preview without writing.
+   CSV hash. The manifest records distinct source observations and revisions,
+   not polling history. An exact repeat is a clean no-op whether it is an
+   immediate retry or a later scheduled check, so unchanged polling creates no
+   timestamp-only branch, commit or PR. Workflow execution logs retain that
+   operational polling history outside the canonical source-provenance DAG. A
+   new URL for known content is retained as provenance without duplicating its
+   snapshot. Use `--dry-run` to preview without writing.
 
 2. Regenerate the deterministic facets and review any newly unmatched
    datasets/organisations it reports:

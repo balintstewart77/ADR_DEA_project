@@ -30,6 +30,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
+import io
 import json
 import os
 import subprocess
@@ -55,9 +57,11 @@ from analysis.register_cleaning import (  # noqa: E402
 from analysis.register_manifest import (  # noqa: E402
     CURRENT_POINTER,
     DATA_DIR,
+    canonical_git_text_bytes,
     load_manifest,
     previous_ingested_snapshot,
     previous_nominal_release_snapshot,
+    record_analytical_state,
     resolve_snapshot_csv,
     snapshot_record,
 )
@@ -101,14 +105,29 @@ def load_cleaned_version(version: str) -> pd.DataFrame:
 
 def load_raw_snapshot(snapshot_ref: str, *, data_dir: str = DATA_DIR) -> pd.DataFrame:
     path, _snapshot = resolve_snapshot_csv(data_dir, snapshot_ref)
-    return pd.read_csv(path, encoding="utf-8-sig")
+    return pd.read_csv(io.BytesIO(canonical_git_text_bytes(path)), encoding="utf-8-sig")
 
 
 def load_cleaned_snapshot(snapshot_ref: str, *, data_dir: str = DATA_DIR) -> pd.DataFrame:
     raw = load_raw_snapshot(snapshot_ref, data_dir=data_dir)
     with tempfile.TemporaryDirectory() as tmp:
-        cleaned, _stats = clean_register_dataframe(raw, output_dir=tmp, verbose=False)
+        cleaned, _stats = clean_register_dataframe(
+            raw,
+            output_dir=tmp,
+            include_quarter_date=True,
+            verbose=False,
+        )
     return cleaned
+
+
+def _canonical_dataframe_bytes(frame: pd.DataFrame) -> bytes:
+    buffer = io.StringIO()
+    frame.to_csv(buffer, index=False, lineterminator="\n")
+    return buffer.getvalue().encode("utf-8-sig")
+
+
+def _canonical_file_sha256(path: Path) -> str:
+    return hashlib.sha256(canonical_git_text_bytes(str(path))).hexdigest()
 
 
 def build_register_diff(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
@@ -579,9 +598,10 @@ def main() -> int:
     analytical_changed = bool(
         ingest_comparison and ingest_comparison["analytical_impact"] != "none"
     )
+    derived_properties: pd.DataFrame | None = None
     if analytical_changed or args.force:
         print("[derive] regenerating deterministic facets...")
-        _properties, coverage = derive_run(
+        derived_properties, coverage = derive_run(
             report_path=(report_dir / "derive_report.md").resolve()
         )
         (report_dir / "review_required.md").write_text(
@@ -599,7 +619,10 @@ def main() -> int:
         )
 
     classifications_csv = None
-    if args.classify and analytical_changed:
+    classify_current = args.classify and (
+        analytical_changed or (args.skip_fetch and args.force)
+    )
+    if classify_current:
         classification_dir = classify_step(report_key, model=args.model)
         classifications_csv = classification_dir / "layer_classifications.csv"
         summary.append(f"- Classification run: {classification_dir.name}")
@@ -621,7 +644,32 @@ def main() -> int:
         _emit_workflow_outcome("gate_failure")
         return 2
 
-    if args.classify and classifications_csv is not None and analytical_changed:
+    properties_rows = (
+        len(derived_properties)
+        if derived_properties is not None
+        else len(pd.read_csv(properties_csv, encoding="utf-8-sig"))
+    )
+    analytical_state = record_analytical_state(
+        data_dir=DATA_DIR,
+        source_snapshot_ref=target_snapshot_id,
+        cleaned_content_sha256=hashlib.sha256(
+            _canonical_dataframe_bytes(new_register)
+        ).hexdigest(),
+        cleaned_row_count=len(new_register),
+        deterministic_properties_sha256=_canonical_file_sha256(properties_csv),
+        deterministic_properties_row_count=properties_rows,
+    )
+    state_action = (
+        "created"
+        if analytical_state["created_state"]
+        else "linked" if analytical_state["linked_source"] else "already linked"
+    )
+    summary.append(
+        "- Analytical state: "
+        f"{state_action} {analytical_state['state']['analytical_state_id']}"
+    )
+
+    if classify_current and classifications_csv is not None:
         update_classification_pointer(classifications_csv.parent)
         summary.append("- Dashboard pointer updated to the new classification run")
 

@@ -393,6 +393,50 @@ class ReleasePointersTest(unittest.TestCase):
 
 
 class UnchangedRefreshControlFlowTest(unittest.TestCase):
+    def test_skip_fetch_force_classify_runs_post_merge_classification(self):
+        register = _register([{"Record ID": "2024/001"}])
+        coverage = {
+            "dataset_mentions_matched": 0,
+            "dataset_mentions_total": 0,
+            "organisation_mentions_matched": 0,
+            "organisation_mentions_total": 0,
+            "dataset_unmatched_counts": {},
+            "organisation_unmatched_counts": {},
+        }
+        with tempfile.TemporaryDirectory() as tmp, patch.object(
+            refresh_pipeline, "REFRESH_DIR", Path(tmp) / "reports"
+        ), patch.object(
+            refresh_pipeline, "load_cleaned_snapshot", return_value=register
+        ), patch.object(
+            refresh_pipeline, "build_ingest_revision_comparison", return_value=None
+        ), patch.object(
+            refresh_pipeline, "build_nominal_release_comparison", return_value=None
+        ), patch.object(
+            refresh_pipeline, "derive_run", return_value=(register, coverage)
+        ), patch.object(
+            refresh_pipeline, "classify_step", return_value=Path(tmp) / "classified"
+        ) as classify, patch.object(
+            refresh_pipeline, "run_gates", return_value=[]
+        ), patch.object(
+            refresh_pipeline, "record_analytical_state", return_value={
+                "state": {"analytical_state_id": "sha256:" + "1" * 64},
+                "created_state": False,
+                "linked_source": False,
+            }
+        ), patch.object(
+            refresh_pipeline, "_canonical_file_sha256", return_value="2" * 64
+        ), patch.object(
+            refresh_pipeline, "update_classification_pointer"
+        ) as update_pointer, patch.object(
+            refresh_pipeline, "_emit_workflow_outcome"
+        ), patch(
+            "sys.argv",
+            ["refresh_pipeline", "--skip-fetch", "--force", "--classify"],
+        ):
+            self.assertEqual(refresh_pipeline.main(), 0)
+        classify.assert_called_once()
+        update_pointer.assert_called_once_with(Path(tmp) / "classified")
+
     def test_unchanged_noop_exits_before_reports_even_when_forced(self):
         manifest = load_manifest()
         snapshot = manifest["pointers"]["current_latest_revision"]["snapshot_id"]
@@ -428,6 +472,10 @@ class UnchangedRefreshControlFlowTest(unittest.TestCase):
         guard = "if: steps.refresh.outputs.outcome != 'unchanged_noop'"
         self.assertEqual(workflow.count(guard), 2)
         self.assertIn("uses: peter-evans/create-pull-request@v6", workflow)
+        self.assertIn(
+            "analysis/outputs_deterministic_rc2/register_properties.csv", workflow
+        )
+        self.assertIn("analysis/outputs_deterministic_rc2/manifest.json", workflow)
 
 
 if __name__ == "__main__":

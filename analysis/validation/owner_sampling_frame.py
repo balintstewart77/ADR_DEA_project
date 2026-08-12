@@ -25,6 +25,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from analysis.register_cleaning import load_clean_register
+from analysis.register_manifest import verify_frozen_validation_binding  # noqa: E402
 from dashboard.institution_normalisation import (
     _ALIASES,
     _build_logical_lines,
@@ -205,6 +206,7 @@ def validate_population(population: pd.DataFrame) -> None:
 
 def reconstruct_canonical_population() -> pd.DataFrame:
     """Rebuild in a temporary directory and require exact frozen agreement."""
+    verify_frozen_validation_binding()
     with tempfile.TemporaryDirectory(prefix="owner-frame-clean-") as output_dir:
         rebuilt, _, source = load_clean_register(
             str(REPO_ROOT / "data"), candidate_files=["dea_accredited_projects_20260601.csv"],

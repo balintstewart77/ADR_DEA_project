@@ -10,12 +10,18 @@ import hashlib
 import json
 import random
 import subprocess
+import sys
 from collections import Counter
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
 
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from analysis.register_manifest import verify_frozen_validation_binding  # noqa: E402
+
+
 SOURCE_DRAW_COMMIT = "6500c92148d97043a7826b684f5885127fd22814"
 BASELINE_ACTIVE = Path(
     "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv"
@@ -451,6 +457,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.output_directory is None or not args.timestamp_utc:
         raise AssignmentError("Official generation requires --output-directory and --timestamp-utc")
+    verify_frozen_validation_binding()
     output_directory = args.output_directory.resolve()
     restricted_root = (ROOT / "preregistration_restricted/assignments").resolve()
     try:

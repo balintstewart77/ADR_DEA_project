@@ -67,4 +67,5 @@ jobs:
             data/
             analysis/outputs_refresh/
             analysis/outputs_deterministic_rc2/register_properties.csv
+            analysis/outputs_deterministic_rc2/manifest.json
           delete-branch: true

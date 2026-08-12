@@ -23,6 +23,7 @@ from analysis.register_manifest import (
     _validate_v2_manifest,
     load_manifest,
     snapshot_record,
+    verify_frozen_validation_binding,
 )
 
 
@@ -113,6 +114,11 @@ def test_release_matches_the_canonical_population_and_duplicate_structure():
 
 
 def test_frozen_validation_source_binding_is_immutable_and_independent_of_live_pointer():
+    assert verify_frozen_validation_binding() == {
+        "raw_xlsx_sha256": FROZEN_SOURCE_XLSX_SHA256,
+        "canonical_csv_sha256": FROZEN_SOURCE_CSV_SHA256,
+        "cleaned_population_sha256": FROZEN_CLEANED_SHA256,
+    }
     manifest = load_manifest()
     live = snapshot_record(manifest, CURRENT_POINTER)
     frozen = snapshot_record(manifest, FROZEN_VALIDATION_POINTER)
@@ -170,8 +176,17 @@ def test_validation_workflows_do_not_resolve_through_mutable_live_pointer():
         text = path.read_text(encoding="utf-8")
         assert "current_latest_revision" not in text
         assert "CURRENT_POINTER" not in text
-        assert "register_manifest" not in text
         assert POPULATION.name in text
+
+    guarded_consumers = {
+        Path("scripts/draw_validation_samples.py"): "inputs = validate_inputs(",
+        Path("scripts/generate_formal_validation_assignments.py"): "metadata = generate(",
+        Path("analysis/validation/owner_sampling_frame.py"): "frozen = pd.read_csv(",
+    }
+    for path, consumption in guarded_consumers.items():
+        text = path.read_text(encoding="utf-8")
+        guard = text.rfind("verify_frozen_validation_binding()", 0, text.index(consumption))
+        assert guard >= 0, f"{path} consumes the frozen population without the shared guard"
 
     changed_live = copy.deepcopy(manifest)
     changed_live["pointers"][CURRENT_POINTER] = {

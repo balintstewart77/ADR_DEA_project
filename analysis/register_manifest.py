@@ -36,6 +36,8 @@ LEGACY_MANIFEST_FILENAME = "register_manifest.json"
 MANIFEST_SCHEMA_VERSION = 2
 CURRENT_POINTER = "current_latest_revision"
 FROZEN_VALIDATION_POINTER = "frozen_validation_snapshot"
+FROZEN_SOURCE_XLSX_PATH = "dea_accredited_projects_20260601.xlsx"
+FROZEN_SOURCE_CSV_PATH = "dea_accredited_projects_20260601.csv"
 FROZEN_SOURCE_XLSX_SHA256 = "4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3"
 FROZEN_SOURCE_CSV_SHA256 = "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d"
 FROZEN_CLEANED_PATH = (
@@ -120,6 +122,59 @@ def _validate_v2_manifest(manifest: dict, path: str) -> None:
         raise ValueError("Frozen validation cleaned-population binding changed")
     if frozen.get("cleaned_population_path") != FROZEN_CLEANED_PATH:
         raise ValueError("Frozen validation cleaned-population path changed")
+
+
+def canonical_git_text_bytes(path: str) -> bytes:
+    """Read canonical LF bytes independently of checkout line-ending policy."""
+    with open(path, "rb") as handle:
+        return handle.read().replace(b"\r\n", b"\n")
+
+
+def verify_frozen_validation_binding(
+    data_dir: str = DATA_DIR,
+    project_root: str = PROJECT_ROOT,
+) -> dict[str, str]:
+    """Verify the immutable frozen source binding and all three input files.
+
+    The historical CSV identity is the canonical LF Git representation. Git
+    may materialise CRLF bytes in an existing Windows checkout, so verification
+    normalises CRLF back to LF without changing the registered file.
+    """
+    manifest = load_manifest(data_dir)
+    if manifest is None or manifest.get("schema_version", 1) < 2:
+        raise ValueError("Frozen validation requires the schema-2 provenance manifest")
+    frozen = snapshot_record(manifest, FROZEN_VALIDATION_POINTER)
+    if frozen.get("raw_xlsx_path") != FROZEN_SOURCE_XLSX_PATH:
+        raise ValueError("Frozen validation original-XLSX path changed")
+    if frozen.get("canonical_csv_path") != FROZEN_SOURCE_CSV_PATH:
+        raise ValueError("Frozen validation canonical-CSV path changed")
+
+    xlsx_path = os.path.join(data_dir, FROZEN_SOURCE_XLSX_PATH)
+    csv_path = os.path.join(data_dir, FROZEN_SOURCE_CSV_PATH)
+    cleaned_path = os.path.join(project_root, *FROZEN_CLEANED_PATH.split("/"))
+    checks = (
+        ("original XLSX", xlsx_path, _sha256, FROZEN_SOURCE_XLSX_SHA256),
+        (
+            "canonical Git CSV",
+            csv_path,
+            lambda value: _sha256_bytes(canonical_git_text_bytes(value)),
+            FROZEN_SOURCE_CSV_SHA256,
+        ),
+        ("frozen cleaned population", cleaned_path, _sha256, FROZEN_CLEANED_SHA256),
+    )
+    for label, path, digest, expected in checks:
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f"Frozen validation {label} is missing: {path}")
+        actual = digest(path)
+        if actual != expected:
+            raise ValueError(
+                f"Frozen validation {label} hash changed: expected {expected}, got {actual}"
+            )
+    return {
+        "raw_xlsx_sha256": FROZEN_SOURCE_XLSX_SHA256,
+        "canonical_csv_sha256": FROZEN_SOURCE_CSV_SHA256,
+        "cleaned_population_sha256": FROZEN_CLEANED_SHA256,
+    }
 
 
 def write_manifest(manifest: dict, data_dir: str = DATA_DIR) -> str:
@@ -294,7 +349,11 @@ def _safe_upstream_filename(source_url: str) -> str:
 
 
 def matching_fetch_observation(manifest: dict, identity: dict) -> dict | None:
-    """Return an observation with the same stable provenance identity, if any."""
+    """Return an observation with the same stable source identity, if any.
+
+    Observations describe distinct source identities/revisions, not polling
+    events. A matching identity is therefore a no-op even on a later run.
+    """
     missing = [field for field in OBSERVATION_IDENTITY_FIELDS if field not in identity]
     if missing:
         raise ValueError(f"Observation identity is missing fields: {missing}")
@@ -305,6 +364,77 @@ def matching_fetch_observation(manifest: dict, identity: dict) -> dict | None:
         ),
         None,
     )
+
+
+def record_analytical_state(
+    *,
+    data_dir: str,
+    source_snapshot_ref: str,
+    cleaned_content_sha256: str,
+    cleaned_row_count: int,
+    deterministic_properties_sha256: str,
+    deterministic_properties_row_count: int,
+    cleaning_rules: dict | None = None,
+) -> dict:
+    """Append or link a content-addressed cleaned analytical state.
+
+    A source snapshot that cleans to known bytes is linked to the existing
+    state. A distinct cleaned-content hash creates a new state; prior states
+    and source links are never replaced.
+    """
+    for label, value in (
+        ("cleaned content", cleaned_content_sha256),
+        ("deterministic properties", deterministic_properties_sha256),
+    ):
+        if re.fullmatch(r"[0-9a-f]{64}", value) is None:
+            raise ValueError(f"Invalid {label} SHA-256: {value!r}")
+    if cleaned_row_count < 0 or deterministic_properties_row_count < 0:
+        raise ValueError("Analytical-state row counts must be non-negative")
+
+    manifest = load_manifest(data_dir)
+    if manifest is None or manifest.get("schema_version", 1) < 2:
+        raise ValueError("Analytical states require an existing schema-2 manifest")
+    source_snapshot_id = snapshot_record(manifest, source_snapshot_ref)["snapshot_id"]
+    expected_properties = {
+        "content_sha256": deterministic_properties_sha256,
+        "row_count": deterministic_properties_row_count,
+        "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF)",
+    }
+    state = next(
+        (
+            item for item in manifest["analytical_states"]
+            if item.get("cleaned_content_sha256") == cleaned_content_sha256
+        ),
+        None,
+    )
+    if state is not None:
+        if state.get("cleaned_row_count") != cleaned_row_count:
+            raise ValueError("Known cleaned analytical state has a different row count")
+        if state.get("deterministic_properties") != expected_properties:
+            raise ValueError(
+                "Known cleaned analytical state has a different deterministic-output identity"
+            )
+        if source_snapshot_id in state.get("source_snapshot_ids", []):
+            return {"state": state, "created_state": False, "linked_source": False}
+        state.setdefault("source_snapshot_ids", []).append(source_snapshot_id)
+        write_manifest(manifest, data_dir)
+        return {"state": state, "created_state": False, "linked_source": True}
+
+    state = {
+        "analytical_state_id": f"sha256:{cleaned_content_sha256}",
+        "cleaned_content_sha256": cleaned_content_sha256,
+        "cleaned_row_count": cleaned_row_count,
+        "serialization": (
+            "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF), "
+            "include_quarter_date=True"
+        ),
+        "cleaning_rules": cleaning_rules or {},
+        "source_snapshot_ids": [source_snapshot_id],
+        "deterministic_properties": expected_properties,
+    }
+    manifest["analytical_states"].append(state)
+    write_manifest(manifest, data_dir)
+    return {"state": state, "created_state": True, "linked_source": True}
 
 
 def _write_immutable(path: str, data: bytes) -> None:

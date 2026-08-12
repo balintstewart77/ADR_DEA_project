@@ -14,6 +14,7 @@ from analysis.register_manifest import (
     MANIFEST_FILENAME,
     add_version,
     load_manifest,
+    record_analytical_state,
     record_fetch_observation,
     resolve_register_csv,
     write_manifest,
@@ -299,7 +300,7 @@ class HashAddressedManifestTest(unittest.TestCase):
         )
         self.assertEqual(open(path, "rb").read(), before)
 
-    def test_exact_repeat_is_byte_stable_noop_and_immediate_retry_is_idempotent(self):
+    def test_exact_repeat_is_noop_for_retry_and_later_scheduled_poll(self):
         first = self.record(
             b"revised workbook bytes", self.original_csv,
             "https://example.test/uploads/2026/08/register.xlsx",
@@ -316,15 +317,92 @@ class HashAddressedManifestTest(unittest.TestCase):
             "https://example.test/uploads/2026/08/register.xlsx",
             "2026-08-10T09:00:01+00:00",
         )
+        later_poll = self.record(
+            b"revised workbook bytes", self.original_csv,
+            "https://example.test/uploads/2026/08/register.xlsx",
+            "2026-09-07T07:00:00+00:00",
+        )
         manifest = load_manifest(self.data_dir)
         self.assertTrue(first["created_snapshot"])
         self.assertFalse(second["created_snapshot"])
         self.assertFalse(second["created_observation"])
         self.assertEqual(second["outcome"], "unchanged_noop")
+        self.assertFalse(later_poll["created_observation"])
+        self.assertEqual(later_poll["outcome"], "unchanged_noop")
         self.assertEqual(len(manifest["content_snapshots"]), 2)
         self.assertEqual(len(manifest["fetch_observations"]), 2)
         self.assertEqual(open(manifest_path, "rb").read(), manifest_before)
         self.assertEqual(open(snapshot_path, "rb").read(), snapshot_before)
+
+    def test_same_cleaned_content_links_new_snapshot_to_existing_state(self):
+        first = self.record(
+            b"first revision", self.original_csv.replace(b"Original", b"First---"),
+            "https://example.test/uploads/2026/08/register.xlsx",
+            "2026-08-10T09:00:00+00:00",
+        )
+        second = self.record(
+            b"second revision", self.original_csv.replace(b"Original", b"Second--"),
+            "https://example.test/uploads/2026/09/register.xlsx",
+            "2026-09-01T09:00:00+00:00",
+        )
+        cleaned_sha = "1" * 64
+        properties_sha = "2" * 64
+        created = record_analytical_state(
+            data_dir=self.data_dir,
+            source_snapshot_ref=first["snapshot"]["snapshot_id"],
+            cleaned_content_sha256=cleaned_sha,
+            cleaned_row_count=1,
+            deterministic_properties_sha256=properties_sha,
+            deterministic_properties_row_count=1,
+        )
+        linked = record_analytical_state(
+            data_dir=self.data_dir,
+            source_snapshot_ref=second["snapshot"]["snapshot_id"],
+            cleaned_content_sha256=cleaned_sha,
+            cleaned_row_count=1,
+            deterministic_properties_sha256=properties_sha,
+            deterministic_properties_row_count=1,
+        )
+        states = load_manifest(self.data_dir)["analytical_states"]
+        self.assertTrue(created["created_state"])
+        self.assertFalse(linked["created_state"])
+        self.assertTrue(linked["linked_source"])
+        self.assertEqual(len(states), 1)
+        self.assertEqual(
+            states[0]["source_snapshot_ids"],
+            [first["snapshot"]["snapshot_id"], second["snapshot"]["snapshot_id"]],
+        )
+
+    def test_changed_cleaned_content_appends_state_and_preserves_prior_state(self):
+        first = self.record(
+            b"first revision", self.original_csv.replace(b"Original", b"First---"),
+            "https://example.test/uploads/2026/08/register.xlsx",
+            "2026-08-10T09:00:00+00:00",
+        )
+        second = self.record(
+            b"second revision", self.original_csv.replace(b"Original", b"Second--"),
+            "https://example.test/uploads/2026/09/register.xlsx",
+            "2026-09-01T09:00:00+00:00",
+        )
+        for result, cleaned, properties in (
+            (first, "3" * 64, "4" * 64),
+            (second, "5" * 64, "6" * 64),
+        ):
+            record_analytical_state(
+                data_dir=self.data_dir,
+                source_snapshot_ref=result["snapshot"]["snapshot_id"],
+                cleaned_content_sha256=cleaned,
+                cleaned_row_count=1,
+                deterministic_properties_sha256=properties,
+                deterministic_properties_row_count=1,
+            )
+        states = load_manifest(self.data_dir)["analytical_states"]
+        self.assertEqual(len(states), 2)
+        self.assertEqual(
+            [state["cleaned_content_sha256"] for state in states],
+            ["3" * 64, "5" * 64],
+        )
+        self.assertEqual(states[0]["source_snapshot_ids"], [first["snapshot"]["snapshot_id"]])
 
     def test_same_content_at_new_url_adds_observation_not_snapshot(self):
         first = self.record(

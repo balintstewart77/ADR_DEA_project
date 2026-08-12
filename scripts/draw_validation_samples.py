@@ -25,8 +25,12 @@ import numpy as np
 import pandas as pd
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from analysis.register_manifest import verify_frozen_validation_binding  # noqa: E402
+
 SPECIFICATION_PATH = Path(
     "preregistration/package/04_exclusions_and_sampling/sampling_specification.yaml"
 )
@@ -909,6 +913,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print("Sampling specification and static engine checks passed; no RNG was created.")
         return 0
     if args.validate_real_inputs:
+        verify_frozen_validation_binding()
         inputs = validate_inputs(ROOT / REAL_CLEANED_PATH, ROOT / REAL_EXCLUSION_PATH, ROOT / REAL_HARD_PATH, specification=specification, expect_real=True)
         counts = inputs.hard["hard_case_stratum"].value_counts().to_dict()
         forced = int(inputs.hard["accompanying_tag_disagreement"].sum())
@@ -931,6 +936,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if not _same_real_paths(args, ROOT):
         raise SamplingError("Official mode requires the canonical real input paths")
+    verify_frozen_validation_binding()
     if args.seed not in (None, OFFICIAL_SEED):
         raise SamplingError("Official mode may use only the registered official seed")
     if args.registration_receipt is None:
