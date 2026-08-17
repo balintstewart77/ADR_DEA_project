@@ -73,7 +73,8 @@ class DashboardRegistryOptionTest(unittest.TestCase):
         self.assertEqual(set(values) - {"ALL"}, set(expected_counts))
         for value, count in expected_counts.items():
             with self.subTest(processing_environment=value):
-                self.assertIn(f"({count} projects)", labels_by_value[value])
+                project_label = "project" if count == 1 else "projects"
+                self.assertIn(f"({count} {project_label})", labels_by_value[value])
 
         raw_aliases = {
             "Office for National Statistics Secure Research Service",
