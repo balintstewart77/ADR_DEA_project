@@ -1,0 +1,570 @@
+{
+  "schema_version": 2,
+  "snapshot": {
+    "snapshot_id": "sha256:dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
+    "nominal_source_date": "2026-08-17",
+    "raw_xlsx_sha256": "dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
+    "canonical_csv_sha256": "381593a7c64b297b9ee289c84b02a6982824b74f85800b4082e5ff1f059583f4",
+    "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/08/13_08_2026_UKSA-Accredited-Research-Projects-Report.xlsx"
+  },
+  "ingest_revision_comparison": {
+    "kind": "ingest_revision",
+    "meaning": "Newly observed content snapshot versus the immediately preceding distinct ingested snapshot, regardless of nominal source date.",
+    "baseline": {
+      "snapshot_id": "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "nominal_source_date": "2026-06-01",
+      "raw_xlsx_sha256": "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "canonical_csv_sha256": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/08/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx"
+    },
+    "target": {
+      "snapshot_id": "sha256:dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
+      "nominal_source_date": "2026-08-17",
+      "raw_xlsx_sha256": "dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
+      "canonical_csv_sha256": "381593a7c64b297b9ee289c84b02a6982824b74f85800b4082e5ff1f059583f4",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/08/13_08_2026_UKSA-Accredited-Research-Projects-Report.xlsx"
+    },
+    "raw_diff": {
+      "old_rows": 1450,
+      "new_rows": 1485,
+      "added": [
+        {
+          "project_id": "2026/091"
+        },
+        {
+          "project_id": "2026/092"
+        },
+        {
+          "project_id": "2026/093"
+        },
+        {
+          "project_id": "2026/094"
+        },
+        {
+          "project_id": "2026/095"
+        },
+        {
+          "project_id": "2026/096"
+        },
+        {
+          "project_id": "2026/097"
+        },
+        {
+          "project_id": "2026/098"
+        },
+        {
+          "project_id": "2026/099"
+        },
+        {
+          "project_id": "2026/100"
+        },
+        {
+          "project_id": "2026/101"
+        },
+        {
+          "project_id": "2026/102"
+        },
+        {
+          "project_id": "2026/103"
+        },
+        {
+          "project_id": "2026/104"
+        },
+        {
+          "project_id": "2026/105"
+        },
+        {
+          "project_id": "2026/106"
+        },
+        {
+          "project_id": "2026/107"
+        },
+        {
+          "project_id": "2026/108"
+        },
+        {
+          "project_id": "2026/109"
+        },
+        {
+          "project_id": "2026/111"
+        },
+        {
+          "project_id": "2026/112"
+        },
+        {
+          "project_id": "2026/113"
+        },
+        {
+          "project_id": "2026/114"
+        },
+        {
+          "project_id": "2026/115"
+        },
+        {
+          "project_id": "2026/116"
+        },
+        {
+          "project_id": "2026/117"
+        },
+        {
+          "project_id": "2026/118"
+        },
+        {
+          "project_id": "2026/119"
+        },
+        {
+          "project_id": "2026/120"
+        },
+        {
+          "project_id": "2026/121"
+        },
+        {
+          "project_id": "2026/122"
+        },
+        {
+          "project_id": "2026/123"
+        },
+        {
+          "project_id": "2026/124"
+        },
+        {
+          "project_id": "2026/125"
+        },
+        {
+          "project_id": "2026/127"
+        }
+      ],
+      "removed": [],
+      "changed": []
+    },
+    "cleaned_diff": {
+      "old_rows": 1308,
+      "new_rows": 1343,
+      "added": [
+        {
+          "record_id": "2026/091",
+          "title": "Fiscal Credibility and Firms' Expectations"
+        },
+        {
+          "record_id": "2026/092",
+          "title": "The UK Pensions Framework 2026"
+        },
+        {
+          "record_id": "2026/093",
+          "title": "Do the healthcare interventions we provide for hearing impairment and speech, language and communication difficulties in children born with cleft palate and / or cleft lip impact on educational outcomes?"
+        },
+        {
+          "record_id": "2026/094",
+          "title": "Living alone in the last year of life in England and Wales: prevalence, sociodemographic and health characteristics, place of death and future projections"
+        },
+        {
+          "record_id": "2026/095",
+          "title": "Attracting Global Talent to the United Kingdom (UK): An Assessment of the UK\u2019s Talent Routes"
+        },
+        {
+          "record_id": "2026/096",
+          "title": "Sustainability Reporting and Its Impact on Organisational Financial Performance within the Manufacturing Sector of England, with a Focus on Small and Medium-sized Enterprises (SMEs)"
+        },
+        {
+          "record_id": "2026/097",
+          "title": "Benefit and income dynamics in the UK over the lifecycle and across generations"
+        },
+        {
+          "record_id": "2026/098",
+          "title": "Trends in labour market outcomes and benefit receipt"
+        },
+        {
+          "record_id": "2026/099",
+          "title": "Regional University Expansion: Fostering Income and Spatial Equality?"
+        },
+        {
+          "record_id": "2026/100",
+          "title": "CPC-Connecting Generation: Selective migration and new-build housing in England and Wales: an analysis of age, ethnicity, and socio-economic trends using the 2021 census"
+        },
+        {
+          "record_id": "2026/101",
+          "title": "Understanding the health and employment support needs of the Scottish working age population"
+        },
+        {
+          "record_id": "2026/102",
+          "title": "Exploring the role of entrepreneurial skills for new firm creation"
+        },
+        {
+          "record_id": "2026/103",
+          "title": "The Effects of Brexit on Trade and Investment of Firms in the UK"
+        },
+        {
+          "record_id": "2026/104",
+          "title": "Examining the impact of Sure Start initiative interactions on educational and employment-related outcomes in Northern Ireland: A pilot study based on the EOL data"
+        },
+        {
+          "record_id": "2026/105",
+          "title": "Education pathways into the engineering and technology industry using the Longitudinal Education Outcomes (LEO) database, including for different demographic groups"
+        },
+        {
+          "record_id": "2026/106",
+          "title": "Using Longitudinal Educational Outcomes (LEO) to quality adjust output"
+        },
+        {
+          "record_id": "2026/107",
+          "title": "The impact of age of diagnosis of autism on educational and economic outcomes."
+        },
+        {
+          "record_id": "2026/108",
+          "title": "Market Power in the UK"
+        },
+        {
+          "record_id": "2026/109",
+          "title": "Education, Skills, and Technology: The Role of Local Labour Market Signals"
+        },
+        {
+          "record_id": "2026/111",
+          "title": "Business sentiment in London, with a focus on hospitality businesses"
+        },
+        {
+          "record_id": "2026/112",
+          "title": "The local impact of the Great Britiain beer and pub sector"
+        },
+        {
+          "record_id": "2026/113",
+          "title": "CONNECT-AF: Cross-TRE Network for Evaluating Clinical Outcomes and National Trends in Embolic Complications of Atrial Fibrillation"
+        },
+        {
+          "record_id": "2026/114",
+          "title": "Energyflex - Occupancy and Activity Modelling for Urban Household Energy Demand and Flexibility Using UK Time of Use Diaries"
+        },
+        {
+          "record_id": "2026/115",
+          "title": "Post-Brexit emigration analysis"
+        },
+        {
+          "record_id": "2026/116",
+          "title": "Short term healthcare utilisation following recorded maltreatment concerns in England"
+        },
+        {
+          "record_id": "2026/117",
+          "title": "Exploring Urban Social Inequalities through Spatial Microsimulation and Energy Consumption Patterns"
+        },
+        {
+          "record_id": "2026/118",
+          "title": "Supporting workforce and social integration, retention and career development of internationally recruited doctors and nurses in the UK"
+        },
+        {
+          "record_id": "2026/119",
+          "title": "Evaluation of the Assault on Emergency Workers (Offences) Act 2018"
+        },
+        {
+          "record_id": "2026/120",
+          "title": "Investigating statistical associations between occupation and mortality outcomes"
+        },
+        {
+          "record_id": "2026/121",
+          "title": "Amongst those aged 65 and over in England, who lives in care homes? A descriptive analysis"
+        },
+        {
+          "record_id": "2026/122",
+          "title": "Understanding the relationship between diabetes and the development of multiple long-term conditions"
+        },
+        {
+          "record_id": "2026/123",
+          "title": "UK Living Standards Compendium - what drives household living standards and how place-based policies can boost them"
+        },
+        {
+          "record_id": "2026/124",
+          "title": "UK Dynamism and the reallocation of labour"
+        },
+        {
+          "record_id": "2026/125",
+          "title": "Student Loans, Field of Study, and Retraining"
+        },
+        {
+          "record_id": "2026/127",
+          "title": "Why Firms Matter for Immigrant-Native Pay Gaps in the UK"
+        }
+      ],
+      "removed": [],
+      "changed": []
+    },
+    "analytical_impact": "changed"
+  },
+  "nominal_release_comparison": {
+    "kind": "nominal_release",
+    "meaning": "Latest revision for the current nominal source date versus the latest revision for the preceding nominal source date; this is release history, not the change detected at the latest observation.",
+    "baseline": {
+      "snapshot_id": "sha256:33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "nominal_source_date": "2026-06-01",
+      "raw_xlsx_sha256": "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+      "canonical_csv_sha256": "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/08/01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx"
+    },
+    "target": {
+      "snapshot_id": "sha256:dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
+      "nominal_source_date": "2026-08-17",
+      "raw_xlsx_sha256": "dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
+      "canonical_csv_sha256": "381593a7c64b297b9ee289c84b02a6982824b74f85800b4082e5ff1f059583f4",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/08/13_08_2026_UKSA-Accredited-Research-Projects-Report.xlsx"
+    },
+    "raw_diff": {
+      "old_rows": 1450,
+      "new_rows": 1485,
+      "added": [
+        {
+          "project_id": "2026/091"
+        },
+        {
+          "project_id": "2026/092"
+        },
+        {
+          "project_id": "2026/093"
+        },
+        {
+          "project_id": "2026/094"
+        },
+        {
+          "project_id": "2026/095"
+        },
+        {
+          "project_id": "2026/096"
+        },
+        {
+          "project_id": "2026/097"
+        },
+        {
+          "project_id": "2026/098"
+        },
+        {
+          "project_id": "2026/099"
+        },
+        {
+          "project_id": "2026/100"
+        },
+        {
+          "project_id": "2026/101"
+        },
+        {
+          "project_id": "2026/102"
+        },
+        {
+          "project_id": "2026/103"
+        },
+        {
+          "project_id": "2026/104"
+        },
+        {
+          "project_id": "2026/105"
+        },
+        {
+          "project_id": "2026/106"
+        },
+        {
+          "project_id": "2026/107"
+        },
+        {
+          "project_id": "2026/108"
+        },
+        {
+          "project_id": "2026/109"
+        },
+        {
+          "project_id": "2026/111"
+        },
+        {
+          "project_id": "2026/112"
+        },
+        {
+          "project_id": "2026/113"
+        },
+        {
+          "project_id": "2026/114"
+        },
+        {
+          "project_id": "2026/115"
+        },
+        {
+          "project_id": "2026/116"
+        },
+        {
+          "project_id": "2026/117"
+        },
+        {
+          "project_id": "2026/118"
+        },
+        {
+          "project_id": "2026/119"
+        },
+        {
+          "project_id": "2026/120"
+        },
+        {
+          "project_id": "2026/121"
+        },
+        {
+          "project_id": "2026/122"
+        },
+        {
+          "project_id": "2026/123"
+        },
+        {
+          "project_id": "2026/124"
+        },
+        {
+          "project_id": "2026/125"
+        },
+        {
+          "project_id": "2026/127"
+        }
+      ],
+      "removed": [],
+      "changed": []
+    },
+    "cleaned_diff": {
+      "old_rows": 1308,
+      "new_rows": 1343,
+      "added": [
+        {
+          "record_id": "2026/091",
+          "title": "Fiscal Credibility and Firms' Expectations"
+        },
+        {
+          "record_id": "2026/092",
+          "title": "The UK Pensions Framework 2026"
+        },
+        {
+          "record_id": "2026/093",
+          "title": "Do the healthcare interventions we provide for hearing impairment and speech, language and communication difficulties in children born with cleft palate and / or cleft lip impact on educational outcomes?"
+        },
+        {
+          "record_id": "2026/094",
+          "title": "Living alone in the last year of life in England and Wales: prevalence, sociodemographic and health characteristics, place of death and future projections"
+        },
+        {
+          "record_id": "2026/095",
+          "title": "Attracting Global Talent to the United Kingdom (UK): An Assessment of the UK\u2019s Talent Routes"
+        },
+        {
+          "record_id": "2026/096",
+          "title": "Sustainability Reporting and Its Impact on Organisational Financial Performance within the Manufacturing Sector of England, with a Focus on Small and Medium-sized Enterprises (SMEs)"
+        },
+        {
+          "record_id": "2026/097",
+          "title": "Benefit and income dynamics in the UK over the lifecycle and across generations"
+        },
+        {
+          "record_id": "2026/098",
+          "title": "Trends in labour market outcomes and benefit receipt"
+        },
+        {
+          "record_id": "2026/099",
+          "title": "Regional University Expansion: Fostering Income and Spatial Equality?"
+        },
+        {
+          "record_id": "2026/100",
+          "title": "CPC-Connecting Generation: Selective migration and new-build housing in England and Wales: an analysis of age, ethnicity, and socio-economic trends using the 2021 census"
+        },
+        {
+          "record_id": "2026/101",
+          "title": "Understanding the health and employment support needs of the Scottish working age population"
+        },
+        {
+          "record_id": "2026/102",
+          "title": "Exploring the role of entrepreneurial skills for new firm creation"
+        },
+        {
+          "record_id": "2026/103",
+          "title": "The Effects of Brexit on Trade and Investment of Firms in the UK"
+        },
+        {
+          "record_id": "2026/104",
+          "title": "Examining the impact of Sure Start initiative interactions on educational and employment-related outcomes in Northern Ireland: A pilot study based on the EOL data"
+        },
+        {
+          "record_id": "2026/105",
+          "title": "Education pathways into the engineering and technology industry using the Longitudinal Education Outcomes (LEO) database, including for different demographic groups"
+        },
+        {
+          "record_id": "2026/106",
+          "title": "Using Longitudinal Educational Outcomes (LEO) to quality adjust output"
+        },
+        {
+          "record_id": "2026/107",
+          "title": "The impact of age of diagnosis of autism on educational and economic outcomes."
+        },
+        {
+          "record_id": "2026/108",
+          "title": "Market Power in the UK"
+        },
+        {
+          "record_id": "2026/109",
+          "title": "Education, Skills, and Technology: The Role of Local Labour Market Signals"
+        },
+        {
+          "record_id": "2026/111",
+          "title": "Business sentiment in London, with a focus on hospitality businesses"
+        },
+        {
+          "record_id": "2026/112",
+          "title": "The local impact of the Great Britiain beer and pub sector"
+        },
+        {
+          "record_id": "2026/113",
+          "title": "CONNECT-AF: Cross-TRE Network for Evaluating Clinical Outcomes and National Trends in Embolic Complications of Atrial Fibrillation"
+        },
+        {
+          "record_id": "2026/114",
+          "title": "Energyflex - Occupancy and Activity Modelling for Urban Household Energy Demand and Flexibility Using UK Time of Use Diaries"
+        },
+        {
+          "record_id": "2026/115",
+          "title": "Post-Brexit emigration analysis"
+        },
+        {
+          "record_id": "2026/116",
+          "title": "Short term healthcare utilisation following recorded maltreatment concerns in England"
+        },
+        {
+          "record_id": "2026/117",
+          "title": "Exploring Urban Social Inequalities through Spatial Microsimulation and Energy Consumption Patterns"
+        },
+        {
+          "record_id": "2026/118",
+          "title": "Supporting workforce and social integration, retention and career development of internationally recruited doctors and nurses in the UK"
+        },
+        {
+          "record_id": "2026/119",
+          "title": "Evaluation of the Assault on Emergency Workers (Offences) Act 2018"
+        },
+        {
+          "record_id": "2026/120",
+          "title": "Investigating statistical associations between occupation and mortality outcomes"
+        },
+        {
+          "record_id": "2026/121",
+          "title": "Amongst those aged 65 and over in England, who lives in care homes? A descriptive analysis"
+        },
+        {
+          "record_id": "2026/122",
+          "title": "Understanding the relationship between diabetes and the development of multiple long-term conditions"
+        },
+        {
+          "record_id": "2026/123",
+          "title": "UK Living Standards Compendium - what drives household living standards and how place-based policies can boost them"
+        },
+        {
+          "record_id": "2026/124",
+          "title": "UK Dynamism and the reallocation of labour"
+        },
+        {
+          "record_id": "2026/125",
+          "title": "Student Loans, Field of Study, and Retraining"
+        },
+        {
+          "record_id": "2026/127",
+          "title": "Why Firms Matter for Immigrant-Native Pay Gaps in the UK"
+        }
+      ],
+      "removed": [],
+      "changed": []
+    },
+    "analytical_impact": "changed"
+  }
+}
