@@ -2,7 +2,6 @@ import json
 import hashlib
 import difflib
 import os
-import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,6 +14,7 @@ from analysis.refresh_pipeline import (
     build_nominal_release_comparison,
     build_raw_register_diff,
     build_register_diff,
+    build_snapshot_comparison,
     diff_markdown,
     load_cleaned_snapshot,
     review_required_markdown,
@@ -103,17 +103,53 @@ class BuildRegisterDiffTest(unittest.TestCase):
 
 
 class VerifiedRepublicationComparisonTest(unittest.TestCase):
+    ORIGINAL_RAW = "4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3"
     ORIGINAL = "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d"
+    REVISED_RAW = "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014"
     REVISED = "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd"
+    MARCH_RAW = "cd4b11a055280d3ed8848a7222077c8f2bfe6f6bfa010febdf8839b971065672"
+    MARCH = "56d148ea3e17cb8fdbe21fb6b70636dbf91c2642e9282e51c85932dd6ade5aac"
 
     @classmethod
     def setUpClass(cls):
         cls.manifest = load_manifest()
-        cls.ingest = build_ingest_revision_comparison(cls.manifest)
-        cls.nominal = build_nominal_release_comparison(cls.manifest)
 
-    def test_previous_ingest_uses_preceding_hash_not_nominal_date(self):
+        def historical_snapshot(raw_hash: str, csv_hash: str) -> dict:
+            matches = [
+                item
+                for item in cls.manifest["content_snapshots"]
+                if item.get("raw_xlsx_sha256") == raw_hash
+                and item.get("canonical_csv_sha256") == csv_hash
+            ]
+            if len(matches) != 1:
+                raise AssertionError(
+                    "Expected exactly one immutable historical snapshot for "
+                    f"raw {raw_hash} / canonical {csv_hash}; found {len(matches)}"
+                )
+            return matches[0]
+
+        # These are historical regression fixtures. Never infer either side
+        # from current_latest_revision or the append order of the manifest.
+        cls.march_snapshot = historical_snapshot(cls.MARCH_RAW, cls.MARCH)
+        cls.original_snapshot = historical_snapshot(cls.ORIGINAL_RAW, cls.ORIGINAL)
+        cls.revised_snapshot = historical_snapshot(cls.REVISED_RAW, cls.REVISED)
+        cls.ingest = build_snapshot_comparison(
+            cls.original_snapshot,
+            cls.revised_snapshot,
+            kind="historical_june_republication",
+            meaning="Explicit original and verified republished June 2026 fixtures.",
+        )
+        cls.nominal = build_snapshot_comparison(
+            cls.march_snapshot,
+            cls.revised_snapshot,
+            kind="historical_march_to_june",
+            meaning="Explicit March 2026 and verified republished June 2026 fixtures.",
+        )
+
+    def test_june_republication_uses_explicit_historical_source_identities(self):
+        self.assertEqual(self.ingest["baseline"]["raw_xlsx_sha256"], self.ORIGINAL_RAW)
         self.assertEqual(self.ingest["baseline"]["canonical_csv_sha256"], self.ORIGINAL)
+        self.assertEqual(self.ingest["target"]["raw_xlsx_sha256"], self.REVISED_RAW)
         self.assertEqual(self.ingest["target"]["canonical_csv_sha256"], self.REVISED)
         self.assertEqual(
             self.ingest["baseline"]["nominal_source_date"],
@@ -140,22 +176,20 @@ class VerifiedRepublicationComparisonTest(unittest.TestCase):
         self.assertEqual((len(diff["added"]), len(diff["removed"]), len(diff["changed"])), (38, 1, 1))
 
     def test_original_and_revised_cleaned_outputs_are_identical_and_exclude_target(self):
-        original = load_cleaned_snapshot(self.ORIGINAL)
-        revised = load_cleaned_snapshot(self.REVISED)
+        original = load_cleaned_snapshot(self.original_snapshot["snapshot_id"])
+        revised = load_cleaned_snapshot(self.revised_snapshot["snapshot_id"])
         pd.testing.assert_frame_equal(original, revised, check_exact=True)
         self.assertEqual(len(original), 1308)
         self.assertNotIn("2023/126", set(original["Project ID"].astype(str)))
 
     def test_workbook_reclean_and_deterministic_serializations_are_byte_identical(self):
-        snapshots = {
-            item["canonical_csv_sha256"]: item
-            for item in self.manifest["content_snapshots"]
-        }
         root = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
         cleaned = []
         with tempfile.TemporaryDirectory() as tmp:
-            for label, csv_hash in (("original", self.ORIGINAL), ("revised", self.REVISED)):
-                snapshot = snapshots[csv_hash]
+            for label, snapshot in (
+                ("original", self.original_snapshot),
+                ("revised", self.revised_snapshot),
+            ):
                 xlsx_path = os.path.join(
                     root, "data", *snapshot["raw_xlsx_path"].split("/")
                 )
@@ -194,15 +228,13 @@ class VerifiedRepublicationComparisonTest(unittest.TestCase):
 
     def test_csv_physical_diff_is_one_deleted_two_added_without_encoding_churn(self):
         root = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
-        original = subprocess.check_output(
-            ["git", "show", "HEAD:data/dea_accredited_projects_20260601.csv"],
-            cwd=root,
+        original_path = os.path.join(
+            root, "data", *self.original_snapshot["canonical_csv_path"].split("/")
         )
         revised_path = os.path.join(
-            root, "data", "register_snapshots",
-            "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
-            "canonical.csv",
+            root, "data", *self.revised_snapshot["canonical_csv_path"].split("/")
         )
+        original = open(original_path, "rb").read().replace(b"\r\n", b"\n")
         revised = open(revised_path, "rb").read().replace(b"\r\n", b"\n")
         self.assertTrue(original.startswith(b"\xef\xbb\xbf"))
         self.assertTrue(revised.startswith(b"\xef\xbb\xbf"))

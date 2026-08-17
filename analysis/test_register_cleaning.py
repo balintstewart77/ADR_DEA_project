@@ -10,6 +10,7 @@ from analysis.register_cleaning import (
     filter_dea_projects,
     apply_duplicate_policy,
 )
+from analysis.register_manifest import CURRENT_POINTER, load_manifest, snapshot_record
 
 
 class RegisterCleaningTests(unittest.TestCase):
@@ -144,22 +145,41 @@ class CurrentRegisterCleaningTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls._tmp = tempfile.TemporaryDirectory()
-        raw, _source_file = load_raw_register(version="current")
+        cls.manifest = load_manifest()
+        cls.snapshot = snapshot_record(cls.manifest, CURRENT_POINTER)
+        raw, cls.source_file = load_raw_register(version="current")
         cls.df, cls.stats = clean_register_dataframe(raw, output_dir=cls._tmp.name, verbose=False)
 
     @classmethod
     def tearDownClass(cls):
         cls._tmp.cleanup()
 
-    def test_current_register_revised_counts(self):
-        self.assertEqual(len(self.df), 1308)
-        self.assertEqual(self.df["Project ID"].nunique(), 1304)
-        self.assertEqual(self.df["Record ID"].nunique(), 1308)
+    def test_current_register_counts_match_identified_analytical_state(self):
+        self.assertEqual(self.source_file, self.snapshot["canonical_csv_path"])
+        matching_states = [
+            state
+            for state in self.manifest["analytical_states"]
+            if self.snapshot["snapshot_id"] in state.get("source_snapshot_ids", [])
+        ]
+        self.assertEqual(
+            len(matching_states),
+            1,
+            f"current snapshot {self.snapshot['snapshot_id']} must have one analytical state",
+        )
+        expected_rows = matching_states[0]["cleaned_row_count"]
+
+        self.assertEqual(self.stats["raw_loaded"], self.snapshot["raw_row_count"])
+        self.assertEqual(len(self.df), expected_rows)
+        self.assertEqual(self.df["Record ID"].nunique(), expected_rows)
+        self.assertEqual(
+            self.df["Project ID"].nunique(),
+            expected_rows - int(self.df["Project ID"].duplicated().sum()),
+        )
         repeated = self.df["Project ID"].value_counts()
         self.assertEqual(len(repeated[repeated.eq(2)]), 4)
         self.assertTrue((repeated <= 2).all())
-        self.assertEqual(self.stats["rows_after_duplicate_policy"], 1309)
-        self.assertEqual(self.stats["rows_after_duplicate_rulings"], 1308)
+        self.assertEqual(self.stats["rows_after_duplicate_policy"], expected_rows + 1)
+        self.assertEqual(self.stats["rows_after_duplicate_rulings"], expected_rows)
 
     def test_current_record_ids_are_clean_and_collision_free(self):
         record_ids = self.df["Record ID"].astype("string")

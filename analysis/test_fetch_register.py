@@ -1,6 +1,6 @@
 import io
+import json
 import os
-import shutil
 import tempfile
 import sys
 import unittest
@@ -34,6 +34,13 @@ RESEARCHERS_JUNE = (
     "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/"
     "01-06-2026-UKSA-Accredited-Researchers-Report.xlsx"
 )
+REPUBLISHED_JUNE_RAW_SHA256 = (
+    "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014"
+)
+REPUBLISHED_JUNE_CSV_SHA256 = (
+    "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd"
+)
+REPUBLISHED_JUNE_URL = PROJECTS_JUNE.replace("/2026/06/", "/2026/08/")
 
 
 class UrlDiscoveryTest(unittest.TestCase):
@@ -123,6 +130,66 @@ def _sample_rows(n=3):
     ]
 
 
+def _copy_republished_june_manifest(source_data: str, target_data: str) -> str:
+    """Create the manifest state in which the 1,450-row fixture was current."""
+    source_path = os.path.join(source_data, "register_provenance_manifest.json")
+    with open(source_path, encoding="utf-8") as handle:
+        manifest = json.load(handle)
+
+    matches = [
+        snapshot
+        for snapshot in manifest["content_snapshots"]
+        if snapshot.get("raw_xlsx_sha256") == REPUBLISHED_JUNE_RAW_SHA256
+        and snapshot.get("canonical_csv_sha256") == REPUBLISHED_JUNE_CSV_SHA256
+    ]
+    if len(matches) != 1:
+        raise AssertionError("Expected exactly one republished June fixture snapshot")
+    snapshot = matches[0]
+    frozen_snapshot_id = manifest["pointers"]["frozen_validation_snapshot"]["snapshot_id"]
+    retained_snapshot_ids = {frozen_snapshot_id, snapshot["snapshot_id"]}
+    manifest["content_snapshots"] = [
+        item
+        for item in manifest["content_snapshots"]
+        if item["snapshot_id"] in retained_snapshot_ids
+    ]
+    manifest["fetch_observations"] = [
+        item
+        for item in manifest["fetch_observations"]
+        if item["snapshot_id"] in retained_snapshot_ids
+    ]
+    manifest["analytical_states"] = [
+        state
+        for state in manifest["analytical_states"]
+        if set(state.get("source_snapshot_ids", [])) <= retained_snapshot_ids
+    ]
+    manifest["current"] = "20260601"
+    manifest["pointers"]["current_latest_revision"] = {
+        "snapshot_id": snapshot["snapshot_id"],
+        "raw_xlsx_sha256": REPUBLISHED_JUNE_RAW_SHA256,
+        "canonical_csv_sha256": REPUBLISHED_JUNE_CSV_SHA256,
+    }
+    version = next(
+        item for item in manifest["versions"] if item["version"] == "20260601"
+    )
+    manifest["versions"] = [version]
+    version.update({
+        "latest_snapshot_id": snapshot["snapshot_id"],
+        "csv": snapshot["canonical_csv_path"],
+        "xlsx": snapshot["raw_xlsx_path"],
+        "source_url": snapshot["source_url"],
+        "retrieved_at": snapshot["first_seen_at"][:10],
+        "sha256_csv": REPUBLISHED_JUNE_CSV_SHA256,
+        "sha256_xlsx": REPUBLISHED_JUNE_RAW_SHA256,
+        "row_count": snapshot["raw_row_count"],
+    })
+
+    target_path = os.path.join(target_data, "register_provenance_manifest.json")
+    with open(target_path, "w", encoding="utf-8", newline="\n") as handle:
+        json.dump(manifest, handle, indent=2)
+        handle.write("\n")
+    return target_path
+
+
 class XlsxConversionTest(unittest.TestCase):
     def test_header_detection_skips_preamble_and_renames_columns(self):
         df = xlsx_to_dataframe(_workbook_bytes(_sample_rows()))
@@ -167,28 +234,26 @@ class ValidationTest(unittest.TestCase):
 class LocalDryRunTest(unittest.TestCase):
     def test_republished_fixture_dry_run_has_no_network_or_writes(self):
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        data_dir = os.path.join(root, "data")
-        manifest_path = os.path.join(data_dir, "register_provenance_manifest.json")
-        before = open(manifest_path, "rb").read()
+        source_data = os.path.join(root, "data")
         revised_xlsx = os.path.join(
-            data_dir,
+            source_data,
             "register_snapshots",
-            "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+            REPUBLISHED_JUNE_RAW_SHA256,
             "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
         )
-        with patch("fetch_register.download_bytes", return_value=open(revised_xlsx, "rb").read()):
-            result = run_fetch(
-                url=PROJECTS_JUNE.replace("/2026/06/", "/2026/08/"),
-                data_dir=data_dir,
-                dry_run=True,
-            )
-        self.assertEqual(result["status"], "dry-run")
-        self.assertEqual(result["outcome"], "unchanged_noop")
-        self.assertEqual(
-            result["raw_xlsx_sha256"],
-            "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
-        )
-        self.assertEqual(open(manifest_path, "rb").read(), before)
+        with tempfile.TemporaryDirectory() as data_dir:
+            manifest_path = _copy_republished_june_manifest(source_data, data_dir)
+            before = open(manifest_path, "rb").read()
+            with patch("fetch_register.download_bytes", return_value=open(revised_xlsx, "rb").read()):
+                result = run_fetch(
+                    url=REPUBLISHED_JUNE_URL,
+                    data_dir=data_dir,
+                    dry_run=True,
+                )
+            self.assertEqual(result["status"], "dry-run")
+            self.assertEqual(result["outcome"], "unchanged_noop")
+            self.assertEqual(result["raw_xlsx_sha256"], REPUBLISHED_JUNE_RAW_SHA256)
+            self.assertEqual(open(manifest_path, "rb").read(), before)
 
     def test_two_identical_local_fetches_are_manifest_byte_stable_noops(self):
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -196,25 +261,21 @@ class LocalDryRunTest(unittest.TestCase):
         revised_xlsx = os.path.join(
             source_data,
             "register_snapshots",
-            "33c8ba2abd2085a28b2e5ca5ba2913398c6edb96f59f31331e5c125c96661014",
+            REPUBLISHED_JUNE_RAW_SHA256,
             "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx",
         )
         xlsx_bytes = open(revised_xlsx, "rb").read()
         with tempfile.TemporaryDirectory() as data_dir:
-            manifest_path = os.path.join(data_dir, "register_provenance_manifest.json")
-            shutil.copyfile(
-                os.path.join(source_data, "register_provenance_manifest.json"),
-                manifest_path,
-            )
+            manifest_path = _copy_republished_june_manifest(source_data, data_dir)
             before = open(manifest_path, "rb").read()
             with patch("fetch_register.download_bytes", return_value=xlsx_bytes):
                 first = run_fetch(
-                    url=PROJECTS_JUNE.replace("/2026/06/", "/2026/08/"),
+                    url=REPUBLISHED_JUNE_URL,
                     data_dir=data_dir,
                 )
                 after_first = open(manifest_path, "rb").read()
                 second = run_fetch(
-                    url=PROJECTS_JUNE.replace("/2026/06/", "/2026/08/"),
+                    url=REPUBLISHED_JUNE_URL,
                     data_dir=data_dir,
                 )
             self.assertEqual(first["outcome"], "unchanged_noop")

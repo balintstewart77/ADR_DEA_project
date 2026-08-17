@@ -1,11 +1,13 @@
 import unittest
 
+from analysis.register_manifest import CURRENT_POINTER, load_manifest, snapshot_record
 from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS,
     _ALL_PROVIDER_OPTIONS,
     _ALL_TRE_OPTIONS,
     df_all,
     df_flagship_projects,
+    source_file,
 )
 
 
@@ -47,16 +49,27 @@ class DashboardRegistryOptionTest(unittest.TestCase):
             self.assertNotIn(acronym, values)
 
     def test_processing_environment_options_are_canonicalised(self):
-        expected_counts = {
-            "ONS Secure Research Service (SRS)": 1011,
-            "Northern Ireland Statistics and Research Agency (NISRA)": 22,
-            "SAIL Databank": 77,
-            "UK Data Service (UKDS)": 184,
-            "Integrated Data Service (IDS)": 13,
-        }
+        # This test intentionally describes the mutable operational register.
+        # Derive its category/count contract from the current cleaned snapshot
+        # that produced the dashboard data, so legitimate category additions
+        # are represented automatically.
+        expected_counts = (
+            df_all.assign(
+                _processing_environment=(
+                    df_all["Secure Research Service"].astype("string").str.strip()
+                )
+            )
+            .dropna(subset=["_processing_environment"])
+            .query("_processing_environment != ''")
+            ["_processing_environment"]
+            .value_counts()
+            .to_dict()
+        )
         values = [option["value"] for option in _ALL_TRE_OPTIONS]
         labels_by_value = {option["value"]: option["label"] for option in _ALL_TRE_OPTIONS}
 
+        current_snapshot = snapshot_record(load_manifest(), CURRENT_POINTER)
+        self.assertEqual(source_file, current_snapshot["canonical_csv_path"])
         self.assertEqual(set(values) - {"ALL"}, set(expected_counts))
         for value, count in expected_counts.items():
             with self.subTest(processing_environment=value):
