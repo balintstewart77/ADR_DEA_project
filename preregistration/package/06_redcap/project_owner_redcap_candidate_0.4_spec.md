@@ -2,22 +2,22 @@
 
 Version: `owner-redcap-candidate-0.4`  
 Status: unfrozen development candidate; pre-recruitment; controlled PID 9149 migration and live QA pending.  
-Ethics trace: UCL Project ID 5004; Participant Information and Consent v3 dated 28 July 2026.
+Ethics trace: UCL Project ID 5004; corrected Participant Information v3.1 dated 18 August 2026 preserves the ethics-approved v3 source; Questionnaire v3 remains the approved reference and requires reconciliation with the live-QA changes recorded below.
 
 ## Architecture and field counts
 
-Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 116 dictionary fields:
+Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 117 dictionary fields:
 
 - `owner_consent`: 22 fields;
-- `project_review`: 94 fields.
+- `project_review`: 95 fields.
 
 The Project Owner instrument remains unfrozen and non-authoritative. This candidate does not authorise recruitment or live migration. Both canonical participant DOCX files are pinned by SHA-256 and byte size; generation stops if either changes without an authorised metadata refresh. The missing-Domain wording is author-approved and repository-validated; controlled migration and live semantic/display QA remain mandatory before recruitment.
 
 ## Project Review orientation and point-of-need references
 
-After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed by the detailed Domain, Purpose and tag judgements; the former read-only classification overview and its three hidden summary inputs are absent. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
+After the public project information, `po_llm_disclaimer` reproduces the Questionnaire v3 large-language-model disclaimer verbatim. `po_intro` then presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed by the detailed Domain, Purpose and tag judgements; the former read-only classification overview and its three hidden summary inputs are absent. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
 
-The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete always-open reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need.
+The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete always-open reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need. Each block states that labels already proposed above remain listed for completeness and should be selected only when genuinely absent from the proposal.
 
 Q6b contains exactly 11 label-only missing-Domain choices. `po_miss_domain_reference` displays every matching author-approved boundary definition generated from `OWNER_DOMAIN_DISPLAY`; `Unclear from Register Entry` is excluded. Q7b and Q8b likewise use label-only choices with complete adjacent reference blocks sourced from their questionnaire/rc3-identical wording. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic, wrapping and PDF/export display QA remains pending.
 
@@ -36,14 +36,14 @@ Each Project Review displays the canonical label and exact rc3 proposed-label sh
 
 ## Ethics-to-REDCap consent traceability
 
-The participant-visible sequence is: full Participant Information Sheet v3; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The controlled live project must display or attach the full approved v3 information sheet before these fields.
+The participant-visible sequence is: the pinned verbatim inline Participant Information v3.1 in `participant_info_link`; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The downloadable participant-information PDF remains a separate manual survey attachment.
 
-Participant-document alignment is complete for the implemented candidate-0.4 content: the canonical consent DOCX contains the ten statements, final consent decision and acknowledgement wording represented here; the canonical Questionnaire v3 reproduces the participant-facing Project Review orientation, labels, response choices and author-approved inline checkbox microdefinitions. Its Appendix B records the complete owner-level consent-validity join. Q13, participant-facing per-project quotation permission and taxonomy-reference placeholders are absent. Controlled migration and live QA remain mandatory before recruitment.
+The canonical consent statements remain aligned with the ten confirmation fields, including restoration of the strict approved `consent_no_nonpublic` wording. Questionnaire v3 remains stale relative to the live-QA changes in form guidance, duration, visibility stems, missing-label guidance and disclaimer placement; it requires separate reconciliation and applicable ethics/change-control action before production. Its Appendix B records the complete owner-level consent-validity join. Q13, participant-facing per-project quotation permission and taxonomy-reference placeholders are absent. Controlled migration and live QA remain mandatory before recruitment.
 
 - `consent_read_info` — I have read and understood the participant information above.
 - `consent_understand_invitation` — I understand why I have been invited and what taking part involves.
 - `consent_voluntary` — I understand that participation is voluntary and that I may review all, some or none of the projects offered.
-- `consent_no_nonpublic` — I understand that I should not disclose confidential, sensitive or otherwise non-public information. Where wider project context affects your answer, please describe it only at a general level you are comfortable sharing.
+- `consent_no_nonpublic` — I understand that I should not disclose confidential, sensitive or otherwise non-public information.
 - `consent_confidentiality_limits` — I understand that my information will be handled confidentially and that direct identifiers will not appear in research outputs, but complete anonymity cannot be guaranteed because the participant group is small and responses concern publicly identifiable projects.
 - `consent_withdrawal_deadline` — I understand that I may withdraw a submitted review by emailing the study team by Friday 2 October 2026, and that after this date responses can no longer be removed.
 - `consent_quote_process` — I understand that if the study wishes to quote my comments, I will be sent the exact proposed wording in advance and it will only be used if I agree.
@@ -85,7 +85,7 @@ Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Proj
 
 `po_final_warning` now follows `po_other_comment` immediately before submission and has no quotation-permission dependency.
 
-All participant-visible read-only stimulus fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static June 2026 register provenance line. `po_privacy` uses both sentences of the approved questionnaire wording. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
+All participant-visible read-only stimulus fields and all survey-hidden administrative fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static June 2026 register provenance line. `owner_intro` and `po_privacy` use the live-QA form-guidance wording, while the stricter approved consent statement remains unchanged. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
 
 ## Fixture and long-format analysis
 
@@ -95,4 +95,4 @@ Analysis must join the non-repeating owner row to reviews by `owner_id` and requ
 
 ## Scope exclusions and change record
 
-Reason: repair participant-facing requiredness, density, reference delivery, missing-label task order, privacy, provenance and descriptive formatting defects while preserving category wording authorities. Nature: candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative. The missing-label gate removal intentionally departs from questionnaire Q6a/Q7a/Q8a branching and requires REC notification before migration. No frozen taxonomy, production prompt, candidate 0.3 artefact, assignment, sample or participant record changed.
+Reason: repair participant-facing requiredness, density, inline information delivery, duration, guidance, visibility wording, missing-label task order, provenance and descriptive formatting defects while preserving category wording authorities. Nature: candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative. The missing-label gate removal and other documented live-QA text departures require questionnaire reconciliation and applicable REC/change-control action before migration. No frozen taxonomy, protocol, production prompt, candidate 0.3 artefact, assignment, sample or participant record changed.

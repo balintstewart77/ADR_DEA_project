@@ -4,6 +4,7 @@ import csv
 import hashlib
 import html
 import inspect
+import json
 import re
 import zipfile
 from collections import Counter
@@ -51,9 +52,9 @@ def test_exact_two_instruments_and_counts():
         "project_review",
     )
     assert Counter(row["Form Name"] for row in rows) == Counter(
-        {"owner_consent": 22, "project_review": 94}
+        {"owner_consent": 22, "project_review": 95}
     )
-    assert len(rows) == 116
+    assert len(rows) == 117
 
 
 def test_read_only_requiredness_descriptive_weight_and_provenance_are_repaired():
@@ -63,6 +64,7 @@ def test_read_only_requiredness_descriptive_weight_and_provenance_are_repaired()
         not row["Required Field?"]
         for row in rows
         if "@READONLY-SURVEY" in row["Field Annotation"]
+        or "@HIDDEN-SURVEY" in row["Field Annotation"]
     )
     for row in rows:
         if row["Field Type"] != "descriptive":
@@ -74,7 +76,7 @@ def test_read_only_requiredness_descriptive_weight_and_provenance_are_repaired()
     assert by["po_register_provenance"]["Field Label"] == builder.normal_weight_descriptive(
         builder.REGISTER_PROVENANCE
     )
-    assert builder.APPROVED_PRIVACY_WORDING in validator.plain_redcap_label(
+    assert builder.FORM_GUIDANCE_WORDING in validator.plain_redcap_label(
         by["po_privacy"]["Field Label"]
     )
 
@@ -124,6 +126,7 @@ def test_reference_blocks_use_only_supported_always_open_html():
     used = {
         tag.lower()
         for row in rows
+        if row["Variable / Field Name"] != "participant_info_link"
         for tag in re.findall(r"</?\s*([A-Za-z0-9]+)", row["Field Label"])
     }
     assert used <= permitted
@@ -132,6 +135,7 @@ def test_reference_blocks_use_only_supported_always_open_html():
         assert label == builder.missing_reference_html(layer)
         assert "<details" not in label.lower()
         assert "<summary" not in label.lower()
+        assert label.count(builder.ALREADY_PROPOSED_GUIDANCE) == 1
 
 
 def test_missing_label_spec_uses_checkbox_state_without_discordance_rule():
@@ -188,18 +192,7 @@ def test_ten_unique_owner_level_consent_items_match_ethics_document():
         assert validator.normalise_text(by[name]["Field Label"]) == validator.normalise_text(
             wording
         )
-        if name == "consent_no_nonpublic":
-            assert validator.normalise_text(
-                "I understand that I should not disclose confidential, sensitive or "
-                "otherwise non-public information."
-            ) in document
-            assert any(
-                validator.normalise_text(builder.APPROVED_WIDER_CONTEXT_SENTENCE)
-                in paragraph
-                for paragraph in document
-            )
-        else:
-            assert validator.normalise_text(wording) in document
+        assert validator.normalise_text(wording) in document
         assert by[name]["Branching Logic (Show field only if...)"] == (
             "[intended_recipient] = '1'"
         )
@@ -234,6 +227,7 @@ def test_participant_visible_text_has_no_internal_configuration_language():
     participant_source = " ".join(
         row[column]
         for row in dictionary_rows()
+        if "@HIDDEN-SURVEY" not in row["Field Annotation"]
         for column in ("Section Header", "Field Label", "Field Note")
     )
     participant_source = re.sub(
@@ -250,6 +244,8 @@ def test_participant_visible_text_has_no_internal_configuration_language():
         "controlled live configuration",
         "repository dictionary",
         "project_owner_",
+        "candidate 0.4",
+        "owner-redcap-candidate",
     ):
         assert prohibited not in participant_text
 
@@ -325,10 +321,68 @@ def test_both_canonical_participant_documents_are_pinned_and_aligned():
     assert builder.PARTICIPANT_SOURCE.stat().st_size == builder.PARTICIPANT_SOURCE_SIZE
     assert builder.sha256(builder.QUESTIONNAIRE_SOURCE) == builder.QUESTIONNAIRE_SOURCE_SHA256
     assert builder.QUESTIONNAIRE_SOURCE.stat().st_size == builder.QUESTIONNAIRE_SOURCE_SIZE
+    assert builder.sha256(builder.INLINE_PARTICIPANT_INFO_SOURCE) == (
+        builder.INLINE_PARTICIPANT_INFO_SHA256
+    )
+    assert builder.sha256(builder.CONSENT_STATEMENTS_SOURCE) == (
+        builder.CONSENT_STATEMENTS_SHA256
+    )
     assert validator.validate_participant_documents(dictionary_by_name()) == []
     for path in (builder.PARTICIPANT_SOURCE, builder.QUESTIONNAIRE_SOURCE):
         with zipfile.ZipFile(path) as archive:
             assert archive.testzip() is None
+
+
+def test_inline_participant_information_is_the_pinned_v3_1_derivative_verbatim():
+    row = dictionary_by_name()["participant_info_link"]
+    source = builder.INLINE_PARTICIPANT_INFO_SOURCE.read_text(encoding="utf-8")
+    assert row["Field Label"] == source
+    assert row["Field Label"].encode("utf-8") == source.encode("utf-8")
+    assert "Version 3.1" not in source
+    assert builder.REVIEW_DURATION_WORDING in source
+    assert "Review reference shown at the top of that review" in source
+
+
+def test_live_qa_guidance_duration_and_approved_nonpublic_consent_are_exact():
+    by = dictionary_by_name()
+    assert builder.FORM_GUIDANCE_WORDING in validator.plain_redcap_label(
+        by["owner_intro"]["Field Label"]
+    )
+    assert validator.normalise_text(builder.REVIEW_DURATION_WORDING) in validator.plain_redcap_label(
+        by["owner_intro"]["Field Label"]
+    )
+    assert validator.plain_redcap_label(by["po_privacy"]["Field Label"]).endswith(
+        builder.FORM_GUIDANCE_WORDING
+    )
+    statements = json.loads(builder.CONSENT_STATEMENTS_SOURCE.read_text(encoding="utf-8"))
+    approved = next(
+        item["statement_text"]
+        for item in statements
+        if item["dictionary_field"] == "consent_no_nonpublic"
+    )
+    assert by["consent_no_nonpublic"]["Field Label"] == approved
+
+
+def test_visibility_stems_changed_without_broadening_correctness_explanations():
+    by = dictionary_by_name()
+    for prefix in (*[f"d{i:02d}" for i in range(1, 5)], *[f"p{i:02d}" for i in range(1, 3)]):
+        assert by[f"po_{prefix}_vis"]["Field Label"] == (
+            builder.CLASSIFICATION_VISIBILITY_QUESTION
+        )
+    for prefix in ("t01", "t02"):
+        assert by[f"po_{prefix}_vis"]["Field Label"] == builder.STATUS_VISIBILITY_QUESTION
+    for prefix in (f"d{i:02d}" for i in range(1, 5)):
+        assert by[f"po_{prefix}_correct_explain"][
+            "Branching Logic (Show field only if...)"
+        ] == f"[po_{prefix}_fit] = '2'"
+    for prefix in (f"p{i:02d}" for i in range(1, 3)):
+        assert by[f"po_{prefix}_correct_explain"][
+            "Branching Logic (Show field only if...)"
+        ] == f"[po_{prefix}_fit] = '2'"
+    for prefix in ("t01", "t02"):
+        assert by[f"po_{prefix}_correct_explain"][
+            "Branching Logic (Show field only if...)"
+        ] == f"[po_{prefix}_correct] = '0'"
 
 
 def test_classification_orientation_matches_questionnaire_and_precedes_judgements():
@@ -350,7 +404,17 @@ def test_classification_orientation_matches_questionnaire_and_precedes_judgement
     )
     assert paragraphs[start : start + len(intro)] == intro
     assert start + len(intro) == overview
-    assert names.index("datasets_used") < names.index("po_intro") < names.index("po_d01_display")
+    assert names.count("po_llm_disclaimer") == 1
+    assert validator.plain_redcap_label(by["po_llm_disclaimer"]["Field Label"]) == (
+        validator.normalise_text(builder.LLM_DISCLAIMER)
+    )
+    assert (
+        names.index("datasets_used")
+        < names.index("public_register_url")
+        < names.index("po_llm_disclaimer")
+        < names.index("po_intro")
+        < names.index("po_d01_display")
+    )
     assert not (builder.CLASSIFICATION_OVERVIEW_FIELDS & set(names))
     assert "save & return later" not in by["po_intro"]["Field Label"].lower()
     assert builder.CLASSIFICATION_INTRO_PARAGRAPHS.count(
@@ -419,6 +483,7 @@ def test_three_wording_roles_are_kept_separate_and_complete():
     for layer in ("domain", "purpose", "tag"):
         reference = by[builder.REFERENCE_FIELD_BY_LAYER[layer]]["Field Label"]
         assert reference == builder.missing_reference_html(layer)
+        assert reference.count(builder.ALREADY_PROPOSED_GUIDANCE) == 1
         assert builder.base.UNCLEAR_LABEL not in html.unescape(reference)
         for label in builder.missing_menu_labels(layer):
             definition = (
@@ -795,7 +860,7 @@ def test_no_direct_identifier_field_is_introduced():
 
 
 def test_project_review_preserves_existing_names_and_types_with_documented_changes():
-    assert validator.validate_dictionary()["forms"]["project_review"] == 94
+    assert validator.validate_dictionary()["forms"]["project_review"] == 95
 
 
 def test_deterministic_build_includes_approval_and_concordance_records():

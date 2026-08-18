@@ -335,6 +335,12 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
         " ".join(builder.CLASSIFICATION_INTRO_PARAGRAPHS)
     ):
         errors.append("dictionary po_intro differs from the canonical questionnaire block")
+    if questionnaire.count(normalise_text(builder.LLM_DISCLAIMER)) != 1:
+        errors.append("questionnaire does not contain the LLM disclaimer exactly once")
+    if plain_redcap_label(by["po_llm_disclaimer"]["Field Label"]) != normalise_text(
+        builder.LLM_DISCLAIMER
+    ):
+        errors.append("dictionary LLM disclaimer differs from Questionnaire v3")
     if by["po_intro"]["Field Label"].count(
         f"<strong>{builder.SUBSTANTIVE_FOCUS_PHRASE}</strong>"
     ) != 1:
@@ -369,7 +375,10 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
     ):
         if obsolete in questionnaire_text:
             errors.append(f"questionnaire retains taxonomy-reference text: {obsolete}")
-    intentional_label_departures = {"Q6b.", "Q7b.", "Q8b."}
+    intentional_label_departures = {
+        "Q2c.", "Q3c.", "Q4c.", "Q5c.",
+        "Q6b.", "Q7b.", "Q8b.",
+    }
     for prefix, variable in QUESTIONNAIRE_LABEL_MAP.items():
         if prefix in intentional_label_departures:
             continue
@@ -532,9 +541,9 @@ def validate_dictionary() -> dict[str, object]:
     counts = Counter(row["Form Name"] for row in rows)
     if tuple(dict.fromkeys(row["Form Name"] for row in rows)) != builder.base.FORMS:
         errors.append("dictionary does not contain exactly the intended two instruments")
-    if counts != Counter({"owner_consent": 22, "project_review": 94}):
+    if counts != Counter({"owner_consent": 22, "project_review": 95}):
         errors.append(f"field counts differ: {dict(counts)}")
-    if len(rows) != 116 or len(names) != len(set(names)):
+    if len(rows) != 117 or len(names) != len(set(names)):
         errors.append("total field count or uniqueness differs")
     by = {row["Variable / Field Name"]: row for row in rows}
     if set(builder.CONSENT_NAMES) - set(by):
@@ -546,22 +555,7 @@ def validate_dictionary() -> dict[str, object]:
             errors.append(f"{name} is not owner-level")
         if normalise_text(row.get("Field Label", "")) != normalise_text(wording):
             errors.append(f"{name} wording differs")
-        if name == "consent_no_nonpublic":
-            approved_parts = (
-                normalise_text(
-                    "I understand that I should not disclose confidential, sensitive or "
-                    "otherwise non-public information."
-                ),
-                normalise_text(builder.APPROVED_WIDER_CONTEXT_SENTENCE),
-            )
-            if any(
-                not any(part in paragraph for paragraph in document_paragraphs)
-                for part in approved_parts
-            ):
-                errors.append(
-                    "consent_no_nonpublic approved source sentences are not both present"
-                )
-        elif normalise_text(wording) not in document_paragraphs:
+        if normalise_text(wording) not in document_paragraphs:
             errors.append(f"{name} is not present in Participant Information v3")
         if row.get("Branching Logic (Show field only if...)") != "[intended_recipient] = '1'":
             errors.append(f"{name} intended-recipient branch differs")
@@ -592,6 +586,7 @@ def validate_dictionary() -> dict[str, object]:
     participant_visible_source = " ".join(
         row[column]
         for row in rows
+        if "@HIDDEN-SURVEY" not in row["Field Annotation"]
         for column in ("Section Header", "Field Label", "Field Note")
     )
     participant_visible_source = re.sub(
@@ -610,19 +605,47 @@ def validate_dictionary() -> dict[str, object]:
         "controlled live configuration",
         "repository dictionary",
         "project_owner_",
+        "candidate 0.4",
+        "owner-redcap-candidate",
     ):
         if prohibited in participant_visible_text:
             errors.append(
                 f"participant-visible consent text contains internal term: {prohibited}"
             )
     permitted_tags = {"br", "div", "span", "strong"}
-    used_tags = {
-        tag.lower()
+    for row in rows:
+        if row["Variable / Field Name"] == "participant_info_link":
+            continue
+        used_tags = {
+            tag.lower()
+            for tag in re.findall(r"</?\s*([A-Za-z0-9]+)", row["Field Label"])
+        }
+        if used_tags - permitted_tags:
+            errors.append(
+                f"unsupported participant HTML tags retained in "
+                f"{row['Variable / Field Name']}: {sorted(used_tags - permitted_tags)}"
+            )
+    if by["participant_info_link"]["Field Label"] != builder.INLINE_PARTICIPANT_INFO_SOURCE.read_text(
+        encoding="utf-8"
+    ):
+        errors.append("participant_info_link is not byte-equivalent to the pinned v3.1 HTML")
+    if "Version 3.1" in by["participant_info_link"]["Field Label"]:
+        errors.append("participant_info_link unexpectedly contains a version marker")
+    if builder.FORM_GUIDANCE_WORDING not in plain_redcap_label(by["owner_intro"]["Field Label"]):
+        errors.append("owner_intro lacks the live-QA form guidance")
+    if builder.FORM_GUIDANCE_WORDING not in plain_redcap_label(by["po_privacy"]["Field Label"]):
+        errors.append("po_privacy lacks the live-QA form guidance")
+    if normalise_text(builder.REVIEW_DURATION_WORDING) not in plain_redcap_label(
+        by["owner_intro"]["Field Label"]
+    ):
+        errors.append("owner_intro lacks the corrected review duration")
+    hidden_required = [
+        row["Variable / Field Name"]
         for row in rows
-        for tag in re.findall(r"</?\s*([A-Za-z0-9]+)", row["Field Label"])
-    }
-    if used_tags - permitted_tags:
-        errors.append(f"unsupported participant HTML tags retained: {sorted(used_tags - permitted_tags)}")
+        if "@HIDDEN-SURVEY" in row["Field Annotation"] and row["Required Field?"]
+    ]
+    if hidden_required:
+        errors.append(f"survey-hidden fields remain required: {hidden_required}")
     if by["ack_pref"]["Required Field?"]:
         errors.append("acknowledgement is not optional")
     if by["ack_pref"]["Branching Logic (Show field only if...)"] != (
@@ -646,12 +669,29 @@ def validate_dictionary() -> dict[str, object]:
         errors.append(f"retired overview/gate fields retained: {sorted(removed & set(by))}")
     if names.count("po_intro") != 1 or by["po_intro"]["Form Name"] != "project_review":
         errors.append("po_intro is not exactly one Project Review field")
+    if names.count("po_llm_disclaimer") != 1:
+        errors.append("po_llm_disclaimer is not exactly one field")
+    elif (
+        by["po_llm_disclaimer"]["Form Name"] != "project_review"
+        or by["po_llm_disclaimer"]["Field Type"] != "descriptive"
+        or plain_redcap_label(by["po_llm_disclaimer"]["Field Label"])
+        != normalise_text(builder.LLM_DISCLAIMER)
+    ):
+        errors.append("po_llm_disclaimer structure or wording differs")
     if not (
         names.index("datasets_used")
+        < names.index("public_register_url")
+        < names.index("po_llm_disclaimer")
         < names.index("po_intro")
         < names.index("po_d01_display")
     ):
         errors.append("participant-visible orientation/detailed-judgement order differs")
+    for prefix in (*[f"d{i:02d}" for i in range(1, 5)], *[f"p{i:02d}" for i in range(1, 3)]):
+        if by[f"po_{prefix}_vis"]["Field Label"] != builder.CLASSIFICATION_VISIBILITY_QUESTION:
+            errors.append(f"po_{prefix}_vis wording differs")
+    for prefix in ("t01", "t02"):
+        if by[f"po_{prefix}_vis"]["Field Label"] != builder.STATUS_VISIBILITY_QUESTION:
+            errors.append(f"po_{prefix}_vis wording differs")
     reminder_expectations = (
         ("po_miss_domain_reminder", "po_miss_domains", builder.MISSING_DOMAIN_REMINDER_HTML, builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE),
         ("po_miss_purpose_reminder", "po_miss_purposes", builder.MISSING_PURPOSE_REMINDER_HTML, builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE),
@@ -681,6 +721,10 @@ def validate_dictionary() -> dict[str, object]:
         errors.append("final warning is not immediately after final comments")
     if "quotation permission" in by["po_final_warning"]["Field Label"].lower():
         errors.append("final warning still refers to quotation permission")
+    if "at the end of that review" in "\n".join(
+        row["Field Label"] for row in rows
+    ).lower():
+        errors.append("dictionary places the Review reference at the end of the review")
     direct_names = {
         name for name in names if re.search(r"(^|_)(name|email|affiliation)($|_)", name)
     }
@@ -699,6 +743,7 @@ def validate_dictionary() -> dict[str, object]:
     }
     added = {
         *builder.REFERENCE_FIELD_BY_LAYER.values(),
+        "po_llm_disclaimer",
         "po_register_provenance",
         "po_miss_domain_reminder",
         "po_miss_purpose_reminder",
@@ -738,6 +783,16 @@ def validate_specs_and_fixture() -> dict[str, object]:
         errors.append("branch specification consent-document hash differs")
     if consent.get("participant_document_size_bytes") != builder.PARTICIPANT_SOURCE_SIZE:
         errors.append("branch specification consent-document size differs")
+    if consent.get("inline_participant_information_field") != "participant_info_link":
+        errors.append("branch specification inline participant-information field differs")
+    if consent.get("inline_participant_information_source") != str(
+        builder.INLINE_PARTICIPANT_INFO_SOURCE.relative_to(builder.ROOT)
+    ):
+        errors.append("branch specification inline participant-information source differs")
+    if consent.get("inline_participant_information_sha256") != (
+        builder.INLINE_PARTICIPANT_INFO_SHA256
+    ):
+        errors.append("branch specification inline participant-information hash differs")
     review_document = branch.get("project_review_v3", {})
     if review_document.get("participant_document_sha256") != builder.QUESTIONNAIRE_SOURCE_SHA256:
         errors.append("branch specification questionnaire hash differs")
@@ -749,8 +804,12 @@ def validate_specs_and_fixture() -> dict[str, object]:
         builder.CLASSIFICATION_INTRO_PARAGRAPHS
     ):
         errors.append("branch specification orientation wording differs")
+    if review_document.get("llm_disclaimer_field") != "po_llm_disclaimer":
+        errors.append("branch specification LLM disclaimer field differs")
+    if review_document.get("llm_disclaimer_wording") != builder.LLM_DISCLAIMER:
+        errors.append("branch specification LLM disclaimer wording differs")
     if review_document.get("classification_orientation_order") != (
-        "project information -> po_intro -> detailed judgements"
+        "public project information -> po_llm_disclaimer -> po_intro -> detailed judgements"
     ):
         errors.append("branch specification participant-visible order differs")
     if review_document.get("substantive_focus_rule") != {
