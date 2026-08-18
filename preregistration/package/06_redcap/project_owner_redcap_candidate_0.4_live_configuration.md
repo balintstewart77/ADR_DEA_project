@@ -41,7 +41,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 
 23. Verify `po_quote_permission` and any participant-facing replacement quotation-permission question are absent everywhere in Project Review. Quotation remains a later point-of-use email process using the exact proposed wording and context and requiring written agreement.
 24. Verify `po_final_warning` follows final comments immediately before submission and does not refer to quotation permission.
-25. Verify both permanent tag blocks appear in every Project Review, each with its exact full two-sentence definition immediately before the Applied / Not applied proposed status.
+25. Verify both permanent tag blocks appear in every Project Review, each with its exact rc3 proposed-label short definition immediately before the Applied / Not applied proposed status.
 26. Verify consent values export only on the non-repeating owner row and are blank on every Project Review repeat row.
 27. Verify valid consent is joined onto review rows using all four conditions: intended recipient, all-confirmed, final Yes and Owner Consent complete.
 28. Verify Save & Return Later, return-to-queue, completed-response modification disabled, no automatic next survey, no redirect and no participant-created repeat.
@@ -50,23 +50,23 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 31. Verify `prop_t01_status` maps to `Demographic disparities / equity tag` and `prop_t02_status` maps to `COVID-19 & Pandemic` in every review and export.
 32. Verify each tag's correctness and visibility questions operate independently and each visibility explanation retains its existing Partly visible / Not visible / Unsure branch.
 33. Omit each tag correctness or visibility judgement in turn and confirm analytical completion remains false.
-34. Verify the main survey definitions match Questionnaire Appendix A after whitespace normalisation on desktop and mobile.
-35. Verify `po_taxonomy_ref` is absent and no taxonomy-reference placeholder, PDF attachment, Appendix A link, external taxonomy link or replacement guide appears anywhere in Project Review.
+34. Verify all proposed-label displays use rc3 short definitions and that the separate missing-label reference blocks use Q6b/Q7b/Q8b wording.
+35. Verify `po_taxonomy_ref` is absent and the three point-of-need reference blocks are the only complete participant-facing framework reference.
 36. Verify the exact six-paragraph `po_intro` block appears after project information and immediately before the unchanged read-only `po_classification_overview`.
 37. Verify `po_intro` contains no duplicate Save & Return Later, consent, confidentiality or withdrawal guidance.
-38. Verify Q6b displays all 11 approved choices, with unchanged canonical labels in `DOMAIN_ORDER`, exact full text, and no `Unclear from Register Entry` choice.
-39. Verify Q6b is multi-select, appears only when Q6a (`po_miss_domain`) = Yes, requires at least one selection when shown, and exports the unchanged checkbox variables/codes.
-40. Verify every full Q6b choice is readable on desktop and mobile: no truncation or unusable rendering, and line wrapping does not obscure which boundary belongs to which Domain.
-41. Research Domain wording concordance: For every Research Domain, compare the full definition displayed when the Domain is proposed with the compressed wording displayed in the missing-Domain checklist. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries. Neither wording may direct participants toward assigning the Domain in circumstances that the other wording excludes.
+38. Verify Q6b displays all 11 label-only choices in `DOMAIN_ORDER`, with no `Unclear from Register Entry` choice, and that `po_miss_domain_reference` contains all 11 exact approved boundary definitions.
+39. Verify all three missing-label multi-select checkboxes display unconditionally and remain optional, while each required Yes/No/Unsure radio follows its checkbox and optional basis field.
+40. Verify every reference block expands on desktop/mobile without truncation or ambiguous line wrapping and test whether `<details>` survives PDF export. If it does not, replace it with an always-open `<div>` before migration approval.
+41. Research Domain wording concordance: For every Research Domain, compare the rc3 definition displayed when the Domain is proposed with the Q6b boundary wording displayed in `po_miss_domain_reference`. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries.
 42. Record an individual pass/fail live-QA result for all 11 Domains in `project_owner_domain_wording_concordance_candidate_0.4.md` or an associated completed QA record. Migration approval fails if any Domain points in materially different directions.
-43. Confirm no separate taxonomy-reference document, link or placeholder appears.
+43. Confirm no separate taxonomy-reference document, link or placeholder appears and no participant-facing text promises one.
 44. Verify the substantive-focus rule is visible before participants see or judge proposed classifications; confirm only `only when it is a substantive focus of the project’s research question or analytical aims` is clearly bold on desktop and mobile.
 45. Confirm the bold is not lost, malformed or displayed as literal HTML, and remains visible and readable after line wrapping.
-46. Verify `po_miss_domain_reminder` appears immediately before Q6b and clearly bolds only `a substantive subject of the project` on desktop and mobile.
-47. Verify `po_miss_purpose_reminder` appears immediately before Q7b and clearly bolds only `a substantive analytical aim of the project` on desktop and mobile.
+46. Verify `po_miss_domain_reminder` appears after the Domain reference and before Q6b and clearly bolds only `a substantive subject of the project` on desktop and mobile.
+47. Verify the Purpose reference, maximum-two guidance and `po_miss_purpose_reminder` all appear before Q7b, with only `a substantive analytical aim of the project` strongly emphasised in the reminder.
 48. Confirm participants are not instructed to assign a Domain merely because a dataset, variable, population characteristic or contextual factor is present.
 49. Confirm participants are not instructed to assign a Purpose merely because a method, analytical step or secondary feature is present.
-50. Confirm both reminders retain their documented branching and do not alter checkbox requiredness, choice codes, order or export coding.
+50. Confirm both reminders and the purpose guidance are unconditional; checkbox codes and order remain unchanged while checkbox requiredness is removed.
 51. Compare the plain wording and visual emphasis of all three substantive-focus displays with the canonical questionnaire.
 52. Fail migration approval if the governing rule is absent, appears after the classification overview or is not visibly emphasised.
 

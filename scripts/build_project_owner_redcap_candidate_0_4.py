@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import html
 from pathlib import Path
 from typing import Iterable
 
@@ -31,6 +32,10 @@ PARTICIPANT_INFO_VERSION = "project-owner-information-v3"
 CONSENT_FORM_VERSION = "owner-consent-v3"
 
 DICTIONARY = PACKAGE / "project_owner_redcap_data_dictionary_candidate_0.4.csv"
+IMPORT_READY_DICTIONARY = (
+    PACKAGE
+    / "project_owner_redcap_data_dictionary_candidate_0.4_defect_repaired_import_2026-08-18.csv"
+)
 SPEC = PACKAGE / "project_owner_redcap_candidate_0.4_spec.md"
 LIVE_CONFIG = PACKAGE / "project_owner_redcap_candidate_0.4_live_configuration.md"
 IMPORT_FIXTURE = LIVE_QA / "project_owner_synthetic_import_candidate_0.4.csv"
@@ -55,6 +60,7 @@ QUESTIONNAIRE_SOURCE = (
     PACKAGE
     / "participant_materials/Project_Owner_Review_Questionnaire_v3.docx"
 )
+RC3_TAXONOMY_SOURCE = ROOT / "taxonomy_data_dictionary_1.0-rc3.yaml"
 
 CONSENT_ITEMS = (
     (
@@ -320,6 +326,48 @@ DOMAIN_TAXONOMY_SOURCE_FIELDS = (
     "exclusion_rules",
     "counterexamples",
 )
+RC3_LAYER_BY_OWNER_LAYER = {
+    "domain": "Layer A -- domain",
+    "purpose": "Layer C -- purpose",
+    "tag": "Cross-cutting tag",
+}
+
+
+def _load_rc3_short_definitions() -> dict[tuple[str, str], str]:
+    """Load the 22 in-prompt display definitions from the rc3 authority."""
+
+    payload = yaml.safe_load(RC3_TAXONOMY_SOURCE.read_text(encoding="utf-8"))
+    if payload.get("metadata", {}).get("dictionary_version") != "1.0-rc3":
+        raise RuntimeError("owner display taxonomy is not dictionary version 1.0-rc3")
+    rows = [
+        item for item in payload.get("categories", []) if item.get("include_in_prompt") is True
+    ]
+    definitions: dict[tuple[str, str], str] = {}
+    for item in rows:
+        identity = (str(item.get("layer", "")), str(item.get("label", "")))
+        definition = str(item.get("short_definition", "")).strip()
+        if not all(identity) or not definition or identity in definitions:
+            raise RuntimeError(f"invalid or duplicate rc3 display definition: {identity!r}")
+        definitions[identity] = definition
+    expected_counts = {
+        "Layer A -- domain": 12,
+        "Layer C -- purpose": 8,
+        "Cross-cutting tag": 2,
+    }
+    actual_counts = {
+        layer: sum(identity[0] == layer for identity in definitions)
+        for layer in expected_counts
+    }
+    if actual_counts != expected_counts or len(definitions) != 22:
+        raise RuntimeError(f"rc3 in-prompt display-definition coverage differs: {actual_counts}")
+    return definitions
+
+
+RC3_SHORT_DEFINITIONS = _load_rc3_short_definitions()
+
+
+def rc3_short_definition(owner_layer: str, label: str) -> str:
+    return RC3_SHORT_DEFINITIONS[(RC3_LAYER_BY_OWNER_LAYER[owner_layer], label)]
 
 
 def _build_owner_domain_display() -> dict[str, dict[str, object]]:
@@ -346,6 +394,9 @@ def _build_owner_domain_display() -> dict[str, dict[str, object]]:
     result: dict[str, dict[str, object]] = {}
     for label in DOMAIN_ORDER:
         source = taxonomy_entries[label]
+        rc3_definition = rc3_short_definition("domain", label)
+        if str(display_entries[label]["owner_microdefinition"]) != rc3_definition:
+            raise RuntimeError(f"candidate-0.3 and rc3 owner display wording differ: {label}")
         missing_fields = [
             name for name in DOMAIN_TAXONOMY_SOURCE_FIELDS if not source.get(name)
         ]
@@ -353,7 +404,7 @@ def _build_owner_domain_display() -> dict[str, dict[str, object]]:
             raise RuntimeError(f"frozen Domain source fields empty for {label}: {missing_fields}")
         result[label] = {
             "canonical_label": label,
-            "full_definition": str(display_entries[label]["owner_microdefinition"]),
+            "full_definition": rc3_definition,
             "missing_choice_microdefinition": _APPROVED_MISSING_DOMAIN_MICRODEFINITIONS[label],
             "taxonomy_source_fields": DOMAIN_TAXONOMY_SOURCE_FIELDS,
             "boundary_summary": _DOMAIN_BOUNDARY_SUMMARIES[label],
@@ -368,7 +419,7 @@ OWNER_DOMAIN_DISPLAY = _build_owner_domain_display()
 
 def owner_domain_redcap_choices() -> str:
     return " | ".join(
-        f"{index}, {entry['missing_choice_microdefinition']}"
+        f"{index}, {entry['canonical_label']}"
         for index, entry in enumerate(OWNER_DOMAIN_DISPLAY.values(), 1)
     )
 
@@ -377,6 +428,56 @@ def owner_domain_questionnaire_choices() -> str:
     return " / ".join(
         str(entry["missing_choice_microdefinition"])
         for entry in OWNER_DOMAIN_DISPLAY.values()
+    )
+
+
+def missing_menu_labels(owner_layer: str) -> tuple[str, ...]:
+    groups, _ = base.taxonomy_groups()
+    return tuple(str(item["label"]) for item in groups[owner_layer])
+
+
+def label_only_redcap_choices(owner_layer: str) -> str:
+    return " | ".join(
+        f"{index}, {label}"
+        for index, label in enumerate(missing_menu_labels(owner_layer), 1)
+    )
+
+
+def missing_questionnaire_choices(owner_layer: str) -> str:
+    if owner_layer == "domain":
+        return owner_domain_questionnaire_choices()
+    return " / ".join(
+        f"{label} — {rc3_short_definition(owner_layer, label)}"
+        for label in missing_menu_labels(owner_layer)
+    )
+
+
+def _domain_boundary_definition(label: str) -> str:
+    exact = _APPROVED_MISSING_DOMAIN_MICRODEFINITIONS[label]
+    prefix = f"{label} — "
+    if not exact.startswith(prefix):
+        raise RuntimeError(f"approved Q6b wording has no exact label prefix: {label}")
+    return exact.removeprefix(prefix)
+
+
+def missing_reference_html(owner_layer: str) -> str:
+    singular = {"domain": "domain", "purpose": "purpose", "tag": "tag"}[owner_layer]
+    lines: list[str] = []
+    for label in missing_menu_labels(owner_layer):
+        definition = (
+            _domain_boundary_definition(label)
+            if owner_layer == "domain"
+            else rc3_short_definition(owner_layer, label)
+        )
+        lines.append(
+            f"<strong>{html.escape(label, quote=False)}</strong> — "
+            f"{html.escape(definition, quote=False)}"
+        )
+    return (
+        f"<details><summary>What each {singular} covers</summary>"
+        '<div style="font-weight:400;">'
+        + "<br>".join(lines)
+        + "</div></details>"
     )
 QUESTIONNAIRE_FIELD_LABELS = {
     **{
@@ -438,6 +539,39 @@ QUESTIONNAIRE_FIELD_LABELS = {
         "Do you have any other comments about the proposed classifications, the public register "
         "entry, or the taxonomy?"
     ),
+}
+REFERENCE_FIELD_BY_LAYER = {
+    "domain": "po_miss_domain_reference",
+    "purpose": "po_miss_purpose_reference",
+    "tag": "po_miss_tag_reference",
+}
+REFERENCE_SECTION_BY_LAYER = {
+    "domain": "Missing Research Domains",
+    "purpose": "Missing Analytical Purposes",
+    "tag": "Missing cross-cutting tags",
+}
+REGISTER_PROVENANCE = (
+    "These details are reproduced from the UK Statistics Authority register of accredited "
+    "research projects, June 2026 edition."
+)
+APPROVED_PRIVACY_WORDING = (
+    "Please do not include confidential, sensitive or otherwise non-public information in your "
+    "answers. Where wider project context affects your answer, describe it only at a general "
+    "level you are comfortable sharing."
+)
+FINAL_COMMENT_CAUTION = (
+    "Comments may be quoted in published outputs, so please avoid including restricted or "
+    "personally identifying detail in anything you would not want reproduced."
+)
+FINAL_WITHDRAWAL_REMINDER = (
+    "You may request withdrawal of this submitted review before the deadline stated in the "
+    "Participant Information Sheet by contacting the study team and quoting the Review "
+    "reference shown above."
+)
+GATE_LABELS = {
+    "po_miss_domain": "Did you identify any missing domains?",
+    "po_miss_purpose": "Did you identify any missing purposes?",
+    "po_miss_tag": "Did you identify any missing tags?",
 }
 APPENDIX_B_CONSENT_WORDING = (
     "Affirmative intended-recipient confirmation, all ten consent confirmations and affirmative "
@@ -541,6 +675,33 @@ def check_sources() -> None:
                 f"canonical {label} source changed: sha256={actual_hash}, size={actual_size}; "
                 f"expected sha256={expected_hash}, size={expected_size}"
             )
+    display_source = base.display_source()
+    display_rows = [
+        *display_source["labels"],
+        *display_source["proposed_only_fallbacks"],
+    ]
+    display_definitions = {
+        (RC3_LAYER_BY_OWNER_LAYER[str(item["owner_layer"])], str(item["canonical_label"])):
+        str(item["owner_microdefinition"])
+        for item in display_rows
+    }
+    if display_definitions != RC3_SHORT_DEFINITIONS:
+        raise RuntimeError(
+            "candidate-0.3 display wording and rc3 short_definition differ; "
+            "candidate-0.4 proposed-label wording cannot be generated safely"
+        )
+    if tuple(missing_menu_labels("purpose")) != tuple(
+        label
+        for layer, label in RC3_SHORT_DEFINITIONS
+        if layer == RC3_LAYER_BY_OWNER_LAYER["purpose"] and label != base.UNCLEAR_LABEL
+    ):
+        raise RuntimeError("Q7b/rc3 purpose order or coverage differs")
+    if tuple(missing_menu_labels("tag")) != tuple(
+        label
+        for layer, label in RC3_SHORT_DEFINITIONS
+        if layer == RC3_LAYER_BY_OWNER_LAYER["tag"]
+    ):
+        raise RuntimeError("Q8b/rc3 tag order or coverage differs")
     base.check_frozen_sources()
     operational_tag_audit()
 
@@ -560,6 +721,24 @@ def configure_base_outputs() -> None:
     base.BRANCH_SPEC = BRANCH_SPEC
     base.EXPORT_SPEC = EXPORT_SPEC
     base.FORMATTING_AUDIT = FORMATTING_AUDIT
+
+
+def normal_weight_descriptive(label: str) -> str:
+    """Apply one normal-weight body wrapper while preserving an initial lead-in."""
+
+    if 'style="font-weight:400;"' in label:
+        if label.count('style="font-weight:400;"') != 1:
+            raise RuntimeError("descriptive label contains nested normal-weight wrappers")
+        return label
+    if label.startswith("<strong>") and "<br>" in label:
+        split_at = label.index("<br>") + len("<br>")
+        return (
+            label[:split_at]
+            + '<div style="font-weight:400;">'
+            + label[split_at:]
+            + "</div>"
+        )
+    return f'<div style="font-weight:400;">{label}</div>'
 
 
 def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
@@ -594,6 +773,15 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
     by_name["po_miss_domains"][
         "Choices, Calculations, OR Slider Labels"
     ] = owner_domain_redcap_choices()
+    by_name["po_miss_purposes"][
+        "Choices, Calculations, OR Slider Labels"
+    ] = label_only_redcap_choices("purpose")
+    by_name["po_miss_tags"][
+        "Choices, Calculations, OR Slider Labels"
+    ] = label_only_redcap_choices("tag")
+    by_name["po_miss_purposes"]["Field Label"] = (
+        "Which Analytical Purpose label or labels are missing? Select up to two."
+    )
     by_name["po_tax_issue"]["Choices, Calculations, OR Slider Labels"] = (
         "1, Missing or inadequately represented category | "
         "2, Ambiguous or overlapping category boundaries | 5, Other taxonomy problem"
@@ -607,6 +795,47 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
         )
         rows.pop(removed_index)
 
+    provenance_index = next(
+        index
+        for index, row in enumerate(rows)
+        if row["Variable / Field Name"] == "public_register_url"
+    )
+    rows.insert(
+        provenance_index,
+        base.field(
+            "po_register_provenance",
+            "project_review",
+            "descriptive",
+            REGISTER_PROVENANCE,
+        ),
+    )
+    by_name["public_register_url"]["Field Annotation"] = "@HIDDEN-SURVEY @READONLY"
+
+    for row in rows:
+        if "@READONLY-SURVEY" in row["Field Annotation"]:
+            row["Required Field?"] = ""
+
+    by_name["po_privacy"]["Field Label"] = (
+        f"<strong>Important</strong><br>{APPROVED_PRIVACY_WORDING}"
+    )
+    by_name["po_final_warning"]["Field Label"] = (
+        f"<strong>Important</strong><br>{FINAL_COMMENT_CAUTION}<br><br>"
+        f"{FINAL_WITHDRAWAL_REMINDER}"
+    )
+
+    proposal_displays = {
+        **{f"po_d{index:02d}_display": "domain" for index in range(1, 5)},
+        **{f"po_p{index:02d}_display": "purpose" for index in range(1, 3)},
+        **{f"po_t{index:02d}_display": "tag" for index in range(1, 3)},
+    }
+    for name, layer in proposal_displays.items():
+        stem = name.removeprefix("po_").removesuffix("_display")
+        by_name[name]["Field Label"] = (
+            f"<div><strong>[prop_{stem}_label]</strong><br>"
+            f'<span style="font-weight:400;">What this {layer} covers: '
+            f"[prop_{stem}_def]</span></div>"
+        )
+
     intro_index = next(
         index for index, row in enumerate(rows) if row["Variable / Field Name"] == "po_intro"
     )
@@ -618,36 +847,81 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
     )
     rows.insert(overview_index, intro_row)
 
-    reminder_fields = (
-        (
-            "po_miss_domains",
-            "po_miss_domain_reminder",
-            MISSING_DOMAIN_REMINDER_HTML,
-            "[po_miss_domain] = '1'",
-        ),
-        (
-            "po_miss_purposes",
-            "po_miss_purpose_reminder",
-            MISSING_PURPOSE_REMINDER_HTML,
-            "[po_miss_purpose] = '1'",
-        ),
+    missing_names = {
+        "po_miss_domain",
+        "po_miss_domains",
+        "po_miss_domain_basis",
+        "po_miss_purpose",
+        "po_miss_purpose_guidance",
+        "po_miss_purposes",
+        "po_miss_purpose_basis",
+        "po_miss_tag",
+        "po_miss_tags",
+        "po_miss_tag_basis",
+    }
+    missing_index = next(
+        index
+        for index, row in enumerate(rows)
+        if row["Variable / Field Name"] == "po_miss_domain"
     )
-    for target_name, reminder_name, reminder_label, reminder_branch in reminder_fields:
-        target_index = next(
-            index
-            for index, row in enumerate(rows)
-            if row["Variable / Field Name"] == target_name
+    missing_rows = {
+        row["Variable / Field Name"]: row
+        for row in rows
+        if row["Variable / Field Name"] in missing_names
+    }
+    rows[:] = [
+        row for row in rows if row["Variable / Field Name"] not in missing_names
+    ]
+    for gate, label in GATE_LABELS.items():
+        missing_rows[gate]["Field Label"] = label
+        missing_rows[gate]["Section Header"] = ""
+    for menu in ("po_miss_domains", "po_miss_purposes", "po_miss_tags"):
+        missing_rows[menu]["Branching Logic (Show field only if...)"] = ""
+        missing_rows[menu]["Required Field?"] = ""
+    missing_rows["po_miss_purpose_guidance"][
+        "Branching Logic (Show field only if...)"
+    ] = ""
+
+    reference_rows = {
+        layer: base.field(
+            REFERENCE_FIELD_BY_LAYER[layer],
+            "project_review",
+            "descriptive",
+            missing_reference_html(layer),
+            section=REFERENCE_SECTION_BY_LAYER[layer],
         )
-        rows.insert(
-            target_index,
-            base.field(
-                reminder_name,
-                "project_review",
-                "descriptive",
-                reminder_label,
-                branch=reminder_branch,
-            ),
-        )
+        for layer in ("domain", "purpose", "tag")
+    }
+    domain_reminder = base.field(
+        "po_miss_domain_reminder",
+        "project_review",
+        "descriptive",
+        MISSING_DOMAIN_REMINDER_HTML,
+    )
+    purpose_reminder = base.field(
+        "po_miss_purpose_reminder",
+        "project_review",
+        "descriptive",
+        MISSING_PURPOSE_REMINDER_HTML,
+    )
+    reordered_missing = [
+        reference_rows["domain"],
+        domain_reminder,
+        missing_rows["po_miss_domains"],
+        missing_rows["po_miss_domain_basis"],
+        missing_rows["po_miss_domain"],
+        reference_rows["purpose"],
+        missing_rows["po_miss_purpose_guidance"],
+        purpose_reminder,
+        missing_rows["po_miss_purposes"],
+        missing_rows["po_miss_purpose_basis"],
+        missing_rows["po_miss_purpose"],
+        reference_rows["tag"],
+        missing_rows["po_miss_tags"],
+        missing_rows["po_miss_tag_basis"],
+        missing_rows["po_miss_tag"],
+    ]
+    rows[missing_index:missing_index] = reordered_missing
 
     intended_index = next(
         index
@@ -677,6 +951,10 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
         )
     )
     rows[intended_index + 1 : intended_index + 1] = consent_rows
+
+    for row in rows:
+        if row["Field Type"] == "descriptive":
+            row["Field Label"] = normal_weight_descriptive(row["Field Label"])
 
     counts = {form: sum(row["Form Name"] == form for row in rows) for form in base.FORMS}
     meta = {
@@ -708,8 +986,8 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
             row["notes"] = ALL_CONFIRMED_EXPRESSION
         elif name in {"prop_t01_def", "prop_t02_def"}:
             slot = "prop_t01_status" if name == "prop_t01_def" else "prop_t02_status"
-            row["construct"] = "participant_facing_full_tag_definition"
-            row["notes"] = TAG_DEFINITIONS[TAG_FIELD_MAPPING[slot]]
+            row["construct"] = "participant_facing_rc3_tag_short_definition"
+            row["notes"] = rc3_short_definition("tag", TAG_FIELD_MAPPING[slot])
         elif name in {"po_t01_display", "po_t02_display"}:
             slot = "prop_t01_status" if name == "po_t01_display" else "prop_t02_status"
             row["construct"] = "tag_definition_immediately_before_proposed_status"
@@ -730,9 +1008,27 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
                 "Display-only threshold clarification immediately before its missing-label "
                 "checkbox; the governing phrase uses supported strong HTML markup."
             )
+        elif name in set(REFERENCE_FIELD_BY_LAYER.values()):
+            row["construct"] = "participant_facing_complete_missing_label_reference"
+            row["notes"] = (
+                "Display-only complete nominable-category reference immediately before its "
+                "unconditional missing-label checkbox."
+            )
+        elif name == "po_register_provenance":
+            row["construct"] = "participant_facing_static_register_provenance"
+            row["notes"] = REGISTER_PROVENANCE
         elif name == "po_miss_domains":
             row["construct"] = "author_approved_missing_domain_identification"
-            row["notes"] = owner_domain_redcap_choices()
+            row["notes"] = (
+                "Label-only options; approved Q6b boundary wording is displayed in "
+                "po_miss_domain_reference."
+            )
+        elif name in {"po_miss_purposes", "po_miss_tags"}:
+            row["construct"] = "missing_classification_identification"
+            row["notes"] = (
+                "Label-only options; approved Q7b/Q8b wording is displayed in the adjacent "
+                "reference block."
+            )
     write_csv(FIELD_SPEC, field_headers, field_rows)
 
     branch = yaml.safe_load(BRANCH_SPEC.read_text(encoding="utf-8"))
@@ -797,19 +1093,21 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
             "po_miss_domain_reminder": {
                 "plain_text": MISSING_DOMAIN_REMINDER,
                 "bold_phrase": MISSING_DOMAIN_REMINDER_PHRASE,
-                "branching": "[po_miss_domain] = '1'",
-                "immediately_before": "po_miss_domains",
+                "branching": "",
+                "position": "after po_miss_domain_reference and before po_miss_domains",
             },
             "po_miss_purpose_reminder": {
                 "plain_text": MISSING_PURPOSE_REMINDER,
                 "bold_phrase": MISSING_PURPOSE_REMINDER_PHRASE,
-                "branching": "[po_miss_purpose] = '1'",
-                "immediately_before": "po_miss_purposes",
+                "branching": "",
+                "position": "after po_miss_purpose_guidance and before po_miss_purposes",
             },
         },
         "taxonomy_reference": (
-            "absent; no placeholder, attachment, PDF, Appendix A link or external reference"
+            "no standalone field or attachment; complete nominable-category reference blocks "
+            "appear at the point of each missing-label decision"
         ),
+        "missing_label_reference_fields": REFERENCE_FIELD_BY_LAYER,
         "missing_domain_microdefinitions": (
             "author-approved owner-instrument display aids generated from OWNER_DOMAIN_DISPLAY; "
             "live semantic and display QA pending"
@@ -830,7 +1128,10 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
             },
             "lifecycle_status_is_not_operational_inclusion": True,
             "definitions": TAG_DEFINITIONS,
-            "full_definition_immediately_before_status": True,
+            "proposed_display_short_definitions": {
+                label: rc3_short_definition("tag", label) for label in OPERATIONAL_TAGS
+            },
+            "rc3_short_definition_immediately_before_status": True,
             "independent_required_judgements": True,
         }
     )
@@ -864,6 +1165,23 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
     completion["quotation_policy"] = (
         QUOTATION_POLICY
     )
+    completion["missing_labels"] = (
+        "all three required post-list identification radios; checkbox selections are optional "
+        "raw responses and contradictory radio/checkbox states require a separately approved "
+        "analysis rule"
+    )
+    branch["missing_label_branching"] = {
+        "gateways_required": True,
+        "gateway_position": "after each checkbox and optional basis field",
+        "checkbox_menus_unconditional": True,
+        "checkbox_menus_required": False,
+        "purpose_guidance_field": "po_miss_purpose_guidance",
+        "purpose_max_checked_annotation": "@MAXCHECKED=2",
+        "contradictory_state_rule": (
+            "pending: checkbox selections with a final No or Unsure radio response must be "
+            "flagged and handled under an approved analysis rule"
+        ),
+    }
     BRANCH_SPEC.write_text(
         yaml.safe_dump(branch, sort_keys=False, allow_unicode=True), encoding="utf-8"
     )
@@ -890,8 +1208,13 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
                 else "prop_t02_status"
             )
             row["notes"] = (
-                f"Exact participant-facing definition for {TAG_FIELD_MAPPING[slot]}; populated "
-                "on every Project Review repeat row."
+                f"Exact rc3 proposed-label short definition for {TAG_FIELD_MAPPING[slot]}; "
+                "populated on every Project Review repeat row."
+            )
+        elif row["variable"] in {"po_miss_domains", "po_miss_purposes", "po_miss_tags"}:
+            row["notes"] = (
+                "Optional raw checkbox selections displayed unconditionally. Preserve alongside "
+                "the required post-list radio; contradictory states require an approved analysis rule."
             )
     write_csv(EXPORT_SPEC, export_headers, export_rows)
 
@@ -924,7 +1247,7 @@ def patch_formatting_audit() -> None:
             )
             row["heading_text"] = ""
             row["body_text"] = MISSING_DOMAIN_REMINDER if domain else MISSING_PURPOSE_REMINDER
-            row["html_tags_used"] = "strong"
+            row["html_tags_used"] = "div | strong"
             row["final_formatting_status"] = (
                 "Only the governing phrase is wrapped in supported strong HTML markup"
             )
@@ -939,11 +1262,11 @@ def patch_formatting_audit() -> None:
                 else "prop_t02_status"
             )
             row["participant_visible_purpose"] = (
-                f"Canonical label and exact full two-sentence definition for "
+                f"Canonical label and exact rc3 short definition for "
                 f"{TAG_FIELD_MAPPING[slot]}"
             )
             row["remaining_live_qa_requirement"] = (
-                "Verify the piped canonical label and exact full definition render immediately "
+                "Verify the piped canonical label and exact rc3 short definition render immediately "
                 "before the proposed Applied / Not applied status and tag questions."
             )
     if any(row["variable_name"] == "po_taxonomy_ref" for row in rows):
@@ -970,7 +1293,7 @@ def patch_formatting_audit() -> None:
                 "contains_heading": "no",
                 "heading_text": "",
                 "body_text": plain,
-                "html_tags_used": "strong",
+                "html_tags_used": "div | strong",
                 "whole_block_bold_present_before_correction": "no",
                 "final_formatting_status": (
                     "Only the governing phrase is wrapped in supported strong HTML markup"
@@ -982,6 +1305,47 @@ def patch_formatting_audit() -> None:
                 ),
             }
         )
+    for layer in ("domain", "purpose", "tag"):
+        rows.append(
+            {
+                "variable_name": REFERENCE_FIELD_BY_LAYER[layer],
+                "instrument": "project_review",
+                "participant_visible_purpose": (
+                    f"Complete collapsible missing-{layer} definition reference"
+                ),
+                "contains_heading": "yes",
+                "heading_text": f"What each {layer} covers",
+                "body_text": " | ".join(
+                    (
+                        _APPROVED_MISSING_DOMAIN_MICRODEFINITIONS[label]
+                        if layer == "domain"
+                        else f"{label} — {rc3_short_definition(layer, label)}"
+                    )
+                    for label in missing_menu_labels(layer)
+                ),
+                "html_tags_used": "br | details | div | strong | summary",
+                "whole_block_bold_present_before_correction": "no",
+                "final_formatting_status": "normal-weight definitions with bold category labels",
+                "remaining_live_qa_requirement": (
+                    "Verify <details> expansion, every category and boundary, desktop/mobile "
+                    "wrapping and PDF/export behaviour; use an always-open div if unsupported."
+                ),
+            }
+        )
+    rows.append(
+        {
+            "variable_name": "po_register_provenance",
+            "instrument": "project_review",
+            "participant_visible_purpose": "Static public-register provenance",
+            "contains_heading": "no",
+            "heading_text": "",
+            "body_text": REGISTER_PROVENANCE,
+            "html_tags_used": "div",
+            "whole_block_bold_present_before_correction": "no",
+            "final_formatting_status": "normal-weight descriptive text",
+            "remaining_live_qa_requirement": "Verify placement after public project details.",
+        }
+    )
     rows.append(
         {
             "variable_name": "po_miss_domains",
@@ -1006,7 +1370,7 @@ def patch_formatting_audit() -> None:
     write_csv(FORMATTING_AUDIT, headers, rows)
 
 
-def patch_fixture_tag_definitions() -> None:
+def patch_fixture_proposed_definitions() -> None:
     with IMPORT_FIXTURE.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
         headers = list(rows[0])
@@ -1021,7 +1385,7 @@ def patch_fixture_tag_definitions() -> None:
                     raise RuntimeError(
                         f"synthetic fixture tag mapping differs for {label_field}"
                     )
-                row[definition_field] = TAG_DEFINITIONS[label]
+                row[definition_field] = rc3_short_definition("tag", label)
             elif any(row[field] for field in (label_field, definition_field, status_field)):
                 raise RuntimeError("owner fixture row unexpectedly contains project tag values")
     write_csv(IMPORT_FIXTURE, headers, rows)
@@ -1059,7 +1423,7 @@ def build_domain_wording_audits() -> None:
 
 Status: **approved instrument wording; implemented in candidate 0.4; live semantic and display QA pending**. Author approval was recorded on 2026-07-28. Candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative; PID 9149 migration and recruitment remain blocked until controlled migration and successful live QA.
 
-These Project Owner instrument display aids apply only to the 11 substantive Research Domain checkbox choices shown in Q6b. The generator mapping OWNER_DOMAIN_DISPLAY is their single operational source. The frozen taxonomy remains authoritative for labels, definitions, inclusion rules, exclusion rules, examples, counterexamples and boundaries; it was not changed.
+These Project Owner instrument display aids apply to the complete 11-category reference block shown immediately before the label-only Research Domain checkbox choices. The generator mapping OWNER_DOMAIN_DISPLAY is their single operational source. The frozen taxonomy remains authoritative for labels, definitions, inclusion rules, exclusion rules, examples, counterexamples and boundaries; it was not changed.
 
 | Canonical Domain | Final approved Q6b wording | Word count | Frozen source fields | Boundary addressed | Change from initial draft | Author approval | Implementation | Concordance record |
 |---|---|---:|---|---|---|---|---|---|
@@ -1067,7 +1431,7 @@ These Project Owner instrument display aids apply only to the 11 substantive Res
 
 ## Author-review decision
 
-The project author approved the exact 11 lines above on 2026-07-28. The table records every substantive change from the earlier draft. The approved lines are now generated into Q6b in the canonical questionnaire, REDCap data dictionary, field specification and formatting audit. Unclear from Register Entry remains excluded.
+The project author approved the exact 11 lines above on 2026-07-28. The table records every substantive change from the earlier draft. The approved lines remain in Q6b of the canonical questionnaire and are generated into the REDCap reference block, field specification and formatting audit. The checkbox itself contains labels only. Unclear from Register Entry remains excluded.
 
 ## Semantic-concordance status
 
@@ -1133,15 +1497,15 @@ Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. I
 
 The Project Owner instrument remains unfrozen and non-authoritative. This candidate does not authorise recruitment or live migration. Both canonical participant DOCX files are pinned by SHA-256 and byte size; generation stops if either changes without an authorised metadata refresh. The missing-Domain wording is author-approved and repository-validated; controlled migration and live semantic/display QA remain mandatory before recruitment.
 
-## Project Review orientation and reference removal
+## Project Review orientation and point-of-need references
 
 After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed immediately by the otherwise unchanged read-only `po_classification_overview`, then the detailed Domain, Purpose and tag judgements. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
 
-The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder is removed without replacement. Candidate 0.4 has no taxonomy-reference PDF, attachment, external link, Appendix A link, optional guide or live-migration dependency. Definitions needed for each judgement are supplied at the point of use.
+The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete collapsible reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need.
 
-Q6b contains exactly 11 author-approved, boundary-bearing missing-Domain choices generated from `OWNER_DOMAIN_DISPLAY`. The mapping keys are the exact eligible frozen Research Domain labels; `Unclear from Register Entry` is excluded. Each entry pairs the existing full proposed-label definition with one approved compressed missing-label aid and documents its frozen source fields and boundary summary. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic and display QA remains pending.
+Q6b contains exactly 11 label-only missing-Domain choices. `po_miss_domain_reference` displays every matching author-approved boundary definition generated from `OWNER_DOMAIN_DISPLAY`; `Unclear from Register Entry` is excluded. Q7b and Q8b likewise use label-only choices with complete adjacent reference blocks sourced from their questionnaire/rc3-identical wording. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic, `<details>` and PDF/export display QA remains pending.
 
-Immediately before Q6b and Q7b, display-only descriptive fields restate the same substantive-focus threshold for missing Domains and Purposes. Only `a substantive subject of the project` and `a substantive analytical aim of the project` are strongly emphasised. These additions do not change the checkbox choices, codes, order, branching, requiredness or exports.
+The three missing-label menus are displayed unconditionally and are optional. Their required Yes/No/Unsure identification radios follow each menu and optional basis field. Domain and Purpose guidance remains visible before the relevant checkbox. This deliberate departure from the approved questionnaire branching must be notified to the REC. Checkbox selections combined with a final No or Unsure response are possible and require a separately approved analysis rule.
 
 ## Operational cross-cutting-tag invariant
 
@@ -1152,7 +1516,7 @@ The operational set contains exactly two frozen machine values, in this order:
 
 Operational inclusion is determined by `{OPERATIONAL_INCLUSION_RULE}`. Lifecycle/provenance status is not the inclusion criterion: the first tag is `new v3.4`, while the second is `active`, and both are operational because they satisfy the explicit rule. The production classifier, production outputs, dashboard and Project Owner pipeline therefore retain both tags; no one-tag bug exists. Candidate 0.4 changes neither the frozen taxonomy nor the production prompt.
 
-Each Project Review displays the canonical label and the exact two-sentence definition from `prop_t01_def` or `prop_t02_def` immediately before its Applied / Not applied proposed status. Both independent correctness and visibility blocks are always required for analytical completion. The main Questionnaire sections 5.1/5.2, Appendix A and these REDCap definition values match after whitespace normalisation.
+Each Project Review displays the canonical label and exact rc3 proposed-label short definition from `prop_t01_def` or `prop_t02_def` immediately before its Applied / Not applied proposed status. The longer Questionnaire and Appendix A definitions remain documentary reference wording and are not substituted into the proposed-label display. Both independent correctness and visibility blocks remain required for analytical completion.
 
 ## Ethics-to-REDCap consent traceability
 
@@ -1194,6 +1558,8 @@ Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Proj
 
 `po_final_warning` now follows `po_other_comment` immediately before submission and has no quotation-permission dependency.
 
+All participant-visible read-only stimulus fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static June 2026 register provenance line. `po_privacy` uses both sentences of the approved questionnaire wording. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
+
 ## Fixture and long-format analysis
 
 The synthetic fixture remains three owners, 19 pre-created Project Review instances and 22 long-format rows. Owner consent responses, all ten confirmations, `consent_items_complete`, final consent and acknowledgement are blank on import. Owner consent values occur only on the non-repeating owner row; Project Review repeat rows keep them blank. No synthetic participant is imported as consented.
@@ -1202,7 +1568,7 @@ Analysis must join the non-repeating owner row to reviews by `owner_id` and requ
 
 ## Scope exclusions and change record
 
-Reason: clarify and visually emphasise the existing substantive-focus threshold before proposed classifications and missing-Domain/Purpose decisions. Nature: completion of candidate 0.4; the governing Project Owner threshold now states that a Domain or Purpose applies only when it is a substantive focus, not merely because related terms, datasets, variables, methods or outcomes appear. No taxonomy rule, category, classification, response code, analytical construct, frozen taxonomy or prompt artefact, dashboard schema, assignment, sampling, project metadata or participant data changed. The approved Q6b microdefinitions remain unchanged. Candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative; migration and recruitment remain blocked pending controlled migration and successful live QA.
+Reason: repair participant-facing requiredness, density, reference delivery, missing-label task order, privacy, provenance and descriptive formatting defects while preserving category wording authorities. Nature: candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative. The missing-label gate removal intentionally departs from questionnaire Q6a/Q7a/Q8a branching and requires REC notification before migration. No frozen taxonomy, production prompt, candidate 0.3 artefact, assignment, sample or participant record changed.
 """,
         encoding="utf-8",
     )
@@ -1251,7 +1617,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 
 23. Verify `po_quote_permission` and any participant-facing replacement quotation-permission question are absent everywhere in Project Review. Quotation remains a later point-of-use email process using the exact proposed wording and context and requiring written agreement.
 24. Verify `po_final_warning` follows final comments immediately before submission and does not refer to quotation permission.
-25. Verify both permanent tag blocks appear in every Project Review, each with its exact full two-sentence definition immediately before the Applied / Not applied proposed status.
+25. Verify both permanent tag blocks appear in every Project Review, each with its exact rc3 proposed-label short definition immediately before the Applied / Not applied proposed status.
 26. Verify consent values export only on the non-repeating owner row and are blank on every Project Review repeat row.
 27. Verify valid consent is joined onto review rows using all four conditions: intended recipient, all-confirmed, final Yes and Owner Consent complete.
 28. Verify Save & Return Later, return-to-queue, completed-response modification disabled, no automatic next survey, no redirect and no participant-created repeat.
@@ -1260,23 +1626,23 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 31. Verify `prop_t01_status` maps to `Demographic disparities / equity tag` and `prop_t02_status` maps to `COVID-19 & Pandemic` in every review and export.
 32. Verify each tag's correctness and visibility questions operate independently and each visibility explanation retains its existing Partly visible / Not visible / Unsure branch.
 33. Omit each tag correctness or visibility judgement in turn and confirm analytical completion remains false.
-34. Verify the main survey definitions match Questionnaire Appendix A after whitespace normalisation on desktop and mobile.
-35. Verify `po_taxonomy_ref` is absent and no taxonomy-reference placeholder, PDF attachment, Appendix A link, external taxonomy link or replacement guide appears anywhere in Project Review.
+34. Verify all proposed-label displays use rc3 short definitions and that the separate missing-label reference blocks use Q6b/Q7b/Q8b wording.
+35. Verify `po_taxonomy_ref` is absent and the three point-of-need reference blocks are the only complete participant-facing framework reference.
 36. Verify the exact six-paragraph `po_intro` block appears after project information and immediately before the unchanged read-only `po_classification_overview`.
 37. Verify `po_intro` contains no duplicate Save & Return Later, consent, confidentiality or withdrawal guidance.
-38. Verify Q6b displays all 11 approved choices, with unchanged canonical labels in `DOMAIN_ORDER`, exact full text, and no `Unclear from Register Entry` choice.
-39. Verify Q6b is multi-select, appears only when Q6a (`po_miss_domain`) = Yes, requires at least one selection when shown, and exports the unchanged checkbox variables/codes.
-40. Verify every full Q6b choice is readable on desktop and mobile: no truncation or unusable rendering, and line wrapping does not obscure which boundary belongs to which Domain.
-41. Research Domain wording concordance: For every Research Domain, compare the full definition displayed when the Domain is proposed with the compressed wording displayed in the missing-Domain checklist. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries. Neither wording may direct participants toward assigning the Domain in circumstances that the other wording excludes.
+38. Verify Q6b displays all 11 label-only choices in `DOMAIN_ORDER`, with no `Unclear from Register Entry` choice, and that `po_miss_domain_reference` contains all 11 exact approved boundary definitions.
+39. Verify all three missing-label multi-select checkboxes display unconditionally and remain optional, while each required Yes/No/Unsure radio follows its checkbox and optional basis field.
+40. Verify every reference block expands on desktop/mobile without truncation or ambiguous line wrapping and test whether `<details>` survives PDF export. If it does not, replace it with an always-open `<div>` before migration approval.
+41. Research Domain wording concordance: For every Research Domain, compare the rc3 definition displayed when the Domain is proposed with the Q6b boundary wording displayed in `po_miss_domain_reference`. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries.
 42. Record an individual pass/fail live-QA result for all 11 Domains in `project_owner_domain_wording_concordance_candidate_0.4.md` or an associated completed QA record. Migration approval fails if any Domain points in materially different directions.
-43. Confirm no separate taxonomy-reference document, link or placeholder appears.
+43. Confirm no separate taxonomy-reference document, link or placeholder appears and no participant-facing text promises one.
 44. Verify the substantive-focus rule is visible before participants see or judge proposed classifications; confirm only `{SUBSTANTIVE_FOCUS_PHRASE}` is clearly bold on desktop and mobile.
 45. Confirm the bold is not lost, malformed or displayed as literal HTML, and remains visible and readable after line wrapping.
-46. Verify `po_miss_domain_reminder` appears immediately before Q6b and clearly bolds only `{MISSING_DOMAIN_REMINDER_PHRASE}` on desktop and mobile.
-47. Verify `po_miss_purpose_reminder` appears immediately before Q7b and clearly bolds only `{MISSING_PURPOSE_REMINDER_PHRASE}` on desktop and mobile.
+46. Verify `po_miss_domain_reminder` appears after the Domain reference and before Q6b and clearly bolds only `{MISSING_DOMAIN_REMINDER_PHRASE}` on desktop and mobile.
+47. Verify the Purpose reference, maximum-two guidance and `po_miss_purpose_reminder` all appear before Q7b, with only `{MISSING_PURPOSE_REMINDER_PHRASE}` strongly emphasised in the reminder.
 48. Confirm participants are not instructed to assign a Domain merely because a dataset, variable, population characteristic or contextual factor is present.
 49. Confirm participants are not instructed to assign a Purpose merely because a method, analytical step or secondary feature is present.
-50. Confirm both reminders retain their documented branching and do not alter checkbox requiredness, choice codes, order or export coding.
+50. Confirm both reminders and the purpose guidance are unconditional; checkbox codes and order remain unchanged while checkbox requiredness is removed.
 51. Compare the plain wording and visual emphasis of all three substantive-focus displays with the canonical questionnaire.
 52. Fail migration approval if the governing rule is absent, appears after the classification overview or is not visibly emphasised.
 
@@ -1320,7 +1686,7 @@ The frozen taxonomy and production prompt were inspected and deliberately left u
 
 ## Participant-facing definitions
 
-The canonical Questionnaire main sections 5.1 and 5.2, Appendix A, and the REDCap values imported into `prop_t01_def` and `prop_t02_def` use the same full two-sentence definitions after whitespace normalisation. The descriptive displays `po_t01_display` and `po_t02_display` pipe the canonical label and definition immediately before the relevant proposed status and questions.
+The canonical Questionnaire main sections 5.1 and 5.2 and Appendix A retain their full reference definitions. REDCap `prop_t01_def` and `prop_t02_def` instead carry the exact rc3 short definitions for proposed-label display. The missing-tag reference uses the Q8b wording, which is byte-identical to rc3 after entity decoding and whitespace normalisation.
 
 ## Quotation-permission audit
 
@@ -1340,6 +1706,7 @@ def main() -> int:
     rows, meta = build_dictionary()
     meta["fixture_columns"] = len(base.fixture_import_headers(rows))
     write_csv(DICTIONARY, base.HEADERS, rows)
+    write_csv(IMPORT_READY_DICTIONARY, base.HEADERS, rows)
     base.build_specs(rows, meta)
     patch_generated_specs(rows)
     base.build_formatting_audit(
@@ -1347,14 +1714,21 @@ def main() -> int:
             row
             for row in rows
             if row["Variable / Field Name"]
-            not in {"po_miss_domain_reminder", "po_miss_purpose_reminder"}
+            not in {
+                "po_miss_domain_reminder",
+                "po_miss_purpose_reminder",
+                "po_miss_domain_reference",
+                "po_miss_purpose_reference",
+                "po_miss_tag_reference",
+                "po_register_provenance",
+            }
         ]
     )
     patch_formatting_audit()
     build_domain_wording_audits()
     build_documentation(meta)
     base.build_fixture(rows)
-    patch_fixture_tag_definitions()
+    patch_fixture_proposed_definitions()
     print(
         yaml.safe_dump(
             {
@@ -1362,6 +1736,9 @@ def main() -> int:
                 "status": STATUS,
                 "dictionary": str(DICTIONARY.relative_to(ROOT)).replace("\\", "/"),
                 "dictionary_sha256": sha256(DICTIONARY),
+                "import_ready_dictionary": str(
+                    IMPORT_READY_DICTIONARY.relative_to(ROOT)
+                ).replace("\\", "/"),
                 "fields": meta["total_fields"],
                 "forms": meta["field_counts"],
                 "consent_confirmations": list(CONSENT_NAMES),

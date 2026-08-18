@@ -28,7 +28,7 @@ The frozen taxonomy and production prompt were inspected and deliberately left u
 
 ## Participant-facing definitions
 
-The canonical Questionnaire main sections 5.1 and 5.2, Appendix A, and the REDCap values imported into `prop_t01_def` and `prop_t02_def` use the same full two-sentence definitions after whitespace normalisation. The descriptive displays `po_t01_display` and `po_t02_display` pipe the canonical label and definition immediately before the relevant proposed status and questions.
+The canonical Questionnaire main sections 5.1 and 5.2 and Appendix A retain their full reference definitions. REDCap `prop_t01_def` and `prop_t02_def` instead carry the exact rc3 short definitions for proposed-label display. The missing-tag reference uses the Q8b wording, which is byte-identical to rc3 after entity decoding and whitespace normalisation.
 
 ## Quotation-permission audit
 

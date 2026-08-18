@@ -11,7 +11,7 @@ forms:
 - project_review
 field_counts:
   owner_consent: 22
-  project_review: 97
+  project_review: 101
 repeating_instruments:
 - project_review
 repeat_custom_label: '[assignment_id] — [project_title]'
@@ -180,19 +180,23 @@ tag_reviews:
       are a central condition or lens for the research question. Research does not
       qualify merely because its data cover the pandemic period or because COVID-19
       is mentioned incidentally.
-  full_definition_immediately_before_status: true
+  proposed_display_short_definitions:
+    Demographic disparities / equity tag: Comparisons across demographic or equality-relevant
+      groups are central; socioeconomic inequality alone or routine subgroup breakdowns
+      do not qualify.
+    COVID-19 & Pandemic: COVID-19 or pandemic conditions are a central research focus
+      or lens, not merely the period covered by the data.
+  rc3_short_definition_immediately_before_status: true
   independent_required_judgements: true
 missing_label_branching:
   gateways_required: true
-  checkbox_menus_show_only_for_yes: true
-  checkbox_menus_required_when_shown: true
-  at_least_one_checkbox_requires_live_qa: true
-  unsure_does_not_show_menu: true
+  gateway_position: after each checkbox and optional basis field
+  checkbox_menus_unconditional: true
+  checkbox_menus_required: false
   purpose_guidance_field: po_miss_purpose_guidance
   purpose_max_checked_annotation: '@MAXCHECKED=2'
-  purpose_cardinality_analysis: Derive retained fitted proposed purposes plus selected
-    missing purposes; flag an implied corrected count above two as a cardinality/taxonomy
-    issue, not a directly comparable corrected classification.
+  contradictory_state_rule: 'pending: checkbox selections with a final No or Unsure
+    radio response must be flagged and handled under an approved analysis rule'
 analytical_completion:
   owner_join:
   - intended_recipient = 1
@@ -203,8 +207,9 @@ analytical_completion:
     explanation only for Does not fit
   tags: correctness and visibility for both tags, plus correctness explanation only
     for No
-  missing_labels: all three gateways and every triggered checkbox menu; prose bases
-    are optional
+  missing_labels: all three required post-list identification radios; checkbox selections
+    are optional raw responses and contradictory radio/checkbox states require a separately
+    approved analysis rule
   overall: public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus
     taxonomy issue for Partial Fit/No Fit
   excluded_optional_fields:
@@ -335,17 +340,21 @@ project_review_v3:
         subject of the project, not merely a dataset, variable, population characteristic
         or contextual factor used in the research.
       bold_phrase: a substantive subject of the project
-      branching: '[po_miss_domain] = ''1'''
-      immediately_before: po_miss_domains
+      branching: ''
+      position: after po_miss_domain_reference and before po_miss_domains
     po_miss_purpose_reminder:
       plain_text: Select a missing Analytical Purpose only if it represents a substantive
         analytical aim of the project, not merely a method, analytical step or secondary
         feature of the work.
       bold_phrase: a substantive analytical aim of the project
-      branching: '[po_miss_purpose] = ''1'''
-      immediately_before: po_miss_purposes
-  taxonomy_reference: absent; no placeholder, attachment, PDF, Appendix A link or
-    external reference
+      branching: ''
+      position: after po_miss_purpose_guidance and before po_miss_purposes
+  taxonomy_reference: no standalone field or attachment; complete nominable-category
+    reference blocks appear at the point of each missing-label decision
+  missing_label_reference_fields:
+    domain: po_miss_domain_reference
+    purpose: po_miss_purpose_reference
+    tag: po_miss_tag_reference
   missing_domain_microdefinitions: author-approved owner-instrument display aids generated
     from OWNER_DOMAIN_DISPLAY; live semantic and display QA pending
   missing_domain_labels:
@@ -360,42 +369,9 @@ project_review_v3:
   - Environment & Agriculture
   - Public Finance & Taxation
   - Data Infrastructure & Methodology
-  missing_domain_choices: 1, Labour Market & Employment — Work, employment, earnings,
-    job quality, workforce dynamics, skills demand or labour-market transitions; not
-    employment or earnings used only to measure the consequences of education, health
-    or another substantive exposure unless labour-market outcomes are themselves a
-    central focus. | 2, Education & Skills — Educational participation, attainment,
-    qualifications, admissions, skills acquisition, training, apprenticeships or educational
-    progression, including where later employment or earnings outcomes are used to
-    study the effects of education or training; not education level used only as a
-    subgroup, covariate or worker characteristic. | 3, Health & Social Care — Health,
-    illness, mental health, wellbeing, clinical outcomes, healthcare access or use,
-    mortality as a health outcome, and social care; not mortality studied only as
-    a demographic or population outcome. | 4, Crime & Justice — Offending, victimisation,
-    public safety, policing, courts, sentencing, prisons, probation, family justice,
-    civil justice or justice-system outcomes; not general harm, risk, vulnerability
-    or public-service use without crime, legal proceedings or justice-system involvement.
-    | 5, Business & Productivity — Firms, business behaviour, innovation, productivity,
-    entrepreneurship, trade, investment or firm performance; not firm-level data used
-    only as a setting or source for another substantive question. | 6, Poverty, Wealth
-    & Living Standards — Household income and resources, poverty, wealth, savings,
-    debt, benefits, food insecurity, cost of living or material deprivation; not pay
-    gaps, employment, deprivation indices, area-level disadvantage or demographic
-    inequality unless household resources or living standards are central. | 7, Housing
-    & Planning — Housing, homelessness, tenure, housing markets, residential conditions
-    or mobility, neighbourhood change and planning; domestic energy or environmental
-    exposure belongs here only where a housing, dwelling or residential mechanism
-    is central, not merely because home, place or geography is mentioned. | 8, Migration
-    & Demographics — Population structure or change, migration, fertility, ageing
-    or mortality as a demographic outcome; not every study that includes demographic
-    characteristics or subgroup comparisons. | 9, Environment & Agriculture — The
-    natural environment, climate, energy, agriculture, land use, pollution, decarbonisation
-    or environmental impacts; not “environment” used only to mean a social, economic,
-    family or institutional context. | 10, Public Finance & Taxation — Taxation, tax
-    compliance, tax credits, business rates, public revenue or expenditure, fiscal
-    transfers, tax reliefs or fiscal policy; not private income, debt, wealth, investment
-    or household finances without a public-finance mechanism. | 11, Data Infrastructure
-    & Methodology — Research primarily about data, linkage, measurement, classifications,
-    methods or statistical infrastructure; not merely a substantive project that uses
-    linked data or advanced methods.
+  missing_domain_choices: 1, Labour Market & Employment | 2, Education & Skills |
+    3, Health & Social Care | 4, Crime & Justice | 5, Business & Productivity | 6,
+    Poverty, Wealth & Living Standards | 7, Housing & Planning | 8, Migration & Demographics
+    | 9, Environment & Agriculture | 10, Public Finance & Taxation | 11, Data Infrastructure
+    & Methodology
   missing_domain_concordance: project_owner_domain_wording_concordance_candidate_0.4.md

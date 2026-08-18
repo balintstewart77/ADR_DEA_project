@@ -71,28 +71,28 @@ po_p02_correct_explain,project_review,project_review,owner_response,Actual-proje
 po_p02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
 po_p02_vis_explain,project_review,project_review,owner_response,"Optional label-level public-register evidence explanation; analyse only when final visibility is Partly visible, Not visible or Unsure. Blank means not provided; ignore a retained value after Clearly visible."
 prop_t01_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
-prop_t01_def,project_review,project_review,assignment_or_proposal,Exact participant-facing definition for Demographic disparities / equity tag; populated on every Project Review repeat row.
+prop_t01_def,project_review,project_review,assignment_or_proposal,Exact rc3 proposed-label short definition for Demographic disparities / equity tag; populated on every Project Review repeat row.
 prop_t01_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
 po_t01_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_t01_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; analyse only when the final fit is Does not fit or final tag correctness is No. Preserve but ignore a retained hidden value after the parent changes.
 po_t01_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
 po_t01_vis_explain,project_review,project_review,owner_response,"Optional label-level public-register evidence explanation; analyse only when final visibility is Partly visible, Not visible or Unsure. Blank means not provided; ignore a retained value after Clearly visible."
 prop_t02_label,project_review,project_review,assignment_or_proposal,Blank on the other row type in REDCap long export.
-prop_t02_def,project_review,project_review,assignment_or_proposal,Exact participant-facing definition for COVID-19 & Pandemic; populated on every Project Review repeat row.
+prop_t02_def,project_review,project_review,assignment_or_proposal,Exact rc3 proposed-label short definition for COVID-19 & Pandemic; populated on every Project Review repeat row.
 prop_t02_status,project_review,project_review,assignment_or_proposal,Pre-populated 1=Applied or 0=Not applied for one of the two tags reviewed on every assignment; blank on the owner row.
 po_t02_correct,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_t02_correct_explain,project_review,project_review,owner_response,Actual-project classification disagreement explanation; analyse only when the final fit is Does not fit or final tag correctness is No. Preserve but ignore a retained hidden value after the parent changes.
 po_t02_vis,project_review,project_review,owner_response,Codes: 2=Clearly visible; 1=Partly visible; 0=Not visible; 3=Unsure. Blank on the owner row.
 po_t02_vis_explain,project_review,project_review,owner_response,"Optional label-level public-register evidence explanation; analyse only when final visibility is Partly visible, Not visible or Unsure. Blank means not provided; ignore a retained value after Clearly visible."
-po_miss_domain,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_miss_domains,project_review,project_review,owner_response,Structured missing-classification selections; analyse only when the final gateway is Yes and ignore retained hidden selections after No/Unsure.
+po_miss_domains,project_review,project_review,owner_response,Optional raw checkbox selections displayed unconditionally. Preserve alongside the required post-list radio; contradictory states require an approved analysis rule.
 po_miss_domain_basis,project_review,project_review,owner_response,Optional missing-classification context; analyse only when the final gateway is Yes and at least one applicable label is selected. Blank means not provided and does not negate the structured report.
-po_miss_purpose,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_miss_purposes,project_review,project_review,owner_response,Missing-purpose checkboxes; @MAXCHECKED=2 limits this menu. Analyse selections only when the final gateway is Yes; ignore retained hidden selections after No/Unsure. Add applicable selections to proposed purposes judged Fits and flag an implied corrected count above two as a cardinality/taxonomy issue.
+po_miss_domain,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_purposes,project_review,project_review,owner_response,Optional raw checkbox selections displayed unconditionally. Preserve alongside the required post-list radio; contradictory states require an approved analysis rule.
 po_miss_purpose_basis,project_review,project_review,owner_response,Optional missing-classification context; analyse only when the final gateway is Yes and at least one applicable label is selected. Blank means not provided and does not negate the structured report.
-po_miss_tag,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
-po_miss_tags,project_review,project_review,owner_response,Structured missing-classification selections; analyse only when the final gateway is Yes and ignore retained hidden selections after No/Unsure.
+po_miss_purpose,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
+po_miss_tags,project_review,project_review,owner_response,Optional raw checkbox selections displayed unconditionally. Preserve alongside the required post-list radio; contradictory states require an approved analysis rule.
 po_miss_tag_basis,project_review,project_review,owner_response,Optional missing-classification context; analyse only when the final gateway is Yes and at least one applicable label is selected. Blank means not provided and does not negate the structured report.
+po_miss_tag,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_sufficiency,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.
 po_suff_explain,project_review,project_review,owner_response,"Optional project-level sufficiency context; analyse only for final Partial/Insufficient. Blank means not provided, not no missing information; ignore retained hidden text after Sufficient."
 po_taxonomy_fit,project_review,project_review,owner_response,Blank on the other row type in REDCap long export.

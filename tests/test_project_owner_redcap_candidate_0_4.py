@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import html
 import inspect
+import re
 import zipfile
 from collections import Counter
 from pathlib import Path
@@ -49,9 +51,92 @@ def test_exact_two_instruments_and_counts():
         "project_review",
     )
     assert Counter(row["Form Name"] for row in rows) == Counter(
-        {"owner_consent": 22, "project_review": 97}
+        {"owner_consent": 22, "project_review": 101}
     )
-    assert len(rows) == 119
+    assert len(rows) == 123
+
+
+def test_import_ready_dictionary_is_exact_generator_output():
+    assert builder.IMPORT_READY_DICTIONARY.read_bytes() == builder.DICTIONARY.read_bytes()
+
+
+def test_read_only_requiredness_descriptive_weight_and_provenance_are_repaired():
+    rows = dictionary_rows()
+    by = dictionary_by_name()
+    assert all(
+        not row["Required Field?"]
+        for row in rows
+        if "@READONLY-SURVEY" in row["Field Annotation"]
+    )
+    for row in rows:
+        if row["Field Type"] != "descriptive":
+            continue
+        label = row["Field Label"]
+        assert label.count('style="font-weight:400;"') == 1
+        assert "<p" not in label.lower()
+    assert by["public_register_url"]["Field Annotation"] == "@HIDDEN-SURVEY @READONLY"
+    assert by["po_register_provenance"]["Field Label"] == builder.normal_weight_descriptive(
+        builder.REGISTER_PROVENANCE
+    )
+    assert builder.APPROVED_PRIVACY_WORDING in validator.plain_redcap_label(
+        by["po_privacy"]["Field Label"]
+    )
+
+
+def test_missing_label_order_requiredness_branching_and_limits_are_repaired():
+    rows = dictionary_rows()
+    by = dictionary_by_name()
+    names = [row["Variable / Field Name"] for row in rows]
+    expected_groups = {
+        "domain": [
+            "po_miss_domain_reference", "po_miss_domain_reminder", "po_miss_domains",
+            "po_miss_domain_basis", "po_miss_domain",
+        ],
+        "purpose": [
+            "po_miss_purpose_reference", "po_miss_purpose_guidance",
+            "po_miss_purpose_reminder", "po_miss_purposes",
+            "po_miss_purpose_basis", "po_miss_purpose",
+        ],
+        "tag": [
+            "po_miss_tag_reference", "po_miss_tags", "po_miss_tag_basis", "po_miss_tag",
+        ],
+    }
+    for group in expected_groups.values():
+        positions = [names.index(name) for name in group]
+        assert positions == list(range(positions[0], positions[0] + len(group)))
+    for gate, label in builder.GATE_LABELS.items():
+        assert by[gate]["Field Label"] == label
+    for layer, reference in builder.REFERENCE_FIELD_BY_LAYER.items():
+        assert by[reference]["Section Header"] == builder.REFERENCE_SECTION_BY_LAYER[layer]
+    for menu, gate in (
+        ("po_miss_domains", "po_miss_domain"),
+        ("po_miss_purposes", "po_miss_purpose"),
+        ("po_miss_tags", "po_miss_tag"),
+    ):
+        assert by[menu]["Branching Logic (Show field only if...)"] == ""
+        assert by[menu]["Required Field?"] == ""
+        assert by[gate]["Required Field?"] == "y"
+        assert names.index(gate) > names.index(menu)
+    assert by["po_miss_purpose_guidance"]["Branching Logic (Show field only if...)"] == ""
+    assert by["po_miss_purposes"]["Field Annotation"] == "@MAXCHECKED=2"
+    assert "up to two" in by["po_miss_purposes"]["Field Label"].lower()
+    assert "@MAXCHECKED" not in by["po_miss_domains"]["Field Annotation"]
+    assert "@MAXCHECKED" not in by["po_miss_tags"]["Field Annotation"]
+    for basis in ("po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis"):
+        assert by[basis]["Required Field?"] == ""
+        assert "(1)] = '1'" in by[basis]["Branching Logic (Show field only if...)"]
+
+
+def test_branching_and_action_tag_references_resolve():
+    rows = dictionary_rows()
+    names = {row["Variable / Field Name"] for row in rows}
+    for row in rows:
+        for column in (
+            "Branching Logic (Show field only if...)",
+            "Field Annotation",
+        ):
+            references = set(re.findall(r"\[([A-Za-z][A-Za-z0-9_]*)", row[column]))
+            assert references <= names, (row["Variable / Field Name"], column, references - names)
 
 
 def test_ten_unique_owner_level_consent_items_match_ethics_document():
@@ -192,16 +277,16 @@ def test_missing_domain_and_purpose_reminders_are_exact_bold_and_immediate():
     names = [row["Variable / Field Name"] for row in rows]
     paragraphs = validator.questionnaire_doc_paragraphs()
     specs = (
-        ("po_miss_domain_reminder", "po_miss_domains", "Q6b.", builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE, builder.MISSING_DOMAIN_REMINDER_HTML, "[po_miss_domain] = '1'"),
-        ("po_miss_purpose_reminder", "po_miss_purposes", "Q7b.", builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE, builder.MISSING_PURPOSE_REMINDER_HTML, "[po_miss_purpose] = '1'"),
+        ("po_miss_domain_reminder", "po_miss_domains", "Q6b.", builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE, builder.MISSING_DOMAIN_REMINDER_HTML),
+        ("po_miss_purpose_reminder", "po_miss_purposes", "Q7b.", builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE, builder.MISSING_PURPOSE_REMINDER_HTML),
     )
-    for reminder, target, question, plain, phrase, markup, branch in specs:
+    for reminder, target, question, plain, phrase, markup in specs:
         assert names.index(reminder) + 1 == names.index(target)
         assert by[reminder]["Field Type"] == "descriptive"
-        assert by[reminder]["Field Label"] == markup
-        assert validator.plain_redcap_label(markup) == validator.normalise_text(plain)
+        assert by[reminder]["Field Label"] == builder.normal_weight_descriptive(markup)
+        assert validator.plain_redcap_label(by[reminder]["Field Label"]) == validator.normalise_text(plain)
         assert markup.count(f"<strong>{phrase}</strong>") == 1
-        assert by[reminder]["Branching Logic (Show field only if...)"] == branch
+        assert by[reminder]["Branching Logic (Show field only if...)"] == ""
         assert by[reminder]["Required Field?"] == ""
         question_index = validator._question_index(paragraphs, question)
         assert paragraphs[question_index - 1] == validator.normalise_text(plain)
@@ -210,14 +295,11 @@ def test_missing_domain_and_purpose_reminders_are_exact_bold_and_immediate():
         ) == []
 
 
-def test_q6b_q7b_choices_and_tag_definitions_are_unchanged():
+def test_missing_choices_are_labels_only_and_reference_wording_is_preserved():
     by = dictionary_by_name()
-    assert hashlib.sha256(
-        by["po_miss_domains"]["Choices, Calculations, OR Slider Labels"].encode()
-    ).hexdigest() == "c7ecbf2e2ad2c9134dfd3ddb3857afc8c077d9a3f86f17fb6bcbeefba3f5cf1d"
-    assert hashlib.sha256(
-        by["po_miss_purposes"]["Choices, Calculations, OR Slider Labels"].encode()
-    ).hexdigest() == "cff79cb5e203a90a49fe0b14e6e8c10a0f7e070d1c21b8b2e177768d8b4c8724"
+    assert tuple(validator.parse_choices(by["po_miss_domains"]["Choices, Calculations, OR Slider Labels"]).values()) == builder.DOMAIN_ORDER
+    assert tuple(validator.parse_choices(by["po_miss_purposes"]["Choices, Calculations, OR Slider Labels"]).values()) == builder.missing_menu_labels("purpose")
+    assert tuple(validator.parse_choices(by["po_miss_tags"]["Choices, Calculations, OR Slider Labels"]).values()) == builder.missing_menu_labels("tag")
     assert builder.TAG_DEFINITIONS == {
         "Demographic disparities / equity tag": (
             "A cross-cutting tag for projects whose research question centres on comparing outcomes, experiences, risks, access, or trajectories across demographic or equality-relevant groups. Routine subgroup breakdowns do not qualify, and socioeconomic or deprivation-based inequality alone is insufficient unless comparison across demographic or equality-relevant groups is central."
@@ -228,7 +310,65 @@ def test_q6b_q7b_choices_and_tag_definitions_are_unchanged():
     }
 
 
-def test_nonproduction_taxonomy_reference_is_removed_without_replacement():
+def test_three_wording_roles_are_kept_separate_and_complete():
+    by = dictionary_by_name()
+    for prefix, layer, count in (("d", "domain", 4), ("p", "purpose", 2), ("t", "tag", 2)):
+        for index in range(1, count + 1):
+            stem = f"{prefix}{index:02d}"
+            assert by[f"po_{stem}_display"]["Field Label"] == (
+                f"<div><strong>[prop_{stem}_label]</strong><br>"
+                f'<span style="font-weight:400;">What this {layer} covers: '
+                f"[prop_{stem}_def]</span></div>"
+            )
+    for layer in ("domain", "purpose", "tag"):
+        reference = by[builder.REFERENCE_FIELD_BY_LAYER[layer]]["Field Label"]
+        assert reference == builder.missing_reference_html(layer)
+        assert builder.base.UNCLEAR_LABEL not in html.unescape(reference)
+        for label in builder.missing_menu_labels(layer):
+            definition = (
+                builder._domain_boundary_definition(label)
+                if layer == "domain"
+                else builder.rc3_short_definition(layer, label)
+            )
+            rendered = (
+                f"<strong>{html.escape(label, quote=False)}</strong> — "
+                f"{html.escape(definition, quote=False)}"
+            )
+            assert reference.count(rendered) == 1
+            if layer == "domain":
+                rc3_rendered = (
+                    f"<strong>{html.escape(label, quote=False)}</strong> — "
+                    f"{html.escape(builder.rc3_short_definition(layer, label), quote=False)}"
+                )
+                assert rc3_rendered not in reference
+
+    fixture, _ = validator.read_csv(builder.IMPORT_FIXTURE)
+    for row in fixture:
+        if row["redcap_repeat_instrument"] != "project_review":
+            continue
+        for prefix, layer, count in (("d", "domain", 4), ("p", "purpose", 2), ("t", "tag", 2)):
+            for index in range(1, count + 1):
+                label = row[f"prop_{prefix}{index:02d}_label"]
+                if label:
+                    assert row[f"prop_{prefix}{index:02d}_def"] == builder.rc3_short_definition(
+                        layer, label
+                    )
+
+
+def test_no_participant_facing_text_promises_a_missing_reference():
+    participant_text = "\n".join(
+        row["Field Label"] for row in dictionary_rows() if row["Field Label"]
+    ).lower()
+    for obsolete in (
+        "a concise reference to all classifications is also available",
+        "one-page guide attached",
+        "taxonomy reference pdf",
+        "optional classification reference",
+    ):
+        assert obsolete not in participant_text
+
+
+def test_nonproduction_taxonomy_reference_is_replaced_by_point_of_need_blocks():
     names = {row["Variable / Field Name"] for row in dictionary_rows()}
     assert "po_taxonomy_ref" not in names
     forbidden = (
@@ -250,8 +390,8 @@ def test_nonproduction_taxonomy_reference_is_removed_without_replacement():
     documentation = builder.SPEC.read_text(encoding="utf-8") + builder.LIVE_CONFIG.read_text(
         encoding="utf-8"
     )
-    assert "no taxonomy-reference PDF, attachment, external link" in documentation
-    assert "no taxonomy-reference placeholder, PDF attachment" in documentation
+    assert "three complete collapsible reference blocks" in documentation
+    assert "point-of-need reference blocks" in documentation
 
 
 def test_approved_missing_domain_mapping_is_exact_complete_and_single_source():
@@ -291,9 +431,9 @@ def test_q6b_questionnaire_dictionary_specs_and_audits_are_exactly_aligned():
     }
     row = dictionary_by_name()["po_miss_domains"]
     assert row["Field Type"] == "checkbox"
-    assert row["Branching Logic (Show field only if...)"] == "[po_miss_domain] = '1'"
-    assert row["Required Field?"] == "y"
-    assert validator.parse_choices(row["Choices, Calculations, OR Slider Labels"]) == expected
+    assert row["Branching Logic (Show field only if...)"] == ""
+    assert row["Required Field?"] == ""
+    assert tuple(validator.parse_choices(row["Choices, Calculations, OR Slider Labels"]).values()) == builder.DOMAIN_ORDER
     documented = validator._question_following(
         validator.questionnaire_doc_paragraphs(), "Q6b.", "Response options:"
     ).removeprefix("Response options:").strip()
@@ -301,7 +441,7 @@ def test_q6b_questionnaire_dictionary_specs_and_audits_are_exactly_aligned():
 
     field_rows, _ = validator.read_csv(builder.FIELD_SPEC)
     field = next(item for item in field_rows if item["variable"] == "po_miss_domains")
-    assert field["notes"] == builder.owner_domain_redcap_choices()
+    assert "po_miss_domain_reference" in field["notes"]
     formatting, _ = validator.read_csv(builder.FORMATTING_AUDIT)
     audit = [item for item in formatting if item["variable_name"] == "po_miss_domains"]
     assert len(audit) == 1
@@ -356,8 +496,7 @@ def test_live_qa_requires_all_eleven_semantic_and_display_checks():
     text = builder.LIVE_CONFIG.read_text(encoding="utf-8")
     assert "Research Domain wording concordance: For every Research Domain" in text
     assert "Record an individual pass/fail live-QA result for all 11 Domains" in text
-    assert "no truncation or unusable rendering" in text
-    assert "line wrapping does not obscure which boundary belongs to which Domain" in text
+    assert "without truncation or ambiguous line wrapping" in text
     assert "multi-select" in text
     assert "Unclear from Register Entry" in text
     assert "Migration approval fails if any Domain points in materially different directions" in text
@@ -456,11 +595,15 @@ def test_both_permanent_tag_blocks_are_populated_independent_and_required():
         visibility = f"po_{prefix}_vis"
         assert builder.TAG_FIELD_MAPPING[status] == label
         assert all(row[f"prop_{prefix}_label"] == label for row in reviews)
-        assert all(row[definition] == builder.TAG_DEFINITIONS[label] for row in reviews)
+        assert all(
+            row[definition] == builder.rc3_short_definition("tag", label)
+            for row in reviews
+        )
         assert all(row[status] in {"0", "1"} for row in reviews)
         assert validator.parse_choices(
             by[status]["Choices, Calculations, OR Slider Labels"]
         ) == {"1": "Applied", "0": "Not applied"}
+        assert by[status]["Required Field?"] == ""
         assert names.index(display) < names.index(status) < names.index(correct)
         for judgement in (correct, visibility):
             assert by[judgement]["Required Field?"] == "y"
@@ -551,9 +694,8 @@ def test_no_direct_identifier_field_is_introduced():
     }
 
 
-def test_project_review_is_predecessor_equivalent_except_documented_removal():
-    # validate_dictionary performs the exact row-level predecessor comparison.
-    assert validator.validate_dictionary()["forms"]["project_review"] == 97
+def test_project_review_preserves_existing_names_and_types_with_four_additions():
+    assert validator.validate_dictionary()["forms"]["project_review"] == 101
 
 
 def test_deterministic_build_includes_approval_and_concordance_records():

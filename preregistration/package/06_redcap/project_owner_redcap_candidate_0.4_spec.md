@@ -6,22 +6,22 @@ Ethics trace: UCL Project ID 5004; Participant Information and Consent v3 dated 
 
 ## Architecture and field counts
 
-Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 119 dictionary fields:
+Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 123 dictionary fields:
 
 - `owner_consent`: 22 fields;
-- `project_review`: 97 fields.
+- `project_review`: 101 fields.
 
 The Project Owner instrument remains unfrozen and non-authoritative. This candidate does not authorise recruitment or live migration. Both canonical participant DOCX files are pinned by SHA-256 and byte size; generation stops if either changes without an authorised metadata refresh. The missing-Domain wording is author-approved and repository-validated; controlled migration and live semantic/display QA remain mandatory before recruitment.
 
-## Project Review orientation and reference removal
+## Project Review orientation and point-of-need references
 
 After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed immediately by the otherwise unchanged read-only `po_classification_overview`, then the detailed Domain, Purpose and tag judgements. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
 
-The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder is removed without replacement. Candidate 0.4 has no taxonomy-reference PDF, attachment, external link, Appendix A link, optional guide or live-migration dependency. Definitions needed for each judgement are supplied at the point of use.
+The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete collapsible reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need.
 
-Q6b contains exactly 11 author-approved, boundary-bearing missing-Domain choices generated from `OWNER_DOMAIN_DISPLAY`. The mapping keys are the exact eligible frozen Research Domain labels; `Unclear from Register Entry` is excluded. Each entry pairs the existing full proposed-label definition with one approved compressed missing-label aid and documents its frozen source fields and boundary summary. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic and display QA remains pending.
+Q6b contains exactly 11 label-only missing-Domain choices. `po_miss_domain_reference` displays every matching author-approved boundary definition generated from `OWNER_DOMAIN_DISPLAY`; `Unclear from Register Entry` is excluded. Q7b and Q8b likewise use label-only choices with complete adjacent reference blocks sourced from their questionnaire/rc3-identical wording. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic, `<details>` and PDF/export display QA remains pending.
 
-Immediately before Q6b and Q7b, display-only descriptive fields restate the same substantive-focus threshold for missing Domains and Purposes. Only `a substantive subject of the project` and `a substantive analytical aim of the project` are strongly emphasised. These additions do not change the checkbox choices, codes, order, branching, requiredness or exports.
+The three missing-label menus are displayed unconditionally and are optional. Their required Yes/No/Unsure identification radios follow each menu and optional basis field. Domain and Purpose guidance remains visible before the relevant checkbox. This deliberate departure from the approved questionnaire branching must be notified to the REC. Checkbox selections combined with a final No or Unsure response are possible and require a separately approved analysis rule.
 
 ## Operational cross-cutting-tag invariant
 
@@ -32,7 +32,7 @@ The operational set contains exactly two frozen machine values, in this order:
 
 Operational inclusion is determined by `include_in_prompt is true; layer is Cross-cutting tag; source status does not begin 'removed'`. Lifecycle/provenance status is not the inclusion criterion: the first tag is `new v3.4`, while the second is `active`, and both are operational because they satisfy the explicit rule. The production classifier, production outputs, dashboard and Project Owner pipeline therefore retain both tags; no one-tag bug exists. Candidate 0.4 changes neither the frozen taxonomy nor the production prompt.
 
-Each Project Review displays the canonical label and the exact two-sentence definition from `prop_t01_def` or `prop_t02_def` immediately before its Applied / Not applied proposed status. Both independent correctness and visibility blocks are always required for analytical completion. The main Questionnaire sections 5.1/5.2, Appendix A and these REDCap definition values match after whitespace normalisation.
+Each Project Review displays the canonical label and exact rc3 proposed-label short definition from `prop_t01_def` or `prop_t02_def` immediately before its Applied / Not applied proposed status. The longer Questionnaire and Appendix A definitions remain documentary reference wording and are not substituted into the proposed-label display. Both independent correctness and visibility blocks remain required for analytical completion.
 
 ## Ethics-to-REDCap consent traceability
 
@@ -83,6 +83,8 @@ Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Proj
 
 `po_final_warning` now follows `po_other_comment` immediately before submission and has no quotation-permission dependency.
 
+All participant-visible read-only stimulus fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static June 2026 register provenance line. `po_privacy` uses both sentences of the approved questionnaire wording. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
+
 ## Fixture and long-format analysis
 
 The synthetic fixture remains three owners, 19 pre-created Project Review instances and 22 long-format rows. Owner consent responses, all ten confirmations, `consent_items_complete`, final consent and acknowledgement are blank on import. Owner consent values occur only on the non-repeating owner row; Project Review repeat rows keep them blank. No synthetic participant is imported as consented.
@@ -91,4 +93,4 @@ Analysis must join the non-repeating owner row to reviews by `owner_id` and requ
 
 ## Scope exclusions and change record
 
-Reason: clarify and visually emphasise the existing substantive-focus threshold before proposed classifications and missing-Domain/Purpose decisions. Nature: completion of candidate 0.4; the governing Project Owner threshold now states that a Domain or Purpose applies only when it is a substantive focus, not merely because related terms, datasets, variables, methods or outcomes appear. No taxonomy rule, category, classification, response code, analytical construct, frozen taxonomy or prompt artefact, dashboard schema, assignment, sampling, project metadata or participant data changed. The approved Q6b microdefinitions remain unchanged. Candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative; migration and recruitment remain blocked pending controlled migration and successful live QA.
+Reason: repair participant-facing requiredness, density, reference delivery, missing-label task order, privacy, provenance and descriptive formatting defects while preserving category wording authorities. Nature: candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative. The missing-label gate removal intentionally departs from questionnaire Q6a/Q7a/Q8a branching and requires REC notification before migration. No frozen taxonomy, production prompt, candidate 0.3 artefact, assignment, sample or participant record changed.

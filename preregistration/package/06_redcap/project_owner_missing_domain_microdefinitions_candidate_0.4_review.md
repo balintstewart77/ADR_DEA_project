@@ -2,7 +2,7 @@
 
 Status: **approved instrument wording; implemented in candidate 0.4; live semantic and display QA pending**. Author approval was recorded on 2026-07-28. Candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative; PID 9149 migration and recruitment remain blocked until controlled migration and successful live QA.
 
-These Project Owner instrument display aids apply only to the 11 substantive Research Domain checkbox choices shown in Q6b. The generator mapping OWNER_DOMAIN_DISPLAY is their single operational source. The frozen taxonomy remains authoritative for labels, definitions, inclusion rules, exclusion rules, examples, counterexamples and boundaries; it was not changed.
+These Project Owner instrument display aids apply to the complete 11-category reference block shown immediately before the label-only Research Domain checkbox choices. The generator mapping OWNER_DOMAIN_DISPLAY is their single operational source. The frozen taxonomy remains authoritative for labels, definitions, inclusion rules, exclusion rules, examples, counterexamples and boundaries; it was not changed.
 
 | Canonical Domain | Final approved Q6b wording | Word count | Frozen source fields | Boundary addressed | Change from initial draft | Author approval | Implementation | Concordance record |
 |---|---|---:|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ These Project Owner instrument display aids apply only to the 11 substantive Res
 
 ## Author-review decision
 
-The project author approved the exact 11 lines above on 2026-07-28. The table records every substantive change from the earlier draft. The approved lines are now generated into Q6b in the canonical questionnaire, REDCap data dictionary, field specification and formatting audit. Unclear from Register Entry remains excluded.
+The project author approved the exact 11 lines above on 2026-07-28. The table records every substantive change from the earlier draft. The approved lines remain in Q6b of the canonical questionnaire and are generated into the REDCap reference block, field specification and formatting audit. The checkbox itself contains labels only. Unclear from Register Entry remains excluded.
 
 ## Semantic-concordance status
 
