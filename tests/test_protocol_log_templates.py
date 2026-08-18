@@ -253,7 +253,12 @@ def test_required_log_files_and_post_pilot_governance_entry():
         "reviewer", "status",
     }
     assert required_deviation_columns <= set(deviation_reader.fieldnames)
-    assert [row["deviation_id"] for row in deviation_entries] == ["DEV-001", "DEV-002"]
+    assert [row["deviation_id"] for row in deviation_entries] == [
+        "DEV-001",
+        "DEV-002",
+        "DEV-003",
+        "DEV-004",
+    ]
     deviation = deviation_entries[0]
     assert all(deviation[column].strip() for column in required_deviation_columns)
     assert deviation["substantive"] == "no"
@@ -273,6 +278,32 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert implementation_correction["reviewer"] == "Project lead instruction"
     assert "direct-parent" in implementation_correction["resolution"]
     assert "no sample" in implementation_correction["resolution"].lower()
+
+    hash_correction = deviation_entries[2]
+    assert all(hash_correction[column].strip() for column in required_deviation_columns)
+    assert hash_correction["substantive"] == "no"
+    assert hash_correction["amendment_required"] == "no"
+    assert hash_correction["status"] == "applied"
+    assert hash_correction["resolved_date"] == "2026-08-18"
+    assert "CRLF" in hash_correction["description"]
+    assert "1,308 records" in hash_correction["affected_records_or_outputs"]
+    assert "No dictionary content" in hash_correction["affected_records_or_outputs"]
+
+    hidden_child_deviation = deviation_entries[3]
+    required_while_open = required_deviation_columns - {"resolved_date"}
+    assert all(
+        hidden_child_deviation[column].strip() for column in required_while_open
+    )
+    assert hidden_child_deviation["resolved_date"] == ""
+    assert hidden_child_deviation["substantive"] == "no"
+    assert hidden_child_deviation["amendment_required"] == "yes"
+    assert hidden_child_deviation["status"] == "open"
+    assert "not confined to QA" in hidden_child_deviation[
+        "affected_records_or_outputs"
+    ]
+    assert "every real owner response" in hidden_child_deviation[
+        "affected_records_or_outputs"
+    ]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():
