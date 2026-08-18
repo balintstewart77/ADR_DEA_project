@@ -43,7 +43,7 @@ Participant-document alignment is complete for the implemented candidate-0.4 con
 - `consent_read_info` — I have read and understood the participant information above.
 - `consent_understand_invitation` — I understand why I have been invited and what taking part involves.
 - `consent_voluntary` — I understand that participation is voluntary and that I may review all, some or none of the projects offered.
-- `consent_no_nonpublic` — I understand that I should not disclose confidential, sensitive or otherwise non-public information.
+- `consent_no_nonpublic` — I understand that I should not disclose confidential, sensitive or otherwise non-public information. Where wider project context affects your answer, please describe it only at a general level you are comfortable sharing.
 - `consent_confidentiality_limits` — I understand that my information will be handled confidentially and that direct identifiers will not appear in research outputs, but complete anonymity cannot be guaranteed because the participant group is small and responses concern publicly identifiable projects.
 - `consent_withdrawal_deadline` — I understand that I may withdraw a submitted review by emailing the study team by Friday 2 October 2026, and that after this date responses can no longer be removed.
 - `consent_quote_process` — I understand that if the study wishes to quote my comments, I will be sent the exact proposed wording in advance and it will only be used if I agree.
@@ -51,7 +51,9 @@ Participant-document alignment is complete for the implemented candidate-0.4 con
 - `consent_complaints` — I am aware of who I should contact if I wish to lodge a complaint.
 - `consent_acknowledgement` — I understand that choosing to be acknowledged by name is optional, is separate to my decision to take part, and would make my participation in this study permanently and publicly identifiable.
 
-Every confirmation is a separate owner-level radio field with stored codes `1, Confirmed | 0, Not confirmed`, starts blank, is never pre-populated, and branches only on `[intended_recipient] = '1'`. None appears in `project_review` or counts as a Project Review analytical outcome.
+Every confirmation is a separate required owner-level radio field with stored codes `1, Confirmed | 0, Not confirmed`, starts blank, is never pre-populated, and branches only on `[intended_recipient] = '1'`. Requiredness prevents an incomplete consent-form submission; the calculation separately requires every stored value to equal `1`, so a required `0` does not establish valid consent. None appears in `project_review` or counts as a Project Review analytical outcome.
+
+`consent_form_ver` remains a hidden/read-only text field populated by the owner-frame import. Its `@DEFAULT='owner-consent-v3'` annotation also supplies the displayed consent version when a record reaches the survey without that imported value, including a decline submission; controlled live QA must confirm the default is stored on the target REDCap runtime.
 
 `consent_items_complete` is a survey-hidden calculated field with this exact expression:
 

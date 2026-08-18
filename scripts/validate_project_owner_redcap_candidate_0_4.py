@@ -546,10 +546,27 @@ def validate_dictionary() -> dict[str, object]:
             errors.append(f"{name} is not owner-level")
         if normalise_text(row.get("Field Label", "")) != normalise_text(wording):
             errors.append(f"{name} wording differs")
-        if normalise_text(wording) not in document_paragraphs:
+        if name == "consent_no_nonpublic":
+            approved_parts = (
+                normalise_text(
+                    "I understand that I should not disclose confidential, sensitive or "
+                    "otherwise non-public information."
+                ),
+                normalise_text(builder.APPROVED_WIDER_CONTEXT_SENTENCE),
+            )
+            if any(
+                not any(part in paragraph for paragraph in document_paragraphs)
+                for part in approved_parts
+            ):
+                errors.append(
+                    "consent_no_nonpublic approved source sentences are not both present"
+                )
+        elif normalise_text(wording) not in document_paragraphs:
             errors.append(f"{name} is not present in Participant Information v3")
         if row.get("Branching Logic (Show field only if...)") != "[intended_recipient] = '1'":
             errors.append(f"{name} intended-recipient branch differs")
+        if row.get("Required Field?") != "y":
+            errors.append(f"{name} is not required")
         if parse_choices(row.get("Choices, Calculations, OR Slider Labels", "")) != {
             "1": "Confirmed",
             "0": "Not confirmed",
@@ -559,6 +576,10 @@ def validate_dictionary() -> dict[str, object]:
         errors.append("all-confirmed expression differs")
     if by["consent_items_complete"]["Field Type"] != "calc":
         errors.append("all-confirmed field is not calculated")
+    if by["consent_form_ver"]["Field Annotation"] != (
+        builder.CONSENT_FORM_VERSION_ANNOTATION
+    ):
+        errors.append("consent-form version is not defaulted on survey submission")
     if normalise_text(by["owner_consent"]["Field Label"]) != normalise_text(builder.FINAL_CONSENT_LABEL):
         errors.append("final consent wording differs")
     if parse_choices(by["owner_consent"]["Choices, Calculations, OR Slider Labels"]) != {
@@ -568,6 +589,32 @@ def validate_dictionary() -> dict[str, object]:
         errors.append("final consent codes differ")
     if by["owner_consent"]["Branching Logic (Show field only if...)"] != "[intended_recipient] = '1'":
         errors.append("active decline is not available after intended-recipient Yes")
+    participant_visible_source = " ".join(
+        row[column]
+        for row in rows
+        for column in ("Section Header", "Field Label", "Field Note")
+    )
+    participant_visible_source = re.sub(
+        r"\[[A-Za-z][A-Za-z0-9_]*(?:\([^]]+\))?\]",
+        "",
+        participant_visible_source,
+    )
+    participant_visible_text = html.unescape(
+        re.sub(r"<[^>]+>", " ", participant_visible_source)
+    ).lower()
+    for prohibited in (
+        "consent_items_complete",
+        "calculated field",
+        "branching logic",
+        "stop action",
+        "controlled live configuration",
+        "repository dictionary",
+        "project_owner_",
+    ):
+        if prohibited in participant_visible_text:
+            errors.append(
+                f"participant-visible consent text contains internal term: {prohibited}"
+            )
     if by["ack_pref"]["Required Field?"]:
         errors.append("acknowledgement is not optional")
     if by["ack_pref"]["Branching Logic (Show field only if...)"] != (

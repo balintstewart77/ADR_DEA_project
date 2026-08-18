@@ -19,12 +19,13 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 6. Confirm exactly two instruments: non-repeating Owner Consent (`owner_consent`) and repeating Project Review (`project_review`).
 7. Confirm `project_review` is the only repeating instrument, custom label `[assignment_id] — [project_title]`, participant-created repeats disabled and auto-start disabled.
 8. Display or attach the full approved `Project_Owner_Participant_Information_and_Consent_v3` information sheet before `intended_recipient`.
-9. Confirm all ten confirmation fields are owner-level, blank by default, not import-populated and hidden after intended-recipient No.
+9. Confirm all ten confirmation fields are owner-level, required, blank by default, not import-populated and hidden after intended-recipient No.
+9a. Confirm `consent_form_ver` is imported as `owner-consent-v3` on normal owner records and that `@DEFAULT='owner-consent-v3'` stores the same value when the field was initially blank and the owner submits either Yes or No.
 10. Confirm `consent_items_complete` uses exactly `if([consent_read_info] = '1' and [consent_understand_invitation] = '1' and [consent_voluntary] = '1' and [consent_no_nonpublic] = '1' and [consent_confidentiality_limits] = '1' and [consent_withdrawal_deadline] = '1' and [consent_quote_process] = '1' and [consent_retention_reanalysis] = '1' and [consent_complaints] = '1' and [consent_acknowledgement] = '1', 1, 0)` and is hidden/read-only to participants.
 11. Configure the Project Review Survey Queue condition exactly as `[owner_consent_complete] = '2' and [owner_consent] = '1' and [intended_recipient] = '1' and [consent_items_complete] = '1'`. Do not include `ack_pref`.
 12. Re-establish the existing Stop Action for `intended_recipient = No`: end the consent survey and reveal no consent items, acknowledgement or Project Reviews.
 13. Re-establish the existing Stop Action for `owner_consent = No`: end the consent survey, collect no acknowledgement and reveal no Project Reviews.
-14. Do not add an unverified action tag. Verify in the Online Designer that an attempted affirmative response with any confirmation blank or Not confirmed is not treated as valid participation and cannot reveal Project Reviews. If the target REDCap runtime cannot enforce this beyond the deterministic gate, stop migration approval and document the unresolved limitation before recruitment.
+14. Do not add an unverified consent-gating action tag. Verify in the Online Designer that an attempted affirmative response with any confirmation blank or Not confirmed is not treated as valid participation and cannot reveal Project Reviews. If the target REDCap runtime cannot enforce this beyond the deterministic gate, stop migration approval and document the unresolved limitation before recruitment.
 
 ## Synthetic import and consent-path tests
 

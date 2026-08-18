@@ -30,11 +30,18 @@ VERSION = "owner-redcap-candidate-0.4"
 STATUS = "development_candidate_unfrozen_pre_recruitment_live_migration_and_qa_pending"
 PARTICIPANT_INFO_VERSION = "project-owner-information-v3"
 CONSENT_FORM_VERSION = "owner-consent-v3"
+CONSENT_FORM_VERSION_ANNOTATION = (
+    f"{base.HIDDEN_ADMIN} @DEFAULT='{CONSENT_FORM_VERSION}'"
+)
+APPROVED_WIDER_CONTEXT_SENTENCE = (
+    "Where wider project context affects your answer, please describe it only at a "
+    "general level you are comfortable sharing."
+)
 
 DICTIONARY = PACKAGE / "project_owner_redcap_data_dictionary_candidate_0.4.csv"
 IMPORT_READY_DICTIONARY = (
     PACKAGE
-    / "project_owner_redcap_data_dictionary_candidate_0.4_defect_repaired_import_2026-08-18.csv"
+    / "project_owner_redcap_data_dictionary_candidate_0.4_consent_gate_repaired_import_2026-08-18.csv"
 )
 SPEC = PACKAGE / "project_owner_redcap_candidate_0.4_spec.md"
 LIVE_CONFIG = PACKAGE / "project_owner_redcap_candidate_0.4_live_configuration.md"
@@ -77,7 +84,8 @@ CONSENT_ITEMS = (
     ),
     (
         "consent_no_nonpublic",
-        "I understand that I should not disclose confidential, sensitive or otherwise non-public information.",
+        "I understand that I should not disclose confidential, sensitive or otherwise non-public "
+        f"information. {APPROVED_WIDER_CONTEXT_SENTENCE}",
     ),
     (
         "consent_confidentiality_limits",
@@ -747,15 +755,12 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
 
     by_name["participant_info_link"]["Field Label"] = (
         "<strong>Participant Information Sheet v3</strong><br>Read the full approved "
-        "Participant Information Sheet displayed here before answering the consent questions. "
-        "The controlled live configuration must attach or render "
-        "Project_Owner_Participant_Information_and_Consent_v3.docx/PDF; this repository "
-        "dictionary does not embed a production attachment."
+        "Participant Information Sheet displayed here before answering the consent questions."
     )
     by_name["owner_consent"]["Field Label"] = FINAL_CONSENT_LABEL
-    by_name["owner_consent"]["Field Note"] = (
-        "An affirmative response is valid only when consent_items_complete = 1. A No response "
-        "remains available without confirming every statement and invokes the configured Stop Action."
+    by_name["owner_consent"]["Field Note"] = ""
+    by_name["consent_form_ver"]["Field Annotation"] = (
+        CONSENT_FORM_VERSION_ANNOTATION
     )
     by_name["ack_pref"]["Field Label"] = ACKNOWLEDGEMENT_LABEL
     by_name["ack_pref"]["Choices, Calculations, OR Slider Labels"] = (
@@ -936,6 +941,7 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             wording,
             choices="1, Confirmed | 0, Not confirmed",
             branch="[intended_recipient] = '1'",
+            required=True,
         )
         for name, wording in CONSENT_ITEMS
     ]
@@ -944,7 +950,7 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
             "consent_items_complete",
             "owner_consent",
             "calc",
-            "All ten owner-consent confirmations complete",
+            "All ten owner-consent confirmations affirmative",
             choices=ALL_CONFIRMED_EXPRESSION,
             branch="[intended_recipient] = '1'",
             annotation=base.HIDDEN_ADMIN,
@@ -1526,7 +1532,9 @@ Participant-document alignment is complete for the implemented candidate-0.4 con
 
 {items}
 
-Every confirmation is a separate owner-level radio field with stored codes `1, Confirmed | 0, Not confirmed`, starts blank, is never pre-populated, and branches only on `[intended_recipient] = '1'`. None appears in `project_review` or counts as a Project Review analytical outcome.
+Every confirmation is a separate required owner-level radio field with stored codes `1, Confirmed | 0, Not confirmed`, starts blank, is never pre-populated, and branches only on `[intended_recipient] = '1'`. Requiredness prevents an incomplete consent-form submission; the calculation separately requires every stored value to equal `1`, so a required `0` does not establish valid consent. None appears in `project_review` or counts as a Project Review analytical outcome.
+
+`consent_form_ver` remains a hidden/read-only text field populated by the owner-frame import. Its `@DEFAULT='{CONSENT_FORM_VERSION}'` annotation also supplies the displayed consent version when a record reaches the survey without that imported value, including a decline submission; controlled live QA must confirm the default is stored on the target REDCap runtime.
 
 `consent_items_complete` is a survey-hidden calculated field with this exact expression:
 
@@ -1595,12 +1603,13 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 6. Confirm exactly two instruments: non-repeating Owner Consent (`owner_consent`) and repeating Project Review (`project_review`).
 7. Confirm `project_review` is the only repeating instrument, custom label `[assignment_id] — [project_title]`, participant-created repeats disabled and auto-start disabled.
 8. Display or attach the full approved `Project_Owner_Participant_Information_and_Consent_v3` information sheet before `intended_recipient`.
-9. Confirm all ten confirmation fields are owner-level, blank by default, not import-populated and hidden after intended-recipient No.
+9. Confirm all ten confirmation fields are owner-level, required, blank by default, not import-populated and hidden after intended-recipient No.
+9a. Confirm `consent_form_ver` is imported as `{CONSENT_FORM_VERSION}` on normal owner records and that `@DEFAULT='{CONSENT_FORM_VERSION}'` stores the same value when the field was initially blank and the owner submits either Yes or No.
 10. Confirm `consent_items_complete` uses exactly `{ALL_CONFIRMED_EXPRESSION}` and is hidden/read-only to participants.
 11. Configure the Project Review Survey Queue condition exactly as `{QUEUE_CONDITION}`. Do not include `ack_pref`.
 12. Re-establish the existing Stop Action for `intended_recipient = No`: end the consent survey and reveal no consent items, acknowledgement or Project Reviews.
 13. Re-establish the existing Stop Action for `owner_consent = No`: end the consent survey, collect no acknowledgement and reveal no Project Reviews.
-14. Do not add an unverified action tag. Verify in the Online Designer that an attempted affirmative response with any confirmation blank or Not confirmed is not treated as valid participation and cannot reveal Project Reviews. If the target REDCap runtime cannot enforce this beyond the deterministic gate, stop migration approval and document the unresolved limitation before recruitment.
+14. Do not add an unverified consent-gating action tag. Verify in the Online Designer that an attempted affirmative response with any confirmation blank or Not confirmed is not treated as valid participation and cannot reveal Project Reviews. If the target REDCap runtime cannot enforce this beyond the deterministic gate, stop migration approval and document the unresolved limitation before recruitment.
 
 ## Synthetic import and consent-path tests
 

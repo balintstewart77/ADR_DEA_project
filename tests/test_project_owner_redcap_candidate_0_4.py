@@ -148,10 +148,22 @@ def test_ten_unique_owner_level_consent_items_match_ethics_document():
         assert validator.normalise_text(by[name]["Field Label"]) == validator.normalise_text(
             wording
         )
-        assert validator.normalise_text(wording) in document
+        if name == "consent_no_nonpublic":
+            assert validator.normalise_text(
+                "I understand that I should not disclose confidential, sensitive or "
+                "otherwise non-public information."
+            ) in document
+            assert any(
+                validator.normalise_text(builder.APPROVED_WIDER_CONTEXT_SENTENCE)
+                in paragraph
+                for paragraph in document
+            )
+        else:
+            assert validator.normalise_text(wording) in document
         assert by[name]["Branching Logic (Show field only if...)"] == (
             "[intended_recipient] = '1'"
         )
+        assert by[name]["Required Field?"] == "y"
     assert not set(builder.CONSENT_NAMES) & {
         row["Variable / Field Name"]
         for row in dictionary_rows()
@@ -170,7 +182,43 @@ def test_all_confirmed_logic_requires_every_item_and_clearing_revokes_validity()
         assert not validator.valid_owner_consent(omitted)
         cleared = dict(owner)
         cleared[name] = "0"
+        assert not validator.consent_items_complete(cleared)
         assert not validator.valid_owner_consent(cleared)
+    all_blank = dict(owner)
+    all_blank.update({name: "" for name in builder.CONSENT_NAMES})
+    assert not validator.consent_items_complete(all_blank)
+    assert not validator.valid_owner_consent(all_blank)
+
+
+def test_participant_visible_text_has_no_internal_configuration_language():
+    participant_source = " ".join(
+        row[column]
+        for row in dictionary_rows()
+        for column in ("Section Header", "Field Label", "Field Note")
+    )
+    participant_source = re.sub(
+        r"\[[A-Za-z][A-Za-z0-9_]*(?:\([^]]+\))?\]", "", participant_source
+    )
+    participant_text = html.unescape(
+        re.sub(r"<[^>]+>", " ", participant_source)
+    ).lower()
+    for prohibited in (
+        "consent_items_complete",
+        "calculated field",
+        "branching logic",
+        "stop action",
+        "controlled live configuration",
+        "repository dictionary",
+        "project_owner_",
+    ):
+        assert prohibited not in participant_text
+
+
+def test_consent_version_is_defaulted_for_affirmative_and_decline_submissions():
+    row = dictionary_by_name()["consent_form_ver"]
+    assert row["Field Type"] == "text"
+    assert row["Field Annotation"] == builder.CONSENT_FORM_VERSION_ANNOTATION
+    assert f"@DEFAULT='{builder.CONSENT_FORM_VERSION}'" in row["Field Annotation"]
 
 
 def test_all_confirmed_calc_and_queue_conditions_are_exact():
