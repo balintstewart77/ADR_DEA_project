@@ -209,18 +209,27 @@ HIGH_RISK_COMPRESSION_NOTES = {
     ("tag", "COVID-19 & Pandemic"): "Human review focus: preserve central condition or lens rather than incidental mention.",
 }
 TAXONOMY_SHA256 = "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
-FROZEN_OUTPUT_SHA256 = "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299"
+# 2026-08-18: LF record-terminator identity under .gitattributes. Converting
+# only CSV record terminators back to CRLF, while preserving embedded newlines,
+# reproduces the former 6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299.
+FROZEN_OUTPUT_SHA256 = "9827fc9f01b9e1f3e9b58fe8f41b59eb5a569c77aacb77d5140628ec04f5eeab"
 
 # Candidate 0.2 is a controlled historical candidate. These hashes are checked
 # before generation and again by the candidate-0.3 validator/tests.
 V02_HASHES = {
     "scripts/build_project_owner_redcap_candidate_0_2.py": "71ba2557a76454e608148f776c7241ef77ea7f08dd6892f4e78b6bff11c374fc",
     "scripts/validate_project_owner_redcap_candidate_0_2.py": "bac416e76762ba2d644b8cfbe22b1b8f87c0a5db081360ed8e5a0d423cdf0c4f",
-    "tests/test_project_owner_redcap_candidate_0_2.py": "85c0761401eb48c2fd94e4c024ab86844fc02fc96feeee857bbc065bb80619e9",
-    "tests/fixtures/project_owner_candidate_0_2_synthetic_submissions.yaml": "7afe706a04d8f9ad40a167a303e507f67276543d545bcd4e663ad17a4c339733",
+    # 2026-08-18: LF identity under .gitattributes; previous CRLF SHA-256 was
+    # 85c0761401eb48c2fd94e4c024ab86844fc02fc96feeee857bbc065bb80619e9.
+    "tests/test_project_owner_redcap_candidate_0_2.py": "e88a681f847a4721baf99bdf50bfb3bcdbd5a67dccc4f9328f09e074faaee599",
+    # 2026-08-18: LF identity under .gitattributes; previous CRLF SHA-256 was
+    # 7afe706a04d8f9ad40a167a303e507f67276543d545bcd4e663ad17a4c339733.
+    "tests/fixtures/project_owner_candidate_0_2_synthetic_submissions.yaml": "b2c4e6911eb12d200e47022acb48226900c9925c669879fefc82cb758b4fd994",
     "preregistration/package/06_redcap/project_owner_redcap_data_dictionary_candidate_0.2.csv": "8225aec9afaae533151fa66e484b7361d8292777e9398b5a722fdc58b1fd52ec",
     "preregistration/package/06_redcap/project_owner_redcap_field_specification_candidate_0.2.csv": "97d73d402dd18f9b5312b997cb278fe90c3326d9a83a0838a2d6f0f265d7d014",
-    "preregistration/package/06_redcap/project_owner_redcap_branching_specification_candidate_0.2.yaml": "6880407b8e47d06510724f170f0aa8822406c0f62011e1afac55738ff9e7740d",
+    # 2026-08-18: LF identity under .gitattributes; previous CRLF SHA-256 was
+    # 6880407b8e47d06510724f170f0aa8822406c0f62011e1afac55738ff9e7740d.
+    "preregistration/package/06_redcap/project_owner_redcap_branching_specification_candidate_0.2.yaml": "18b43496173d437c8867444ca7be7ed2eb0f911bac873f270b0f979aaa38e9ad",
     "preregistration/package/06_redcap/project_owner_redcap_expected_export_candidate_0.2.csv": "18b9fbe9ef0bbac565495b7699b8d855d04b884d500ef2d38009535326093420",
     "preregistration/package/06_redcap/live_qa/project_owner_synthetic_import_candidate_0.2.csv": "1a0c61835fca6866196905f274908dc2f333be699d25066dbf4e19cb1e7d5346",
     "preregistration/package/06_redcap/project_owner_redcap_candidate_0.2_README.md": "d0a3e29666e28cfa6990de6a48a91f060a4d0f04135243e60a6413f9e3616544",

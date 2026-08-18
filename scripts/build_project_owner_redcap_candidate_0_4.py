@@ -449,16 +449,30 @@ APPENDIX_B_CONSENT_WORDING = (
 # Candidate 0.3 is a historical predecessor.  Generation stops if any of its
 # implementation or generated artefacts has changed.
 C03_HASHES = {
-    "scripts/build_project_owner_redcap_candidate_0_3.py": "b98bfabaa68a6ea5b1f0f7be0f694d9995996ebe389f7dda49866fcf7e6a22b4",
-    "scripts/validate_project_owner_redcap_candidate_0_3.py": "d4f8750ddcfb42d53d38aafd4a39c76f408eeeb0215f236c68db31730fc213df",
-    "tests/test_project_owner_redcap_candidate_0_3.py": "527eb3a9fb89e70558a2587021749266d3868a4f10431442789f385e9abb0622",
+    # 2026-08-18: LF identity after correcting only the candidate-0.3 internal
+    # CRLF-derived guard constants. Its preceding LF identity was
+    # 499c0490ee808aaab646147f86c75a8b43e75b3ce03f1ce5c0ba6c5f2a6992d2.
+    "scripts/build_project_owner_redcap_candidate_0_3.py": "6cec3e12a8db9e4a789e4b7926240f37a6c10e3985cad50fe5ccdff569da014f",
+    # 2026-08-18: LF identity under .gitattributes; previous CRLF SHA-256 was
+    # d4f8750ddcfb42d53d38aafd4a39c76f408eeeb0215f236c68db31730fc213df.
+    "scripts/validate_project_owner_redcap_candidate_0_3.py": "a8a188aee462b40c1a5abd76401b00776776c4b012fea3222674e895ed2cce84",
+    # 2026-08-18: LF identity. The previous 527eb3a9... value matched no version
+    # of this file or any other blob at d51e5512 and is presumed to have come
+    # from an intermediate authoring state that was never committed.
+    "tests/test_project_owner_redcap_candidate_0_3.py": "26ef209cc931ccff5144cc7e2ba386f21144d12261b66f940668c605a53e6c5d",
     "preregistration/package/06_redcap/project_owner_redcap_data_dictionary_candidate_0.3.csv": "97219123588878b7a086a406d08a24e66966b7b4e38e740117335a429d2e011b",
     "preregistration/package/06_redcap/project_owner_redcap_field_specification_candidate_0.3.csv": "88154a52b62241e69ffd73e736744fab0728742e37350d123fe363ba4a3f11af",
-    "preregistration/package/06_redcap/project_owner_redcap_branching_specification_candidate_0.3.yaml": "8fc9997cdd86a0871b998070e84215cad30218d8f408bd12a6b0d32eaab2b44e",
+    # 2026-08-18: LF identity under .gitattributes; previous CRLF SHA-256 was
+    # 8fc9997cdd86a0871b998070e84215cad30218d8f408bd12a6b0d32eaab2b44e.
+    "preregistration/package/06_redcap/project_owner_redcap_branching_specification_candidate_0.3.yaml": "fddc467a2f5518524c5759906016a42c6046c07e97afa35e6965f868330e0c9c",
     "preregistration/package/06_redcap/project_owner_redcap_expected_export_candidate_0.3.csv": "f95c9f85b41122eec40d035ae074f63148f8524c723a57c5b17ffaf2a18bc1d2",
     "preregistration/package/06_redcap/project_owner_redcap_formatting_audit_candidate_0.3.csv": "6667a1e48f876f73fd455f524e934753c8f80029aca3735900c61d8760df6fcb",
-    "preregistration/package/06_redcap/project_owner_redcap_candidate_0.3_spec.md": "ecafc2765930879a61a3f883c22e0b3c7a7afca5269af849472a361a3c09db8b",
-    "preregistration/package/06_redcap/project_owner_redcap_candidate_0.3_live_configuration.md": "48df58eff2cb470c807ed8ddc1742fae6b835b2201a12c75ca66b4a94d80b891",
+    # 2026-08-18: LF identity under .gitattributes; previous CRLF SHA-256 was
+    # ecafc2765930879a61a3f883c22e0b3c7a7afca5269af849472a361a3c09db8b.
+    "preregistration/package/06_redcap/project_owner_redcap_candidate_0.3_spec.md": "df54995df491427f51b0097c966b24675c816b954298c63260d75920e669bd09",
+    # 2026-08-18: LF identity under .gitattributes; previous CRLF SHA-256 was
+    # 48df58eff2cb470c807ed8ddc1742fae6b835b2201a12c75ca66b4a94d80b891.
+    "preregistration/package/06_redcap/project_owner_redcap_candidate_0.3_live_configuration.md": "13be4db8727cf80e5f4b25736bde5974ecb97fe7ea7ad8e29a9c4bc2bc603431",
     "preregistration/package/06_redcap/live_qa/project_owner_synthetic_import_candidate_0.3.csv": "0aa47bf0089c76bcb10a2dcf9d208005a18e976eb28cef908566501db4ba3444",
 }
 PARTICIPANT_SOURCE_SHA256 = "3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a"
