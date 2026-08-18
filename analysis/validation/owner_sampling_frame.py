@@ -8,6 +8,7 @@ written below ``preregistration_restricted/owner_sampling_exploration``.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import itertools
 import re
 import sys
@@ -18,7 +19,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
 
+import numpy as np
 import pandas as pd
+import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -40,6 +43,10 @@ FROZEN_POPULATION = REPO_ROOT / "preregistration/package/01_source_and_cleaning/
 EXCLUSIONS = REPO_ROOT / "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv"
 PROPERTIES = REPO_ROOT / "analysis/outputs_deterministic_rc2/register_properties.csv"
 DEFAULT_OUTPUT = REPO_ROOT / "preregistration_restricted/owner_sampling_exploration"
+OWNER_IDENTIFIER_SPEC = (
+    REPO_ROOT
+    / "preregistration/package/04_exclusions_and_sampling/owner_identifier_specification.yaml"
+)
 EXPECTED_RECORDS = 1308
 EXPECTED_PROJECT_IDS = 1304
 MAJOR_COLLECTION_MIN_RECORDS = 10
@@ -75,6 +82,208 @@ class ParsedResearcher:
 class ContactabilitySequenceResult:
     sequence: pd.DataFrame
     disposition_audit: pd.DataFrame
+
+
+@dataclass(frozen=True)
+class OwnerIdentifierResult:
+    owners: pd.DataFrame
+    assignments: pd.DataFrame
+    metadata: dict[str, object]
+
+
+def load_owner_identifier_spec(path: Path = OWNER_IDENTIFIER_SPEC) -> dict[str, object]:
+    """Load the executable identifier contract used by the owner-frame build."""
+
+    document = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(document, dict):
+        raise ValueError("Owner identifier specification must be a mapping")
+    required = {"release", "frame_binding", "owner_id", "assignment_id", "assertions"}
+    if set(document) != required:
+        raise ValueError("Owner identifier specification sections differ")
+    owner = document["owner_id"]
+    assignment = document["assignment_id"]
+    if owner.get("seed_parameter") != "owner_id_permutation_seed":
+        raise ValueError("Owner identifier seed parameter differs")
+    if assignment.get("seed_parameter") != "assignment_id_seed":
+        raise ValueError("Assignment identifier seed parameter differs")
+    return document
+
+
+def _explicit_seed(value: int, name: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ValueError(f"{name} must be an explicit non-negative integer")
+    return value
+
+
+def assign_production_identifiers(
+    sequence: pd.DataFrame,
+    assignments: pd.DataFrame,
+    *,
+    owner_id_permutation_seed: int,
+    assignment_id_seed: int,
+    specification_path: Path = OWNER_IDENTIFIER_SPEC,
+) -> OwnerIdentifierResult:
+    """Materialise neutral production IDs without running the real frame build.
+
+    ``sequence`` is the final contactability-aware greedy sequence. Assignments
+    are the frozen owner--project pairs. The returned metadata, including both
+    explicit seeds, must be written beside the restricted frame before issue.
+    """
+
+    specification = load_owner_identifier_spec(specification_path)
+    owner_rule = specification["owner_id"]
+    assignment_rule = specification["assignment_id"]
+    binding = specification["frame_binding"]
+    owner_seed = _explicit_seed(owner_id_permutation_seed, "owner_id_permutation_seed")
+    assignment_seed = _explicit_seed(assignment_id_seed, "assignment_id_seed")
+
+    sequence_column = str(binding["required_sequence_column"])
+    owner_key = str(binding["required_owner_key"])
+    assignment_keys = tuple(
+        str(value) for value in binding["required_assignment_key_columns"]
+    )
+    missing_sequence = {sequence_column, owner_key} - set(sequence.columns)
+    if missing_sequence:
+        raise ValueError(f"Owner sequence is missing columns: {sorted(missing_sequence)}")
+    missing_assignments = set(assignment_keys) - set(assignments.columns)
+    if missing_assignments:
+        raise ValueError(f"Owner assignments are missing columns: {sorted(missing_assignments)}")
+
+    owners = sequence.copy().sort_values(sequence_column, kind="stable").reset_index(drop=True)
+    if owners.empty:
+        raise ValueError("Owner sequence cannot be empty")
+    if (
+        owners[owner_key].isna().any()
+        or owners[owner_key].astype(str).str.strip().eq("").any()
+    ):
+        raise ValueError("Owner sequence contains a blank owner key")
+    if owners[owner_key].astype(str).duplicated().any():
+        raise ValueError("Owner sequence contains duplicate owner keys")
+    positions = pd.to_numeric(owners[sequence_column], errors="raise").astype(int)
+    expected_positions = np.arange(1, len(owners) + 1, dtype=int)
+    if not np.array_equal(positions.to_numpy(), expected_positions):
+        raise ValueError("Owner sequence positions must be the contiguous range 1...N")
+
+    guard = owner_rule["correlation_guard"]
+    minimum_count = int(guard["minimum_owner_count"])
+    if len(owners) < minimum_count:
+        raise ValueError(
+            f"At least {minimum_count} owners are required for the position-correlation guard"
+        )
+    owner_rng = np.random.Generator(np.random.PCG64(owner_seed))
+    numeric_suffixes = owner_rng.permutation(expected_positions)
+    correlation = float(np.corrcoef(expected_positions, numeric_suffixes)[0, 1])
+    maximum_correlation = float(guard["maximum_absolute_correlation"])
+    if abs(correlation) > maximum_correlation:
+        raise ValueError(
+            "Seeded owner-ID permutation exceeds the permitted absolute position correlation: "
+            f"{correlation:.6f}"
+        )
+    width = max(int(owner_rule["minimum_numeric_width"]), len(str(len(owners))))
+    owners["owner_id"] = [f"OWNER_{number:0{width}d}" for number in numeric_suffixes]
+    if not owners["owner_id"].str.fullmatch(str(owner_rule["pattern"])).all():
+        raise ValueError("Generated owner_id format differs from specification")
+    if owners["owner_id"].duplicated().any():
+        raise ValueError("Generated owner_id values are not unique")
+
+    assignment_output = assignments.copy()
+    if assignment_output.empty:
+        raise ValueError("Owner assignments cannot be empty")
+    for key in assignment_keys:
+        if (
+            assignment_output[key].isna().any()
+            or assignment_output[key].astype(str).str.strip().eq("").any()
+        ):
+            raise ValueError(f"Owner assignments contain a blank {key}")
+    if assignment_output.duplicated(list(assignment_keys)).any():
+        raise ValueError("Owner assignments contain a duplicate owner-project key")
+    unknown_owners = set(assignment_output[owner_key].astype(str)) - set(
+        owners[owner_key].astype(str)
+    )
+    if unknown_owners:
+        raise ValueError("Owner assignments reference keys absent from the final sequence")
+
+    assignment_output["_input_order"] = np.arange(
+        len(assignment_output), dtype=int
+    )
+    assignment_output = assignment_output.sort_values(list(assignment_keys), kind="stable")
+    alphabet = str(assignment_rule["alphabet"])
+    if (
+        any(character in alphabet for character in "0O1IL")
+        or len(set(alphabet)) != len(alphabet)
+    ):
+        raise ValueError("Assignment alphabet contains ambiguous or duplicate characters")
+    token_characters = int(assignment_rule["token_characters"])
+    group_characters = int(assignment_rule["group_characters"])
+    generated: list[str] = []
+    seen: set[str] = set()
+    collision_count = 0
+    for row in assignment_output.to_dict("records"):
+        counter = 0
+        while True:
+            payload = "\x1f".join(
+                (
+                    "dea-owner-assignment-id-v1",
+                    str(assignment_seed),
+                    *(str(row[key]) for key in assignment_keys),
+                    str(counter),
+                )
+            ).encode("utf-8")
+            number = int.from_bytes(hashlib.sha256(payload).digest(), "big")
+            characters: list[str] = []
+            for _ in range(token_characters):
+                number, index = divmod(number, len(alphabet))
+                characters.append(alphabet[index])
+            token = "".join(characters)
+            value = (
+                f"{assignment_rule['prefix']}-"
+                + "-".join(
+                    token[start : start + group_characters]
+                    for start in range(0, token_characters, group_characters)
+                )
+            )
+            if value not in seen:
+                seen.add(value)
+                generated.append(value)
+                collision_count += counter
+                break
+            counter += 1
+    assignment_output["assignment_id"] = generated
+    if not assignment_output["assignment_id"].str.fullmatch(
+        str(assignment_rule["pattern"])
+    ).all():
+        raise ValueError("Generated assignment_id format differs from specification")
+    assignment_output = (
+        assignment_output.merge(
+            owners[[owner_key, "owner_id"]],
+            on=owner_key,
+            how="left",
+            validate="many_to_one",
+        )
+        .sort_values("_input_order", kind="stable")
+        .drop(columns="_input_order")
+        .reset_index(drop=True)
+    )
+
+    metadata = {
+        "specification_version": specification["release"]["specification_version"],
+        "specification_path": str(specification_path.relative_to(REPO_ROOT)),
+        "metadata_filename": binding["metadata_filename"],
+        "owner_id_permutation_seed": owner_seed,
+        "assignment_id_seed": assignment_seed,
+        "owner_id_bit_generator": "numpy.random.PCG64",
+        "assignment_id_algorithm": assignment_rule["algorithm"],
+        "assignment_id_collision_count": collision_count,
+        "owner_stable_input_sort": owner_rule["stable_input_sort"],
+        "assignment_stable_input_sort": assignment_rule["stable_input_sort"],
+        "owner_count": len(owners),
+        "assignment_count": len(assignment_output),
+        "owner_id_sequence_position_spearman_correlation": correlation,
+        "maximum_absolute_owner_position_correlation": maximum_correlation,
+        "owner_id_format": owner_rule["format"],
+        "assignment_id_format": assignment_rule["format"],
+    }
+    return OwnerIdentifierResult(owners, assignment_output, metadata)
 
 
 def normalise_researcher_name(value: str) -> str:

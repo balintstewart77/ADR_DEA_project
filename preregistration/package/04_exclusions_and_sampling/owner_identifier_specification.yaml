@@ -1,0 +1,90 @@
+release:
+  specification_version: owner-identifiers-1.0
+  status: approved_pre_frame_build_convention
+  decision_date: '2026-08-18'
+  implementation_module: analysis/validation/owner_sampling_frame.py
+  protocol_basis:
+    version: v1.1
+    section: '7'
+    compatibility: >-
+      Implements the existing requirements for a pseudonymous owner_id and a
+      neutral assignment_id; it does not change the frozen protocol.
+
+frame_binding:
+  required_sequence_column: sequence_position
+  required_owner_key: researcher_identity_key
+  required_assignment_key_columns:
+  - researcher_identity_key
+  - source_record_id
+  metadata_filename: owner_identifier_metadata.json
+  metadata_location: >-
+    Write beside the restricted owner frame, contactability dispositions,
+    greedy sequence and tie-break audit. The metadata must be archived before
+    owner records are created or imported.
+
+owner_id:
+  format: OWNER_NNN
+  pattern: '^OWNER_[0-9]{3,}$'
+  generation_rule: >-
+    Sort the final contactable greedy sequence by sequence_position, create the
+    pool OWNER_001 through OWNER_NNN, and assign that pool using one seeded
+    numpy.random.PCG64 permutation. The seed is explicit and never time-derived.
+  stable_input_sort: sequence_position ascending
+  seed_parameter: owner_id_permutation_seed
+  seed_metadata_key: owner_id_permutation_seed
+  bit_generator: numpy.random.PCG64
+  minimum_numeric_width: 3
+  correlation_guard:
+    method: Spearman correlation between sequence_position and owner numeric suffix
+    minimum_owner_count: 10
+    maximum_absolute_correlation: 0.25
+  must_not_encode:
+  - greedy-sequence position
+  - contactability disposition
+  - recruitment batch or route
+  - researcher name or contact detail
+  - project or Record ID
+  - sample source
+  - disagreement status or stratum
+  - difficulty
+
+assignment_id:
+  format: REV-XXXX-XXXX
+  pattern: '^REV-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{4}-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{4}$'
+  prefix: REV
+  alphabet: '23456789ABCDEFGHJKMNPQRSTUVWXYZ'
+  token_characters: 8
+  group_characters: 4
+  generation_rule: >-
+    Derive each token independently from an explicitly seeded SHA-256 mapping
+    of the frozen researcher_identity_key and source_record_id. Map digest
+    values into the transcription-safe alphabet; no substring is copied from
+    an input attribute. Independent derivation keeps an issued mapping stable
+    if later assignments are added. Freeze the resulting crosswalk; never
+    renumber or regenerate an identifier once issued.
+  stable_input_sort:
+  - researcher_identity_key
+  - source_record_id
+  seed_parameter: assignment_id_seed
+  seed_metadata_key: assignment_id_seed
+  algorithm: seeded SHA-256 deterministic token mapping
+  collision_rule: >-
+    If two keys produce the same token, append a deterministic collision counter
+    to the keyed payload and derive the next token; record and review the event.
+  transcription_rule: Exclude 0, O, 1, I and L; use two four-character groups.
+  must_not_encode:
+  - owner rank or owner_id numeric suffix
+  - review order within owner
+  - source_record_id or official_project_id
+  - sample source
+  - disagreement status or stratum
+  - difficulty
+
+assertions:
+  explicit_seeds_required: true
+  owner_ids_unique: true
+  owner_id_pool_permuted: true
+  owner_position_correlation_guarded: true
+  assignment_ids_unique_study_wide: true
+  assignment_tokens_attribute_independent: true
+  identifiers_stable_after_issue: true

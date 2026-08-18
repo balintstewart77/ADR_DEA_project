@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import re
+
 import pandas as pd
 import pytest
 
 from analysis.validation.owner_sampling_frame import (
     EXPECTED_RECORDS,
+    OWNER_IDENTIFIER_SPEC,
+    assign_production_identifiers,
     assert_no_contact_columns,
     apply_scratch_reserve_exclusions,
     build_contactability_aware_sequence,
@@ -17,12 +21,200 @@ from analysis.validation.owner_sampling_frame import (
     build_researcher_record_frame,
     classify_entity,
     load_exclusion_ids,
+    load_owner_identifier_spec,
     normalise_researcher_name,
     parse_researcher_field,
     researcher_identity_key,
     researcher_portfolios,
     validate_population,
 )
+
+
+def test_owner_identifier_specification_is_bound_to_the_frame_builder():
+    specification = load_owner_identifier_spec()
+    assert OWNER_IDENTIFIER_SPEC.name == "owner_identifier_specification.yaml"
+    assert specification["release"]["implementation_module"] == (
+        "analysis/validation/owner_sampling_frame.py"
+    )
+    assert specification["owner_id"]["format"] == "OWNER_NNN"
+    assert specification["owner_id"]["seed_parameter"] == (
+        "owner_id_permutation_seed"
+    )
+    assert specification["assignment_id"]["format"] == "REV-XXXX-XXXX"
+    assert specification["frame_binding"]["metadata_filename"] == (
+        "owner_identifier_metadata.json"
+    )
+
+
+def test_production_identifiers_are_seeded_opaque_and_input_order_independent():
+    sequence = pd.DataFrame(
+        {
+            "sequence_position": range(1, 41),
+            "researcher_identity_key": [
+                f"synthetic-owner-{number:02d}" for number in range(1, 41)
+            ],
+            "contactability_disposition": "contactable",
+        }
+    )
+    assignments = pd.DataFrame(
+        [
+            {
+                "researcher_identity_key": f"synthetic-owner-{number:02d}",
+                "source_record_id": f"SYN-{number:03d}",
+                "official_project_id": f"SYN-P{number:03d}",
+                "sample_source": "baseline" if number % 2 else "hard_case",
+                "disagreement_stratum": "both" if number % 3 == 0 else "domain_only",
+                "difficulty": number,
+                "review_order_within_owner": 1,
+            }
+            for number in range(1, 41)
+        ]
+    )
+    first = assign_production_identifiers(
+        sequence,
+        assignments,
+        owner_id_permutation_seed=20260818,
+        assignment_id_seed=20260819,
+    )
+    second = assign_production_identifiers(
+        sequence.sample(frac=1, random_state=5),
+        assignments.sample(frac=1, random_state=7),
+        owner_id_permutation_seed=20260818,
+        assignment_id_seed=20260819,
+    )
+    owner_map = first.owners.set_index("researcher_identity_key")["owner_id"].to_dict()
+    shuffled_owner_map = second.owners.set_index("researcher_identity_key")["owner_id"].to_dict()
+    assert owner_map == shuffled_owner_map
+    assert set(first.owners["owner_id"]) == {
+        f"OWNER_{number:03d}" for number in range(1, 41)
+    }
+    assert list(first.owners["owner_id"]) != [
+        f"OWNER_{number:03d}" for number in range(1, 41)
+    ]
+    correlation = first.metadata["owner_id_sequence_position_spearman_correlation"]
+    assert abs(correlation) <= 0.25
+    assert first.metadata["owner_id_permutation_seed"] == 20260818
+    assert first.metadata["assignment_id_seed"] == 20260819
+    assert first.metadata["metadata_filename"] == "owner_identifier_metadata.json"
+
+    assignment_map = first.assignments.set_index(
+        ["researcher_identity_key", "source_record_id"]
+    )["assignment_id"].to_dict()
+    shuffled_assignment_map = second.assignments.set_index(
+        ["researcher_identity_key", "source_record_id"]
+    )["assignment_id"].to_dict()
+    assert assignment_map == shuffled_assignment_map
+    assert len(set(assignment_map.values())) == 40
+    assert all(
+        re.fullmatch(
+            r"REV-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{4}-"
+            r"[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{4}",
+            value,
+        )
+        for value in assignment_map.values()
+    )
+    assert not any(
+        any(character in value for character in "0O1IL")
+        for value in assignment_map.values()
+    )
+    assert not any(
+        source_id in assignment_id or owner_key in assignment_id
+        for (owner_key, source_id), assignment_id in assignment_map.items()
+    )
+
+    changed_attributes = assignments.assign(
+        official_project_id="REPLACED",
+        sample_source="REPLACED",
+        disagreement_stratum="REPLACED",
+        difficulty=-1,
+        review_order_within_owner=99,
+    )
+    changed = assign_production_identifiers(
+        sequence,
+        changed_attributes,
+        owner_id_permutation_seed=20260818,
+        assignment_id_seed=20260819,
+    )
+    changed_map = changed.assignments.set_index(
+        ["researcher_identity_key", "source_record_id"]
+    )["assignment_id"].to_dict()
+    assert changed_map == assignment_map
+
+    extra_assignment = pd.concat(
+        [
+            assignments,
+            pd.DataFrame(
+                [
+                    {
+                        "researcher_identity_key": "synthetic-owner-01",
+                        "source_record_id": "SYN-999",
+                    }
+                ]
+            ),
+        ],
+        ignore_index=True,
+    )
+    extended = assign_production_identifiers(
+        sequence,
+        extra_assignment,
+        owner_id_permutation_seed=20260818,
+        assignment_id_seed=20260819,
+    )
+    extended_map = extended.assignments.set_index(
+        ["researcher_identity_key", "source_record_id"]
+    )["assignment_id"].to_dict()
+    assert all(extended_map[key] == value for key, value in assignment_map.items())
+
+
+def test_identifier_generation_requires_explicit_valid_seeds_and_enough_owners():
+    sequence = pd.DataFrame(
+        {
+            "sequence_position": range(1, 10),
+            "researcher_identity_key": [f"synthetic-{number}" for number in range(1, 10)],
+        }
+    )
+    assignments = pd.DataFrame(
+        {
+            "researcher_identity_key": sequence["researcher_identity_key"],
+            "source_record_id": [f"SYN-{number}" for number in range(1, 10)],
+        }
+    )
+    with pytest.raises(ValueError, match="At least 10 owners"):
+        assign_production_identifiers(
+            sequence,
+            assignments,
+            owner_id_permutation_seed=1,
+            assignment_id_seed=2,
+        )
+    with pytest.raises(ValueError, match="explicit non-negative integer"):
+        assign_production_identifiers(
+            pd.concat(
+                [
+                    sequence,
+                    sequence.iloc[[0]].assign(
+                        sequence_position=10,
+                        researcher_identity_key="synthetic-10",
+                    ),
+                ],
+                ignore_index=True,
+            ),
+            pd.concat(
+                [
+                    assignments,
+                    pd.DataFrame(
+                        [
+                            {
+                                "researcher_identity_key": "synthetic-10",
+                                "source_record_id": "SYN-10",
+                            }
+                        ]
+                    ),
+                ],
+                ignore_index=True,
+            ),
+            owner_id_permutation_seed=-1,
+            assignment_id_seed=2,
+        )
 
 
 def test_multiple_researchers_duplicates_and_separator_normalisation():
