@@ -1,0 +1,70 @@
+{
+  "source_sha256_before": "3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a",
+  "source_sha256_after_html_derivation": "3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a",
+  "paragraph_counts": {
+    "all_nonempty": 108,
+    "participant_information": 73,
+    "inline_source": 63,
+    "privacy_notice": 10,
+    "consent_section": 32
+  },
+  "boundaries": {
+    "study_title_start": {
+      "nonempty_ordinal": 4,
+      "xml_paragraph_index": 3,
+      "text": "Study title "
+    },
+    "privacy_notice_start": {
+      "nonempty_ordinal": 67,
+      "xml_paragraph_index": 68,
+      "text": "Local Data Protection Privacy Notice"
+    },
+    "privacy_notice_end": {
+      "nonempty_ordinal": 76,
+      "xml_paragraph_index": 77,
+      "text": "If you are concerned about how your personal data is being processed, or if you would like to contact us about your rights, please contact UCL in the first instance at data-protection@ucl.ac.uk."
+    },
+    "consent_start": {
+      "nonempty_ordinal": 77,
+      "xml_paragraph_index": 83,
+      "text": "Consent form"
+    }
+  },
+  "characters": {
+    "full_participant_information_normalised_visible": 12612,
+    "privacy_notice_normalised_visible": 1953,
+    "privacy_notice_proportion": 0.15485252140818268,
+    "inline_source_normalised_visible": 10658,
+    "inline_html_codepoints_with_closing_line": 12342,
+    "inline_html_utf8_bytes_with_closing_line": 12358,
+    "inline_visible_with_closing_line": 10902
+  },
+  "authored_closing_line": "The full participant information, including the Local Data Protection Privacy Notice, is available to download with this consent form; UCL is the data controller, and UCL’s Data Protection Officer can be contacted at data-protection@ucl.ac.uk.",
+  "coverage": {
+    "participant_information_partition_exact": true,
+    "participant_information_partition_overlap_count": 0,
+    "all_source_nonempty_paragraphs_in_full_pdf_render_source": true,
+    "source_paragraphs_in_neither_planned_artifact": 0
+  },
+  "html_checks": {
+    "source_visible_text_exact_after_whitespace_normalisation": true,
+    "privacy_notice_absent": true,
+    "forbidden_tags_absent": true,
+    "only_font_weight_inline_style": true
+  },
+  "outputs": {
+    "inline_html": "/private/tmp/project-owner-participant-split.902phK/project_owner_participant_information_inline_without_privacy_notice_v3.html",
+    "full_pdf_render_source": "/private/tmp/project-owner-participant-split.902phK/project_owner_information_and_consent_v3_full_pdf_render_source.html"
+  },
+  "pdf_checks": {
+    "page_count": 7,
+    "file_opens_as_pdf": true,
+    "all_source_nonempty_paragraphs_present_in_order": true,
+    "matched_paragraphs": 108,
+    "missing_paragraphs": [],
+    "extraction_normalisation": "Whitespace was normalised and spaces inserted by PDF line wrapping immediately after source hyphens were removed; this reconciled four extraction-only splits (non-public, two data-protection email addresses, and one hyphenated URL).",
+    "visual_inspection_no_clipping": true,
+    "privacy_notice_present": true,
+    "consent_form_present": true
+  }
+}

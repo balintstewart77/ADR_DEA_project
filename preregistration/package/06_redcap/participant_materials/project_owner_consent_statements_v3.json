@@ -1,0 +1,52 @@
+[
+  {
+    "ordinal_position": 1,
+    "statement_text": "I have read and understood the participant information above.",
+    "dictionary_field": "consent_read_info"
+  },
+  {
+    "ordinal_position": 2,
+    "statement_text": "I understand why I have been invited and what taking part involves.",
+    "dictionary_field": "consent_understand_invitation"
+  },
+  {
+    "ordinal_position": 3,
+    "statement_text": "I understand that participation is voluntary and that I may review all, some or none of the projects offered.",
+    "dictionary_field": "consent_voluntary"
+  },
+  {
+    "ordinal_position": 4,
+    "statement_text": "I understand that I should not disclose confidential, sensitive or otherwise non-public information.",
+    "dictionary_field": "consent_no_nonpublic"
+  },
+  {
+    "ordinal_position": 5,
+    "statement_text": "I understand that my information will be handled confidentially and that direct identifiers will not appear in research outputs, but complete anonymity cannot be guaranteed because the participant group is small and responses concern publicly identifiable projects. ",
+    "dictionary_field": "consent_confidentiality_limits"
+  },
+  {
+    "ordinal_position": 6,
+    "statement_text": "I understand that I may withdraw a submitted review by emailing the study team by Friday 2 October 2026, and that after this date responses can no longer be removed.  ",
+    "dictionary_field": "consent_withdrawal_deadline"
+  },
+  {
+    "ordinal_position": 7,
+    "statement_text": "I understand that if the study wishes to quote my comments, I will be sent the exact proposed wording in advance and it will only be used if I agree.",
+    "dictionary_field": "consent_quote_process"
+  },
+  {
+    "ordinal_position": 8,
+    "statement_text": "I agree that my pseudonymised research data may be retained for 10 years and used by the research team for verification and further analyses directly related to this validation study and the improvement of the classification framework and dashboard . ",
+    "dictionary_field": "consent_retention_reanalysis"
+  },
+  {
+    "ordinal_position": 9,
+    "statement_text": "I am aware of who I should contact if I wish to lodge a complaint. ",
+    "dictionary_field": "consent_complaints"
+  },
+  {
+    "ordinal_position": 10,
+    "statement_text": "I understand that choosing to be acknowledged by name is optional, is separate to my decision to take part, and would make my participation in this study permanently and publicly identifiable. ",
+    "dictionary_field": "consent_acknowledgement"
+  }
+]

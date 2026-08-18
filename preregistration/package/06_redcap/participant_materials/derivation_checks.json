@@ -1,0 +1,51 @@
+{
+  "source_sha256_before": "3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a",
+  "source_sha256_after_generation": "3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a",
+  "nonempty_paragraph_count": 108,
+  "participant_information": {
+    "first_nonempty_ordinal": 4,
+    "last_nonempty_ordinal": 76,
+    "first_xml_paragraph_index": 3,
+    "last_xml_paragraph_index": 77,
+    "first_text": "Study title ",
+    "last_text": "If you are concerned about how your personal data is being processed, or if you would like to contact us about your rights, please contact UCL in the first instance at data-protection@ucl.ac.uk.",
+    "html_character_count": 14267,
+    "html_utf8_byte_count": 14281,
+    "normalised_visible_text_character_count": 12612,
+    "visible_text_match": true,
+    "forbidden_elements_absent": true
+  },
+  "consent_form": {
+    "first_nonempty_ordinal": 77,
+    "last_nonempty_ordinal": 108,
+    "first_xml_paragraph_index": 83,
+    "last_xml_paragraph_index": 119,
+    "first_text": "Consent form",
+    "last_text": "Response options: Yes, I would like to be acknowledged by name / No, I would prefer not to be named / I would prefer to decide later. Please contact me about this  ",
+    "statement_count": 10
+  },
+  "mapping_count": 10,
+  "unmapped_statement_count": 0,
+  "unmapped_field_count": 0,
+  "divergences": [
+    {
+      "ordinal_position": "4",
+      "dictionary_field": "consent_no_nonpublic",
+      "source_statement": "I understand that I should not disclose confidential, sensitive or otherwise non-public information.",
+      "dictionary_label": "I understand that I should not disclose confidential, sensitive or otherwise non-public information. Where wider project context affects your answer, please describe it only at a general level you are comfortable sharing.",
+      "similarity": "0.623053"
+    },
+    {
+      "ordinal_position": "8",
+      "dictionary_field": "consent_retention_reanalysis",
+      "source_statement": "I agree that my pseudonymised research data may be retained for 10 years and used by the research team for verification and further analyses directly related to this validation study and the improvement of the classification framework and dashboard . ",
+      "dictionary_label": "I agree that my pseudonymised research data may be retained for 10 years and used by the research team for verification and further analyses directly related to this validation study and the improvement of the classification framework and dashboard.",
+      "similarity": "0.997996"
+    }
+  ],
+  "outputs": {
+    "participant_information_html": "/private/tmp/project-owner-consent-derivatives.VtF2pk/project_owner_participant_information_v3_redcap.html",
+    "consent_statements_json": "/private/tmp/project-owner-consent-derivatives.VtF2pk/project_owner_consent_statements_v3.json",
+    "consent_pdf_render_source": "/private/tmp/project-owner-consent-derivatives.VtF2pk/consent_form_pdf_render_source.html"
+  }
+}
