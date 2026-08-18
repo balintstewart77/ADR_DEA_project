@@ -11,7 +11,7 @@ forms:
 - project_review
 field_counts:
   owner_consent: 22
-  project_review: 101
+  project_review: 94
 repeating_instruments:
 - project_review
 repeat_custom_label: '[assignment_id] — [project_title]'
@@ -52,9 +52,22 @@ stop_actions_manual_after_import:
   minimum_external_disposition: No automatic deletion, retention, reminder-suppression
     or contact-table action is encoded or claimed; follow the separately approved
     recruitment-administration process.
-  invalid_affirmative: No unverified action tag is encoded. Live QA must establish
-    that an attempted Yes with any item blank or Not confirmed is not treated as valid
-    consent and reveals no Project Review.
+  consent_confirmation_negative:
+    fields:
+    - consent_read_info
+    - consent_understand_invitation
+    - consent_voluntary
+    - consent_no_nonpublic
+    - consent_confidentiality_limits
+    - consent_withdrawal_deadline
+    - consent_quote_process
+    - consent_retention_reanalysis
+    - consent_complaints
+    - consent_acknowledgement
+    trigger: Not confirmed (stored code 0)
+    behaviour: show the Survey Stop Action confirmation dialogue; Return and Edit
+      Response returns to the survey and clears the triggering answer
+    dictionary_action_tag: none; this is manual REDCap survey configuration
 production_cardinalities:
   domain:
     column: substantive_domains
@@ -84,20 +97,6 @@ slot_capacity:
   domain: 4
   purpose: 2
   tag: 2
-classification_overview:
-  display_field: po_classification_overview
-  summary_fields:
-  - prop_domain_summary
-  - prop_purpose_summary
-  - prop_tag_summary
-  display_support_only: true
-  participant_editable: false
-  analytical_completion_requirement: false
-  domain_and_purpose_order: first populated proposal-slot order with blanks omitted
-    and duplicates removed
-  tag_order:
-  - Demographic disparities / equity
-  - COVID-19 & Pandemic
 taxonomy_menu_counts:
   domain: 11
   purpose: 7
@@ -189,14 +188,15 @@ tag_reviews:
   rc3_short_definition_immediately_before_status: true
   independent_required_judgements: true
 missing_label_branching:
-  gateways_required: true
-  gateway_position: after each checkbox and optional basis field
+  gateways_required: false
   checkbox_menus_unconditional: true
   checkbox_menus_required: false
+  identification_source: checkbox state on the submitted Project Review
+  all_zero_meaning: complete list displayed; no missing label selected
   purpose_guidance_field: po_miss_purpose_guidance
   purpose_max_checked_annotation: '@MAXCHECKED=2'
-  contradictory_state_rule: 'pending: checkbox selections with a final No or Unsure
-    radio response must be flagged and handled under an approved analysis rule'
+  unsure_response: no separate structured Unsure response; optional basis prose is
+    available only when at least one checkbox is selected
 analytical_completion:
   owner_join:
   - intended_recipient = 1
@@ -207,9 +207,10 @@ analytical_completion:
     explanation only for Does not fit
   tags: correctness and visibility for both tags, plus correctness explanation only
     for No
-  missing_labels: all three required post-list identification radios; checkbox selections
-    are optional raw responses and contradictory radio/checkbox states require a separately
-    approved analysis rule
+  missing_labels: derive missing-label identification directly from the three optional
+    checkbox menus; because every menu is displayed unconditionally, a submitted all-zero
+    checkbox set means the owner considered the complete list and selected no missing
+    label
   overall: public-entry sufficiency, project-knowledge gateway and taxonomy fit, plus
     taxonomy issue for Partial Fit/No Fit
   excluded_optional_fields:
@@ -229,11 +230,6 @@ analytical_completion:
   - po_nonpublic_note
   - po_tax_explain
   - po_other_comment
-  excluded_display_support_fields:
-  - prop_domain_summary
-  - prop_purpose_summary
-  - prop_tag_summary
-  - po_classification_overview
   submitted_is_separate: project_review_complete = 2 is submission status, not the
     analytical-completion definition
   final_branching_state_rule: Derive completion and analysis variables from final
@@ -322,8 +318,7 @@ project_review_v3:
   - Each proposed classification is shown with a definition. Please judge each one
     independently against the actual project and then assess whether its basis is
     visible in the public register entry.
-  classification_orientation_order: project information -> po_intro -> po_classification_overview
-    -> detailed judgements
+  classification_orientation_order: project information -> po_intro -> detailed judgements
   substantive_focus_rule:
     plain_text: A Research Domain or Analytical Purpose should be treated as applying
       only when it is a substantive focus of the project’s research question or analytical
@@ -333,7 +328,7 @@ project_review_v3:
       or analytical aims
     redcap_markup: <strong>only when it is a substantive focus of the project’s research
       question or analytical aims</strong>
-    position: inside po_intro before po_classification_overview
+    position: inside po_intro before the detailed classification judgements
   missing_classification_reminders:
     po_miss_domain_reminder:
       plain_text: Select a missing Research Domain only if it represents a substantive

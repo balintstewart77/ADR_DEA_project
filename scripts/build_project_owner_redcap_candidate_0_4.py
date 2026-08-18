@@ -39,13 +39,12 @@ APPROVED_WIDER_CONTEXT_SENTENCE = (
 )
 
 DICTIONARY = PACKAGE / "project_owner_redcap_data_dictionary_candidate_0.4.csv"
-IMPORT_READY_DICTIONARY = (
-    PACKAGE
-    / "project_owner_redcap_data_dictionary_candidate_0.4_consent_gate_repaired_import_2026-08-18.csv"
-)
 SPEC = PACKAGE / "project_owner_redcap_candidate_0.4_spec.md"
 LIVE_CONFIG = PACKAGE / "project_owner_redcap_candidate_0.4_live_configuration.md"
 IMPORT_FIXTURE = LIVE_QA / "project_owner_synthetic_import_candidate_0.4.csv"
+QA_IMPORT_FIXTURE = (
+    LIVE_QA / "project_owner_synthetic_import_candidate_0.4_defect_repaired_qa_2026-08-18.csv"
+)
 FIELD_SPEC = PACKAGE / "project_owner_redcap_field_specification_candidate_0.4.csv"
 BRANCH_SPEC = PACKAGE / "project_owner_redcap_branching_specification_candidate_0.4.yaml"
 EXPORT_SPEC = PACKAGE / "project_owner_redcap_expected_export_candidate_0.4.csv"
@@ -469,7 +468,6 @@ def _domain_boundary_definition(label: str) -> str:
 
 
 def missing_reference_html(owner_layer: str) -> str:
-    singular = {"domain": "domain", "purpose": "purpose", "tag": "tag"}[owner_layer]
     lines: list[str] = []
     for label in missing_menu_labels(owner_layer):
         definition = (
@@ -481,12 +479,7 @@ def missing_reference_html(owner_layer: str) -> str:
             f"<strong>{html.escape(label, quote=False)}</strong> — "
             f"{html.escape(definition, quote=False)}"
         )
-    return (
-        f"<details><summary>What each {singular} covers</summary>"
-        '<div style="font-weight:400;">'
-        + "<br>".join(lines)
-        + "</div></details>"
-    )
+    return '<div style="font-weight:400;">' + "<br>".join(lines) + "</div>"
 QUESTIONNAIRE_FIELD_LABELS = {
     **{
         f"po_d{slot:02d}_vis_explain": (
@@ -522,14 +515,22 @@ QUESTIONNAIRE_FIELD_LABELS = {
         "Please briefly explain why the basis for this proposed tag status is only partly "
         "visible, not visible, or unclear in the public project title and listed datasets."
     ),
-    "po_miss_domains": "Which Research Domain label or labels are missing?",
+    "po_miss_domains": (
+        "Select any Research Domains that apply to the project but were not proposed above."
+    ),
     "po_miss_domain_basis": (
         "Please briefly explain why the selected Research Domain label or labels should be included."
     ),
-    "po_miss_purposes": "Which Analytical Purpose label or labels are missing?",
+    "po_miss_purposes": (
+        "Select up to two Analytical Purposes that apply to the project but were not proposed "
+        "above."
+    ),
     "po_miss_purpose_basis": (
         "Please briefly explain why the selected Analytical Purpose label or labels should be "
         "included."
+    ),
+    "po_miss_tags": (
+        "Select any cross-cutting tags that should have been assigned or applied differently."
     ),
     "po_miss_tag_basis": (
         "Please briefly explain why the selected tag or tags should have been assigned or applied "
@@ -576,10 +577,16 @@ FINAL_WITHDRAWAL_REMINDER = (
     "Participant Information Sheet by contacting the study team and quoting the Review "
     "reference shown above."
 )
-GATE_LABELS = {
-    "po_miss_domain": "Did you identify any missing domains?",
-    "po_miss_purpose": "Did you identify any missing purposes?",
-    "po_miss_tag": "Did you identify any missing tags?",
+CLASSIFICATION_OVERVIEW_FIELDS = {
+    "prop_domain_summary",
+    "prop_purpose_summary",
+    "prop_tag_summary",
+    "po_classification_overview",
+}
+MISSING_LABEL_GATE_FIELDS = {
+    "po_miss_domain",
+    "po_miss_purpose",
+    "po_miss_tag",
 }
 APPENDIX_B_CONSENT_WORDING = (
     "Affirmative intended-recipient confirmation, all ten consent confirmations and affirmative "
@@ -784,9 +791,6 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
     by_name["po_miss_tags"][
         "Choices, Calculations, OR Slider Labels"
     ] = label_only_redcap_choices("tag")
-    by_name["po_miss_purposes"]["Field Label"] = (
-        "Which Analytical Purpose label or labels are missing? Select up to two."
-    )
     by_name["po_tax_issue"]["Choices, Calculations, OR Slider Labels"] = (
         "1, Missing or inadequately represented category | "
         "2, Ambiguous or overlapping category boundaries | 5, Other taxonomy problem"
@@ -851,6 +855,11 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
         if row["Variable / Field Name"] == "po_classification_overview"
     )
     rows.insert(overview_index, intro_row)
+    rows[:] = [
+        row
+        for row in rows
+        if row["Variable / Field Name"] not in CLASSIFICATION_OVERVIEW_FIELDS
+    ]
 
     missing_names = {
         "po_miss_domain",
@@ -877,9 +886,6 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
     rows[:] = [
         row for row in rows if row["Variable / Field Name"] not in missing_names
     ]
-    for gate, label in GATE_LABELS.items():
-        missing_rows[gate]["Field Label"] = label
-        missing_rows[gate]["Section Header"] = ""
     for menu in ("po_miss_domains", "po_miss_purposes", "po_miss_tags"):
         missing_rows[menu]["Branching Logic (Show field only if...)"] = ""
         missing_rows[menu]["Required Field?"] = ""
@@ -914,17 +920,14 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
         domain_reminder,
         missing_rows["po_miss_domains"],
         missing_rows["po_miss_domain_basis"],
-        missing_rows["po_miss_domain"],
         reference_rows["purpose"],
         missing_rows["po_miss_purpose_guidance"],
         purpose_reminder,
         missing_rows["po_miss_purposes"],
         missing_rows["po_miss_purpose_basis"],
-        missing_rows["po_miss_purpose"],
         reference_rows["tag"],
         missing_rows["po_miss_tags"],
         missing_rows["po_miss_tag_basis"],
-        missing_rows["po_miss_tag"],
     ]
     rows[missing_index:missing_index] = reordered_missing
 
@@ -1006,7 +1009,7 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
             row["notes"] = (
                 "Exact canonical Questionnaire Section 2 orientation with the governing "
                 "substantive-focus phrase strongly emphasised; displayed after project "
-                "information and before po_classification_overview."
+                "information and before the detailed classification judgements."
             )
         elif name in {"po_miss_domain_reminder", "po_miss_purpose_reminder"}:
             row["construct"] = "participant_facing_substantive_focus_reminder"
@@ -1087,13 +1090,13 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
         "classification_orientation_field": "po_intro",
         "classification_orientation_paragraphs": list(CLASSIFICATION_INTRO_PARAGRAPHS),
         "classification_orientation_order": (
-            "project information -> po_intro -> po_classification_overview -> detailed judgements"
+            "project information -> po_intro -> detailed judgements"
         ),
         "substantive_focus_rule": {
             "plain_text": SUBSTANTIVE_FOCUS_PARAGRAPH,
             "bold_phrase": SUBSTANTIVE_FOCUS_PHRASE,
             "redcap_markup": f"<strong>{SUBSTANTIVE_FOCUS_PHRASE}</strong>",
-            "position": "inside po_intro before po_classification_overview",
+            "position": "inside po_intro before the detailed classification judgements",
         },
         "missing_classification_reminders": {
             "po_miss_domain_reminder": {
@@ -1152,10 +1155,15 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
             }
         )
     branch["stop_actions_manual_after_import"]["owner_consent"] = "No"
-    branch["stop_actions_manual_after_import"]["invalid_affirmative"] = (
-        "No unverified action tag is encoded. Live QA must establish that an attempted Yes with "
-        "any item blank or Not confirmed is not treated as valid consent and reveals no Project Review."
-    )
+    branch["stop_actions_manual_after_import"]["consent_confirmation_negative"] = {
+        "fields": list(CONSENT_NAMES),
+        "trigger": "Not confirmed (stored code 0)",
+        "behaviour": (
+            "show the Survey Stop Action confirmation dialogue; Return and Edit Response "
+            "returns to the survey and clears the triggering answer"
+        ),
+        "dictionary_action_tag": "none; this is manual REDCap survey configuration",
+    }
     completion = branch["analytical_completion"]
     completion["owner_join"] = [
         "intended_recipient = 1",
@@ -1172,22 +1180,25 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
         QUOTATION_POLICY
     )
     completion["missing_labels"] = (
-        "all three required post-list identification radios; checkbox selections are optional "
-        "raw responses and contradictory radio/checkbox states require a separately approved "
-        "analysis rule"
+        "derive missing-label identification directly from the three optional checkbox menus; "
+        "because every menu is displayed unconditionally, a submitted all-zero checkbox set "
+        "means the owner considered the complete list and selected no missing label"
     )
+    completion.pop("excluded_display_support_fields", None)
     branch["missing_label_branching"] = {
-        "gateways_required": True,
-        "gateway_position": "after each checkbox and optional basis field",
+        "gateways_required": False,
         "checkbox_menus_unconditional": True,
         "checkbox_menus_required": False,
+        "identification_source": "checkbox state on the submitted Project Review",
+        "all_zero_meaning": "complete list displayed; no missing label selected",
         "purpose_guidance_field": "po_miss_purpose_guidance",
         "purpose_max_checked_annotation": "@MAXCHECKED=2",
-        "contradictory_state_rule": (
-            "pending: checkbox selections with a final No or Unsure radio response must be "
-            "flagged and handled under an approved analysis rule"
+        "unsure_response": (
+            "no separate structured Unsure response; optional basis prose is available only "
+            "when at least one checkbox is selected"
         ),
     }
+    branch.pop("classification_overview", None)
     BRANCH_SPEC.write_text(
         yaml.safe_dump(branch, sort_keys=False, allow_unicode=True), encoding="utf-8"
     )
@@ -1219,8 +1230,9 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
             )
         elif row["variable"] in {"po_miss_domains", "po_miss_purposes", "po_miss_tags"}:
             row["notes"] = (
-                "Optional raw checkbox selections displayed unconditionally. Preserve alongside "
-                "the required post-list radio; contradictory states require an approved analysis rule."
+                "Optional checkbox selections displayed unconditionally; submitted checkbox "
+                "state is the missing-label identification measure, with all-zero meaning no "
+                "missing label selected."
             )
     write_csv(EXPORT_SPEC, export_headers, export_rows)
 
@@ -1237,7 +1249,7 @@ def patch_formatting_audit() -> None:
             row["heading_text"] = CLASSIFICATION_INTRO_PARAGRAPHS[0]
             row["body_text"] = " ".join(CLASSIFICATION_INTRO_PARAGRAPHS[1:])
             row["remaining_live_qa_requirement"] = (
-                "Verify exact wording before the read-only classification overview and confirm "
+                "Verify exact wording before the detailed classification judgements and confirm "
                 "that only the governing phrase is visibly bold on desktop and mobile, with no "
                 "literal or malformed HTML."
             )
@@ -1317,10 +1329,10 @@ def patch_formatting_audit() -> None:
                 "variable_name": REFERENCE_FIELD_BY_LAYER[layer],
                 "instrument": "project_review",
                 "participant_visible_purpose": (
-                    f"Complete collapsible missing-{layer} definition reference"
+                    f"Complete always-open missing-{layer} definition reference"
                 ),
-                "contains_heading": "yes",
-                "heading_text": f"What each {layer} covers",
+                "contains_heading": "no",
+                "heading_text": "",
                 "body_text": " | ".join(
                     (
                         _APPROVED_MISSING_DOMAIN_MICRODEFINITIONS[label]
@@ -1329,12 +1341,12 @@ def patch_formatting_audit() -> None:
                     )
                     for label in missing_menu_labels(layer)
                 ),
-                "html_tags_used": "br | details | div | strong | summary",
+                "html_tags_used": "br | div | strong",
                 "whole_block_bold_present_before_correction": "no",
                 "final_formatting_status": "normal-weight definitions with bold category labels",
                 "remaining_live_qa_requirement": (
-                    "Verify <details> expansion, every category and boundary, desktop/mobile "
-                    "wrapping and PDF/export behaviour; use an always-open div if unsupported."
+                    "Verify every category and boundary and the always-open block's desktop/mobile "
+                    "wrapping and PDF/export behaviour."
                 ),
             }
         )
@@ -1395,6 +1407,33 @@ def patch_fixture_proposed_definitions() -> None:
             elif any(row[field] for field in (label_field, definition_field, status_field)):
                 raise RuntimeError("owner fixture row unexpectedly contains project tag values")
     write_csv(IMPORT_FIXTURE, headers, rows)
+
+
+def build_fixture(rows: list[dict[str, str]]) -> None:
+    """Reuse the predecessor fixture logic without its retired summary values."""
+
+    original = base.populate_proposed_summaries
+    base.populate_proposed_summaries = lambda row: None
+    try:
+        base.build_fixture(rows)
+    finally:
+        base.populate_proposed_summaries = original
+
+
+def patch_qa_fixture_removed_fields() -> None:
+    """Keep the extended live-QA fixture aligned with the generated dictionary schema."""
+
+    with QA_IMPORT_FIXTURE.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        rows = list(reader)
+        headers = list(reader.fieldnames or ())
+    removed = CLASSIFICATION_OVERVIEW_FIELDS | MISSING_LABEL_GATE_FIELDS
+    headers = [header for header in headers if header not in removed]
+    write_csv(
+        QA_IMPORT_FIXTURE,
+        headers,
+        ({header: row[header] for header in headers} for row in rows),
+    )
 
 
 def _markdown_cell(value: object) -> str:
@@ -1505,13 +1544,13 @@ The Project Owner instrument remains unfrozen and non-authoritative. This candid
 
 ## Project Review orientation and point-of-need references
 
-After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed immediately by the otherwise unchanged read-only `po_classification_overview`, then the detailed Domain, Purpose and tag judgements. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
+After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed by the detailed Domain, Purpose and tag judgements; the former read-only classification overview and its three hidden summary inputs are absent. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
 
-The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete collapsible reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need.
+The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete always-open reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need.
 
-Q6b contains exactly 11 label-only missing-Domain choices. `po_miss_domain_reference` displays every matching author-approved boundary definition generated from `OWNER_DOMAIN_DISPLAY`; `Unclear from Register Entry` is excluded. Q7b and Q8b likewise use label-only choices with complete adjacent reference blocks sourced from their questionnaire/rc3-identical wording. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic, `<details>` and PDF/export display QA remains pending.
+Q6b contains exactly 11 label-only missing-Domain choices. `po_miss_domain_reference` displays every matching author-approved boundary definition generated from `OWNER_DOMAIN_DISPLAY`; `Unclear from Register Entry` is excluded. Q7b and Q8b likewise use label-only choices with complete adjacent reference blocks sourced from their questionnaire/rc3-identical wording. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic, wrapping and PDF/export display QA remains pending.
 
-The three missing-label menus are displayed unconditionally and are optional. Their required Yes/No/Unsure identification radios follow each menu and optional basis field. Domain and Purpose guidance remains visible before the relevant checkbox. This deliberate departure from the approved questionnaire branching must be notified to the REC. Checkbox selections combined with a final No or Unsure response are possible and require a separately approved analysis rule.
+The three missing-label menus are displayed unconditionally and are optional. The former Yes/No/Unsure identification radios are absent. Submitted checkbox state is the missing-label measure: because each complete menu is always displayed, an all-zero submitted set records that the owner selected no missing label. Domain and Purpose guidance remains visible before the relevant checkbox. This deliberate departure from the approved questionnaire branching must be notified to the REC. A separate structured Unsure response is no longer collected; because each optional basis field remains conditional on a checkbox selection, uncertainty can be recorded there only when the owner selects at least one candidate label.
 
 ## Operational cross-cutting-tag invariant
 
@@ -1609,7 +1648,9 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 11. Configure the Project Review Survey Queue condition exactly as `{QUEUE_CONDITION}`. Do not include `ack_pref`.
 12. Re-establish the existing Stop Action for `intended_recipient = No`: end the consent survey and reveal no consent items, acknowledgement or Project Reviews.
 13. Re-establish the existing Stop Action for `owner_consent = No`: end the consent survey, collect no acknowledgement and reveal no Project Reviews.
-14. Do not add an unverified consent-gating action tag. Verify in the Online Designer that an attempted affirmative response with any confirmation blank or Not confirmed is not treated as valid participation and cannot reveal Project Reviews. If the target REDCap runtime cannot enforce this beyond the deterministic gate, stop migration approval and document the unresolved limitation before recruitment.
+14. In the Online Designer for the Owner Consent survey, open each of the ten confirmation radio fields listed below, select **Survey Stop Action**, set the triggering response to **Not confirmed** (stored code `0`), and save the action. Configure the prompt behaviour used by the existing negative-response confirmation dialogue; do not configure an immediate terminal action. Repeat for: {', '.join(f'`{name}`' for name in CONSENT_NAMES)}.
+14a. Live-test each of the ten actions separately. Select Not confirmed and verify that REDCap shows the confirmation dialogue before submission. Choose **Return and Edit Response** and verify that REDCap returns to the survey and clears the triggering answer. This is the intended mis-click recovery path. Also verify that continuing with the negative answer cannot establish `consent_items_complete = 1` or reveal Project Reviews.
+14b. These ten Survey Stop Actions are manual project configuration. No Field Annotation or other data-dictionary action tag encodes them; archive screenshots or configuration evidence for all ten after migration.
 
 ## Synthetic import and consent-path tests
 
@@ -1637,11 +1678,11 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 33. Omit each tag correctness or visibility judgement in turn and confirm analytical completion remains false.
 34. Verify all proposed-label displays use rc3 short definitions and that the separate missing-label reference blocks use Q6b/Q7b/Q8b wording.
 35. Verify `po_taxonomy_ref` is absent and the three point-of-need reference blocks are the only complete participant-facing framework reference.
-36. Verify the exact six-paragraph `po_intro` block appears after project information and immediately before the unchanged read-only `po_classification_overview`.
+36. Verify the exact six-paragraph `po_intro` block appears after project information and before the detailed classification judgements; confirm `po_classification_overview` and all three hidden summary inputs are absent.
 37. Verify `po_intro` contains no duplicate Save & Return Later, consent, confidentiality or withdrawal guidance.
 38. Verify Q6b displays all 11 label-only choices in `DOMAIN_ORDER`, with no `Unclear from Register Entry` choice, and that `po_miss_domain_reference` contains all 11 exact approved boundary definitions.
-39. Verify all three missing-label multi-select checkboxes display unconditionally and remain optional, while each required Yes/No/Unsure radio follows its checkbox and optional basis field.
-40. Verify every reference block expands on desktop/mobile without truncation or ambiguous line wrapping and test whether `<details>` survives PDF export. If it does not, replace it with an always-open `<div>` before migration approval.
+39. Verify all three missing-label multi-select checkboxes display unconditionally and remain optional; confirm the former Yes/No/Unsure identification radios are absent and submitted checkbox state is the identification measure.
+40. Verify every always-open reference block displays on desktop/mobile without truncation, literal markup or ambiguous line wrapping and survives PDF export.
 41. Research Domain wording concordance: For every Research Domain, compare the rc3 definition displayed when the Domain is proposed with the Q6b boundary wording displayed in `po_miss_domain_reference`. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries.
 42. Record an individual pass/fail live-QA result for all 11 Domains in `project_owner_domain_wording_concordance_candidate_0.4.md` or an associated completed QA record. Migration approval fails if any Domain points in materially different directions.
 43. Confirm no separate taxonomy-reference document, link or placeholder appears and no participant-facing text promises one.
@@ -1653,7 +1694,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 49. Confirm participants are not instructed to assign a Purpose merely because a method, analytical step or secondary feature is present.
 50. Confirm both reminders and the purpose guidance are unconditional; checkbox codes and order remain unchanged while checkbox requiredness is removed.
 51. Compare the plain wording and visual emphasis of all three substantive-focus displays with the canonical questionnaire.
-52. Fail migration approval if the governing rule is absent, appears after the classification overview or is not visibly emphasised.
+52. Fail migration approval if the governing rule is absent, appears after the detailed classification judgements or is not visibly emphasised.
 
 Migration and recruitment are prohibited until controlled migration is authorised, all live tests pass, every Domain has a recorded semantic-concordance pass, residual differences are resolved or approved, and candidate 0.4 receives the required ethics/governance and repository approval.
 """,
@@ -1715,7 +1756,6 @@ def main() -> int:
     rows, meta = build_dictionary()
     meta["fixture_columns"] = len(base.fixture_import_headers(rows))
     write_csv(DICTIONARY, base.HEADERS, rows)
-    write_csv(IMPORT_READY_DICTIONARY, base.HEADERS, rows)
     base.build_specs(rows, meta)
     patch_generated_specs(rows)
     base.build_formatting_audit(
@@ -1736,8 +1776,9 @@ def main() -> int:
     patch_formatting_audit()
     build_domain_wording_audits()
     build_documentation(meta)
-    base.build_fixture(rows)
+    build_fixture(rows)
     patch_fixture_proposed_definitions()
+    patch_qa_fixture_removed_fields()
     print(
         yaml.safe_dump(
             {
@@ -1745,9 +1786,9 @@ def main() -> int:
                 "status": STATUS,
                 "dictionary": str(DICTIONARY.relative_to(ROOT)).replace("\\", "/"),
                 "dictionary_sha256": sha256(DICTIONARY),
-                "import_ready_dictionary": str(
-                    IMPORT_READY_DICTIONARY.relative_to(ROOT)
-                ).replace("\\", "/"),
+                "import_ready_dictionary": str(DICTIONARY.relative_to(ROOT)).replace(
+                    "\\", "/"
+                ),
                 "fields": meta["total_fields"],
                 "forms": meta["field_counts"],
                 "consent_confirmations": list(CONSENT_NAMES),

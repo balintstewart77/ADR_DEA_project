@@ -6,22 +6,22 @@ Ethics trace: UCL Project ID 5004; Participant Information and Consent v3 dated 
 
 ## Architecture and field counts
 
-Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 123 dictionary fields:
+Candidate 0.4 preserves candidate 0.3 as its unchanged historical predecessor. It retains one pseudonymous owner record, non-repeating `owner_consent`, repeating `project_review`, pre-created review instances and one participant-specific Survey Queue link. It contains exactly two instruments and 116 dictionary fields:
 
 - `owner_consent`: 22 fields;
-- `project_review`: 101 fields.
+- `project_review`: 94 fields.
 
 The Project Owner instrument remains unfrozen and non-authoritative. This candidate does not authorise recruitment or live migration. Both canonical participant DOCX files are pinned by SHA-256 and byte size; generation stops if either changes without an authorised metadata refresh. The missing-Domain wording is author-approved and repository-validated; controlled migration and live semantic/display QA remain mandatory before recruitment.
 
 ## Project Review orientation and point-of-need references
 
-After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed immediately by the otherwise unchanged read-only `po_classification_overview`, then the detailed Domain, Purpose and tag judgements. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
+After the public project information, `po_intro` presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed by the detailed Domain, Purpose and tag judgements; the former read-only classification overview and its three hidden summary inputs are absent. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
 
-The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete collapsible reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need.
+The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete always-open reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need.
 
-Q6b contains exactly 11 label-only missing-Domain choices. `po_miss_domain_reference` displays every matching author-approved boundary definition generated from `OWNER_DOMAIN_DISPLAY`; `Unclear from Register Entry` is excluded. Q7b and Q8b likewise use label-only choices with complete adjacent reference blocks sourced from their questionnaire/rc3-identical wording. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic, `<details>` and PDF/export display QA remains pending.
+Q6b contains exactly 11 label-only missing-Domain choices. `po_miss_domain_reference` displays every matching author-approved boundary definition generated from `OWNER_DOMAIN_DISPLAY`; `Unclear from Register Entry` is excluded. Q7b and Q8b likewise use label-only choices with complete adjacent reference blocks sourced from their questionnaire/rc3-identical wording. `project_owner_missing_domain_microdefinitions_candidate_0.4_review.md` records the author decision, and `project_owner_domain_wording_concordance_candidate_0.4.md` records the human semantic review. Live semantic, wrapping and PDF/export display QA remains pending.
 
-The three missing-label menus are displayed unconditionally and are optional. Their required Yes/No/Unsure identification radios follow each menu and optional basis field. Domain and Purpose guidance remains visible before the relevant checkbox. This deliberate departure from the approved questionnaire branching must be notified to the REC. Checkbox selections combined with a final No or Unsure response are possible and require a separately approved analysis rule.
+The three missing-label menus are displayed unconditionally and are optional. The former Yes/No/Unsure identification radios are absent. Submitted checkbox state is the missing-label measure: because each complete menu is always displayed, an all-zero submitted set records that the owner selected no missing label. Domain and Purpose guidance remains visible before the relevant checkbox. This deliberate departure from the approved questionnaire branching must be notified to the REC. A separate structured Unsure response is no longer collected; because each optional basis field remains conditional on a checkbox selection, uncertainty can be recorded there only when the owner selects at least one candidate label.
 
 ## Operational cross-cutting-tag invariant
 

@@ -51,13 +51,9 @@ def test_exact_two_instruments_and_counts():
         "project_review",
     )
     assert Counter(row["Form Name"] for row in rows) == Counter(
-        {"owner_consent": 22, "project_review": 101}
+        {"owner_consent": 22, "project_review": 94}
     )
-    assert len(rows) == 123
-
-
-def test_import_ready_dictionary_is_exact_generator_output():
-    assert builder.IMPORT_READY_DICTIONARY.read_bytes() == builder.DICTIONARY.read_bytes()
+    assert len(rows) == 116
 
 
 def test_read_only_requiredness_descriptive_weight_and_provenance_are_repaired():
@@ -90,33 +86,27 @@ def test_missing_label_order_requiredness_branching_and_limits_are_repaired():
     expected_groups = {
         "domain": [
             "po_miss_domain_reference", "po_miss_domain_reminder", "po_miss_domains",
-            "po_miss_domain_basis", "po_miss_domain",
+            "po_miss_domain_basis",
         ],
         "purpose": [
             "po_miss_purpose_reference", "po_miss_purpose_guidance",
             "po_miss_purpose_reminder", "po_miss_purposes",
-            "po_miss_purpose_basis", "po_miss_purpose",
+            "po_miss_purpose_basis",
         ],
         "tag": [
-            "po_miss_tag_reference", "po_miss_tags", "po_miss_tag_basis", "po_miss_tag",
+            "po_miss_tag_reference", "po_miss_tags", "po_miss_tag_basis",
         ],
     }
     for group in expected_groups.values():
         positions = [names.index(name) for name in group]
         assert positions == list(range(positions[0], positions[0] + len(group)))
-    for gate, label in builder.GATE_LABELS.items():
-        assert by[gate]["Field Label"] == label
     for layer, reference in builder.REFERENCE_FIELD_BY_LAYER.items():
         assert by[reference]["Section Header"] == builder.REFERENCE_SECTION_BY_LAYER[layer]
-    for menu, gate in (
-        ("po_miss_domains", "po_miss_domain"),
-        ("po_miss_purposes", "po_miss_purpose"),
-        ("po_miss_tags", "po_miss_tag"),
-    ):
+    for menu in ("po_miss_domains", "po_miss_purposes", "po_miss_tags"):
         assert by[menu]["Branching Logic (Show field only if...)"] == ""
         assert by[menu]["Required Field?"] == ""
-        assert by[gate]["Required Field?"] == "y"
-        assert names.index(gate) > names.index(menu)
+        assert not by[menu]["Field Label"].rstrip().endswith("?")
+    assert not (builder.MISSING_LABEL_GATE_FIELDS & set(names))
     assert by["po_miss_purpose_guidance"]["Branching Logic (Show field only if...)"] == ""
     assert by["po_miss_purposes"]["Field Annotation"] == "@MAXCHECKED=2"
     assert "up to two" in by["po_miss_purposes"]["Field Label"].lower()
@@ -125,6 +115,56 @@ def test_missing_label_order_requiredness_branching_and_limits_are_repaired():
     for basis in ("po_miss_domain_basis", "po_miss_purpose_basis", "po_miss_tag_basis"):
         assert by[basis]["Required Field?"] == ""
         assert "(1)] = '1'" in by[basis]["Branching Logic (Show field only if...)"]
+
+
+def test_reference_blocks_use_only_supported_always_open_html():
+    by = dictionary_by_name()
+    rows = dictionary_rows()
+    permitted = {"br", "div", "span", "strong"}
+    used = {
+        tag.lower()
+        for row in rows
+        for tag in re.findall(r"</?\s*([A-Za-z0-9]+)", row["Field Label"])
+    }
+    assert used <= permitted
+    for layer, variable in builder.REFERENCE_FIELD_BY_LAYER.items():
+        label = by[variable]["Field Label"]
+        assert label == builder.missing_reference_html(layer)
+        assert "<details" not in label.lower()
+        assert "<summary" not in label.lower()
+
+
+def test_missing_label_spec_uses_checkbox_state_without_discordance_rule():
+    branch = yaml.safe_load(builder.BRANCH_SPEC.read_text(encoding="utf-8"))
+    assert branch["analytical_completion"]["missing_labels"] == (
+        "derive missing-label identification directly from the three optional checkbox menus; "
+        "because every menu is displayed unconditionally, a submitted all-zero checkbox set "
+        "means the owner considered the complete list and selected no missing label"
+    )
+    missing = branch["missing_label_branching"]
+    assert missing["gateways_required"] is False
+    assert missing["identification_source"] == (
+        "checkbox state on the submitted Project Review"
+    )
+    assert missing["all_zero_meaning"] == (
+        "complete list displayed; no missing label selected"
+    )
+    paths = (
+        Path(builder.__file__),
+        builder.BRANCH_SPEC,
+        builder.SPEC,
+        builder.EXPORT_SPEC,
+        builder.LIVE_CONFIG,
+    )
+    obsolete = (
+        "contradictory_state_rule",
+        "contradictory radio/checkbox",
+        "required post-list identification radios",
+        "checkbox selections with a final No or Unsure",
+    )
+    for path in paths:
+        text = path.read_text(encoding="utf-8-sig")
+        assert not any(value in text for value in obsolete), path
 
 
 def test_branching_and_action_tag_references_resolve():
@@ -252,6 +292,15 @@ def test_active_decline_and_wrong_recipient_paths_remain_available():
     branch = yaml.safe_load(builder.BRANCH_SPEC.read_text(encoding="utf-8"))
     assert branch["stop_actions_manual_after_import"]["owner_consent"] == "No"
     assert branch["stop_actions_manual_after_import"]["intended_recipient"] == "No"
+    negative = branch["stop_actions_manual_after_import"][
+        "consent_confirmation_negative"
+    ]
+    assert negative["fields"] == list(builder.CONSENT_NAMES)
+    assert negative["trigger"] == "Not confirmed (stored code 0)"
+    assert "Return and Edit Response" in negative["behaviour"]
+    assert negative["dictionary_action_tag"].startswith("none")
+    for name in builder.CONSENT_NAMES:
+        assert dictionary_by_name()[name]["Field Annotation"] == ""
 
 
 def test_acknowledgement_is_optional_and_only_after_valid_affirmative_path():
@@ -282,7 +331,7 @@ def test_both_canonical_participant_documents_are_pinned_and_aligned():
             assert archive.testzip() is None
 
 
-def test_classification_orientation_matches_questionnaire_and_precedes_overview():
+def test_classification_orientation_matches_questionnaire_and_precedes_judgements():
     by = dictionary_by_name()
     rows = dictionary_rows()
     names = [row["Variable / Field Name"] for row in rows]
@@ -301,9 +350,8 @@ def test_classification_orientation_matches_questionnaire_and_precedes_overview(
     )
     assert paragraphs[start : start + len(intro)] == intro
     assert start + len(intro) == overview
-    assert names.index("datasets_used") < names.index("po_intro") < names.index(
-        "po_classification_overview"
-    )
+    assert names.index("datasets_used") < names.index("po_intro") < names.index("po_d01_display")
+    assert not (builder.CLASSIFICATION_OVERVIEW_FIELDS & set(names))
     assert "save & return later" not in by["po_intro"]["Field Label"].lower()
     assert builder.CLASSIFICATION_INTRO_PARAGRAPHS.count(
         builder.SUBSTANTIVE_FOCUS_PARAGRAPH
@@ -438,7 +486,7 @@ def test_nonproduction_taxonomy_reference_is_replaced_by_point_of_need_blocks():
     documentation = builder.SPEC.read_text(encoding="utf-8") + builder.LIVE_CONFIG.read_text(
         encoding="utf-8"
     )
-    assert "three complete collapsible reference blocks" in documentation
+    assert "three complete always-open reference blocks" in documentation
     assert "point-of-need reference blocks" in documentation
 
 
@@ -544,7 +592,7 @@ def test_live_qa_requires_all_eleven_semantic_and_display_checks():
     text = builder.LIVE_CONFIG.read_text(encoding="utf-8")
     assert "Research Domain wording concordance: For every Research Domain" in text
     assert "Record an individual pass/fail live-QA result for all 11 Domains" in text
-    assert "without truncation or ambiguous line wrapping" in text
+    assert "without truncation, literal markup or ambiguous line wrapping" in text
     assert "multi-select" in text
     assert "Unclear from Register Entry" in text
     assert "Migration approval fails if any Domain points in materially different directions" in text
@@ -708,6 +756,10 @@ def test_fixture_preserves_three_owner_nineteen_review_structure_and_blank_conse
     assert all(row["owner_consent_complete"] == "0" for row in owners)
     assert all(row["owner_instr_ver"] == builder.VERSION for row in owners)
     assert all(row["review_instr_ver"] == builder.VERSION for row in reviews)
+    removed = builder.CLASSIFICATION_OVERVIEW_FIELDS | builder.MISSING_LABEL_GATE_FIELDS
+    assert not (removed & set(header))
+    _, qa_header = validator.read_csv(builder.QA_IMPORT_FIXTURE)
+    assert not (removed & set(qa_header))
 
 
 def test_long_export_joins_composite_valid_consent_from_nonrepeating_owner_row():
@@ -742,8 +794,8 @@ def test_no_direct_identifier_field_is_introduced():
     }
 
 
-def test_project_review_preserves_existing_names_and_types_with_four_additions():
-    assert validator.validate_dictionary()["forms"]["project_review"] == 101
+def test_project_review_preserves_existing_names_and_types_with_documented_changes():
+    assert validator.validate_dictionary()["forms"]["project_review"] == 94
 
 
 def test_deterministic_build_includes_approval_and_concordance_records():

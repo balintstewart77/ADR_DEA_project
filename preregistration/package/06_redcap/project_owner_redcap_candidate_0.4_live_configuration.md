@@ -25,7 +25,9 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 11. Configure the Project Review Survey Queue condition exactly as `[owner_consent_complete] = '2' and [owner_consent] = '1' and [intended_recipient] = '1' and [consent_items_complete] = '1'`. Do not include `ack_pref`.
 12. Re-establish the existing Stop Action for `intended_recipient = No`: end the consent survey and reveal no consent items, acknowledgement or Project Reviews.
 13. Re-establish the existing Stop Action for `owner_consent = No`: end the consent survey, collect no acknowledgement and reveal no Project Reviews.
-14. Do not add an unverified consent-gating action tag. Verify in the Online Designer that an attempted affirmative response with any confirmation blank or Not confirmed is not treated as valid participation and cannot reveal Project Reviews. If the target REDCap runtime cannot enforce this beyond the deterministic gate, stop migration approval and document the unresolved limitation before recruitment.
+14. In the Online Designer for the Owner Consent survey, open each of the ten confirmation radio fields listed below, select **Survey Stop Action**, set the triggering response to **Not confirmed** (stored code `0`), and save the action. Configure the prompt behaviour used by the existing negative-response confirmation dialogue; do not configure an immediate terminal action. Repeat for: `consent_read_info`, `consent_understand_invitation`, `consent_voluntary`, `consent_no_nonpublic`, `consent_confidentiality_limits`, `consent_withdrawal_deadline`, `consent_quote_process`, `consent_retention_reanalysis`, `consent_complaints`, `consent_acknowledgement`.
+14a. Live-test each of the ten actions separately. Select Not confirmed and verify that REDCap shows the confirmation dialogue before submission. Choose **Return and Edit Response** and verify that REDCap returns to the survey and clears the triggering answer. This is the intended mis-click recovery path. Also verify that continuing with the negative answer cannot establish `consent_items_complete = 1` or reveal Project Reviews.
+14b. These ten Survey Stop Actions are manual project configuration. No Field Annotation or other data-dictionary action tag encodes them; archive screenshots or configuration evidence for all ten after migration.
 
 ## Synthetic import and consent-path tests
 
@@ -53,11 +55,11 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 33. Omit each tag correctness or visibility judgement in turn and confirm analytical completion remains false.
 34. Verify all proposed-label displays use rc3 short definitions and that the separate missing-label reference blocks use Q6b/Q7b/Q8b wording.
 35. Verify `po_taxonomy_ref` is absent and the three point-of-need reference blocks are the only complete participant-facing framework reference.
-36. Verify the exact six-paragraph `po_intro` block appears after project information and immediately before the unchanged read-only `po_classification_overview`.
+36. Verify the exact six-paragraph `po_intro` block appears after project information and before the detailed classification judgements; confirm `po_classification_overview` and all three hidden summary inputs are absent.
 37. Verify `po_intro` contains no duplicate Save & Return Later, consent, confidentiality or withdrawal guidance.
 38. Verify Q6b displays all 11 label-only choices in `DOMAIN_ORDER`, with no `Unclear from Register Entry` choice, and that `po_miss_domain_reference` contains all 11 exact approved boundary definitions.
-39. Verify all three missing-label multi-select checkboxes display unconditionally and remain optional, while each required Yes/No/Unsure radio follows its checkbox and optional basis field.
-40. Verify every reference block expands on desktop/mobile without truncation or ambiguous line wrapping and test whether `<details>` survives PDF export. If it does not, replace it with an always-open `<div>` before migration approval.
+39. Verify all three missing-label multi-select checkboxes display unconditionally and remain optional; confirm the former Yes/No/Unsure identification radios are absent and submitted checkbox state is the identification measure.
+40. Verify every always-open reference block displays on desktop/mobile without truncation, literal markup or ambiguous line wrapping and survives PDF export.
 41. Research Domain wording concordance: For every Research Domain, compare the rc3 definition displayed when the Domain is proposed with the Q6b boundary wording displayed in `po_miss_domain_reference`. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries.
 42. Record an individual pass/fail live-QA result for all 11 Domains in `project_owner_domain_wording_concordance_candidate_0.4.md` or an associated completed QA record. Migration approval fails if any Domain points in materially different directions.
 43. Confirm no separate taxonomy-reference document, link or placeholder appears and no participant-facing text promises one.
@@ -69,6 +71,6 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 49. Confirm participants are not instructed to assign a Purpose merely because a method, analytical step or secondary feature is present.
 50. Confirm both reminders and the purpose guidance are unconditional; checkbox codes and order remain unchanged while checkbox requiredness is removed.
 51. Compare the plain wording and visual emphasis of all three substantive-focus displays with the canonical questionnaire.
-52. Fail migration approval if the governing rule is absent, appears after the classification overview or is not visibly emphasised.
+52. Fail migration approval if the governing rule is absent, appears after the detailed classification judgements or is not visibly emphasised.
 
 Migration and recruitment are prohibited until controlled migration is authorised, all live tests pass, every Domain has a recorded semantic-concordance pass, residual differences are resolved or approved, and candidate 0.4 receives the required ethics/governance and repository approval.

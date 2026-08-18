@@ -187,13 +187,10 @@ QUESTIONNAIRE_LABEL_MAP = {
     "Q5b.": "po_t02_correct_explain",
     "Q5c.": "po_t02_vis",
     "Q5d.": "po_t02_vis_explain",
-    "Q6a.": "po_miss_domain",
     "Q6b.": "po_miss_domains",
     "Q6c.": "po_miss_domain_basis",
-    "Q7a.": "po_miss_purpose",
     "Q7b.": "po_miss_purposes",
     "Q7c.": "po_miss_purpose_basis",
-    "Q8a.": "po_miss_tag",
     "Q8b.": "po_miss_tags",
     "Q8c.": "po_miss_tag_basis",
     "Q9a.": "po_sufficiency",
@@ -209,7 +206,7 @@ QUESTIONNAIRE_CHOICE_MAP = {
     key: QUESTIONNAIRE_LABEL_MAP[key]
     for key in (
         "Q2a.", "Q2c.", "Q3a.", "Q3c.", "Q4a.", "Q4c.", "Q5a.",
-        "Q5c.", "Q6a.", "Q6b.", "Q7a.", "Q7b.", "Q8a.", "Q8b.",
+        "Q5c.", "Q6b.", "Q7b.", "Q8b.",
         "Q9a.", "Q10a.", "Q11a.", "Q11b.",
     )
 }
@@ -372,7 +369,7 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
     ):
         if obsolete in questionnaire_text:
             errors.append(f"questionnaire retains taxonomy-reference text: {obsolete}")
-    intentional_label_departures = {"Q6a.", "Q7a.", "Q7b.", "Q8a."}
+    intentional_label_departures = {"Q6b.", "Q7b.", "Q8b."}
     for prefix, variable in QUESTIONNAIRE_LABEL_MAP.items():
         if prefix in intentional_label_departures:
             continue
@@ -471,8 +468,11 @@ def analytical_completion_missing(
         not in {
             "joined_intended_recipient",
             "joined_owner_consent",
+            "po_miss_domain",
             "po_miss_domains",
+            "po_miss_purpose",
             "po_miss_purposes",
+            "po_miss_tag",
             "po_miss_tags",
         }
     ]
@@ -532,9 +532,9 @@ def validate_dictionary() -> dict[str, object]:
     counts = Counter(row["Form Name"] for row in rows)
     if tuple(dict.fromkeys(row["Form Name"] for row in rows)) != builder.base.FORMS:
         errors.append("dictionary does not contain exactly the intended two instruments")
-    if counts != Counter({"owner_consent": 22, "project_review": 101}):
+    if counts != Counter({"owner_consent": 22, "project_review": 94}):
         errors.append(f"field counts differ: {dict(counts)}")
-    if len(rows) != 123 or len(names) != len(set(names)):
+    if len(rows) != 116 or len(names) != len(set(names)):
         errors.append("total field count or uniqueness differs")
     by = {row["Variable / Field Name"]: row for row in rows}
     if set(builder.CONSENT_NAMES) - set(by):
@@ -615,6 +615,14 @@ def validate_dictionary() -> dict[str, object]:
             errors.append(
                 f"participant-visible consent text contains internal term: {prohibited}"
             )
+    permitted_tags = {"br", "div", "span", "strong"}
+    used_tags = {
+        tag.lower()
+        for row in rows
+        for tag in re.findall(r"</?\s*([A-Za-z0-9]+)", row["Field Label"])
+    }
+    if used_tags - permitted_tags:
+        errors.append(f"unsupported participant HTML tags retained: {sorted(used_tags - permitted_tags)}")
     if by["ack_pref"]["Required Field?"]:
         errors.append("acknowledgement is not optional")
     if by["ack_pref"]["Branching Logic (Show field only if...)"] != (
@@ -633,14 +641,17 @@ def validate_dictionary() -> dict[str, object]:
         errors.append("obsolete quotation-permission field retained")
     if "po_taxonomy_ref" in by:
         errors.append("non-production taxonomy-reference field retained")
+    removed = builder.CLASSIFICATION_OVERVIEW_FIELDS | builder.MISSING_LABEL_GATE_FIELDS
+    if removed & set(by):
+        errors.append(f"retired overview/gate fields retained: {sorted(removed & set(by))}")
     if names.count("po_intro") != 1 or by["po_intro"]["Form Name"] != "project_review":
         errors.append("po_intro is not exactly one Project Review field")
     if not (
         names.index("datasets_used")
         < names.index("po_intro")
-        < names.index("po_classification_overview")
+        < names.index("po_d01_display")
     ):
-        errors.append("participant-visible orientation/overview order differs")
+        errors.append("participant-visible orientation/detailed-judgement order differs")
     reminder_expectations = (
         ("po_miss_domain_reminder", "po_miss_domains", builder.MISSING_DOMAIN_REMINDER_HTML, builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE),
         ("po_miss_purpose_reminder", "po_miss_purposes", builder.MISSING_PURPOSE_REMINDER_HTML, builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE),
@@ -660,6 +671,12 @@ def validate_dictionary() -> dict[str, object]:
             errors.append(f"{reminder} branching differs")
         if names.index(reminder) + 1 != names.index(target):
             errors.append(f"{reminder} is not immediately before {target}")
+    for layer, variable in builder.REFERENCE_FIELD_BY_LAYER.items():
+        if by[variable]["Field Label"] != builder.missing_reference_html(layer):
+            errors.append(f"{variable} always-open reference content differs")
+    for variable in ("po_miss_domains", "po_miss_purposes", "po_miss_tags"):
+        if by[variable]["Field Label"].rstrip().endswith("?"):
+            errors.append(f"{variable} label remains a question")
     if names[-2:] != ["po_other_comment", "po_final_warning"]:
         errors.append("final warning is not immediately after final comments")
     if "quotation permission" in by["po_final_warning"]["Field Label"].lower():
@@ -686,7 +703,12 @@ def validate_dictionary() -> dict[str, object]:
         "po_miss_domain_reminder",
         "po_miss_purpose_reminder",
     }
-    expected_names = (set(predecessor) - {"po_quote_permission", "po_taxonomy_ref"}) | added
+    expected_names = (
+        set(predecessor)
+        - {"po_quote_permission", "po_taxonomy_ref"}
+        - builder.CLASSIFICATION_OVERVIEW_FIELDS
+        - builder.MISSING_LABEL_GATE_FIELDS
+    ) | added
     actual_review = {
         row["Variable / Field Name"]: row
         for row in rows
@@ -728,14 +750,14 @@ def validate_specs_and_fixture() -> dict[str, object]:
     ):
         errors.append("branch specification orientation wording differs")
     if review_document.get("classification_orientation_order") != (
-        "project information -> po_intro -> po_classification_overview -> detailed judgements"
+        "project information -> po_intro -> detailed judgements"
     ):
         errors.append("branch specification participant-visible order differs")
     if review_document.get("substantive_focus_rule") != {
         "plain_text": builder.SUBSTANTIVE_FOCUS_PARAGRAPH,
         "bold_phrase": builder.SUBSTANTIVE_FOCUS_PHRASE,
         "redcap_markup": f"<strong>{builder.SUBSTANTIVE_FOCUS_PHRASE}</strong>",
-        "position": "inside po_intro before po_classification_overview",
+        "position": "inside po_intro before the detailed classification judgements",
     }:
         errors.append("branch specification substantive-focus rule differs")
     expected_reminders = {
@@ -756,6 +778,22 @@ def validate_specs_and_fixture() -> dict[str, object]:
         errors.append("branch specification missing-classification reminders differ")
     if review_document.get("missing_label_reference_fields") != builder.REFERENCE_FIELD_BY_LAYER:
         errors.append("branch specification missing-label reference fields differ")
+    manual_stop = branch.get("stop_actions_manual_after_import", {}).get(
+        "consent_confirmation_negative", {}
+    )
+    if manual_stop.get("fields") != list(builder.CONSENT_NAMES):
+        errors.append("manual negative-confirmation Stop Action field list differs")
+    if manual_stop.get("trigger") != "Not confirmed (stored code 0)":
+        errors.append("manual negative-confirmation Stop Action trigger differs")
+    missing_branching = branch.get("missing_label_branching", {})
+    if missing_branching.get("gateways_required") is not False:
+        errors.append("branch specification still requires missing-label gateways")
+    if missing_branching.get("identification_source") != (
+        "checkbox state on the submitted Project Review"
+    ):
+        errors.append("branch specification missing-label identification source differs")
+    if "classification_overview" in branch:
+        errors.append("branch specification retains classification overview metadata")
     if "po_quote_permission" in builder.BRANCH_SPEC.read_text(encoding="utf-8"):
         errors.append("quotation field retained in branch specification")
     tag_spec = branch.get("tag_reviews", {})
@@ -793,6 +831,9 @@ def validate_specs_and_fixture() -> dict[str, object]:
         errors.append("fixture retains quotation-permission field")
     if "po_taxonomy_ref" in header:
         errors.append("fixture retains taxonomy-reference field")
+    removed = builder.CLASSIFICATION_OVERVIEW_FIELDS | builder.MISSING_LABEL_GATE_FIELDS
+    if removed & set(header):
+        errors.append(f"fixture retains removed fields: {sorted(removed & set(header))}")
     if any(row["owner_instr_ver"] != builder.VERSION for row in owners):
         errors.append("owner fixture version differs")
     if any(row["review_instr_ver"] != builder.VERSION for row in repeats):
@@ -842,6 +883,11 @@ def validate_specs_and_fixture() -> dict[str, object]:
             errors.append(f"quotation field retained in {path.name}")
         if "po_taxonomy_ref" in text:
             errors.append(f"taxonomy-reference field retained in {path.name}")
+    qa_fixture, qa_header = read_csv(builder.QA_IMPORT_FIXTURE)
+    if removed & set(qa_header):
+        errors.append(
+            f"extended QA fixture retains removed fields: {sorted(removed & set(qa_header))}"
+        )
     current_missing = next(
         row for row in load_dictionary() if row["Variable / Field Name"] == "po_miss_domains"
     )
