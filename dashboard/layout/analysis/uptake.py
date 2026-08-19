@@ -32,46 +32,14 @@ def _uptake_graph(graph_id: str, height: int) -> html.Div:
     )
 
 
-_AVAILABILITY_BASIS_DISPLAY = {
-    "documented_accessible": "documented accessible",
-    "bounded_by_first_use": "bounded by first use",
-    "pre_register_window": "pre-register window",
-    "proxy": "first register appearance",
-    "collection": "collection member availability",
-}
-
-
 def build_adoption_summary_table(summary: pd.DataFrame) -> dash_table.DataTable:
     """Static per-product adoption summary (deterministic)."""
     display = summary.copy()
-    display["availability_display"] = display.apply(
-        lambda row: (
-            f"{row['availability']} (bounded; announced {row['announced']})"
-            if row["basis"] == "announced"
-            else f"{row['availability']} "
-                 f"({_AVAILABILITY_BASIS_DISPLAY.get(row['basis'], row['basis'])})"
-        ),
-        axis=1,
-    )
-    display["lag_display"] = display.apply(
-        lambda row: (
-            "n/a (bounded)" if row["basis"] in ("announced", "bounded_by_first_use")
-            else "-" if pd.isna(row["lag_years"])
-            else f"{row['lag_years']:.1f}"
-        ),
-        axis=1,
-    )
-    display["delivery_display"] = display["delivery_lag_years"].map(
-        lambda value: "-" if pd.isna(value) else f"{value:.1f}"
-    )
     columns = [
         {"name": "Linked product", "id": "product"},
         {"name": "Flagship grouping", "id": "flagship_group"},
         {"name": "Linkage span", "id": "linkage_span"},
-        {"name": "Availability", "id": "availability_display"},
         {"name": "First accredited use", "id": "first_use"},
-        {"name": "Adoption lag (years)", "id": "lag_display"},
-        {"name": "Announcement -> first DEA-route use (years)", "id": "delivery_display"},
         {"name": "Exposure (years)", "id": "exposure_years", "type": "numeric"},
         {"name": "Total projects", "id": "total_projects", "type": "numeric"},
         {"name": "Projects / exposure-year", "id": "projects_per_exposure_year", "type": "numeric"},
@@ -106,7 +74,7 @@ def _linked_data_uptake_content() -> list:
         html.P(
             "ADR England flagship datasets are selected by default. Other linked datasets "
             "can be added as a group or chosen individually. Lines begin at each dataset's "
-            "availability. The Collections toggle switches between reference-defined "
+            "first accredited use in the DEA register. The Collections toggle switches between reference-defined "
             "collection lines and individual linked-product lines. DEA-gateway use only.",
             className="section-desc text-muted",
         ),
@@ -189,14 +157,12 @@ def _linked_data_uptake_content() -> list:
         _uptake_graph("uptake-adoption-curves", height=UPTAKE_CURVES_HEIGHT),
         html.H6("Adoption summary", className="mt-3"),
         html.P(
-            "Availability follows the available-by rule: a date is recorded as accessible "
-            "only where the source evidences actual SRS/DEA access; announcement-only "
-            "sources bound availability by first register use instead, with the "
-            "announcement kept separately. Adoption lag (availability -> first DEA use) and "
-            "delivery/governance lag (announcement -> first DEA-route use) are different "
-            "quantities and shown in separate columns - bounded and announced rows show "
-            "adoption lag as \"n/a (bounded)\" rather than a false zero. Rates over short "
-            "exposures are initial-adoption rates, not sustained demand.",
+            "Exposure begins at the first accredited use of each linked dataset observed in "
+            "the DEA register. Exposure-years therefore measure observed DEA-gateway uptake "
+            "from first use onwards; they do not claim to identify when the dataset first "
+            "became technically available through any route. For grouped collections, exposure "
+            "begins at the earliest first accredited use among the collection members included "
+            "in that line. Rates over short exposures are initial-adoption rates, not sustained demand.",
             className="section-desc",
         ),
         html.Div(

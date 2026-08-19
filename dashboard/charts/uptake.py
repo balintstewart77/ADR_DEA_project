@@ -26,7 +26,7 @@ def make_adoption_curves(
 
     Cross-domain products draw solid, within-domain dashed, so the two kinds
     stay distinguishable however many products are selected. The data frame is
-    already clipped so each product starts at its availability period.
+    already clipped so each product starts at its first accredited-use period.
     """
     fig = go.Figure()
     if df_adoption.empty:
@@ -115,17 +115,18 @@ def make_adoption_curves(
             note = (
                 "Access requests count each (project, member dataset) pair, so a collection "
                 "line equals the sum of its member lines. Lines begin at the earliest "
-                "selected member availability. DEA-gateway use only."
+                "selected member's first accredited use. DEA-gateway use only."
             )
         else:
             note = (
                 "Reference-defined collections are de-duplicated to one project per collection. "
-                "Lines begin at the earliest selected member availability. DEA-gateway use only."
+                "Lines begin at the earliest selected member's first accredited use. "
+                "DEA-gateway use only."
             )
     else:
         note = (
-            "Selected linked datasets shown individually. Lines begin at each dataset's "
-            "availability. DEA-gateway use only. Solid = cross-domain; dashed = within-domain."
+            "Selected linked datasets shown individually. Lines begin at each dataset's first "
+            "accredited use in the DEA register. Solid = cross-domain; dashed = within-domain."
         )
     fig.add_annotation(
         text=note,
@@ -139,6 +140,25 @@ def make_adoption_curves(
             fig, years=df_adoption["Year"].unique(), partial_year_info=partial_year_info,
         )
     return _apply_common(fig, height=height)
+
+
+def _wrap_axis_label(label: str, width: int = 23) -> str:
+    """Wrap a categorical axis label at word boundaries for Plotly tick text."""
+    words = label.split()
+    if not words:
+        return label
+    lines: list[str] = []
+    current: list[str] = []
+    for word in words:
+        candidate = " ".join([*current, word])
+        if current and len(candidate) > width:
+            lines.append(" ".join(current))
+            current = [word]
+        else:
+            current.append(word)
+    if current:
+        lines.append(" ".join(current))
+    return "<br>".join(lines)
 
 
 def make_exposure_rate_bar(
@@ -180,13 +200,19 @@ def make_exposure_rate_bar(
         title="Projects per Exposure-Year",
         xaxis_title="Projects per exposure-year",
         yaxis_title="",
+        yaxis=dict(
+            tickmode="array",
+            tickvals=work["short"].astype(str).tolist(),
+            ticktext=[_wrap_axis_label(str(label)) for label in work["short"]],
+            automargin=True,
+        ),
         showlegend=False,
-        margin=dict(l=150, r=60, t=92, b=56),
+        margin=dict(l=190, r=60, t=92, b=56),
     )
     fig.add_annotation(
         text=(
             "Teal = ADR England flagship; grey = Other linked datasets. "
-            "Exposure-years are counted from availability within the register window; "
+            "Exposure-years are counted from first accredited use in the DEA register; "
             "short exposures are initial-adoption rates."
         ),
         xref="paper", yref="paper",
@@ -197,25 +223,23 @@ def make_exposure_rate_bar(
     return _apply_common(fig, height=height)
 
 
-def add_availability_annotations(
+def add_first_accredited_use_annotations(
     fig: go.Figure,
     annotations: list[dict],
     min_x: float | None = None,
 ) -> go.Figure:
-    """Overlay product-availability vertical lines on a by-year trend figure.
+    """Overlay first-accredited-use vertical lines on a by-year trend figure.
 
-    Each annotation dict carries ``year_fraction``, ``short`` and ``basis``
-    ("available" for a curated date, "first register appearance" for the
-    empirical proxy) — the label keeps that distinction visible. Dates before
+    Each annotation dict carries ``year_fraction`` and ``short``. Dates before
     ``min_x`` are pinned to the left edge and labelled as pre-window rather
     than stretching the axis back decades.
     """
     seen_x: dict[float, int] = {}
     for spec in annotations:
         x = spec["year_fraction"]
-        label = f"{spec['short']} ({spec['basis']})"
+        label = f"{spec['short']} (first accredited use)"
         if min_x is not None and x < min_x:
-            label = f"{spec['short']} (available pre-{int(min_x)})"
+            label = f"{spec['short']} (first accredited use pre-{int(min_x)})"
             x = min_x
         collisions = seen_x.get(x, 0)
         seen_x[x] = collisions + 1

@@ -1,18 +1,18 @@
-"""Linked-product uptake and availability-exposure data (deterministic layer).
+"""Linked-product uptake and observed-exposure data (deterministic layer).
 
 Everything here is derived deterministically from the register and the named
 linked-product catalogue in analysis/register_reference.yaml:
 
-- exposure windows for availability-normalised demand (years a dataset has
-  been requestable WITHIN the register window, never raw dataset age);
+- observed DEA-register exposure windows for linked-product uptake (from the
+  first accredited use, never raw dataset age);
 - per-product adoption counts from the matched_products facet;
 - the set of domain pairs served by an existing cross-domain linked product.
 
-Availability dates come in two tiers. The EMPIRICAL default for every dataset
-and product is its first appearance in the register (first mention quarter) —
-an honest proxy, labelled as such. CURATED dates from the reference
-(``availability_date``, falling back to the legacy ``available_from``)
-override the proxy where present.
+The reference catalogue retains curated availability and announcement evidence
+for provenance. Linked Data Uptake deliberately does not use that evidence as
+an exposure start: it measures observed DEA-gateway uptake from first
+accredited use in the register. The separate dataset-level table below remains
+for the general dataset-demand view.
 """
 
 from collections import Counter
@@ -101,15 +101,16 @@ def _quarter_label(ts) -> str:
     return f"{ts.year} Q{(ts.month - 1) // 3 + 1}"
 
 
-def _exposure_years(availability: pd.Timestamp | None) -> float:
-    """Years of exposure WITHIN the register window, fractional current year.
+def _exposure_years(exposure_start: pd.Timestamp | None) -> float:
+    """Observed exposure years within the register window, fractional current year.
 
-    Anything available before the window start gets the full window — its rate
-    is then count/window by construction, which is the intended reading.
+    Starts before the window get the full window. Linked-product callers pass
+    first accredited DEA-register use, while the general dataset-demand view
+    retains its separately documented availability calculation.
     """
     start = REGISTER_WINDOW_START
-    if availability is not None and not pd.isna(availability):
-        start = max(start, pd.Timestamp(availability))
+    if exposure_start is not None and not pd.isna(exposure_start):
+        start = max(start, pd.Timestamp(exposure_start))
     days = (LATEST_REGISTER_DATE - start).days
     return max(days, 0) / 365.25
 
@@ -271,27 +272,27 @@ PRODUCT_SELECTION_OPTIONS = [
 ]
 
 
-def _product_availability_date(product: str) -> pd.Timestamp | None:
-    record = _linked_product_by_canonical.get(product)
-    curated = record["curated_date"] if record else None
+def _product_first_accredited_use(product: str) -> pd.Timestamp | None:
+    """First accredited DEA-register use observed for one linked product."""
+
     seen = _first_seen_by_product.get(product, pd.NaT)
-    if curated is not None and not pd.isna(curated):
-        return pd.Timestamp(curated)
     if not pd.isna(seen):
         return pd.Timestamp(seen)
     return None
 
 
 def _product_period_start(product: str, granularity: str) -> pd.Timestamp:
-    availability = _product_availability_date(product)
-    start = REGISTER_WINDOW_START if availability is None else max(REGISTER_WINDOW_START, availability)
+    """First chart period containing an accredited DEA-register use."""
+
+    first_use = _product_first_accredited_use(product)
+    start = REGISTER_WINDOW_START if first_use is None else max(REGISTER_WINDOW_START, first_use)
     if granularity == "quarter":
         return start.to_period("Q").start_time
     return pd.Timestamp(start.year, 1, 1)
 
 
 def _product_by_year() -> pd.DataFrame:
-    """Projects per year per product, beginning at product availability."""
+    """Projects per year per product, beginning at first accredited use."""
     rows = []
     counts = DF_PRODUCT_PROJECTS.groupby(["product", "Year"]).size()
     for product, _ in PRODUCT_TOTALS.most_common():
@@ -323,7 +324,7 @@ DF_PRODUCT_BY_YEAR = _product_by_year()
 
 
 def _product_by_quarter() -> pd.DataFrame:
-    """Projects per quarter per product, beginning at product availability."""
+    """Projects per quarter per product, beginning at first accredited use."""
     rows = []
     counts = DF_PRODUCT_PROJECTS.groupby(["product", "quarter_date"]).size()
     for product, _ in PRODUCT_TOTALS.most_common():
@@ -523,17 +524,6 @@ def adoption_curve_table(
         kind="stable",
     ).reset_index(drop=True)
 
-# Honest annotation/table wording per availability basis: a documented-
-# accessible date is a real access date ("available"); announced and bounded
-# dates are only upper bounds from observed register use ("available by").
-_ANNOTATION_BASIS_LABELS = {
-    "documented_accessible": "available",
-    "announced": "available by",
-    "bounded_by_first_use": "available by",
-    "pre_register_window": "available",
-}
-
-
 def _group_product_summary(summary: pd.DataFrame) -> pd.DataFrame:
     if summary.empty:
         return summary
@@ -555,18 +545,13 @@ def _group_product_summary(summary: pd.DataFrame) -> pd.DataFrame:
                     ["project_key"],
                 ]["project_key"].nunique()
             )
-            availability_values = [
-                value for value in group["availability_date"]
-                if value is not None and not pd.isna(value)
-            ]
-            availability = min(availability_values) if availability_values else pd.NaT
             first_values = [
-                _first_seen_by_product.get(product, pd.NaT)
-                for product in products
+                value for value in group["exposure_start"]
+                if value is not None and not pd.isna(value)
             ]
             first_values = [value for value in first_values if not pd.isna(value)]
             first_use = min(first_values) if first_values else pd.NaT
-            exposure = _exposure_years(availability) if not pd.isna(availability) else 0.0
+            exposure = _exposure_years(first_use) if not pd.isna(first_use) else 0.0
             span = _line_span(group["linkage_span"])
             rows.append({
                 "product": collection,
@@ -576,14 +561,8 @@ def _group_product_summary(summary: pd.DataFrame) -> pd.DataFrame:
                 "collection_label": collection,
                 "is_adr_england_flagship": bool(group["is_adr_england_flagship"].any()),
                 "flagship_group": str(group["flagship_group"].iloc[0]),
-                "availability": _quarter_label(availability),
-                "basis": "collection",
-                "availability_basis": "collection member availability",
-                "availability_date": availability,
-                "announced": "",
                 "first_use": _quarter_label(first_use),
-                "lag_years": None,
-                "delivery_lag_years": None,
+                "exposure_start": first_use,
                 "exposure_years": round(exposure, 1),
                 "total_projects": project_count,
                 "projects_per_exposure_year": round(project_count / exposure, 1) if exposure else None,
@@ -599,41 +578,18 @@ def product_summary_table(
     collection_view: str | None = None,
     selected_products: list[str] | None = None,
 ) -> pd.DataFrame:
-    """Per-product availability, first accredited use, lags and demand rate.
+    """Observed first use, exposure years and demand rate per linked product.
 
-    Two DISTINCT lag quantities, never conflated:
-
-    - adoption lag (availability -> first DEA use): observable only for
-      documented_accessible or pre_register_window dates. For announced or
-      bounded dates, availability <= first use with an unknown gap — the
-      column stays unset (rendered "n/a (bounded)"), never a false zero.
-    - delivery/governance lag (announcement -> first DEA-route use): only for
-      announced rows, measuring how long after an announcement the asset first
-      shows DEA-gateway use. NOT adoption lag — ECHILD's ~3.5y here is a
-      governance delay, not slow researcher uptake.
+    Exposure begins in the quarter of first accredited use observed in the DEA
+    register. Curated availability and announcement metadata remain in
+    ``LINKED_PRODUCTS`` for provenance but have no effect on this table.
     """
     rows = []
     for product in LINKED_PRODUCTS:
         canonical = product["canonical"]
-        curated = product["curated_date"]
-        basis = product["availability_basis"] if curated is not None else "proxy"
-        seen = _first_seen_by_product.get(canonical, pd.NaT)
-        availability = curated if curated is not None else seen
-        exposure = _exposure_years(availability) if not pd.isna(availability) else 0.0
+        first_use = _product_first_accredited_use(canonical)
+        exposure = _exposure_years(first_use) if first_use is not None else 0.0
         total = int(PRODUCT_TOTALS.get(canonical, 0))
-        if (
-            basis in ("documented_accessible", "pre_register_window")
-            and curated is not None
-            and not pd.isna(seen)
-        ):
-            lag_years = round((seen - curated).days / 365.25, 1)
-        else:
-            lag_years = None
-        announced_date = product["announced_date"]
-        if basis == "announced" and announced_date is not None and not pd.isna(seen):
-            delivery_lag_years = round((seen - announced_date).days / 365.25, 1)
-        else:
-            delivery_lag_years = None
         rows.append({
             "product": canonical,
             "short": product["short"],
@@ -646,18 +602,8 @@ def product_summary_table(
                 if product["flagship_collection"] == ADR_ENGLAND_FLAGSHIP_COLLECTION
                 else OTHER_LINKED_DATASETS_LABEL
             ),
-            "availability": (
-                str(product["curated_raw"]) if curated is not None else _quarter_label(seen)
-            ),
-            "basis": basis,
-            "availability_basis": _ANNOTATION_BASIS_LABELS.get(
-                basis, "first register appearance"
-            ),
-            "availability_date": availability,
-            "announced": str(product["announced_raw"]) if announced_date is not None else "",
-            "first_use": _quarter_label(seen),
-            "lag_years": lag_years,
-            "delivery_lag_years": delivery_lag_years,
+            "first_use": _quarter_label(first_use),
+            "exposure_start": first_use,
             "exposure_years": round(exposure, 1),
             "total_projects": total,
             "projects_per_exposure_year": round(total / exposure, 1) if exposure else None,
@@ -685,16 +631,15 @@ def top_products(n: int) -> list[str]:
     return [product for product, _ in PRODUCT_TOTALS.most_common(n)]
 
 
-def availability_annotations(n: int = 6) -> list[dict]:
-    """Annotation specs for the top-n products: curated date when present,
-    else the first-register-appearance proxy, labelled accordingly."""
+def first_accredited_use_annotations(n: int = 6) -> list[dict]:
+    """Annotation specs for the top-n products' first accredited uses."""
     summary = PRODUCT_SUMMARY.set_index("product")
     annotations = []
     for product in top_products(n):
         if product not in summary.index:
             continue
         row = summary.loc[product]
-        date = row["availability_date"]
+        date = row["exposure_start"]
         if pd.isna(date):
             continue
         date = pd.Timestamp(date)
@@ -703,6 +648,5 @@ def availability_annotations(n: int = 6) -> list[dict]:
             "short": str(row["short"]),
             "date": date,
             "year_fraction": date.year + (date.dayofyear - 1) / 365.25,
-            "basis": str(row["availability_basis"]),
         })
     return annotations
