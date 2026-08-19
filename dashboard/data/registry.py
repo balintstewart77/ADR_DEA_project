@@ -50,6 +50,9 @@ COLLECTIONS = (
 )
 _max_date = df_all["Accreditation Date"].max() if len(df_all) else None
 DATA_DATE = _max_date.strftime("%d %B %Y") if _max_date is not None else "unknown"
+# Public source wording deliberately describes the register, not its internal
+# archive path or content hashes. Its accompanying coverage date is DATA_DATE.
+DATA_SOURCE_LABEL = "UKSA accredited-project register"
 
 # Detect whether the latest year is incomplete (data doesn't cover the full year)
 _partial_year = int(_max_date.year) if (_max_date is not None and _max_date.month < 12) else None

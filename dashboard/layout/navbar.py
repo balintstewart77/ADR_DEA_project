@@ -4,7 +4,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 from dashboard.config import FEEDBACK_EMAIL_URL, SOURCE_URL
-from dashboard.data.registry import DATA_DATE, source_file
+from dashboard.data.registry import DATA_DATE, DATA_SOURCE_LABEL
 
 
 def build_navbar():
@@ -36,7 +36,7 @@ def build_navbar():
                     className="nav-search-btn btn btn-sm me-3",
                 ),
                 html.Span(
-                    f"Data to {DATA_DATE}  •  {source_file}",
+                    f"Accreditation data through {DATA_DATE}  •  {DATA_SOURCE_LABEL}",
                     className="nav-meta",
                 ),
             ], className="d-flex align-items-center ms-auto"),

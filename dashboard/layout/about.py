@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 
 from dashboard.config import FEEDBACK_EMAIL_URL, RELEASE_MODEL, SOURCE_URL
 from dashboard.data.registry import (
-    PROCESSING_STATS, DATA_DATE, source_file,
+    PROCESSING_STATS, DATA_DATE, DATA_SOURCE_LABEL,
     RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT,
     TOTAL_RETAINED_REGISTER_ENTRIES,
     TOTAL_UNIQUE_OFFICIAL_PROJECT_IDS,
@@ -22,8 +22,8 @@ This dashboard presents data on research projects accredited under the
 as a public register of accredited researchers and research projects.
 
 The data is downloaded as an Excel file from the UKSA website and converted
-to CSV for processing. The dashboard was last refreshed using data up to
-**{DATA_DATE}** (source file: `{source_file}`).
+to CSV for processing. The dashboard contains accreditation data through
+**{DATA_DATE}** from the **{DATA_SOURCE_LABEL}**.
 
 ---
 

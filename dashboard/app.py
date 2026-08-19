@@ -57,7 +57,7 @@ app.layout = html.Div([
         ),
         html.Footer(
             f"DEA Accredited Projects Dashboard  •  Data sourced from UKSA  •  "
-            f"Last updated {registry.DATA_DATE}",
+            f"Accreditation data through {registry.DATA_DATE}",
             className="dea-footer",
         ),
     ], fluid=True),
