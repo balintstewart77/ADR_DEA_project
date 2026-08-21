@@ -10,6 +10,7 @@ and one de-identified candidate--Record-ID incidence frame.
 from __future__ import annotations
 
 import hashlib
+import itertools
 import json
 import re
 import sys
@@ -25,10 +26,16 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from analysis.validation.owner_sampling_frame import (  # noqa: E402
-    _possible_variant,
     normalise_researcher_name,
     parse_researcher_field,
     resolve_frame_entity_statuses,
+)
+from dashboard.institution_normalisation import (  # noqa: E402
+    _build_logical_lines,
+    _clean_fragment,
+    _clean_text,
+    _starts_name,
+    describe_institution_normalisation,
 )
 from scripts.verify_training_exclusion_membership import verify_membership  # noqa: E402
 
@@ -42,7 +49,7 @@ SAMPLING_ASSERTIONS = REPO_ROOT / "preregistration_restricted/sampling/official_
 PROTOCOL = REPO_ROOT / "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx"
 SAMPLING_SPECIFICATION = REPO_ROOT / "preregistration/package/04_exclusions_and_sampling/sampling_specification.yaml"
 SAMPLING_RUNBOOK = REPO_ROOT / "preregistration/package/04_exclusions_and_sampling/official_sampling_runbook.md"
-CONTACTABILITY_PROCEDURE = REPO_ROOT / "preregistration/post_registration/procedures/owner_contactability_procedure_v1.0.md"
+CONTACTABILITY_PROCEDURE = REPO_ROOT / "preregistration/post_registration/procedures/owner_contactability_procedure_v1.1.md"
 TRAINER = REPO_ROOT / "preregistration/package/05_training_and_pilot/DEA_trainer_handout_v2.docx"
 CODER = REPO_ROOT / "preregistration/package/05_training_and_pilot/DEA_coder_training_handout_v3.docx"
 PILOT_REFERENCE = REPO_ROOT / "preregistration/package/05_training_and_pilot/DEA_pilot_projects_trainer_debrief_reference_v2.docx"
@@ -63,7 +70,7 @@ EXPECTED_HASHES = {
     PROTOCOL: "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
     SAMPLING_SPECIFICATION: "d926d4911f626a72ceab71f2ed37879dbe960f100bf2d5c075812617b63ef63b",
     SAMPLING_RUNBOOK: "9a06fd1dfb09b8ebea7381db14361fcd74318737af3df6a893ce2fd255e3728b",
-    CONTACTABILITY_PROCEDURE: "2c57258812eeff84e09fef62539460dfb896503ef667208c340f487170a00793",
+    CONTACTABILITY_PROCEDURE: "364cabed2c2da44986dd87e043cf686a5c7307068387094d718dc4a426970ca2",
     TRAINER: "8b030a48c8b482d50fa4cede3a50e2c47b83d7866f836ca113e5ebeff30cf9d0",
     CODER: "7a351641de997f78374082538285a3d6dd589c6d8fb0928bb4c6725b49c173b5",
     PILOT_REFERENCE: "47707df5d3a52eed4b326aa50d2c4d21d005390162e5d9694d3626b913465cfa",
@@ -139,22 +146,100 @@ def exact_membership_join(
     return matched
 
 
+def _verbatim_fragment(source: str, normalised: str) -> tuple[str, str]:
+    """Recover the frozen-field substring while tolerating separator whitespace."""
+
+    words = normalised.split()
+    if not words:
+        return "", "empty"
+    pattern = r"[\s,]+".join(re.escape(word) for word in words)
+    match = re.search(pattern, source, flags=re.IGNORECASE)
+    if match:
+        return match.group(0).strip(" \t\r\n,;"), "verbatim_source_slice"
+    return normalised, "normalised_fallback"
+
+
+def _name_institution_pairs(raw: object) -> list[dict[str, str]]:
+    if not isinstance(raw, str) or not raw.strip():
+        return []
+    source = raw
+    text = _clean_text(raw.replace(";", "\n"))
+    rows: list[dict[str, str]] = []
+    for line in _build_logical_lines(text):
+        tokens = [_clean_fragment(part) for part in line.split(",") if _clean_fragment(part)]
+        index = 0
+        while index < len(tokens):
+            consumed = _starts_name(tokens, index)
+            if not consumed:
+                index += 1
+                continue
+            displayed = normalise_researcher_name(" ".join(tokens[index:index + consumed]))
+            index += consumed
+            institution_parts: list[str] = []
+            while index < len(tokens):
+                next_consumed = _starts_name(tokens, index)
+                if institution_parts and next_consumed:
+                    break
+                token = tokens[index]
+                if institution_parts and _starts_name([token], 0) and index == len(tokens) - 1:
+                    break
+                institution_parts.append(token)
+                index += 1
+            institution_as_registered = ", ".join(institution_parts)
+            normalisation = describe_institution_normalisation(institution_as_registered)
+            source_name, capture_status = _verbatim_fragment(source, displayed)
+            source_institution, institution_capture_status = _verbatim_fragment(
+                source, institution_as_registered
+            )
+            rows.append({
+                "researcher_identity_key": normalise_researcher_name(displayed).casefold(),
+                "source_name_string": source_name,
+                "source_name_capture_status": capture_status,
+                "institution_as_registered": source_institution,
+                "institution_capture_status": institution_capture_status,
+                "institution_normalised": str(normalisation["institution"]),
+                "institution_match_status": str(normalisation["match_status"]),
+            })
+    return rows
+
+
 def build_parsed_frame(eligible: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     incidences: list[dict[str, object]] = []
     reviews: list[dict[str, object]] = []
     for record in eligible[["Record ID", "Project ID", "Title", "Researchers"]].to_dict("records"):
         parsed, record_reviews = parse_researcher_field(record.get("Researchers"))
+        pairs: dict[str, list[dict[str, str]]] = defaultdict(list)
+        for pair in _name_institution_pairs(record.get("Researchers")):
+            pairs[pair["researcher_identity_key"]].append(pair)
         for person in parsed:
-            incidences.append({
-                "record_id": str(record["Record ID"]),
-                "project_id": str(record["Project ID"]),
-                "researcher_displayed": person.displayed,
-                "researcher_normalised": person.normalised,
-                "researcher_identity_key": person.identity_key,
-                "entity_status": person.entity_status,
-                "entity_status_reason": person.entity_status_reason,
-                "eligible_as_index_researcher": int(person.entity_status == "person_candidate"),
-            })
+            matched_pairs = pairs.get(person.identity_key) or [{
+                "source_name_string": person.displayed,
+                "source_name_capture_status": "normalised_fallback",
+                "institution_as_registered": "",
+                "institution_capture_status": "empty",
+                "institution_normalised": "",
+                "institution_match_status": "empty",
+            }]
+            seen_pairs: set[tuple[str, str]] = set()
+            for pair in matched_pairs:
+                pair_key = (
+                    str(pair["source_name_string"]),
+                    str(pair["institution_normalised"]),
+                )
+                if pair_key in seen_pairs:
+                    continue
+                seen_pairs.add(pair_key)
+                incidences.append({
+                    "record_id": str(record["Record ID"]),
+                    "project_id": str(record["Project ID"]),
+                    "researcher_displayed": person.displayed,
+                    "researcher_normalised": person.normalised,
+                    "researcher_identity_key": person.identity_key,
+                    "entity_status": person.entity_status,
+                    "entity_status_reason": person.entity_status_reason,
+                    "eligible_as_index_researcher": int(person.entity_status == "person_candidate"),
+                    **pair,
+                })
         for item in record_reviews:
             reviews.append({
                 "record_id": str(record["Record ID"]),
@@ -167,15 +252,196 @@ def build_parsed_frame(eligible: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFra
     if frame.empty:
         raise ValueError("No researcher incidences were parsed")
     frame = resolve_frame_entity_statuses(frame)
-    frame = frame.drop_duplicates(["researcher_identity_key", "record_id"]).reset_index(drop=True)
+    frame = frame.drop_duplicates([
+        "researcher_identity_key", "institution_normalised", "record_id"
+    ]).reset_index(drop=True)
     return frame, pd.DataFrame(reviews)
 
 
-def portfolios_from(frame: pd.DataFrame) -> dict[str, frozenset[str]]:
-    people = frame.loc[frame["entity_status"].eq("person_candidate")]
+def _identity_tokens(name: str) -> tuple[tuple[str, ...], str]:
+    tokens = tuple(
+        re.sub(r"[^\w'-]", "", token, flags=re.UNICODE).casefold()
+        for token in normalise_researcher_name(name).split()
+        if re.sub(r"[^\w'-]", "", token, flags=re.UNICODE)
+    )
+    if len(tokens) < 2:
+        return (), ""
+    return tokens[:-1], tokens[-1]
+
+
+def _given_names_consistent(left: tuple[str, ...], right: tuple[str, ...]) -> bool:
+    if not left or not right:
+        return False
+    for a, b in zip(left, right):
+        if a == b:
+            continue
+        if len(a) == 1 and b.startswith(a):
+            continue
+        if len(b) == 1 and a.startswith(b):
+            continue
+        return False
+    return True
+
+
+def _merge_permitted(left_name: str, right_name: str, institution: str) -> bool:
+    if not institution:
+        return False
+    left_given, left_surname = _identity_tokens(left_name)
+    right_given, right_surname = _identity_tokens(right_name)
+    return bool(
+        left_surname
+        and left_surname == right_surname
+        and _given_names_consistent(left_given, right_given)
+    )
+
+
+def _canonical_name(values: Iterable[str]) -> str:
+    def key(value: str) -> tuple[int, int, str, str]:
+        tokens = normalise_researcher_name(value).split()
+        initials = sum(len(re.sub(r"\W", "", token)) == 1 for token in tokens[:-1])
+        return (-len(tokens), initials, value.casefold(), value)
+    return sorted(set(values), key=key)[0]
+
+
+def resolve_candidate_identities(
+    frame: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Apply the v1.1 institution-aware name merge rule before sequencing."""
+
+    people = frame.loc[frame["entity_status"].eq("person_candidate")].copy()
+    people["source_node"] = people.apply(
+        lambda row: (
+            json.dumps(
+                [str(row["researcher_identity_key"]), str(row["institution_normalised"])],
+                ensure_ascii=False, separators=(",", ":"),
+            )
+            if str(row["institution_normalised"])
+            else json.dumps(
+                [str(row["researcher_identity_key"]), "MISSING", str(row["record_id"])],
+                ensure_ascii=False, separators=(",", ":"),
+            )
+        ),
+        axis=1,
+    )
+    node_rows = {
+        node: group.copy()
+        for node, group in people.groupby("source_node", sort=True)
+    }
+    node_name = {
+        node: _canonical_name(group["researcher_normalised"])
+        for node, group in node_rows.items()
+    }
+    node_institution = {
+        node: str(group["institution_normalised"].iloc[0])
+        for node, group in node_rows.items()
+    }
+
+    parent = {node: node for node in node_rows}
+
+    def find(node: str) -> str:
+        while parent[node] != node:
+            parent[node] = parent[parent[node]]
+            node = parent[node]
+        return node
+
+    def union(left: str, right: str) -> None:
+        a, b = find(left), find(right)
+        if a != b:
+            parent[max(a, b)] = min(a, b)
+
+    blocks: dict[tuple[str, str, str], list[str]] = defaultdict(list)
+    for node, name in node_name.items():
+        given, surname = _identity_tokens(name)
+        first_initial = given[0][:1] if given else ""
+        blocks[(node_institution[node], surname, first_initial)].append(node)
+    compatible_pairs: set[tuple[str, str]] = set()
+    for (institution, _, _), nodes in blocks.items():
+        if not institution:
+            continue
+        for left, right in itertools.combinations(sorted(nodes), 2):
+            if _merge_permitted(node_name[left], node_name[right], institution):
+                compatible_pairs.add((left, right))
+                union(left, right)
+
+    components: dict[str, set[str]] = defaultdict(set)
+    for node in node_rows:
+        components[find(node)].add(node)
+    nontransitive_nodes: set[str] = set()
+    for nodes in components.values():
+        if len(nodes) < 3:
+            continue
+        if any(
+            tuple(sorted((left, right))) not in compatible_pairs
+            for left, right in itertools.combinations(sorted(nodes), 2)
+        ):
+            nontransitive_nodes.update(nodes)
+    if nontransitive_nodes:
+        # Conflicting-middle-name bridges are not allowed to create a merge.
+        for node in nontransitive_nodes:
+            parent[node] = node
+
+    components = defaultdict(set)
+    for node in node_rows:
+        components[find(node)].add(node)
+
+    node_to_candidate: dict[str, str] = {}
+    candidate_names: dict[str, str] = {}
+    candidate_institutions: dict[str, str] = {}
+    evidence_rows: list[dict[str, object]] = []
+    for nodes in sorted((sorted(values) for values in components.values()), key=lambda x: x[0]):
+        names = [node_name[node] for node in nodes]
+        canonical = _canonical_name(names)
+        institution = node_institution[nodes[0]]
+        signature_material = json.dumps(nodes, ensure_ascii=False, separators=(",", ":"))
+        tie_key = (
+            f"{canonical.casefold()}|||{institution.casefold()}|||"
+            f"{hashlib.sha256(signature_material.encode('utf-8')).hexdigest()[:16]}"
+        )
+        candidate_names[tie_key] = canonical
+        candidate_institutions[tie_key] = institution
+        for node in nodes:
+            node_to_candidate[node] = tie_key
+        for left, right in itertools.combinations(nodes, 2):
+            if node_name[left].casefold() == node_name[right].casefold():
+                continue
+            left_row = node_rows[left].sort_values("record_id", kind="stable").iloc[0]
+            right_row = node_rows[right].sort_values("record_id", kind="stable").iloc[0]
+            evidence_rows.append({
+                "candidate_identity_key": tie_key,
+                "candidate_key": candidate_key(tie_key),
+                "canonical_person_name": canonical,
+                "source_name_string_a": left_row["source_name_string"],
+                "source_name_capture_status_a": left_row["source_name_capture_status"],
+                "institution_as_registered_a": left_row["institution_as_registered"],
+                "institution_capture_status_a": left_row["institution_capture_status"],
+                "source_name_string_b": right_row["source_name_string"],
+                "source_name_capture_status_b": right_row["source_name_capture_status"],
+                "institution_as_registered_b": right_row["institution_as_registered"],
+                "institution_capture_status_b": right_row["institution_capture_status"],
+                "shared_normalised_institution": institution,
+                "merge_rule": (
+                    "surname exact after whitespace normalisation; given names compatible by "
+                    "initial/full form with no conflict; unambiguous normalised institution exact"
+                ),
+            })
+
+    people["candidate_identity_key"] = people["source_node"].map(node_to_candidate)
+    if people["candidate_identity_key"].isna().any():
+        raise ValueError(
+            "Parsed person occurrences were not assigned to a resolved candidate: "
+            f"count={int(people['candidate_identity_key'].isna().sum())}"
+        )
+    people["canonical_person_name"] = people["candidate_identity_key"].map(candidate_names)
+    people["candidate_institution_normalised"] = people["candidate_identity_key"].map(candidate_institutions)
+    people["candidate_key"] = people["candidate_identity_key"].map(candidate_key)
+    evidence = pd.DataFrame(evidence_rows)
+    return people, evidence
+
+
+def portfolios_from(resolved: pd.DataFrame) -> dict[str, frozenset[str]]:
     return {
         key: frozenset(group["record_id"].astype(str))
-        for key, group in people.groupby("researcher_identity_key", sort=True)
+        for key, group in resolved.groupby("candidate_identity_key", sort=True)
     }
 
 
@@ -203,7 +469,7 @@ def greedy_sequence(portfolios: Mapping[str, frozenset[str]]) -> pd.DataFrame:
             (len(portfolios[key] - covered) for key in remaining), default=0
         )
         rows.append({
-            "researcher_identity_key": chosen,
+            "candidate_identity_key": chosen,
             "conditional_sequence_step": len(rows) + 1,
             "conditional_marginal_coverage": len(new_records),
             "conditional_cumulative_coverage": len(covered),
@@ -216,105 +482,36 @@ def greedy_sequence(portfolios: Mapping[str, frozenset[str]]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def possible_variants(
-    names: Mapping[str, str], portfolios: Mapping[str, frozenset[str]]
-) -> dict[str, list[str]]:
-    keys = sorted(names)
-    variants: dict[str, list[str]] = defaultdict(list)
-    for left_index, left in enumerate(keys):
-        for right in keys[left_index + 1:]:
-            if _possible_variant(names[left], names[right]):
-                variants[left].append(right)
-                variants[right].append(left)
-    return variants
-
-
-def assert_no_leading_variant_ambiguity(
-    names: Mapping[str, str], portfolios: Mapping[str, frozenset[str]],
-    sequence: pd.DataFrame, variants: Mapping[str, list[str]],
-) -> None:
-    leading = set(sequence.head(25)["researcher_identity_key"])
-    leading_floor = int(sequence.head(25)["conditional_marginal_coverage"].min())
-    checked_pairs: set[tuple[str, str]] = set()
-    capable: list[tuple[str, str]] = []
-    for left, others in variants.items():
-        for right in others:
-            pair = tuple(sorted((left, right)))
-            if pair in checked_pairs:
-                continue
-            checked_pairs.add(pair)
-            if left in leading or right in leading:
-                capable.append(pair)
-                continue
-            merged_records = portfolios[left] | portfolios[right]
-            if len(merged_records) < leading_floor:
-                # Marginal gain can never exceed total portfolio size, so this
-                # pair cannot displace any member of the observed prefix.
-                continue
-            merged_key = min(pair) + "\0merged-variant-diagnostic"
-            alternative = {
-                key: records for key, records in portfolios.items() if key not in pair
-            }
-            alternative[merged_key] = merged_records
-            remaining = set(alternative)
-            covered: set[str] = set()
-            merged_position: int | None = None
-            for position in range(1, 26):
-                chosen = min(
-                    remaining,
-                    key=lambda key: (
-                        -len(alternative[key] - covered),
-                        -len(alternative[key]),
-                        key,
-                    ),
-                )
-                if chosen == merged_key:
-                    merged_position = position
-                    break
-                covered.update(alternative[chosen])
-                remaining.remove(chosen)
-            if merged_position is not None:
-                capable.append(pair)
-    if capable:
-        labels = [f"{names[left]} / {names[right]}" for left, right in capable]
-        raise ValueError(
-            "Unresolved possible-name variants could affect the first 25 conditional "
-            "greedy positions: " + "; ".join(labels)
-        )
-
-
 def candidate_rows(
-    frame: pd.DataFrame, reviews: pd.DataFrame, portfolios: Mapping[str, frozenset[str]],
-    sequence: pd.DataFrame, variants: Mapping[str, list[str]],
+    frame: pd.DataFrame, resolved: pd.DataFrame, reviews: pd.DataFrame,
+    portfolios: Mapping[str, frozenset[str]], sequence: pd.DataFrame,
+    merge_evidence: pd.DataFrame,
 ) -> pd.DataFrame:
-    sequence_map = sequence.set_index("researcher_identity_key").to_dict("index")
-    names = {
-        key: sorted(
-            set(group["researcher_normalised"]),
-            key=lambda value: (str(value).casefold(), str(value)),
-        )[0]
-        for key, group in frame.loc[frame["entity_status"].eq("person_candidate")]
-        .groupby("researcher_identity_key", sort=True)
-    }
+    sequence_map = sequence.set_index("candidate_identity_key").to_dict("index")
     rows: list[dict[str, object]] = []
     for identity_key in sorted(portfolios):
-        group = frame.loc[frame["researcher_identity_key"].eq(identity_key)]
+        group = resolved.loc[resolved["candidate_identity_key"].eq(identity_key)]
         sequence_values = sequence_map[identity_key]
-        variant_names = [names[key] for key in variants.get(identity_key, [])]
         count = len(portfolios[identity_key])
         step = int(sequence_values["conditional_sequence_step"])
+        canonical = str(group["canonical_person_name"].iloc[0])
+        institution = str(group["candidate_institution_normalised"].iloc[0])
+        source_names = join_values(group["source_name_string"])
+        registered_institutions = join_values(group["institution_as_registered"])
         rows.append({
             "frame_row_type": "candidate",
             "candidate_key": candidate_key(identity_key),
-            "canonical_person_name": names[identity_key],
+            "canonical_person_name": canonical,
             "eligibility_status": "ELIGIBLE_NAMED_PERSON",
             "entity_status": "person_candidate",
+            "candidate_institution_normalised": institution,
+            "institutions_as_registered": registered_institutions,
             "parsing_and_identity_resolution_evidence": (
-                "Exact conservative identity after Unicode typography, punctuation, separator, "
-                "and whitespace normalisation; exact within-record duplicates removed; no fuzzy "
-                "merge or external resolution. Observed forms: "
-                + join_values(group["researcher_displayed"])
-                + (". Possible variants kept separate: " + join_values(variant_names) if variant_names else ". No possible variant flagged.")
+                "v1.1 rule applied before sequencing: surname exact after whitespace "
+                "normalisation; given names compatible by initial/full form with no conflicting "
+                "middle name or initial; unambiguous normalised institution exact. Source names: "
+                f"{source_names}. Institutions as registered: {registered_institutions or '[absent]'}. "
+                f"Resolved institution: {institution or '[absent; merge blocked]'}"
             ),
             "conservative_exclusion_reason": "",
             "associated_eligible_record_count": count,
@@ -332,6 +529,12 @@ def candidate_rows(
             "candidate_key_generation_rule": KEY_RULE,
             "conditional_universal_contactability_planning_only": 1,
             "next_assessment_status": "KNOWN_NEXT_ONLY" if step == 1 else "CONDITIONAL_RECOMPUTE_IN_8B",
+            "contactability_source_hierarchy": (
+                "1 institutional staff/departmental page; 2 same-institution directory; "
+                "3 corresponding-author publication address; 4 ORCID/equivalent professional profile"
+            ),
+            "contactability_effort_ceiling_minutes": 10,
+            "permitted_dispositions": "CONTACTABLE; NOT_FOUND; UNRESOLVED; INELIGIBLE",
             "disposition": "",
             "source_reached_or_succeeded": "",
             "url": "",
@@ -340,6 +543,32 @@ def candidate_rows(
             "note": "",
             "planning_warning": PLANNING_WARNING,
         })
+
+    if len(merge_evidence):
+        for item in merge_evidence.sort_values(
+            ["canonical_person_name", "source_name_string_a", "source_name_string_b"],
+            kind="stable",
+        ).to_dict("records"):
+            rows.append({
+                "frame_row_type": "identity_merge_evidence",
+                "candidate_key": item["candidate_key"],
+                "canonical_person_name": item["canonical_person_name"],
+                "eligibility_status": "MERGE_AUDIT_ONLY",
+                "entity_status": "person_candidate",
+                "parsing_and_identity_resolution_evidence": item["merge_rule"],
+                "source_name_string_a": item["source_name_string_a"],
+                "source_name_capture_status_a": item["source_name_capture_status_a"],
+                "institution_as_registered_a": item["institution_as_registered_a"],
+                "institution_capture_status_a": item["institution_capture_status_a"],
+                "source_name_string_b": item["source_name_string_b"],
+                "source_name_capture_status_b": item["source_name_capture_status_b"],
+                "institution_as_registered_b": item["institution_as_registered_b"],
+                "institution_capture_status_b": item["institution_capture_status_b"],
+                "shared_normalised_institution": item["shared_normalised_institution"],
+                "merge_rule": item["merge_rule"],
+                "candidate_key_generation_rule": KEY_RULE,
+                "planning_warning": PLANNING_WARNING,
+            })
 
     excluded = frame.loc[~frame["entity_status"].eq("person_candidate")]
     for identity_key, group in excluded.groupby("researcher_identity_key", sort=True):
@@ -375,16 +604,28 @@ def candidate_rows(
             "planning_warning": PLANNING_WARNING,
         })
     output = pd.DataFrame(rows)
-    candidate_mask = output["frame_row_type"].eq("candidate")
-    output.loc[candidate_mask] = output.loc[candidate_mask].sort_values(
-        "conditional_sequence_step", kind="stable"
-    ).values
-    return output
+    integer_columns = [
+        "associated_eligible_record_count", "potential_review_incidence_count",
+        "conditional_sequence_step", "conditional_marginal_coverage",
+        "conditional_cumulative_coverage", "maximum_remaining_marginal_after_step",
+        "primary_tie_size", "secondary_tie_size",
+        "conditional_universal_contactability_planning_only",
+        "contactability_effort_ceiling_minutes",
+    ]
+    for column in integer_columns:
+        output[column] = pd.to_numeric(output.get(column), errors="coerce").astype("Int64")
+    row_order = {"candidate": 0, "identity_merge_evidence": 1, "conservative_exclusion": 2}
+    output["_row_order"] = output["frame_row_type"].map(row_order)
+    output["_step_order"] = pd.to_numeric(
+        output.get("conditional_sequence_step"), errors="coerce"
+    ).fillna(10**9)
+    return output.sort_values(
+        ["_row_order", "_step_order", "candidate_key", "canonical_person_name"],
+        kind="stable",
+    ).drop(columns=["_row_order", "_step_order"]).reset_index(drop=True)
 
 
-def incidence_rows(
-    frame: pd.DataFrame, portfolios: Mapping[str, frozenset[str]]
-) -> pd.DataFrame:
+def incidence_rows(portfolios: Mapping[str, frozenset[str]]) -> pd.DataFrame:
     rows: list[dict[str, object]] = []
     for identity_key in sorted(portfolios):
         key = candidate_key(identity_key)
@@ -500,18 +741,23 @@ def build() -> dict[str, object]:
     discrepancy = len(eligible) - registered_after_reserve
 
     frame, reviews = build_parsed_frame(eligible)
-    portfolios = portfolios_from(frame)
+    resolved, merge_evidence = resolve_candidate_identities(frame)
+    if len(merge_evidence):
+        capture_columns = [
+            "source_name_capture_status_a", "source_name_capture_status_b",
+            "institution_capture_status_a", "institution_capture_status_b",
+        ]
+        if merge_evidence[capture_columns].isin({
+            "normalised_fallback", "empty"
+        }).any().any():
+            raise ValueError("A v1.1 identity merge lacks verbatim name or institution evidence")
+    portfolios = portfolios_from(resolved)
     sequence = greedy_sequence(portfolios)
-    names = {
-        key: sorted(set(group["researcher_normalised"]), key=str.casefold)[0]
-        for key, group in frame.loc[frame["entity_status"].eq("person_candidate")]
-        .groupby("researcher_identity_key", sort=True)
-    }
-    variants = possible_variants(names, portfolios)
-    assert_no_leading_variant_ambiguity(names, portfolios, sequence, variants)
 
-    restricted = candidate_rows(frame, reviews, portfolios, sequence, variants)
-    incidence = incidence_rows(frame, portfolios)
+    restricted = candidate_rows(
+        frame, resolved, reviews, portfolios, sequence, merge_evidence
+    )
+    incidence = incidence_rows(portfolios)
     eligible_ids = set(eligible["Record ID"])
     assert_outputs(restricted, incidence, portfolios, eligible_ids, sequence)
 
@@ -556,6 +802,18 @@ def build() -> dict[str, object]:
             "entity_status_distribution": entity_counts,
             "parse_review_reason_distribution": reviews["review_reason"].value_counts().sort_index().astype(int).to_dict(),
         },
+        "identity_resolution": {
+            "merge_evidence_rows": len(merge_evidence),
+            "candidate_groups_containing_multiple_source_name_strings": int(
+                resolved.groupby("candidate_identity_key")["researcher_identity_key"]
+                .nunique().gt(1).sum()
+            ),
+            "all_merge_name_and_institution_evidence_verbatim": True,
+            "merge_rule": (
+                "surname exact; given names compatible by initial/full form without "
+                "conflict; unambiguous normalised institution exact"
+            ),
+        },
         "conditional_greedy_universal_contactability": {
             "candidate_positions": len(sequence),
             "marginal_coverage_distribution": distribution(marginal),
@@ -583,6 +841,7 @@ def build() -> dict[str, object]:
             "reserve_ids_not_printed_enumerated_sampled_or_logged": True,
             "no_post_preregistration_population_read": True,
             "no_prohibited_selection_attribute_read": True,
+            "v1_1_identity_rule_applied_before_greedy_sequence": True,
             "reproducible_deterministic_build": True,
             "coverage_curve_monotonic": True,
             "no_contactability_search": True,
