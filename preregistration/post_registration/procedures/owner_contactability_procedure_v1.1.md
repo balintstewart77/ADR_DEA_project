@@ -1,6 +1,6 @@
 # Owner contactability procedure
 
-Version 1.0 | 21 August 2026
+Version 1.1 | 21 August 2026
 
 Frozen before any contact search or sequence position was determined. Post-registration procedural specification.
 
