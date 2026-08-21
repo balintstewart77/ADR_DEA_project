@@ -1,6 +1,6 @@
 # Owner contactability procedure
 
-Version 1.0 | 18 August 2026
+Version 1.0 | 21 August 2026
 
 Frozen before any contact search or sequence position was determined. Post-registration procedural specification.
 
@@ -23,6 +23,51 @@ A **professional** contact route: an email address published by an institution, 
 Not acceptable: personal addresses, addresses obtained from private correspondence, addresses inferred from an institutional pattern without a published instance, social media direct messaging, and any route obtained from data held by this study.
 
 The route must be current on its face — a staff page marked as former staff does not qualify.
+
+## Identity resolution
+
+Applies before contactability, at the parsing stage. Determines who becomes a candidate.
+
+The register's Accredited Researchers field is not consistently formatted, and the same person may appear under different name strings across records. Resolving these changes marginal coverage and therefore the sequence, so the rule is fixed here.
+
+### Merge rule
+
+Two register name strings resolve to **one candidate** where all three hold:
+
+1. **Surname matches** exactly after whitespace normalisation.
+2. **Given names are consistent**, by initial or full form — "Stuart George" and "Stuart" are consistent, as are "S. G." and "Stuart George".
+3. **Institution matches**, normalised.
+
+Where any of the three fails, the strings remain **separate candidates**.
+
+### Blocking conditions
+
+A merge is blocked, regardless of the above, where:
+
+- Middle names or initials **conflict** rather than one being absent. "Stuart J." and "Stuart George" do not merge.
+- Surnames differ by spelling, however close. "Stuart" and "Stewart" are different names.
+- The institution is **absent** from either string. Absence is not a match.
+
+### Institution matching
+
+Match on the institutional name as it appears, after normalising case, punctuation and common variants of the same institution — "University of Strathclyde" and "Strathclyde University" match.
+
+**Anything ambiguous is treated as non-matching.** An institution and a constituent part of it — "University of London" and "UCL" — do not match under this rule. Conservatism here produces two candidates rather than one wrongly merged person.
+
+### Evidence recorded per merge
+
+- Both source name strings, verbatim
+- The shared institution as it appears in each
+- Which rule permitted the merge
+- The resulting `candidate_key`
+
+Every merge is auditable. A resolution that cannot be recorded this way has not been made.
+
+### Unresolvable identities
+
+Where a name string cannot be resolved to a specific person — a common name with no institution, or multiple plausible matches — it is conservatively excluded at the parsing stage and reported. It does not become a candidate and does not receive a contactability disposition.
+
+---
 
 ## Source hierarchy
 
@@ -84,7 +129,7 @@ The contact route itself is recorded in the restricted recruitment table, never 
 
 ## Status
 
-Frozen 18 August 2026, before the first candidate frame was built and before any contact search.
+Frozen 21 August 2026, before the first candidate frame was built and before any contact search.
 
 This is a **post-registration procedural specification**, not a preregistered artefact. §5.4 requires that a source hierarchy and effort ceiling be prespecified; it does not fix their content. This document supplies that content and is fixed before use, which is what the requirement asks for.
 
