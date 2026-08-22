@@ -39,6 +39,15 @@ FORM_GUIDANCE_WORDING = (
     "Describe any relevant project context at a general level. Please don't include "
     "confidential or sensitive details."
 )
+OWNER_REGISTER_INVITATION_CURRENT = (
+    "This personalised link was sent because you are named as a researcher on one or more "
+    "projects in the UK Statistics Authority public register."
+)
+OWNER_REGISTER_INVITATION = (
+    "This personalised link was sent because you are named as a researcher on one or more "
+    "projects accredited under the Digital Economy Act 2017 in the UK Statistics Authority's "
+    "public register of accredited projects."
+)
 REVIEW_DURATION_WORDING = (
     "Each project review usually takes about 5–10 minutes. The first review may take longer "
     "while you become familiar with the classifications."
@@ -624,12 +633,12 @@ REFERENCE_SECTION_BY_LAYER = {
     "tag": "Missing cross-cutting tags",
 }
 REGISTER_PROVENANCE = (
-    "These details are reproduced from the UK Statistics Authority register of accredited "
-    "research projects, June 2026 edition."
+    "These details are reproduced from the UK Statistics Authority's Public Register of "
+    "Accredited Projects, as at 1 June 2026."
 )
 FINAL_COMMENT_CAUTION = (
-    "Comments may be quoted in published outputs, so please avoid including restricted or "
-    "personally identifying detail in anything you would not want reproduced."
+    "If the study wishes to quote any of your comments, we will email you the exact wording "
+    "and the context in which it would appear, and use it only if you agree."
 )
 FINAL_WITHDRAWAL_REMINDER = (
     "You may request withdrawal of this submitted review before the deadline stated in the "
@@ -878,14 +887,23 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
         "3–5 minutes."
     )
     new_owner_guidance = (
-        f"Please do not forward this personalised link. {FORM_GUIDANCE_WORDING} "
-        f"{REVIEW_DURATION_WORDING}"
+        f"Please do not forward this personalised link. {REVIEW_DURATION_WORDING}"
     )
     if by_name["owner_intro"]["Field Label"].count(old_owner_guidance) != 1:
         raise RuntimeError("candidate-0.3 owner introduction wording changed")
     by_name["owner_intro"]["Field Label"] = by_name["owner_intro"][
         "Field Label"
     ].replace(old_owner_guidance, new_owner_guidance)
+    if (
+        by_name["owner_intro"]["Field Label"].count(
+            OWNER_REGISTER_INVITATION_CURRENT
+        )
+        != 1
+    ):
+        raise RuntimeError("candidate-0.3 owner register invitation wording changed")
+    by_name["owner_intro"]["Field Label"] = by_name["owner_intro"][
+        "Field Label"
+    ].replace(OWNER_REGISTER_INVITATION_CURRENT, OWNER_REGISTER_INVITATION)
     by_name["po_intro"]["Field Label"] = CLASSIFICATION_INTRO_LABEL
 
     for name, label in QUESTIONNAIRE_FIELD_LABELS.items():
@@ -1441,6 +1459,10 @@ def patch_formatting_audit() -> None:
                 "Verify the piped canonical label and exact rc3 short definition render immediately "
                 "before the proposed Applied / Not applied status and tag questions."
             )
+        if row["variable_name"] == "po_final_warning":
+            row["participant_visible_purpose"] = (
+                "Final quotation process and withdrawal reminder"
+            )
     if any(row["variable_name"] == "po_taxonomy_ref" for row in rows):
         raise RuntimeError("formatting audit retained po_taxonomy_ref")
     for name, plain, phrase, purpose in (
@@ -1771,7 +1793,7 @@ Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Proj
 
 `po_final_warning` now follows `po_other_comment` immediately before submission and has no quotation-permission dependency.
 
-All participant-visible read-only stimulus fields and all survey-hidden administrative fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static June 2026 register provenance line. `owner_intro` and `po_privacy` use the live-QA form-guidance wording, while the stricter approved consent statement remains unchanged. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
+All participant-visible read-only stimulus fields and all survey-hidden administrative fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static register provenance line as at 1 June 2026. `owner_intro` retains the review-duration and Save & Return guidance, while `po_privacy` uses the live-QA form-guidance wording and the stricter approved consent statement remains unchanged. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
 
 ## Fixture and long-format analysis
 

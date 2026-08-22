@@ -635,8 +635,12 @@ def validate_dictionary() -> dict[str, object]:
         errors.append("participant_info_link is not byte-equivalent to the pinned v3.1 HTML")
     if "Version 3.1" in by["participant_info_link"]["Field Label"]:
         errors.append("participant_info_link unexpectedly contains a version marker")
-    if builder.FORM_GUIDANCE_WORDING not in plain_redcap_label(by["owner_intro"]["Field Label"]):
-        errors.append("owner_intro lacks the live-QA form guidance")
+    if builder.FORM_GUIDANCE_WORDING in plain_redcap_label(by["owner_intro"]["Field Label"]):
+        errors.append("owner_intro retains duplicated confidentiality guidance")
+    if builder.OWNER_REGISTER_INVITATION not in plain_redcap_label(
+        by["owner_intro"]["Field Label"]
+    ):
+        errors.append("owner_intro lacks the DEA-specific register wording")
     if builder.FORM_GUIDANCE_WORDING not in plain_redcap_label(by["po_privacy"]["Field Label"]):
         errors.append("po_privacy lacks the live-QA form guidance")
     if normalise_text(builder.REVIEW_DURATION_WORDING) not in plain_redcap_label(

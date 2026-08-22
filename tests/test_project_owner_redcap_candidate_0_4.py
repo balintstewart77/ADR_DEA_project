@@ -348,9 +348,15 @@ def test_inline_participant_information_is_the_pinned_v3_1_derivative_verbatim()
     assert "Review reference shown at the top of that review" in source
 
 
-def test_live_qa_guidance_duration_and_approved_nonpublic_consent_are_exact():
+def test_live_qa_intro_privacy_duration_and_approved_nonpublic_consent_are_exact():
     by = dictionary_by_name()
-    assert builder.FORM_GUIDANCE_WORDING in validator.plain_redcap_label(
+    assert builder.FORM_GUIDANCE_WORDING not in validator.plain_redcap_label(
+        by["owner_intro"]["Field Label"]
+    )
+    assert builder.FORM_GUIDANCE_WORDING not in validator.plain_redcap_label(
+        by["po_intro"]["Field Label"]
+    )
+    assert builder.OWNER_REGISTER_INVITATION in validator.plain_redcap_label(
         by["owner_intro"]["Field Label"]
     )
     assert validator.normalise_text(builder.REVIEW_DURATION_WORDING) in validator.plain_redcap_label(
@@ -366,6 +372,25 @@ def test_live_qa_guidance_duration_and_approved_nonpublic_consent_are_exact():
         if item["dictionary_field"] == "consent_no_nonpublic"
     )
     assert by["consent_no_nonpublic"]["Field Label"] == approved
+
+
+def test_final_qa_wording_batch_is_exact_and_superseded_text_is_absent():
+    by = dictionary_by_name()
+    assert by["po_register_provenance"]["Field Label"] == builder.normal_weight_descriptive(
+        builder.REGISTER_PROVENANCE
+    )
+    assert builder.FINAL_COMMENT_CAUTION in validator.plain_redcap_label(
+        by["po_final_warning"]["Field Label"]
+    )
+    all_labels = "\n".join(row["Field Label"] for row in dictionary_rows())
+    for superseded in (
+        "Comments may be quoted in published outputs, so please avoid including restricted or "
+        "personally identifying detail in anything you would not want reproduced.",
+        builder.OWNER_REGISTER_INVITATION_CURRENT,
+        "These details are reproduced from the UK Statistics Authority register of accredited "
+        "research projects, June 2026 edition.",
+    ):
+        assert superseded not in all_labels
 
 
 def test_visibility_stems_changed_without_broadening_correctness_explanations():

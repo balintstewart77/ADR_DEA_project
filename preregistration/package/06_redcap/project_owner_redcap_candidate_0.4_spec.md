@@ -85,7 +85,7 @@ Candidate 0.4 removes `po_quote_permission` from the generator, dictionary, Proj
 
 `po_final_warning` now follows `po_other_comment` immediately before submission and has no quotation-permission dependency.
 
-All participant-visible read-only stimulus fields and all survey-hidden administrative fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static June 2026 register provenance line. `owner_intro` and `po_privacy` use the live-QA form-guidance wording, while the stricter approved consent statement remains unchanged. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
+All participant-visible read-only stimulus fields and all survey-hidden administrative fields are optional, so an empty prefilled value cannot block submission. `public_register_url` is retained for downstream compatibility but survey-hidden; `po_register_provenance` supplies the static register provenance line as at 1 June 2026. `owner_intro` retains the review-duration and Save & Return guidance, while `po_privacy` uses the live-QA form-guidance wording and the stricter approved consent statement remains unchanged. Descriptive-field bodies render at normal weight while intended headings and proposed category labels remain emphasised.
 
 ## Fixture and long-format analysis
 

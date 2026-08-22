@@ -26,7 +26,7 @@ source_record_id,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-
 official_project_id,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
 project_title,project_review,notes,project_review_repeat_row,yes,no,,,@READONLY-SURVEY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
 datasets_used,project_review,notes,project_review_repeat_row,yes,no,,,@READONLY-SURVEY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
-po_register_provenance,project_review,descriptive,project_review_repeat_row,no,no,,,,participant_facing_static_register_provenance,not_applicable,,always_if_row_and_field_are_applicable,"These details are reproduced from the UK Statistics Authority register of accredited research projects, June 2026 edition."
+po_register_provenance,project_review,descriptive,project_review_repeat_row,no,no,,,,participant_facing_static_register_provenance,not_applicable,,always_if_row_and_field_are_applicable,"These details are reproduced from the UK Statistics Authority's Public Register of Accredited Projects, as at 1 June 2026."
 public_register_url,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
 source_pop_ver,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
 production_ver,project_review,text,project_review_repeat_row,yes,no,,,@HIDDEN-SURVEY @READONLY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
