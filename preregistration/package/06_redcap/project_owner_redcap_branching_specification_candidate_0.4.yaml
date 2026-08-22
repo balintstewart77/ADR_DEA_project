@@ -263,7 +263,7 @@ owner_consent_v3:
   participant_document_sha256: 3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a
   participant_document_size_bytes: 35369
   inline_participant_information_source: preregistration\package\06_redcap\participant_materials\project_owner_participant_information_inline_without_privacy_notice_v3.1.html
-  inline_participant_information_sha256: a7d39e75d28b2ef44f9163297c137b9e6be952b3e368c82758ac145df2c4ef29
+  inline_participant_information_sha256: d78f1880174a74c0c0ad1e8b6b51b0765bcac79003970d0622126afdd7d20348
   inline_participant_information_field: participant_info_link
   intended_recipient_gate: '[intended_recipient] = ''1'''
   confirmation_fields:

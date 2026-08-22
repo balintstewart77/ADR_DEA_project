@@ -697,7 +697,7 @@ PARTICIPANT_SOURCE_SIZE = 35369
 QUESTIONNAIRE_SOURCE_SHA256 = "cea613180ea2bb379f0996076d100c16fe09065098b743224e96f0d98cfa1b64"
 QUESTIONNAIRE_SOURCE_SIZE = 21038
 INLINE_PARTICIPANT_INFO_SHA256 = (
-    "a7d39e75d28b2ef44f9163297c137b9e6be952b3e368c82758ac145df2c4ef29"
+    "d78f1880174a74c0c0ad1e8b6b51b0765bcac79003970d0622126afdd7d20348"
 )
 CONSENT_STATEMENTS_SHA256 = (
     "482f3e275de5634c58edec2d2e8faf5a806fd3d438f5385c13b3dc40f8e975b3"
@@ -802,7 +802,7 @@ def check_sources() -> None:
         "Will I hear about the results?",
         "Who can I contact?",
     ):
-        if f"<br><br><div><strong>{heading}</strong></div>" not in inline_participant_info:
+        if f"<br><div><strong>{heading}</strong></div>" not in inline_participant_info:
             raise RuntimeError(f"v3.1 inline participant information lacks spacing before {heading}")
     if sha256(CONSENT_STATEMENTS_SOURCE) != CONSENT_STATEMENTS_SHA256:
         raise RuntimeError("canonical consent-statements JSON changed")

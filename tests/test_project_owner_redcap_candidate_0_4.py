@@ -348,6 +348,8 @@ def test_inline_participant_information_is_the_pinned_v3_1_derivative_verbatim()
     assert "Review reference shown at the top of that review" in source
     assert "<ol" not in source.lower()
     assert "<blockquote" not in source.lower()
+    assert "<br><br>" not in source.lower()
+    assert source.count("<br>") == 62
     assert source.count("<ul>") == 2
     assert source.count("<li>") == 8
     for heading in (
@@ -366,7 +368,7 @@ def test_inline_participant_information_is_the_pinned_v3_1_derivative_verbatim()
         "Will I hear about the results?",
         "Who can I contact?",
     ):
-        assert f"<br><br><div><strong>{heading}</strong></div>" in source
+        assert f"<br><div><strong>{heading}</strong></div>" in source
 
 
 def test_live_qa_intro_privacy_duration_and_approved_nonpublic_consent_are_exact():
