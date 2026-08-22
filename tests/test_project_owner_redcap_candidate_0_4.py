@@ -346,6 +346,27 @@ def test_inline_participant_information_is_the_pinned_v3_1_derivative_verbatim()
     assert "Version 3.1" not in source
     assert builder.REVIEW_DURATION_WORDING in source
     assert "Review reference shown at the top of that review" in source
+    assert "<ol" not in source.lower()
+    assert "<blockquote" not in source.lower()
+    assert source.count("<ul>") == 2
+    assert source.count("<li>") == 8
+    for heading in (
+        "Participant information",
+        "What is the study about?",
+        "Why have I been invited?",
+        "What would taking part involve?",
+        "What will my responses be used for?",
+        "Is participation voluntary?",
+        "Are there any risks?",
+        "What personal data do you collect about me? ",
+        "How is my information kept confidential?",
+        "Will I be identified in any outputs?",
+        "How long will my data be kept?",
+        "Can I withdraw?",
+        "Will I hear about the results?",
+        "Who can I contact?",
+    ):
+        assert f"<br><br><div><strong>{heading}</strong></div>" in source
 
 
 def test_live_qa_intro_privacy_duration_and_approved_nonpublic_consent_are_exact():

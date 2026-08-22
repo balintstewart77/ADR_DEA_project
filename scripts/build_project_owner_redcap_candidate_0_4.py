@@ -697,7 +697,7 @@ PARTICIPANT_SOURCE_SIZE = 35369
 QUESTIONNAIRE_SOURCE_SHA256 = "cea613180ea2bb379f0996076d100c16fe09065098b743224e96f0d98cfa1b64"
 QUESTIONNAIRE_SOURCE_SIZE = 21038
 INLINE_PARTICIPANT_INFO_SHA256 = (
-    "c15ccca12b000fc9fb824b3f576c545595adeb014dbfa571907055dfe2afdba2"
+    "a7d39e75d28b2ef44f9163297c137b9e6be952b3e368c82758ac145df2c4ef29"
 )
 CONSENT_STATEMENTS_SHA256 = (
     "482f3e275de5634c58edec2d2e8faf5a806fd3d438f5385c13b3dc40f8e975b3"
@@ -779,6 +779,31 @@ def check_sources() -> None:
         raise RuntimeError("v3.1 inline participant information lacks corrected duration wording")
     if "Review reference shown at the top of that review" not in inline_participant_info:
         raise RuntimeError("v3.1 inline participant information lacks corrected reference location")
+    if any(
+        tag in inline_participant_info.lower()
+        for tag in ("<ol", "<blockquote", "<p", "<details", "<summary", "<script")
+    ):
+        raise RuntimeError("v3.1 inline participant information retains prohibited HTML")
+    if inline_participant_info.count("<ul>") != 2 or inline_participant_info.count("<li>") != 8:
+        raise RuntimeError("v3.1 inline participant information list structure differs")
+    for heading in (
+        "Participant information",
+        "What is the study about?",
+        "Why have I been invited?",
+        "What would taking part involve?",
+        "What will my responses be used for?",
+        "Is participation voluntary?",
+        "Are there any risks?",
+        "What personal data do you collect about me? ",
+        "How is my information kept confidential?",
+        "Will I be identified in any outputs?",
+        "How long will my data be kept?",
+        "Can I withdraw?",
+        "Will I hear about the results?",
+        "Who can I contact?",
+    ):
+        if f"<br><br><div><strong>{heading}</strong></div>" not in inline_participant_info:
+            raise RuntimeError(f"v3.1 inline participant information lacks spacing before {heading}")
     if sha256(CONSENT_STATEMENTS_SOURCE) != CONSENT_STATEMENTS_SHA256:
         raise RuntimeError("canonical consent-statements JSON changed")
     consent_statements = json.loads(CONSENT_STATEMENTS_SOURCE.read_text(encoding="utf-8"))
