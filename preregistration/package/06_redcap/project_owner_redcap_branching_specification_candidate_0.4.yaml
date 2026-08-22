@@ -262,7 +262,7 @@ owner_consent_v3:
   participant_document: participant_materials/Project_Owner_Participant_Information_and_Consent_v3.docx
   participant_document_sha256: 3ceb089b06e707fb815f6fa3dab6cc261617e254aadeffe386ed6e131848af4a
   participant_document_size_bytes: 35369
-  inline_participant_information_source: preregistration/package/06_redcap/participant_materials/project_owner_participant_information_inline_without_privacy_notice_v3.1.html
+  inline_participant_information_source: preregistration\package\06_redcap\participant_materials\project_owner_participant_information_inline_without_privacy_notice_v3.1.html
   inline_participant_information_sha256: c15ccca12b000fc9fb824b3f576c545595adeb014dbfa571907055dfe2afdba2
   inline_participant_information_field: participant_info_link
   intended_recipient_gate: '[intended_recipient] = ''1'''
@@ -315,10 +315,10 @@ project_review_v3:
     are not ranked.
   - Analytical Purposes describe what the project is trying to do analytically. One
     or two may apply.
-  - A Research Domain or Analytical Purpose should be treated as applying only when
-    it is a substantive focus of the project’s research question or analytical aims—not
-    merely because related terms, datasets, variables, methods or outcomes are mentioned
-    or used.
+  - Assign a Research Domain or Analytical Purpose only when it is a substantive part
+    of the project's research question or analytical aims. Do not assign it solely
+    because the project mentions or uses related terms, datasets, variables, methods
+    or outcomes.
   - Cross-cutting tags show whether Demographic disparities / equity or COVID-19 &
     Pandemic is a central feature of the research question. Either, both or neither
     may apply.
@@ -328,28 +328,29 @@ project_review_v3:
   classification_orientation_order: public project information -> po_llm_disclaimer
     -> po_intro -> detailed judgements
   substantive_focus_rule:
-    plain_text: A Research Domain or Analytical Purpose should be treated as applying
-      only when it is a substantive focus of the project’s research question or analytical
-      aims—not merely because related terms, datasets, variables, methods or outcomes
-      are mentioned or used.
-    bold_phrase: only when it is a substantive focus of the project’s research question
+    plain_text: Assign a Research Domain or Analytical Purpose only when it is a substantive
+      part of the project's research question or analytical aims. Do not assign it
+      solely because the project mentions or uses related terms, datasets, variables,
+      methods or outcomes.
+    bold_phrase: only when it is a substantive part of the project's research question
       or analytical aims
-    redcap_markup: <strong>only when it is a substantive focus of the project’s research
+    redcap_markup: <strong>only when it is a substantive part of the project's research
       question or analytical aims</strong>
     position: inside po_intro before the detailed classification judgements
   missing_classification_reminders:
     po_miss_domain_reminder:
-      plain_text: Select a missing Research Domain only if it represents a substantive
-        subject of the project, not merely a dataset, variable, population characteristic
-        or contextual factor used in the research.
+      plain_text: Select a missing Research Domain only when it is a substantive subject
+        of the project. Do not select one solely because the project uses a related
+        dataset or variable, examines a population with a related characteristic,
+        or mentions it as context.
       bold_phrase: a substantive subject of the project
       branching: ''
       position: after po_miss_domain_reference and before po_miss_domains
     po_miss_purpose_reminder:
-      plain_text: Select a missing Analytical Purpose only if it represents a substantive
-        analytical aim of the project, not merely a method, analytical step or secondary
-        feature of the work.
-      bold_phrase: a substantive analytical aim of the project
+      plain_text: Select a missing Analytical Purpose only when it is a substantive
+        aim of the project. Do not select one solely because it describes a method,
+        analytical step or secondary feature of the work.
+      bold_phrase: a substantive aim of the project
       branching: ''
       position: after po_miss_purpose_guidance and before po_miss_purposes
   taxonomy_reference: no standalone field or attachment; complete nominable-category

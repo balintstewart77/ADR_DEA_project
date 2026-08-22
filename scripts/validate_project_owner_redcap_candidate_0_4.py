@@ -28,9 +28,11 @@ if str(REPO_ROOT) not in sys.path:
 
 try:
     import scripts.build_project_owner_redcap_candidate_0_4 as builder
+    import scripts.update_project_owner_participant_documents_candidate_0_4 as document_updater
     import scripts.validate_project_owner_redcap_candidate_0_3 as predecessor
 except ModuleNotFoundError:  # Direct execution places scripts/ on sys.path.
     import build_project_owner_redcap_candidate_0_4 as builder
+    import update_project_owner_participant_documents_candidate_0_4 as document_updater
     import validate_project_owner_redcap_candidate_0_3 as predecessor
 
 
@@ -314,7 +316,9 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
     for obsolete in ("q13", "po_quote_permission", "quotation permission", "may the study use a short anonymised quotation"):
         if obsolete in questionnaire_text:
             errors.append(f"questionnaire retains obsolete quotation item: {obsolete}")
-    intro = [normalise_text(item) for item in builder.CLASSIFICATION_INTRO_PARAGRAPHS]
+    intro = [
+        normalise_text(item) for item in document_updater.CLASSIFICATION_INTRO_PARAGRAPHS
+    ]
     intro_indexes = [
         index for index, paragraph in enumerate(questionnaire) if paragraph == intro[0]
     ]
@@ -348,14 +352,14 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
     errors.extend(
         validate_exact_docx_bold_phrase(
             builder.QUESTIONNAIRE_SOURCE,
-            builder.SUBSTANTIVE_FOCUS_PARAGRAPH,
-            builder.SUBSTANTIVE_FOCUS_PHRASE,
+            document_updater.CLASSIFICATION_INTRO_PARAGRAPHS[3],
+            document_updater.SUBSTANTIVE_FOCUS_PHRASE,
             "substantive-focus rule",
         )
     )
     reminder_specs = (
-        ("Q6b.", "po_miss_domain_reminder", builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE),
-        ("Q7b.", "po_miss_purpose_reminder", builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE),
+        ("Q6b.", "po_miss_domain_reminder", document_updater.MISSING_DOMAIN_REMINDER, document_updater.MISSING_DOMAIN_REMINDER_PHRASE),
+        ("Q7b.", "po_miss_purpose_reminder", document_updater.MISSING_PURPOSE_REMINDER, document_updater.MISSING_PURPOSE_REMINDER_PHRASE),
     )
     for prefix, variable, reminder, phrase in reminder_specs:
         question_index = _question_index(questionnaire, prefix)

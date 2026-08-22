@@ -135,7 +135,12 @@ def test_reference_blocks_use_only_supported_always_open_html():
         assert label == builder.missing_reference_html(layer)
         assert "<details" not in label.lower()
         assert "<summary" not in label.lower()
-        assert label.count(builder.ALREADY_PROPOSED_GUIDANCE) == 1
+        guidance = (
+            builder.MISSING_TAG_GUIDANCE
+            if layer == "tag"
+            else builder.ALREADY_PROPOSED_GUIDANCE
+        )
+        assert label.count(guidance) == 1
 
 
 def test_missing_label_spec_uses_checkbox_state_without_discordance_rule():
@@ -395,7 +400,9 @@ def test_classification_orientation_matches_questionnaire_and_precedes_judgement
         validator.normalise_text(" ".join(builder.CLASSIFICATION_INTRO_PARAGRAPHS))
     )
     paragraphs = validator.questionnaire_doc_paragraphs()
-    intro = [validator.normalise_text(item) for item in builder.CLASSIFICATION_INTRO_PARAGRAPHS]
+    intro = [
+        validator.normalise_text(item) for item in updater.CLASSIFICATION_INTRO_PARAGRAPHS
+    ]
     start = paragraphs.index(intro[0])
     overview = next(
         index
@@ -425,8 +432,8 @@ def test_classification_orientation_matches_questionnaire_and_precedes_judgement
     ) == 1
     assert validator.validate_exact_docx_bold_phrase(
         builder.QUESTIONNAIRE_SOURCE,
-        builder.SUBSTANTIVE_FOCUS_PARAGRAPH,
-        builder.SUBSTANTIVE_FOCUS_PHRASE,
+        updater.CLASSIFICATION_INTRO_PARAGRAPHS[3],
+        updater.SUBSTANTIVE_FOCUS_PHRASE,
         "substantive-focus rule",
     ) == []
 
@@ -437,10 +444,10 @@ def test_missing_domain_and_purpose_reminders_are_exact_bold_and_immediate():
     names = [row["Variable / Field Name"] for row in rows]
     paragraphs = validator.questionnaire_doc_paragraphs()
     specs = (
-        ("po_miss_domain_reminder", "po_miss_domains", "Q6b.", builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE, builder.MISSING_DOMAIN_REMINDER_HTML),
-        ("po_miss_purpose_reminder", "po_miss_purposes", "Q7b.", builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE, builder.MISSING_PURPOSE_REMINDER_HTML),
+        ("po_miss_domain_reminder", "po_miss_domains", "Q6b.", builder.MISSING_DOMAIN_REMINDER, builder.MISSING_DOMAIN_REMINDER_PHRASE, builder.MISSING_DOMAIN_REMINDER_HTML, updater.MISSING_DOMAIN_REMINDER, updater.MISSING_DOMAIN_REMINDER_PHRASE),
+        ("po_miss_purpose_reminder", "po_miss_purposes", "Q7b.", builder.MISSING_PURPOSE_REMINDER, builder.MISSING_PURPOSE_REMINDER_PHRASE, builder.MISSING_PURPOSE_REMINDER_HTML, updater.MISSING_PURPOSE_REMINDER, updater.MISSING_PURPOSE_REMINDER_PHRASE),
     )
-    for reminder, target, question, plain, phrase, markup in specs:
+    for reminder, target, question, plain, phrase, markup, document_plain, document_phrase in specs:
         assert names.index(reminder) + 1 == names.index(target)
         assert by[reminder]["Field Type"] == "descriptive"
         assert by[reminder]["Field Label"] == builder.normal_weight_descriptive(markup)
@@ -449,9 +456,9 @@ def test_missing_domain_and_purpose_reminders_are_exact_bold_and_immediate():
         assert by[reminder]["Branching Logic (Show field only if...)"] == ""
         assert by[reminder]["Required Field?"] == ""
         question_index = validator._question_index(paragraphs, question)
-        assert paragraphs[question_index - 1] == validator.normalise_text(plain)
+        assert paragraphs[question_index - 1] == validator.normalise_text(document_plain)
         assert validator.validate_exact_docx_bold_phrase(
-            builder.QUESTIONNAIRE_SOURCE, plain, phrase, reminder
+            builder.QUESTIONNAIRE_SOURCE, document_plain, document_phrase, reminder
         ) == []
 
 
@@ -483,14 +490,15 @@ def test_three_wording_roles_are_kept_separate_and_complete():
     for layer in ("domain", "purpose", "tag"):
         reference = by[builder.REFERENCE_FIELD_BY_LAYER[layer]]["Field Label"]
         assert reference == builder.missing_reference_html(layer)
-        assert reference.count(builder.ALREADY_PROPOSED_GUIDANCE) == 1
+        guidance = (
+            builder.MISSING_TAG_GUIDANCE
+            if layer == "tag"
+            else builder.ALREADY_PROPOSED_GUIDANCE
+        )
+        assert reference.count(guidance) == 1
         assert builder.base.UNCLEAR_LABEL not in html.unescape(reference)
         for label in builder.missing_menu_labels(layer):
-            definition = (
-                builder._domain_boundary_definition(label)
-                if layer == "domain"
-                else builder.rc3_short_definition(layer, label)
-            )
+            definition = builder.missing_reference_definition(layer, label)
             rendered = (
                 f"<strong>{html.escape(label, quote=False)}</strong> — "
                 f"{html.escape(definition, quote=False)}"
@@ -502,6 +510,82 @@ def test_three_wording_roles_are_kept_separate_and_complete():
                     f"{html.escape(builder.rc3_short_definition(layer, label), quote=False)}"
                 )
                 assert rc3_rendered not in reference
+
+
+def test_instruction_17_missing_label_wording_is_exact():
+    by = dictionary_by_name()
+    expected_intro = (
+        "Assign a Research Domain or Analytical Purpose only when it is a substantive part of "
+        "the project's research question or analytical aims. Do not assign it solely because "
+        "the project mentions or uses related terms, datasets, variables, methods or outcomes."
+    )
+    expected_repeated_guidance = (
+        "Labels already proposed are repeated here for completeness. Select only labels that "
+        "are missing from the proposal."
+    )
+    expected_domain_reminder = (
+        "Select a missing Research Domain only when it is a substantive subject of the project. "
+        "Do not select one solely because the project uses a related dataset or variable, "
+        "examines a population with a related characteristic, or mentions it as context."
+    )
+    expected_purpose_guidance = (
+        "Each project can have no more than two Analytical Purposes. Select only the most "
+        "important missing purpose or purposes. The final classification must contain no more "
+        "than two purposes in total."
+    )
+    expected_purpose_reminder = (
+        "Select a missing Analytical Purpose only when it is a substantive aim of the project. "
+        "Do not select one solely because it describes a method, analytical step or secondary "
+        "feature of the work."
+    )
+    expected_tag_definitions = {
+        "Demographic disparities / equity tag": (
+            "Use when comparisons between demographic or equality-relevant groups are central "
+            "to the project. Do not use for socioeconomic inequality alone or routine subgroup "
+            "analysis."
+        ),
+        "COVID-19 & Pandemic": (
+            "Use when COVID-19 or pandemic conditions are a central research focus or analytical "
+            "lens. Do not use simply because the data cover the pandemic period."
+        ),
+    }
+    expected_tag_guidance = (
+        "The full list appears below, including labels already proposed. Select only labels that "
+        "were not proposed."
+    )
+
+    assert builder.SUBSTANTIVE_FOCUS_PARAGRAPH == expected_intro
+    assert builder.ALREADY_PROPOSED_GUIDANCE == expected_repeated_guidance
+    assert builder.MISSING_DOMAIN_REMINDER == expected_domain_reminder
+    assert builder.MISSING_PURPOSE_GUIDANCE == expected_purpose_guidance
+    assert builder.MISSING_PURPOSE_REMINDER == expected_purpose_reminder
+    assert builder.MISSING_TAG_REFERENCE_DEFINITIONS == expected_tag_definitions
+    assert builder.MISSING_TAG_GUIDANCE == expected_tag_guidance
+    assert validator.normalise_text(expected_intro) in validator.plain_redcap_label(
+        by["po_intro"]["Field Label"]
+    )
+    assert validator.plain_redcap_label(by["po_miss_domain_reference"]["Field Label"]).endswith(
+        expected_repeated_guidance
+    )
+    assert validator.plain_redcap_label(by["po_miss_domain_reminder"]["Field Label"]) == (
+        expected_domain_reminder
+    )
+    assert validator.plain_redcap_label(by["po_miss_purpose_reference"]["Field Label"]).endswith(
+        expected_repeated_guidance
+    )
+    assert validator.plain_redcap_label(by["po_miss_purpose_guidance"]["Field Label"]) == (
+        expected_purpose_guidance
+    )
+    assert validator.plain_redcap_label(by["po_miss_purpose_reminder"]["Field Label"]) == (
+        expected_purpose_reminder
+    )
+    tag_reference_html = by["po_miss_tag_reference"]["Field Label"]
+    for label, definition in expected_tag_definitions.items():
+        assert (
+            f"<strong>{html.escape(label, quote=False)}</strong> — "
+            f"{html.escape(definition, quote=False)}"
+        ) in tag_reference_html
+    assert validator.plain_redcap_label(tag_reference_html).endswith(expected_tag_guidance)
 
     fixture, _ = validator.read_csv(builder.IMPORT_FIXTURE)
     for row in fixture:

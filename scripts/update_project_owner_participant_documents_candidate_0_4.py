@@ -91,12 +91,40 @@ PREVIOUS_CLASSIFICATION_INTRO_PARAGRAPHS = (
         "in the public register entry."
     ),
 )
-CLASSIFICATION_INTRO_PARAGRAPHS = candidate.CLASSIFICATION_INTRO_PARAGRAPHS
-SUBSTANTIVE_FOCUS_PHRASE = candidate.SUBSTANTIVE_FOCUS_PHRASE
-MISSING_DOMAIN_REMINDER = candidate.MISSING_DOMAIN_REMINDER
-MISSING_DOMAIN_REMINDER_PHRASE = candidate.MISSING_DOMAIN_REMINDER_PHRASE
-MISSING_PURPOSE_REMINDER = candidate.MISSING_PURPOSE_REMINDER
-MISSING_PURPOSE_REMINDER_PHRASE = candidate.MISSING_PURPOSE_REMINDER_PHRASE
+CLASSIFICATION_INTRO_PARAGRAPHS = (
+    "How the classifications work",
+    "Research Domains describe what the project is about. Several may apply, and they are not ranked.",
+    "Analytical Purposes describe what the project is trying to do analytically. One or two may apply.",
+    (
+        "A Research Domain or Analytical Purpose should be treated as applying only when it is "
+        "a substantive focus of the project’s research question or analytical aims—not merely "
+        "because related terms, datasets, variables, methods or outcomes are mentioned or used."
+    ),
+    (
+        "Cross-cutting tags show whether Demographic disparities / equity or COVID-19 & Pandemic "
+        "is a central feature of the research question. Either, both or neither may apply."
+    ),
+    (
+        "Each proposed classification is shown with a definition. Please judge each one "
+        "independently against the actual project and then assess whether its basis is visible "
+        "in the public register entry."
+    ),
+)
+SUBSTANTIVE_FOCUS_PHRASE = (
+    "only when it is a substantive focus of the project’s research question or analytical aims"
+)
+MISSING_DOMAIN_REMINDER_PHRASE = "a substantive subject of the project"
+MISSING_DOMAIN_REMINDER = (
+    "Select a missing Research Domain only if it represents "
+    f"{MISSING_DOMAIN_REMINDER_PHRASE}, not merely a dataset, variable, population "
+    "characteristic or contextual factor used in the research."
+)
+MISSING_PURPOSE_REMINDER_PHRASE = "a substantive analytical aim of the project"
+MISSING_PURPOSE_REMINDER = (
+    "Select a missing Analytical Purpose only if it represents "
+    f"{MISSING_PURPOSE_REMINDER_PHRASE}, not merely a method, analytical step or secondary "
+    "feature of the work."
+)
 
 QUESTION_REPLACEMENTS = {
     "Q2d.": (

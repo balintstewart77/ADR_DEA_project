@@ -63,10 +63,10 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 41. Research Domain wording concordance: For every Research Domain, compare the rc3 definition displayed when the Domain is proposed with the Q6b boundary wording displayed in `po_miss_domain_reference`. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries.
 42. Record an individual pass/fail live-QA result for all 11 Domains in `project_owner_domain_wording_concordance_candidate_0.4.md` or an associated completed QA record. Migration approval fails if any Domain points in materially different directions.
 43. Confirm no separate taxonomy-reference document, link or placeholder appears and no participant-facing text promises one.
-44. Verify the substantive-focus rule is visible before participants see or judge proposed classifications; confirm only `only when it is a substantive focus of the project’s research question or analytical aims` is clearly bold on desktop and mobile.
+44. Verify the substantive-focus rule is visible before participants see or judge proposed classifications; confirm only `only when it is a substantive part of the project's research question or analytical aims` is clearly bold on desktop and mobile.
 45. Confirm the bold is not lost, malformed or displayed as literal HTML, and remains visible and readable after line wrapping.
 46. Verify `po_miss_domain_reminder` appears after the Domain reference and before Q6b and clearly bolds only `a substantive subject of the project` on desktop and mobile.
-47. Verify the Purpose reference, maximum-two guidance and `po_miss_purpose_reminder` all appear before Q7b, with only `a substantive analytical aim of the project` strongly emphasised in the reminder.
+47. Verify the Purpose reference, maximum-two guidance and `po_miss_purpose_reminder` all appear before Q7b, with only `a substantive aim of the project` strongly emphasised in the reminder.
 48. Confirm participants are not instructed to assign a Domain merely because a dataset, variable, population characteristic or contextual factor is present.
 49. Confirm participants are not instructed to assign a Purpose merely because a method, analytical step or secondary feature is present.
 50. Confirm both reminders and the purpose guidance are unconditional; checkbox codes and order remain unchanged while checkbox requiredness is removed.

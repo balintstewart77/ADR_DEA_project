@@ -44,8 +44,12 @@ REVIEW_DURATION_WORDING = (
     "while you become familiar with the classifications."
 )
 ALREADY_PROPOSED_GUIDANCE = (
-    "Labels already proposed above are listed here for completeness; select only those "
-    "genuinely absent from the proposal."
+    "Labels already proposed are repeated here for completeness. Select only labels that are "
+    "missing from the proposal."
+)
+MISSING_TAG_GUIDANCE = (
+    "The full list appears below, including labels already proposed. Select only labels that "
+    "were not proposed."
 )
 CLASSIFICATION_VISIBILITY_QUESTION = (
     "Could this classification reasonably have been reached from the public title and "
@@ -204,24 +208,29 @@ QUOTATION_POLICY = (
     "following written agreement."
 )
 SUBSTANTIVE_FOCUS_PHRASE = (
-    "only when it is a substantive focus of the project’s research question or analytical aims"
+    "only when it is a substantive part of the project's research question or analytical aims"
 )
 SUBSTANTIVE_FOCUS_PARAGRAPH = (
-    "A Research Domain or Analytical Purpose should be treated as applying "
-    f"{SUBSTANTIVE_FOCUS_PHRASE}—not merely because related terms, datasets, variables, "
-    "methods or outcomes are mentioned or used."
+    f"Assign a Research Domain or Analytical Purpose {SUBSTANTIVE_FOCUS_PHRASE}. Do not assign "
+    "it solely because the project mentions or uses related terms, datasets, variables, methods "
+    "or outcomes."
 )
 MISSING_DOMAIN_REMINDER_PHRASE = "a substantive subject of the project"
 MISSING_DOMAIN_REMINDER = (
-    "Select a missing Research Domain only if it represents "
-    f"{MISSING_DOMAIN_REMINDER_PHRASE}, not merely a dataset, variable, population "
-    "characteristic or contextual factor used in the research."
+    f"Select a missing Research Domain only when it is {MISSING_DOMAIN_REMINDER_PHRASE}. Do not "
+    "select one solely because the project uses a related dataset or variable, examines a "
+    "population with a related characteristic, or mentions it as context."
 )
-MISSING_PURPOSE_REMINDER_PHRASE = "a substantive analytical aim of the project"
+MISSING_PURPOSE_GUIDANCE = (
+    "Each project can have no more than two Analytical Purposes. Select only the most important "
+    "missing purpose or purposes. The final classification must contain no more than two purposes "
+    "in total."
+)
+MISSING_PURPOSE_REMINDER_PHRASE = "a substantive aim of the project"
 MISSING_PURPOSE_REMINDER = (
-    "Select a missing Analytical Purpose only if it represents "
-    f"{MISSING_PURPOSE_REMINDER_PHRASE}, not merely a method, analytical step or secondary "
-    "feature of the work."
+    f"Select a missing Analytical Purpose only when it is {MISSING_PURPOSE_REMINDER_PHRASE}. Do "
+    "not select one solely because it describes a method, analytical step or secondary feature "
+    "of the work."
 )
 MISSING_DOMAIN_REMINDER_HTML = MISSING_DOMAIN_REMINDER.replace(
     MISSING_DOMAIN_REMINDER_PHRASE,
@@ -249,11 +258,22 @@ CLASSIFICATION_INTRO_PARAGRAPHS = (
 CLASSIFICATION_INTRO_LABEL = (
     "<strong>How the classifications work</strong><br><br>"
     + "<br><br>".join(CLASSIFICATION_INTRO_PARAGRAPHS[1:3])
-    + "<br><br>A Research Domain or Analytical Purpose should be treated as applying "
-    + f"<strong>{SUBSTANTIVE_FOCUS_PHRASE}</strong>—not merely because related terms, "
-    + "datasets, variables, methods or outcomes are mentioned or used.<br><br>"
+    + "<br><br>Assign a Research Domain or Analytical Purpose "
+    + f"<strong>{SUBSTANTIVE_FOCUS_PHRASE}</strong>. Do not assign it solely because the project "
+    + "mentions or uses related terms, datasets, variables, methods or outcomes.<br><br>"
     + "<br><br>".join(CLASSIFICATION_INTRO_PARAGRAPHS[4:])
 )
+
+MISSING_TAG_REFERENCE_DEFINITIONS = {
+    "Demographic disparities / equity tag": (
+        "Use when comparisons between demographic or equality-relevant groups are central to the "
+        "project. Do not use for socioeconomic inequality alone or routine subgroup analysis."
+    ),
+    "COVID-19 & Pandemic": (
+        "Use when COVID-19 or pandemic conditions are a central research focus or analytical lens. "
+        "Do not use simply because the data cover the pandemic period."
+    ),
+}
 
 DOMAIN_ORDER = (
     "Labour Market & Employment",
@@ -496,14 +516,18 @@ def _domain_boundary_definition(label: str) -> str:
     return exact.removeprefix(prefix)
 
 
+def missing_reference_definition(owner_layer: str, label: str) -> str:
+    if owner_layer == "domain":
+        return _domain_boundary_definition(label)
+    if owner_layer == "tag":
+        return MISSING_TAG_REFERENCE_DEFINITIONS[label]
+    return rc3_short_definition(owner_layer, label)
+
+
 def missing_reference_html(owner_layer: str) -> str:
     lines: list[str] = []
     for label in missing_menu_labels(owner_layer):
-        definition = (
-            _domain_boundary_definition(label)
-            if owner_layer == "domain"
-            else rc3_short_definition(owner_layer, label)
-        )
+        definition = missing_reference_definition(owner_layer, label)
         lines.append(
             f"<strong>{html.escape(label, quote=False)}</strong> — "
             f"{html.escape(definition, quote=False)}"
@@ -512,7 +536,10 @@ def missing_reference_html(owner_layer: str) -> str:
         '<div style="font-weight:400;">'
         + "<br>".join(lines)
         + "<br><br>"
-        + html.escape(ALREADY_PROPOSED_GUIDANCE, quote=False)
+        + html.escape(
+            MISSING_TAG_GUIDANCE if owner_layer == "tag" else ALREADY_PROPOSED_GUIDANCE,
+            quote=False,
+        )
         + "</div>"
     )
 QUESTIONNAIRE_FIELD_LABELS = {
@@ -988,6 +1015,9 @@ def build_dictionary() -> tuple[list[dict[str, str]], dict[str, object]]:
     missing_rows["po_miss_purpose_guidance"][
         "Branching Logic (Show field only if...)"
     ] = ""
+    missing_rows["po_miss_purpose_guidance"]["Field Label"] = normal_weight_descriptive(
+        MISSING_PURPOSE_GUIDANCE
+    )
 
     reference_rows = {
         layer: base.field(
@@ -1458,11 +1488,7 @@ def patch_formatting_audit() -> None:
                 "contains_heading": "no",
                 "heading_text": "",
                 "body_text": " | ".join(
-                    (
-                        _APPROVED_MISSING_DOMAIN_MICRODEFINITIONS[label]
-                        if layer == "domain"
-                        else f"{label} — {rc3_short_definition(layer, label)}"
-                    )
+                    f"{label} — {missing_reference_definition(layer, label)}"
                     for label in missing_menu_labels(layer)
                 ),
                 "html_tags_used": "br | div | strong",
