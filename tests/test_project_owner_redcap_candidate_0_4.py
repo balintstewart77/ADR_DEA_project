@@ -478,6 +478,18 @@ def test_classification_orientation_matches_questionnaire_and_precedes_judgement
     assert by["po_intro"]["Field Label"].count(
         f"<strong>{builder.SUBSTANTIVE_FOCUS_PHRASE}</strong>"
     ) == 1
+    intro_label = by["po_intro"]["Field Label"]
+    assert intro_label.startswith(
+        "<div><strong>How the classifications work</strong><br>"
+        '<span style="font-weight:400;"><br>'
+        "<strong>Research Domains</strong> describe what the project is about. "
+        "Several may apply, and they are not ranked.<br><br>"
+        "<strong>Analytical Purposes</strong> describe what the project is trying to do "
+        "analytically. One or two may apply."
+    )
+    assert intro_label.endswith("</span></div>")
+    assert "<strong>Research Domains describe" not in intro_label
+    assert "<strong>Analytical Purposes describe" not in intro_label
     assert validator.validate_exact_docx_bold_phrase(
         builder.QUESTIONNAIRE_SOURCE,
         updater.CLASSIFICATION_INTRO_PARAGRAPHS[3],

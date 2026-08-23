@@ -265,12 +265,20 @@ CLASSIFICATION_INTRO_PARAGRAPHS = (
     ),
 )
 CLASSIFICATION_INTRO_LABEL = (
-    "<strong>How the classifications work</strong><br><br>"
-    + "<br><br>".join(CLASSIFICATION_INTRO_PARAGRAPHS[1:3])
+    "<div><strong>How the classifications work</strong><br>"
+    '<span style="font-weight:400;"><br>'
+    + CLASSIFICATION_INTRO_PARAGRAPHS[1].replace(
+        "Research Domains", "<strong>Research Domains</strong>", 1
+    )
+    + "<br><br>"
+    + CLASSIFICATION_INTRO_PARAGRAPHS[2].replace(
+        "Analytical Purposes", "<strong>Analytical Purposes</strong>", 1
+    )
     + "<br><br>Assign a Research Domain or Analytical Purpose "
     + f"<strong>{SUBSTANTIVE_FOCUS_PHRASE}</strong>. Do not assign it solely because the project "
     + "mentions or uses related terms, datasets, variables, methods or outcomes.<br><br>"
     + "<br><br>".join(CLASSIFICATION_INTRO_PARAGRAPHS[4:])
+    + "</span></div>"
 )
 
 MISSING_TAG_REFERENCE_DEFINITIONS = {
@@ -1447,8 +1455,9 @@ def patch_formatting_audit() -> None:
             row["body_text"] = " ".join(CLASSIFICATION_INTRO_PARAGRAPHS[1:])
             row["remaining_live_qa_requirement"] = (
                 "Verify exact wording before the detailed classification judgements and confirm "
-                "that only the governing phrase is visibly bold on desktop and mobile, with no "
-                "literal or malformed HTML."
+                "that the heading, the two classification terms and the governing phrase are "
+                "visibly bold on desktop and mobile, with no emphasis bleeding into their "
+                "surrounding text and no literal or malformed HTML."
             )
         if row["variable_name"] in {
             "po_miss_domain_reminder",
@@ -1757,7 +1766,7 @@ The Project Owner instrument remains unfrozen and non-authoritative. This candid
 
 ## Project Review orientation and point-of-need references
 
-After the public project information, `po_llm_disclaimer` reproduces the Questionnaire v3 large-language-model disclaimer verbatim. `po_intro` then presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The governing substantive-focus phrase is the only phrase strongly emphasised in its threshold paragraph. It is followed by the detailed Domain, Purpose and tag judgements; the former read-only classification overview and its three hidden summary inputs are absent. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
+After the public project information, `po_llm_disclaimer` reproduces the Questionnaire v3 large-language-model disclaimer verbatim. `po_intro` then presents the six-paragraph Questionnaire Section 2 block beginning “How the classifications work”. The heading is closed before the normal-weight body begins; the terms “Research Domains” and “Analytical Purposes” are strongly emphasised without their definitions, and the governing substantive-focus phrase is strongly emphasised in its threshold paragraph. It is followed by the detailed Domain, Purpose and tag judgements; the former read-only classification overview and its three hidden summary inputs are absent. The intro contains no consent, confidentiality, withdrawal or Save & Return Later wording and introduces no training material.
 
 The inherited participant-visible `po_taxonomy_ref` synthetic-QA placeholder remains absent. It is replaced functionally—not as a standalone field or attachment—by three complete always-open reference blocks immediately before the missing-Domain, missing-Purpose and missing-tag menus. These blocks are the participant delivery route for every nominable category definition at the point of need. Each block states that labels already proposed above remain listed for completeness and should be selected only when genuinely absent from the proposal.
 
@@ -1899,7 +1908,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 41. Research Domain wording concordance: For every Research Domain, compare the rc3 definition displayed when the Domain is proposed with the Q6b boundary wording displayed in `po_miss_domain_reference`. Confirm that both identify the same substantive research object and apply compatible inclusion and exclusion boundaries.
 42. Record an individual pass/fail live-QA result for all 11 Domains in `project_owner_domain_wording_concordance_candidate_0.4.md` or an associated completed QA record. Migration approval fails if any Domain points in materially different directions.
 43. Confirm no separate taxonomy-reference document, link or placeholder appears and no participant-facing text promises one.
-44. Verify the substantive-focus rule is visible before participants see or judge proposed classifications; confirm only `{SUBSTANTIVE_FOCUS_PHRASE}` is clearly bold on desktop and mobile.
+44. Verify the substantive-focus rule is visible before participants see or judge proposed classifications; confirm the `po_intro` heading, “Research Domains”, “Analytical Purposes” and `{SUBSTANTIVE_FOCUS_PHRASE}` are clearly bold on desktop and mobile, while each definition and all surrounding prose remain normal weight.
 45. Confirm the bold is not lost, malformed or displayed as literal HTML, and remains visible and readable after line wrapping.
 46. Verify `po_miss_domain_reminder` appears after the Domain reference and before Q6b and clearly bolds only `{MISSING_DOMAIN_REMINDER_PHRASE}` on desktop and mobile.
 47. Verify the Purpose reference, maximum-two guidance and `po_miss_purpose_reminder` all appear before Q7b, with only `{MISSING_PURPOSE_REMINDER_PHRASE}` strongly emphasised in the reminder.

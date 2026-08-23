@@ -349,6 +349,21 @@ def validate_participant_documents(by: Mapping[str, Mapping[str, str]]) -> list[
         f"<strong>{builder.SUBSTANTIVE_FOCUS_PHRASE}</strong>"
     ) != 1:
         errors.append("po_intro does not strongly emphasise the exact governing phrase once")
+    intro_label = by["po_intro"]["Field Label"]
+    expected_intro_opening = (
+        "<div><strong>How the classifications work</strong><br>"
+        '<span style="font-weight:400;"><br>'
+        "<strong>Research Domains</strong> describe what the project is about. "
+        "Several may apply, and they are not ranked.<br><br>"
+        "<strong>Analytical Purposes</strong> describe what the project is trying to do "
+        "analytically. One or two may apply."
+    )
+    if not intro_label.startswith(expected_intro_opening):
+        errors.append(
+            "po_intro heading or Domain/Purpose emphasis boundaries are malformed"
+        )
+    if not intro_label.endswith("</span></div>"):
+        errors.append("po_intro normal-weight body wrapper is not closed")
     errors.extend(
         validate_exact_docx_bold_phrase(
             builder.QUESTIONNAIRE_SOURCE,
