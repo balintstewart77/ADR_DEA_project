@@ -26,7 +26,7 @@ INSTRUMENT_LOG_REQUIRED_COLUMNS = {
     "status",
 }
 INSTRUMENT_CHANGE_ID = re.compile(r"^REDCAP-(\d{3})$")
-NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-026"
+NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-035"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
@@ -99,7 +99,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
     tag_alignment = instrument_by_id["REDCAP-023"]
     intro_reference_cleanup = instrument_by_id["REDCAP-024"]
     approved_domain_wording = instrument_by_id["REDCAP-025"]
-    substantive_focus_clarification = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
+    substantive_focus_clarification = instrument_by_id["REDCAP-026"]
+    display_and_reference_repairs = instrument_by_id["REDCAP-027"]
+    consent_gate_repairs = instrument_by_id["REDCAP-028"]
+    missing_label_architecture = instrument_by_id["REDCAP-029"]
+    participant_information_v31 = instrument_by_id["REDCAP-030"]
+    live_qa_batch = instrument_by_id["REDCAP-031"]
+    instruction_wording = instrument_by_id["REDCAP-032"]
+    final_wording = instrument_by_id["REDCAP-033"]
+    inline_spacing = instrument_by_id["REDCAP-034"]
+    intro_emphasis = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -239,6 +248,26 @@ def test_required_log_files_and_post_pilot_governance_entry():
         substantive_focus_clarification["protocol_effect"]
     )
     assert "live presentation and emphasis" in substantive_focus_clarification["status"]
+    assert "taxonomy 1.0-rc3 short definitions" in (
+        display_and_reference_repairs["change_description"]
+    )
+    assert "superseded by REDCAP-029" in display_and_reference_repairs["status"]
+    assert "all ten consent confirmations required" in consent_gate_repairs["change_description"]
+    assert "superseded by REDCAP-031" in consent_gate_repairs["status"]
+    assert "direct missing-label measure" in missing_label_architecture["change_description"]
+    assert "all-zero submitted set" in missing_label_architecture["protocol_effect"]
+    assert "5–10 minutes" in participant_information_v31["change_description"]
+    assert "original ethics-approved v3 preserved" in participant_information_v31["status"]
+    assert "D5–D15" in live_qa_batch["field_or_component"]
+    assert "Candidate field count became 117" in live_qa_batch["change_description"]
+    assert "maximum-two" in instruction_wording["change_description"]
+    assert "DEA 2017-accredited" in final_wording["change_description"]
+    assert "extra duplicated break" in inline_spacing["change_description"]
+    assert intro_emphasis["instrument_version"] == "owner-redcap-candidate-0.4"
+    assert intro_emphasis["classification_rule_change"] == "no"
+    assert "Research Domains and Analytical Purposes" in intro_emphasis["change_description"]
+    assert "W10" in intro_emphasis["evidence_or_reason"]
+    assert "Markup-only" in intro_emphasis["protocol_effect"]
 
     with (PACKAGE / "protocol_deviation_log.csv").open(
         encoding="utf-8", newline=""
