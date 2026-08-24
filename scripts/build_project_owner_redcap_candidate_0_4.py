@@ -13,6 +13,7 @@ import csv
 import hashlib
 import html
 import json
+import os
 import re
 from pathlib import Path
 from typing import Iterable
@@ -30,7 +31,7 @@ PACKAGE = ROOT / "preregistration/package/06_redcap"
 LIVE_QA = PACKAGE / "live_qa"
 VERSION = "owner-redcap-candidate-0.4"
 STATUS = "development_candidate_unfrozen_pre_recruitment_live_migration_and_qa_pending"
-PARTICIPANT_INFO_VERSION = "project-owner-information-v3.1"
+PARTICIPANT_INFO_VERSION = "project-owner-information-v3.2"
 CONSENT_FORM_VERSION = "owner-consent-v3"
 CONSENT_FORM_VERSION_ANNOTATION = (
     f"{base.HIDDEN_ADMIN} @DEFAULT='{CONSENT_FORM_VERSION}'"
@@ -109,6 +110,13 @@ QUESTIONNAIRE_SOURCE = (
     / "participant_materials/Project_Owner_Review_Questionnaire_v3.docx"
 )
 RC3_TAXONOMY_SOURCE = ROOT / "taxonomy_data_dictionary_1.0-rc3.yaml"
+UNSIGNED_LIVE_CONFIG_SIGNATURE = (
+    "- Signature: ______________________________    Date: __________________"
+)
+LIVE_CONFIG_SIGNATURE_PATTERN = re.compile(
+    rb"(?m)^- Signature: (?P<signature>[^\r\n]*)    Date: (?P<date>[^\r\n]*)(?=\r?$)"
+)
+_PRESERVED_TEXT_NEWLINES: dict[Path, bytes] = {}
 
 CONSENT_ITEMS = (
     (
@@ -733,6 +741,99 @@ def write_csv(path: Path, headers: list[str], rows: Iterable[dict[str, object]])
         writer = csv.DictWriter(handle, fieldnames=headers, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
+
+
+def _generated_text_bytes(text: str, *, newline: bytes | None = None) -> bytes:
+    """Render generator-owned text in an explicit platform or artefact representation."""
+
+    selected = os.linesep.encode("ascii") if newline is None else newline
+    if selected not in {b"\n", b"\r\n"}:
+        raise RuntimeError("unsupported generated-text line ending")
+    return text.encode("utf-8").replace(b"\n", selected)
+
+
+def _existing_text_newline(payload: bytes) -> bytes:
+    """Return the single line-ending representation used by an existing artefact."""
+
+    without_crlf = payload.replace(b"\r\n", b"")
+    has_crlf = b"\r\n" in payload
+    has_lf = b"\n" in without_crlf
+    if has_crlf and has_lf:
+        raise RuntimeError("live configuration contains mixed line endings")
+    return b"\r\n" if has_crlf else b"\n"
+
+
+def _capture_generated_text_newlines(paths: Iterable[Path]) -> None:
+    """Preserve each tracked text artefact's checked-out LF/CRLF representation."""
+
+    _PRESERVED_TEXT_NEWLINES.clear()
+    for path in paths:
+        if path.exists():
+            _PRESERVED_TEXT_NEWLINES[path] = _existing_text_newline(path.read_bytes())
+
+
+def _write_generated_text(path: Path, text: str, *, encoding: str = "utf-8") -> None:
+    """Write deterministic text without changing its existing line-ending representation."""
+
+    if encoding != "utf-8":
+        raise RuntimeError("generated candidate documentation must use UTF-8")
+    newline = _PRESERVED_TEXT_NEWLINES.get(path)
+    if newline is None and path.exists():
+        newline = _existing_text_newline(path.read_bytes())
+    payload = _generated_text_bytes(text, newline=newline)
+    if not path.exists() or path.read_bytes() != payload:
+        path.write_bytes(payload)
+
+
+def _validate_signed_live_config(actual: bytes, expected_unsigned: bytes) -> None:
+    """Validate a human-completed checklist, ignoring only its signature fields."""
+
+    expected_signature = UNSIGNED_LIVE_CONFIG_SIGNATURE.encode("utf-8")
+    if expected_unsigned.count(expected_signature) != 1:
+        raise RuntimeError("generated live configuration has no unique unsigned signature line")
+    matches = list(LIVE_CONFIG_SIGNATURE_PATTERN.finditer(actual))
+    if len(matches) != 1:
+        raise RuntimeError("signed live configuration has no unique signature/date line")
+    match = matches[0]
+    signature = match.group("signature").decode("utf-8")
+    date = match.group("date").decode("utf-8")
+    signature_is_placeholder = bool(signature) and set(signature) == {"_"}
+    date_is_placeholder = bool(date) and set(date) == {"_"}
+    if signature_is_placeholder or date_is_placeholder:
+        raise RuntimeError("live-configuration signature/date is only partially completed")
+    if not signature.strip() or not date.strip():
+        raise RuntimeError("live-configuration signature/date is empty")
+    unsigned_actual = actual[: match.start()] + expected_signature + actual[match.end() :]
+    if unsigned_actual != expected_unsigned:
+        raise RuntimeError(
+            "signed live configuration differs from generated content outside the signature/date fields"
+        )
+
+
+def _write_or_validate_live_config(
+    path: Path, expected_unsigned_text: str, *, encoding: str = "utf-8"
+) -> None:
+    """Generate an unsigned checklist, or preserve and validate a signed one."""
+
+    if encoding != "utf-8":
+        raise RuntimeError("live configuration must use UTF-8")
+    if not path.exists():
+        expected_unsigned = _generated_text_bytes(expected_unsigned_text)
+        path.write_bytes(expected_unsigned)
+        return
+    actual = path.read_bytes()
+    expected_unsigned = _generated_text_bytes(
+        expected_unsigned_text, newline=_existing_text_newline(actual)
+    )
+    matches = list(LIVE_CONFIG_SIGNATURE_PATTERN.finditer(actual))
+    if len(matches) != 1:
+        raise RuntimeError("live configuration has no unique signature/date line")
+    match = matches[0]
+    if match.group(0) == UNSIGNED_LIVE_CONFIG_SIGNATURE.encode("utf-8"):
+        if actual != expected_unsigned:
+            path.write_bytes(expected_unsigned)
+        return
+    _validate_signed_live_config(actual, expected_unsigned)
 
 
 def operational_tag_audit() -> list[dict[str, object]]:
@@ -1406,7 +1507,8 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
         ),
     }
     branch.pop("classification_overview", None)
-    BRANCH_SPEC.write_text(
+    _write_generated_text(
+        BRANCH_SPEC,
         yaml.safe_dump(branch, sort_keys=False, allow_unicode=True), encoding="utf-8"
     )
 
@@ -1696,7 +1798,8 @@ def build_domain_wording_audits() -> None:
         + " |"
         for label, entry in OWNER_DOMAIN_DISPLAY.items()
     )
-    MISSING_DOMAIN_REVIEW.write_text(
+    _write_generated_text(
+        MISSING_DOMAIN_REVIEW,
         f"""# Candidate 0.4 missing-domain microdefinitions — approved implementation
 
 Status: **approved instrument wording; implemented in candidate 0.4; live semantic and display QA pending**. Author approval was recorded on 2026-07-28. Candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative; PID 9149 migration and recruitment remain blocked until controlled migration and successful live QA.
@@ -1739,7 +1842,8 @@ No taxonomy rule, category, field, production prompt, production classification 
         + " |"
         for label, entry in OWNER_DOMAIN_DISPLAY.items()
     )
-    DOMAIN_CONCORDANCE.write_text(
+    _write_generated_text(
+        DOMAIN_CONCORDANCE,
         f"""# Candidate 0.4 Research Domain wording concordance
 
 Status: **author-approved repository concordance; live-QA result pending**. This is an auditable human review record for Project Owner candidate 0.4, not a taxonomy amendment. Automated exact-text and structural checks supplement but cannot replace human semantic review.
@@ -1759,7 +1863,8 @@ The canonical labels and full definitions remain derived from the frozen taxonom
 def build_documentation(meta: dict[str, object]) -> None:
     counts = meta["field_counts"]
     items = "\n".join(f"- `{name}` — {wording}" for name, wording in CONSENT_ITEMS)
-    SPEC.write_text(
+    _write_generated_text(
+        SPEC,
         f"""# Project Owner REDCap candidate 0.4 specification
 
 Version: `{VERSION}`  
@@ -1853,7 +1958,8 @@ Reason: repair participant-facing requiredness, density, inline information deli
         encoding="utf-8",
     )
 
-    LIVE_CONFIG.write_text(
+    _write_or_validate_live_config(
+        LIVE_CONFIG,
         f"""# Project Owner candidate 0.4 authorised-administrator migration and live-QA checklist
 
 Status: instructions only. Do not execute without separate authorisation. Candidate 0.4 is unfrozen, pre-recruitment and non-authoritative. The missing-Domain wording is author-approved and implemented; PID 9149 migration and recruitment remain blocked until controlled migration is authorised and every live-QA item passes.
@@ -1965,7 +2071,8 @@ The instrument remains outside Production. Moving PID 9149 to Production and com
         f"- `{item['label']}`: `status={item.get('status')}`, `include_in_prompt=true`."
         for item in tag_rows
     )
-    TAG_AND_QUOTATION_AUDIT.write_text(
+    _write_generated_text(
+        TAG_AND_QUOTATION_AUDIT,
         f"""# Candidate 0.4 cross-cutting-tag and quotation-permission audit
 
 Status: completed offline pre-migration audit; candidate 0.4 remains unfrozen, pre-recruitment and non-authoritative.
@@ -2012,6 +2119,16 @@ The live-QA checklist requires an authorised administrator to confirm that the m
 def main() -> int:
     check_sources()
     configure_base_outputs()
+    _capture_generated_text_newlines(
+        (
+            SPEC,
+            LIVE_CONFIG,
+            BRANCH_SPEC,
+            MISSING_DOMAIN_REVIEW,
+            DOMAIN_CONCORDANCE,
+            TAG_AND_QUOTATION_AUDIT,
+        )
+    )
     rows, meta = build_dictionary()
     meta["fixture_columns"] = len(base.fixture_import_headers(rows))
     write_csv(DICTIONARY, base.HEADERS, rows)

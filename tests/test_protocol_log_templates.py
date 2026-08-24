@@ -26,7 +26,7 @@ INSTRUMENT_LOG_REQUIRED_COLUMNS = {
     "status",
 }
 INSTRUMENT_CHANGE_ID = re.compile(r"^REDCAP-(\d{3})$")
-NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-037"
+NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-038"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
@@ -110,7 +110,8 @@ def test_required_log_files_and_post_pilot_governance_entry():
     inline_spacing = instrument_by_id["REDCAP-034"]
     intro_emphasis = instrument_by_id["REDCAP-035"]
     v32_dates = instrument_by_id["REDCAP-036"]
-    owner_freeze = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
+    owner_freeze = instrument_by_id["REDCAP-037"]
+    participant_provenance = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -287,6 +288,23 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "Production transition remains a separate manual action" in owner_freeze[
         "protocol_effect"
     ]
+    assert participant_provenance["instrument_version"] == (
+        "owner-redcap-candidate-0.4"
+    )
+    assert participant_provenance["classification_rule_change"] == "no"
+    assert "project-owner-information-v3.1" in participant_provenance[
+        "change_description"
+    ]
+    assert "project-owner-information-v3.2" in participant_provenance[
+        "change_description"
+    ]
+    assert "never imported" in participant_provenance["evidence_or_reason"]
+    assert "No participant had been imported or consented" in (
+        participant_provenance["pilot_or_formal_data_effect"]
+    )
+    assert "signed human evidence preserved byte-identical" in (
+        participant_provenance["approval"]
+    )
 
     with (PACKAGE / "protocol_deviation_log.csv").open(
         encoding="utf-8", newline=""

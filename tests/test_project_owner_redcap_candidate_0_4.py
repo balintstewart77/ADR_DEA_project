@@ -11,6 +11,7 @@ from collections import Counter
 from pathlib import Path
 
 import yaml
+import pytest
 
 from analysis import llm_theme_analysis_v3 as classifier
 from dashboard import taxonomy as dashboard_taxonomy
@@ -55,6 +56,59 @@ def test_exact_two_instruments_and_counts():
         {"owner_consent": 22, "project_review": 95}
     )
     assert len(rows) == 117
+
+
+def test_current_participant_information_provenance_is_exactly_v3_2():
+    expected = "project-owner-information-v3.2"
+    stale = "project-owner-information-v3.1"
+    assert builder.PARTICIPANT_INFO_VERSION == expected
+
+    by = dictionary_by_name()
+    assert "participant_info_ver" in by
+    assert by["participant_info_link"]["Field Label"] == (
+        builder.INLINE_PARTICIPANT_INFO_SOURCE.read_text(encoding="utf-8")
+    )
+    assert "v3.2" in builder.INLINE_PARTICIPANT_INFO_SOURCE.name
+
+    with builder.IMPORT_FIXTURE.open(encoding="utf-8", newline="") as handle:
+        fixture = list(csv.DictReader(handle))
+    owner_rows = [row for row in fixture if not row["redcap_repeat_instrument"]]
+    review_rows = [row for row in fixture if row["redcap_repeat_instrument"]]
+    assert len(owner_rows) == 3
+    assert all(row["participant_info_ver"] == expected for row in owner_rows)
+    assert all(not row["participant_info_ver"] for row in review_rows)
+
+    current_generated_text = (
+        builder.DICTIONARY,
+        builder.SPEC,
+        builder.LIVE_CONFIG,
+        builder.IMPORT_FIXTURE,
+        builder.QA_IMPORT_FIXTURE,
+        builder.FIELD_SPEC,
+        builder.BRANCH_SPEC,
+        builder.EXPORT_SPEC,
+        builder.FORMATTING_AUDIT,
+        builder.MISSING_DOMAIN_REVIEW,
+        builder.DOMAIN_CONCORDANCE,
+        builder.TAG_AND_QUOTATION_AUDIT,
+    )
+    for path in current_generated_text:
+        assert stale not in path.read_text(encoding="utf-8-sig"), path
+
+    participant_materials = builder.PACKAGE / "participant_materials"
+    historical_v31 = (
+        participant_materials
+        / "Project_Owner_Participant_Information_and_Consent_v3_1.docx"
+    )
+    archived_v31 = (
+        participant_materials
+        / "Project_Owner_Participant_Information_and_Consent_v3_1_archived_2026-08-24.docx"
+    )
+    expected_v31_hash = (
+        "4428a3f4ad121df7b94b2f92bf056a2d1854922db2b6bc61ceb6651e0cca922b"
+    )
+    assert hashlib.sha256(historical_v31.read_bytes()).hexdigest() == expected_v31_hash
+    assert hashlib.sha256(archived_v31.read_bytes()).hexdigest() == expected_v31_hash
 
 
 def test_read_only_requiredness_descriptive_weight_and_provenance_are_repaired():
@@ -1011,7 +1065,9 @@ def test_project_review_preserves_existing_names_and_types_with_documented_chang
     assert validator.validate_dictionary()["forms"]["project_review"] == 95
 
 
-def test_deterministic_build_includes_approval_and_concordance_records():
+def test_deterministic_build_includes_approval_and_concordance_records(
+    monkeypatch, tmp_path
+):
     outputs = (
         builder.DICTIONARY,
         builder.SPEC,
@@ -1025,8 +1081,46 @@ def test_deterministic_build_includes_approval_and_concordance_records():
         builder.DOMAIN_CONCORDANCE,
     )
     before = {path: path.read_bytes() for path in outputs}
+    captured = {}
+    original = builder._write_or_validate_live_config
+
+    def capture(path, expected_unsigned_text, *, encoding="utf-8"):
+        captured["expected_text"] = expected_unsigned_text
+        return original(path, expected_unsigned_text, encoding=encoding)
+
+    monkeypatch.setattr(builder, "_write_or_validate_live_config", capture)
     assert builder.main() == 0
     assert {path: path.read_bytes() for path in outputs} == before
+    signed_live_config = before[builder.LIVE_CONFIG]
+    expected_live_config = builder._generated_text_bytes(
+        captured["expected_text"],
+        newline=builder._existing_text_newline(signed_live_config),
+    )
+    builder._validate_signed_live_config(signed_live_config, expected_live_config)
+    assert builder.UNSIGNED_LIVE_CONFIG_SIGNATURE.encode("utf-8") in expected_live_config
+    assert b"Balint Stewart" not in expected_live_config
+
+    expected_text = (
+        "# Synthetic live configuration\n\n"
+        f"{builder.UNSIGNED_LIVE_CONFIG_SIGNATURE}\n"
+    )
+    expected = builder._generated_text_bytes(expected_text)
+    signed = expected.replace(
+        builder.UNSIGNED_LIVE_CONFIG_SIGNATURE.encode("utf-8"),
+        b"- Signature: A Human Reviewer    Date: 2026-08-24",
+    )
+    drifted = signed.replace(b"Synthetic live configuration", b"Changed live configuration")
+    path = tmp_path / "signed_live_configuration.md"
+    path.write_bytes(drifted)
+    with pytest.raises(RuntimeError, match="outside the signature/date fields"):
+        builder._write_or_validate_live_config(path, expected_text)
+    assert path.read_bytes() == drifted
+
+    unsigned_path = tmp_path / "unsigned_live_configuration.md"
+    builder._write_or_validate_live_config(unsigned_path, expected_text)
+    first = unsigned_path.read_bytes()
+    builder._write_or_validate_live_config(unsigned_path, expected_text)
+    assert unsigned_path.read_bytes() == first == builder._generated_text_bytes(expected_text)
 
 
 def test_participant_document_updater_is_idempotent():

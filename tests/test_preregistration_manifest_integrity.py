@@ -73,26 +73,39 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     questionnaire_v3 = redcap["RED-085"]
     assert information_v2["version"] == "project-owner-information-v2"
     assert questionnaire_v2["version"] == "project-owner-review-questionnaire-v2"
-    assert information_v2["authoritative_status"] == "current_ethics_review_material"
+    assert information_v2["current_state"] == "historical_candidate"
+    assert information_v2["authoritative_status"] == "superseded_ethics_review_material"
     assert questionnaire_v2["authoritative_status"] == "superseded_ethics_review_material"
     assert questionnaire_v3["version"] == "project-owner-review-questionnaire-v3"
-    assert questionnaire_v3["authoritative_status"] == "current_aligned_participant_material"
-    assert "substantive-focus" in questionnaire_v3["notes"]
-    assert "bold" in questionnaire_v3["notes"]
+    assert questionnaire_v3["current_state"] == "frozen_source"
+    assert questionnaire_v3["authoritative_status"] == (
+        "ethics_approved_material_stale_against_frozen_instrument"
+    )
+    assert questionnaire_v3["frozen"] == "true"
+    assert "stale against the frozen instrument" in questionnaire_v3["notes"]
     owner_04 = redcap["RED-086"]
     assert owner_04["version"] == "owner-redcap-candidate-0.4"
-    assert owner_04["current_state"] == "working_candidate"
-    assert owner_04["authoritative_status"] == "current_unfrozen_candidate"
-    assert owner_04["frozen"] == "false"
+    assert owner_04["current_state"] == "frozen_source"
+    assert owner_04["authoritative_status"] == "frozen_immutable_source"
+    assert owner_04["frozen"] == "true"
     assert owner_04["registered"] == "false"
-    assert "119-field" in owner_04["notes"]
+    assert "117-field" in owner_04["notes"]
+    assert owner_04["pending_gates"] == "manual Production transition"
     assert "RED-068" in owner_04["supersedes_or_superseded_by"]
     assert redcap["RED-089"]["version"] == "owner-redcap-candidate-0.4"
+    freeze_record = redcap["RED-088"]
+    assert freeze_record["current_state"] == "completed"
+    assert freeze_record["authoritative_status"] == "authoritative_qa_record"
+    assert freeze_record["frozen"] == "true"
+    assert "117-field" in freeze_record["notes"]
+    assert "six authorised REDCap storage transformations" in freeze_record["notes"]
     assert redcap["RED-097"]["version"] == "project-owner-information-v3"
-    assert redcap["RED-097"]["authoritative_status"] == "current_aligned_participant_material"
-    assert redcap["RED-085"]["authoritative_status"] == "current_aligned_participant_material"
+    assert redcap["RED-097"]["current_state"] == "frozen_source"
+    assert redcap["RED-097"]["authoritative_status"] == "ethics_approved_archival_source"
+    assert redcap["RED-097"]["frozen"] == "true"
     assert redcap["RED-098"]["version"] == "owner-redcap-candidate-0.4"
-    assert redcap["RED-098"]["authoritative_status"] == "supporting_current_candidate"
+    assert redcap["RED-098"]["authoritative_status"] == "supporting_frozen_instrument"
+    assert redcap["RED-098"]["frozen"] == "true"
     assert redcap["RED-099"]["version"] == "owner-redcap-candidate-0.4"
     assert redcap["RED-099"]["authoritative_status"] == "supporting_current_candidate"
     assert "two-tag" in redcap["RED-099"]["description"]
@@ -103,15 +116,34 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert redcap["RED-100"]["registered"] == "false"
     assert redcap["RED-101"]["version"] == "owner-redcap-candidate-0.4"
     assert redcap["RED-101"]["authoritative_status"] == "approved_instrument_wording"
-    assert redcap["RED-101"]["frozen"] == "false"
+    assert redcap["RED-101"]["frozen"] == "true"
     assert redcap["RED-101"]["registered"] == "false"
     assert "implemented" in redcap["RED-101"]["notes"]
     assert redcap["RED-102"]["version"] == "owner-redcap-candidate-0.4"
-    assert redcap["RED-102"]["authoritative_status"] == "approved_concordance_live_qa_pending"
+    assert redcap["RED-102"]["current_state"] == "historical_candidate"
+    assert redcap["RED-102"]["authoritative_status"] == "supporting_historical_candidate"
     assert redcap["RED-102"]["frozen"] == "false"
     assert redcap["RED-102"]["registered"] == "false"
-    assert "11" in redcap["RED-102"]["notes"]
-    assert "live QA" in redcap["RED-102"]["pending_gates"]
+    assert "full-definition/missing-Domain microdefinition concordance" in (
+        redcap["RED-102"]["description"]
+    )
+    assert "Completed live QA is recorded by RED-088 and LOG-002" in redcap["RED-102"]["notes"]
+    rc3 = next(row for row in manifest_rows if row["artifact_id"] == "MOD-013")
+    assert rc3["current_path"] == "taxonomy_data_dictionary_1.0-rc3.yaml"
+    assert rc3["version"] == "1.0-rc3 / v3.4-rc2"
+    assert rc3["current_state"] == "frozen_source"
+    assert rc3["authoritative_status"] == (
+        "authoritative_participant_facing_definition_source"
+    )
+    assert rc3["sha256"] == (
+        "48a311e4c3f11d7ebd008e6194c3b096b729c723ed89d7a91bbf2760dca936e4"
+    )
+    assert rc3["size_bytes"] == "66081"
+    assert rc3["frozen"] == "true"
+    assert "Production Fable 5 classifications remain frozen on dict-1.0-rc2" in rc3["notes"]
+    rc3_path = ROOT / rc3["current_path"]
+    assert hashlib.sha256(rc3_path.read_bytes()).hexdigest() == rc3["sha256"]
+    assert str(rc3_path.stat().st_size) == rc3["size_bytes"]
     assert redcap["RED-066"]["authoritative_status"] == "superseded_ethics_review_material"
     assert redcap["RED-067"]["authoritative_status"] == "superseded_ethics_review_material"
     invitation = redcap["RED-081"]
