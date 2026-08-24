@@ -84,7 +84,7 @@ Migration and recruitment are prohibited until controlled migration is authorise
 - [x] Instrument-change log updated through `REDCAP-037`.
 - [x] Live-QA record completed and archived in the approved restricted evidence location.
 - [x] Test records purged and verified: the purge export decompresses to zero bytes, with no header and no rows.
-- Signature: ______________________________    Date: __________________
+- Signature: Balint Stewart    Date: 2026-08-24
 
 ### Frozen-export reconciliation
 
