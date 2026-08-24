@@ -2,7 +2,7 @@
 
 Version: `owner-redcap-candidate-0.4`  
 Status: unfrozen development candidate; pre-recruitment; controlled PID 9149 migration and live QA pending.  
-Ethics trace: UCL Project ID 5004; corrected Participant Information v3.1 dated 18 August 2026 preserves the ethics-approved v3 source; Questionnaire v3 remains the approved reference and requires reconciliation with the live-QA changes recorded below.
+Ethics trace: UCL Project ID 5004; corrected Participant Information v3.2 dated 24 August 2026 preserves the ethics-approved v3 source; Questionnaire v3 remains the approved reference and requires reconciliation with the live-QA changes recorded below.
 
 ## Architecture and field counts
 
@@ -36,7 +36,7 @@ Each Project Review displays the canonical label and exact rc3 proposed-label sh
 
 ## Ethics-to-REDCap consent traceability
 
-The participant-visible sequence is: the pinned verbatim inline Participant Information v3.1 in `participant_info_link`; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The downloadable participant-information PDF remains a separate manual survey attachment.
+The participant-visible sequence is: the pinned verbatim inline Participant Information v3.2 in `participant_info_link`; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The downloadable participant-information PDF remains a separate manual survey attachment.
 
 The canonical consent statements remain aligned with the ten confirmation fields, including restoration of the strict approved `consent_no_nonpublic` wording. Questionnaire v3 remains stale relative to the live-QA changes in form guidance, duration, visibility stems, missing-label guidance and disclaimer placement; it requires separate reconciliation and applicable ethics/change-control action before production. Its Appendix B records the complete owner-level consent-validity join. Q13, participant-facing per-project quotation permission and taxonomy-reference placeholders are absent. Controlled migration and live QA remain mandatory before recruitment.
 

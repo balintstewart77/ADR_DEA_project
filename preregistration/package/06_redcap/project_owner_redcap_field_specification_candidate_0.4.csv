@@ -1,7 +1,7 @@
 variable,form,field_type,scope,prepopulated,participant_response,branching,required,annotation,construct,analytical_completion,requiredness_rationale,analysis_applicability,notes
 owner_id,owner_consent,text,owner_row,yes,no,,,@HIDDEN-SURVEY @READONLY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
 owner_intro,owner_consent,descriptive,owner_row,no,no,,,,,not_applicable,,always_if_row_and_field_are_applicable,Generated display/wording field
-participant_info_link,owner_consent,descriptive,owner_row,no,no,,,,verbatim_inline_participant_information_v3_1,not_applicable,,always_if_row_and_field_are_applicable,Byte-identical field-label value from the pinned v3.1 inline participant-information HTML derivative.
+participant_info_link,owner_consent,descriptive,owner_row,no,no,,,,verbatim_inline_participant_information_v3_2,not_applicable,,always_if_row_and_field_are_applicable,Byte-identical field-label value from the pinned v3.2 inline participant-information HTML derivative.
 participant_info_ver,owner_consent,text,owner_row,yes,no,,,@HIDDEN-SURVEY @READONLY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
 consent_form_ver,owner_consent,text,owner_row,yes,no,,,@HIDDEN-SURVEY @READONLY @DEFAULT='owner-consent-v3',,not_applicable,,always_if_row_and_field_are_applicable,REDCap field
 owner_instr_ver,owner_consent,text,owner_row,yes,no,,,@HIDDEN-SURVEY @READONLY,,not_applicable,,always_if_row_and_field_are_applicable,REDCap field

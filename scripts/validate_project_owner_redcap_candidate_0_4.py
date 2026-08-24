@@ -663,8 +663,8 @@ def validate_dictionary() -> dict[str, object]:
     if by["participant_info_link"]["Field Label"] != builder.INLINE_PARTICIPANT_INFO_SOURCE.read_text(
         encoding="utf-8"
     ):
-        errors.append("participant_info_link is not byte-equivalent to the pinned v3.1 HTML")
-    if "Version 3.1" in by["participant_info_link"]["Field Label"]:
+        errors.append("participant_info_link is not byte-equivalent to the pinned v3.2 HTML")
+    if "Version 3.2" in by["participant_info_link"]["Field Label"]:
         errors.append("participant_info_link unexpectedly contains a version marker")
     if builder.FORM_GUIDANCE_WORDING in plain_redcap_label(by["owner_intro"]["Field Label"]):
         errors.append("owner_intro retains duplicated confidentiality guidance")

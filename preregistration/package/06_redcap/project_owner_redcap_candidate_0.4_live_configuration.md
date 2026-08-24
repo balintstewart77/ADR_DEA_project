@@ -18,7 +18,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 5. Import `project_owner_redcap_data_dictionary_candidate_0.4.csv` through the controlled REDCap dictionary process and resolve every reported change before applying it.
 6. Confirm exactly two instruments: non-repeating Owner Consent (`owner_consent`) and repeating Project Review (`project_review`).
 7. Confirm `project_review` is the only repeating instrument, custom label `[assignment_id] — [project_title]`, participant-created repeats disabled and auto-start disabled.
-8. Confirm `participant_info_link` displays the pinned v3.1 inline participant information byte-for-byte before `intended_recipient`, and configure the participant-information PDF download separately.
+8. Confirm `participant_info_link` displays the pinned v3.2 inline participant information byte-for-byte before `intended_recipient`, and configure the participant-information PDF download separately.
 9. Confirm all ten confirmation fields are owner-level, required, blank by default, not import-populated and hidden after intended-recipient No.
 9a. Confirm `consent_form_ver` is imported as `owner-consent-v3` on normal owner records and that `@DEFAULT='owner-consent-v3'` stores the same value when the field was initially blank and the owner submits either Yes or No.
 10. Confirm `consent_items_complete` uses exactly `if([consent_read_info] = '1' and [consent_understand_invitation] = '1' and [consent_voluntary] = '1' and [consent_no_nonpublic] = '1' and [consent_confidentiality_limits] = '1' and [consent_withdrawal_deadline] = '1' and [consent_quote_process] = '1' and [consent_retention_reanalysis] = '1' and [consent_complaints] = '1' and [consent_acknowledgement] = '1', 1, 0)` and is hidden/read-only to participants.
@@ -48,7 +48,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 26. Verify consent values export only on the non-repeating owner row and are blank on every Project Review repeat row.
 27. Verify valid consent is joined onto review rows using all four conditions: intended recipient, all-confirmed, final Yes and Owner Consent complete.
 28. Verify Save & Return Later, return-to-queue, completed-response modification disabled, no automatic next survey, no redirect and no participant-created repeat.
-29. Verify desktop and mobile rendering of the full inline v3.1 participant information, ten statements, final decision, acknowledgement and repeated reviews.
+29. Verify desktop and mobile rendering of the full inline v3.2 participant information, ten statements, final decision, acknowledgement and repeated reviews.
 30. Archive post-migration screenshots, dictionary, configuration evidence, synthetic export and source/live comparison in the approved restricted evidence location.
 31. Verify `prop_t01_status` maps to `Demographic disparities / equity tag` and `prop_t02_status` maps to `COVID-19 & Pandemic` in every review and export.
 32. Verify each tag's correctness and visibility questions operate independently and each visibility explanation retains its existing Partly visible / Not visible / Unsure branch.

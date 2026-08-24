@@ -342,12 +342,12 @@ def test_both_canonical_participant_documents_are_pinned_and_aligned():
             assert archive.testzip() is None
 
 
-def test_inline_participant_information_is_the_pinned_v3_1_derivative_verbatim():
+def test_inline_participant_information_is_the_pinned_v3_2_derivative_verbatim():
     row = dictionary_by_name()["participant_info_link"]
     source = builder.INLINE_PARTICIPANT_INFO_SOURCE.read_text(encoding="utf-8")
     assert row["Field Label"] == source
     assert row["Field Label"].encode("utf-8") == source.encode("utf-8")
-    assert "Version 3.1" not in source
+    assert "Version 3.2" not in source
     assert builder.REVIEW_DURATION_WORDING in source
     assert "Review reference shown at the top of that review" in source
     assert "<ol" not in source.lower()

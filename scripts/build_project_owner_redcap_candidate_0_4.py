@@ -95,7 +95,7 @@ TAG_AND_QUOTATION_AUDIT = (
 )
 INLINE_PARTICIPANT_INFO_SOURCE = (
     PACKAGE
-    / "participant_materials/project_owner_participant_information_inline_without_privacy_notice_v3.1.html"
+    / "participant_materials/project_owner_participant_information_inline_without_privacy_notice_v3.2.html"
 )
 CONSENT_STATEMENTS_SOURCE = (
     PACKAGE / "participant_materials/project_owner_consent_statements_v3.json"
@@ -705,7 +705,7 @@ PARTICIPANT_SOURCE_SIZE = 35369
 QUESTIONNAIRE_SOURCE_SHA256 = "cea613180ea2bb379f0996076d100c16fe09065098b743224e96f0d98cfa1b64"
 QUESTIONNAIRE_SOURCE_SIZE = 21038
 INLINE_PARTICIPANT_INFO_SHA256 = (
-    "d78f1880174a74c0c0ad1e8b6b51b0765bcac79003970d0622126afdd7d20348"
+    "f9137694d189aa0eec419dfadbdaf6f063b686232f8b51aeb9dfb535e8eb2007"
 )
 CONSENT_STATEMENTS_SHA256 = (
     "0fe53a1dd4d019693f64e52302d9aeb7ec7b3436b4721a67cf1cbe7f04c794e8"
@@ -784,21 +784,21 @@ def check_sources() -> None:
                 f"expected sha256={expected_hash}, size={expected_size}"
             )
     if sha256_text_lf(INLINE_PARTICIPANT_INFO_SOURCE) != INLINE_PARTICIPANT_INFO_SHA256:
-        raise RuntimeError("corrected v3.1 inline participant information changed")
+        raise RuntimeError("corrected v3.2 inline participant information changed")
     inline_participant_info = INLINE_PARTICIPANT_INFO_SOURCE.read_text(encoding="utf-8")
-    if "Version 3.1" in inline_participant_info:
-        raise RuntimeError("v3.1 inline participant information unexpectedly contains a version marker")
+    if "Version 3.2" in inline_participant_info:
+        raise RuntimeError("v3.2 inline participant information unexpectedly contains a version marker")
     if REVIEW_DURATION_WORDING not in inline_participant_info:
-        raise RuntimeError("v3.1 inline participant information lacks corrected duration wording")
+        raise RuntimeError("v3.2 inline participant information lacks corrected duration wording")
     if "Review reference shown at the top of that review" not in inline_participant_info:
-        raise RuntimeError("v3.1 inline participant information lacks corrected reference location")
+        raise RuntimeError("v3.2 inline participant information lacks corrected reference location")
     if any(
         tag in inline_participant_info.lower()
         for tag in ("<ol", "<blockquote", "<p", "<details", "<summary", "<script")
     ):
-        raise RuntimeError("v3.1 inline participant information retains prohibited HTML")
+        raise RuntimeError("v3.2 inline participant information retains prohibited HTML")
     if inline_participant_info.count("<ul>") != 2 or inline_participant_info.count("<li>") != 8:
-        raise RuntimeError("v3.1 inline participant information list structure differs")
+        raise RuntimeError("v3.2 inline participant information list structure differs")
     for heading in (
         "Participant information",
         "What is the study about?",
@@ -816,7 +816,7 @@ def check_sources() -> None:
         "Who can I contact?",
     ):
         if f"<br><div><strong>{heading}</strong></div>" not in inline_participant_info:
-            raise RuntimeError(f"v3.1 inline participant information lacks spacing before {heading}")
+            raise RuntimeError(f"v3.2 inline participant information lacks spacing before {heading}")
     if sha256_text_lf(CONSENT_STATEMENTS_SOURCE) != CONSENT_STATEMENTS_SHA256:
         raise RuntimeError("canonical consent-statements JSON changed")
     consent_statements = json.loads(CONSENT_STATEMENTS_SOURCE.read_text(encoding="utf-8"))
@@ -1170,9 +1170,9 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
     for row in field_rows:
         name = row["variable"]
         if name == "participant_info_link":
-            row["construct"] = "verbatim_inline_participant_information_v3_1"
+            row["construct"] = "verbatim_inline_participant_information_v3_2"
             row["notes"] = (
-                "Byte-identical field-label value from the pinned v3.1 inline participant-"
+                "Byte-identical field-label value from the pinned v3.2 inline participant-"
                 "information HTML derivative."
             )
         elif name == "po_llm_disclaimer":
@@ -1451,7 +1451,7 @@ def patch_formatting_audit() -> None:
     for row in rows:
         if row["variable_name"] == "participant_info_link":
             row["participant_visible_purpose"] = (
-                "Verbatim inline Participant Information v3.1 above consent confirmations"
+                "Verbatim inline Participant Information v3.2 above consent confirmations"
             )
             row["final_formatting_status"] = "pinned derivative embedded byte-for-byte"
             row["remaining_live_qa_requirement"] = (
@@ -1764,7 +1764,7 @@ def build_documentation(meta: dict[str, object]) -> None:
 
 Version: `{VERSION}`  
 Status: unfrozen development candidate; pre-recruitment; controlled PID 9149 migration and live QA pending.  
-Ethics trace: UCL Project ID 5004; corrected Participant Information v3.1 dated 18 August 2026 preserves the ethics-approved v3 source; Questionnaire v3 remains the approved reference and requires reconciliation with the live-QA changes recorded below.
+Ethics trace: UCL Project ID 5004; corrected Participant Information v3.2 dated 24 August 2026 preserves the ethics-approved v3 source; Questionnaire v3 remains the approved reference and requires reconciliation with the live-QA changes recorded below.
 
 ## Architecture and field counts
 
@@ -1798,7 +1798,7 @@ Each Project Review displays the canonical label and exact rc3 proposed-label sh
 
 ## Ethics-to-REDCap consent traceability
 
-The participant-visible sequence is: the pinned verbatim inline Participant Information v3.1 in `participant_info_link`; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The downloadable participant-information PDF remains a separate manual survey attachment.
+The participant-visible sequence is: the pinned verbatim inline Participant Information v3.2 in `participant_info_link`; `intended_recipient`; ten separately stored confirmations; final `owner_consent`; and optional `ack_pref` only after valid affirmative consent. The downloadable participant-information PDF remains a separate manual survey attachment.
 
 The canonical consent statements remain aligned with the ten confirmation fields, including restoration of the strict approved `consent_no_nonpublic` wording. Questionnaire v3 remains stale relative to the live-QA changes in form guidance, duration, visibility stems, missing-label guidance and disclaimer placement; it requires separate reconciliation and applicable ethics/change-control action before production. Its Appendix B records the complete owner-level consent-validity join. Q13, participant-facing per-project quotation permission and taxonomy-reference placeholders are absent. Controlled migration and live QA remain mandatory before recruitment.
 
@@ -1874,7 +1874,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 5. Import `project_owner_redcap_data_dictionary_candidate_0.4.csv` through the controlled REDCap dictionary process and resolve every reported change before applying it.
 6. Confirm exactly two instruments: non-repeating Owner Consent (`owner_consent`) and repeating Project Review (`project_review`).
 7. Confirm `project_review` is the only repeating instrument, custom label `[assignment_id] — [project_title]`, participant-created repeats disabled and auto-start disabled.
-8. Confirm `participant_info_link` displays the pinned v3.1 inline participant information byte-for-byte before `intended_recipient`, and configure the participant-information PDF download separately.
+8. Confirm `participant_info_link` displays the pinned v3.2 inline participant information byte-for-byte before `intended_recipient`, and configure the participant-information PDF download separately.
 9. Confirm all ten confirmation fields are owner-level, required, blank by default, not import-populated and hidden after intended-recipient No.
 9a. Confirm `consent_form_ver` is imported as `{CONSENT_FORM_VERSION}` on normal owner records and that `@DEFAULT='{CONSENT_FORM_VERSION}'` stores the same value when the field was initially blank and the owner submits either Yes or No.
 10. Confirm `consent_items_complete` uses exactly `{ALL_CONFIRMED_EXPRESSION}` and is hidden/read-only to participants.
@@ -1904,7 +1904,7 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 26. Verify consent values export only on the non-repeating owner row and are blank on every Project Review repeat row.
 27. Verify valid consent is joined onto review rows using all four conditions: intended recipient, all-confirmed, final Yes and Owner Consent complete.
 28. Verify Save & Return Later, return-to-queue, completed-response modification disabled, no automatic next survey, no redirect and no participant-created repeat.
-29. Verify desktop and mobile rendering of the full inline v3.1 participant information, ten statements, final decision, acknowledgement and repeated reviews.
+29. Verify desktop and mobile rendering of the full inline v3.2 participant information, ten statements, final decision, acknowledgement and repeated reviews.
 30. Archive post-migration screenshots, dictionary, configuration evidence, synthetic export and source/live comparison in the approved restricted evidence location.
 31. Verify `prop_t01_status` maps to `Demographic disparities / equity tag` and `prop_t02_status` maps to `COVID-19 & Pandemic` in every review and export.
 32. Verify each tag's correctness and visibility questions operate independently and each visibility explanation retains its existing Partly visible / Not visible / Unsure branch.
