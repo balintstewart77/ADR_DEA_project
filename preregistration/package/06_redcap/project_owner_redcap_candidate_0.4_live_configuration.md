@@ -74,3 +74,29 @@ Use the generated dictionary as the migration source. `project_owner_missing_dom
 52. Fail migration approval if the governing rule is absent, appears after the detailed classification judgements or is not visibly emphasised.
 
 Migration and recruitment are prohibited until controlled migration is authorised, all live tests pass, every Domain has a recorded semantic-concordance pass, residual differences are resolved or approved, and candidate 0.4 receives the required ethics/governance and repository approval.
+
+## Freeze record — PID 9149
+
+- [x] Blocking defects resolved.
+- [x] Instrument frozen as `owner-redcap-candidate-0.4`; deployed dictionary SHA-256 `51518c588d4b32393b7a2cce4a84d63c4fdc75219434d28df580f8959246bf2a`.
+- [x] Freeze date: 24 August 2026.
+- [x] Frozen data dictionary archived as the registration addendum at `DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv`.
+- [x] Instrument-change log updated through `REDCAP-037`.
+- [x] Live-QA record completed and archived in the approved restricted evidence location.
+- [x] Test records purged and verified: the purge export decompresses to zero bytes, with no header and no rows.
+- Signature: ______________________________    Date: __________________
+
+### Frozen-export reconciliation
+
+The frozen export contains 117 fields and reconciles cell-for-cell with generated source `project_owner_redcap_data_dictionary_candidate_0.4.csv` (SHA-256 `d0b03b8d98e02fe1960377512e9f5e28dd8bc1b9465b6a6df0e34d4a87774be6`) after normalising only these authorised REDCap storage transformations:
+
+1. one UTF-8 BOM prepended to the export;
+2. CSV quoting differences, normalised by parsing both files as CSV;
+3. leading whitespace in 36 `Field Annotation` cells;
+4. 62 `<br>` tags stored as line feeds in `participant_info_link`;
+5. 14 `&amp;` entities stored as literal `&` characters: two in `participant_info_link`, eleven in `po_miss_domain_reference` and one in `po_miss_tag_reference`;
+6. the first-instrument-field section header dropped once: generated `owner_id` carries `Owner Consent`, while the export is blank.
+
+No other cell differs. Item 6 was confirmed in the PID 9149 Codebook on 24 August 2026: no section header renders above `owner_id`, because the instrument name serves that purpose and REDCap does not store a section header on an instrument's first field. This supersedes the provisional 17 August attribution to an Online Designer edit.
+
+The instrument remains outside Production. Moving PID 9149 to Production and completing the signature line are manual actions.

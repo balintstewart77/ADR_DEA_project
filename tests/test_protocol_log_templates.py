@@ -26,7 +26,7 @@ INSTRUMENT_LOG_REQUIRED_COLUMNS = {
     "status",
 }
 INSTRUMENT_CHANGE_ID = re.compile(r"^REDCAP-(\d{3})$")
-NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-035"
+NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-037"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
@@ -108,7 +108,9 @@ def test_required_log_files_and_post_pilot_governance_entry():
     instruction_wording = instrument_by_id["REDCAP-032"]
     final_wording = instrument_by_id["REDCAP-033"]
     inline_spacing = instrument_by_id["REDCAP-034"]
-    intro_emphasis = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
+    intro_emphasis = instrument_by_id["REDCAP-035"]
+    v32_dates = instrument_by_id["REDCAP-036"]
+    owner_freeze = instrument_by_id[NEWEST_INSTRUMENT_CHANGE_ID]
     assert historical["change_id"] == "REDCAP-006"
     assert historical["instrument_version"] == "redcap-candidate-0.6"
     assert "all three responded" in historical["evidence_or_reason"]
@@ -268,6 +270,23 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "Research Domains and Analytical Purposes" in intro_emphasis["change_description"]
     assert "W10" in intro_emphasis["evidence_or_reason"]
     assert "Markup-only" in intro_emphasis["protocol_effect"]
+    assert "v3.2" in v32_dates["change_description"]
+    assert "Monday 5 October 2026" in v32_dates["change_description"]
+    assert "Monday 19 October 2026" in v32_dates["change_description"]
+    assert owner_freeze["instrument_version"] == "owner-redcap-candidate-0.4"
+    assert "117 fields" in owner_freeze["change_description"]
+    assert "51518c588d4b32393b7a2cce4a84d63c4fdc75219434d28df580f8959246bf2a" in (
+        owner_freeze["change_description"]
+    )
+    assert "d0b03b8d98e02fe1960377512e9f5e28dd8bc1b9465b6a6df0e34d4a87774be6" in (
+        owner_freeze["change_description"]
+    )
+    assert "six authorised REDCap storage transformations" in owner_freeze[
+        "evidence_or_reason"
+    ]
+    assert "Production transition remains a separate manual action" in owner_freeze[
+        "protocol_effect"
+    ]
 
     with (PACKAGE / "protocol_deviation_log.csv").open(
         encoding="utf-8", newline=""
