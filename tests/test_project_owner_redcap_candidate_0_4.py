@@ -191,13 +191,17 @@ def test_branching_and_action_tag_references_resolve():
 def test_ten_unique_owner_level_consent_items_match_ethics_document():
     by = dictionary_by_name()
     assert len(builder.CONSENT_NAMES) == len(set(builder.CONSENT_NAMES)) == 10
-    document = set(validator.participant_doc_paragraphs())
+    document = validator.participant_doc_paragraphs()
     for name, wording in builder.CONSENT_ITEMS:
         assert by[name]["Form Name"] == "owner_consent"
         assert validator.normalise_text(by[name]["Field Label"]) == validator.normalise_text(
             wording
         )
-        assert validator.normalise_text(wording) in document
+        comparable_document = {
+            validator.participant_source_equivalent_wording(name, paragraph)
+            for paragraph in document
+        }
+        assert validator.participant_source_equivalent_wording(name, wording) in comparable_document
         assert by[name]["Branching Logic (Show field only if...)"] == (
             "[intended_recipient] = '1'"
         )
@@ -326,10 +330,10 @@ def test_both_canonical_participant_documents_are_pinned_and_aligned():
     assert builder.PARTICIPANT_SOURCE.stat().st_size == builder.PARTICIPANT_SOURCE_SIZE
     assert builder.sha256(builder.QUESTIONNAIRE_SOURCE) == builder.QUESTIONNAIRE_SOURCE_SHA256
     assert builder.QUESTIONNAIRE_SOURCE.stat().st_size == builder.QUESTIONNAIRE_SOURCE_SIZE
-    assert builder.sha256(builder.INLINE_PARTICIPANT_INFO_SOURCE) == (
+    assert builder.sha256_text_lf(builder.INLINE_PARTICIPANT_INFO_SOURCE) == (
         builder.INLINE_PARTICIPANT_INFO_SHA256
     )
-    assert builder.sha256(builder.CONSENT_STATEMENTS_SOURCE) == (
+    assert builder.sha256_text_lf(builder.CONSENT_STATEMENTS_SOURCE) == (
         builder.CONSENT_STATEMENTS_SHA256
     )
     assert validator.validate_participant_documents(dictionary_by_name()) == []

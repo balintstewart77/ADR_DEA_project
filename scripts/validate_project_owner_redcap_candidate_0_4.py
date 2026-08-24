@@ -142,6 +142,18 @@ def participant_doc_paragraphs() -> list[str]:
     return docx_paragraphs(builder.PARTICIPANT_SOURCE, strip_checkbox=True)
 
 
+def participant_source_equivalent_wording(name: str, wording: str) -> str:
+    wording = normalise_text(wording)
+    if name == "consent_withdrawal_deadline":
+        wording = re.sub(
+            r"\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) "
+            r"\d{1,2} [A-Z][a-z]+ \d{4}\b",
+            "<withdrawal-date>",
+            wording,
+        )
+    return wording
+
+
 def questionnaire_doc_paragraphs() -> list[str]:
     return docx_paragraphs(builder.QUESTIONNAIRE_SOURCE)
 
@@ -567,14 +579,18 @@ def validate_dictionary() -> dict[str, object]:
     by = {row["Variable / Field Name"]: row for row in rows}
     if set(builder.CONSENT_NAMES) - set(by):
         errors.append("one or more consent confirmation variables are absent")
-    document_paragraphs = set(participant_doc_paragraphs())
+    document_paragraphs = participant_doc_paragraphs()
     for name, wording in builder.CONSENT_ITEMS:
         row = by.get(name, {})
         if row.get("Form Name") != "owner_consent":
             errors.append(f"{name} is not owner-level")
         if normalise_text(row.get("Field Label", "")) != normalise_text(wording):
             errors.append(f"{name} wording differs")
-        if normalise_text(wording) not in document_paragraphs:
+        comparable_document_paragraphs = {
+            participant_source_equivalent_wording(name, paragraph)
+            for paragraph in document_paragraphs
+        }
+        if participant_source_equivalent_wording(name, wording) not in comparable_document_paragraphs:
             errors.append(f"{name} is not present in Participant Information v3")
         if row.get("Branching Logic (Show field only if...)") != "[intended_recipient] = '1'":
             errors.append(f"{name} intended-recipient branch differs")

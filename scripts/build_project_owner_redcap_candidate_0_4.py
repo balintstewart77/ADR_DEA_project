@@ -134,7 +134,7 @@ CONSENT_ITEMS = (
     ),
     (
         "consent_withdrawal_deadline",
-        "I understand that I may withdraw a submitted review by emailing the study team by Friday 2 October 2026, and that after this date responses can no longer be removed.",
+        "I understand that I may withdraw a submitted review by emailing the study team by Monday 19 October 2026, and that after this date responses can no longer be removed.",
     ),
     (
         "consent_quote_process",
@@ -708,12 +708,17 @@ INLINE_PARTICIPANT_INFO_SHA256 = (
     "d78f1880174a74c0c0ad1e8b6b51b0765bcac79003970d0622126afdd7d20348"
 )
 CONSENT_STATEMENTS_SHA256 = (
-    "482f3e275de5634c58edec2d2e8faf5a806fd3d438f5385c13b3dc40f8e975b3"
+    "0fe53a1dd4d019693f64e52302d9aeb7ec7b3436b4721a67cf1cbe7f04c794e8"
 )
 
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def sha256_text_lf(path: Path) -> str:
+    payload = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def normalise_authority_text(value: str) -> str:
@@ -759,7 +764,7 @@ def operational_tag_audit() -> list[dict[str, object]]:
 
 def check_sources() -> None:
     for relative, expected in C03_HASHES.items():
-        actual = sha256(ROOT / relative)
+        actual = sha256_text_lf(ROOT / relative)
         if actual != expected:
             raise RuntimeError(
                 f"candidate-0.3 predecessor changed: {relative}: {actual}"
@@ -778,7 +783,7 @@ def check_sources() -> None:
                 f"canonical {label} source changed: sha256={actual_hash}, size={actual_size}; "
                 f"expected sha256={expected_hash}, size={expected_size}"
             )
-    if sha256(INLINE_PARTICIPANT_INFO_SOURCE) != INLINE_PARTICIPANT_INFO_SHA256:
+    if sha256_text_lf(INLINE_PARTICIPANT_INFO_SOURCE) != INLINE_PARTICIPANT_INFO_SHA256:
         raise RuntimeError("corrected v3.1 inline participant information changed")
     inline_participant_info = INLINE_PARTICIPANT_INFO_SOURCE.read_text(encoding="utf-8")
     if "Version 3.1" in inline_participant_info:
@@ -812,7 +817,7 @@ def check_sources() -> None:
     ):
         if f"<br><div><strong>{heading}</strong></div>" not in inline_participant_info:
             raise RuntimeError(f"v3.1 inline participant information lacks spacing before {heading}")
-    if sha256(CONSENT_STATEMENTS_SOURCE) != CONSENT_STATEMENTS_SHA256:
+    if sha256_text_lf(CONSENT_STATEMENTS_SOURCE) != CONSENT_STATEMENTS_SHA256:
         raise RuntimeError("canonical consent-statements JSON changed")
     consent_statements = json.loads(CONSENT_STATEMENTS_SOURCE.read_text(encoding="utf-8"))
     consent_by_field = {
@@ -854,7 +859,13 @@ def check_sources() -> None:
         if layer == RC3_LAYER_BY_OWNER_LAYER["tag"]
     ):
         raise RuntimeError("Q8b/rc3 tag order or coverage differs")
-    base.check_frozen_sources()
+    for path, expected in (
+        (base.TAXONOMY, base.TAXONOMY_SHA256),
+        (base.FROZEN_OUTPUT, base.FROZEN_OUTPUT_SHA256),
+    ):
+        actual = sha256_text_lf(path)
+        if actual != expected:
+            raise RuntimeError(f"frozen source changed: {path.relative_to(ROOT)}: {actual}")
     operational_tag_audit()
 
 

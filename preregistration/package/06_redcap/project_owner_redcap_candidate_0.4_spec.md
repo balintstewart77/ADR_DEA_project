@@ -45,7 +45,7 @@ The canonical consent statements remain aligned with the ten confirmation fields
 - `consent_voluntary` — I understand that participation is voluntary and that I may review all, some or none of the projects offered.
 - `consent_no_nonpublic` — I understand that I should not disclose confidential, sensitive or otherwise non-public information.
 - `consent_confidentiality_limits` — I understand that my information will be handled confidentially and that direct identifiers will not appear in research outputs, but complete anonymity cannot be guaranteed because the participant group is small and responses concern publicly identifiable projects.
-- `consent_withdrawal_deadline` — I understand that I may withdraw a submitted review by emailing the study team by Friday 2 October 2026, and that after this date responses can no longer be removed.
+- `consent_withdrawal_deadline` — I understand that I may withdraw a submitted review by emailing the study team by Monday 19 October 2026, and that after this date responses can no longer be removed.
 - `consent_quote_process` — I understand that if the study wishes to quote my comments, I will be sent the exact proposed wording in advance and it will only be used if I agree.
 - `consent_retention_reanalysis` — I agree that my pseudonymised research data may be retained for 10 years and used by the research team for verification and further analyses directly related to this validation study and the improvement of the classification framework and dashboard.
 - `consent_complaints` — I am aware of who I should contact if I wish to lodge a complaint.

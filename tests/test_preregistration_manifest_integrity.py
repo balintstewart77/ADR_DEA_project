@@ -96,7 +96,8 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert redcap["RED-099"]["version"] == "owner-redcap-candidate-0.4"
     assert redcap["RED-099"]["authoritative_status"] == "supporting_current_candidate"
     assert "two-tag" in redcap["RED-099"]["description"]
-    assert redcap["RED-100"]["version"] == "project-owner-invitation-v2"
+    assert redcap["RED-100"]["version"] == "project-owner-invitation-v2.1"
+    assert redcap["RED-100"]["filename"] == "project_owner_invitation_email.docx"
     assert redcap["RED-100"]["authoritative_status"] == "current_aligned_participant_material"
     assert redcap["RED-100"]["frozen"] == "false"
     assert redcap["RED-100"]["registered"] == "false"
@@ -115,12 +116,12 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     assert redcap["RED-067"]["authoritative_status"] == "superseded_ethics_review_material"
     invitation = redcap["RED-081"]
     assert invitation["version"] == ""
-    assert invitation["current_state"] == "working_candidate"
+    assert invitation["current_state"] == "historical_candidate"
     assert invitation["status_at_registration"] == "draft_template"
     assert invitation["pre_existing_or_prospective"] == "prospective"
     assert invitation["access_class"] == "public"
     assert invitation["registration_inclusion"] == "include"
-    assert invitation["authoritative_status"] == "supporting_current_candidate"
+    assert invitation["authoritative_status"] == "superseded_participant_material"
     assert invitation["frozen"] == "false"
     assert invitation["registered"] == "false"
     assert "not approved for participant use" in invitation["notes"].lower()

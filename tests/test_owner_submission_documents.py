@@ -15,6 +15,7 @@ ARCHIVED_QUESTIONNAIRE = MATERIALS / "Project_Owner_Review_Questionnaire_v2.docx
 PROTOCOL = PROTOCOL_DIR / "Validation_Protocol_PreReg_v0.17.docx"
 ARCHIVED_PROTOCOL = PROTOCOL_DIR / "Validation_Protocol_PreReg_v0.16.docx"
 INVITATION = MATERIALS / "project_owner_invitation_email_draft.docx"
+CURRENT_INVITATION = MATERIALS / "project_owner_invitation_email.docx"
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 OBSOLETE = (
@@ -295,3 +296,22 @@ def test_invitation_email_is_preserved_byte_for_byte() -> None:
     )
     invitation_text = docx_text(INVITATION).lower()
     assert not [phrase for phrase in OBSOLETE if phrase in invitation_text]
+
+    current = docx_text(CURRENT_INVITATION)
+    assert "Monday 5 October" in current
+    assert "Monday 19 October 2026" in current
+    assert not any(stale in current for stale in ("18 September", "2 October", "21 August"))
+    assert (
+        "If I haven't heard from you by Friday 4 September I'll send a brief reminder. "
+        "The reviews stay open until Monday 5 October."
+        in current
+    )
+    assert "Digital Economy Act 2017" in current
+    assert "Public Register of Accredited Projects" in current
+    assert "Each project review usually takes about 5–10 minutes." in current
+    assert (
+        "The first review may take longer while you become familiar with the classifications."
+        in current
+    )
+    assert "whether either of two cross-cutting tags has been applied" in current
+    assert "whether or two" not in current
