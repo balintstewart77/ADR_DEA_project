@@ -1,0 +1,5 @@
+population,dimension,all_three_replacement_deltas_below_zero,delta_min_ci_entirely_below_zero
+baseline,Research Domains,NO,NO
+baseline,Analytical Purposes,NO,YES
+baseline,Demographic disparities / equity,YES,YES
+baseline,COVID-19 & Pandemic,NO,NO

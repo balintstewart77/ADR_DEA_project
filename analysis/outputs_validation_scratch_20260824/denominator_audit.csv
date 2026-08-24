@@ -1,0 +1,194 @@
+analysis,population,measure,numerator,denominator,proportion,interval_method,ci_lower,ci_upper,notes
+completion_and_qa,overall,all | rows_in_raw_export,713,713,1.0,,,,export row
+completion_and_qa,overall,all | records,225,225,1.0,,,,project
+completion_and_qa,overall,all | expected_responses,675,675,1.0,,,,response
+completion_and_qa,overall,all | submitted_responses,675,675,1.0,,,,response
+completion_and_qa,overall,all | complete_responses,675,675,1.0,,,,response
+completion_and_qa,overall,all | incomplete_responses,0,675,0.0,,,,response
+completion_and_qa,overall,all | structural_invalid_responses,0,675,0.0,,,,response
+completion_and_qa,overall,all | structural_invalid_projects,0,225,0.0,,,,project
+completion_and_qa,overall,all | exposure_flagged_responses,1,675,0.0014814814814814814,,,,response
+completion_and_qa,overall,all | exposure_affected_projects,1,225,0.0044444444444444444,,,,project
+completion_and_qa,overall,all | structural_sensitivity_retained_projects,225,225,1.0,,,,project
+completion_and_qa,overall,all | exposure_sensitivity_retained_projects,224,225,0.9955555555555555,,,,project
+completion_and_qa,overall,Research Domains | complete_matched_three_coder_panels,225,225,1.0,,,,project
+completion_and_qa,overall,Analytical Purposes | complete_matched_three_coder_panels,225,225,1.0,,,,project
+completion_and_qa,overall,Demographic disparities / equity | complete_matched_three_coder_panels,225,225,1.0,,,,project
+completion_and_qa,overall,COVID-19 & Pandemic | complete_matched_three_coder_panels,225,225,1.0,,,,project
+completion_and_qa,baseline,all | records,150,150,1.0,,,,project
+completion_and_qa,baseline,all | expected_responses,450,450,1.0,,,,response
+completion_and_qa,baseline,all | submitted_responses,450,450,1.0,,,,response
+completion_and_qa,baseline,all | complete_responses,450,450,1.0,,,,response
+completion_and_qa,baseline,all | incomplete_responses,0,450,0.0,,,,response
+completion_and_qa,baseline,all | structural_invalid_responses,0,450,0.0,,,,response
+completion_and_qa,baseline,all | structural_invalid_projects,0,150,0.0,,,,project
+completion_and_qa,baseline,all | exposure_flagged_responses,1,450,0.0022222222222222222,,,,response
+completion_and_qa,baseline,all | exposure_affected_projects,1,150,0.006666666666666667,,,,project
+completion_and_qa,baseline,all | structural_sensitivity_retained_projects,150,150,1.0,,,,project
+completion_and_qa,baseline,all | exposure_sensitivity_retained_projects,149,150,0.9933333333333333,,,,project
+completion_and_qa,baseline,Research Domains | complete_matched_three_coder_panels,150,150,1.0,,,,project
+completion_and_qa,baseline,Analytical Purposes | complete_matched_three_coder_panels,150,150,1.0,,,,project
+completion_and_qa,baseline,Demographic disparities / equity | complete_matched_three_coder_panels,150,150,1.0,,,,project
+completion_and_qa,baseline,COVID-19 & Pandemic | complete_matched_three_coder_panels,150,150,1.0,,,,project
+completion_and_qa,hard_case,all | records,75,75,1.0,,,,project
+completion_and_qa,hard_case,all | expected_responses,225,225,1.0,,,,response
+completion_and_qa,hard_case,all | submitted_responses,225,225,1.0,,,,response
+completion_and_qa,hard_case,all | complete_responses,225,225,1.0,,,,response
+completion_and_qa,hard_case,all | incomplete_responses,0,225,0.0,,,,response
+completion_and_qa,hard_case,all | structural_invalid_responses,0,225,0.0,,,,response
+completion_and_qa,hard_case,all | structural_invalid_projects,0,75,0.0,,,,project
+completion_and_qa,hard_case,all | exposure_flagged_responses,0,225,0.0,,,,response
+completion_and_qa,hard_case,all | exposure_affected_projects,0,75,0.0,,,,project
+completion_and_qa,hard_case,all | structural_sensitivity_retained_projects,75,75,1.0,,,,project
+completion_and_qa,hard_case,all | exposure_sensitivity_retained_projects,75,75,1.0,,,,project
+completion_and_qa,hard_case,all | hard_case_stratum_domain_only_records,25,75,0.3333333333333333,,,,project
+completion_and_qa,hard_case,all | hard_case_stratum_purpose_only_records,25,75,0.3333333333333333,,,,project
+completion_and_qa,hard_case,all | hard_case_stratum_both_records,25,75,0.3333333333333333,,,,project
+completion_and_qa,hard_case,Research Domains | complete_matched_three_coder_panels,75,75,1.0,,,,project
+completion_and_qa,hard_case,Analytical Purposes | complete_matched_three_coder_panels,75,75,1.0,,,,project
+completion_and_qa,hard_case,Demographic disparities / equity | complete_matched_three_coder_panels,75,75,1.0,,,,project
+completion_and_qa,hard_case,COVID-19 & Pandemic | complete_matched_three_coder_panels,75,75,1.0,,,,project
+sufficiency_response_distribution,baseline,all | Sufficient,262,450,0.5822222222222222,,,,
+sufficiency_response_distribution,baseline,all | Partially sufficient,176,450,0.39111111111111113,,,,
+sufficiency_response_distribution,baseline,all | Insufficient,12,450,0.02666666666666667,,,,
+sufficiency_response_distribution,baseline,C01 | Sufficient,107,150,0.7133333333333334,,,,
+sufficiency_response_distribution,baseline,C01 | Partially sufficient,39,150,0.26,,,,
+sufficiency_response_distribution,baseline,C01 | Insufficient,4,150,0.02666666666666667,,,,
+sufficiency_response_distribution,baseline,C02 | Sufficient,96,150,0.64,,,,
+sufficiency_response_distribution,baseline,C02 | Partially sufficient,48,150,0.32,,,,
+sufficiency_response_distribution,baseline,C02 | Insufficient,6,150,0.04,,,,
+sufficiency_response_distribution,baseline,C03 | Sufficient,59,150,0.3933333333333333,,,,
+sufficiency_response_distribution,baseline,C03 | Partially sufficient,89,150,0.5933333333333334,,,,
+sufficiency_response_distribution,baseline,C03 | Insufficient,2,150,0.013333333333333334,,,,
+sufficiency_response_distribution,hard_case,all | Sufficient,123,225,0.5466666666666666,,,,
+sufficiency_response_distribution,hard_case,all | Partially sufficient,93,225,0.41333333333333333,,,,
+sufficiency_response_distribution,hard_case,all | Insufficient,9,225,0.04,,,,
+sufficiency_response_distribution,hard_case,C01 | Sufficient,54,75,0.72,,,,
+sufficiency_response_distribution,hard_case,C01 | Partially sufficient,20,75,0.26666666666666666,,,,
+sufficiency_response_distribution,hard_case,C01 | Insufficient,1,75,0.013333333333333334,,,,
+sufficiency_response_distribution,hard_case,C02 | Sufficient,45,75,0.6,,,,
+sufficiency_response_distribution,hard_case,C02 | Partially sufficient,24,75,0.32,,,,
+sufficiency_response_distribution,hard_case,C02 | Insufficient,6,75,0.08,,,,
+sufficiency_response_distribution,hard_case,C03 | Sufficient,24,75,0.32,,,,
+sufficiency_response_distribution,hard_case,C03 | Partially sufficient,49,75,0.6533333333333333,,,,
+sufficiency_response_distribution,hard_case,C03 | Insufficient,2,75,0.02666666666666667,,,,
+sufficiency_record_distribution,baseline,Sufficient,92,150,0.6133333333333333,,,,
+sufficiency_record_distribution,baseline,Partially sufficient,55,150,0.36666666666666664,,,,
+sufficiency_record_distribution,baseline,Insufficient,2,150,0.013333333333333334,,,,
+sufficiency_record_distribution,baseline,No majority / split judgement,1,150,0.006666666666666667,,,,
+sufficiency_record_distribution,hard_case,Sufficient,42,75,0.56,,,,
+sufficiency_record_distribution,hard_case,Partially sufficient,30,75,0.4,,,,
+sufficiency_record_distribution,hard_case,Insufficient,0,75,0.0,,,,
+sufficiency_record_distribution,hard_case,No majority / split judgement,3,75,0.04,,,,
+sufficiency_subset,baseline,broad_register_usable,148,150,0.9866666666666667,Wilson score 95%,0.9526930912996325,0.9963358708487731,
+sufficiency_subset,baseline,strict_register_sufficient,92,150,0.6133333333333333,Wilson score 95%,0.5334979124018292,0.6875088322080735,
+sufficiency_subset,hard_case,broad_register_usable,75,75,1.0,not applied (diagnostic sample),,,
+sufficiency_subset,hard_case,strict_register_sufficient,42,75,0.56,not applied (diagnostic sample),,,
+taxonomy_fit_response_distribution,baseline,all | Fit,328,450,0.7288888888888889,,,,
+taxonomy_fit_response_distribution,baseline,all | Partial Fit,84,450,0.18666666666666668,,,,
+taxonomy_fit_response_distribution,baseline,all | No Fit,4,450,0.008888888888888889,,,,
+taxonomy_fit_response_distribution,baseline,all | Cannot assess from register entry,34,450,0.07555555555555556,,,,
+taxonomy_fit_response_distribution,baseline,C01 | Fit,103,150,0.6866666666666666,,,,
+taxonomy_fit_response_distribution,baseline,C01 | Partial Fit,20,150,0.13333333333333333,,,,
+taxonomy_fit_response_distribution,baseline,C01 | No Fit,3,150,0.02,,,,
+taxonomy_fit_response_distribution,baseline,C01 | Cannot assess from register entry,24,150,0.16,,,,
+taxonomy_fit_response_distribution,baseline,C02 | Fit,133,150,0.8866666666666667,,,,
+taxonomy_fit_response_distribution,baseline,C02 | Partial Fit,7,150,0.04666666666666667,,,,
+taxonomy_fit_response_distribution,baseline,C02 | No Fit,1,150,0.006666666666666667,,,,
+taxonomy_fit_response_distribution,baseline,C02 | Cannot assess from register entry,9,150,0.06,,,,
+taxonomy_fit_response_distribution,baseline,C03 | Fit,92,150,0.6133333333333333,,,,
+taxonomy_fit_response_distribution,baseline,C03 | Partial Fit,57,150,0.38,,,,
+taxonomy_fit_response_distribution,baseline,C03 | No Fit,0,150,0.0,,,,
+taxonomy_fit_response_distribution,baseline,C03 | Cannot assess from register entry,1,150,0.006666666666666667,,,,
+taxonomy_fit_response_distribution,hard_case,all | Fit,150,225,0.6666666666666666,,,,
+taxonomy_fit_response_distribution,hard_case,all | Partial Fit,54,225,0.24,,,,
+taxonomy_fit_response_distribution,hard_case,all | No Fit,2,225,0.008888888888888889,,,,
+taxonomy_fit_response_distribution,hard_case,all | Cannot assess from register entry,19,225,0.08444444444444445,,,,
+taxonomy_fit_response_distribution,hard_case,C01 | Fit,47,75,0.6266666666666667,,,,
+taxonomy_fit_response_distribution,hard_case,C01 | Partial Fit,13,75,0.17333333333333334,,,,
+taxonomy_fit_response_distribution,hard_case,C01 | No Fit,1,75,0.013333333333333334,,,,
+taxonomy_fit_response_distribution,hard_case,C01 | Cannot assess from register entry,14,75,0.18666666666666668,,,,
+taxonomy_fit_response_distribution,hard_case,C02 | Fit,65,75,0.8666666666666667,,,,
+taxonomy_fit_response_distribution,hard_case,C02 | Partial Fit,6,75,0.08,,,,
+taxonomy_fit_response_distribution,hard_case,C02 | No Fit,0,75,0.0,,,,
+taxonomy_fit_response_distribution,hard_case,C02 | Cannot assess from register entry,4,75,0.05333333333333334,,,,
+taxonomy_fit_response_distribution,hard_case,C03 | Fit,38,75,0.5066666666666667,,,,
+taxonomy_fit_response_distribution,hard_case,C03 | Partial Fit,35,75,0.4666666666666667,,,,
+taxonomy_fit_response_distribution,hard_case,C03 | No Fit,1,75,0.013333333333333334,,,,
+taxonomy_fit_response_distribution,hard_case,C03 | Cannot assess from register entry,1,75,0.013333333333333334,,,,
+taxonomy_fit_record_distribution,baseline,record | Fit,119,150,0.7933333333333333,,,,
+taxonomy_fit_record_distribution,baseline,record | Partial Fit,12,150,0.08,,,,
+taxonomy_fit_record_distribution,baseline,record | No Fit,0,150,0.0,,,,
+taxonomy_fit_record_distribution,baseline,record | Cannot assess from register entry,6,150,0.04,,,,
+taxonomy_fit_record_distribution,baseline,record | No majority / split judgement,13,150,0.08666666666666667,,,,
+taxonomy_fit_record_distribution,hard_case,record | Fit,54,75,0.72,,,,
+taxonomy_fit_record_distribution,hard_case,record | Partial Fit,11,75,0.14666666666666667,,,,
+taxonomy_fit_record_distribution,hard_case,record | No Fit,0,75,0.0,,,,
+taxonomy_fit_record_distribution,hard_case,record | Cannot assess from register entry,1,75,0.013333333333333334,,,,
+taxonomy_fit_record_distribution,hard_case,record | No majority / split judgement,9,75,0.12,,,,
+taxonomy_issue,baseline,Missing or inadequately represented category,28,88,0.3181818181818182,,,,Percentages may sum to more than 100%.
+taxonomy_issue,baseline,Ambiguous or overlapping category boundaries,76,88,0.8636363636363636,,,,Percentages may sum to more than 100%.
+taxonomy_issue,baseline,Other taxonomy problem,11,88,0.125,,,,Percentages may sum to more than 100%.
+taxonomy_issue,hard_case,Missing or inadequately represented category,18,56,0.32142857142857145,,,,Percentages may sum to more than 100%.
+taxonomy_issue,hard_case,Ambiguous or overlapping category boundaries,45,56,0.8035714285714286,,,,Percentages may sum to more than 100%.
+taxonomy_issue,hard_case,Other taxonomy problem,9,56,0.16071428571428573,,,,Percentages may sum to more than 100%.
+taxonomy_unclear,baseline,Research Domains | frequency | coder_response_uses | Unclear,60,450,0.13333333333333333,,,,
+taxonomy_unclear,baseline,Research Domains | frequency | records_with_1_of_3 | Unclear,31,150,0.20666666666666667,,,,
+taxonomy_unclear,baseline,Research Domains | frequency | records_with_2_of_3 | Unclear,10,150,0.06666666666666667,,,,
+taxonomy_unclear,baseline,Research Domains | frequency | records_with_3_of_3 | Unclear,3,150,0.02,,,,
+taxonomy_unclear,baseline,Research Domains | frequency | records_with_majority_use | Unclear,13,150,0.08666666666666667,,,,
+taxonomy_unclear,baseline,Research Domains | response_crosstab_sufficiency | unclear_use | Sufficient,2,262,0.007633587786259542,,,,
+taxonomy_unclear,baseline,Research Domains | response_crosstab_sufficiency | unclear_use | Partially sufficient,48,176,0.2727272727272727,,,,
+taxonomy_unclear,baseline,Research Domains | response_crosstab_sufficiency | unclear_use | Insufficient,10,12,0.8333333333333334,,,,
+taxonomy_unclear,baseline,Research Domains | response_crosstab_confidence | unclear_use | High,18,193,0.09326424870466321,,,,
+taxonomy_unclear,baseline,Research Domains | response_crosstab_confidence | unclear_use | Medium,39,242,0.16115702479338842,,,,
+taxonomy_unclear,baseline,Research Domains | response_crosstab_confidence | unclear_use | Low,3,15,0.2,,,,
+taxonomy_unclear,baseline,Analytical Purposes | frequency | coder_response_uses | Unclear,106,450,0.23555555555555555,,,,
+taxonomy_unclear,baseline,Analytical Purposes | frequency | records_with_1_of_3 | Unclear,45,150,0.3,,,,
+taxonomy_unclear,baseline,Analytical Purposes | frequency | records_with_2_of_3 | Unclear,17,150,0.11333333333333333,,,,
+taxonomy_unclear,baseline,Analytical Purposes | frequency | records_with_3_of_3 | Unclear,9,150,0.06,,,,
+taxonomy_unclear,baseline,Analytical Purposes | frequency | records_with_majority_use | Unclear,26,150,0.17333333333333334,,,,
+taxonomy_unclear,baseline,Analytical Purposes | response_crosstab_sufficiency | unclear_use | Sufficient,2,262,0.007633587786259542,,,,
+taxonomy_unclear,baseline,Analytical Purposes | response_crosstab_sufficiency | unclear_use | Partially sufficient,94,176,0.5340909090909091,,,,
+taxonomy_unclear,baseline,Analytical Purposes | response_crosstab_sufficiency | unclear_use | Insufficient,10,12,0.8333333333333334,,,,
+taxonomy_unclear,baseline,Analytical Purposes | response_crosstab_confidence | unclear_use | High,13,193,0.06735751295336788,,,,
+taxonomy_unclear,baseline,Analytical Purposes | response_crosstab_confidence | unclear_use | Medium,87,242,0.359504132231405,,,,
+taxonomy_unclear,baseline,Analytical Purposes | response_crosstab_confidence | unclear_use | Low,6,15,0.4,,,,
+taxonomy_unclear,hard_case,Research Domains | frequency | coder_response_uses | Unclear,21,225,0.09333333333333334,,,,
+taxonomy_unclear,hard_case,Research Domains | frequency | records_with_1_of_3 | Unclear,15,75,0.2,,,,
+taxonomy_unclear,hard_case,Research Domains | frequency | records_with_2_of_3 | Unclear,3,75,0.04,,,,
+taxonomy_unclear,hard_case,Research Domains | frequency | records_with_3_of_3 | Unclear,0,75,0.0,,,,
+taxonomy_unclear,hard_case,Research Domains | frequency | records_with_majority_use | Unclear,3,75,0.04,,,,
+taxonomy_unclear,hard_case,Research Domains | response_crosstab_sufficiency | unclear_use | Sufficient,2,123,0.016260162601626018,,,,
+taxonomy_unclear,hard_case,Research Domains | response_crosstab_sufficiency | unclear_use | Partially sufficient,13,93,0.13978494623655913,,,,
+taxonomy_unclear,hard_case,Research Domains | response_crosstab_sufficiency | unclear_use | Insufficient,6,9,0.6666666666666666,,,,
+taxonomy_unclear,hard_case,Research Domains | response_crosstab_confidence | unclear_use | High,9,78,0.11538461538461539,,,,
+taxonomy_unclear,hard_case,Research Domains | response_crosstab_confidence | unclear_use | Medium,11,139,0.07913669064748201,,,,
+taxonomy_unclear,hard_case,Research Domains | response_crosstab_confidence | unclear_use | Low,1,8,0.125,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | frequency | coder_response_uses | Unclear,68,225,0.3022222222222222,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | frequency | records_with_1_of_3 | Unclear,22,75,0.29333333333333333,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | frequency | records_with_2_of_3 | Unclear,14,75,0.18666666666666668,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | frequency | records_with_3_of_3 | Unclear,6,75,0.08,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | frequency | records_with_majority_use | Unclear,20,75,0.26666666666666666,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | response_crosstab_sufficiency | unclear_use | Sufficient,3,123,0.024390243902439025,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | response_crosstab_sufficiency | unclear_use | Partially sufficient,57,93,0.6129032258064516,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | response_crosstab_sufficiency | unclear_use | Insufficient,8,9,0.8888888888888888,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | response_crosstab_confidence | unclear_use | High,10,78,0.1282051282051282,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | response_crosstab_confidence | unclear_use | Medium,55,139,0.39568345323741005,,,,
+taxonomy_unclear,hard_case,Analytical Purposes | response_crosstab_confidence | unclear_use | Low,3,8,0.375,,,,
+taxonomy_coherence,baseline,cannot_assess_by_sufficiency | Sufficient,0,34,0.0,,,,
+taxonomy_coherence,baseline,cannot_assess_by_sufficiency | Partially sufficient,24,34,0.7058823529411765,,,,
+taxonomy_coherence,baseline,cannot_assess_by_sufficiency | Insufficient,10,34,0.29411764705882354,,,,
+taxonomy_coherence,baseline,cannot_assess_by_confidence | High,2,34,0.058823529411764705,,,,
+taxonomy_coherence,baseline,cannot_assess_by_confidence | Medium,27,34,0.7941176470588235,,,,
+taxonomy_coherence,baseline,cannot_assess_by_confidence | Low,5,34,0.14705882352941177,,,,
+taxonomy_coherence,baseline,candidate_0.7_cannot_assess_coherence | validator_coherent,34,34,1.0,,,,
+taxonomy_coherence,baseline,candidate_0.7_cannot_assess_coherence | validator_incoherent,0,34,0.0,,,,
+taxonomy_coherence,hard_case,cannot_assess_by_sufficiency | Sufficient,0,19,0.0,,,,
+taxonomy_coherence,hard_case,cannot_assess_by_sufficiency | Partially sufficient,15,19,0.7894736842105263,,,,
+taxonomy_coherence,hard_case,cannot_assess_by_sufficiency | Insufficient,4,19,0.21052631578947367,,,,
+taxonomy_coherence,hard_case,cannot_assess_by_confidence | High,1,19,0.05263157894736842,,,,
+taxonomy_coherence,hard_case,cannot_assess_by_confidence | Medium,15,19,0.7894736842105263,,,,
+taxonomy_coherence,hard_case,cannot_assess_by_confidence | Low,3,19,0.15789473684210525,,,,
+taxonomy_coherence,hard_case,candidate_0.7_cannot_assess_coherence | validator_coherent,19,19,1.0,,,,
+taxonomy_coherence,hard_case,candidate_0.7_cannot_assess_coherence | validator_incoherent,0,19,0.0,,,,

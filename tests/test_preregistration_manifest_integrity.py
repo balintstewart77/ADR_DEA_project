@@ -28,8 +28,11 @@ OFFICIAL_DRAW_RESTRICTED_IDS = {
 FORMAL_ASSIGNMENT_RESTRICTED_IDS = {
     "POST-019", "POST-020", "POST-021", "POST-022",
 }
+FROZEN_ANALYSIS_INPUT_RESTRICTED_IDS = {"POST-028"}
 HASH_COMMITTED_RESTRICTED_IDS = (
-    OFFICIAL_DRAW_RESTRICTED_IDS | FORMAL_ASSIGNMENT_RESTRICTED_IDS
+    OFFICIAL_DRAW_RESTRICTED_IDS
+    | FORMAL_ASSIGNMENT_RESTRICTED_IDS
+    | FROZEN_ANALYSIS_INPUT_RESTRICTED_IDS
 )
 RELATIONSHIP_SPLIT = re.compile(r"\s*[;|]\s*")
 
@@ -238,7 +241,17 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
     assert by_id["POST-007"]["authoritative_status"] == "authoritative"
     assert by_id["POST-001"]["current_state"] == "superseded"
     assert by_id["POST-002"]["current_state"] == "superseded"
-    assert by_id["POST-003"]["current_state"] == "not_yet_generated"
+    assert by_id["POST-003"]["current_state"] == "superseded"
+    assert by_id["POST-003"]["supersedes_or_superseded_by"] == "POST-028"
+    assert by_id["POST-028"]["current_state"] == "completed"
+    assert by_id["POST-028"]["authoritative_status"] == "authoritative"
+    assert by_id["POST-028"]["current_path"] == (
+        "preregistration/post_registration/redcap_exports/"
+        "scratch_coder_export_frozen_2026-08-24.csv"
+    )
+    assert by_id["POST-028"]["sha256"] == (
+        "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+    )
     assert by_id["POST-025"]["version"] == "coder-declarations-20260728"
     assert by_id["POST-025"]["authoritative_status"] == "authoritative"
     assert by_id["POST-026"]["version"] == "coder-declarations-20260728"

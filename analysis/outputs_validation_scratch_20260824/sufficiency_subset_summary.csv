@@ -1,0 +1,5 @@
+population,subset,count,denominator,proportion,ci_method,ci_lower,ci_upper
+baseline,broad_register_usable,148,150,0.9866666666666667,Wilson score 95%,0.9526930912996325,0.9963358708487731
+baseline,strict_register_sufficient,92,150,0.6133333333333333,Wilson score 95%,0.5334979124018292,0.6875088322080735
+hard_case,broad_register_usable,75,75,1.0,not applied (diagnostic sample),,
+hard_case,strict_register_sufficient,42,75,0.56,not applied (diagnostic sample),,

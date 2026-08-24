@@ -1,0 +1,45 @@
+population,dimension,section,measure,category,count,denominator,proportion
+baseline,Research Domains,frequency,coder_response_uses,Unclear,60,450,0.13333333333333333
+baseline,Research Domains,frequency,records_with_1_of_3,Unclear,31,150,0.20666666666666667
+baseline,Research Domains,frequency,records_with_2_of_3,Unclear,10,150,0.06666666666666667
+baseline,Research Domains,frequency,records_with_3_of_3,Unclear,3,150,0.02
+baseline,Research Domains,frequency,records_with_majority_use,Unclear,13,150,0.08666666666666667
+baseline,Research Domains,response_crosstab_sufficiency,unclear_use,Sufficient,2,262,0.007633587786259542
+baseline,Research Domains,response_crosstab_sufficiency,unclear_use,Partially sufficient,48,176,0.2727272727272727
+baseline,Research Domains,response_crosstab_sufficiency,unclear_use,Insufficient,10,12,0.8333333333333334
+baseline,Research Domains,response_crosstab_confidence,unclear_use,High,18,193,0.09326424870466321
+baseline,Research Domains,response_crosstab_confidence,unclear_use,Medium,39,242,0.16115702479338842
+baseline,Research Domains,response_crosstab_confidence,unclear_use,Low,3,15,0.2
+baseline,Analytical Purposes,frequency,coder_response_uses,Unclear,106,450,0.23555555555555555
+baseline,Analytical Purposes,frequency,records_with_1_of_3,Unclear,45,150,0.3
+baseline,Analytical Purposes,frequency,records_with_2_of_3,Unclear,17,150,0.11333333333333333
+baseline,Analytical Purposes,frequency,records_with_3_of_3,Unclear,9,150,0.06
+baseline,Analytical Purposes,frequency,records_with_majority_use,Unclear,26,150,0.17333333333333334
+baseline,Analytical Purposes,response_crosstab_sufficiency,unclear_use,Sufficient,2,262,0.007633587786259542
+baseline,Analytical Purposes,response_crosstab_sufficiency,unclear_use,Partially sufficient,94,176,0.5340909090909091
+baseline,Analytical Purposes,response_crosstab_sufficiency,unclear_use,Insufficient,10,12,0.8333333333333334
+baseline,Analytical Purposes,response_crosstab_confidence,unclear_use,High,13,193,0.06735751295336788
+baseline,Analytical Purposes,response_crosstab_confidence,unclear_use,Medium,87,242,0.359504132231405
+baseline,Analytical Purposes,response_crosstab_confidence,unclear_use,Low,6,15,0.4
+hard_case,Research Domains,frequency,coder_response_uses,Unclear,21,225,0.09333333333333334
+hard_case,Research Domains,frequency,records_with_1_of_3,Unclear,15,75,0.2
+hard_case,Research Domains,frequency,records_with_2_of_3,Unclear,3,75,0.04
+hard_case,Research Domains,frequency,records_with_3_of_3,Unclear,0,75,0.0
+hard_case,Research Domains,frequency,records_with_majority_use,Unclear,3,75,0.04
+hard_case,Research Domains,response_crosstab_sufficiency,unclear_use,Sufficient,2,123,0.016260162601626018
+hard_case,Research Domains,response_crosstab_sufficiency,unclear_use,Partially sufficient,13,93,0.13978494623655913
+hard_case,Research Domains,response_crosstab_sufficiency,unclear_use,Insufficient,6,9,0.6666666666666666
+hard_case,Research Domains,response_crosstab_confidence,unclear_use,High,9,78,0.11538461538461539
+hard_case,Research Domains,response_crosstab_confidence,unclear_use,Medium,11,139,0.07913669064748201
+hard_case,Research Domains,response_crosstab_confidence,unclear_use,Low,1,8,0.125
+hard_case,Analytical Purposes,frequency,coder_response_uses,Unclear,68,225,0.3022222222222222
+hard_case,Analytical Purposes,frequency,records_with_1_of_3,Unclear,22,75,0.29333333333333333
+hard_case,Analytical Purposes,frequency,records_with_2_of_3,Unclear,14,75,0.18666666666666668
+hard_case,Analytical Purposes,frequency,records_with_3_of_3,Unclear,6,75,0.08
+hard_case,Analytical Purposes,frequency,records_with_majority_use,Unclear,20,75,0.26666666666666666
+hard_case,Analytical Purposes,response_crosstab_sufficiency,unclear_use,Sufficient,3,123,0.024390243902439025
+hard_case,Analytical Purposes,response_crosstab_sufficiency,unclear_use,Partially sufficient,57,93,0.6129032258064516
+hard_case,Analytical Purposes,response_crosstab_sufficiency,unclear_use,Insufficient,8,9,0.8888888888888888
+hard_case,Analytical Purposes,response_crosstab_confidence,unclear_use,High,10,78,0.1282051282051282
+hard_case,Analytical Purposes,response_crosstab_confidence,unclear_use,Medium,55,139,0.39568345323741005
+hard_case,Analytical Purposes,response_crosstab_confidence,unclear_use,Low,3,8,0.375

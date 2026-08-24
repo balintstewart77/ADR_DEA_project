@@ -1,0 +1,9 @@
+population,category,count,denominator,proportion
+baseline,Sufficient,92,150,0.6133333333333333
+baseline,Partially sufficient,55,150,0.36666666666666664
+baseline,Insufficient,2,150,0.013333333333333334
+baseline,No majority / split judgement,1,150,0.006666666666666667
+hard_case,Sufficient,42,75,0.56
+hard_case,Partially sufficient,30,75,0.4
+hard_case,Insufficient,0,75,0.0
+hard_case,No majority / split judgement,3,75,0.04

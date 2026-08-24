@@ -1,0 +1,822 @@
+{
+  "status": "preliminary_stage_a_aggregate_complete",
+  "replacement": {
+    "baseline": {
+      "Research Domains": {
+        "n": 150,
+        "ABC": 0.5263372741925532,
+        "LBC": 0.5833854979981307,
+        "ALC": 0.5279824870301835,
+        "ABL": 0.5735239672738957,
+        "delta_A": 0.0570482238055775,
+        "delta_B": 0.0016452128376303055,
+        "delta_C": 0.04718669308134249,
+        "delta_min": 0.0016452128376303055,
+        "delta_min_ci_lower": -0.03470582294311854,
+        "delta_min_ci_upper": 0.038533287558298546
+      },
+      "Analytical Purposes": {
+        "n": 150,
+        "ABC": 0.2921101465494055,
+        "LBC": 0.27561685370002553,
+        "ALC": 0.24944189515977,
+        "ABL": 0.35754042811994313,
+        "delta_A": -0.016493292849379948,
+        "delta_B": -0.04266825138963548,
+        "delta_C": 0.06543028157053765,
+        "delta_min": -0.04266825138963548,
+        "delta_min_ci_lower": -0.09028046253808193,
+        "delta_min_ci_upper": -0.002141124278556386
+      },
+      "Demographic disparities / equity": {
+        "n": 150,
+        "ABC": 0.5124552887072049,
+        "LBC": 0.46846749892380535,
+        "ALC": 0.43107544480228077,
+        "ABL": 0.45243902439024386,
+        "delta_A": -0.04398778978339957,
+        "delta_B": -0.08137984390492414,
+        "delta_C": -0.060016264316961054,
+        "delta_min": -0.08137984390492414,
+        "delta_min_ci_lower": -0.2020064067359965,
+        "delta_min_ci_upper": -0.006490658978949588
+      },
+      "COVID-19 & Pandemic": {
+        "n": 150,
+        "ABC": 0.9397477187332259,
+        "LBC": 0.9397477187332259,
+        "ALC": 0.9412342124206531,
+        "ABL": 0.971320899335718,
+        "delta_A": 0.0,
+        "delta_B": 0.0014864936874271484,
+        "delta_C": 0.031573180602492035,
+        "delta_min": 0.0,
+        "delta_min_ci_lower": 0.0,
+        "delta_min_ci_upper": 0.0
+      }
+    },
+    "hard_case": {
+      "Research Domains": {
+        "n": 75,
+        "ABC": 0.46228781652079254,
+        "LBC": 0.4386641380008872,
+        "ALC": 0.4429465414674122,
+        "ABL": 0.4348981730590701,
+        "delta_A": -0.023623678519905322,
+        "delta_B": -0.019341275053380347,
+        "delta_C": -0.027389643461722457,
+        "delta_min": -0.027389643461722457,
+        "delta_min_ci_lower": -0.09563393858782052,
+        "delta_min_ci_upper": 0.010487383888573898
+      },
+      "Analytical Purposes": {
+        "n": 75,
+        "ABC": 0.29174237392340174,
+        "LBC": 0.18259925261107035,
+        "ALC": 0.17791957263688996,
+        "ABL": 0.2556179923215066,
+        "delta_A": -0.10914312131233139,
+        "delta_B": -0.11382280128651179,
+        "delta_C": -0.03612438160189513,
+        "delta_min": -0.11382280128651179,
+        "delta_min_ci_lower": -0.19061601182254387,
+        "delta_min_ci_upper": -0.05948533232203007
+      },
+      "Demographic disparities / equity": {
+        "n": 75,
+        "ABC": 0.653652879783533,
+        "LBC": 0.5390946502057612,
+        "ALC": 0.5670660997294164,
+        "ABL": 0.5660783469651314,
+        "delta_A": -0.11455822957777184,
+        "delta_B": -0.08658678005411669,
+        "delta_C": -0.08757453281840166,
+        "delta_min": -0.11455822957777184,
+        "delta_min_ci_lower": -0.33012555322232656,
+        "delta_min_ci_upper": 0.0
+      },
+      "COVID-19 & Pandemic": {
+        "n": 75,
+        "ABC": 0.8099547511312217,
+        "LBC": 0.8660287081339713,
+        "ALC": 0.942769545222279,
+        "ABL": 0.8099547511312217,
+        "delta_A": 0.05607395700274953,
+        "delta_B": 0.13281479409105723,
+        "delta_C": 0.0,
+        "delta_min": 0.0,
+        "delta_min_ci_lower": 0.0,
+        "delta_min_ci_upper": 0.0
+      }
+    },
+    "baseline_broad_usable": {
+      "Research Domains": {
+        "n": 148,
+        "ABC": 0.5316242682222907,
+        "LBC": 0.590468852526179,
+        "ALC": 0.5352511079402535,
+        "ABL": 0.57993969675598,
+        "delta_A": 0.05884458430388828,
+        "delta_B": 0.0036268397179628487,
+        "delta_C": 0.04831542853368931,
+        "delta_min": 0.0036268397179628487,
+        "delta_min_ci_lower": -0.03348631261670343,
+        "delta_min_ci_upper": 0.0402644716704934
+      },
+      "Analytical Purposes": {
+        "n": 148,
+        "ABC": 0.29403296549293545,
+        "LBC": 0.27796692162413383,
+        "ALC": 0.2532909474056826,
+        "ABL": 0.3626134891110433,
+        "delta_A": -0.016066043868801616,
+        "delta_B": -0.04074201808725286,
+        "delta_C": 0.06858052361810785,
+        "delta_min": -0.04074201808725286,
+        "delta_min_ci_lower": -0.08981420139627612,
+        "delta_min_ci_upper": 0.0014852043075420688
+      },
+      "Demographic disparities / equity": {
+        "n": 148,
+        "ABC": 0.5118615504277937,
+        "LBC": 0.4676644090015294,
+        "ALC": 0.43019454418779135,
+        "ABL": 0.4517326732673267,
+        "delta_A": -0.0441971414262643,
+        "delta_B": -0.08166700624000234,
+        "delta_C": -0.060128877160467,
+        "delta_min": -0.08166700624000234,
+        "delta_min_ci_lower": -0.19862644819854344,
+        "delta_min_ci_upper": -0.005995275502565178
+      },
+      "COVID-19 & Pandemic": {
+        "n": 148,
+        "ABC": 0.9396786492374728,
+        "LBC": 0.9396786492374728,
+        "ALC": 0.9411647519755628,
+        "ABL": 0.9712859735545761,
+        "delta_A": 0.0,
+        "delta_B": 0.0014861027380900227,
+        "delta_C": 0.031607324317103336,
+        "delta_min": 0.0,
+        "delta_min_ci_lower": 0.0,
+        "delta_min_ci_upper": 0.0
+      }
+    },
+    "baseline_strict_sufficient": {
+      "Research Domains": {
+        "n": 92,
+        "ABC": 0.5663369602187813,
+        "LBC": 0.6547241324289896,
+        "ALC": 0.6080347444709928,
+        "ABL": 0.6396448464570299,
+        "delta_A": 0.08838717221020831,
+        "delta_B": 0.04169778425221149,
+        "delta_C": 0.07330788623824858,
+        "delta_min": 0.04169778425221149,
+        "delta_min_ci_lower": 0.0005992244570877603,
+        "delta_min_ci_upper": 0.07637533196699833
+      },
+      "Analytical Purposes": {
+        "n": 92,
+        "ABC": 0.28850902356657826,
+        "LBC": 0.3299339376703402,
+        "ALC": 0.30209892601258537,
+        "ABL": 0.39648866130212124,
+        "delta_A": 0.04142491410376192,
+        "delta_B": 0.013589902446007107,
+        "delta_C": 0.10797963773554298,
+        "delta_min": 0.013589902446007107,
+        "delta_min_ci_lower": -0.03496156313229823,
+        "delta_min_ci_upper": 0.058959806361075326
+      },
+      "Demographic disparities / equity": {
+        "n": 92,
+        "ABC": 0.44556451612903225,
+        "LBC": 0.43181818181818177,
+        "ALC": 0.3805572021339656,
+        "ABL": 0.38573223509702637,
+        "delta_A": -0.013746334310850483,
+        "delta_B": -0.06500731399506665,
+        "delta_C": -0.059832281032005885,
+        "delta_min": -0.06500731399506665,
+        "delta_min_ci_lower": -0.22623841596312533,
+        "delta_min_ci_upper": 0.021039898745564774
+      },
+      "COVID-19 & Pandemic": {
+        "n": 92,
+        "ABC": 0.9647797131147541,
+        "LBC": 0.9647797131147541,
+        "ALC": 0.9647797131147541,
+        "ABL": 1.0,
+        "delta_A": 0.0,
+        "delta_B": 0.0,
+        "delta_C": 0.03522028688524592,
+        "delta_min": 0.0,
+        "delta_min_ci_lower": 0.0,
+        "delta_min_ci_upper": 0.0
+      }
+    }
+  },
+  "triggers": [
+    {
+      "population": "baseline",
+      "dimension": "Research Domains",
+      "all_three_replacement_deltas_below_zero": "NO",
+      "delta_min_ci_entirely_below_zero": "NO"
+    },
+    {
+      "population": "baseline",
+      "dimension": "Analytical Purposes",
+      "all_three_replacement_deltas_below_zero": "NO",
+      "delta_min_ci_entirely_below_zero": "YES"
+    },
+    {
+      "population": "baseline",
+      "dimension": "Demographic disparities / equity",
+      "all_three_replacement_deltas_below_zero": "YES",
+      "delta_min_ci_entirely_below_zero": "YES"
+    },
+    {
+      "population": "baseline",
+      "dimension": "COVID-19 & Pandemic",
+      "all_three_replacement_deltas_below_zero": "NO",
+      "delta_min_ci_entirely_below_zero": "NO"
+    }
+  ],
+  "qa": [
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "rows_in_raw_export",
+      "count": 713,
+      "denominator": 713,
+      "proportion": 1.0,
+      "unit": "export row"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "records",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "expected_responses",
+      "count": 675,
+      "denominator": 675,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "submitted_responses",
+      "count": 675,
+      "denominator": 675,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "complete_responses",
+      "count": 675,
+      "denominator": 675,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "incomplete_responses",
+      "count": 0,
+      "denominator": 675,
+      "proportion": 0.0,
+      "unit": "response"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "structural_invalid_responses",
+      "count": 0,
+      "denominator": 675,
+      "proportion": 0.0,
+      "unit": "response"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "structural_invalid_projects",
+      "count": 0,
+      "denominator": 225,
+      "proportion": 0.0,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "exposure_flagged_responses",
+      "count": 1,
+      "denominator": 675,
+      "proportion": 0.0014814814814814814,
+      "unit": "response"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "exposure_affected_projects",
+      "count": 1,
+      "denominator": 225,
+      "proportion": 0.0044444444444444444,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "structural_sensitivity_retained_projects",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "all",
+      "measure": "exposure_sensitivity_retained_projects",
+      "count": 224,
+      "denominator": 225,
+      "proportion": 0.9955555555555555,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "Research Domains",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "Analytical Purposes",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "Demographic disparities / equity",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "overall",
+      "dimension": "COVID-19 & Pandemic",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "records",
+      "count": 150,
+      "denominator": 150,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "expected_responses",
+      "count": 450,
+      "denominator": 450,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "submitted_responses",
+      "count": 450,
+      "denominator": 450,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "complete_responses",
+      "count": 450,
+      "denominator": 450,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "incomplete_responses",
+      "count": 0,
+      "denominator": 450,
+      "proportion": 0.0,
+      "unit": "response"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "structural_invalid_responses",
+      "count": 0,
+      "denominator": 450,
+      "proportion": 0.0,
+      "unit": "response"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "structural_invalid_projects",
+      "count": 0,
+      "denominator": 150,
+      "proportion": 0.0,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "exposure_flagged_responses",
+      "count": 1,
+      "denominator": 450,
+      "proportion": 0.0022222222222222222,
+      "unit": "response"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "exposure_affected_projects",
+      "count": 1,
+      "denominator": 150,
+      "proportion": 0.006666666666666667,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "structural_sensitivity_retained_projects",
+      "count": 150,
+      "denominator": 150,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "all",
+      "measure": "exposure_sensitivity_retained_projects",
+      "count": 149,
+      "denominator": 150,
+      "proportion": 0.9933333333333333,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "Research Domains",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 150,
+      "denominator": 150,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "Analytical Purposes",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 150,
+      "denominator": 150,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "Demographic disparities / equity",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 150,
+      "denominator": 150,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "baseline",
+      "dimension": "COVID-19 & Pandemic",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 150,
+      "denominator": 150,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "records",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "expected_responses",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "submitted_responses",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "complete_responses",
+      "count": 225,
+      "denominator": 225,
+      "proportion": 1.0,
+      "unit": "response"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "incomplete_responses",
+      "count": 0,
+      "denominator": 225,
+      "proportion": 0.0,
+      "unit": "response"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "structural_invalid_responses",
+      "count": 0,
+      "denominator": 225,
+      "proportion": 0.0,
+      "unit": "response"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "structural_invalid_projects",
+      "count": 0,
+      "denominator": 75,
+      "proportion": 0.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "exposure_flagged_responses",
+      "count": 0,
+      "denominator": 225,
+      "proportion": 0.0,
+      "unit": "response"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "exposure_affected_projects",
+      "count": 0,
+      "denominator": 75,
+      "proportion": 0.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "structural_sensitivity_retained_projects",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "exposure_sensitivity_retained_projects",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "hard_case_stratum_domain_only_records",
+      "count": 25,
+      "denominator": 75,
+      "proportion": 0.3333333333333333,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "hard_case_stratum_purpose_only_records",
+      "count": 25,
+      "denominator": 75,
+      "proportion": 0.3333333333333333,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "all",
+      "measure": "hard_case_stratum_both_records",
+      "count": 25,
+      "denominator": 75,
+      "proportion": 0.3333333333333333,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "Research Domains",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "Analytical Purposes",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "Demographic disparities / equity",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "unit": "project"
+    },
+    {
+      "population": "hard_case",
+      "dimension": "COVID-19 & Pandemic",
+      "measure": "complete_matched_three_coder_panels",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "unit": "project"
+    }
+  ],
+  "sufficiency_subsets": [
+    {
+      "population": "baseline",
+      "subset": "broad_register_usable",
+      "count": 148,
+      "denominator": 150,
+      "proportion": 0.9866666666666667,
+      "ci_method": "Wilson score 95%",
+      "ci_lower": 0.9526930912996325,
+      "ci_upper": 0.9963358708487731
+    },
+    {
+      "population": "baseline",
+      "subset": "strict_register_sufficient",
+      "count": 92,
+      "denominator": 150,
+      "proportion": 0.6133333333333333,
+      "ci_method": "Wilson score 95%",
+      "ci_lower": 0.5334979124018292,
+      "ci_upper": 0.6875088322080735
+    },
+    {
+      "population": "hard_case",
+      "subset": "broad_register_usable",
+      "count": 75,
+      "denominator": 75,
+      "proportion": 1.0,
+      "ci_method": "not applied (diagnostic sample)",
+      "ci_lower": null,
+      "ci_upper": null
+    },
+    {
+      "population": "hard_case",
+      "subset": "strict_register_sufficient",
+      "count": 42,
+      "denominator": 75,
+      "proportion": 0.56,
+      "ci_method": "not applied (diagnostic sample)",
+      "ci_lower": null,
+      "ci_upper": null
+    }
+  ],
+  "taxonomy_fit_records": [
+    {
+      "population": "baseline",
+      "category": "Fit",
+      "count": 119,
+      "denominator": 150,
+      "proportion": 0.7933333333333333
+    },
+    {
+      "population": "baseline",
+      "category": "Partial Fit",
+      "count": 12,
+      "denominator": 150,
+      "proportion": 0.08
+    },
+    {
+      "population": "baseline",
+      "category": "No Fit",
+      "count": 0,
+      "denominator": 150,
+      "proportion": 0.0
+    },
+    {
+      "population": "baseline",
+      "category": "Cannot assess from register entry",
+      "count": 6,
+      "denominator": 150,
+      "proportion": 0.04
+    },
+    {
+      "population": "baseline",
+      "category": "No majority / split judgement",
+      "count": 13,
+      "denominator": 150,
+      "proportion": 0.08666666666666667
+    },
+    {
+      "population": "hard_case",
+      "category": "Fit",
+      "count": 54,
+      "denominator": 75,
+      "proportion": 0.72
+    },
+    {
+      "population": "hard_case",
+      "category": "Partial Fit",
+      "count": 11,
+      "denominator": 75,
+      "proportion": 0.14666666666666667
+    },
+    {
+      "population": "hard_case",
+      "category": "No Fit",
+      "count": 0,
+      "denominator": 75,
+      "proportion": 0.0
+    },
+    {
+      "population": "hard_case",
+      "category": "Cannot assess from register entry",
+      "count": 1,
+      "denominator": 75,
+      "proportion": 0.013333333333333334
+    },
+    {
+      "population": "hard_case",
+      "category": "No majority / split judgement",
+      "count": 9,
+      "denominator": 75,
+      "proportion": 0.12
+    }
+  ],
+  "timing": [
+    {
+      "population": "formal_panel",
+      "estimable": false,
+      "valid_n": 0,
+      "missing_n": 675,
+      "measure": "active_review_duration",
+      "reason": "A6 not defensibly estimable from the frozen REDCap timestamp fields: the export contains no formal scratch_coder_timestamp values and no review-start timestamp for the same coding review.",
+      "median": null,
+      "q1": null,
+      "q3": null,
+      "iqr": null,
+      "p10": null,
+      "p90": null,
+      "p95": null,
+      "maximum": null
+    }
+  ]
+}

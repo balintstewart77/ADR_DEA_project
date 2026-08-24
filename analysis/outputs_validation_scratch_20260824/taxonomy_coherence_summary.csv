@@ -1,0 +1,17 @@
+population,analysis,category,count,denominator,proportion
+baseline,cannot_assess_by_sufficiency,Sufficient,0,34,0.0
+baseline,cannot_assess_by_sufficiency,Partially sufficient,24,34,0.7058823529411765
+baseline,cannot_assess_by_sufficiency,Insufficient,10,34,0.29411764705882354
+baseline,cannot_assess_by_confidence,High,2,34,0.058823529411764705
+baseline,cannot_assess_by_confidence,Medium,27,34,0.7941176470588235
+baseline,cannot_assess_by_confidence,Low,5,34,0.14705882352941177
+baseline,candidate_0.7_cannot_assess_coherence,validator_coherent,34,34,1.0
+baseline,candidate_0.7_cannot_assess_coherence,validator_incoherent,0,34,0.0
+hard_case,cannot_assess_by_sufficiency,Sufficient,0,19,0.0
+hard_case,cannot_assess_by_sufficiency,Partially sufficient,15,19,0.7894736842105263
+hard_case,cannot_assess_by_sufficiency,Insufficient,4,19,0.21052631578947367
+hard_case,cannot_assess_by_confidence,High,1,19,0.05263157894736842
+hard_case,cannot_assess_by_confidence,Medium,15,19,0.7894736842105263
+hard_case,cannot_assess_by_confidence,Low,3,19,0.15789473684210525
+hard_case,candidate_0.7_cannot_assess_coherence,validator_coherent,19,19,1.0
+hard_case,candidate_0.7_cannot_assess_coherence,validator_incoherent,0,19,0.0

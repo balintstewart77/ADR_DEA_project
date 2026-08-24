@@ -1,0 +1,7 @@
+population,issue,count,applicable_denominator,proportion,note
+baseline,Missing or inadequately represented category,28,88,0.3181818181818182,Percentages may sum to more than 100%.
+baseline,Ambiguous or overlapping category boundaries,76,88,0.8636363636363636,Percentages may sum to more than 100%.
+baseline,Other taxonomy problem,11,88,0.125,Percentages may sum to more than 100%.
+hard_case,Missing or inadequately represented category,18,56,0.32142857142857145,Percentages may sum to more than 100%.
+hard_case,Ambiguous or overlapping category boundaries,45,56,0.8035714285714286,Percentages may sum to more than 100%.
+hard_case,Other taxonomy problem,9,56,0.16071428571428573,Percentages may sum to more than 100%.

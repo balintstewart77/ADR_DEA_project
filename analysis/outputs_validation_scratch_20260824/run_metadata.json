@@ -1,0 +1,216 @@
+{
+  "analysis_run_datetime": "2026-08-24T16:12:04.226112+00:00",
+  "analysis_code_commit_or_worktree_state": {
+    "head_commit": "ac183152ba192b2bc74e0e41e16ce4d699cc321c",
+    "worktree_dirty": true,
+    "changed_paths_at_run": [
+      "M preregistration/preregistration_artifact_manifest.csv",
+      " M tests/test_preregistration_manifest_integrity.py",
+      "?? analysis/scratch_coder_stage_a/__init__.py",
+      "?? analysis/scratch_coder_stage_a/__main__.py",
+      "?? analysis/scratch_coder_stage_a/agreement.py",
+      "?? analysis/scratch_coder_stage_a/api.py",
+      "?? analysis/scratch_coder_stage_a/config.py",
+      "?? analysis/scratch_coder_stage_a/load.py",
+      "?? analysis/scratch_coder_stage_a/mappings.py",
+      "?? analysis/scratch_coder_stage_a/panels.py",
+      "?? analysis/scratch_coder_stage_a/report.py",
+      "?? analysis/scratch_coder_stage_a/run_stage_a.py",
+      "?? analysis/scratch_coder_stage_a/sufficiency.py",
+      "?? analysis/scratch_coder_stage_a/taxonomy.py",
+      "?? analysis/scratch_coder_stage_a/timing.py",
+      "?? tests/test_scratch_coder_stage_a.py"
+    ]
+  },
+  "python_version": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+  "package_versions": {
+    "numpy": "2.2.5",
+    "pandas": "2.2.3",
+    "PyYAML": "6.0.2",
+    "nbformat": "5.10.4",
+    "pytest": "9.1.1",
+    "krippendorff_alpha": "repository analysis.validation.alpha",
+    "masi_distance": "repository analysis.validation.metrics"
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "raw_export_relative_path": "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+  "raw_export_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+  "raw_export_bytes": 439039,
+  "raw_export_rows": 713,
+  "raw_export_columns": 164,
+  "protocol_path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx",
+  "protocol_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+  "taxonomy_identity": {
+    "manifest_id": "MOD-001",
+    "version": "dict-1.0-rc2"
+  },
+  "instrument_identity": {
+    "manifest_id": "RED-036",
+    "version": "redcap-candidate-0.7"
+  },
+  "validator_identity": {
+    "manifest_id": "RED-013"
+  },
+  "sample_identity": {
+    "baseline": "POST-009",
+    "hard_case": "POST-011",
+    "crosswalk": "POST-019"
+  },
+  "production_model_path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+  "production_model_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+  "bootstrap_seed": 20260714,
+  "bootstrap_replicates": 2000,
+  "quantile_method": "Hyndman-Fan Type 7 / linear",
+  "verified_authorities": [
+    {
+      "role": "raw_export",
+      "manifest_id": "POST-028",
+      "path": "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "expected_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "observed_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "size_bytes": 439039,
+      "matched": true
+    },
+    {
+      "role": "protocol",
+      "manifest_id": "PRO-018",
+      "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx",
+      "expected_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "observed_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "size_bytes": 413032,
+      "matched": true
+    },
+    {
+      "role": "instrument",
+      "manifest_id": "RED-036",
+      "path": "preregistration/package/06_redcap/redcap_data_dictionary_frozen_0.7_2026-07-22.csv",
+      "expected_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "observed_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "size_bytes": 33250,
+      "matched": true
+    },
+    {
+      "role": "validator",
+      "manifest_id": "RED-013",
+      "path": "scripts/validate_redcap_candidate.py",
+      "expected_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "observed_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "size_bytes": 33635,
+      "matched": true
+    },
+    {
+      "role": "field_specification",
+      "manifest_id": "RED-005",
+      "path": "preregistration/package/06_redcap/redcap_field_response_specification.csv",
+      "expected_sha256": "bb7f55be07352f87e4704bdbfdccc37436c23d5da2db68ec2ae52b5564376e52",
+      "observed_sha256": "bb7f55be07352f87e4704bdbfdccc37436c23d5da2db68ec2ae52b5564376e52",
+      "size_bytes": 64005,
+      "matched": true
+    },
+    {
+      "role": "branching_specification",
+      "manifest_id": "RED-006",
+      "path": "preregistration/package/06_redcap/redcap_branching_validation_specification.yaml",
+      "expected_sha256": "2dbc2005f832dfa6887fda9994d917598b4f12d63ed060bba8a7ea0e27f11f9c",
+      "observed_sha256": "2dbc2005f832dfa6887fda9994d917598b4f12d63ed060bba8a7ea0e27f11f9c",
+      "size_bytes": 10133,
+      "matched": true
+    },
+    {
+      "role": "export_specification",
+      "manifest_id": "RED-007",
+      "path": "preregistration/package/06_redcap/redcap_expected_export_schema.csv",
+      "expected_sha256": "414e25368757568f9c5db9cadf830e94089123333f7e0264d835863c236e0aca",
+      "observed_sha256": "414e25368757568f9c5db9cadf830e94089123333f7e0264d835863c236e0aca",
+      "size_bytes": 25376,
+      "matched": true
+    },
+    {
+      "role": "codebook",
+      "manifest_id": "RED-003",
+      "path": "preregistration/package/06_redcap/redcap_instrument_codebook.md",
+      "expected_sha256": "e0dc33b0bcccd6983fa273b3f05bf3903bf8afd68be9242c89c0436b19525760",
+      "observed_sha256": "e0dc33b0bcccd6983fa273b3f05bf3903bf8afd68be9242c89c0436b19525760",
+      "size_bytes": 6030,
+      "matched": true
+    },
+    {
+      "role": "label_mapping",
+      "manifest_id": "RED-017",
+      "path": "preregistration/package/06_redcap/redcap_label_variable_mapping.csv",
+      "expected_sha256": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "observed_sha256": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "size_bytes": 2071,
+      "matched": true
+    },
+    {
+      "role": "formal_assignment_crosswalk",
+      "manifest_id": "POST-019",
+      "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+      "expected_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "observed_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "size_bytes": 80272,
+      "matched": true
+    },
+    {
+      "role": "formal_assignment_metadata",
+      "manifest_id": "POST-022",
+      "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_metadata.json",
+      "expected_sha256": "327107366d9c741c87cd561475befcf5921e36b3202058dac83f9c42241c09e0",
+      "observed_sha256": "327107366d9c741c87cd561475befcf5921e36b3202058dac83f9c42241c09e0",
+      "size_bytes": 3506,
+      "matched": true
+    },
+    {
+      "role": "baseline_sample",
+      "manifest_id": "POST-009",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "expected_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "observed_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "size_bytes": 18022,
+      "matched": true
+    },
+    {
+      "role": "hard_case_sample",
+      "manifest_id": "POST-011",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "expected_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "observed_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "size_bytes": 9284,
+      "matched": true
+    },
+    {
+      "role": "taxonomy_rc2",
+      "manifest_id": "MOD-001",
+      "path": "taxonomy_data_dictionary.yaml",
+      "expected_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "observed_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "size_bytes": 62863,
+      "matched": true
+    },
+    {
+      "role": "production_model",
+      "manifest_id": "MOD-006",
+      "path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+      "expected_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "observed_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "size_bytes": 1252471,
+      "matched": true
+    }
+  ],
+  "panel_design": {
+    "coders": 3,
+    "formal_records": 225,
+    "baseline": 150,
+    "hard_case": 75,
+    "responses": 675
+  },
+  "raw_export_hash_after_analysis": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+  "masking": {
+    "real_source_ids_detected": 0,
+    "real_project_titles_detected": 0,
+    "record_level_disagreement_outputs": 0,
+    "stage_b_outputs": 0
+  },
+  "raw_export_unchanged": true
+}

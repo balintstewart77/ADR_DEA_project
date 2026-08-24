@@ -1,0 +1,2 @@
+population,estimable,valid_n,missing_n,measure,reason,median,q1,q3,iqr,p10,p90,p95,maximum
+formal_panel,False,0,675,active_review_duration,A6 not defensibly estimable from the frozen REDCap timestamp fields: the export contains no formal scratch_coder_timestamp values and no review-start timestamp for the same coding review.,,,,,,,,

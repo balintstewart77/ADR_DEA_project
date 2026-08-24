@@ -1,0 +1,25 @@
+population,coder,category,count,denominator,proportion
+baseline,all,Sufficient,262,450,0.5822222222222222
+baseline,all,Partially sufficient,176,450,0.39111111111111113
+baseline,all,Insufficient,12,450,0.02666666666666667
+baseline,C01,Sufficient,107,150,0.7133333333333334
+baseline,C01,Partially sufficient,39,150,0.26
+baseline,C01,Insufficient,4,150,0.02666666666666667
+baseline,C02,Sufficient,96,150,0.64
+baseline,C02,Partially sufficient,48,150,0.32
+baseline,C02,Insufficient,6,150,0.04
+baseline,C03,Sufficient,59,150,0.3933333333333333
+baseline,C03,Partially sufficient,89,150,0.5933333333333334
+baseline,C03,Insufficient,2,150,0.013333333333333334
+hard_case,all,Sufficient,123,225,0.5466666666666666
+hard_case,all,Partially sufficient,93,225,0.41333333333333333
+hard_case,all,Insufficient,9,225,0.04
+hard_case,C01,Sufficient,54,75,0.72
+hard_case,C01,Partially sufficient,20,75,0.26666666666666666
+hard_case,C01,Insufficient,1,75,0.013333333333333334
+hard_case,C02,Sufficient,45,75,0.6
+hard_case,C02,Partially sufficient,24,75,0.32
+hard_case,C02,Insufficient,6,75,0.08
+hard_case,C03,Sufficient,24,75,0.32
+hard_case,C03,Partially sufficient,49,75,0.6533333333333333
+hard_case,C03,Insufficient,2,75,0.02666666666666667

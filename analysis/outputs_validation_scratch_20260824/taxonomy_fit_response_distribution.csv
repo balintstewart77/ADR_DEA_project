@@ -1,0 +1,33 @@
+population,coder,category,count,denominator,proportion
+baseline,all,Fit,328,450,0.7288888888888889
+baseline,all,Partial Fit,84,450,0.18666666666666668
+baseline,all,No Fit,4,450,0.008888888888888889
+baseline,all,Cannot assess from register entry,34,450,0.07555555555555556
+baseline,C01,Fit,103,150,0.6866666666666666
+baseline,C01,Partial Fit,20,150,0.13333333333333333
+baseline,C01,No Fit,3,150,0.02
+baseline,C01,Cannot assess from register entry,24,150,0.16
+baseline,C02,Fit,133,150,0.8866666666666667
+baseline,C02,Partial Fit,7,150,0.04666666666666667
+baseline,C02,No Fit,1,150,0.006666666666666667
+baseline,C02,Cannot assess from register entry,9,150,0.06
+baseline,C03,Fit,92,150,0.6133333333333333
+baseline,C03,Partial Fit,57,150,0.38
+baseline,C03,No Fit,0,150,0.0
+baseline,C03,Cannot assess from register entry,1,150,0.006666666666666667
+hard_case,all,Fit,150,225,0.6666666666666666
+hard_case,all,Partial Fit,54,225,0.24
+hard_case,all,No Fit,2,225,0.008888888888888889
+hard_case,all,Cannot assess from register entry,19,225,0.08444444444444445
+hard_case,C01,Fit,47,75,0.6266666666666667
+hard_case,C01,Partial Fit,13,75,0.17333333333333334
+hard_case,C01,No Fit,1,75,0.013333333333333334
+hard_case,C01,Cannot assess from register entry,14,75,0.18666666666666668
+hard_case,C02,Fit,65,75,0.8666666666666667
+hard_case,C02,Partial Fit,6,75,0.08
+hard_case,C02,No Fit,0,75,0.0
+hard_case,C02,Cannot assess from register entry,4,75,0.05333333333333334
+hard_case,C03,Fit,38,75,0.5066666666666667
+hard_case,C03,Partial Fit,35,75,0.4666666666666667
+hard_case,C03,No Fit,1,75,0.013333333333333334
+hard_case,C03,Cannot assess from register entry,1,75,0.013333333333333334

@@ -1,0 +1,11 @@
+population,category,count,denominator,proportion
+baseline,Fit,119,150,0.7933333333333333
+baseline,Partial Fit,12,150,0.08
+baseline,No Fit,0,150,0.0
+baseline,Cannot assess from register entry,6,150,0.04
+baseline,No majority / split judgement,13,150,0.08666666666666667
+hard_case,Fit,54,75,0.72
+hard_case,Partial Fit,11,75,0.14666666666666667
+hard_case,No Fit,0,75,0.0
+hard_case,Cannot assess from register entry,1,75,0.013333333333333334
+hard_case,No majority / split judgement,9,75,0.12

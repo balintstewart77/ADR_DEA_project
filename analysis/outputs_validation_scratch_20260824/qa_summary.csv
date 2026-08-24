@@ -1,0 +1,50 @@
+population,dimension,measure,count,denominator,proportion,unit
+overall,all,rows_in_raw_export,713,713,1.0,export row
+overall,all,records,225,225,1.0,project
+overall,all,expected_responses,675,675,1.0,response
+overall,all,submitted_responses,675,675,1.0,response
+overall,all,complete_responses,675,675,1.0,response
+overall,all,incomplete_responses,0,675,0.0,response
+overall,all,structural_invalid_responses,0,675,0.0,response
+overall,all,structural_invalid_projects,0,225,0.0,project
+overall,all,exposure_flagged_responses,1,675,0.0014814814814814814,response
+overall,all,exposure_affected_projects,1,225,0.0044444444444444444,project
+overall,all,structural_sensitivity_retained_projects,225,225,1.0,project
+overall,all,exposure_sensitivity_retained_projects,224,225,0.9955555555555555,project
+overall,Research Domains,complete_matched_three_coder_panels,225,225,1.0,project
+overall,Analytical Purposes,complete_matched_three_coder_panels,225,225,1.0,project
+overall,Demographic disparities / equity,complete_matched_three_coder_panels,225,225,1.0,project
+overall,COVID-19 & Pandemic,complete_matched_three_coder_panels,225,225,1.0,project
+baseline,all,records,150,150,1.0,project
+baseline,all,expected_responses,450,450,1.0,response
+baseline,all,submitted_responses,450,450,1.0,response
+baseline,all,complete_responses,450,450,1.0,response
+baseline,all,incomplete_responses,0,450,0.0,response
+baseline,all,structural_invalid_responses,0,450,0.0,response
+baseline,all,structural_invalid_projects,0,150,0.0,project
+baseline,all,exposure_flagged_responses,1,450,0.0022222222222222222,response
+baseline,all,exposure_affected_projects,1,150,0.006666666666666667,project
+baseline,all,structural_sensitivity_retained_projects,150,150,1.0,project
+baseline,all,exposure_sensitivity_retained_projects,149,150,0.9933333333333333,project
+baseline,Research Domains,complete_matched_three_coder_panels,150,150,1.0,project
+baseline,Analytical Purposes,complete_matched_three_coder_panels,150,150,1.0,project
+baseline,Demographic disparities / equity,complete_matched_three_coder_panels,150,150,1.0,project
+baseline,COVID-19 & Pandemic,complete_matched_three_coder_panels,150,150,1.0,project
+hard_case,all,records,75,75,1.0,project
+hard_case,all,expected_responses,225,225,1.0,response
+hard_case,all,submitted_responses,225,225,1.0,response
+hard_case,all,complete_responses,225,225,1.0,response
+hard_case,all,incomplete_responses,0,225,0.0,response
+hard_case,all,structural_invalid_responses,0,225,0.0,response
+hard_case,all,structural_invalid_projects,0,75,0.0,project
+hard_case,all,exposure_flagged_responses,0,225,0.0,response
+hard_case,all,exposure_affected_projects,0,75,0.0,project
+hard_case,all,structural_sensitivity_retained_projects,75,75,1.0,project
+hard_case,all,exposure_sensitivity_retained_projects,75,75,1.0,project
+hard_case,all,hard_case_stratum_domain_only_records,25,75,0.3333333333333333,project
+hard_case,all,hard_case_stratum_purpose_only_records,25,75,0.3333333333333333,project
+hard_case,all,hard_case_stratum_both_records,25,75,0.3333333333333333,project
+hard_case,Research Domains,complete_matched_three_coder_panels,75,75,1.0,project
+hard_case,Analytical Purposes,complete_matched_three_coder_panels,75,75,1.0,project
+hard_case,Demographic disparities / equity,complete_matched_three_coder_panels,75,75,1.0,project
+hard_case,COVID-19 & Pandemic,complete_matched_three_coder_panels,75,75,1.0,project
