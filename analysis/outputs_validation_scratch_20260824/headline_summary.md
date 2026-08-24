@@ -22,6 +22,25 @@ Mechanical review-trigger indicators:
 - Demographic disparities / equity: all three deltas below zero = YES; Δmin CI entirely below zero = YES.
 - COVID-19 & Pandemic: all three deltas below zero = NO; Δmin CI entirely below zero = NO.
 
+**COVID low-prevalence caution.** COVID-19 & Pandemic has 12 human-majority-positive and 13 model-positive records in the 150-record baseline. Under the protocol's low-support rule, its alpha and replacement deltas are descriptive and should not be interpreted as stable performance estimates.
+
+The COVID Δmin interval [0.000, 0.000] is structural, not evidence of general sampling certainty: model L and coder A give the same COVID status on every baseline record, so replacement panel LBC is identical to ABC in the point estimate and every bootstrap resample. ΔA is therefore always zero; the other two replacement deltas are non-negative in all 2,000 resamples, pinning Δmin at zero.
+
+**Equity support caution.** Demographic disparities / equity is low-support and its replacement estimate is fragile: the baseline contains 11 human-majority-positive records and 19 model-positive records.
+
+### Preregistered exposure sensitivity
+
+The exposure sensitivity excludes every baseline project with at least one exposure-flagged coder response (149 records retained).
+
+| Dimension | Primary Δmin [95% CI] | Exposure sensitivity Δmin [95% CI] |
+|---|---:|---:|
+| Research Domains | 0.0016 [-0.0347, 0.0385] | 0.0017 [-0.0350, 0.0389] |
+| Analytical Purposes | -0.0427 [-0.0903, -0.0021] | -0.0430 [-0.0903, -0.0008] |
+| Demographic disparities / equity | -0.0814 [-0.2020, -0.0065] | -0.0683 [-0.1875, 0.0031] |
+| COVID-19 & Pandemic | 0.0000 [0.0000, 0.0000] | 0.0000 [0.0000, 0.0000] |
+
+For Equity, Δmin changes from -0.0814 [-0.2020, -0.0065] to -0.0683 [-0.1875, 0.0031]; after the preregistered exposure exclusion, its interval includes zero.
+
 ## 3. Register sufficiency
 
 **Random baseline.** Sufficient: 92/150 (61.3%); Partially sufficient: 55/150 (36.7%); Insufficient: 2/150 (1.3%); No majority / split judgement: 1/150 (0.7%).

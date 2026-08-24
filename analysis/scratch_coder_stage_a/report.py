@@ -14,7 +14,7 @@ from analysis.validation.replacement import replacement_panel_analysis
 
 from .config import CODERS, DIMENSIONS, OUTPUT_DIR, ROOT
 from .mappings import field_mapping_rows
-from .panels import StageAData, dimension_panels, distance_for_dimension
+from .panels import StageAData, build_stage_a_data, dimension_panels, distance_for_dimension
 
 
 def qa_rows(data: StageAData) -> list[dict[str, object]]:
@@ -115,6 +115,23 @@ def _lookup(rows, population, dimension, key, value):
     return next(row for row in rows if row["population"] == population and row["dimension"] == dimension and row[key] == value)
 
 
+def _baseline_tag_support_counts() -> dict[str, dict[str, int]]:
+    """Return aggregate baseline support counts used only for report cautions."""
+
+    data = build_stage_a_data()
+    counts: dict[str, dict[str, int]] = {}
+    for dimension in ("Demographic disparities / equity", "COVID-19 & Pandemic"):
+        panels = dimension_panels(data, data.baseline_ids, dimension)
+        counts[dimension] = {
+            "human_majority_positive": sum(
+                int(panel.coder_a) + int(panel.coder_b) + int(panel.coder_c) >= 2
+                for panel in panels
+            ),
+            "model_positive": sum(int(panel.model) == 1 for panel in panels),
+        }
+    return counts
+
+
 def headline_results(agreement, sufficiency, taxonomy, qa, timing) -> dict[str, object]:
     replacement = {}
     for population in ("baseline", "hard_case", "baseline_broad_usable", "baseline_strict_sufficient"):
@@ -190,6 +207,7 @@ The command-line run is authoritative; notebook code imports these functions rat
 
 
 def headline_markdown(results: dict[str, object], agreement, sufficiency, taxonomy, timing) -> str:
+    tag_support = _baseline_tag_support_counts()
     lines = [
         "# Scratch-coder Stage A headline summary",
         "",
@@ -213,6 +231,34 @@ def headline_markdown(results: dict[str, object], agreement, sufficiency, taxono
     lines.extend(["", "Mechanical review-trigger indicators:", ""])
     for row in agreement["triggers"]:
         lines.append(f"- {row['dimension']}: all three deltas below zero = {row['all_three_replacement_deltas_below_zero']}; Δmin CI entirely below zero = {row['delta_min_ci_entirely_below_zero']}.")
+    covid_support = tag_support["COVID-19 & Pandemic"]
+    equity_support = tag_support["Demographic disparities / equity"]
+    lines.extend([
+        "",
+        f"**COVID low-prevalence caution.** COVID-19 & Pandemic has {covid_support['human_majority_positive']} human-majority-positive and {covid_support['model_positive']} model-positive records in the 150-record baseline. Under the protocol's low-support rule, its alpha and replacement deltas are descriptive and should not be interpreted as stable performance estimates.",
+        "",
+        "The COVID Δmin interval [0.000, 0.000] is structural, not evidence of general sampling certainty: model L and coder A give the same COVID status on every baseline record, so replacement panel LBC is identical to ABC in the point estimate and every bootstrap resample. ΔA is therefore always zero; the other two replacement deltas are non-negative in all 2,000 resamples, pinning Δmin at zero.",
+        "",
+        f"**Equity support caution.** Demographic disparities / equity is low-support and its replacement estimate is fragile: the baseline contains {equity_support['human_majority_positive']} human-majority-positive records and {equity_support['model_positive']} model-positive records.",
+        "",
+        "### Preregistered exposure sensitivity",
+        "",
+        "The exposure sensitivity excludes every baseline project with at least one exposure-flagged coder response (149 records retained).",
+        "",
+        "| Dimension | Primary Δmin [95% CI] | Exposure sensitivity Δmin [95% CI] |",
+        "|---|---:|---:|",
+    ])
+    for dimension in DIMENSIONS:
+        primary = _lookup(agreement["deltas"], "baseline", dimension, "delta", "delta_min")
+        exposure = _lookup(agreement["deltas"], "baseline_exposure_sensitivity", dimension, "delta", "delta_min")
+        fmt4 = lambda value: "NA" if value is None or pd.isna(value) else f"{float(value):.4f}"
+        primary_text = f"{fmt4(primary['point_estimate'])} [{fmt4(primary['ci_lower'])}, {fmt4(primary['ci_upper'])}]"
+        exposure_text = f"{fmt4(exposure['point_estimate'])} [{fmt4(exposure['ci_lower'])}, {fmt4(exposure['ci_upper'])}]"
+        lines.append(f"| {dimension} | {primary_text} | {exposure_text} |")
+    lines.extend([
+        "",
+        "For Equity, Δmin changes from -0.0814 [-0.2020, -0.0065] to -0.0683 [-0.1875, 0.0031]; after the preregistered exposure exclusion, its interval includes zero.",
+    ])
     lines.extend(["", "## 3. Register sufficiency", ""])
     for population in ("baseline", "hard_case"):
         label = "Random baseline" if population == "baseline" else "Hard case (diagnostic)"
@@ -248,13 +294,43 @@ def headline_markdown(results: dict[str, object], agreement, sufficiency, taxono
     return "\n".join(lines) + "\n"
 
 
+def regenerate_headline_summary(output_dir: Path = OUTPUT_DIR) -> Path:
+    """Regenerate only the human-readable headline report from frozen outputs."""
+
+    results = json.loads((output_dir / "headline_results.json").read_text(encoding="utf-8"))
+
+    def rows(name: str) -> list[dict[str, object]]:
+        return pd.read_csv(output_dir / name).to_dict("records")
+
+    agreement = {
+        "panels": rows("replacement_panel_results.csv"),
+        "deltas": rows("replacement_delta_results.csv"),
+        "triggers": rows("replacement_trigger_summary.csv"),
+    }
+    sufficiency = {
+        "records": rows("sufficiency_record_distribution.csv"),
+        "subsets": rows("sufficiency_subset_summary.csv"),
+    }
+    taxonomy = {
+        "records": rows("taxonomy_fit_record_distribution.csv"),
+        "issues": rows("taxonomy_issue_summary.csv"),
+    }
+    timing = rows("timing_summary.csv")
+    path = output_dir / "headline_summary.md"
+    path.write_text(
+        headline_markdown(results, agreement, sufficiency, taxonomy, timing),
+        encoding="utf-8",
+    )
+    return path
+
+
 def create_review_notebook(path: Path) -> None:
     nb = nbformat.v4.new_notebook()
     nb["metadata"]["kernelspec"] = {"display_name": "Python 3", "language": "python", "name": "python3"}
     nb["cells"] = [
         nbformat.v4.new_markdown_cell("# Scratch-coder Stage A aggregate review\n\nThis notebook never displays raw response rows, source IDs, projects, or disagreement cases."),
         nbformat.v4.new_markdown_cell("## 1. Frozen input"),
-        nbformat.v4.new_code_cell("from pathlib import Path\nimport json, pandas as pd, numpy as np\nfrom analysis.scratch_coder_stage_a import validate_export, derive_sufficiency_subsets, summarise_taxonomy_fit\nfrom analysis.scratch_coder_stage_a.api import build_panels, run_replacement_analysis\nROOT = Path.cwd()\nOUT = ROOT / 'analysis/outputs_validation_scratch_20260824'\nmetadata = json.loads((OUT/'run_metadata.json').read_text())\n{key: metadata[key] for key in ['raw_export_relative_path','raw_export_sha256','raw_export_rows','raw_export_columns','verified_authorities']}"),
+        nbformat.v4.new_code_cell("from pathlib import Path\nimport sys\n\nROOT = Path.cwd().resolve()\nwhile ROOT != ROOT.parent and not (ROOT / '.git').exists():\n    ROOT = ROOT.parent\nif not (ROOT / '.git').exists():\n    raise RuntimeError('Could not locate repository root from the notebook working directory')\nsys.path.insert(0, str(ROOT))\n\nimport json, pandas as pd, numpy as np\nfrom analysis.scratch_coder_stage_a import validate_export, derive_sufficiency_subsets, summarise_taxonomy_fit\nfrom analysis.scratch_coder_stage_a.api import build_panels, run_replacement_analysis\nOUT = ROOT / 'analysis/outputs_validation_scratch_20260824'\nmetadata = json.loads((OUT/'run_metadata.json').read_text())\n{key: metadata[key] for key in ['raw_export_relative_path','raw_export_sha256','raw_export_rows','raw_export_columns','verified_authorities']}"),
         nbformat.v4.new_markdown_cell("## 2. Panel QA"),
         nbformat.v4.new_code_cell("qa = pd.read_csv(OUT/'qa_summary.csv')\nqa"),
         nbformat.v4.new_markdown_cell("## 3. Field mapping"),
