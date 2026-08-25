@@ -1,0 +1,63 @@
+{
+  "authoritative_source_hashes": {
+    "analysis/validation/build_owner_sequence_8b.py": "3f17ea50923f97e9289e02f587fe8b10c36e8f299764e6a73e841e0c735aa32a",
+    "preregistration/post_registration/owner_candidate_frame_8a/owner_candidate_incidence_deidentified.csv": "5c275edb4637a2f702f732064a6a7d0cbfec586beca75a22f5e61f0fe80820e1",
+    "preregistration/post_registration/procedures/owner_contactability_procedure_v1.1.md": "7ebaf22d33bdc509fb34297fcc96761cce8a6a26893093647a8ffe3ba2d036e4",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_candidate_frame_restricted.csv": "33538966dbc3bb44d3f76affe3be339368507b969e0ee1268fe97f3dc2ec6a26",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_contactability_dispositions.csv": "ae88e6b3e815908c3718b9678cd62cba714eccba65fa0788c1ea17b0214059f8",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_identifier_metadata.json": "3266c340b89c17f475811588f746f3b00bbb04afeda1cae39d55e1ade0228f40",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_sequence_log_8b.csv": "4d7c2224a21038da8cf953db436de4bcf17d86c12fe745214ef69dbaf7c0249c"
+  },
+  "authoritative_source_paths": [
+    "preregistration/post_registration/owner_candidate_frame_8a/owner_candidate_incidence_deidentified.csv",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_candidate_frame_restricted.csv",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_contactability_dispositions.csv",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_sequence_log_8b.csv",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_identifier_metadata.json",
+    "preregistration/post_registration/procedures/owner_contactability_procedure_v1.1.md",
+    "analysis/validation/build_owner_sequence_8b.py"
+  ],
+  "candidate_count": 2353,
+  "code_path": "analysis/visualisations/owner_sampling.py",
+  "comparison_interpretation": "Both strategies use the full 2,353-candidate incidence universe and the same 1,130-project denominator, isolating selection-algorithm behaviour under an all-candidates-reachable assumption.",
+  "contactability_handling": "Ignored for both strategies; no disposition alters either sequence.",
+  "coverage_denominator": 1130,
+  "eligible_unique_project_count": 1130,
+  "expected_curve_reconciliation": {
+    "mismatching_values": 0,
+    "steps_compared_per_strategy": 25
+  },
+  "figure_data_file": "analysis/figure_data/owner_sampling_coverage_comparison.csv",
+  "figure_outputs": {
+    "coverage_comparison": [
+      "analysis/figures/owner_sampling_coverage_comparison.png",
+      "analysis/figures/owner_sampling_coverage_comparison.svg"
+    ],
+    "paired_portfolio_and_marginal_comparison": [
+      "analysis/figures/owner_sampling_portfolio_vs_marginal_comparison.png",
+      "analysis/figures/owner_sampling_portfolio_vs_marginal_comparison.svg"
+    ]
+  },
+  "figure_sequence_endpoint": {
+    "algorithmic_selections_per_strategy": 25,
+    "rule": "first 25 algorithmic candidate selections"
+  },
+  "generation_datetime": "2026-08-25T07:03:46.358840+00:00",
+  "git_HEAD": "3b5db07892a5ab197af41fd6f0fe9e257d837f3a",
+  "quantity_definitions": {
+    "cumulative_unique_projects": "Unique eligible projects covered by all algorithmic selections so far.",
+    "marginal_unique_projects": "Projects in the selected researcher's portfolio not represented by any earlier selected researcher.",
+    "owner_total_eligible_projects": "The selected researcher's full eligible portfolio, including projects already represented by earlier selected researchers."
+  },
+  "selection_step_definition": "Algorithmic candidate selection position for both strategies.",
+  "strategy_definitions": {
+    "greedy_marginal_coverage": "At every algorithmic selection, choose maximum uncovered eligible-project gain, then total eligible-project count descending, then conservative identity key ascending; recompute after every selection.",
+    "total_project_count": "Sort the full frozen candidate universe once by total eligible project count descending, then conservative identity key ascending; do not re-rank after selection."
+  },
+  "tie_break_rule_authority": [
+    "analysis/validation/build_owner_sequence_8b.py",
+    "preregistration_restricted/owner_candidate_frame_8a/owner_candidate_frame_restricted.csv",
+    "preregistration/post_registration/procedures/owner_contactability_procedure_v1.1.md"
+  ],
+  "working_tree_dirty": true
+}
