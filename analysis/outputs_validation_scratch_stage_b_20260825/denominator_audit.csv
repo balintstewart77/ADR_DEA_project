@@ -1,0 +1,139 @@
+analysis,population,dimension,label_or_tag,pair,measure,numerator,denominator,value,support_n,support_band,interval_method,bootstrap_valid_n,notes
+label_support,baseline,Research Domains,Business & Productivity,,human-majority support,41,150,0.2733333333333333,41,STANDARD,not applicable,,
+label_support,baseline,Research Domains,Crime & Justice,,human-majority support,4,150,0.02666666666666667,4,RARE,not applicable,,
+label_support,baseline,Research Domains,Data Infrastructure & Methodology,,human-majority support,0,150,0.0,0,RARE,not applicable,,
+label_support,baseline,Research Domains,Education & Skills,,human-majority support,27,150,0.18,27,LOW SUPPORT,not applicable,,
+label_support,baseline,Research Domains,Environment & Agriculture,,human-majority support,4,150,0.02666666666666667,4,RARE,not applicable,,
+label_support,baseline,Research Domains,Health & Social Care,,human-majority support,23,150,0.15333333333333332,23,LOW SUPPORT,not applicable,,
+label_support,baseline,Research Domains,Housing & Planning,,human-majority support,0,150,0.0,0,RARE,not applicable,,
+label_support,baseline,Research Domains,Labour Market & Employment,,human-majority support,39,150,0.26,39,STANDARD,not applicable,,
+label_support,baseline,Research Domains,Migration & Demographics,,human-majority support,9,150,0.06,9,RARE,not applicable,,
+label_support,baseline,Research Domains,"Poverty, Wealth & Living Standards",,human-majority support,11,150,0.07333333333333333,11,LOW SUPPORT,not applicable,,
+label_support,baseline,Research Domains,Public Finance & Taxation,,human-majority support,2,150,0.013333333333333334,2,RARE,not applicable,,
+label_support,baseline,Research Domains,Unclear from Register Entry,,human-majority support,13,150,0.08666666666666667,13,LOW SUPPORT,not applicable,,
+label_support,baseline,Analytical Purposes,Descriptive Monitoring,,human-majority support,36,150,0.24,36,STANDARD,not applicable,,
+label_support,baseline,Analytical Purposes,Life-Course / Trajectory Analysis,,human-majority support,9,150,0.06,9,RARE,not applicable,,
+label_support,baseline,Analytical Purposes,Methodological / Infrastructure Research,,human-majority support,7,150,0.04666666666666667,7,RARE,not applicable,,
+label_support,baseline,Analytical Purposes,Outcome Tracking,,human-majority support,19,150,0.12666666666666668,19,LOW SUPPORT,not applicable,,
+label_support,baseline,Analytical Purposes,Policy Evaluation / Impact Analysis,,human-majority support,30,150,0.2,30,STANDARD,not applicable,,
+label_support,baseline,Analytical Purposes,Risk Prediction / Early Identification,,human-majority support,1,150,0.006666666666666667,1,RARE,not applicable,,
+label_support,baseline,Analytical Purposes,Service Interaction / Systems Analysis,,human-majority support,1,150,0.006666666666666667,1,RARE,not applicable,,
+label_support,baseline,Analytical Purposes,Unclear from Register Entry,,human-majority support,26,150,0.17333333333333334,26,LOW SUPPORT,not applicable,,
+label_support,baseline,Cross-cutting tag,Demographic disparities / equity,,human-majority support,11,150,0.07333333333333333,11,LOW SUPPORT,not applicable,,
+label_support,baseline,Cross-cutting tag,COVID-19 & Pandemic,,human-majority support,12,150,0.08,12,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,Business & Productivity,,human prevalence,41,150,0.2733333333333333,41,STANDARD,not applicable,,
+per_label_contingency,baseline,Research Domains,Business & Productivity,,model prevalence,45,150,0.3,41,STANDARD,not applicable,,
+per_label_contingency,baseline,Research Domains,Business & Productivity,,TP/FP/FN/TN,40,150,,41,STANDARD,not applicable,,TP=40; FP=5; FN=1; TN=104
+per_label_contingency,baseline,Research Domains,Crime & Justice,,human prevalence,4,150,0.02666666666666667,4,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Crime & Justice,,model prevalence,4,150,0.02666666666666667,4,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Crime & Justice,,TP/FP/FN/TN,4,150,,4,RARE,not applicable,,TP=4; FP=0; FN=0; TN=146
+per_label_contingency,baseline,Research Domains,Data Infrastructure & Methodology,,human prevalence,0,150,0.0,0,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Data Infrastructure & Methodology,,model prevalence,4,150,0.02666666666666667,0,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Data Infrastructure & Methodology,,TP/FP/FN/TN,0,150,,0,RARE,not applicable,,TP=0; FP=4; FN=0; TN=146
+per_label_contingency,baseline,Research Domains,Education & Skills,,human prevalence,27,150,0.18,27,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,Education & Skills,,model prevalence,35,150,0.23333333333333334,27,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,Education & Skills,,TP/FP/FN/TN,26,150,,27,LOW SUPPORT,not applicable,,TP=26; FP=9; FN=1; TN=114
+per_label_contingency,baseline,Research Domains,Environment & Agriculture,,human prevalence,4,150,0.02666666666666667,4,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Environment & Agriculture,,model prevalence,10,150,0.06666666666666667,4,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Environment & Agriculture,,TP/FP/FN/TN,4,150,,4,RARE,not applicable,,TP=4; FP=6; FN=0; TN=140
+per_label_contingency,baseline,Research Domains,Health & Social Care,,human prevalence,23,150,0.15333333333333332,23,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,Health & Social Care,,model prevalence,25,150,0.16666666666666666,23,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,Health & Social Care,,TP/FP/FN/TN,22,150,,23,LOW SUPPORT,not applicable,,TP=22; FP=3; FN=1; TN=124
+per_label_contingency,baseline,Research Domains,Housing & Planning,,human prevalence,0,150,0.0,0,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Housing & Planning,,model prevalence,1,150,0.006666666666666667,0,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Housing & Planning,,TP/FP/FN/TN,0,150,,0,RARE,not applicable,,TP=0; FP=1; FN=0; TN=149
+per_label_contingency,baseline,Research Domains,Labour Market & Employment,,human prevalence,39,150,0.26,39,STANDARD,not applicable,,
+per_label_contingency,baseline,Research Domains,Labour Market & Employment,,model prevalence,56,150,0.37333333333333335,39,STANDARD,not applicable,,
+per_label_contingency,baseline,Research Domains,Labour Market & Employment,,TP/FP/FN/TN,35,150,,39,STANDARD,not applicable,,TP=35; FP=21; FN=4; TN=90
+per_label_contingency,baseline,Research Domains,Migration & Demographics,,human prevalence,9,150,0.06,9,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Migration & Demographics,,model prevalence,6,150,0.04,9,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Migration & Demographics,,TP/FP/FN/TN,4,150,,9,RARE,not applicable,,TP=4; FP=2; FN=5; TN=139
+per_label_contingency,baseline,Research Domains,"Poverty, Wealth & Living Standards",,human prevalence,11,150,0.07333333333333333,11,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,"Poverty, Wealth & Living Standards",,model prevalence,10,150,0.06666666666666667,11,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,"Poverty, Wealth & Living Standards",,TP/FP/FN/TN,6,150,,11,LOW SUPPORT,not applicable,,TP=6; FP=4; FN=5; TN=135
+per_label_contingency,baseline,Research Domains,Public Finance & Taxation,,human prevalence,2,150,0.013333333333333334,2,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Public Finance & Taxation,,model prevalence,2,150,0.013333333333333334,2,RARE,not applicable,,
+per_label_contingency,baseline,Research Domains,Public Finance & Taxation,,TP/FP/FN/TN,2,150,,2,RARE,not applicable,,TP=2; FP=0; FN=0; TN=148
+per_label_contingency,baseline,Research Domains,Unclear from Register Entry,,human prevalence,13,150,0.08666666666666667,13,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,Unclear from Register Entry,,model prevalence,1,150,0.006666666666666667,13,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Research Domains,Unclear from Register Entry,,TP/FP/FN/TN,1,150,,13,LOW SUPPORT,not applicable,,TP=1; FP=0; FN=12; TN=137
+per_label_contingency,baseline,Analytical Purposes,Descriptive Monitoring,,human prevalence,36,150,0.24,36,STANDARD,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Descriptive Monitoring,,model prevalence,52,150,0.3466666666666667,36,STANDARD,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Descriptive Monitoring,,TP/FP/FN/TN,26,150,,36,STANDARD,not applicable,,TP=26; FP=26; FN=10; TN=88
+per_label_contingency,baseline,Analytical Purposes,Life-Course / Trajectory Analysis,,human prevalence,9,150,0.06,9,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Life-Course / Trajectory Analysis,,model prevalence,11,150,0.07333333333333333,9,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Life-Course / Trajectory Analysis,,TP/FP/FN/TN,3,150,,9,RARE,not applicable,,TP=3; FP=8; FN=6; TN=133
+per_label_contingency,baseline,Analytical Purposes,Methodological / Infrastructure Research,,human prevalence,7,150,0.04666666666666667,7,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Methodological / Infrastructure Research,,model prevalence,10,150,0.06666666666666667,7,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Methodological / Infrastructure Research,,TP/FP/FN/TN,5,150,,7,RARE,not applicable,,TP=5; FP=5; FN=2; TN=138
+per_label_contingency,baseline,Analytical Purposes,Outcome Tracking,,human prevalence,19,150,0.12666666666666668,19,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Outcome Tracking,,model prevalence,47,150,0.31333333333333335,19,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Outcome Tracking,,TP/FP/FN/TN,13,150,,19,LOW SUPPORT,not applicable,,TP=13; FP=34; FN=6; TN=97
+per_label_contingency,baseline,Analytical Purposes,Policy Evaluation / Impact Analysis,,human prevalence,30,150,0.2,30,STANDARD,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Policy Evaluation / Impact Analysis,,model prevalence,33,150,0.22,30,STANDARD,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Policy Evaluation / Impact Analysis,,TP/FP/FN/TN,21,150,,30,STANDARD,not applicable,,TP=21; FP=12; FN=9; TN=108
+per_label_contingency,baseline,Analytical Purposes,Risk Prediction / Early Identification,,human prevalence,1,150,0.006666666666666667,1,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Risk Prediction / Early Identification,,model prevalence,2,150,0.013333333333333334,1,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Risk Prediction / Early Identification,,TP/FP/FN/TN,1,150,,1,RARE,not applicable,,TP=1; FP=1; FN=0; TN=148
+per_label_contingency,baseline,Analytical Purposes,Service Interaction / Systems Analysis,,human prevalence,1,150,0.006666666666666667,1,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Service Interaction / Systems Analysis,,model prevalence,4,150,0.02666666666666667,1,RARE,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Service Interaction / Systems Analysis,,TP/FP/FN/TN,1,150,,1,RARE,not applicable,,TP=1; FP=3; FN=0; TN=146
+per_label_contingency,baseline,Analytical Purposes,Unclear from Register Entry,,human prevalence,26,150,0.17333333333333334,26,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Unclear from Register Entry,,model prevalence,1,150,0.006666666666666667,26,LOW SUPPORT,not applicable,,
+per_label_contingency,baseline,Analytical Purposes,Unclear from Register Entry,,TP/FP/FN/TN,1,150,,26,LOW SUPPORT,not applicable,,TP=1; FP=0; FN=25; TN=124
+exact_set,baseline,Research Domains,,L-A,exact-set agreement,84,150,0.56,,,bootstrap percentile Type-7,2000,
+jaccard,baseline,Research Domains,,L-A,mean record-level Jaccard,,150,0.7188888888888889,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,baseline,Research Domains,,L-B,exact-set agreement,86,150,0.5733333333333334,,,bootstrap percentile Type-7,2000,
+jaccard,baseline,Research Domains,,L-B,mean record-level Jaccard,,150,0.701111111111111,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,baseline,Research Domains,,L-C,exact-set agreement,81,150,0.54,,,bootstrap percentile Type-7,2000,
+jaccard,baseline,Research Domains,,L-C,mean record-level Jaccard,,150,0.6366666666666667,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,baseline,Analytical Purposes,,L-A,exact-set agreement,52,150,0.3466666666666667,,,bootstrap percentile Type-7,2000,
+jaccard,baseline,Analytical Purposes,,L-A,mean record-level Jaccard,,150,0.44,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,baseline,Analytical Purposes,,L-B,exact-set agreement,84,150,0.56,,,bootstrap percentile Type-7,2000,
+jaccard,baseline,Analytical Purposes,,L-B,mean record-level Jaccard,,150,0.5833333333333334,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,baseline,Analytical Purposes,,L-C,exact-set agreement,44,150,0.29333333333333333,,,bootstrap percentile Type-7,2000,
+jaccard,baseline,Analytical Purposes,,L-C,mean record-level Jaccard,,150,0.31888888888888883,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,hard_case,Research Domains,,L-A,exact-set agreement,25,75,0.3333333333333333,,,bootstrap percentile Type-7,2000,
+jaccard,hard_case,Research Domains,,L-A,mean record-level Jaccard,,75,0.5833333333333334,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,hard_case,Research Domains,,L-B,exact-set agreement,30,75,0.4,,,bootstrap percentile Type-7,2000,
+jaccard,hard_case,Research Domains,,L-B,mean record-level Jaccard,,75,0.5766666666666667,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,hard_case,Research Domains,,L-C,exact-set agreement,28,75,0.37333333333333335,,,bootstrap percentile Type-7,2000,
+jaccard,hard_case,Research Domains,,L-C,mean record-level Jaccard,,75,0.5477777777777777,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,hard_case,Analytical Purposes,,L-A,exact-set agreement,16,75,0.21333333333333335,,,bootstrap percentile Type-7,2000,
+jaccard,hard_case,Analytical Purposes,,L-A,mean record-level Jaccard,,75,0.3244444444444444,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,hard_case,Analytical Purposes,,L-B,exact-set agreement,22,75,0.29333333333333333,,,bootstrap percentile Type-7,2000,
+jaccard,hard_case,Analytical Purposes,,L-B,mean record-level Jaccard,,75,0.4,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+exact_set,hard_case,Analytical Purposes,,L-C,exact-set agreement,13,75,0.17333333333333334,,,bootstrap percentile Type-7,2000,
+jaccard,hard_case,Analytical Purposes,,L-C,mean record-level Jaccard,,75,0.25333333333333335,,,bootstrap percentile Type-7,2000,Aggregate only; no record-level values saved.
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,raw_agreement,,150,0.88,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,positive_agreement,,150,0.4,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,negative_agreement,,150,0.9333333333333333,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,cohen_kappa,,150,0.3385595296423324,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,gwet_ac1,,150,0.8536585365853658,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,precision,,150,0.3157894736842105,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,recall,,150,0.5454545454545454,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,Demographic disparities / equity,,f1,,150,0.39999999999999997,11,LOW SUPPORT,bootstrap percentile Type-7,1998,TP=6; FP=13; FN=5; TN=126
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,raw_agreement,,150,0.9933333333333333,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,positive_agreement,,150,0.96,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,negative_agreement,,150,0.9963636363636363,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,cohen_kappa,,150,0.9563699825479928,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,gwet_ac1,,150,0.9921311475409835,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,precision,,150,0.9230769230769231,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,recall,,150,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,baseline,Cross-cutting tag,COVID-19 & Pandemic,,f1,,150,0.9600000000000001,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=12; FP=1; FN=0; TN=137
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,raw_agreement,,75,0.92,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,positive_agreement,,75,0.625,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,negative_agreement,,75,0.9552238805970149,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,cohen_kappa,,75,0.580223880597015,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,gwet_ac1,,75,0.9011640676477047,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,precision,,75,0.625,11,LOW SUPPORT,bootstrap percentile Type-7,1998,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,recall,,75,0.625,11,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,Demographic disparities / equity,,f1,,75,0.625,11,LOW SUPPORT,bootstrap percentile Type-7,1990,TP=5; FP=3; FN=3; TN=64
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,raw_agreement,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=0; FN=0; TN=69
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,positive_agreement,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,1998,TP=6; FP=0; FN=0; TN=69
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,negative_agreement,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=0; FN=0; TN=69
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,cohen_kappa,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,1998,TP=6; FP=0; FN=0; TN=69
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,gwet_ac1,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,2000,TP=6; FP=0; FN=0; TN=69
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,precision,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,1998,TP=6; FP=0; FN=0; TN=69
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,recall,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,1998,TP=6; FP=0; FN=0; TN=69
+tag_diagnostic,hard_case,Cross-cutting tag,COVID-19 & Pandemic,,f1,,75,1.0,12,LOW SUPPORT,bootstrap percentile Type-7,1998,TP=6; FP=0; FN=0; TN=69

@@ -1,0 +1,26 @@
+from __future__ import annotations
+import hashlib,json,subprocess,sys
+from datetime import datetime,timezone
+import types
+import numpy as np,pandas as pd,yaml,pytest
+nbformat=types.SimpleNamespace(__version__='not-installed; standard notebook JSON writer')
+from .config import ROOT,OUT,ATTEMPTS,SEED,RAW,BASE,HARD,CROSS,RAW_MOD,LF_MOD
+from .support import authorities,build_stage_b_data,sha
+from .agreement import exact_jaccard
+from .performance import support_contingencies,performance_kappa_macro
+from .tags import diagnostics
+from .report import writecsv,audit,methods,summary,notebook,scan
+def stagea_hashes():
+ d=ROOT/'analysis/outputs_validation_scratch_20260824';return {p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in d.iterdir() if p.is_file() and p.suffix in {'.csv','.json'}}
+def calculate(data=None,attempts=ATTEMPTS):
+ d=build_stage_b_data() if data is None else data;s,c,index=support_contingencies(d);tag,tagrep,tagsupport=diagnostics(d,attempts);exact,exactrep=exact_jaccard(d,attempts);perf,kap,preprep,kaprep,macro,macrorep=performance_kappa_macro(d,index,attempts);return {'data':d,'support':s+tagsupport,'cont':c,'tag':tag,'tagrep':tagrep,'exact':exact,'exactrep':exactrep,'perf':perf,'kap':kap,'preprep':preprep,'kaprep':kaprep,'macro':macro,'macrorep':macrorep}
+def main():
+ if OUT.exists():raise FileExistsError(f'Refusing to overwrite existing Stage B run: {OUT}')
+ initial=subprocess.run(['git','status','--short','--untracked-files=all'],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines();before=stagea_hashes();checks=authorities();r=calculate();OUT.mkdir(parents=True)
+ for name,key in [('label_support.csv','support'),('exact_set_jaccard_summary.csv','exact'),('per_label_contingencies.csv','cont'),('per_label_pairwise_kappa.csv','kap'),('per_label_model_performance.csv','perf'),('macro_performance.csv','macro'),('tag_diagnostics.csv','tag'),('bootstrap_exact_set_jaccard.csv','exactrep'),('bootstrap_per_label_performance.csv','preprep'),('bootstrap_per_label_kappa.csv','kaprep'),('bootstrap_macro_performance.csv','macrorep'),('bootstrap_tag_diagnostics.csv','tagrep')]:writecsv(name,r[key])
+ writecsv('denominator_audit.csv',audit(r));(OUT/'methods_stage_b.md').write_text(methods(),encoding='utf-8');(OUT/'stage_b_summary.md').write_text(summary(r),encoding='utf-8')
+ meta={'analysis_run_datetime':datetime.now(timezone.utc).isoformat(),'git_HEAD':subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,text=True,capture_output=True,check=True).stdout.strip(),'working_tree_dirty':bool(initial),'working_tree_entry_state':initial,'raw_export_path':RAW.relative_to(ROOT).as_posix(),'raw_export_sha256':sha(RAW),'baseline_active_path':BASE.relative_to(ROOT).as_posix(),'baseline_active_sha256':sha(BASE),'hard_active_path':HARD.relative_to(ROOT).as_posix(),'hard_active_sha256':sha(HARD),'formal_assignment_crosswalk_path':CROSS.relative_to(ROOT).as_posix(),'formal_assignment_crosswalk_sha256':sha(CROSS),'protocol_path':next(x.path for x in checks if x.role=='protocol'),'protocol_sha256':next(x.expected_sha256 for x in checks if x.role=='protocol'),'taxonomy_path':next(x.path for x in checks if x.role=='taxonomy_rc2'),'taxonomy_sha256':next(x.expected_sha256 for x in checks if x.role=='taxonomy_rc2'),'candidate_dictionary_path':next(x.path for x in checks if x.role=='instrument'),'candidate_dictionary_sha256':next(x.expected_sha256 for x in checks if x.role=='instrument'),'validator_path':next(x.path for x in checks if x.role=='validator'),'validator_sha256':next(x.expected_sha256 for x in checks if x.role=='validator'),'production_model_path':next(x.path for x in checks if x.role=='production_model'),'production_model':{'protected_raw_sha256':RAW_MOD,'working_tree_lf_sha256':LF_MOD,'observed_working_tree_sha256':sha(ROOT/'analysis/outputs_classified_20260702_fable5/layer_classifications.csv'),'representation':'Git working-tree LF-normalised representation of protected MOD-006'},'stage_a_reference_directory':'analysis/outputs_validation_scratch_20260824','bootstrap_seed':SEED,'bootstrap_replicates':ATTEMPTS,'bootstrap_unit':'record; linked A/B/C/L retained','quantile_method':'Hyndman–Fan Type 7 / linear','python_version':sys.version,'relevant_package_versions':{'numpy':np.__version__,'pandas':pd.__version__,'PyYAML':yaml.__version__,'nbformat':nbformat.__version__,'pytest':pytest.__version__},'analysis_code_paths':['analysis/scratch_coder_stage_b','analysis/scratch_coder_stage_a'],'output_directory':OUT.relative_to(ROOT).as_posix(),'verified_authorities':[x.__dict__ for x in checks],'stage_a_numerical_hashes_before':before}
+ (OUT/'run_metadata.json').write_text(json.dumps(meta,indent=2)+'\n',encoding='utf-8');notebook();meta['masking']=scan(r['data']);after=stagea_hashes();meta['stage_a_numerical_hashes_after']=after;meta['stage_a_numerical_output_changes']=sum(before.get(k)!=after.get(k) for k in set(before)|set(after));
+ if meta['stage_a_numerical_output_changes']:raise RuntimeError('Stage A numerical outputs changed')
+ (OUT/'run_metadata.json').write_text(json.dumps(meta,indent=2)+'\n',encoding='utf-8');print(json.dumps({'baseline':150,'hard_case':75,'output':str(OUT),'masking':meta['masking']},indent=2))
+if __name__=='__main__':main()

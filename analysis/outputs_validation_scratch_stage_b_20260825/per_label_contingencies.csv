@@ -1,0 +1,21 @@
+dimension,label,baseline_n,human_majority_positive_n,human_majority_prevalence,model_positive_n,model_prevalence,tp,fp,fn,tn,n,support_band,performance_metrics_reportable
+Research Domains,Business & Productivity,150,41,0.2733333333333333,45,0.3,40,5,1,104,150,STANDARD,True
+Research Domains,Crime & Justice,150,4,0.02666666666666667,4,0.02666666666666667,4,0,0,146,150,RARE,False
+Research Domains,Data Infrastructure & Methodology,150,0,0.0,4,0.02666666666666667,0,4,0,146,150,RARE,False
+Research Domains,Education & Skills,150,27,0.18,35,0.23333333333333334,26,9,1,114,150,LOW SUPPORT,True
+Research Domains,Environment & Agriculture,150,4,0.02666666666666667,10,0.06666666666666667,4,6,0,140,150,RARE,False
+Research Domains,Health & Social Care,150,23,0.15333333333333332,25,0.16666666666666666,22,3,1,124,150,LOW SUPPORT,True
+Research Domains,Housing & Planning,150,0,0.0,1,0.006666666666666667,0,1,0,149,150,RARE,False
+Research Domains,Labour Market & Employment,150,39,0.26,56,0.37333333333333335,35,21,4,90,150,STANDARD,True
+Research Domains,Migration & Demographics,150,9,0.06,6,0.04,4,2,5,139,150,RARE,False
+Research Domains,"Poverty, Wealth & Living Standards",150,11,0.07333333333333333,10,0.06666666666666667,6,4,5,135,150,LOW SUPPORT,True
+Research Domains,Public Finance & Taxation,150,2,0.013333333333333334,2,0.013333333333333334,2,0,0,148,150,RARE,False
+Research Domains,Unclear from Register Entry,150,13,0.08666666666666667,1,0.006666666666666667,1,0,12,137,150,LOW SUPPORT,True
+Analytical Purposes,Descriptive Monitoring,150,36,0.24,52,0.3466666666666667,26,26,10,88,150,STANDARD,True
+Analytical Purposes,Life-Course / Trajectory Analysis,150,9,0.06,11,0.07333333333333333,3,8,6,133,150,RARE,False
+Analytical Purposes,Methodological / Infrastructure Research,150,7,0.04666666666666667,10,0.06666666666666667,5,5,2,138,150,RARE,False
+Analytical Purposes,Outcome Tracking,150,19,0.12666666666666668,47,0.31333333333333335,13,34,6,97,150,LOW SUPPORT,True
+Analytical Purposes,Policy Evaluation / Impact Analysis,150,30,0.2,33,0.22,21,12,9,108,150,STANDARD,True
+Analytical Purposes,Risk Prediction / Early Identification,150,1,0.006666666666666667,2,0.013333333333333334,1,1,0,148,150,RARE,False
+Analytical Purposes,Service Interaction / Systems Analysis,150,1,0.006666666666666667,4,0.02666666666666667,1,3,0,146,150,RARE,False
+Analytical Purposes,Unclear from Register Entry,150,26,0.17333333333333334,1,0.006666666666666667,1,0,25,124,150,LOW SUPPORT,True

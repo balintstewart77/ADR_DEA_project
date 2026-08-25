@@ -1,0 +1,23 @@
+dimension,label,baseline_human_majority_positive_n,baseline_human_majority_prevalence,baseline_model_positive_n,baseline_model_prevalence,support_band,eligible_for_per_label_performance,eligible_for_macro_average,low_support_caution_required
+Research Domains,Business & Productivity,41,0.2733333333333333,45,0.3,STANDARD,True,True,False
+Research Domains,Crime & Justice,4,0.02666666666666667,4,0.02666666666666667,RARE,False,False,False
+Research Domains,Data Infrastructure & Methodology,0,0.0,4,0.02666666666666667,RARE,False,False,False
+Research Domains,Education & Skills,27,0.18,35,0.23333333333333334,LOW SUPPORT,True,True,True
+Research Domains,Environment & Agriculture,4,0.02666666666666667,10,0.06666666666666667,RARE,False,False,False
+Research Domains,Health & Social Care,23,0.15333333333333332,25,0.16666666666666666,LOW SUPPORT,True,True,True
+Research Domains,Housing & Planning,0,0.0,1,0.006666666666666667,RARE,False,False,False
+Research Domains,Labour Market & Employment,39,0.26,56,0.37333333333333335,STANDARD,True,True,False
+Research Domains,Migration & Demographics,9,0.06,6,0.04,RARE,False,False,False
+Research Domains,"Poverty, Wealth & Living Standards",11,0.07333333333333333,10,0.06666666666666667,LOW SUPPORT,True,True,True
+Research Domains,Public Finance & Taxation,2,0.013333333333333334,2,0.013333333333333334,RARE,False,False,False
+Research Domains,Unclear from Register Entry,13,0.08666666666666667,1,0.006666666666666667,LOW SUPPORT,True,True,True
+Analytical Purposes,Descriptive Monitoring,36,0.24,52,0.3466666666666667,STANDARD,True,True,False
+Analytical Purposes,Life-Course / Trajectory Analysis,9,0.06,11,0.07333333333333333,RARE,False,False,False
+Analytical Purposes,Methodological / Infrastructure Research,7,0.04666666666666667,10,0.06666666666666667,RARE,False,False,False
+Analytical Purposes,Outcome Tracking,19,0.12666666666666668,47,0.31333333333333335,LOW SUPPORT,True,True,True
+Analytical Purposes,Policy Evaluation / Impact Analysis,30,0.2,33,0.22,STANDARD,True,True,False
+Analytical Purposes,Risk Prediction / Early Identification,1,0.006666666666666667,2,0.013333333333333334,RARE,False,False,False
+Analytical Purposes,Service Interaction / Systems Analysis,1,0.006666666666666667,4,0.02666666666666667,RARE,False,False,False
+Analytical Purposes,Unclear from Register Entry,26,0.17333333333333334,1,0.006666666666666667,LOW SUPPORT,True,True,True
+Cross-cutting tag,Demographic disparities / equity,11,0.07333333333333333,19,0.12666666666666668,LOW SUPPORT,True,False,True
+Cross-cutting tag,COVID-19 & Pandemic,12,0.08,13,0.08666666666666667,LOW SUPPORT,True,False,True
