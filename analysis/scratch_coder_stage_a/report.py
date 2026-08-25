@@ -206,8 +206,30 @@ The command-line run is authoritative; notebook code imports these functions rat
 """
 
 
-def headline_markdown(results: dict[str, object], agreement, sufficiency, taxonomy, timing) -> str:
-    tag_support = _baseline_tag_support_counts()
+def _replacement_table_lines(agreement, population: str) -> list[str]:
+    """Render existing replacement CSV rows without recalculating statistics."""
+
+    fmt = lambda value: "NA" if value is None or pd.isna(value) else f"{float(value):.3f}"
+    lines = [
+        "| Dimension | N | Human α | Replace A α | Replace B α | Replace C α | ΔA | ΔB | ΔC | Δmin | 95% CI Δmin |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for dimension in DIMENSIONS:
+        panels = {panel: _lookup(agreement["panels"], population, dimension, "panel", panel) for panel in ("ABC", "LBC", "ALC", "ABL")}
+        deltas = {delta: _lookup(agreement["deltas"], population, dimension, "delta", delta) for delta in ("delta_A", "delta_B", "delta_C", "delta_min")}
+        delta_min = deltas["delta_min"]
+        lines.append(
+            f"| {dimension} | {delta_min['n_records']} | {fmt(panels['ABC']['point_estimate'])} | "
+            f"{fmt(panels['LBC']['point_estimate'])} | {fmt(panels['ALC']['point_estimate'])} | "
+            f"{fmt(panels['ABL']['point_estimate'])} | {fmt(deltas['delta_A']['point_estimate'])} | "
+            f"{fmt(deltas['delta_B']['point_estimate'])} | {fmt(deltas['delta_C']['point_estimate'])} | "
+            f"{fmt(delta_min['point_estimate'])} | [{fmt(delta_min['ci_lower'])}, {fmt(delta_min['ci_upper'])}] |"
+        )
+    return lines
+
+
+def headline_markdown(results: dict[str, object], agreement, sufficiency, taxonomy, timing, *, tag_support=None) -> str:
+    tag_support = _baseline_tag_support_counts() if tag_support is None else tag_support
     lines = [
         "# Scratch-coder Stage A headline summary",
         "",
@@ -219,15 +241,10 @@ def headline_markdown(results: dict[str, object], agreement, sufficiency, taxono
         "",
         "## 2. Headline replacement analysis",
         "",
-        "| Dimension | N | Human α | Replace A α | Replace B α | Replace C α | ΔA | ΔB | ΔC | Δmin | 95% CI Δmin |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "### Random-baseline replacement analysis",
+        "",
     ]
-    baseline = results["replacement"]["baseline"]
-    for dimension in DIMENSIONS:
-        r = baseline[dimension]
-        fmt = lambda x: "NA" if x is None else f"{x:.3f}"
-        ci = f"[{fmt(r['delta_min_ci_lower'])}, {fmt(r['delta_min_ci_upper'])}]"
-        lines.append(f"| {dimension} | {r['n']} | {fmt(r['ABC'])} | {fmt(r['LBC'])} | {fmt(r['ALC'])} | {fmt(r['ABL'])} | {fmt(r['delta_A'])} | {fmt(r['delta_B'])} | {fmt(r['delta_C'])} | {fmt(r['delta_min'])} | {ci} |")
+    lines.extend(_replacement_table_lines(agreement, "baseline"))
     lines.extend(["", "Mechanical review-trigger indicators:", ""])
     for row in agreement["triggers"]:
         lines.append(f"- {row['dimension']}: all three deltas below zero = {row['all_three_replacement_deltas_below_zero']}; Δmin CI entirely below zero = {row['delta_min_ci_entirely_below_zero']}.")
@@ -240,6 +257,16 @@ def headline_markdown(results: dict[str, object], agreement, sufficiency, taxono
         "The COVID Δmin interval [0.000, 0.000] is structural, not evidence of general sampling certainty: model L and coder A give the same COVID status on every baseline record, so replacement panel LBC is identical to ABC in the point estimate and every bootstrap resample. ΔA is therefore always zero; the other two replacement deltas are non-negative in all 2,000 resamples, pinning Δmin at zero.",
         "",
         f"**Equity support caution.** Demographic disparities / equity is low-support and its replacement estimate is fragile: the baseline contains {equity_support['human_majority_positive']} human-majority-positive records and {equity_support['model_positive']} model-positive records.",
+        "",
+        "### Hard-case replacement analysis — diagnostic",
+        "",
+        "The 75-record hard-case sample was deliberately enriched for cross-model disagreement and is non-representative. These replacement-panel results are diagnostic rather than population-level performance estimates.",
+        "",
+    ])
+    lines.extend(_replacement_table_lines(agreement, "hard_case"))
+    lines.extend([
+        "",
+        "These values describe replacement behaviour within the deliberately difficult hard-case sample. They do not activate or override the preregistered population-level review triggers, which are based on the random baseline.",
         "",
         "### Preregistered exposure sensitivity",
         "",
@@ -317,8 +344,17 @@ def regenerate_headline_summary(output_dir: Path = OUTPUT_DIR) -> Path:
     }
     timing = rows("timing_summary.csv")
     path = output_dir / "headline_summary.md"
+    previous = path.read_text(encoding="utf-8")
+    covid = re.search(r"COVID-19 & Pandemic has (\d+) human-majority-positive and (\d+) model-positive", previous)
+    equity = re.search(r"baseline contains (\d+) human-majority-positive records and (\d+) model-positive records", previous)
+    if covid is None or equity is None:
+        raise ValueError("Cannot recover existing aggregate tag-support context for report-only regeneration")
+    tag_support = {
+        "COVID-19 & Pandemic": {"human_majority_positive": int(covid.group(1)), "model_positive": int(covid.group(2))},
+        "Demographic disparities / equity": {"human_majority_positive": int(equity.group(1)), "model_positive": int(equity.group(2))},
+    }
     path.write_text(
-        headline_markdown(results, agreement, sufficiency, taxonomy, timing),
+        headline_markdown(results, agreement, sufficiency, taxonomy, timing, tag_support=tag_support),
         encoding="utf-8",
     )
     return path

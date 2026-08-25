@@ -8,6 +8,8 @@ The frozen panel reconciles to 3 coders × 225 records (675 formal responses): 1
 
 ## 2. Headline replacement analysis
 
+### Random-baseline replacement analysis
+
 | Dimension | N | Human α | Replace A α | Replace B α | Replace C α | ΔA | ΔB | ΔC | Δmin | 95% CI Δmin |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Research Domains | 150 | 0.526 | 0.583 | 0.528 | 0.574 | 0.057 | 0.002 | 0.047 | 0.002 | [-0.035, 0.039] |
@@ -27,6 +29,19 @@ Mechanical review-trigger indicators:
 The COVID Δmin interval [0.000, 0.000] is structural, not evidence of general sampling certainty: model L and coder A give the same COVID status on every baseline record, so replacement panel LBC is identical to ABC in the point estimate and every bootstrap resample. ΔA is therefore always zero; the other two replacement deltas are non-negative in all 2,000 resamples, pinning Δmin at zero.
 
 **Equity support caution.** Demographic disparities / equity is low-support and its replacement estimate is fragile: the baseline contains 11 human-majority-positive records and 19 model-positive records.
+
+### Hard-case replacement analysis — diagnostic
+
+The 75-record hard-case sample was deliberately enriched for cross-model disagreement and is non-representative. These replacement-panel results are diagnostic rather than population-level performance estimates.
+
+| Dimension | N | Human α | Replace A α | Replace B α | Replace C α | ΔA | ΔB | ΔC | Δmin | 95% CI Δmin |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Research Domains | 75 | 0.462 | 0.439 | 0.443 | 0.435 | -0.024 | -0.019 | -0.027 | -0.027 | [-0.096, 0.010] |
+| Analytical Purposes | 75 | 0.292 | 0.183 | 0.178 | 0.256 | -0.109 | -0.114 | -0.036 | -0.114 | [-0.191, -0.059] |
+| Demographic disparities / equity | 75 | 0.654 | 0.539 | 0.567 | 0.566 | -0.115 | -0.087 | -0.088 | -0.115 | [-0.330, 0.000] |
+| COVID-19 & Pandemic | 75 | 0.810 | 0.866 | 0.943 | 0.810 | 0.056 | 0.133 | 0.000 | 0.000 | [0.000, 0.000] |
+
+These values describe replacement behaviour within the deliberately difficult hard-case sample. They do not activate or override the preregistered population-level review triggers, which are based on the random baseline.
 
 ### Preregistered exposure sensitivity
 
