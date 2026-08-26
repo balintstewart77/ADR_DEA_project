@@ -1,0 +1,455 @@
+# Independent Stage B audit
+
+## Overall verdict
+
+**PASS**
+
+Every independently recomputed quantity — 20 label-support counts, 20 full contingency tables (all summing to 150), 30 per-label P/R/F1 point estimates, 60 pairwise-kappa values, 24 exact-set/Jaccard point estimates plus 18 median/Q1/Q3 values, 2 macro point-estimate triples, ~29 spot-checked bootstrap confidence intervals across every statistic family, and 32 tag-diagnostic point estimates (baseline + hard-case) — reproduced exactly (to floating-point tolerance) from an independent reimplementation.
+
+Reference/prediction orientation, the support rule, the rare/low-support reporting rule, hard-case isolation, bootstrap linkage, Type-7 percentile calculation, and masking were all independently confirmed.
+
+Two observations are recorded below; neither is a computational error.
+
+## 1. Scope and independence
+
+Examined:
+
+- all Stage B source code under `analysis/scratch_coder_stage_b/*.py`;
+- all Stage B outputs under `analysis/outputs_validation_scratch_stage_b_20260825/`;
+- relevant Stage A source/configuration;
+- the frozen protocol `Validation_Protocol_PreReg_v1.1.docx`, including §§8.1, 8.4, 8.8, 8.9, 8.10 and 10;
+- the preregistration manifest;
+- the raw restricted frozen inputs.
+
+Reused, per the audit instruction to avoid low-value REDCap-parsing risk:
+
+- Stage A's `build_stage_a_data()` panel construction;
+- `invoke_stage_b_data()`, which only monkey-patches restricted-file paths and does not alter statistical logic.
+
+Independently reimplemented from that panel, using different code from Stage B's own modules and without calling `agreement.py`, `performance.py`, `tags.py`, `bootstrap.py`, or `metrics.py` for any statistic:
+
+- majority-support aggregation;
+- TP/FP/FN/TN contingency construction;
+- precision, recall and F1;
+- Cohen's kappa from 2×2 margins;
+- Gwet's AC1 from a pooled-prevalence formulation, validated on synthetic perfect-agreement, balanced, skewed-prevalence and swap-symmetry fixtures;
+- exact-set and Jaccard aggregation;
+- Type-7 percentile confidence intervals;
+- macro unweighted-mean construction, including per-replicate undefined-value propagation.
+
+Existing Stage B and Stage A tests were run only as supplementary evidence and never as the basis for any conclusion.
+
+No repository file was created, modified, staged, committed, or pushed. All computation ran from temporary, non-repository scratch scripts, which were deleted. `git status` was unchanged from session start.
+
+## 2. Frozen authorities
+
+| Authority | Observed identity | Expected identity | Result |
+|---|---|---|---|
+| POST-028 | `2980934…0ee1d` | `2980934…0ee1d` | ✅ Match |
+| POST-009 baseline active | `0ea3cca…4a11` | Manifest authority | ✅ Match |
+| POST-011 hard active | `582f248…cfb11` | Manifest authority | ✅ Match |
+| POST-019 | `96dadda…dd666` | `96dadda…dd666` | ✅ Match, with path caveat noted below |
+| PRO-018 protocol | `fd1fa40…f2fb77` | `fd1fa40…f2fb77` | ✅ Match |
+| MOD-001 rc2 taxonomy | `7ddbf1b…e31de` | `7ddbf1b…e31de` | ✅ Match |
+| MOD-006 production model, protected/raw | `6f4ff53…e299` | `6f4ff53…e299` | ✅ Match |
+| MOD-006 Git/LF representation | `9827fc9…eeab` | `9827fc9…eeab` | ✅ Match |
+| RED-036 instrument | Matched | Manifest authority | ✅ Match |
+| RED-013 validator | Matched | Manifest authority | ✅ Match |
+
+The MOD-006 LF representation was reconfirmed as a pre-existing representation documented in the manifest notes: `.gitattributes` forces `eol=lf` on this file. This is not a Stage B artefact.
+
+All authorities verified bit-for-bit against files actually on disk. `run_metadata.json` agrees with the files Stage B actually reads.
+
+## 3. Population reconstruction
+
+| Quantity | Expected | Independently observed |
+|---|---:|---:|
+| Formal responses | 675 | 675 |
+| Formal records | 225 | 225 |
+| Baseline records | 150 | 150 |
+| Hard-case records | 75 | 75 |
+| Formal coders | 3 | 3 (`C01`, `C02`, `C03`) |
+| Hard-case strata | 25 / 25 / 25 | Domain-only 25 / Purpose-only 25 / both 25 |
+| Structurally invalid responses | 0 | 0 |
+| Exposure flags | 1 response / 1 baseline project | 1 response / 1 baseline project |
+| Fable → formal-record join | 1:1 | 1:1 |
+| Purpose majority cap | Not capped | Confirmed |
+
+Every one of the 225 formal records had exactly `{C01, C02, C03}`.
+
+For Analytical Purposes, the majority aggregation was confirmed to be cap-free. Empirically, the majority reference had a maximum of two labels per record in this dataset; that empirical maximum is consistent with the implementation but is not evidence of an imposed cap.
+
+## 4. Label support
+
+All 20 labels/tags checked. There were **0 mismatches** against `label_support.csv`.
+
+The reported support bands were reproduced exactly, including all RARE, LOW SUPPORT and STANDARD groupings for Domains, Purposes and both tags.
+
+## 5. Per-label contingencies and P/R/F1
+
+- Contingency tables checked: **20** — all 12 Domain labels and 8 Purpose labels.
+- Exact matches: **20/20**.
+- Every contingency table sums to **150**.
+- Orientation verified: **YES**.
+  - TP = model ∩ human;
+  - FP = model only;
+  - FN = human only;
+  - TN = neither.
+- P/R/F1 reproduced: **YES** for all 10 reportable labels with support ≥10.
+- Point-estimate mismatches: **0**.
+- Rare-label rule:
+  - 0 rare labels present in `per_label_model_performance.csv`;
+  - all 10 reportable labels present;
+  - rare-label descriptive contingency rows retained appropriately elsewhere.
+
+Precision and recall were not reversed. A directional sanity check using Outcome Tracking confirmed the expected direction: human N=19, model N=47, precision 0.277 < recall 0.684, as expected for a model that over-predicts.
+
+## 6. Pairwise kappa
+
+All 60 expected values were checked:
+
+- 10 eligible labels × 6 pairs (`A-B`, `A-C`, `B-C`, `L-A`, `L-B`, `L-C`).
+- Mismatches: **0**.
+- Symmetry confirmed analytically.
+- Rare labels correctly absent.
+- No macro-averaging of kappa appears anywhere in the outputs.
+
+## 7. Exact-set and Jaccard
+
+### Baseline
+
+| Dimension | Pair | Exact-set | Mean Jaccard |
+|---|---|---:|---:|
+| Domains | L-A | 0.560 | 0.719 |
+| Domains | L-B | 0.573 | 0.701 |
+| Domains | L-C | 0.540 | 0.637 |
+| Purposes | L-A | 0.347 | 0.440 |
+| Purposes | L-B | 0.560 | 0.583 |
+| Purposes | L-C | 0.293 | 0.319 |
+
+All six baseline exact-set and Jaccard values were independently reproduced exactly.
+
+All reported baseline median, Q1 and Q3 Jaccard summaries were also reproduced exactly.
+
+Hard-case point estimates, treated as diagnostic only, were also reproduced exactly.
+
+## 8. Analytical Purposes L–B investigation
+
+The elevated L–B Purpose agreement is **genuine and not a mapping or aliasing bug**.
+
+### Anti-aliasing checks
+
+- L and B were confirmed as genuinely distinct sources.
+- Full Purpose sets were exactly equal for only **84/150 records = 0.560**, meaning they disagreed on 44% of records.
+- There was no evidence that coder B values were substituted for the model or vice versa.
+
+### Aggregate mechanism
+
+Coder B is markedly the most conservative Purpose labeller:
+
+- B mean set size: **1.007**;
+- B single-labelled: **149/150** records.
+
+The model is also relatively conservative:
+
+- model mean set size: **1.067**;
+- model single-labelled: **140/150** records.
+
+Coder A is more liberal, multi-labelling **32/150** records, and over-uses `Unclear from Register Entry` relative to the model.
+
+Because exact-set agreement requires whole-set equality, two conservative predominantly single-label sources coincide more often than a conservative model paired with a more liberal or systematically divergent coder.
+
+This is not simply because coder B agrees with everyone:
+
+- A-B human-human agreement: **0.407**;
+- B-C: **0.367**;
+- the human-human Purpose pair agreements are below L-B = **0.560**.
+
+Per-label raw agreement was higher for L-B on only a subset of Purpose labels, indicating that the effect reflects both overall labelling parsimony and a contribution from a handful of higher-support labels.
+
+For Domains there was no analogous coder-B cardinality effect; coder/model set-size means were much closer and L-A/L-B/L-C exact-set agreement was correspondingly similar.
+
+### Verdict
+
+Predominantly:
+
+- **A. genuine coder/model similarity in labelling parsimony**, with
+- **B. contribution from a handful of higher-support labels**.
+
+A computational or mapping bug was ruled out.
+
+## 9. Macro metrics and bootstrap validity
+
+Eligible-label sets were independently reconstructed and matched exactly.
+
+### Eligible Domain labels: 6
+
+- Business & Productivity
+- Education & Skills
+- Health & Social Care
+- Labour Market & Employment
+- Poverty, Wealth & Living Standards
+- Unclear from Register Entry
+
+### Eligible Purpose labels: 4
+
+- Descriptive Monitoring
+- Outcome Tracking
+- Policy Evaluation / Impact Analysis
+- Unclear from Register Entry
+
+### Macro point estimates
+
+| Dimension | Precision | Recall | F1 |
+|---|---:|---:|---:|
+| Domains | 0.789 | 0.736 | 0.689 |
+| Purposes | 0.603 | 0.536 | 0.431 |
+
+All point estimates reproduced exactly.
+
+### Macro bootstrap validity
+
+| Dimension | Metric | Valid | Invalid | ≥1800? | Reported CI |
+|---|---|---:|---:|---|---|
+| Domains | Precision | 1284 | 716 | No | CI NOT ESTIMABLE |
+| Domains | Recall | 2000 | 0 | Yes | [0.678, 0.799] |
+| Domains | F1 | 1278 | 722 | No | CI NOT ESTIMABLE |
+| Purposes | Precision | 1233 | 767 | No | CI NOT ESTIMABLE |
+| Purposes | Recall | 2000 | 0 | Yes | [0.453, 0.607] |
+| Purposes | F1 | 1233 | 767 | No | CI NOT ESTIMABLE |
+
+The root cause was independently isolated.
+
+`Unclear from Register Entry` has a model-positive count of exactly one in both dimensions (`TP=1`, `FP=0`). Precision for that label becomes undefined whenever a bootstrap resample omits that single record.
+
+The theoretical probability that a fixed record is absent from a 150-record bootstrap sample is:
+
+\[
+(149/150)^{150} \approx 0.3665
+\]
+
+or about 733 of 2,000 replicates, closely matching the observed invalid-replicate counts.
+
+For Domains, a small additional number of F1 invalidations arise from `Poverty, Wealth & Living Standards`, where an all-zero precision/recall combination creates a genuine undefined F1 case under the implemented convention.
+
+No other labels materially drive the undefined macro replicates.
+
+### Protocol classification
+
+The rule:
+
+> any eligible label undefined ⇒ whole macro replicate undefined
+
+is a **reasonable, transparent, protocol-silent implementation choice**, not a protocol violation.
+
+§8.9 specifies exclusion of a single undefined alpha or binary statistic within a bootstrap replicate, but does not explicitly state how a composite macro statistic should behave when one constituent per-label metric is undefined.
+
+Stage B's implementation is internally coherent and preserves the fixed observed-baseline eligible-label set rather than silently changing it within resamples.
+
+### Non-preregistered audit sensitivity
+
+**NON-PREREGISTERED AUDIT SENSITIVITY — NOT A REPLACEMENT RESULT**
+
+Under an alternative convention that averages over whichever fixed eligible labels have defined metrics in each replicate, all four otherwise non-estimable macro intervals become estimable:
+
+- Domains precision: approximately **[0.687, 0.852]**
+- Domains F1: approximately **[0.639, 0.843]**
+- Purposes precision: approximately **[0.404, 0.660]**
+- Purposes F1: approximately **[0.378, 0.614]**
+
+This confirms that `CI NOT ESTIMABLE` is a direct consequence of the conservative macro convention and the single-record model-positive count for `Unclear from Register Entry`, not an inherent impossibility and not a computational bug.
+
+## 10. Cross-cutting tags
+
+### Baseline
+
+| Metric | Equity | COVID |
+|---|---:|---:|
+| Support | 11 — LOW SUPPORT | 12 — LOW SUPPORT |
+| Raw agreement | 0.880 | 0.993 |
+| Positive agreement | 0.400 | 0.960 |
+| Negative agreement | 0.933 | 0.996 |
+| Cohen's kappa | 0.339 | 0.956 |
+| Gwet's AC1 | 0.854 | 0.992 |
+| Precision | 0.316 | 0.923 |
+| Recall | 0.545 | 1.000 |
+| F1 | 0.400 | 0.960 |
+
+All values above, plus TP/FP/FN/TN, reproduced exactly using an independently implemented standard binary two-rater AC1 formula.
+
+Hard-case tag point estimates were also independently reproduced exactly.
+
+### Prevalence mechanics
+
+For Equity:
+
+- human prevalence = **0.073**;
+- model prevalence = **0.127**;
+- TN/N = **0.840**;
+- TP = 6;
+- FP = 13;
+- FN = 5.
+
+The dominant negative class mechanically produces high raw agreement and AC1 while positive agreement, kappa, precision, recall and F1 remain much lower.
+
+For COVID, disagreement is minimal even on the rare positive class:
+
+- FP = 1;
+- FN = 0.
+
+Accordingly, both prevalence-sensitive and positive-case metrics remain high.
+
+Both tags are correctly classified as **LOW SUPPORT**.
+
+## 11. Bootstrap audit
+
+Confirmed:
+
+- seed = **20260714**;
+- unit = **record**;
+- attempts = **2000**;
+- A/B/C/L values remain linked within each resampled record;
+- duplicate draws are preserved;
+- no coder-response-independent or label-independent bootstrap occurs;
+- interval type = **Hyndman–Fan Type 7 / linear percentile**;
+- undefined values are excluded per statistic and are never coerced to 0 or 1;
+- the 1800/2000 90% threshold is applied correctly.
+
+Replicate-file structure was consistent with 2,000 attempts per required group.
+
+Approximately 29 confidence intervals were independently recomputed from saved replicate values across:
+
+- per-label P/R/F1;
+- kappa;
+- exact-set agreement;
+- Jaccard mean;
+- tag diagnostics;
+- macro recall.
+
+All reproduced exactly to stored precision.
+
+## 12. Masking/privacy
+
+An independent scan of every file in the Stage B output directory against all 225 formal Record IDs and associated project titles found:
+
+- source-ID leakage = **0**
+- project-title leakage = **0**
+- record-level disagreement artefacts = **0**
+- adjudication population = **absent**
+
+No files equivalent to:
+
+- `adjudication_population.csv`
+- `disagreement_records.csv`
+- `false_positive_records.csv`
+- `false_negative_records.csv`
+- `majority_vs_model_by_record.csv`
+- `model_errors.csv`
+
+were present.
+
+The review notebook:
+
+- contains no raw `head()` or equivalent raw-data dump;
+- imports reusable Stage A/B implementation rather than duplicating analytical logic;
+- uses portable repository-root discovery;
+- contains no prohibited record-level output;
+- executed successfully in an isolated in-memory namespace without modifying repository files.
+
+## 13. Findings
+
+### Finding 1
+
+**Severity:** Note  
+**Location:** POST-019 provenance/path metadata
+
+**Finding:** The manifest's registered `current_path` for POST-019 points to:
+
+`preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv`
+
+but that path does not exist locally. The available file used by Stage B is:
+
+`preregistration_restricted/sampling/official_draw_20260724/formal_assignment_crosswalk.csv`
+
+Its SHA-256 matches the manifest's registered POST-019 hash exactly.
+
+**Evidence:** Search of `preregistration_restricted` found only the `sampling/official_draw_20260724` copy; content identity matches POST-019.
+
+**Effect on results:** None. Stage B verifies the file by the registered hash and the analysed data are unaffected. A reader following the manifest path literally would need the Stage B path override.
+
+**Recommended action:** Resolve/document the manifest `current_path` versus actual local path for reproducibility hygiene.
+
+---
+
+### Finding 2
+
+**Severity:** Note  
+**Location:** `analysis/scratch_coder_stage_b/performance.py`, macro bootstrap convention and `methods_stage_b.md`
+
+**Finding:** The convention:
+
+> any fixed eligible label undefined ⇒ whole macro replicate undefined
+
+is a defensible and transparently documented, but protocol-silent, implementation choice. It is the specific and sole substantive reason macro precision and F1 confidence intervals are not estimable for both dimensions.
+
+**Evidence:** Root-cause analysis in §9 above.
+
+**Effect on results:** None on point estimates. It determines whether macro precision/F1 bootstrap intervals meet the preregistered 90% valid-replicate reporting threshold.
+
+**Recommended action:** Preserve and explicitly document the convention; do not silently substitute the alternative sensitivity result.
+
+---
+
+### Finding 3
+
+**Severity:** Note  
+**Location:** `tests/test_scratch_coder_stage_a.py`
+
+**Finding:** Existing Stage A tests produce 7 setup errors and 1 failure because they hard-code the legacy path:
+
+`preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv`
+
+which is absent in this environment.
+
+**Evidence:** `pytest` output; all failures/errors were `FileNotFoundError` on the legacy raw-export path.
+
+**Effect on results:** None. Stage B does not read this path; it explicitly resolves the restricted authoritative copy before loading.
+
+**Recommended action:** Address when maintaining Stage A test infrastructure. This is not a Stage B freeze blocker.
+
+### Critical or Major findings
+
+**None.**
+
+## 14. Bottom line
+
+1. **Are Stage B point estimates computationally correct?**  
+   Yes. Every audited point estimate across support, contingencies, P/R/F1, kappa, exact-set, Jaccard, macro and tag diagnostics reproduced exactly.
+
+2. **Are the bootstrap intervals correctly calculated?**  
+   Yes. Type-7 percentile intervals independently reproduced exactly across all spot-checked statistic families; invalid-replicate handling and the 1800/2000 threshold are correct.
+
+3. **Is Gwet's AC1 correctly implemented?**  
+   Yes. It was independently re-derived using the standard binary two-rater formulation, validated on synthetic fixtures, and reproduced for both tags in both populations.
+
+4. **Are precision and recall correctly oriented?**  
+   Yes. Orientation was confirmed both by code reconstruction and directional sanity checks.
+
+5. **Are the support/rare-label rules correctly applied?**  
+   Yes. Support thresholds, rare-label exclusions from performance/kappa/macro reporting, and retention of descriptive contingencies were verified with zero discrepancies.
+
+6. **Is the Purpose L–B pattern real rather than a mapping bug?**  
+   Yes. It is real and is driven mainly by coder B's unusually parsimonious Purpose-labelling style, which resembles the model's own parsimony, with additional contribution from a subset of higher-support labels. A mapping/aliasing bug was explicitly ruled out.
+
+7. **Is the macro CI-not-estimable result computationally justified?**  
+   Yes. It was traced to a specific, quantitatively understood consequence of the fixed-label undefined-propagation convention and very low model-positive support for `Unclear from Register Entry`.
+
+8. **Is any correction required before Stage B is frozen?**  
+   No computational correction is required. The POST-019 path discrepancy is a reproducibility-hygiene note only.
+
+9. **Would any correction materially change the current substantive Stage B picture?**  
+   No.
+
+---
+
+**Repository files modified during audit: 0**
