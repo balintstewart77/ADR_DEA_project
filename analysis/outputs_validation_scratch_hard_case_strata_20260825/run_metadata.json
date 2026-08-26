@@ -1,0 +1,110 @@
+{
+  "analysis_run_datetime": "2026-08-25T16:18:24.402344+00:00",
+  "git_head": "cc5cf7dcede8134f24bd1ebb08b564f217da21f1",
+  "working_tree_entry_state": [
+    "?? analysis/scratch_coder_hard_case_strata/__init__.py",
+    "?? analysis/scratch_coder_hard_case_strata/__main__.py",
+    "?? analysis/scratch_coder_hard_case_strata/analysis.py",
+    "?? analysis/scratch_coder_hard_case_strata/report.py",
+    "?? analysis/scratch_coder_hard_case_strata/run.py"
+  ],
+  "verified_authorities": [
+    {
+      "role": "raw_export",
+      "manifest_id": "POST-028",
+      "path": "preregistration_restricted/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "expected_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "observed_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "size_bytes": 439039,
+      "matched": true
+    },
+    {
+      "role": "protocol",
+      "manifest_id": "PRO-018",
+      "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx",
+      "expected_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "observed_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "size_bytes": 413032,
+      "matched": true
+    },
+    {
+      "role": "instrument",
+      "manifest_id": "RED-036",
+      "path": "preregistration/package/06_redcap/redcap_data_dictionary_frozen_0.7_2026-07-22.csv",
+      "expected_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "observed_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "size_bytes": 33250,
+      "matched": true
+    },
+    {
+      "role": "validator",
+      "manifest_id": "RED-013",
+      "path": "scripts/validate_redcap_candidate.py",
+      "expected_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "observed_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "size_bytes": 33635,
+      "matched": true
+    },
+    {
+      "role": "formal_assignment_crosswalk",
+      "manifest_id": "POST-019",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/formal_assignment_crosswalk.csv",
+      "expected_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "observed_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "size_bytes": 80272,
+      "matched": true
+    },
+    {
+      "role": "baseline_sample",
+      "manifest_id": "POST-009",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "expected_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "observed_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "size_bytes": 18022,
+      "matched": true
+    },
+    {
+      "role": "hard_case_sample",
+      "manifest_id": "POST-011",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "expected_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "observed_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "size_bytes": 9284,
+      "matched": true
+    },
+    {
+      "role": "taxonomy_rc2",
+      "manifest_id": "MOD-001",
+      "path": "taxonomy_data_dictionary.yaml",
+      "expected_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "observed_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "size_bytes": 62863,
+      "matched": true
+    },
+    {
+      "role": "production_model",
+      "manifest_id": "MOD-006",
+      "path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+      "expected_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "observed_sha256": "9827fc9f01b9e1f3e9b58fe8f41b59eb5a569c77aacb77d5140628ec04f5eeab",
+      "size_bytes": 1251162,
+      "matched": true
+    }
+  ],
+  "bootstrap_seed": 20260714,
+  "bootstrap_replicates": 2000,
+  "quantile_method": "Hyndman\u2013Fan Type 7 / linear",
+  "stratum_counts": {
+    "domain_only": 25,
+    "purpose_only": 25,
+    "both": 25
+  },
+  "overall_hard_case_reconciliation": "YES",
+  "masking": {
+    "source_ids_exposed": 0,
+    "project_titles_exposed": 0,
+    "record_level_disagreement_outputs": 0
+  },
+  "stage_a_numerical_output_changes": 0,
+  "stage_b_numerical_output_changes": 0
+}
