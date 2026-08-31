@@ -1,13 +1,13 @@
 {
   "cleaning_stats": {
-    "after_filters": 1309,
+    "after_filters": 1344,
     "dropped_exact_duplicates": 23,
     "dropped_no_date": 0,
     "dropped_no_date_or_title": 0,
     "dropped_non_dea": 106,
     "dropped_same_id_same_title": 35,
     "dropped_special_duplicate_rows": 0,
-    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
+    "duplicate_review_file": "/home/runner/work/ADR_DEA_project/ADR_DEA_project/analysis/outputs_deterministic_rc2/quality/duplicate_review_flagged.csv",
     "duplicate_ruling_groups_applied": 5,
     "duplicate_ruling_merged_source_rows": 2,
     "duplicate_ruling_retained_project_ids": [
@@ -17,32 +17,32 @@
       "2024/095"
     ],
     "duplicate_ruling_rows_removed": 1,
-    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
-    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\register_duplicate_rulings.yaml",
+    "duplicate_rulings_audit_file": "/home/runner/work/ADR_DEA_project/ADR_DEA_project/analysis/outputs_deterministic_rc2/quality/duplicate_rulings_audit.csv",
+    "duplicate_rulings_file": "/home/runner/work/ADR_DEA_project/ADR_DEA_project/analysis/register_duplicate_rulings.yaml",
     "duplicate_tier1_rows_removed": 23,
     "duplicate_tier2_input_rows": 24,
     "duplicate_tier2_merge_groups": 12,
     "duplicate_tier2_rows_removed": 12,
     "duplicate_tier3_rows_flagged": 0,
-    "final_rows": 1308,
-    "raw_loaded": 1450,
-    "rows_after_dea_filter": 1344,
-    "rows_after_duplicate_policy": 1309,
-    "rows_after_duplicate_rulings": 1308,
-    "rows_after_required_fields": 1450
+    "final_rows": 1343,
+    "raw_loaded": 1485,
+    "rows_after_dea_filter": 1379,
+    "rows_after_duplicate_policy": 1344,
+    "rows_after_duplicate_rulings": 1343,
+    "rows_after_required_fields": 1485
   },
-  "created_at_utc": "2026-07-13T17:56:24.566222+00:00",
+  "created_at_utc": "2026-08-31T14:53:46.669357+00:00",
   "git": {
-    "commit": "c9f86403911673d3230668b5e07b1ffe75e644db",
+    "commit": "7f500898db5e48b36cc76784e3774de28959f6d1",
     "dirty": true,
-    "status_porcelain": "M METHODS_LOG.md\n M README.md\n M analysis/derive_register_properties.py\n M analysis/outputs_classified_20260702_fable5/layer_a_by_year.csv\n M analysis/outputs_classified_20260702_fable5/layer_a_totals.csv\n M analysis/outputs_classified_20260702_fable5/layer_c_by_year.csv\n M analysis/outputs_classified_20260702_fable5/layer_c_totals.csv\n M analysis/outputs_classified_20260702_fable5/layer_classifications.csv\n M analysis/outputs_classified_20260702_fable5/run_metadata.json\n M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/register_cleaning.py\n M analysis/test_register_cleaning.py\n M dashboard/callbacks/datasets.py\n M dashboard/charts/core.py\n M dashboard/charts/institutions.py\n M dashboard/data/collection_view.py\n M dashboard/data/filtering.py\n M dashboard/data/registry.py\n M dashboard/dataset_normalisation.py\n M dashboard/institution_normalisation.py\n M dashboard/layout/about.py\n M dashboard/layout/overview.py\n?? analysis/migrate_reviewed_duplicate_record_ids.py\n?? analysis/register_duplicate_rulings.yaml"
+    "status_porcelain": "M analysis/outputs_deterministic_rc2/register_properties.csv\n M data/register_provenance_manifest.json\n?? analysis/outputs_refresh/20260831-dc97c680115f/\n?? data/register_snapshots/dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40/"
   },
   "model": null,
   "output_files": [
-    "analysis\\outputs_deterministic_rc2\\register_properties.csv"
+    "analysis/outputs_deterministic_rc2/register_properties.csv"
   ],
   "reference_table_version": "0.5.7",
-  "row_count": 1308,
+  "row_count": 1343,
   "run_type": "deterministic_properties",
-  "source_file": "dea_accredited_projects_20260601.csv"
+  "source_file": "register_snapshots/dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40/canonical.csv"
 }
