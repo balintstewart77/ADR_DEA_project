@@ -1,0 +1,242 @@
+{
+  "provenance": {
+    "audit_timestamp_utc": "2026-09-02T07:48:32.446438+00:00",
+    "repository_head": "7f500898db5e48b36cc76784e3774de28959f6d1",
+    "frozen_cleaned_path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+    "frozen_cleaned_sha256": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+    "frozen_raw_path": "data/dea_accredited_projects_20260601.csv",
+    "source_sha256_git_lf": "abd65ff9d8a5a521a83b5a8cd62eac2808fc330eda9f3f012751ad364f5c9d5d",
+    "source_sha256_preregistered_windows_crlf": "fc911d3c2e5cb0ec42ef04b1bfa2822bd3b358558ba8afbfd75b1048dcfe9892",
+    "frozen_population_row_count": 1308,
+    "frozen_unique_record_id_count": 1308,
+    "frozen_unique_project_id_count": 1304,
+    "entity_input_representation": "frozen cleaned 1,308-record file",
+    "raw_source_role": "identity/provenance only; no raw-to-cleaned whitespace measure"
+  },
+  "field_implementations": {
+    "datasets": {
+      "parser_module": "dashboard.dataset_normalisation",
+      "parser_function": "iter_dataset_entries (live parse_datasets uses it)",
+      "canonicaliser_module": "dashboard.dataset_normalisation",
+      "canonicaliser_function": "describe_dataset_normalisation / normalise_dataset_name",
+      "provider_function": "normalise_provider_name",
+      "reference_paths": [],
+      "implementation_sha256": "6e8e13a73e6f6cbe0ebb6256c4e32d5601bc6c198906952526f60f3fd793eff1",
+      "used_by_live_dashboard": true,
+      "measurable": true,
+      "reason_if_false": null
+    },
+    "organisations": {
+      "parser_module": "dashboard.institution_normalisation",
+      "parser_function": "parse_institutions_with_metadata (same internal parser as live parse_institutions)",
+      "canonicaliser_module": "dashboard.institution_normalisation",
+      "canonicaliser_function": "describe_institution_normalisation",
+      "reference_paths": [],
+      "implementation_sha256": "c2ff06a5981f827b8695aab2198226b939da2f51dcdb3122b52626db02965662",
+      "used_by_live_dashboard": true,
+      "measurable": true,
+      "reason_if_false": null
+    },
+    "researcher_names": {
+      "parser_module": "analysis.validation.owner_sampling_frame",
+      "parser_function": "parse_researcher_field",
+      "canonicaliser_module": null,
+      "canonicaliser_function": null,
+      "reference_paths": [],
+      "implementation_sha256": "06fe96265f1d613374788a2366c3f50bae8c9c33a8ba847f6e480571a255338b",
+      "used_by_live_dashboard": false,
+      "measurable": false,
+      "reason_if_false": "No production person-name variant reconciliation exists; parser normalises typography and exact duplicates but never merges similar names.",
+      "researcher_name_reconciliation_rate_not_measurable": true
+    },
+    "explicit_malformed_text": {
+      "parser_module": "dashboard.dataset_normalisation; dashboard.institution_normalisation",
+      "parser_function": "existing named token/alias corrections and institution parser_cleanup status",
+      "canonicaliser_module": "same as parent entity field",
+      "canonicaliser_function": "same as parent entity field",
+      "reference_paths": [],
+      "implementation_sha256": {
+        "dataset": "6e8e13a73e6f6cbe0ebb6256c4e32d5601bc6c198906952526f60f3fd793eff1",
+        "institution": "c2ff06a5981f827b8695aab2198226b939da2f51dcdb3122b52626db02965662"
+      },
+      "used_by_live_dashboard": true,
+      "measurable": true,
+      "reason_if_false": null
+    }
+  },
+  "summary_metrics": {
+    "datasets": {
+      "evaluable_records": 1307,
+      "affected_records": 1189,
+      "affected_record_rate": 90.9717,
+      "total_occurrences": 3350,
+      "changed_occurrences": 2639,
+      "changed_occurrence_rate": 78.7761,
+      "distinct_raw_values": 701,
+      "distinct_canonical_values": 347,
+      "canonical_values_with_multiple_raw_variants": 126,
+      "explicit_error_records": 55,
+      "explicit_error_record_rate": 4.2081,
+      "explicit_error_rate_identifiable": true,
+      "notes": "Current downstream parser/canonicaliser; explicit-error subset is conservative and rule-labelled."
+    },
+    "organisations": {
+      "evaluable_records": 1299,
+      "affected_records": 619,
+      "affected_record_rate": 47.652,
+      "total_occurrences": 1839,
+      "changed_occurrences": 761,
+      "changed_occurrence_rate": 41.3812,
+      "distinct_raw_values": 409,
+      "distinct_canonical_values": 281,
+      "canonical_values_with_multiple_raw_variants": 75,
+      "explicit_error_records": 12,
+      "explicit_error_record_rate": 0.9238,
+      "explicit_error_rate_identifiable": true,
+      "notes": "Live institution parser; explicit-error subset uses parser_cleanup and aliases explicitly labelled as typos."
+    },
+    "researcher names": {
+      "evaluable_records": 1306,
+      "affected_records": null,
+      "affected_record_rate": null,
+      "total_occurrences": 3997,
+      "changed_occurrences": null,
+      "changed_occurrence_rate": null,
+      "distinct_raw_values": 2478,
+      "distinct_canonical_values": null,
+      "canonical_values_with_multiple_raw_variants": null,
+      "explicit_error_records": null,
+      "explicit_error_record_rate": null,
+      "explicit_error_rate_identifiable": false,
+      "notes": "Reconciliation rate not measurable: production parser never merges similar person names; occurrence count is person_candidate parser output."
+    },
+    "explicit malformed/text corrections": {
+      "evaluable_records": 1308,
+      "affected_records": 66,
+      "affected_record_rate": 5.0459,
+      "total_occurrences": 5189,
+      "changed_occurrences": 78,
+      "changed_occurrence_rate": 1.5032,
+      "distinct_raw_values": null,
+      "distinct_canonical_values": null,
+      "canonical_values_with_multiple_raw_variants": null,
+      "explicit_error_records": 66,
+      "explicit_error_record_rate": 5.0459,
+      "explicit_error_rate_identifiable": true,
+      "notes": "Conservative union of explicitly labelled corrective rules across dataset/provider and institution occurrences."
+    }
+  },
+  "field_diagnostics": {
+    "datasets": {
+      "unchanged_occurrences": 711,
+      "unresolved_occurrences": 0,
+      "needs_review_occurrences": 2,
+      "match_type_counts": {
+        "alias": 2409,
+        "compound_or_multi_dataset": 2,
+        "identity": 513,
+        "normalised_format": 426
+      },
+      "raw_variants_per_canonical_distribution": {
+        "1": 221,
+        "2": 45,
+        "3": 29,
+        "4": 17,
+        "5": 14,
+        "6": 9,
+        "7": 4,
+        "8": 1,
+        "9": 1,
+        "10": 4,
+        "11": 1,
+        "15": 1
+      },
+      "provider_stage": {
+        "nonblank_parsed_provider_occurrences": 3343,
+        "provider_changed_occurrences": 3092,
+        "distinct_nonblank_raw_providers": 68,
+        "distinct_final_canonical_providers": 49,
+        "included_in_dataset_name_headline": false
+      }
+    },
+    "organisations": {
+      "unchanged_occurrences": 1078,
+      "unclassified_occurrences": 23,
+      "match_type_counts": {
+        "alias": 624,
+        "identity": 1203,
+        "parser_cleanup": 12
+      },
+      "raw_variants_per_canonical_distribution": {
+        "1": 206,
+        "2": 49,
+        "3": 12,
+        "4": 9,
+        "5": 2,
+        "6": 1,
+        "9": 1,
+        "12": 1
+      },
+      "production_output_semantics": "one occurrence per unique canonical institution per retained record"
+    },
+    "researcher_names": {
+      "nonblank_source_records": 1306,
+      "all_parser_entity_outputs": 4055,
+      "person_candidate_occurrences": 3997,
+      "person_candidate_records": 1302,
+      "distinct_person_candidate_display_strings": 2478
+    }
+  },
+  "cross_field": {
+    "evaluable_in_at_least_one_reconciled_field": 1308,
+    "affected_in_at_least_one_reconciled_field": 1236,
+    "affected_rate_percent": 94.4954,
+    "affected_in_exactly_one_field": 664,
+    "affected_in_two_or_more_fields": 572,
+    "fields_in_union": [
+      "datasets",
+      "organisations"
+    ]
+  },
+  "definitions": {
+    "detected_variation": "A parsed observed entity whose exact parsed raw representation differs from the current production canonical representation.",
+    "explicit_error": "A conservative subset matched by a deterministic operation explicitly labelled corrective in production code, tests, comments, or match metadata.",
+    "record_denominator": "Unique frozen Record IDs with at least one parsed evaluable occurrence for the field.",
+    "occurrence_denominator": "All parsed evaluable entity occurrences emitted under the production parser's output semantics.",
+    "rate_unit": "percent"
+  },
+  "disclosure": {
+    "reserve_suppression_available": false,
+    "observed_raw_strings_emitted": false,
+    "individual_raw_variant_ranking_emitted": false,
+    "reason": "Archived baseline_reserve.csv and hard_reserve.csv are absent; example generation stopped and all observed raw strings were withheld."
+  },
+  "limitations": [
+    "Completeness is out of scope.",
+    "Current reconciliation logic measures detectable variation, not total true error.",
+    "Canonicalisation does not imply error.",
+    "The researcher-name reconciliation rate is unavailable because no deterministic person-identity reconciliation exists.",
+    "The frozen June population differs conceptually from the current live register.",
+    "The 103 LF/CRLF-sensitive cleaned-cell differences are not counted as entity variation or error.",
+    "Observed raw-form examples and individual raw-form rankings are withheld because archived reserve membership artefacts are unavailable."
+  ],
+  "verification": {
+    "frozen_cleaned_hash_matches": true,
+    "raw_git_lf_hash_matches": true,
+    "population_rows_1308": true,
+    "unique_nonblank_record_ids_1308": true,
+    "unique_project_ids_1304": true,
+    "all_analysed_records_in_frozen_population": true,
+    "all_dataset_mappings_reproduced_by_current_production_logic": true,
+    "all_organisation_mappings_reproduced_by_current_production_logic": true,
+    "record_numerators_use_unique_record_ids": true,
+    "cross_field_total_uses_set_union": true,
+    "blank_values_not_counted_as_errors": true,
+    "lf_crlf_103_cell_issue_excluded": true,
+    "new_aliases_or_matching_rules_introduced": false,
+    "classification_or_validation_responses_read": false,
+    "web_api_llm_calls_made": false,
+    "tracked_preexisting_files_changed_before_run": false,
+    "relevant_tests": "72 passed, 189 subtests passed (dataset, institution, and researcher-parser suites)"
+  }
+}

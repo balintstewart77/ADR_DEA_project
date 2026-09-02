@@ -1,0 +1,1351 @@
+{
+  "provenance": {
+    "repository_head": "7f500898db5e48b36cc76784e3774de28959f6d1",
+    "frozen_population_path": "preregistration/package/01_source_and_cleaning/dea_accredited_projects_20260601_cleaned_1308.csv",
+    "frozen_population_sha256": "a334bd7f06e23db4cc8497274b36c0c483f6f0db7b079013e18729cd189ff9c1",
+    "frozen_population_records": 1308,
+    "dataset_occurrences": 3350,
+    "organisation_occurrences": 1839
+  },
+  "definitions": {
+    "fragmented_observed_forms": "Two or more distinct parsed pre-canonicalisation source forms observed for one existing deterministic canonical entity.",
+    "single_observed_form": "Exactly one parsed pre-canonicalisation source form observed for one existing deterministic canonical entity.",
+    "minimum_required_relabels": "Total entity occurrences minus the frequency of the most common observed raw form; lexical raw form breaks modal ties only.",
+    "canonical_standardisation_without_observed_fragmentation": "A production string change attached to a canonical entity with exactly one observed source form in the frozen population."
+  },
+  "fragmentation_summary": {
+    "datasets": {
+      "canonical_entities": 347,
+      "single_observed_form_entities": 221,
+      "fragmented_observed_form_entities": 126,
+      "occurrences_in_fragmented_entities": 2969,
+      "records_exposed_to_fragmentation": 1224,
+      "minimum_required_relabels": 1186,
+      "records_containing_non_modal_variant": 649,
+      "all_occurrences": 3350,
+      "minimum_required_relabel_rate": 35.403
+    },
+    "organisations": {
+      "canonical_entities": 281,
+      "single_observed_form_entities": 206,
+      "fragmented_observed_form_entities": 75,
+      "occurrences_in_fragmented_entities": 1251,
+      "records_exposed_to_fragmentation": 981,
+      "minimum_required_relabels": 276,
+      "records_containing_non_modal_variant": 257,
+      "all_occurrences": 1839,
+      "minimum_required_relabel_rate": 15.0082
+    },
+    "combined": {
+      "records_exposed_to_observed_fragmentation": 1289,
+      "records_exposed_rate": 98.5474,
+      "records_containing_non_modal_variant": 766,
+      "records_non_modal_rate": 58.5627,
+      "occurrences_in_fragmented_entities": 4220,
+      "minimum_required_relabels": 1462,
+      "minimum_required_relabel_rate": 28.175
+    }
+  },
+  "optional_standardisation_without_fragmentation": {
+    "datasets": {
+      "occurrences": 159,
+      "records": 130,
+      "native_class_occurrences": {
+        "alias": 57,
+        "compound_or_multi_dataset": 2,
+        "normalised_format": 100
+      }
+    },
+    "organisations": {
+      "occurrences": 118,
+      "records": 107,
+      "native_class_occurrences": {
+        "alias": 60,
+        "identity_with_display_change": 55,
+        "parser_cleanup": 3
+      }
+    },
+    "combined": {
+      "occurrences": 277,
+      "records": 226
+    }
+  },
+  "previous_class_by_source_form_class": {
+    "datasets": [
+      {
+        "previous_class": "display_only_acronym",
+        "single_observed_form": 12,
+        "fragmented_observed_forms": 953,
+        "total": 965
+      },
+      {
+        "previous_class": "analytically_necessary_normalisation",
+        "single_observed_form": 147,
+        "fragmented_observed_forms": 1527,
+        "total": 1674
+      }
+    ],
+    "organisations": [
+      {
+        "previous_class": "display_only_acronym",
+        "single_observed_form": 62,
+        "fragmented_observed_forms": 244,
+        "total": 306
+      },
+      {
+        "previous_class": "analytically_necessary_normalisation",
+        "single_observed_form": 56,
+        "fragmented_observed_forms": 399,
+        "total": 455
+      }
+    ]
+  },
+  "explicit_corrections_by_source_form_class": [
+    {
+      "field": "datasets",
+      "entity_component": "dataset_name",
+      "source_form_class": "fragmented_observed_forms",
+      "occurrences": 3,
+      "records": 3,
+      "mappings": 3
+    },
+    {
+      "field": "datasets",
+      "entity_component": "dataset_name",
+      "source_form_class": "single_observed_form",
+      "occurrences": 1,
+      "records": 1,
+      "mappings": 1
+    },
+    {
+      "field": "datasets",
+      "entity_component": "provider",
+      "source_form_class": "fragmented_observed_forms",
+      "occurrences": 56,
+      "records": 51,
+      "mappings": 3
+    },
+    {
+      "field": "organisations",
+      "entity_component": "organisation",
+      "source_form_class": "fragmented_observed_forms",
+      "occurrences": 13,
+      "records": 10,
+      "mappings": 11
+    },
+    {
+      "field": "organisations",
+      "entity_component": "organisation",
+      "source_form_class": "single_observed_form",
+      "occurrences": 5,
+      "records": 5,
+      "mappings": 5
+    }
+  ],
+  "provider_component": {
+    "kept_separate_from_dataset_name_denominator": true,
+    "summary": {
+      "canonical_entities": 48,
+      "single_observed_form_entities": 37,
+      "fragmented_observed_form_entities": 11,
+      "occurrences_in_fragmented_entities": 3037,
+      "records_exposed_to_fragmentation": 1133,
+      "minimum_required_relabels": 160,
+      "records_containing_non_modal_variant": 109,
+      "all_occurrences": 3343
+    },
+    "provider_correction_occurrences": 56,
+    "provider_corrections_on_dataset_name_unchanged_occurrences": 25
+  },
+  "headline_hierarchy": {
+    "any_production_string_change_records": 1236,
+    "any_production_string_change_rate": 94.5,
+    "previous_non_display_canonicalisation_records": 973,
+    "previous_non_display_canonicalisation_rate": 74.39,
+    "records_exposed_to_observed_fragmentation": 1289,
+    "records_exposed_to_observed_fragmentation_rate": 98.5474,
+    "records_containing_non_modal_variant": 766,
+    "records_containing_non_modal_variant_rate": 58.5627,
+    "explicit_correction_records": 66,
+    "explicit_correction_record_rate": 5.05,
+    "explicit_correction_records_excluding_dominant_provider_form": 18,
+    "explicit_correction_excluding_dominant_rate": 1.38
+  },
+  "top_fragmented_entities": {
+    "datasets": [
+      {
+        "rank": 1,
+        "canonical_entity": "Business Structure Database (BSD)",
+        "distinct_observed_forms": 7,
+        "total_occurrences": 283,
+        "modal_form_occurrences": 176,
+        "minimum_required_relabels": 107,
+        "records": 283,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Business Structure Database",
+            "occurrences": 176,
+            "records": 176,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Structure Database - UK",
+            "occurrences": 88,
+            "records": 88,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Structure Database UK",
+            "occurrences": 14,
+            "records": 14,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Structure Database (BSD)",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Structure Database (1997-2023)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business structure Database - UK",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business structure database",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "canonical_entity": "Annual Business Survey (ABS)",
+        "distinct_observed_forms": 10,
+        "total_occurrences": 231,
+        "modal_form_occurrences": 143,
+        "minimum_required_relabels": 88,
+        "records": 231,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Annual Business Survey",
+            "occurrences": 143,
+            "records": 143,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey - GB",
+            "occurrences": 44,
+            "records": 44,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey - UK",
+            "occurrences": 31,
+            "records": 31,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey GB",
+            "occurrences": 4,
+            "records": 4,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey UK",
+            "occurrences": 4,
+            "records": 4,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey (ABS)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey 1973 onwards)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey 2005-2022",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey Household Datasets",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Business Survey in Great Britain",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "canonical_entity": "Annual Survey of Hours and Earnings (ASHE)",
+        "distinct_observed_forms": 11,
+        "total_occurrences": 205,
+        "modal_form_occurrences": 123,
+        "minimum_required_relabels": 82,
+        "records": 204,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings",
+            "occurrences": 123,
+            "records": 123,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings - UK",
+            "occurrences": 41,
+            "records": 41,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings - GB",
+            "occurrences": 24,
+            "records": 24,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings UK",
+            "occurrences": 7,
+            "records": 7,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings (ASHE)",
+            "occurrences": 4,
+            "records": 4,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "ASHE",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey for Hours and Earnings",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings (1997-2024)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings 1997-2023",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings 1997-2024",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Survey of Hours and Earnings GB",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "canonical_entity": "Longitudinal Education Outcomes (LEO)",
+        "distinct_observed_forms": 15,
+        "total_occurrences": 119,
+        "modal_form_occurrences": 55,
+        "minimum_required_relabels": 64,
+        "records": 118,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England",
+            "occurrences": 55,
+            "records": 55,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes SRS Iteration 1 Standard Extract - England",
+            "occurrences": 27,
+            "records": 26,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "LEO via SRS Iteration 1 Standard Extract",
+            "occurrences": 18,
+            "records": 18,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education",
+            "occurrences": 4,
+            "records": 4,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "LEO via SRS Iteration 2 Standard Extract",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes (LEO)",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes SRS Iteration 2",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes SRS Iteration 2 standard extract - England",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "LEO",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "LEO Scotland",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes - England",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes Iteration 2",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes SRS Iteration 1 standard extract - England",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Education Outcomes SRS Iteration 2 - England",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "canonical_entity": "Annual Population Survey (APS)",
+        "distinct_observed_forms": 9,
+        "total_occurrences": 183,
+        "modal_form_occurrences": 131,
+        "minimum_required_relabels": 52,
+        "records": 176,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Annual Population Survey",
+            "occurrences": 131,
+            "records": 126,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Population Survey - UK",
+            "occurrences": 40,
+            "records": 39,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Population Survey UK",
+            "occurrences": 4,
+            "records": 3,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Population Survey (APS)",
+            "occurrences": 3,
+            "records": 3,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Population Survey (2004-2022 secure access)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Population Survey (2004-2023 secure access)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Population Survey 2004-2022",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Population Surveys - Wales",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual population survey - UK",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "canonical_entity": "Business Enterprise Research and Development (BERD)",
+        "distinct_observed_forms": 10,
+        "total_occurrences": 83,
+        "modal_form_occurrences": 33,
+        "minimum_required_relabels": 50,
+        "records": 82,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Business Enterprise Research and Development",
+            "occurrences": 33,
+            "records": 33,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research and Development - Great Britain",
+            "occurrences": 30,
+            "records": 30,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research and Development - GB",
+            "occurrences": 7,
+            "records": 7,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research and Development England",
+            "occurrences": 5,
+            "records": 5,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research and Development - England",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research and Development - Northern Ireland",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research Development - GB",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research and Developement",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Enterprise Research and Development (BERD)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business enterprise research and development",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "canonical_entity": "Business Register and Employment Survey (BRES)",
+        "distinct_observed_forms": 6,
+        "total_occurrences": 67,
+        "modal_form_occurrences": 25,
+        "minimum_required_relabels": 42,
+        "records": 66,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Business Register Employment Survey - UK",
+            "occurrences": 25,
+            "records": 25,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Register and Employment Survey",
+            "occurrences": 20,
+            "records": 19,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Register Employment Survey",
+            "occurrences": 19,
+            "records": 19,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Register Employment Survey (BRES)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Register Employment survey - UK",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Business Register and Employment Survey (BRES)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "canonical_entity": "Annual Respondents Database X",
+        "distinct_observed_forms": 10,
+        "total_occurrences": 62,
+        "modal_form_occurrences": 23,
+        "minimum_required_relabels": 39,
+        "records": 62,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Annual Respondents Database x - UK",
+            "occurrences": 23,
+            "records": 23,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents Database X",
+            "occurrences": 21,
+            "records": 21,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents Database x",
+            "occurrences": 6,
+            "records": 6,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents Database x UK",
+            "occurrences": 5,
+            "records": 5,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents Database X - UK",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondent Database X",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents Database ARDx UK",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents Database X (ARDX)",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents Database X- UK",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Annual Respondents DatabaseX",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "canonical_entity": "ONS Longitudinal Study (LS)",
+        "distinct_observed_forms": 7,
+        "total_occurrences": 57,
+        "modal_form_occurrences": 21,
+        "minimum_required_relabels": 36,
+        "records": 56,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Longitudinal Study of England and Wales",
+            "occurrences": 21,
+            "records": 21,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "ONS Longitudinal Study - England and Wales",
+            "occurrences": 19,
+            "records": 18,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Study",
+            "occurrences": 8,
+            "records": 8,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "ONS Longitudinal Study",
+            "occurrences": 5,
+            "records": 5,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "ONS Longitudinal Study (LS)",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Longitudinal Study - England and Wales",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "ONS Longitudinal Study of England and Wales",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "canonical_entity": "Understanding Society",
+        "distinct_observed_forms": 4,
+        "total_occurrences": 58,
+        "modal_form_occurrences": 28,
+        "minimum_required_relabels": 30,
+        "records": 58,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Understanding Society - UK",
+            "occurrences": 28,
+            "records": 28,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Understanding Society",
+            "occurrences": 26,
+            "records": 26,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "British Household Panel Survey",
+            "occurrences": 3,
+            "records": 3,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Understanding Society UK",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      }
+    ],
+    "organisations": [
+      {
+        "rank": 1,
+        "canonical_entity": "London School of Economics and Political Science (LSE)",
+        "distinct_observed_forms": 9,
+        "total_occurrences": 97,
+        "modal_form_occurrences": 55,
+        "minimum_required_relabels": 42,
+        "records": 97,
+        "observed_forms": [
+          {
+            "raw_observed_form": "London School of Economics",
+            "occurrences": 55,
+            "records": 55,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "London School of Economics and Political Science",
+            "occurrences": 23,
+            "records": 23,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "The London School of Economics and Political Science",
+            "occurrences": 12,
+            "records": 12,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "The London School of Economics",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "LSE",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "London School of Economics and Polictical Science",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "London School of Economics and Political Science, University of London",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "London School of Economics; and University College London",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of Warwick/London School of Economics",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "canonical_entity": "University College London (UCL)",
+        "distinct_observed_forms": 12,
+        "total_occurrences": 120,
+        "modal_form_occurrences": 99,
+        "minimum_required_relabels": 21,
+        "records": 120,
+        "observed_forms": [
+          {
+            "raw_observed_form": "University College London",
+            "occurrences": 99,
+            "records": 99,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of London - University College",
+            "occurrences": 11,
+            "records": 11,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "[source form 03 withheld: contains researcher name]",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "withheld_researcher_name"
+          },
+          {
+            "raw_observed_form": "CASA University College London",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "London School of Economics; and University College London",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "UCL",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "UCL Centre for Longitudinal Studies",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "UCL Institute of Epidemiology and Health",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Univeristy College London",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of London / University College",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of London University College",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of London-University College",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "canonical_entity": "University of Manchester",
+        "distinct_observed_forms": 4,
+        "total_occurrences": 43,
+        "modal_form_occurrences": 23,
+        "minimum_required_relabels": 20,
+        "records": 43,
+        "observed_forms": [
+          {
+            "raw_observed_form": "The University of Manchester",
+            "occurrences": 23,
+            "records": 23,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of Manchester",
+            "occurrences": 18,
+            "records": 18,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Manchester University",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "The Productivity Institute, University of Manchester",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "canonical_entity": "University of Edinburgh",
+        "distinct_observed_forms": 2,
+        "total_occurrences": 31,
+        "modal_form_occurrences": 18,
+        "minimum_required_relabels": 13,
+        "records": 31,
+        "observed_forms": [
+          {
+            "raw_observed_form": "The University of Edinburgh",
+            "occurrences": 18,
+            "records": 18,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of Edinburgh",
+            "occurrences": 13,
+            "records": 13,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "canonical_entity": "Cardiff University",
+        "distinct_observed_forms": 3,
+        "total_occurrences": 37,
+        "modal_form_occurrences": 28,
+        "minimum_required_relabels": 9,
+        "records": 37,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Cardiff University",
+            "occurrences": 28,
+            "records": 28,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Cardiff Business School",
+            "occurrences": 6,
+            "records": 6,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of Cardiff",
+            "occurrences": 3,
+            "records": 3,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "canonical_entity": "Ipsos",
+        "distinct_observed_forms": 5,
+        "total_occurrences": 27,
+        "modal_form_occurrences": 18,
+        "minimum_required_relabels": 9,
+        "records": 27,
+        "observed_forms": [
+          {
+            "raw_observed_form": "IPSOS MORI",
+            "occurrences": 18,
+            "records": 18,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Ipsos",
+            "occurrences": 5,
+            "records": 5,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Ipsos UK",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "IPSOS UK",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Ipsos MORI",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "canonical_entity": "Queen Mary University of London",
+        "distinct_observed_forms": 6,
+        "total_occurrences": 16,
+        "modal_form_occurrences": 7,
+        "minimum_required_relabels": 9,
+        "records": 16,
+        "observed_forms": [
+          {
+            "raw_observed_form": "[source form 01 withheld: contains researcher name]",
+            "occurrences": 7,
+            "records": 7,
+            "disclosure_status": "withheld_researcher_name"
+          },
+          {
+            "raw_observed_form": "[source form 02 withheld: contains researcher name]",
+            "occurrences": 5,
+            "records": 5,
+            "disclosure_status": "withheld_researcher_name"
+          },
+          {
+            "raw_observed_form": "[source form 03 withheld: contains researcher name]",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "withheld_researcher_name"
+          },
+          {
+            "raw_observed_form": "[source form 04 withheld: contains researcher name]",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "withheld_researcher_name"
+          },
+          {
+            "raw_observed_form": "[source form 05 withheld: contains researcher name]",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "withheld_researcher_name"
+          },
+          {
+            "raw_observed_form": "[source form 06 withheld: contains researcher name]",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "withheld_researcher_name"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "canonical_entity": "King's College London (KCL)",
+        "distinct_observed_forms": 5,
+        "total_occurrences": 32,
+        "modal_form_occurrences": 24,
+        "minimum_required_relabels": 8,
+        "records": 32,
+        "observed_forms": [
+          {
+            "raw_observed_form": "King's College London",
+            "occurrences": 24,
+            "records": 24,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of London - Kings College",
+            "occurrences": 4,
+            "records": 4,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Kings College London",
+            "occurrences": 2,
+            "records": 2,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "The Policy Institute, King's College London",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of London Kings College",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "canonical_entity": "Durham University",
+        "distinct_observed_forms": 2,
+        "total_occurrences": 19,
+        "modal_form_occurrences": 11,
+        "minimum_required_relabels": 8,
+        "records": 19,
+        "observed_forms": [
+          {
+            "raw_observed_form": "University of Durham",
+            "occurrences": 11,
+            "records": 11,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Durham University",
+            "occurrences": 8,
+            "records": 8,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "canonical_entity": "Aston University",
+        "distinct_observed_forms": 4,
+        "total_occurrences": 14,
+        "modal_form_occurrences": 6,
+        "minimum_required_relabels": 8,
+        "records": 14,
+        "observed_forms": [
+          {
+            "raw_observed_form": "Aston University",
+            "occurrences": 6,
+            "records": 6,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "University of Aston",
+            "occurrences": 6,
+            "records": 6,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "Aston Business School",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          },
+          {
+            "raw_observed_form": "The university of Aston",
+            "occurrences": 1,
+            "records": 1,
+            "disclosure_status": "public_register_raw_form"
+          }
+        ]
+      }
+    ]
+  },
+  "top_optional_standardisation_mappings": [
+    {
+      "rank": 1,
+      "field": "organisations",
+      "raw_observed_form": "Public Health Wales",
+      "canonical_form": "Public Health Wales (PHW)",
+      "occurrences": 15,
+      "records": 15,
+      "native_transformation_class": "identity_with_display_change"
+    },
+    {
+      "rank": 2,
+      "field": "organisations",
+      "raw_observed_form": "London School of Hygiene and Tropical Medicine",
+      "canonical_form": "London School of Hygiene and Tropical Medicine (LSHTM)",
+      "occurrences": 13,
+      "records": 13,
+      "native_transformation_class": "identity_with_display_change"
+    },
+    {
+      "rank": 3,
+      "field": "datasets",
+      "raw_observed_form": "Growing Up in England Wave 1",
+      "canonical_form": "Growing Up in England Wave 1 (GUIE)",
+      "occurrences": 12,
+      "records": 12,
+      "native_transformation_class": "alias"
+    },
+    {
+      "rank": 4,
+      "field": "organisations",
+      "raw_observed_form": "Greater London Authority",
+      "canonical_form": "Greater London Authority (GLA)",
+      "occurrences": 9,
+      "records": 9,
+      "native_transformation_class": "alias"
+    },
+    {
+      "rank": 5,
+      "field": "organisations",
+      "raw_observed_form": "Competition and Markets Authority",
+      "canonical_form": "Competition and Markets Authority (CMA)",
+      "occurrences": 8,
+      "records": 8,
+      "native_transformation_class": "identity_with_display_change"
+    },
+    {
+      "rank": 6,
+      "field": "datasets",
+      "raw_observed_form": "Labour Force Survey Five-Quarter Longitudinal Dataset",
+      "canonical_form": "Labour Force Survey Five-Quarter Longitudinal",
+      "occurrences": 7,
+      "records": 7,
+      "native_transformation_class": "normalised_format"
+    },
+    {
+      "rank": 7,
+      "field": "datasets",
+      "raw_observed_form": "New Earnings Survey Panel Dataset",
+      "canonical_form": "New Earnings Survey Panel",
+      "occurrences": 7,
+      "records": 7,
+      "native_transformation_class": "normalised_format"
+    },
+    {
+      "rank": 8,
+      "field": "datasets",
+      "raw_observed_form": "Absences and English School Census",
+      "canonical_form": "English School Census Absences",
+      "occurrences": 6,
+      "records": 6,
+      "native_transformation_class": "alias"
+    },
+    {
+      "rank": 9,
+      "field": "organisations",
+      "raw_observed_form": "Department for Business and Trade",
+      "canonical_form": "Department for Business and Trade (DBT)",
+      "occurrences": 5,
+      "records": 5,
+      "native_transformation_class": "alias"
+    },
+    {
+      "rank": 10,
+      "field": "datasets",
+      "raw_observed_form": "Labour Force Survey Two-Quarter Longitudinal Dataset",
+      "canonical_form": "Labour Force Survey Two-Quarter Longitudinal",
+      "occurrences": 5,
+      "records": 5,
+      "native_transformation_class": "normalised_format"
+    }
+  ],
+  "verification": {
+    "only_existing_deterministic_mappings_used": true,
+    "fragmented_entities_have_at_least_two_forms": true,
+    "single_form_entities_have_exactly_one_form": true,
+    "minimum_relabel_formula_verified_per_entity": true,
+    "record_metrics_use_record_id_set_operations": true,
+    "production_only_display_acronyms_not_counted_as_source_forms": true,
+    "existing_headlines_unchanged": true,
+    "explicit_corrections_sum_to_78": true,
+    "provider_components_excluded_from_dataset_name_denominator": true,
+    "displayed_raw_forms_verbatim_or_withheld": true,
+    "no_record_ids_written": true
+  }
+}

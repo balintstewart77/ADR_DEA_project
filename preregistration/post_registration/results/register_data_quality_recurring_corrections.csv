@@ -1,0 +1,26 @@
+field,entity_component,canonical_entity,variant_id,occurrences,unique_records,recurring_boolean
+datasets,dataset_name,Annual Survey of Hours and Earnings linked to Census 2011,variant_01,1,1,False
+datasets,dataset_name,Business Enterprise Research and Development (BERD),variant_01,1,1,False
+datasets,dataset_name,Integrated Data Service,variant_01,1,1,False
+datasets,dataset_name,MoJ Data First Probation,variant_01,1,1,False
+datasets,provider,Northern Ireland Statistics and Research Agency (NISRA),variant_01,1,1,False
+datasets,provider,Office for National Statistics (ONS),variant_01,2,1,True
+datasets,provider,SAIL Databank,variant_01,53,49,True
+organisations,organisation,Academy of Medical Sciences,variant_01,1,1,False
+organisations,organisation,Centre for Economic and Business Research (CEBR),variant_01,1,1,False
+organisations,organisation,Equality and Human Rights Commission (EHRC),variant_01,1,1,False
+organisations,organisation,Health Foundation,variant_01,1,1,False
+organisations,organisation,Imperial College London,variant_01,1,1,False
+organisations,organisation,Institute for Employment Studies (IES),variant_01,1,1,False
+organisations,organisation,London School of Economics and Political Science (LSE),variant_01,1,1,False
+organisations,organisation,London School of Economics and Political Science (LSE),variant_02,1,1,False
+organisations,organisation,London School of Economics and Political Science (LSE),variant_03,1,1,False
+organisations,organisation,"Ministry of National Education, Republic of Türkiye",variant_01,1,1,False
+organisations,organisation,Sentencing Academy,variant_01,1,1,False
+organisations,organisation,Teesside University,variant_01,1,1,False
+organisations,organisation,University College London (UCL),variant_01,1,1,False
+organisations,organisation,University College London (UCL),variant_02,1,1,False
+organisations,organisation,University of Leeds,variant_01,1,1,False
+organisations,organisation,University of Reading,variant_01,1,1,False
+organisations,organisation,University of Warwick,variant_01,1,1,False
+organisations,organisation,University of York,variant_01,1,1,False

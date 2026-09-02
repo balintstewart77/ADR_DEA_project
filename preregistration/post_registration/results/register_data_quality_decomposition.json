@@ -1,0 +1,488 @@
+{
+  "provenance": {
+    "audit_timestamp_utc": "2026-09-02T07:48:32.446438+00:00",
+    "repository_head": "7f500898db5e48b36cc76784e3774de28959f6d1",
+    "source_audit_metrics_path": "preregistration/post_registration/results/register_data_quality_metrics.json",
+    "frozen_population_rows": 1308,
+    "raw_strings_disclosed": false
+  },
+  "base_audit": {
+    "dataset_total": 3350,
+    "dataset_changed": 2639,
+    "dataset_unchanged": 711,
+    "dataset_affected_records": 1189,
+    "organisation_total": 1839,
+    "organisation_changed": 761,
+    "organisation_unchanged": 1078,
+    "organisation_affected_records": 619,
+    "total_entity_occurrences": 5189,
+    "explicit_occurrences": 78,
+    "explicit_records": 66
+  },
+  "datasets": {
+    "native_match_status": [
+      {
+        "match_type": "alias",
+        "total_occurrences": 2409,
+        "changed_occurrences": 2211,
+        "unchanged_occurrences": 198,
+        "unique_records": 1147,
+        "changed_unique_records": 1108,
+        "pct_of_all_occurrences": 71.9104,
+        "pct_of_changed_occurrences": 83.7817
+      },
+      {
+        "match_type": "compound_or_multi_dataset",
+        "total_occurrences": 2,
+        "changed_occurrences": 2,
+        "unchanged_occurrences": 0,
+        "unique_records": 2,
+        "changed_unique_records": 2,
+        "pct_of_all_occurrences": 0.0597,
+        "pct_of_changed_occurrences": 0.0758
+      },
+      {
+        "match_type": "identity",
+        "total_occurrences": 513,
+        "changed_occurrences": 0,
+        "unchanged_occurrences": 513,
+        "unique_records": 300,
+        "changed_unique_records": 0,
+        "pct_of_all_occurrences": 15.3134,
+        "pct_of_changed_occurrences": 0.0
+      },
+      {
+        "match_type": "normalised_format",
+        "total_occurrences": 426,
+        "changed_occurrences": 426,
+        "unchanged_occurrences": 0,
+        "unique_records": 252,
+        "changed_unique_records": 252,
+        "pct_of_all_occurrences": 12.7164,
+        "pct_of_changed_occurrences": 16.1425
+      }
+    ],
+    "changed_occurrence_composition": [
+      {
+        "transformation_type": "alias",
+        "occurrences": 2211,
+        "unique_records": 1108,
+        "pct_of_changed": 83.7817
+      },
+      {
+        "transformation_type": "compound_or_multi_dataset",
+        "occurrences": 2,
+        "unique_records": 2,
+        "pct_of_changed": 0.0758
+      },
+      {
+        "transformation_type": "normalised_format",
+        "occurrences": 426,
+        "unique_records": 252,
+        "pct_of_changed": 16.1425
+      }
+    ],
+    "affected_record_composition": {
+      "exactly_one_transformation_type": 1017,
+      "two_or_more_transformation_types": 172,
+      "combinations": [
+        {
+          "unique_records": 936,
+          "transformation_type_combination": "alias"
+        },
+        {
+          "unique_records": 171,
+          "transformation_type_combination": "alias + normalised_format"
+        },
+        {
+          "unique_records": 80,
+          "transformation_type_combination": "normalised_format"
+        },
+        {
+          "unique_records": 1,
+          "transformation_type_combination": "alias + compound_or_multi_dataset + normalised_format"
+        },
+        {
+          "unique_records": 1,
+          "transformation_type_combination": "compound_or_multi_dataset"
+        }
+      ]
+    },
+    "grouping_only_changed_occurrences": {
+      "dataset_family_grouping": 0,
+      "collection_grouping": 0,
+      "linked_product_grouping": 0
+    },
+    "native_category_interpretation": "Native alias and normalised_format labels are retained; alias cannot be cleanly partitioned into legitimate naming versus correction without leaving implementation metadata."
+  },
+  "organisations": {
+    "native_match_status": [
+      {
+        "match_type": "alias",
+        "total_occurrences": 624,
+        "changed_occurrences": 514,
+        "unchanged_occurrences": 110,
+        "unique_records": 542,
+        "changed_unique_records": 456,
+        "pct_of_all_occurrences": 33.9315,
+        "pct_of_changed_occurrences": 67.5427
+      },
+      {
+        "match_type": "identity",
+        "total_occurrences": 1203,
+        "changed_occurrences": 235,
+        "unchanged_occurrences": 968,
+        "unique_records": 948,
+        "changed_unique_records": 219,
+        "pct_of_all_occurrences": 65.416,
+        "pct_of_changed_occurrences": 30.8804
+      },
+      {
+        "match_type": "parser_cleanup",
+        "total_occurrences": 12,
+        "changed_occurrences": 12,
+        "unchanged_occurrences": 0,
+        "unique_records": 7,
+        "changed_unique_records": 7,
+        "pct_of_all_occurrences": 0.6525,
+        "pct_of_changed_occurrences": 1.5769
+      }
+    ],
+    "changed_occurrence_composition": [
+      {
+        "transformation_type": "alias",
+        "occurrences": 514,
+        "unique_records": 456,
+        "pct_of_changed": 67.5427
+      },
+      {
+        "transformation_type": "identity_with_display_change",
+        "occurrences": 235,
+        "unique_records": 219,
+        "pct_of_changed": 30.8804
+      },
+      {
+        "transformation_type": "parser_cleanup",
+        "occurrences": 12,
+        "unique_records": 7,
+        "pct_of_changed": 1.5769
+      }
+    ],
+    "identity_native_occurrences": 1203,
+    "identity_with_display_change": {
+      "occurrences": 235,
+      "unique_records": 219,
+      "pct_of_761_changed": 30.8804,
+      "causes": [
+        {
+          "identity_display_cause": "approved_acronym_addition",
+          "occurrences": 235,
+          "unique_records": 219
+        }
+      ]
+    },
+    "affected_record_composition": {
+      "exactly_one_transformation_type": 556,
+      "two_or_more_transformation_types": 63,
+      "combinations": [
+        {
+          "unique_records": 393,
+          "transformation_type_combination": "alias"
+        },
+        {
+          "unique_records": 158,
+          "transformation_type_combination": "identity_with_display_change"
+        },
+        {
+          "unique_records": 61,
+          "transformation_type_combination": "alias + identity_with_display_change"
+        },
+        {
+          "unique_records": 5,
+          "transformation_type_combination": "parser_cleanup"
+        },
+        {
+          "unique_records": 2,
+          "transformation_type_combination": "alias + parser_cleanup"
+        }
+      ]
+    }
+  },
+  "explicit_corrections": {
+    "field_split": [
+      {
+        "field": "datasets",
+        "explicit_correction_occurrences": 60,
+        "unique_affected_records": 55,
+        "occurrence_denominator": 3350,
+        "occurrence_rate": 1.791,
+        "record_denominator": 1307,
+        "record_rate": 4.2081
+      },
+      {
+        "field": "organisations",
+        "explicit_correction_occurrences": 18,
+        "unique_affected_records": 12,
+        "occurrence_denominator": 1839,
+        "occurrence_rate": 0.9788,
+        "record_denominator": 1299,
+        "record_rate": 0.9238
+      },
+      {
+        "field": "combined union",
+        "explicit_correction_occurrences": 78,
+        "unique_affected_records": 66,
+        "occurrence_denominator": 5189,
+        "occurrence_rate": 1.5032,
+        "record_denominator": 1308,
+        "record_rate": 5.0459
+      }
+    ],
+    "mutually_exclusive_record_groups": [
+      {
+        "record_group": "dataset correction only",
+        "records": 54
+      },
+      {
+        "record_group": "organisation correction only",
+        "records": 11
+      },
+      {
+        "record_group": "corrections in both fields",
+        "records": 1
+      }
+    ],
+    "rule_mechanisms": [
+      {
+        "rank": 1,
+        "field": "datasets",
+        "rule_id": "provider_repeated_word_correction",
+        "operation": "recognised repeated provider word removed",
+        "occurrences": 53,
+        "unique_records": 49,
+        "affected_canonical_entities": 1,
+        "pct_of_78_explicit_occurrences": 67.9487
+      },
+      {
+        "rank": 2,
+        "field": "organisations",
+        "rule_id": "institution_parser_cleanup",
+        "operation": "production parser_cleanup match status",
+        "occurrences": 12,
+        "unique_records": 7,
+        "affected_canonical_entities": 10,
+        "pct_of_78_explicit_occurrences": 15.3846
+      },
+      {
+        "rank": 3,
+        "field": "organisations",
+        "rule_id": "institution_reviewed_typo_alias",
+        "operation": "aliases labelled as typos by production tests/source comments",
+        "occurrences": 6,
+        "unique_records": 6,
+        "affected_canonical_entities": 6,
+        "pct_of_78_explicit_occurrences": 7.6923
+      },
+      {
+        "rank": 4,
+        "field": "datasets",
+        "rule_id": "provider_spelling_correction_01",
+        "operation": "recognised provider spelling correction",
+        "occurrences": 2,
+        "unique_records": 1,
+        "affected_canonical_entities": 1,
+        "pct_of_78_explicit_occurrences": 2.5641
+      },
+      {
+        "rank": 5,
+        "field": "datasets",
+        "rule_id": "dataset_leading_character_artifact",
+        "operation": "reviewed leading-character artefact correction",
+        "occurrences": 1,
+        "unique_records": 1,
+        "affected_canonical_entities": 1,
+        "pct_of_78_explicit_occurrences": 1.2821
+      },
+      {
+        "rank": 6,
+        "field": "datasets",
+        "rule_id": "dataset_spelling_correction_01",
+        "operation": "existing dataset spelling correction",
+        "occurrences": 1,
+        "unique_records": 1,
+        "affected_canonical_entities": 1,
+        "pct_of_78_explicit_occurrences": 1.2821
+      },
+      {
+        "rank": 7,
+        "field": "datasets",
+        "rule_id": "dataset_spelling_correction_02",
+        "operation": "existing dataset spelling correction",
+        "occurrences": 1,
+        "unique_records": 1,
+        "affected_canonical_entities": 1,
+        "pct_of_78_explicit_occurrences": 1.2821
+      },
+      {
+        "rank": 8,
+        "field": "datasets",
+        "rule_id": "dataset_truncation_correction_01",
+        "operation": "reviewed truncated alias correction",
+        "occurrences": 1,
+        "unique_records": 1,
+        "affected_canonical_entities": 1,
+        "pct_of_78_explicit_occurrences": 1.2821
+      },
+      {
+        "rank": 9,
+        "field": "datasets",
+        "rule_id": "provider_spelling_correction_02",
+        "operation": "recognised provider spelling correction",
+        "occurrences": 1,
+        "unique_records": 1,
+        "affected_canonical_entities": 1,
+        "pct_of_78_explicit_occurrences": 1.2821
+      }
+    ],
+    "excluding_dominant_provider_form": {
+      "dominant_form_occurrences": 53,
+      "dominant_form_records": 49,
+      "dominant_form_records_with_another_correction": 1,
+      "remaining_explicit_correction_occurrences": 25,
+      "remaining_affected_records": 18,
+      "record_denominator": 1308,
+      "remaining_record_rate_percent": 1.3761
+    }
+  },
+  "concentration": {
+    "minimum_support_for_rate_ranking": 5,
+    "minimum_support_note": "Descriptive filter chosen to avoid rankings dominated by 1/1 and 1/2 cases; not preregistered and not inferential.",
+    "cumulative_concentration": [
+      {
+        "field": "datasets",
+        "explicit_correction_occurrences": 60,
+        "affected_canonical_entities": 7,
+        "entities_with_exactly_1_correction": 5,
+        "entities_with_2_corrections": 1,
+        "entities_with_3_to_4_corrections": 0,
+        "entities_with_5_plus_corrections": 1,
+        "top_1_share_percent": 88.3333,
+        "top_3_share_percent": 93.3333,
+        "top_5_share_percent": 96.6667,
+        "top_10_share_percent": 100.0
+      },
+      {
+        "field": "organisations",
+        "explicit_correction_occurrences": 18,
+        "affected_canonical_entities": 15,
+        "entities_with_exactly_1_correction": 13,
+        "entities_with_2_corrections": 1,
+        "entities_with_3_to_4_corrections": 1,
+        "entities_with_5_plus_corrections": 0,
+        "top_1_share_percent": 16.6667,
+        "top_3_share_percent": 33.3333,
+        "top_5_share_percent": 44.4444,
+        "top_10_share_percent": 72.2222
+      },
+      {
+        "field": "combined",
+        "explicit_correction_occurrences": 78,
+        "affected_canonical_entities": 22,
+        "entities_with_exactly_1_correction": 18,
+        "entities_with_2_corrections": 2,
+        "entities_with_3_to_4_corrections": 1,
+        "entities_with_5_plus_corrections": 1,
+        "top_1_share_percent": 67.9487,
+        "top_3_share_percent": 74.359,
+        "top_5_share_percent": 78.2051,
+        "top_10_share_percent": 84.6154
+      }
+    ],
+    "recurrence_summary": [
+      {
+        "field": "datasets",
+        "explicit_correction_occurrences": 60,
+        "distinct_malformed_mappings": 7,
+        "one_off_form_occurrences": 5,
+        "recurring_form_occurrences": 55,
+        "recurring_form_share_percent": 91.6667,
+        "occurrences_in_forms_seen_in_3plus_records": 53,
+        "three_plus_record_share_percent": 88.3333
+      },
+      {
+        "field": "organisations",
+        "explicit_correction_occurrences": 18,
+        "distinct_malformed_mappings": 18,
+        "one_off_form_occurrences": 18,
+        "recurring_form_occurrences": 0,
+        "recurring_form_share_percent": 0.0,
+        "occurrences_in_forms_seen_in_3plus_records": 0,
+        "three_plus_record_share_percent": 0.0
+      },
+      {
+        "field": "combined",
+        "explicit_correction_occurrences": 78,
+        "distinct_malformed_mappings": 25,
+        "one_off_form_occurrences": 23,
+        "recurring_form_occurrences": 55,
+        "recurring_form_share_percent": 70.5128,
+        "occurrences_in_forms_seen_in_3plus_records": 53,
+        "three_plus_record_share_percent": 67.9487
+      }
+    ],
+    "field_comparison": [
+      {
+        "field": "datasets",
+        "explicit_correction_occurrences": 60,
+        "affected_canonical_entities": 7,
+        "median_corrections_per_affected_entity": 1.0,
+        "maximum_corrections_for_one_entity": 53,
+        "recurring_form_share_percent": 91.6667,
+        "singleton_form_share_percent": 8.3333
+      },
+      {
+        "field": "organisations",
+        "explicit_correction_occurrences": 18,
+        "affected_canonical_entities": 15,
+        "median_corrections_per_affected_entity": 1.0,
+        "maximum_corrections_for_one_entity": 3,
+        "recurring_form_share_percent": 0.0,
+        "singleton_form_share_percent": 100.0
+      }
+    ]
+  },
+  "definitions": {
+    "identity_with_display_change": "Native identity status plus exact parsed_raw_value != final_canonical/display_value.",
+    "recurring_malformed_form": "The same suppressed raw malformed representation maps to the same canonical entity in more than one correction occurrence.",
+    "variant_id": "Stable anonymous label assigned within field, entity component, and canonical entity by occurrence count, record count, and SHA-256 tie-break; no raw value is emitted."
+  },
+  "assertions": {
+    "dataset_total_occurrences": true,
+    "dataset_changed_occurrences": true,
+    "dataset_unchanged_occurrences": true,
+    "organisation_total_occurrences": true,
+    "organisation_changed_occurrences": true,
+    "organisation_unchanged_occurrences": true,
+    "total_entity_occurrences": true,
+    "explicit_correction_occurrences": true,
+    "explicit_correction_record_union": true,
+    "explicit_field_occurrences_sum": true,
+    "explicit_mutually_exclusive_record_groups_sum": true,
+    "entity_concentration_occurrences_sum": true,
+    "recurring_mapping_occurrences_sum": true,
+    "each_correction_has_one_canonical_entity": true,
+    "dominant_provider_form_occurrences_53": true,
+    "dominant_provider_form_records_49": true,
+    "excluding_dominant_form_record_union_reconciles": true,
+    "grouping_only_dataset_changes_zero": true,
+    "no_raw_malformed_strings_disclosed": true,
+    "minimum_support_filter_affects_rank_only": true
+  },
+  "verification": {
+    "relevant_tests": "72 passed, 189 subtests passed (dataset, institution, and researcher-parser suites)",
+    "new_aliases_or_matching_rules_introduced": false,
+    "manual_raw_variant_reclassification_performed": false,
+    "validation_or_model_outputs_analysed": false,
+    "raw_malformed_strings_disclosed": false
+  }
+}

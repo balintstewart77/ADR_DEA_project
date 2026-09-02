@@ -1,0 +1,26 @@
+field,mechanism,canonical_entity,variant_id,raw_observed_form,corrected_form,occurrences,unique_records,disclosure_status
+datasets,dataset_truncation_correction_01,Annual Survey of Hours and Earnings linked to Census 2011,variant_01,Annual Survey for Hours and Earnings / Census 2011 Linked Datase,Annual Survey of Hours and Earnings linked to Census 2011,1,1,public_register_raw_form
+datasets,dataset_spelling_correction_01,Business Enterprise Research and Development (BERD),variant_01,Business Enterprise Research and Developement,Business Enterprise Research and Development (BERD),1,1,public_register_raw_form
+datasets,dataset_leading_character_artifact,Integrated Data Service,variant_01,KIntegrated Data Service Environment Health Cohort Spine,Integrated Data Service,1,1,public_register_raw_form
+datasets,dataset_spelling_correction_02,MoJ Data First Probation,variant_01,MOJ Data First Probabation,MoJ Data First Probation,1,1,public_register_raw_form
+datasets,provider_spelling_correction_02,Northern Ireland Statistics and Research Agency (NISRA),variant_01,Northern Ireland Statitiscs and Research Agency,Northern Ireland Statistics and Research Agency (NISRA),1,1,public_register_raw_form
+datasets,provider_spelling_correction_01,Office for National Statistics (ONS),variant_01,Offcie for National Statistics,Office for National Statistics (ONS),2,1,public_register_raw_form
+datasets,provider_repeated_word_correction,SAIL Databank,variant_01,SAIL Databank Databank,SAIL Databank,53,49,public_register_raw_form
+organisations,institution_parser_cleanup,Academy of Medical Sciences,variant_01,Health Foundation/ Academy of Medical Sciences,Academy of Medical Sciences,1,1,public_register_raw_form
+organisations,institution_parser_cleanup,Centre for Economic and Business Research (CEBR),variant_01,Centre for Economic and Business Research Ltd (CEBR),Centre for Economic and Business Research (CEBR),1,1,public_register_raw_form
+organisations,institution_reviewed_typo_alias,Equality and Human Rights Commission (EHRC),variant_01,Equality and Human Rights Comission,Equality and Human Rights Commission (EHRC),1,1,public_register_raw_form
+organisations,institution_parser_cleanup,Health Foundation,variant_01,Health Foundation/ Academy of Medical Sciences,Health Foundation,1,1,public_register_raw_form
+organisations,institution_parser_cleanup,Imperial College London,variant_01,"Imperial College Business, School/London School of Economics",Imperial College London,1,1,public_register_raw_form
+organisations,institution_reviewed_typo_alias,Institute for Employment Studies (IES),variant_01,Institue for Employment Studies,Institute for Employment Studies (IES),1,1,public_register_raw_form
+organisations,institution_parser_cleanup,London School of Economics and Political Science (LSE),variant_01,London School of Economics; and University College London,London School of Economics and Political Science (LSE),1,1,public_register_raw_form
+organisations,institution_parser_cleanup,London School of Economics and Political Science (LSE),variant_02,University of Warwick/London School of Economics,London School of Economics and Political Science (LSE),1,1,public_register_raw_form
+organisations,institution_reviewed_typo_alias,London School of Economics and Political Science (LSE),variant_03,London School of Economics and Polictical Science,London School of Economics and Political Science (LSE),1,1,public_register_raw_form
+organisations,institution_parser_cleanup,"Ministry of National Education, Republic of Türkiye",variant_01,"Reading University Ministry of National Education, Republic of Turkiye","Ministry of National Education, Republic of Türkiye",1,1,public_register_raw_form
+organisations,institution_reviewed_typo_alias,Sentencing Academy,variant_01,Sentencing Acadamey,Sentencing Academy,1,1,public_register_raw_form
+organisations,institution_reviewed_typo_alias,Teesside University,variant_01,Teeside University,Teesside University,1,1,public_register_raw_form
+organisations,institution_parser_cleanup,University College London (UCL),variant_01,"[researcher name redacted], University College London",University College London (UCL),1,1,public_register_raw_form_researcher_name_redacted
+organisations,institution_parser_cleanup,University College London (UCL),variant_02,London School of Economics; and University College London,University College London (UCL),1,1,public_register_raw_form
+organisations,institution_parser_cleanup,University of Leeds,variant_01,"University of Leeds [researcher name redacted], University of Leeds",University of Leeds,1,1,public_register_raw_form_researcher_name_redacted
+organisations,institution_parser_cleanup,University of Reading,variant_01,"Reading University Ministry of National Education, Republic of Turkiye",University of Reading,1,1,public_register_raw_form
+organisations,institution_parser_cleanup,University of Warwick,variant_01,University of Warwick/London School of Economics,University of Warwick,1,1,public_register_raw_form
+organisations,institution_reviewed_typo_alias,University of York,variant_01,York Univeristy,University of York,1,1,public_register_raw_form

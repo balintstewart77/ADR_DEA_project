@@ -1,0 +1,23 @@
+rank,field,entity_component,canonical_entity,explicit_correction_occurrences,affected_records,n_distinct_malformed_variants,total_occurrences,explicit_correction_rate
+1,datasets,provider,SAIL Databank,53,49,1,68,77.9412
+2,datasets,provider,Office for National Statistics (ONS),2,1,1,2619,0.0764
+3,datasets,dataset_name,Annual Survey of Hours and Earnings linked to Census 2011,1,1,1,24,4.1667
+4,datasets,dataset_name,Business Enterprise Research and Development (BERD),1,1,1,83,1.2048
+5,datasets,dataset_name,Integrated Data Service,1,1,1,1,100.0
+6,datasets,dataset_name,MoJ Data First Probation,1,1,1,7,14.2857
+7,datasets,provider,Northern Ireland Statistics and Research Agency (NISRA),1,1,1,39,2.5641
+1,organisations,organisation,London School of Economics and Political Science (LSE),3,3,3,97,3.0928
+2,organisations,organisation,University College London (UCL),2,2,2,120,1.6667
+3,organisations,organisation,Academy of Medical Sciences,1,1,1,1,100.0
+4,organisations,organisation,Centre for Economic and Business Research (CEBR),1,1,1,1,100.0
+5,organisations,organisation,Equality and Human Rights Commission (EHRC),1,1,1,2,50.0
+6,organisations,organisation,Health Foundation,1,1,1,2,50.0
+7,organisations,organisation,Imperial College London,1,1,1,17,5.8824
+8,organisations,organisation,Institute for Employment Studies (IES),1,1,1,1,100.0
+9,organisations,organisation,"Ministry of National Education, Republic of Türkiye",1,1,1,1,100.0
+10,organisations,organisation,Sentencing Academy,1,1,1,1,100.0
+11,organisations,organisation,Teesside University,1,1,1,2,50.0
+12,organisations,organisation,University of Leeds,1,1,1,12,8.3333
+13,organisations,organisation,University of Reading,1,1,1,13,7.6923
+14,organisations,organisation,University of Warwick,1,1,1,34,2.9412
+15,organisations,organisation,University of York,1,1,1,13,7.6923

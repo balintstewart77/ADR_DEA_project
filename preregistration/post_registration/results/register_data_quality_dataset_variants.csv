@@ -1,0 +1,348 @@
+rank,canonical_value,affected_records,total_occurrences,unique_records,changed_occurrences,n_distinct_raw_variants,existing_match_types,raw_variants,raw_variants_suppressed,suppression_reason
+1,Business Structure Database (BSD),281,283,283,281,7,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+2,Annual Business Survey (ABS),230,231,231,230,10,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+3,Annual Survey of Hours and Earnings (ASHE),200,205,204,201,11,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+4,Annual Population Survey (APS),173,183,176,180,9,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+5,Longitudinal Education Outcomes (LEO),116,119,118,117,15,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+6,Business Enterprise Research and Development (BERD),81,83,82,82,10,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+7,UK Innovation Survey (UKIS),79,79,79,79,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+8,Business Register and Employment Survey (BRES),65,67,66,66,6,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+9,Labour Force Survey (LFS),61,81,62,80,4,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+10,ONS Longitudinal Study (LS),54,57,56,55,7,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+11,Labour Force Survey Person,49,68,68,49,7,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+12,Annual Respondents Database X,41,62,62,41,10,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+13,Business Insights and Conditions Survey (BICS),40,41,41,40,7,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+14,Education and Child Health Insights from Linked Data (ECHILD),40,41,41,40,4,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+15,Crime Survey for England and Wales (CSEW),39,41,40,40,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+16,Living Costs and Food Survey (LCF),39,39,39,39,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+17,Labour Force Survey Household,36,48,48,36,8,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+18,Annual Survey of Hours and Earnings Longitudinal,36,42,41,37,10,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+19,Longitudinal Small Business Survey (LSBS),34,35,35,34,4,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+20,Understanding Society,32,58,58,32,4,alias; identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+21,Wealth and Assets Survey (WAS),29,29,29,29,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+22,Labour Force Survey Longitudinal,27,39,39,27,5,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+23,Universities and Colleges Admissions Service (UCAS),25,25,25,25,6,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+24,Management and Expectations Survey (MES),25,25,25,25,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+25,Census Wales 2011,23,30,30,23,6,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+26,Annual Survey of Hours and Earnings linked to Census 2011,23,24,24,23,6,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+27,COVID-19 Infection Survey (CIS),23,23,23,23,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+28,Coronavirus and the Social Impacts on Great Britain,20,20,20,20,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+29,International Trade in Services,19,36,36,19,6,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+30,New Earnings Survey (NES),18,19,18,19,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+31,Opinions and Lifestyle Survey (OPN),17,18,18,17,5,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+32,Linked Trade-in-Goods/Inter-Departmental Business Register,16,20,20,16,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+33,Business Structure Database Longitudinal,14,20,20,14,6,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+34,Annual Respondents Database 2,14,18,18,14,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+35,Employer Skills Survey and Investment in Training,14,15,15,14,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+36,Consumer Prices Index,13,15,15,13,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+37,GRading and Admissions Data England (GRADE),12,13,13,12,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+38,Growing Up in England Wave 1 (GUIE),12,12,12,12,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+39,Annual Foreign Direct Investment Survey,11,22,22,11,4,alias; identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+40,Annual Purchases Survey,11,22,22,11,4,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+41,UK Manufacturers' Sales by Product Survey,11,18,18,11,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+42,E-Commerce Survey,10,17,17,10,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+43,MoJ Data First Crown Court Defendant Case Level,10,11,10,11,2,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+44,Death Registration Data - Provisional Monthly Extracts,10,10,10,10,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+45,MoJ Data First Magistrates' Court Defendant Case Level,10,10,10,10,3,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+46,Longitudinal Business Database,9,14,14,9,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+47,Monthly Wages and Salary Survey,9,10,10,9,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+48,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,9,9,9,9,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+49,Linked Trade-in-Goods/IDBR,8,10,10,8,5,alias; identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+50,Annual International Trade in Services,8,10,10,8,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+51,Decision Maker Panel,8,9,9,8,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+52,MoJ Data First Cross-Justice System Linking Dataset,8,8,8,8,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+53,Census 2021,7,25,25,7,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+54,Longitudinal Inter-Departmental Business Register,7,17,17,7,6,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+55,Low Carbon and Renewable Energy Economy Survey,7,14,14,7,4,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+56,E-Commerce and Digital Economy Survey,7,8,8,7,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+57,Growing Up in England Wave 2 (GUIE),7,7,7,7,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+58,Linked Census and Death Occurrences,7,7,7,7,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+59,Labour Force Survey Five-Quarter Longitudinal,7,7,7,7,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+60,New Earnings Survey Panel,7,7,7,7,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+61,Vacancy Survey,6,13,13,6,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+62,MoJ Data First Prisoner Custodial Journey,6,9,9,6,6,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+63,National Employer Skills Survey,6,9,9,6,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+64,MoJ Data First Crown Court Defendant,6,7,7,6,5,alias; identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+65,Death Registrations Finalised,6,7,7,6,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+66,MoJ Data First Family Court,6,6,6,6,6,alias; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+67,Birth Registrations in England and Wales,6,6,6,6,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+68,Broad Economy Sales and Exports,6,6,6,6,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+69,MoJ Data First Crown Court Iteration 2,6,6,6,6,2,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+70,English School Census Absences,6,6,6,6,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+71,Workplace Employment Relations Survey,5,14,13,5,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+72,Employer Skills Survey,5,9,9,5,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+73,Family Resources Survey,5,8,8,5,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+74,Annual Population Survey Longitudinal,5,6,6,5,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+75,Administrative Data | Agricultural Research Collection (AD|ARC),5,5,5,5,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+76,MoJ Data First Magistrates Court Iteration 2,5,5,5,5,2,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+77,Labour Force Survey Two-Quarter Longitudinal,5,5,5,5,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+78,MoJ Data First Linked Criminal Courts Defendant Case Level,5,5,5,5,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+79,Census 2011,4,29,27,4,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+80,Death Registrations,4,22,21,4,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+81,Quarterly Capital Expenditure Survey,4,14,14,4,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+82,Producer Price Index,4,9,9,4,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+83,Census Wales 2021,4,7,7,4,4,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+84,Investment in Intangible Assets Survey,4,7,7,4,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+85,Capital Stock Dataset,4,5,5,4,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+86,Annual Population Survey Persons,4,4,4,4,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+87,Mergers and Acquisitions Survey,4,4,4,4,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+88,Earnings and Employees Study (EES) 2011 - Northern Ireland,4,4,4,4,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+89,Quarterly Acquisitions and Disposals of Capital Assets Survey,3,14,14,3,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+90,Quarterly Fuels Inquiry,3,10,10,3,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+91,Management Practices Survey,3,9,9,3,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+92,MoJ Data First Probation,3,7,7,3,4,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+93,Annual Survey of Goods and Services,3,6,6,3,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+94,Census 2011 Household,3,5,3,5,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+95,COVID-19 Schools Infection Survey,3,4,4,3,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+96,Death Registrations in England and Wales,3,4,4,3,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+97,Census 2001 Household,3,3,3,3,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+98,Census 2011 England and Wales Household Structure for COVID-19 Models,3,3,3,3,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+99,COVID-19 Infection Survey linked to Combined Vaccination,3,3,3,3,2,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+100,Census 2001 Individual,3,3,3,3,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+101,Online Time Use Survey (OTUS),3,3,3,3,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+102,RETIRED MoJ Data First Magistrates Court Defendant,3,3,3,3,2,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+103,Census 2011 linked to Benefits and Income,3,3,3,3,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+104,Further Education Workforce Data Collection,3,3,3,3,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+105,Nursing and Midwifery Council Register,3,3,3,3,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+106,Nursing and Midwifery Council Register linked to Census 2021,3,3,3,3,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+107,Working Lives of Teachers and Leaders Survey,3,3,3,3,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+108,Annual Respondents Database,2,45,40,2,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+109,Business Expenditure on Research and Development,2,16,16,2,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+110,Annual Business Inquiry,2,11,11,2,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+111,Monthly Business Survey,2,9,9,2,3,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+112,Small Business Survey,2,7,7,2,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+113,National Travel Survey,2,5,5,2,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+114,Census 1981,2,3,3,2,3,alias; identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+115,Census 2011 Origin-Destination,2,3,3,2,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+116,Annual Gas and Electricity Consumption at Meter Level,2,3,3,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+117,COVID-19 Schools Infection Survey linked to Test and Trace,2,2,2,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+118,Census 2021 Comprehensive Microdata,2,2,2,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+119,Effects of Taxes and Benefits on Household Income,2,2,2,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+120,MoJ Data First Probation Iteration 2,2,2,2,2,2,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+121,Monthly Inquiry into the Distributive and Services Sector (MIDSS),2,2,2,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+122,Monthly Production Inquiry (MPI),2,2,2,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+123,Bespoke Admin Data - Agricultural Research Collection Phase 2,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+124,COVID-19 Infection Survey linked to VOA and EPC,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+125,COVID-19 Infection Survey with Combined Vaccination,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+126,COVID-19 Vaccine Opinions Survey,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+127,Census 2011 and Census 2021 England and Wales,2,2,2,2,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+128,Census 2021 Household Secure Microdata Sample,2,2,2,2,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+129,Children of the 2020s Longitudinal Study,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+130,DHSC: COVID-19 Infection Survey linked to NHS Test and Trace,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+131,Designs and Trade Marks from Intellectual Property Office,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+132,Racial Disparity Audit,2,2,2,2,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+133,Statutory Homelessness Flows - England,2,2,2,2,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+134,Growing Up in England Wave 2 - Exclusions,1,6,6,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+135,Annual Population Survey: Well-Being,1,5,5,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+136,Census 1961,1,4,4,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+137,Census 1971,1,4,4,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+138,MoJ Data First Linked Criminal Courts,1,4,4,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+139,MoJ Data First Magistrates' Court Defendant,1,3,3,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+140,Over 50s Lifestyle Study,1,3,3,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+141,Prices Survey Microdata,1,3,3,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+142,Understanding Society UKHLS,1,3,3,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+143,COVID-19 Weekly Opinions Survey,1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+144,Census 2011 England,1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+145,Childcare and Early Years Survey of Parents,1,2,2,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+146,EOL,1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+147,Foreign Direct Investment Index,1,2,2,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+148,Understanding Society BHPS,1,2,2,1,2,identity; normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+149,Annual Business Survey - GB Annual Survey of Hours and Earnings,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+150,Annual Business Survey - UK,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+151,Annual Survey of Hours and Earnings linked to Census 2011 England and Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+152,Bespoke Admin Data - Agricultural Research Collection Phase 1,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+153,Bespoke Admin Data: Agricultural Research Collection,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+154,Bespoke Equalities Data Asset: Companies House - Census 2011,1,1,1,1,1,compound_or_multi_dataset,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+155,Bespoke National Council for Voluntary Organisations,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+156,Business Data Research (BDR) 2022 Themed,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+157,Business Register Employment Survey - UK Living Costs and Food Survey - UK Labour Force Survey Household - UK Consumer and Retail Price Index - UK Annual Survey of Hours and Earnings Longitudinal - UK Annual Population Survey,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+158,Business Register Emplyment Survey,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+159,Business Structure Database - UK Annual Survey of Hours and Earnings - GB Annual Population Survey - UK Annual International Trade in Services,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+160,CGIAD,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+161,COVID-19 Infection Survey linked to Death Occurrences England and Wales Office for National Statistics /,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+162,COVID-19 Infection Survey linked to NHS Test and Trace,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+163,COVID-19 Infection Survey linked to Public Health Research Database,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+164,COVID-19 Infection Survey linked to UK Innovation Survey,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+165,COVID-19 Infection Survey linked to VOA and EPC - England and Wales Office for National,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+166,COVID-19 Infection Survey with National Immunisation Management Service,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+167,COVID-19 School Infection Survey linked to NHS Test,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+168,COVID-19 Schools Infection Survey linked to National Immunisation Management Service,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+169,Census 2011 Aggregate,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+170,Census 2011 Ethnicity,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+171,Census 2011 Household Sample,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+172,Census 2011 Household Sample England and Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+173,Census 2011 Individual Sample England and Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+174,Census 2011 Individual Secure Sample England and Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+175,Census 2011 Northern Ireland,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+176,Census 2011 Origin-Destination Flow,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+177,Census 2021 10% Sample,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+178,Census 2021 Household Secure Microdata Sample England and Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+179,Census 2021 Indexed,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+180,Census 2021 Non-Response Link Study England and Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+181,Census 2021 Non-Response Link Study England and Wales Indexed,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+182,Census 2021 Origin-Destination Tables England and Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+183,Census 2022,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+184,Census Wales 2021 Household,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+185,Civil Society Organisations,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+186,Council Tax Property Attributes,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+187,Death,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+188,Death Registrations in England and Wales Indexed,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+189,Department for Education: Employer Skills Survey,1,1,1,1,1,compound_or_multi_dataset,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+190,Energy Performance Certification,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+191,English Housing Survey UK Household Electricity and Activity Survey Smart Energy Research Lab Observatory,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+192,Food Survey,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+193,Integrated Data Asset Hospital Episode,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+194,Integrated Data Service,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+195,Inter-Departmental Business Register (IDBR),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+196,Linked Credit Reference Agency (CRA),1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+197,Linked Director's mortality,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+198,Maternal Deaths,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+199,MoJ Data First Family Court Data Extract,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+200,MoJ Data First Familyman Family Court,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+201,MoJ Data First Link Ed Criminal Courts,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+202,MoJ Data First Linked Criminal Courts And Prisons Defendant,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+203,MoJ Data First Magistrates Court Defendant,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+204,MoJ Data First Magistrates Court Defendant Iteration 2,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+205,MoJ Data First Offender Assessment,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+206,MoJ Data First Prison Iteration 2,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+207,Monthly Business Survey for Construction and Allied Trades,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+208,NHS Test and Trace,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+209,National Energy Efficiency,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+210,Northern Ireland Census 2021 Microdata,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+211,Northern Ireland Economic Trade,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+212,O2 mobile network operator travel and location data,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+213,ONS Longitudinal Study 1971,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+214,Quarterly Labour Force Survey Household,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+215,RETIRED MoJ Data First Crown Court Defendant,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+216,RETIRED MoJ Data First Probation,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+217,Schools Daily Contact Testing,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+218,Short Term Employment Survey,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+219,Skills and Employment Surveys Series,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+220,State-funded schools inspections and outcomes,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+221,Statutory Homelessness Flows,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+222,Structure Database,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+223,Trace,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+224,UCAS Grading and Admissions,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+225,UK Household Longitudinal Study Mainstage Survey Wave 9,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+226,Understanding Society - UK Office for National,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+227,pension funds and trusts,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+228,udinal Business Database,1,1,1,1,1,normalised_format,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+229,Quarterly Labour Force Survey,0,48,46,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+230,Community Innovation Survey,0,9,9,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+231,Public Health Research Database,0,7,7,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+232,Annual Population Survey Household,0,6,6,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+233,Northern Ireland Annual Business Inquiry,0,6,6,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+234,Annual Inquiry into Foreign Direct Investment,0,4,4,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+235,Department for Business,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+236,Employment Creation and Survival,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+237,Firm Productivity,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+238,"Linked Census, HES and Mortality Data",0,3,3,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+239,Longitudinal Labour Force Survey,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+240,Research and Development Expenditures and Subsidies,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+241,BHPS,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+242,COVID-19 Infection Survey linked to Combined Vaccination - UK ONS,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+243,COVID-19 Study,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+244,Census 1991,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+245,Census 2021 England and Wales,0,2,2,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+246,Expenditure and Food Survey,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+247,Industrial Strategy: UK Innovation Survey,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+248,Innovation Panel,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+249,Integrated Census Microdata,0,2,2,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+250,International Passenger Survey,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+251,Northern Ireland Annual Business Inquiry (NIABI),0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+252,Northern Ireland School Census,0,2,2,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+253,Survey of Innovation and Patent Use,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+254,Telephone-Operated Crime Survey for England and Wales,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+255,The Second Longitudinal Study of Young People in England,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+256,UK Gross Value Added,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+257,Waves 1-10 and Harmonised BHPS Geography files,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+258,2020 Wave 1 Labour Force Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+259,Annual Acquisition and Disposals of Capital Assets Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+260,Annual Respondents Database X (ARDx) Business Register and Employment Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+261,Bespoke Data Tables for Project,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+262,Bespoke National Pupil Database extract,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+263,Bespoke Refugee Integration Outcomes Cohort Study England,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+264,Births and Deaths,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+265,British Election Panel Study,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+266,British Local Election Database,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+267,Business Enterprise Research and Development Great Britain,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+268,Business Enterprise Research and Development Northern Ireland,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+269,COVID-19 Infection Survey linked to Mortality - England and Wales ONS,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+270,Capital Stock 2014,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+271,Census 2001,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+272,Census 2011 (CENW),0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+273,Census 2011 100% Household and Individual - England an d Wales,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+274,Census 2011 England and Wales: Household structure for COVID-19 models,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+275,Census 2011 Individual England and Wales,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+276,Census 2011 Individual Northern Ireland,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+277,Census 2011 Individual Scotland,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+278,Census 2021 (CENS) Ministry of Justice,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+279,Census Microdata 9% Sample,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+280,Childcare and Early Years Provision: Providers' Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+281,Children and Family Court Advisory and Support Service (CAFCASS England),0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+282,Children of the 2020s: Wave 1,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+283,DEA Research Project Accreditation Understanding Society,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+284,Designs and Trade Marks Office for National Statistics /,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+285,Digital Economy Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+286,Digital library of historical directories,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+287,Emergency Care Data Set monthly in England indexed,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+288,Employer Skills Survey: Investment in Training,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+289,Energy and Industrial Strategy: Community Innovation Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+290,English Longitudinal Study of Ageing,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+291,Enhanced Linked Trade-in-Goods/Inter-Departmental Business Register,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+292,Family Expenditure Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+293,Financial Assets and Liabilities Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+294,General Household Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+295,General Lifestyle Survey to 2010,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+296,Growing Up in England Wave 2 Vulnerability Measures,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+297,Harmonised BHPS Waves 1-18,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+298,Health Survey for England,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+299,Health and Lifestyle Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+300,Households Below Average Income,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+301,Infant Mortality linkage of 2011 Census,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+302,Investment by insurance companies,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+303,Investment in Intangible Assets,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+304,Labour Force Survey Indexed,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+305,Linked Census and death occurrences Office for National Statistics /,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+306,Linked Inter-Departmental Business Register and Valuation Office Agency,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+307,Longitudinal Business Register,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+308,Longitudinal Inter-Development Business Register,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+309,Longitudinal Study of young people in England,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+310,Low carbon and renewable energy economy,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+311,NI Annual Business Inquiry,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+312,NN4B,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+313,National Travel Survey England,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+314,National Travel Survey English Housing Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+315,Northern Ireland Economic Trade Statistics (NIETS),0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+316,Northern Ireland Economic Trade Statistics (NIETS) Northern Ireland Annual Survey of Hours and Earnings (NI ASHE),0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+317,Northern Ireland Exams Database,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+318,Northern Ireland School Leavers Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+319,Northern Ireland School Leavers Survey Northern Ireland Exams Database,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+320,ONS Census 2021,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+321,ONS Omnibus Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+322,Occupational differences in mortality from COVID-19,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+323,Provisional Monthly Extracts England and Wales,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+324,Public Attitudes Tracker,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+325,Quarterly Fuels Inquiry / Quarterly Fuels Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+326,Quarterly Survey of Financial Assets and Liabilities,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+327,Retail Price Index,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+328,Safeguarded Living Costs and Food Survey,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+329,Secure Access version of Understanding Society Data and Harmonised BHPS Geography files,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+330,Secure Census 2011 Scotland,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+331,Small Business Survey Longitudinal,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+332,Standard Industrial Classification and Occupational lookup,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+333,Street Level Crime for England,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+334,Survey of Personal Incomes,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+335,Trade in Services,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+336,UCAS Grading and Admissions Qualifications Wales,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+337,UK Gross Value Added for lower layer super output areas,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+338,UK Household Longitudinal Study Mainstage Survey Wave 6,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+339,UK research and Innovation Workforce Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+340,UK small area gross value added estimates,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+341,UK: 2023,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+342,Understanding Society Waves 1-9,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+343,Understanding Society and Harmonised BHPS,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+344,Urban Population Database,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+345,Valuation data of Scottish properties,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+346,Wealth and Assets Survey Great Britain,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+347,Workplace Employee Relations Survey,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld

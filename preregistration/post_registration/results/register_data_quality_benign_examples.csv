@@ -1,0 +1,41 @@
+field,transformation_class,rank_within_class,raw_observed_form,canonical_form,occurrences,unique_records
+datasets,alias,1,Business Structure Database,Business Structure Database (BSD),176,176
+datasets,alias,2,Annual Business Survey,Annual Business Survey (ABS),143,143
+datasets,alias,3,Annual Population Survey,Annual Population Survey (APS),131,126
+datasets,alias,4,Annual Survey of Hours and Earnings,Annual Survey of Hours and Earnings (ASHE),123,123
+datasets,alias,5,Business Structure Database - UK,Business Structure Database (BSD),88,88
+datasets,alias,6,UK Innovation Survey,UK Innovation Survey (UKIS),75,75
+datasets,alias,7,Labour Force Survey,Labour Force Survey (LFS),70,54
+datasets,alias,8,Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England,Longitudinal Education Outcomes (LEO),55,55
+datasets,alias,9,Annual Business Survey - GB,Annual Business Survey (ABS),44,44
+datasets,alias,10,Annual Survey of Hours and Earnings - UK,Annual Survey of Hours and Earnings (ASHE),41,41
+datasets,normalised_format,1,Labour Force Survey Person - UK,Labour Force Survey Person,39,39
+datasets,normalised_format,2,Understanding Society - UK,Understanding Society,28,28
+datasets,normalised_format,3,Labour Force Survey Longitudinal - UK,Labour Force Survey Longitudinal,22,22
+datasets,normalised_format,4,Labour Force Survey Household - UK,Labour Force Survey Household,21,21
+datasets,normalised_format,5,Employer Skills Survey and Investment in Training - UK,Employer Skills Survey and Investment in Training,14,14
+datasets,normalised_format,6,Annual Foreign Direct Investment Survey - UK,Annual Foreign Direct Investment Survey,8,8
+datasets,normalised_format,7,Annual Purchases Survey - UK,Annual Purchases Survey,8,8
+datasets,normalised_format,8,Decision Maker Panel - UK,Decision Maker Panel,8,8
+datasets,normalised_format,9,MoJ Data First Crown court defendant case level dataset,MoJ Data First Crown Court Defendant Case Level,8,7
+datasets,normalised_format,10,Labour Force Survey Five-Quarter Longitudinal Dataset,Labour Force Survey Five-Quarter Longitudinal,7,7
+organisations,alias,1,London School of Economics,London School of Economics and Political Science (LSE),55,55
+organisations,alias,2,Office for National Statistics,Office for National Statistics (ONS),40,40
+organisations,alias,3,King's College London,King's College London (KCL),24,24
+organisations,alias,4,London School of Economics and Political Science,London School of Economics and Political Science (LSE),23,23
+organisations,alias,5,The University of Manchester,University of Manchester,23,23
+organisations,alias,6,IPSOS MORI,Ipsos,18,18
+organisations,alias,7,The University of Edinburgh,University of Edinburgh,18,18
+organisations,alias,8,National Foundation for Educational Research,National Foundation for Education Research (NFER),13,13
+organisations,alias,9,The London School of Economics and Political Science,London School of Economics and Political Science (LSE),12,12
+organisations,alias,10,University of Durham,Durham University,11,11
+organisations,identity_with_display_change,1,University College London,University College London (UCL),99,99
+organisations,identity_with_display_change,2,Institute for Fiscal Studies,Institute for Fiscal Studies (IFS),64,64
+organisations,identity_with_display_change,3,Public Health Wales,Public Health Wales (PHW),15,15
+organisations,identity_with_display_change,4,London School of Hygiene and Tropical Medicine,London School of Hygiene and Tropical Medicine (LSHTM),13,13
+organisations,identity_with_display_change,5,National Institute for Economic and Social Research,National Institute for Economic and Social Research (NIESR),13,13
+organisations,identity_with_display_change,6,Competition and Markets Authority,Competition and Markets Authority (CMA),8,8
+organisations,identity_with_display_change,7,Massachusetts Institute of Technology,Massachusetts Institute of Technology (MIT),5,5
+organisations,identity_with_display_change,8,"Department for Business, Energy and Industrial Strategy","Department for Business, Energy and Industrial Strategy (BEIS)",4,4
+organisations,identity_with_display_change,9,Low Pay Commission,Low Pay Commission (LPC),4,4
+organisations,identity_with_display_change,10,Public Health England,Public Health England (PHE),4,4

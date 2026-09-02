@@ -1,0 +1,39 @@
+field,analysis_level,native_match_type,transformation_type,total_occurrences,changed_occurrences,unchanged_occurrences,unique_records,changed_unique_records,denominator,percentage,pct_of_all_occurrences,pct_of_changed_occurrences,notes
+datasets,native_match_status,alias,NA,2409,2211,198,1147,1108,3350,71.9104,71.9104,83.7817,Record counts across match types can overlap and are not additive.
+datasets,native_match_status,compound_or_multi_dataset,NA,2,2,0,2,2,3350,0.0597,0.0597,0.0758,Record counts across match types can overlap and are not additive.
+datasets,native_match_status,identity,NA,513,0,513,300,0,3350,15.3134,15.3134,0.0,Record counts across match types can overlap and are not additive.
+datasets,native_match_status,normalised_format,NA,426,426,0,252,252,3350,12.7164,12.7164,16.1425,Record counts across match types can overlap and are not additive.
+datasets,changed_occurrence_composition,alias,alias,2211,2211,0,1108,1108,2639,83.7817,NA,83.7817,Restricted to changed occurrences; record counts can overlap.
+datasets,changed_occurrence_composition,compound_or_multi_dataset,compound_or_multi_dataset,2,2,0,2,2,2639,0.0758,NA,0.0758,Restricted to changed occurrences; record counts can overlap.
+datasets,changed_occurrence_composition,normalised_format,normalised_format,426,426,0,252,252,2639,16.1425,NA,16.1425,Restricted to changed occurrences; record counts can overlap.
+datasets,affected_record_type_count,NA,exactly_one_transformation_type,NA,NA,NA,1017,1017,1189,85.5341,NA,NA,Mutually exclusive record-level composition.
+datasets,affected_record_type_count,NA,two_or_more_transformation_types,NA,NA,NA,172,172,1189,14.4659,NA,NA,Mutually exclusive record-level composition.
+datasets,affected_record_type_combination,NA,alias,NA,NA,NA,936,936,1189,78.7216,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+datasets,affected_record_type_combination,NA,alias + normalised_format,NA,NA,NA,171,171,1189,14.3818,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+datasets,affected_record_type_combination,NA,normalised_format,NA,NA,NA,80,80,1189,6.7283,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+datasets,affected_record_type_combination,NA,alias + compound_or_multi_dataset + normalised_format,NA,NA,NA,1,1,1189,0.0841,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+datasets,affected_record_type_combination,NA,compound_or_multi_dataset,NA,NA,NA,1,1,1189,0.0841,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+organisations,native_match_status,alias,NA,624,514,110,542,456,1839,33.9315,33.9315,67.5427,Record counts across match types can overlap and are not additive.
+organisations,native_match_status,identity,NA,1203,235,968,948,219,1839,65.416,65.416,30.8804,Record counts across match types can overlap and are not additive.
+organisations,native_match_status,parser_cleanup,NA,12,12,0,7,7,1839,0.6525,0.6525,1.5769,Record counts across match types can overlap and are not additive.
+organisations,changed_occurrence_composition,alias,alias,514,514,0,456,456,761,67.5427,NA,67.5427,Restricted to changed occurrences; record counts can overlap.
+organisations,changed_occurrence_composition,identity,identity_with_display_change,235,235,0,219,219,761,30.8804,NA,30.8804,Restricted to changed occurrences; record counts can overlap.
+organisations,changed_occurrence_composition,parser_cleanup,parser_cleanup,12,12,0,7,7,761,1.5769,NA,1.5769,Restricted to changed occurrences; record counts can overlap.
+organisations,affected_record_type_count,NA,exactly_one_transformation_type,NA,NA,NA,556,556,619,89.8223,NA,NA,Mutually exclusive record-level composition.
+organisations,affected_record_type_count,NA,two_or_more_transformation_types,NA,NA,NA,63,63,619,10.1777,NA,NA,Mutually exclusive record-level composition.
+organisations,affected_record_type_combination,NA,alias,NA,NA,NA,393,393,619,63.4895,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+organisations,affected_record_type_combination,NA,identity_with_display_change,NA,NA,NA,158,158,619,25.525,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+organisations,affected_record_type_combination,NA,alias + identity_with_display_change,NA,NA,NA,61,61,619,9.8546,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+organisations,affected_record_type_combination,NA,parser_cleanup,NA,NA,NA,5,5,619,0.8078,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+organisations,affected_record_type_combination,NA,alias + parser_cleanup,NA,NA,NA,2,2,619,0.3231,NA,NA,Mutually exclusive combination; no Record IDs disclosed.
+datasets,excluded_grouping_operation,NA,dataset_family_grouping,0,0,0,NA,NA,2639,0.0,NA,0.0,Not part of the original dataset-name reconciliation numerator.
+datasets,excluded_grouping_operation,NA,collection_grouping,0,0,0,NA,NA,2639,0.0,NA,0.0,Not part of the original dataset-name reconciliation numerator.
+datasets,excluded_grouping_operation,NA,linked_product_grouping,0,0,0,NA,NA,2639,0.0,NA,0.0,Not part of the original dataset-name reconciliation numerator.
+organisations,identity_display_change_cause,identity,approved_acronym_addition,235,235,0,219,219,761,30.8804,NA,30.8804,"Cause determined by the existing approved-acronym display function, not raw-string interpretation."
+datasets,explicit_correction_field_split,NA,explicit_deterministic_correction,60,60,0,55,55,3350,1.791,1.791,NA,Record denominator 1307; record rate 4.2081%.
+organisations,explicit_correction_field_split,NA,explicit_deterministic_correction,18,18,0,12,12,1839,0.9788,0.9788,NA,Record denominator 1299; record rate 0.9238%.
+combined union,explicit_correction_field_split,NA,explicit_deterministic_correction,78,78,0,66,66,5189,1.5032,1.5032,NA,Record denominator 1308; record rate 5.0459%.
+combined union,explicit_correction_record_overlap,NA,dataset correction only,NA,NA,NA,54,54,66,81.8182,NA,NA,Mutually exclusive groups; sum equals the 66-record union.
+combined union,explicit_correction_record_overlap,NA,organisation correction only,NA,NA,NA,11,11,66,16.6667,NA,NA,Mutually exclusive groups; sum equals the 66-record union.
+combined union,explicit_correction_record_overlap,NA,corrections in both fields,NA,NA,NA,1,1,66,1.5152,NA,NA,Mutually exclusive groups; sum equals the 66-record union.
+combined union,explicit_correction_sensitivity,NA,excluding_dominant_provider_form,25,25,0,18,18,1308,1.3761,NA,NA,Dominant form affects 49 records; 1 of those also have another explicit correction.

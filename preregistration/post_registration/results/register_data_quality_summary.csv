@@ -1,0 +1,5 @@
+field,evaluable_records,affected_records,affected_record_rate,total_occurrences,changed_occurrences,changed_occurrence_rate,distinct_raw_values,distinct_canonical_values,canonical_values_with_multiple_raw_variants,explicit_error_records,explicit_error_record_rate,explicit_error_rate_identifiable,notes
+datasets,1307,1189,90.9717,3350,2639,78.7761,701,347,126,55,4.2081,True,Current downstream parser/canonicaliser; explicit-error subset is conservative and rule-labelled.
+organisations,1299,619,47.652,1839,761,41.3812,409,281,75,12,0.9238,True,Live institution parser; explicit-error subset uses parser_cleanup and aliases explicitly labelled as typos.
+researcher names,1306,NA,NA,3997,NA,NA,2478,NA,NA,NA,NA,False,Reconciliation rate not measurable: production parser never merges similar person names; occurrence count is person_candidate parser output.
+explicit malformed/text corrections,1308,66,5.0459,5189,78,1.5032,NA,NA,NA,66,5.0459,True,Conservative union of explicitly labelled corrective rules across dataset/provider and institution occurrences.

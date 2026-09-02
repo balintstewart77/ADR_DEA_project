@@ -1,0 +1,282 @@
+rank,canonical_value,affected_records,total_occurrences,unique_records,changed_occurrences,n_distinct_raw_variants,existing_match_types,raw_variants,raw_variants_suppressed,suppression_reason
+1,University College London (UCL),120,120,120,120,12,alias; identity; parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+2,London School of Economics and Political Science (LSE),97,97,97,97,9,alias; parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+3,Institute for Fiscal Studies (IFS),67,67,67,67,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+4,Office for National Statistics (ONS),47,47,47,47,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+5,King's College London (KCL),32,32,32,32,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+6,University of Manchester,25,43,43,25,4,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+7,Ipsos,22,27,27,22,5,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+8,University of Edinburgh,18,31,31,18,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+9,National Institute for Economic and Social Research (NIESR),15,15,15,15,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+10,Public Health Wales (PHW),15,15,15,15,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+11,National Foundation for Education Research (NFER),14,14,14,14,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+12,London School of Hygiene and Tropical Medicine (LSHTM),13,13,13,13,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+13,Durham University,11,19,19,11,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+14,Cardiff University,9,37,37,9,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+15,Queen Mary University of London,9,16,16,9,6,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+16,"City, University of London",9,11,11,9,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+17,Greater London Authority (GLA),9,9,9,9,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+18,Aston University,8,14,14,8,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+19,University of the West of England,8,10,10,8,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+20,Competition and Markets Authority (CMA),8,8,8,8,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+21,Agri-Food and Biosciences Institute,7,7,7,7,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+22,PwC LLP,7,7,7,7,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+23,Lancaster University,6,18,18,6,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+24,Northern Ireland Statistics and Research Agency (NISRA),6,7,7,6,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+25,University of Liverpool,5,20,20,5,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+26,"Royal Holloway, University of London",5,9,9,5,4,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+27,"Department for Business, Energy and Industrial Strategy (BEIS)",5,5,5,5,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+28,Department of Health and Social Care (DHSC),5,5,5,5,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+29,Department for Business and Trade (DBT),5,5,5,5,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+30,Massachusetts Institute of Technology (MIT),5,5,5,5,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+31,University of Westminster,4,10,10,4,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+32,FFT Education Ltd,4,9,9,4,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+33,Alan Turing Institute,4,5,5,4,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+34,Low Pay Commission (LPC),4,4,4,4,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+35,Public Health England (PHE),4,4,4,4,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+36,Swansea University,3,66,66,3,4,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+37,University of Oxford,3,50,50,3,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+38,University of Warwick,3,34,34,3,4,alias; identity; parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+39,Frontier Economics Ltd,3,24,24,3,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+40,Imperial College London,3,17,17,3,4,alias; identity; parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+41,SQW - Economic and Management Consultants,3,6,6,3,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+42,Institute for Social and Economic Research (University of Essex),3,3,3,3,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+43,"Department for Levelling Up, Housing and Communities (DLUHC)",3,3,3,3,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+44,Intellectual Property Office (IPO),3,3,3,3,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+45,National Centre for Social Research (NatCen),3,3,3,3,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+46,University of Bristol,2,29,29,2,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+47,University of Cambridge,2,26,26,2,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+48,University of Bath,2,23,23,2,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+49,University of Exeter,2,17,17,2,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+50,University of Leeds,2,12,12,2,3,alias; identity; parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+51,UCL Institute of Education,2,8,8,2,3,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+52,Loughborough University,2,8,8,2,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+53,Northumbria University,2,4,4,2,3,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+54,University of Oxford - Sociology,2,4,4,2,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+55,Whole Life Consultants,2,4,4,2,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+56,Kingston University,2,3,3,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+57,Equality and Human Rights Commission (EHRC),2,2,2,2,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+58,"ADS (Aerospace, Defence, Security, Space) Group Limited",2,2,2,2,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+59,National Physical Laboratory (NPL),2,2,2,2,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+60,University of Sheffield,1,31,31,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+61,University of Sussex,1,19,19,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+62,University of Surrey,1,17,17,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+63,Belmana,1,15,15,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+64,University of St Andrews,1,15,15,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+65,University of Reading,1,13,13,1,2,identity; parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+66,University of York,1,13,13,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+67,University of East Anglia,1,12,12,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+68,London Economics,1,10,10,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+69,University of Dundee,1,10,10,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+70,University of Kent,1,8,8,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+71,Heriot-Watt University,1,6,6,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+72,RSM UK,1,4,4,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+73,Manchester Metropolitan University,1,3,3,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+74,Nottingham Trent University,1,3,3,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+75,RAND Europe,1,3,3,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+76,University of Barcelona,1,3,3,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+77,ARUP,1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+78,Economic Statistics Centre of Excellence,1,2,2,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+79,Economic and Social Research Institute (ESRI),1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+80,European University Institute,1,2,2,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+81,Fraser of Allander Institute (University of Strathclyde),1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+82,Health Foundation,1,2,2,1,2,identity; parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+83,Henley Business School (University of Reading),1,2,2,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+84,Learning and Work Institute,1,2,2,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+85,Middlesex University,1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+86,Teesside University,1,2,2,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+87,University of Northampton,1,2,2,1,2,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+88,University of Plymouth,1,2,2,1,2,alias; identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+89,Academy of Medical Sciences,1,1,1,1,1,parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+90,Administrative Data Research Wales,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+91,"Birkbeck, University of London",1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+92,Bournemouth University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+93,Cardiff Metropolitan University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+94,Centre for Economic and Business Research (CEBR),1,1,1,1,1,parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+95,"Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)",1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+96,Chartered Institute of Personnel and Development (CIPD),1,1,1,1,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+97,Coventry University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+98,Cranfield University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+99,"Department for Business, Innovation and Skills",1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+100,"Department for Digital, Culture, Media and Sport",1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+101,Department of Health (Northern Ireland),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+102,Engineering Construction Industry Training Board (ECITB),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+103,Financial Conduct Authority (FCA),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+104,HM Revenue and Customs (HMRC),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+105,Health Data Research UK (HDR UK),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+106,Institut Européen d'Administration des Affaires (INSEAD),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+107,Institute for Employment Studies (IES),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+108,Institute for Government (IfG),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+109,Institute for the Future of Work (IFOW),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+110,International Monetary Fund (IMF),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+111,Johannes Kepler University Linz,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+112,Joint Biosecurity Centre,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+113,Lancaster University Management School,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+114,London Metropolitan University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+115,Ministry of Justice (MoJ),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+116,"Ministry of National Education, Republic of Türkiye",1,1,1,1,1,parser_cleanup,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+117,Municipal & General (M&G),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+118,NHS England,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+119,Netherlands Interdisciplinary Demographic Institute,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+120,Office for Health Improvement and Disparities (OHID),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+121,Public Health Scotland (PHS),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+122,"SAIL Databank, Swansea University",1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+123,Sentencing Academy,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+124,Social Mobility Commission (SMC),1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+125,Technological University Dublin,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+126,Umeå University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+127,University of Illinois Urbana-Champaign,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+128,University of Texas at Austin,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+129,Utrecht University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+130,Yale University,1,1,1,1,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+131,University of Strathclyde,0,32,32,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+132,University of Essex,0,26,26,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+133,University of Nottingham,0,23,23,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+134,University of Southampton,0,23,23,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+135,Bank of England,0,22,22,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+136,Queen's University Belfast,0,20,20,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+137,University of Birmingham,0,16,16,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+138,University of London,0,16,16,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+139,Welsh Government,0,14,14,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+140,Simetrica,0,12,12,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+141,University of Leicester,0,11,11,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+142,Ulster University,0,10,10,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+143,Newcastle University,0,9,9,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+144,University of Glasgow,0,9,9,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+145,Resolution Foundation,0,8,8,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+146,Department for International Trade,0,7,7,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+147,Edinburgh Napier University,0,7,7,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+148,Education Policy Institute,0,6,6,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+149,Centre for Cities,0,5,5,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+150,Innovate UK,0,5,5,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+151,Technopolis,0,5,5,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+152,University of Stirling,0,5,5,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+153,Greater Manchester Combined Authority,0,4,4,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+154,Harvard University,0,4,4,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+155,Nesta,0,4,4,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+156,Brunel University London,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+157,Cabinet Office,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+158,HM Treasury,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+159,Oxford Economics Ltd,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+160,Scottish Government,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+161,The Work Foundation,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+162,University of Brighton,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+163,University of Central Lancashire,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+164,University of Hertfordshire,0,3,3,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+165,Alma Economics,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+166,Anglia Ruskin University Higher Education Corporation,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+167,Cambridge Econometrics,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+168,Digital Health and Care Wales,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+169,Georgetown University,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+170,Glasgow City Council,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+171,Institute of Occupational Medicine,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+172,MIME Consulting Ltd,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+173,Nuffield Family Justice Observatory,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+174,OFSTED,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+175,PA Consulting,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+176,Pro Bono Economics,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+177,Sheffield Hallam University,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+178,Skills Development Scotland,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+179,Tech City UK,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+180,UK Health Security Agency,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+181,UK Research and Innovation,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+182,UK Space Agency,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+183,University of Derby,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+184,University of Hull,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+185,University of Padova,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+186,University of Suffolk,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+187,West Midlands Combined Authority,0,2,2,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+188,AQA Education,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+189,Anna Freud Centre,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+190,BOP Consulting,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+191,Be the Business,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+192,Behavioural Insights Team,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+193,British Psychological Society,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+194,British Sociological Society,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+195,Calver Pang,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+196,Cambridge OCR,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+197,Cambridge Policy Consultants,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+198,Cancer Research UK,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+199,Cardiff and Vale University Health Board,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+200,Columbia University,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+201,Cyber Monitoring Centre,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+202,DASCROSE Limited,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+203,"Department for Culture, Media and Sport",0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+204,Department for the Economy (Northern Ireland),0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+205,Ecorys UK,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+206,Emory University,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+207,Experian,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+208,Federal Reserve Bank of Philadelphia,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+209,Federal Reserve Board of Governors,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+210,Frazer-Nash Consultancy,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+211,Free University of Bozen-Bolzano,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+212,Hackney Council,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+213,Happy City Initiative,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+214,Hardisty Jones Associates,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+215,Home Office,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+216,ICF International,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+217,IFF Research,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+218,IFS,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+219,Ifo Institute for Economic Research,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+220,Incomes Data Research,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+221,Independent Researcher,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+222,Infact Systems Limited,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+223,Institute & Faculty of Actuaries,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+224,Institute of the Motor Industry,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+225,King's Fund,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+226,Knowledge Transfer Network,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+227,Lightcast,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+228,Liverpool City Region Combined Authority,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+229,London Borough of Redbridge,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+230,Marie Curie,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+231,Methods Analytics,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+232,National Infrastructure Commission,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+233,National Institute of Social and Economic Research,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+234,Nevin Economic Research Institute,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+235,New Economics Foundation,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+236,Newcastle City Council,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+237,Nuffield Foundation,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+238,OECD,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+239,OREC,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+240,Office of the Victims' Commissioner for England and Wales,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+241,Oxford Brookes University,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+242,Oxford Economics,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+243,Pearson,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+244,Pensions Policy Institute,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+245,Perspective Economics,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+246,Publishers Association,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+247,"Queen's University Belfast Management, School",0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+248,Research Center in Applied Economics for Development CREAD - Algeria,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+249,SGN,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+250,Saga City Research,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+251,ScaleUp Institute,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+252,Sheffield Teaching Hospitals NHS Foundation Trust,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+253,Social Care Wales,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+254,Social Market Foundation,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+255,St Mungo's,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+256,Stanford University,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+257,State of Life,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+258,Stripe Partners,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+259,Swansea Bay University Health Board,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+260,Tees Valley Combined Authority,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+261,The Lesbian Project,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+262,The Police Foundation,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+263,The Young Foundation - Institute for Community Studies,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+264,Trier University,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+265,UK Export Finance,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+266,University of Aberdeen,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+267,University of Antwerp,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+268,University of California,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+269,University of Florida,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+270,University of Greenwich,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+271,University of Lugano,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+272,University of Portsmouth,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+273,University of Roehampton,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+274,University of South Wales,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+275,University of Texas,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+276,University of the West of Scotland,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+277,Vanguard,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+278,WPI Economics,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+279,Wavehill Limited,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+280,Welsh Value in Health Centre,0,1,1,0,1,identity,,True,reserve membership artefacts unavailable; all observed raw strings withheld
+281,What Works for Children's Social Care,0,1,1,0,1,alias,,True,reserve membership artefacts unavailable; all observed raw strings withheld

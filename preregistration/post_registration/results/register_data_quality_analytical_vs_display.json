@@ -1,0 +1,113 @@
+{
+  "provenance": {
+    "repository_head": "7f500898db5e48b36cc76784e3774de28959f6d1",
+    "frozen_population_rows": 1308,
+    "frozen_entity_occurrences": 5189,
+    "source_audit": "preregistration/post_registration/results/register_data_quality_audit.py"
+  },
+  "definitions": {
+    "display_only_acronym": "The existing production-approved terminal acronym is the only difference between the parsed entity name and final display label.",
+    "analytically_necessary_normalisation": "A changed entity-name occurrence that does not satisfy the exact approved-acronym-only relationship.",
+    "unchanged": "The parsed entity name already equals its final canonical representation."
+  },
+  "occurrence_decomposition": {
+    "datasets": {
+      "denominator": 3350,
+      "changed_denominator": 2639,
+      "unchanged": 711,
+      "display_only_acronym": 965,
+      "analytically_necessary_normalisation": 1674
+    },
+    "organisations": {
+      "denominator": 1839,
+      "changed_denominator": 761,
+      "unchanged": 1078,
+      "display_only_acronym": 306,
+      "analytically_necessary_normalisation": 455
+    },
+    "combined": {
+      "denominator": 5189,
+      "changed_denominator": 3400,
+      "unchanged": 1789,
+      "display_only_acronym": 1271,
+      "analytically_necessary_normalisation": 2129
+    }
+  },
+  "record_decomposition": {
+    "denominator": 1308,
+    "no_changed_entity": 72,
+    "display_only_changes_only": 263,
+    "analytically_necessary_changes_only": 542,
+    "both_display_only_and_analytically_necessary": 431,
+    "records_requiring_analytically_necessary_normalisation": 973,
+    "records_requiring_analytically_necessary_normalisation_rate": 74.3884,
+    "records_changed_only_for_display_consistency": 263,
+    "records_changed_only_for_display_consistency_rate": 20.1070,
+    "records_receiving_any_display_only_acronym": 694,
+    "records_receiving_both_classes": 431
+  },
+  "native_class_crosstab": {
+    "datasets": {
+      "alias": {"display_only_acronym": 965, "analytically_necessary_normalisation": 1246, "total_changed": 2211},
+      "normalised_format": {"display_only_acronym": 0, "analytically_necessary_normalisation": 426, "total_changed": 426},
+      "compound_or_multi_dataset": {"display_only_acronym": 0, "analytically_necessary_normalisation": 2, "total_changed": 2}
+    },
+    "organisations": {
+      "alias": {"display_only_acronym": 71, "analytically_necessary_normalisation": 443, "total_changed": 514},
+      "identity_with_display_change": {"display_only_acronym": 235, "analytically_necessary_normalisation": 0, "total_changed": 235},
+      "parser_cleanup": {"display_only_acronym": 0, "analytically_necessary_normalisation": 12, "total_changed": 12}
+    }
+  },
+  "explicit_correction_relationship": {
+    "explicit_correction_occurrences": 78,
+    "overlap_with_analytically_necessary_entity_name_occurrences": 53,
+    "provider_corrections_on_dataset_name_unchanged_occurrences": 25,
+    "analytically_necessary_entity_name_occurrences_without_explicit_correction": 2076,
+    "strict_nesting_within_fixed_3400_changed_entity_name_occurrences": false,
+    "reason": "The existing 2,639 dataset changed numerator compares dataset names only, while the explicit-correction subset also includes provider-component corrections. Twenty-five provider corrections occur where the dataset name itself is unchanged."
+  },
+  "component_aware_sensitivity": {
+    "analytically_necessary_occurrence_union_including_outside_provider_corrections": 2154,
+    "explicit_correction_occurrences": 78,
+    "non_explicit_canonicalisation_occurrences": 2076,
+    "analytically_necessary_record_union_including_outside_provider_corrections": 992,
+    "additional_records_beyond_fixed_entity_name_headline": 19,
+    "status": "Diagnostic sensitivity only; the original broad numerator did not enumerate all provider-label normalisation."
+  },
+  "top_examples": {
+    "display_only_acronym": [
+      {"field": "datasets", "raw_observed_form": "Business Structure Database", "canonical_form": "Business Structure Database (BSD)", "occurrences": 176, "records": 176},
+      {"field": "datasets", "raw_observed_form": "Annual Business Survey", "canonical_form": "Annual Business Survey (ABS)", "occurrences": 143, "records": 143},
+      {"field": "datasets", "raw_observed_form": "Annual Population Survey", "canonical_form": "Annual Population Survey (APS)", "occurrences": 131, "records": 126},
+      {"field": "datasets", "raw_observed_form": "Annual Survey of Hours and Earnings", "canonical_form": "Annual Survey of Hours and Earnings (ASHE)", "occurrences": 123, "records": 123},
+      {"field": "organisations", "raw_observed_form": "University College London", "canonical_form": "University College London (UCL)", "occurrences": 99, "records": 99},
+      {"field": "datasets", "raw_observed_form": "UK Innovation Survey", "canonical_form": "UK Innovation Survey (UKIS)", "occurrences": 75, "records": 75},
+      {"field": "datasets", "raw_observed_form": "Labour Force Survey", "canonical_form": "Labour Force Survey (LFS)", "occurrences": 70, "records": 54},
+      {"field": "organisations", "raw_observed_form": "Institute for Fiscal Studies", "canonical_form": "Institute for Fiscal Studies (IFS)", "occurrences": 64, "records": 64},
+      {"field": "organisations", "raw_observed_form": "Office for National Statistics", "canonical_form": "Office for National Statistics (ONS)", "occurrences": 40, "records": 40},
+      {"field": "datasets", "raw_observed_form": "Crime Survey for England and Wales", "canonical_form": "Crime Survey for England and Wales (CSEW)", "occurrences": 39, "records": 38}
+    ],
+    "analytically_necessary_normalisation": [
+      {"field": "datasets", "raw_observed_form": "Business Structure Database - UK", "canonical_form": "Business Structure Database (BSD)", "occurrences": 88, "records": 88},
+      {"field": "organisations", "raw_observed_form": "London School of Economics", "canonical_form": "London School of Economics and Political Science (LSE)", "occurrences": 55, "records": 55},
+      {"field": "datasets", "raw_observed_form": "Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England", "canonical_form": "Longitudinal Education Outcomes (LEO)", "occurrences": 55, "records": 55},
+      {"field": "datasets", "raw_observed_form": "Annual Business Survey - GB", "canonical_form": "Annual Business Survey (ABS)", "occurrences": 44, "records": 44},
+      {"field": "datasets", "raw_observed_form": "Annual Survey of Hours and Earnings - UK", "canonical_form": "Annual Survey of Hours and Earnings (ASHE)", "occurrences": 41, "records": 41},
+      {"field": "datasets", "raw_observed_form": "Annual Population Survey - UK", "canonical_form": "Annual Population Survey (APS)", "occurrences": 40, "records": 39},
+      {"field": "datasets", "raw_observed_form": "Labour Force Survey Person - UK", "canonical_form": "Labour Force Survey Person", "occurrences": 39, "records": 39},
+      {"field": "datasets", "raw_observed_form": "Annual Business Survey - UK", "canonical_form": "Annual Business Survey (ABS)", "occurrences": 31, "records": 31},
+      {"field": "datasets", "raw_observed_form": "Business Enterprise Research and Development - Great Britain", "canonical_form": "Business Enterprise Research and Development (BERD)", "occurrences": 30, "records": 30},
+      {"field": "datasets", "raw_observed_form": "Understanding Society - UK", "canonical_form": "Understanding Society", "occurrences": 28, "records": 28}
+    ]
+  },
+  "verification": {
+    "all_occurrence_classes_sum_to_5189": true,
+    "changed_classes_sum_to_3400": true,
+    "dataset_changed_classes_sum_to_2639": true,
+    "organisation_changed_classes_sum_to_761": true,
+    "record_categories_sum_to_1308": true,
+    "necessary_record_count_uses_set_union": true,
+    "all_78_explicit_corrections_accounted_for": true,
+    "existing_mappings_unchanged": true
+  }
+}

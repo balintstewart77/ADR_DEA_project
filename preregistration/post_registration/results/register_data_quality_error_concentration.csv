@@ -1,0 +1,678 @@
+field,entity_component,canonical_entity,total_occurrences,explicit_correction_occurrences,affected_records,n_distinct_malformed_variants,largest_single_variant_count,explicit_correction_rate,share_from_largest_variant,minimum_support_5,absolute_burden_rank,rate_rank_min_support_5
+datasets,provider,SAIL Databank,68,53,49,1,53,77.9412,100.0,True,1,1
+datasets,provider,Office for National Statistics (ONS),2619,2,1,1,2,0.0764,100.0,True,2,6
+datasets,dataset_name,Annual Survey of Hours and Earnings linked to Census 2011,24,1,1,1,1,4.1667,100.0,True,3,3
+datasets,dataset_name,Business Enterprise Research and Development (BERD),83,1,1,1,1,1.2048,100.0,True,4,5
+datasets,dataset_name,Integrated Data Service,1,1,1,1,1,100.0,100.0,False,5,NA
+datasets,dataset_name,MoJ Data First Probation,7,1,1,1,1,14.2857,100.0,True,6,2
+datasets,provider,Northern Ireland Statistics and Research Agency (NISRA),39,1,1,1,1,2.5641,100.0,True,7,4
+datasets,dataset_name,2020 Wave 1 Labour Force Survey,1,0,0,0,0,0.0,NA,False,8,NA
+datasets,dataset_name,Administrative Data | Agricultural Research Collection (AD|ARC),5,0,0,0,0,0.0,NA,True,9,7
+datasets,dataset_name,Annual Acquisition and Disposals of Capital Assets Survey,1,0,0,0,0,0.0,NA,False,10,NA
+datasets,dataset_name,Annual Business Inquiry,11,0,0,0,0,0.0,NA,True,11,8
+datasets,dataset_name,Annual Business Survey (ABS),231,0,0,0,0,0.0,NA,True,12,9
+datasets,dataset_name,Annual Business Survey - GB Annual Survey of Hours and Earnings,1,0,0,0,0,0.0,NA,False,13,NA
+datasets,dataset_name,Annual Business Survey - UK,1,0,0,0,0,0.0,NA,False,14,NA
+datasets,dataset_name,Annual Foreign Direct Investment Survey,22,0,0,0,0,0.0,NA,True,15,10
+datasets,dataset_name,Annual Gas and Electricity Consumption at Meter Level,3,0,0,0,0,0.0,NA,False,16,NA
+datasets,dataset_name,Annual Inquiry into Foreign Direct Investment,4,0,0,0,0,0.0,NA,False,17,NA
+datasets,dataset_name,Annual International Trade in Services,10,0,0,0,0,0.0,NA,True,18,11
+datasets,dataset_name,Annual Population Survey (APS),183,0,0,0,0,0.0,NA,True,19,12
+datasets,dataset_name,Annual Population Survey Household,6,0,0,0,0,0.0,NA,True,20,13
+datasets,dataset_name,Annual Population Survey Longitudinal,6,0,0,0,0,0.0,NA,True,21,14
+datasets,dataset_name,Annual Population Survey Persons,4,0,0,0,0,0.0,NA,False,22,NA
+datasets,dataset_name,Annual Population Survey: Well-Being,5,0,0,0,0,0.0,NA,True,23,15
+datasets,dataset_name,Annual Purchases Survey,22,0,0,0,0,0.0,NA,True,24,16
+datasets,dataset_name,Annual Respondents Database,45,0,0,0,0,0.0,NA,True,25,17
+datasets,dataset_name,Annual Respondents Database 2,18,0,0,0,0,0.0,NA,True,26,18
+datasets,dataset_name,Annual Respondents Database X,62,0,0,0,0,0.0,NA,True,27,19
+datasets,dataset_name,Annual Respondents Database X (ARDx) Business Register and Employment Survey,1,0,0,0,0,0.0,NA,False,28,NA
+datasets,dataset_name,Annual Survey of Goods and Services,6,0,0,0,0,0.0,NA,True,29,20
+datasets,dataset_name,Annual Survey of Hours and Earnings (ASHE),205,0,0,0,0,0.0,NA,True,30,21
+datasets,dataset_name,Annual Survey of Hours and Earnings Longitudinal,42,0,0,0,0,0.0,NA,True,31,22
+datasets,dataset_name,Annual Survey of Hours and Earnings linked to Census 2011 England and Wales,1,0,0,0,0,0.0,NA,False,32,NA
+datasets,dataset_name,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,9,0,0,0,0,0.0,NA,True,33,23
+datasets,dataset_name,BHPS,2,0,0,0,0,0.0,NA,False,34,NA
+datasets,provider,Bank of England,10,0,0,0,0,0.0,NA,True,35,24
+datasets,dataset_name,Bespoke Admin Data - Agricultural Research Collection Phase 1,1,0,0,0,0,0.0,NA,False,36,NA
+datasets,dataset_name,Bespoke Admin Data - Agricultural Research Collection Phase 2,2,0,0,0,0,0.0,NA,False,37,NA
+datasets,dataset_name,Bespoke Admin Data: Agricultural Research Collection,1,0,0,0,0,0.0,NA,False,38,NA
+datasets,dataset_name,Bespoke Data Tables for Project,1,0,0,0,0,0.0,NA,False,39,NA
+datasets,dataset_name,Bespoke Equalities Data Asset: Companies House - Census 2011,1,0,0,0,0,0.0,NA,False,40,NA
+datasets,dataset_name,Bespoke National Council for Voluntary Organisations,1,0,0,0,0,0.0,NA,False,41,NA
+datasets,dataset_name,Bespoke National Pupil Database extract,1,0,0,0,0,0.0,NA,False,42,NA
+datasets,dataset_name,Bespoke Refugee Integration Outcomes Cohort Study England,1,0,0,0,0,0.0,NA,False,43,NA
+datasets,dataset_name,Birth Registrations in England and Wales,6,0,0,0,0,0.0,NA,True,44,25
+datasets,dataset_name,Births and Deaths,1,0,0,0,0,0.0,NA,False,45,NA
+datasets,dataset_name,British Election Panel Study,1,0,0,0,0,0.0,NA,False,46,NA
+datasets,dataset_name,British Local Election Database,1,0,0,0,0,0.0,NA,False,47,NA
+datasets,dataset_name,Broad Economy Sales and Exports,6,0,0,0,0,0.0,NA,True,48,26
+datasets,dataset_name,Business Data Research (BDR) 2022 Themed,1,0,0,0,0,0.0,NA,False,49,NA
+datasets,dataset_name,Business Enterprise Research and Development Great Britain,1,0,0,0,0,0.0,NA,False,50,NA
+datasets,dataset_name,Business Enterprise Research and Development Northern Ireland,1,0,0,0,0,0.0,NA,False,51,NA
+datasets,dataset_name,Business Expenditure on Research and Development,16,0,0,0,0,0.0,NA,True,52,27
+datasets,dataset_name,Business Insights and Conditions Survey (BICS),41,0,0,0,0,0.0,NA,True,53,28
+datasets,dataset_name,Business Register Employment Survey - UK Living Costs and Food Survey - UK Labour Force Survey Household - UK Consumer and Retail Price Index - UK Annual Survey of Hours and Earnings Longitudinal - UK Annual Population Survey,1,0,0,0,0,0.0,NA,False,54,NA
+datasets,dataset_name,Business Register Emplyment Survey,1,0,0,0,0,0.0,NA,False,55,NA
+datasets,dataset_name,Business Register and Employment Survey (BRES),67,0,0,0,0,0.0,NA,True,56,29
+datasets,dataset_name,Business Structure Database (BSD),283,0,0,0,0,0.0,NA,True,57,30
+datasets,dataset_name,Business Structure Database - UK Annual Survey of Hours and Earnings - GB Annual Population Survey - UK Annual International Trade in Services,1,0,0,0,0,0.0,NA,False,58,NA
+datasets,dataset_name,Business Structure Database Longitudinal,20,0,0,0,0,0.0,NA,True,59,31
+datasets,dataset_name,CGIAD,1,0,0,0,0,0.0,NA,False,60,NA
+datasets,dataset_name,COVID-19 Infection Survey (CIS),23,0,0,0,0,0.0,NA,True,61,32
+datasets,dataset_name,COVID-19 Infection Survey linked to Combined Vaccination,3,0,0,0,0,0.0,NA,False,62,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to Combined Vaccination - UK ONS,2,0,0,0,0,0.0,NA,False,63,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to Death Occurrences England and Wales Office for National Statistics /,1,0,0,0,0,0.0,NA,False,64,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to Mortality - England and Wales ONS,1,0,0,0,0,0.0,NA,False,65,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to NHS Test and Trace,1,0,0,0,0,0.0,NA,False,66,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to Public Health Research Database,1,0,0,0,0,0.0,NA,False,67,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to UK Innovation Survey,1,0,0,0,0,0.0,NA,False,68,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to VOA and EPC,2,0,0,0,0,0.0,NA,False,69,NA
+datasets,dataset_name,COVID-19 Infection Survey linked to VOA and EPC - England and Wales Office for National,1,0,0,0,0,0.0,NA,False,70,NA
+datasets,dataset_name,COVID-19 Infection Survey with Combined Vaccination,2,0,0,0,0,0.0,NA,False,71,NA
+datasets,dataset_name,COVID-19 Infection Survey with National Immunisation Management Service,1,0,0,0,0,0.0,NA,False,72,NA
+datasets,dataset_name,COVID-19 School Infection Survey linked to NHS Test,1,0,0,0,0,0.0,NA,False,73,NA
+datasets,dataset_name,COVID-19 Schools Infection Survey,4,0,0,0,0,0.0,NA,False,74,NA
+datasets,dataset_name,COVID-19 Schools Infection Survey linked to National Immunisation Management Service,1,0,0,0,0,0.0,NA,False,75,NA
+datasets,dataset_name,COVID-19 Schools Infection Survey linked to Test and Trace,2,0,0,0,0,0.0,NA,False,76,NA
+datasets,dataset_name,COVID-19 Study,2,0,0,0,0,0.0,NA,False,77,NA
+datasets,dataset_name,COVID-19 Vaccine Opinions Survey,2,0,0,0,0,0.0,NA,False,78,NA
+datasets,dataset_name,COVID-19 Weekly Opinions Survey,2,0,0,0,0,0.0,NA,False,79,NA
+datasets,dataset_name,Capital Stock 2014,1,0,0,0,0,0.0,NA,False,80,NA
+datasets,dataset_name,Capital Stock Dataset,5,0,0,0,0,0.0,NA,True,81,33
+datasets,dataset_name,Census 1961,4,0,0,0,0,0.0,NA,False,82,NA
+datasets,dataset_name,Census 1971,4,0,0,0,0,0.0,NA,False,83,NA
+datasets,dataset_name,Census 1981,3,0,0,0,0,0.0,NA,False,84,NA
+datasets,dataset_name,Census 1991,2,0,0,0,0,0.0,NA,False,85,NA
+datasets,dataset_name,Census 2001,1,0,0,0,0,0.0,NA,False,86,NA
+datasets,dataset_name,Census 2001 Household,3,0,0,0,0,0.0,NA,False,87,NA
+datasets,dataset_name,Census 2001 Individual,3,0,0,0,0,0.0,NA,False,88,NA
+datasets,dataset_name,Census 2011,29,0,0,0,0,0.0,NA,True,89,34
+datasets,dataset_name,Census 2011 (CENW),1,0,0,0,0,0.0,NA,False,90,NA
+datasets,dataset_name,Census 2011 100% Household and Individual - England an d Wales,1,0,0,0,0,0.0,NA,False,91,NA
+datasets,dataset_name,Census 2011 Aggregate,1,0,0,0,0,0.0,NA,False,92,NA
+datasets,dataset_name,Census 2011 England,2,0,0,0,0,0.0,NA,False,93,NA
+datasets,dataset_name,Census 2011 England and Wales Household Structure for COVID-19 Models,3,0,0,0,0,0.0,NA,False,94,NA
+datasets,dataset_name,Census 2011 England and Wales: Household structure for COVID-19 models,1,0,0,0,0,0.0,NA,False,95,NA
+datasets,dataset_name,Census 2011 Ethnicity,1,0,0,0,0,0.0,NA,False,96,NA
+datasets,dataset_name,Census 2011 Household,5,0,0,0,0,0.0,NA,True,97,35
+datasets,dataset_name,Census 2011 Household Sample,1,0,0,0,0,0.0,NA,False,98,NA
+datasets,dataset_name,Census 2011 Household Sample England and Wales,1,0,0,0,0,0.0,NA,False,99,NA
+datasets,dataset_name,Census 2011 Individual England and Wales,1,0,0,0,0,0.0,NA,False,100,NA
+datasets,dataset_name,Census 2011 Individual Northern Ireland,1,0,0,0,0,0.0,NA,False,101,NA
+datasets,dataset_name,Census 2011 Individual Sample England and Wales,1,0,0,0,0,0.0,NA,False,102,NA
+datasets,dataset_name,Census 2011 Individual Scotland,1,0,0,0,0,0.0,NA,False,103,NA
+datasets,dataset_name,Census 2011 Individual Secure Sample England and Wales,1,0,0,0,0,0.0,NA,False,104,NA
+datasets,dataset_name,Census 2011 Northern Ireland,1,0,0,0,0,0.0,NA,False,105,NA
+datasets,dataset_name,Census 2011 Origin-Destination,3,0,0,0,0,0.0,NA,False,106,NA
+datasets,dataset_name,Census 2011 Origin-Destination Flow,1,0,0,0,0,0.0,NA,False,107,NA
+datasets,dataset_name,Census 2011 and Census 2021 England and Wales,2,0,0,0,0,0.0,NA,False,108,NA
+datasets,dataset_name,Census 2011 linked to Benefits and Income,3,0,0,0,0,0.0,NA,False,109,NA
+datasets,dataset_name,Census 2021,25,0,0,0,0,0.0,NA,True,110,36
+datasets,dataset_name,Census 2021 (CENS) Ministry of Justice,1,0,0,0,0,0.0,NA,False,111,NA
+datasets,dataset_name,Census 2021 10% Sample,1,0,0,0,0,0.0,NA,False,112,NA
+datasets,dataset_name,Census 2021 Comprehensive Microdata,2,0,0,0,0,0.0,NA,False,113,NA
+datasets,dataset_name,Census 2021 England and Wales,2,0,0,0,0,0.0,NA,False,114,NA
+datasets,dataset_name,Census 2021 Household Secure Microdata Sample,2,0,0,0,0,0.0,NA,False,115,NA
+datasets,dataset_name,Census 2021 Household Secure Microdata Sample England and Wales,1,0,0,0,0,0.0,NA,False,116,NA
+datasets,dataset_name,Census 2021 Indexed,1,0,0,0,0,0.0,NA,False,117,NA
+datasets,dataset_name,Census 2021 Non-Response Link Study England and Wales,1,0,0,0,0,0.0,NA,False,118,NA
+datasets,dataset_name,Census 2021 Non-Response Link Study England and Wales Indexed,1,0,0,0,0,0.0,NA,False,119,NA
+datasets,dataset_name,Census 2021 Origin-Destination Tables England and Wales,1,0,0,0,0,0.0,NA,False,120,NA
+datasets,dataset_name,Census 2022,1,0,0,0,0,0.0,NA,False,121,NA
+datasets,dataset_name,Census Microdata 9% Sample,1,0,0,0,0,0.0,NA,False,122,NA
+datasets,dataset_name,Census Wales 2011,30,0,0,0,0,0.0,NA,True,123,37
+datasets,dataset_name,Census Wales 2021,7,0,0,0,0,0.0,NA,True,124,38
+datasets,dataset_name,Census Wales 2021 Household,1,0,0,0,0,0.0,NA,False,125,NA
+datasets,dataset_name,Childcare and Early Years Provision: Providers' Survey,1,0,0,0,0,0.0,NA,False,126,NA
+datasets,dataset_name,Childcare and Early Years Survey of Parents,2,0,0,0,0,0.0,NA,False,127,NA
+datasets,dataset_name,Children and Family Court Advisory and Support Service (CAFCASS England),1,0,0,0,0,0.0,NA,False,128,NA
+datasets,dataset_name,Children of the 2020s Longitudinal Study,2,0,0,0,0,0.0,NA,False,129,NA
+datasets,dataset_name,Children of the 2020s: Wave 1,1,0,0,0,0,0.0,NA,False,130,NA
+datasets,dataset_name,Civil Society Organisations,1,0,0,0,0,0.0,NA,False,131,NA
+datasets,dataset_name,Community Innovation Survey,9,0,0,0,0,0.0,NA,True,132,39
+datasets,dataset_name,Consumer Prices Index,15,0,0,0,0,0.0,NA,True,133,40
+datasets,dataset_name,Coronavirus and the Social Impacts on Great Britain,20,0,0,0,0,0.0,NA,True,134,41
+datasets,dataset_name,Council Tax Property Attributes,1,0,0,0,0,0.0,NA,False,135,NA
+datasets,dataset_name,Crime Survey for England and Wales (CSEW),41,0,0,0,0,0.0,NA,True,136,42
+datasets,dataset_name,DEA Research Project Accreditation Understanding Society,1,0,0,0,0,0.0,NA,False,137,NA
+datasets,dataset_name,DHSC: COVID-19 Infection Survey linked to NHS Test and Trace,2,0,0,0,0,0.0,NA,False,138,NA
+datasets,dataset_name,Death,1,0,0,0,0,0.0,NA,False,139,NA
+datasets,dataset_name,Death Registration Data - Provisional Monthly Extracts,10,0,0,0,0,0.0,NA,True,140,43
+datasets,dataset_name,Death Registrations,22,0,0,0,0,0.0,NA,True,141,44
+datasets,dataset_name,Death Registrations Finalised,7,0,0,0,0,0.0,NA,True,142,45
+datasets,dataset_name,Death Registrations in England and Wales,4,0,0,0,0,0.0,NA,False,143,NA
+datasets,dataset_name,Death Registrations in England and Wales Indexed,1,0,0,0,0,0.0,NA,False,144,NA
+datasets,dataset_name,Decision Maker Panel,9,0,0,0,0,0.0,NA,True,145,46
+datasets,dataset_name,Department for Business,3,0,0,0,0,0.0,NA,False,146,NA
+datasets,provider,Department for Business and Trade (DBT),34,0,0,0,0,0.0,NA,True,147,47
+datasets,provider,"Department for Business, Energy and Industrial Strategy (BEIS)",64,0,0,0,0,0.0,NA,True,148,48
+datasets,provider,Department for Education (DfE),75,0,0,0,0,0.0,NA,True,149,49
+datasets,dataset_name,Department for Education: Employer Skills Survey,1,0,0,0,0,0.0,NA,False,150,NA
+datasets,provider,"Department for Environment, Food & Rural Affairs (DEFRA)",8,0,0,0,0,0.0,NA,True,151,50
+datasets,provider,"Department for Levelling Up, Housing and Communities (DLUHC)",2,0,0,0,0,0.0,NA,False,152,NA
+datasets,provider,Department for Transport (DfT),4,0,0,0,0,0.0,NA,False,153,NA
+datasets,provider,Department for Work and Pensions (DWP),5,0,0,0,0,0.0,NA,True,154,51
+datasets,provider,Department of Health and Social Care (DHSC),1,0,0,0,0,0.0,NA,False,155,NA
+datasets,dataset_name,Designs and Trade Marks Office for National Statistics /,1,0,0,0,0,0.0,NA,False,156,NA
+datasets,dataset_name,Designs and Trade Marks from Intellectual Property Office,2,0,0,0,0,0.0,NA,False,157,NA
+datasets,provider,"DfE, DWP and HMRC",83,0,0,0,0,0.0,NA,True,158,52
+datasets,provider,"DfE, DWP, HMRC and Scottish Government",1,0,0,0,0,0.0,NA,False,159,NA
+datasets,dataset_name,Digital Economy Survey,1,0,0,0,0,0.0,NA,False,160,NA
+datasets,dataset_name,Digital library of historical directories,1,0,0,0,0,0.0,NA,False,161,NA
+datasets,dataset_name,E-Commerce Survey,17,0,0,0,0,0.0,NA,True,162,53
+datasets,dataset_name,E-Commerce and Digital Economy Survey,8,0,0,0,0,0.0,NA,True,163,54
+datasets,dataset_name,EOL,2,0,0,0,0,0.0,NA,False,164,NA
+datasets,dataset_name,Earnings and Employees Study (EES) 2011 - Northern Ireland,4,0,0,0,0,0.0,NA,False,165,NA
+datasets,provider,Economic and Social Research Council,1,0,0,0,0,0.0,NA,False,166,NA
+datasets,dataset_name,Education and Child Health Insights from Linked Data (ECHILD),41,0,0,0,0,0.0,NA,True,167,55
+datasets,dataset_name,Effects of Taxes and Benefits on Household Income,2,0,0,0,0,0.0,NA,False,168,NA
+datasets,dataset_name,Emergency Care Data Set monthly in England indexed,1,0,0,0,0,0.0,NA,False,169,NA
+datasets,dataset_name,Employer Skills Survey,9,0,0,0,0,0.0,NA,True,170,56
+datasets,dataset_name,Employer Skills Survey and Investment in Training,15,0,0,0,0,0.0,NA,True,171,57
+datasets,dataset_name,Employer Skills Survey: Investment in Training,1,0,0,0,0,0.0,NA,False,172,NA
+datasets,dataset_name,Employment Creation and Survival,3,0,0,0,0,0.0,NA,False,173,NA
+datasets,dataset_name,Energy Performance Certification,1,0,0,0,0,0.0,NA,False,174,NA
+datasets,dataset_name,Energy and Industrial Strategy: Community Innovation Survey,1,0,0,0,0,0.0,NA,False,175,NA
+datasets,dataset_name,English Housing Survey UK Household Electricity and Activity Survey Smart Energy Research Lab Observatory,1,0,0,0,0,0.0,NA,False,176,NA
+datasets,dataset_name,English Longitudinal Study of Ageing,1,0,0,0,0,0.0,NA,False,177,NA
+datasets,dataset_name,English School Census Absences,6,0,0,0,0,0.0,NA,True,178,58
+datasets,dataset_name,Enhanced Linked Trade-in-Goods/Inter-Departmental Business Register,1,0,0,0,0,0.0,NA,False,179,NA
+datasets,dataset_name,Expenditure and Food Survey,2,0,0,0,0,0.0,NA,False,180,NA
+datasets,dataset_name,Family Expenditure Survey,1,0,0,0,0,0.0,NA,False,181,NA
+datasets,dataset_name,Family Resources Survey,8,0,0,0,0,0.0,NA,True,182,59
+datasets,dataset_name,Financial Assets and Liabilities Survey,1,0,0,0,0,0.0,NA,False,183,NA
+datasets,dataset_name,Firm Productivity,3,0,0,0,0,0.0,NA,False,184,NA
+datasets,dataset_name,Food Survey,1,0,0,0,0,0.0,NA,False,185,NA
+datasets,dataset_name,Foreign Direct Investment Index,2,0,0,0,0,0.0,NA,False,186,NA
+datasets,dataset_name,Further Education Workforce Data Collection,3,0,0,0,0,0.0,NA,False,187,NA
+datasets,dataset_name,GRading and Admissions Data England (GRADE),13,0,0,0,0,0.0,NA,True,188,60
+datasets,dataset_name,General Household Survey,1,0,0,0,0,0.0,NA,False,189,NA
+datasets,dataset_name,General Lifestyle Survey to 2010,1,0,0,0,0,0.0,NA,False,190,NA
+datasets,dataset_name,Growing Up in England Wave 1 (GUIE),12,0,0,0,0,0.0,NA,True,191,61
+datasets,dataset_name,Growing Up in England Wave 2 (GUIE),7,0,0,0,0,0.0,NA,True,192,62
+datasets,dataset_name,Growing Up in England Wave 2 - Exclusions,6,0,0,0,0,0.0,NA,True,193,63
+datasets,dataset_name,Growing Up in England Wave 2 Vulnerability Measures,1,0,0,0,0,0.0,NA,False,194,NA
+datasets,provider,HM Revenue and Customs (HMRC),3,0,0,0,0,0.0,NA,False,195,NA
+datasets,dataset_name,Harmonised BHPS Waves 1-18,1,0,0,0,0,0.0,NA,False,196,NA
+datasets,dataset_name,Health Survey for England,1,0,0,0,0,0.0,NA,False,197,NA
+datasets,dataset_name,Health and Lifestyle Survey,1,0,0,0,0,0.0,NA,False,198,NA
+datasets,dataset_name,Households Below Average Income,1,0,0,0,0,0.0,NA,False,199,NA
+datasets,provider,IPO,2,0,0,0,0,0.0,NA,False,200,NA
+datasets,dataset_name,Industrial Strategy: UK Innovation Survey,2,0,0,0,0,0.0,NA,False,201,NA
+datasets,dataset_name,Infant Mortality linkage of 2011 Census,1,0,0,0,0,0.0,NA,False,202,NA
+datasets,dataset_name,Innovation Panel,2,0,0,0,0,0.0,NA,False,203,NA
+datasets,provider,Institute for Social and Economic Research,54,0,0,0,0,0.0,NA,True,204,64
+datasets,dataset_name,Integrated Census Microdata,2,0,0,0,0,0.0,NA,False,205,NA
+datasets,dataset_name,Integrated Data Asset Hospital Episode,1,0,0,0,0,0.0,NA,False,206,NA
+datasets,provider,Intellectual Property Office (IPO),1,0,0,0,0,0.0,NA,False,207,NA
+datasets,dataset_name,Inter-Departmental Business Register (IDBR),1,0,0,0,0,0.0,NA,False,208,NA
+datasets,dataset_name,International Passenger Survey,2,0,0,0,0,0.0,NA,False,209,NA
+datasets,dataset_name,International Trade in Services,36,0,0,0,0,0.0,NA,True,210,65
+datasets,dataset_name,Investment by insurance companies,1,0,0,0,0,0.0,NA,False,211,NA
+datasets,dataset_name,Investment in Intangible Assets,1,0,0,0,0,0.0,NA,False,212,NA
+datasets,dataset_name,Investment in Intangible Assets Survey,7,0,0,0,0,0.0,NA,True,213,66
+datasets,dataset_name,Labour Force Survey (LFS),81,0,0,0,0,0.0,NA,True,214,67
+datasets,dataset_name,Labour Force Survey Five-Quarter Longitudinal,7,0,0,0,0,0.0,NA,True,215,68
+datasets,dataset_name,Labour Force Survey Household,48,0,0,0,0,0.0,NA,True,216,69
+datasets,dataset_name,Labour Force Survey Indexed,1,0,0,0,0,0.0,NA,False,217,NA
+datasets,dataset_name,Labour Force Survey Longitudinal,39,0,0,0,0,0.0,NA,True,218,70
+datasets,dataset_name,Labour Force Survey Person,68,0,0,0,0,0.0,NA,True,219,71
+datasets,dataset_name,Labour Force Survey Two-Quarter Longitudinal,5,0,0,0,0,0.0,NA,True,220,72
+datasets,dataset_name,Linked Census and Death Occurrences,7,0,0,0,0,0.0,NA,True,221,73
+datasets,dataset_name,Linked Census and death occurrences Office for National Statistics /,1,0,0,0,0,0.0,NA,False,222,NA
+datasets,dataset_name,"Linked Census, HES and Mortality Data",3,0,0,0,0,0.0,NA,False,223,NA
+datasets,dataset_name,Linked Credit Reference Agency (CRA),1,0,0,0,0,0.0,NA,False,224,NA
+datasets,dataset_name,Linked Director's mortality,1,0,0,0,0,0.0,NA,False,225,NA
+datasets,dataset_name,Linked Inter-Departmental Business Register and Valuation Office Agency,1,0,0,0,0,0.0,NA,False,226,NA
+datasets,dataset_name,Linked Trade-in-Goods/IDBR,10,0,0,0,0,0.0,NA,True,227,74
+datasets,dataset_name,Linked Trade-in-Goods/Inter-Departmental Business Register,20,0,0,0,0,0.0,NA,True,228,75
+datasets,dataset_name,Living Costs and Food Survey (LCF),39,0,0,0,0,0.0,NA,True,229,76
+datasets,dataset_name,Longitudinal Business Database,14,0,0,0,0,0.0,NA,True,230,77
+datasets,dataset_name,Longitudinal Business Register,1,0,0,0,0,0.0,NA,False,231,NA
+datasets,dataset_name,Longitudinal Education Outcomes (LEO),119,0,0,0,0,0.0,NA,True,232,78
+datasets,dataset_name,Longitudinal Inter-Departmental Business Register,17,0,0,0,0,0.0,NA,True,233,79
+datasets,dataset_name,Longitudinal Inter-Development Business Register,1,0,0,0,0,0.0,NA,False,234,NA
+datasets,dataset_name,Longitudinal Labour Force Survey,3,0,0,0,0,0.0,NA,False,235,NA
+datasets,dataset_name,Longitudinal Small Business Survey (LSBS),35,0,0,0,0,0.0,NA,True,236,80
+datasets,dataset_name,Longitudinal Study of young people in England,1,0,0,0,0,0.0,NA,False,237,NA
+datasets,dataset_name,Low Carbon and Renewable Energy Economy Survey,14,0,0,0,0,0.0,NA,True,238,81
+datasets,dataset_name,Low carbon and renewable energy economy,1,0,0,0,0,0.0,NA,False,239,NA
+datasets,dataset_name,Management Practices Survey,9,0,0,0,0,0.0,NA,True,240,82
+datasets,dataset_name,Management and Expectations Survey (MES),25,0,0,0,0,0.0,NA,True,241,83
+datasets,dataset_name,Maternal Deaths,1,0,0,0,0,0.0,NA,False,242,NA
+datasets,dataset_name,Mergers and Acquisitions Survey,4,0,0,0,0,0.0,NA,False,243,NA
+datasets,provider,Ministry of Justice (MoJ),92,0,0,0,0,0.0,NA,True,244,84
+datasets,dataset_name,MoJ Data First Cross-Justice System Linking Dataset,8,0,0,0,0,0.0,NA,True,245,85
+datasets,dataset_name,MoJ Data First Crown Court Defendant,7,0,0,0,0,0.0,NA,True,246,86
+datasets,dataset_name,MoJ Data First Crown Court Defendant Case Level,11,0,0,0,0,0.0,NA,True,247,87
+datasets,dataset_name,MoJ Data First Crown Court Iteration 2,6,0,0,0,0,0.0,NA,True,248,88
+datasets,dataset_name,MoJ Data First Family Court,6,0,0,0,0,0.0,NA,True,249,89
+datasets,dataset_name,MoJ Data First Family Court Data Extract,1,0,0,0,0,0.0,NA,False,250,NA
+datasets,dataset_name,MoJ Data First Familyman Family Court,1,0,0,0,0,0.0,NA,False,251,NA
+datasets,dataset_name,MoJ Data First Link Ed Criminal Courts,1,0,0,0,0,0.0,NA,False,252,NA
+datasets,dataset_name,MoJ Data First Linked Criminal Courts,4,0,0,0,0,0.0,NA,False,253,NA
+datasets,dataset_name,MoJ Data First Linked Criminal Courts And Prisons Defendant,1,0,0,0,0,0.0,NA,False,254,NA
+datasets,dataset_name,MoJ Data First Linked Criminal Courts Defendant Case Level,5,0,0,0,0,0.0,NA,True,255,90
+datasets,dataset_name,MoJ Data First Magistrates Court Defendant,1,0,0,0,0,0.0,NA,False,256,NA
+datasets,dataset_name,MoJ Data First Magistrates Court Defendant Iteration 2,1,0,0,0,0,0.0,NA,False,257,NA
+datasets,dataset_name,MoJ Data First Magistrates Court Iteration 2,5,0,0,0,0,0.0,NA,True,258,91
+datasets,dataset_name,MoJ Data First Magistrates' Court Defendant,3,0,0,0,0,0.0,NA,False,259,NA
+datasets,dataset_name,MoJ Data First Magistrates' Court Defendant Case Level,10,0,0,0,0,0.0,NA,True,260,92
+datasets,dataset_name,MoJ Data First Offender Assessment,1,0,0,0,0,0.0,NA,False,261,NA
+datasets,dataset_name,MoJ Data First Prison Iteration 2,1,0,0,0,0,0.0,NA,False,262,NA
+datasets,dataset_name,MoJ Data First Prisoner Custodial Journey,9,0,0,0,0,0.0,NA,True,263,93
+datasets,dataset_name,MoJ Data First Probation Iteration 2,2,0,0,0,0,0.0,NA,False,264,NA
+datasets,dataset_name,Monthly Business Survey,9,0,0,0,0,0.0,NA,True,265,94
+datasets,dataset_name,Monthly Business Survey for Construction and Allied Trades,1,0,0,0,0,0.0,NA,False,266,NA
+datasets,dataset_name,Monthly Inquiry into the Distributive and Services Sector (MIDSS),2,0,0,0,0,0.0,NA,False,267,NA
+datasets,dataset_name,Monthly Production Inquiry (MPI),2,0,0,0,0,0.0,NA,False,268,NA
+datasets,dataset_name,Monthly Wages and Salary Survey,10,0,0,0,0,0.0,NA,True,269,95
+datasets,provider,NHS,1,0,0,0,0,0.0,NA,False,270,NA
+datasets,provider,NHS Digital,4,0,0,0,0,0.0,NA,False,271,NA
+datasets,provider,NHS England,5,0,0,0,0,0.0,NA,True,272,96
+datasets,dataset_name,NHS Test and Trace,1,0,0,0,0,0.0,NA,False,273,NA
+datasets,provider,NHS; DfE,41,0,0,0,0,0.0,NA,True,274,97
+datasets,provider,NHSD / University of Oxford,1,0,0,0,0,0.0,NA,False,275,NA
+datasets,dataset_name,NI Annual Business Inquiry,1,0,0,0,0,0.0,NA,False,276,NA
+datasets,dataset_name,NN4B,1,0,0,0,0,0.0,NA,False,277,NA
+datasets,dataset_name,National Employer Skills Survey,9,0,0,0,0,0.0,NA,True,278,98
+datasets,dataset_name,National Energy Efficiency,1,0,0,0,0,0.0,NA,False,279,NA
+datasets,provider,National Records Scotland,1,0,0,0,0,0.0,NA,False,280,NA
+datasets,dataset_name,National Travel Survey,5,0,0,0,0,0.0,NA,True,281,99
+datasets,dataset_name,National Travel Survey England,1,0,0,0,0,0.0,NA,False,282,NA
+datasets,dataset_name,National Travel Survey English Housing Survey,1,0,0,0,0,0.0,NA,False,283,NA
+datasets,dataset_name,New Earnings Survey (NES),19,0,0,0,0,0.0,NA,True,284,100
+datasets,dataset_name,New Earnings Survey Panel,7,0,0,0,0,0.0,NA,True,285,101
+datasets,dataset_name,Northern Ireland Annual Business Inquiry,6,0,0,0,0,0.0,NA,True,286,102
+datasets,dataset_name,Northern Ireland Annual Business Inquiry (NIABI),2,0,0,0,0,0.0,NA,False,287,NA
+datasets,dataset_name,Northern Ireland Census 2021 Microdata,1,0,0,0,0,0.0,NA,False,288,NA
+datasets,dataset_name,Northern Ireland Economic Trade,1,0,0,0,0,0.0,NA,False,289,NA
+datasets,dataset_name,Northern Ireland Economic Trade Statistics (NIETS),1,0,0,0,0,0.0,NA,False,290,NA
+datasets,dataset_name,Northern Ireland Economic Trade Statistics (NIETS) Northern Ireland Annual Survey of Hours and Earnings (NI ASHE),1,0,0,0,0,0.0,NA,False,291,NA
+datasets,dataset_name,Northern Ireland Exams Database,1,0,0,0,0,0.0,NA,False,292,NA
+datasets,provider,Northern Ireland General Register Office,1,0,0,0,0,0.0,NA,False,293,NA
+datasets,provider,Northern Ireland Registrar General's Office,1,0,0,0,0,0.0,NA,False,294,NA
+datasets,dataset_name,Northern Ireland School Census,2,0,0,0,0,0.0,NA,False,295,NA
+datasets,dataset_name,Northern Ireland School Leavers Survey,1,0,0,0,0,0.0,NA,False,296,NA
+datasets,dataset_name,Northern Ireland School Leavers Survey Northern Ireland Exams Database,1,0,0,0,0,0.0,NA,False,297,NA
+datasets,provider,Nursing and Midwifery Council,7,0,0,0,0,0.0,NA,True,298,103
+datasets,dataset_name,Nursing and Midwifery Council Register,3,0,0,0,0,0.0,NA,False,299,NA
+datasets,dataset_name,Nursing and Midwifery Council Register linked to Census 2021,3,0,0,0,0,0.0,NA,False,300,NA
+datasets,dataset_name,O2 mobile network operator travel and location data,1,0,0,0,0,0.0,NA,False,301,NA
+datasets,provider,OFSTED,1,0,0,0,0,0.0,NA,False,302,NA
+datasets,provider,ONS / HMRC / Companies House,6,0,0,0,0,0.0,NA,True,303,104
+datasets,provider,ONS / University of Oxford,23,0,0,0,0,0.0,NA,True,304,105
+datasets,provider,"ONS / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government",2,0,0,0,0,0.0,NA,False,305,NA
+datasets,dataset_name,ONS Census 2021,1,0,0,0,0,0.0,NA,False,306,NA
+datasets,dataset_name,ONS Longitudinal Study (LS),57,0,0,0,0,0.0,NA,True,307,106
+datasets,dataset_name,ONS Longitudinal Study 1971,1,0,0,0,0,0.0,NA,False,308,NA
+datasets,dataset_name,ONS Omnibus Survey,1,0,0,0,0,0.0,NA,False,309,NA
+datasets,provider,"ONS, HMRC",21,0,0,0,0,0.0,NA,True,310,107
+datasets,provider,"ONS, University of Oxford",5,0,0,0,0,0.0,NA,True,311,108
+datasets,provider,ONS. HMRC,1,0,0,0,0,0.0,NA,False,312,NA
+datasets,dataset_name,Occupational differences in mortality from COVID-19,1,0,0,0,0,0.0,NA,False,313,NA
+datasets,provider,Office for National Statistcs,2,0,0,0,0,0.0,NA,False,314,NA
+datasets,provider,Office for the National Statistics,1,0,0,0,0,0.0,NA,False,315,NA
+datasets,provider,Office of Qualifications and Examinations Regulation (Ofqual),2,0,0,0,0,0.0,NA,False,316,NA
+datasets,provider,Ofqual and DfE,2,0,0,0,0,0.0,NA,False,317,NA
+datasets,dataset_name,Online Time Use Survey (OTUS),3,0,0,0,0,0.0,NA,False,318,NA
+datasets,dataset_name,Opinions and Lifestyle Survey (OPN),18,0,0,0,0,0.0,NA,True,319,109
+datasets,dataset_name,Over 50s Lifestyle Study,3,0,0,0,0,0.0,NA,False,320,NA
+datasets,dataset_name,Prices Survey Microdata,3,0,0,0,0,0.0,NA,False,321,NA
+datasets,dataset_name,Producer Price Index,9,0,0,0,0,0.0,NA,True,322,110
+datasets,dataset_name,Provisional Monthly Extracts England and Wales,1,0,0,0,0,0.0,NA,False,323,NA
+datasets,dataset_name,Public Attitudes Tracker,1,0,0,0,0,0.0,NA,False,324,NA
+datasets,dataset_name,Public Health Research Database,7,0,0,0,0,0.0,NA,True,325,111
+datasets,provider,"Qualifications Wales, DfE, UCAS",7,0,0,0,0,0.0,NA,True,326,112
+datasets,dataset_name,Quarterly Acquisitions and Disposals of Capital Assets Survey,14,0,0,0,0,0.0,NA,True,327,113
+datasets,dataset_name,Quarterly Capital Expenditure Survey,14,0,0,0,0,0.0,NA,True,328,114
+datasets,dataset_name,Quarterly Fuels Inquiry,10,0,0,0,0,0.0,NA,True,329,115
+datasets,dataset_name,Quarterly Fuels Inquiry / Quarterly Fuels Survey,1,0,0,0,0,0.0,NA,False,330,NA
+datasets,dataset_name,Quarterly Labour Force Survey,48,0,0,0,0,0.0,NA,True,331,116
+datasets,dataset_name,Quarterly Labour Force Survey Household,1,0,0,0,0,0.0,NA,False,332,NA
+datasets,dataset_name,Quarterly Survey of Financial Assets and Liabilities,1,0,0,0,0,0.0,NA,False,333,NA
+datasets,dataset_name,RETIRED MoJ Data First Crown Court Defendant,1,0,0,0,0,0.0,NA,False,334,NA
+datasets,dataset_name,RETIRED MoJ Data First Magistrates Court Defendant,3,0,0,0,0,0.0,NA,False,335,NA
+datasets,dataset_name,RETIRED MoJ Data First Probation,1,0,0,0,0,0.0,NA,False,336,NA
+datasets,dataset_name,Racial Disparity Audit,2,0,0,0,0,0.0,NA,False,337,NA
+datasets,dataset_name,Research and Development Expenditures and Subsidies,3,0,0,0,0,0.0,NA,False,338,NA
+datasets,dataset_name,Retail Price Index,1,0,0,0,0,0.0,NA,False,339,NA
+datasets,dataset_name,Safeguarded Living Costs and Food Survey,1,0,0,0,0,0.0,NA,False,340,NA
+datasets,dataset_name,Schools Daily Contact Testing,1,0,0,0,0,0.0,NA,False,341,NA
+datasets,provider,Scottish Government,2,0,0,0,0,0.0,NA,False,342,NA
+datasets,dataset_name,Secure Access version of Understanding Society Data and Harmonised BHPS Geography files,1,0,0,0,0,0.0,NA,False,343,NA
+datasets,dataset_name,Secure Census 2011 Scotland,1,0,0,0,0,0.0,NA,False,344,NA
+datasets,dataset_name,Short Term Employment Survey,1,0,0,0,0,0.0,NA,False,345,NA
+datasets,dataset_name,Skills and Employment Surveys Series,1,0,0,0,0,0.0,NA,False,346,NA
+datasets,dataset_name,Small Business Survey,7,0,0,0,0,0.0,NA,True,347,117
+datasets,dataset_name,Small Business Survey Longitudinal,1,0,0,0,0,0.0,NA,False,348,NA
+datasets,dataset_name,Standard Industrial Classification and Occupational lookup,1,0,0,0,0,0.0,NA,False,349,NA
+datasets,dataset_name,State-funded schools inspections and outcomes,1,0,0,0,0,0.0,NA,False,350,NA
+datasets,dataset_name,Statutory Homelessness Flows,1,0,0,0,0,0.0,NA,False,351,NA
+datasets,dataset_name,Statutory Homelessness Flows - England,2,0,0,0,0,0.0,NA,False,352,NA
+datasets,dataset_name,Street Level Crime for England,1,0,0,0,0,0.0,NA,False,353,NA
+datasets,dataset_name,Structure Database,1,0,0,0,0,0.0,NA,False,354,NA
+datasets,dataset_name,Survey of Innovation and Patent Use,2,0,0,0,0,0.0,NA,False,355,NA
+datasets,dataset_name,Survey of Personal Incomes,1,0,0,0,0,0.0,NA,False,356,NA
+datasets,dataset_name,Telephone-Operated Crime Survey for England and Wales,2,0,0,0,0,0.0,NA,False,357,NA
+datasets,dataset_name,The Second Longitudinal Study of Young People in England,2,0,0,0,0,0.0,NA,False,358,NA
+datasets,dataset_name,Trace,1,0,0,0,0,0.0,NA,False,359,NA
+datasets,dataset_name,Trade in Services,1,0,0,0,0,0.0,NA,False,360,NA
+datasets,dataset_name,UCAS Grading and Admissions,1,0,0,0,0,0.0,NA,False,361,NA
+datasets,dataset_name,UCAS Grading and Admissions Qualifications Wales,1,0,0,0,0,0.0,NA,False,362,NA
+datasets,provider,UK Data Service,2,0,0,0,0,0.0,NA,False,363,NA
+datasets,dataset_name,UK Gross Value Added,2,0,0,0,0,0.0,NA,False,364,NA
+datasets,dataset_name,UK Gross Value Added for lower layer super output areas,1,0,0,0,0,0.0,NA,False,365,NA
+datasets,provider,UK Health Security Agency,1,0,0,0,0,0.0,NA,False,366,NA
+datasets,dataset_name,UK Household Longitudinal Study Mainstage Survey Wave 6,1,0,0,0,0,0.0,NA,False,367,NA
+datasets,dataset_name,UK Household Longitudinal Study Mainstage Survey Wave 9,1,0,0,0,0,0.0,NA,False,368,NA
+datasets,dataset_name,UK Innovation Survey (UKIS),79,0,0,0,0,0.0,NA,True,369,118
+datasets,dataset_name,UK Manufacturers' Sales by Product Survey,18,0,0,0,0,0.0,NA,True,370,119
+datasets,dataset_name,UK research and Innovation Workforce Survey,1,0,0,0,0,0.0,NA,False,371,NA
+datasets,dataset_name,UK small area gross value added estimates,1,0,0,0,0,0.0,NA,False,372,NA
+datasets,dataset_name,UK: 2023,1,0,0,0,0,0.0,NA,False,373,NA
+datasets,dataset_name,Understanding Society,58,0,0,0,0,0.0,NA,True,374,120
+datasets,provider,Understanding Society,17,0,0,0,0,0.0,NA,True,375,121
+datasets,dataset_name,Understanding Society - UK Office for National,1,0,0,0,0,0.0,NA,False,376,NA
+datasets,dataset_name,Understanding Society BHPS,2,0,0,0,0,0.0,NA,False,377,NA
+datasets,dataset_name,Understanding Society UKHLS,3,0,0,0,0,0.0,NA,False,378,NA
+datasets,dataset_name,Understanding Society Waves 1-9,1,0,0,0,0,0.0,NA,False,379,NA
+datasets,dataset_name,Understanding Society and Harmonised BHPS,1,0,0,0,0,0.0,NA,False,380,NA
+datasets,dataset_name,Universities and Colleges Admissions Service (UCAS),25,0,0,0,0,0.0,NA,True,381,122
+datasets,provider,Universities and Colleges Admissions Service (UCAS),23,0,0,0,0,0.0,NA,True,382,123
+datasets,provider,University of Leicester,1,0,0,0,0,0.0,NA,False,383,NA
+datasets,dataset_name,Urban Population Database,1,0,0,0,0,0.0,NA,False,384,NA
+datasets,dataset_name,Vacancy Survey,13,0,0,0,0,0.0,NA,True,385,124
+datasets,provider,Valuation Office Agency,2,0,0,0,0,0.0,NA,False,386,NA
+datasets,dataset_name,Valuation data of Scottish properties,1,0,0,0,0,0.0,NA,False,387,NA
+datasets,dataset_name,Waves 1-10 and Harmonised BHPS Geography files,2,0,0,0,0,0.0,NA,False,388,NA
+datasets,dataset_name,Wealth and Assets Survey (WAS),29,0,0,0,0,0.0,NA,True,389,125
+datasets,dataset_name,Wealth and Assets Survey Great Britain,1,0,0,0,0,0.0,NA,False,390,NA
+datasets,dataset_name,Working Lives of Teachers and Leaders Survey,3,0,0,0,0,0.0,NA,False,391,NA
+datasets,dataset_name,Workplace Employee Relations Survey,1,0,0,0,0,0.0,NA,False,392,NA
+datasets,dataset_name,Workplace Employment Relations Survey,14,0,0,0,0,0.0,NA,True,393,126
+datasets,provider,World Bank open data,1,0,0,0,0,0.0,NA,False,394,NA
+datasets,dataset_name,pension funds and trusts,1,0,0,0,0,0.0,NA,False,395,NA
+datasets,dataset_name,udinal Business Database,1,0,0,0,0,0.0,NA,False,396,NA
+organisations,organisation,London School of Economics and Political Science (LSE),97,3,3,3,1,3.0928,33.3333,True,1,5
+organisations,organisation,University College London (UCL),120,2,2,2,1,1.6667,50.0,True,2,7
+organisations,organisation,Academy of Medical Sciences,1,1,1,1,1,100.0,100.0,False,3,NA
+organisations,organisation,Centre for Economic and Business Research (CEBR),1,1,1,1,1,100.0,100.0,False,4,NA
+organisations,organisation,Equality and Human Rights Commission (EHRC),2,1,1,1,1,50.0,100.0,False,5,NA
+organisations,organisation,Health Foundation,2,1,1,1,1,50.0,100.0,False,6,NA
+organisations,organisation,Imperial College London,17,1,1,1,1,5.8824,100.0,True,7,4
+organisations,organisation,Institute for Employment Studies (IES),1,1,1,1,1,100.0,100.0,False,8,NA
+organisations,organisation,"Ministry of National Education, Republic of Türkiye",1,1,1,1,1,100.0,100.0,False,9,NA
+organisations,organisation,Sentencing Academy,1,1,1,1,1,100.0,100.0,False,10,NA
+organisations,organisation,Teesside University,2,1,1,1,1,50.0,100.0,False,11,NA
+organisations,organisation,University of Leeds,12,1,1,1,1,8.3333,100.0,True,12,1
+organisations,organisation,University of Reading,13,1,1,1,1,7.6923,100.0,True,13,2
+organisations,organisation,University of Warwick,34,1,1,1,1,2.9412,100.0,True,14,6
+organisations,organisation,University of York,13,1,1,1,1,7.6923,100.0,True,15,3
+organisations,organisation,"ADS (Aerospace, Defence, Security, Space) Group Limited",2,0,0,0,0,0.0,NA,False,16,NA
+organisations,organisation,AQA Education,1,0,0,0,0,0.0,NA,False,17,NA
+organisations,organisation,ARUP,2,0,0,0,0,0.0,NA,False,18,NA
+organisations,organisation,Administrative Data Research Wales,1,0,0,0,0,0.0,NA,False,19,NA
+organisations,organisation,Agri-Food and Biosciences Institute,7,0,0,0,0,0.0,NA,True,20,8
+organisations,organisation,Alan Turing Institute,5,0,0,0,0,0.0,NA,True,21,9
+organisations,organisation,Alma Economics,2,0,0,0,0,0.0,NA,False,22,NA
+organisations,organisation,Anglia Ruskin University Higher Education Corporation,2,0,0,0,0,0.0,NA,False,23,NA
+organisations,organisation,Anna Freud Centre,1,0,0,0,0,0.0,NA,False,24,NA
+organisations,organisation,Aston University,14,0,0,0,0,0.0,NA,True,25,10
+organisations,organisation,BOP Consulting,1,0,0,0,0,0.0,NA,False,26,NA
+organisations,organisation,Bank of England,22,0,0,0,0,0.0,NA,True,27,11
+organisations,organisation,Be the Business,1,0,0,0,0,0.0,NA,False,28,NA
+organisations,organisation,Behavioural Insights Team,1,0,0,0,0,0.0,NA,False,29,NA
+organisations,organisation,Belmana,15,0,0,0,0,0.0,NA,True,30,12
+organisations,organisation,"Birkbeck, University of London",1,0,0,0,0,0.0,NA,False,31,NA
+organisations,organisation,Bournemouth University,1,0,0,0,0,0.0,NA,False,32,NA
+organisations,organisation,British Psychological Society,1,0,0,0,0,0.0,NA,False,33,NA
+organisations,organisation,British Sociological Society,1,0,0,0,0,0.0,NA,False,34,NA
+organisations,organisation,Brunel University London,3,0,0,0,0,0.0,NA,False,35,NA
+organisations,organisation,Cabinet Office,3,0,0,0,0,0.0,NA,False,36,NA
+organisations,organisation,Calver Pang,1,0,0,0,0,0.0,NA,False,37,NA
+organisations,organisation,Cambridge Econometrics,2,0,0,0,0,0.0,NA,False,38,NA
+organisations,organisation,Cambridge OCR,1,0,0,0,0,0.0,NA,False,39,NA
+organisations,organisation,Cambridge Policy Consultants,1,0,0,0,0,0.0,NA,False,40,NA
+organisations,organisation,Cancer Research UK,1,0,0,0,0,0.0,NA,False,41,NA
+organisations,organisation,Cardiff Metropolitan University,1,0,0,0,0,0.0,NA,False,42,NA
+organisations,organisation,Cardiff University,37,0,0,0,0,0.0,NA,True,43,13
+organisations,organisation,Cardiff and Vale University Health Board,1,0,0,0,0,0.0,NA,False,44,NA
+organisations,organisation,Centre for Cities,5,0,0,0,0,0.0,NA,True,45,14
+organisations,organisation,"Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)",1,0,0,0,0,0.0,NA,False,46,NA
+organisations,organisation,Chartered Institute of Personnel and Development (CIPD),1,0,0,0,0,0.0,NA,False,47,NA
+organisations,organisation,"City, University of London",11,0,0,0,0,0.0,NA,True,48,15
+organisations,organisation,Columbia University,1,0,0,0,0,0.0,NA,False,49,NA
+organisations,organisation,Competition and Markets Authority (CMA),8,0,0,0,0,0.0,NA,True,50,16
+organisations,organisation,Coventry University,1,0,0,0,0,0.0,NA,False,51,NA
+organisations,organisation,Cranfield University,1,0,0,0,0,0.0,NA,False,52,NA
+organisations,organisation,Cyber Monitoring Centre,1,0,0,0,0,0.0,NA,False,53,NA
+organisations,organisation,DASCROSE Limited,1,0,0,0,0,0.0,NA,False,54,NA
+organisations,organisation,Department for Business and Trade (DBT),5,0,0,0,0,0.0,NA,True,55,17
+organisations,organisation,"Department for Business, Energy and Industrial Strategy (BEIS)",5,0,0,0,0,0.0,NA,True,56,18
+organisations,organisation,"Department for Business, Innovation and Skills",1,0,0,0,0,0.0,NA,False,57,NA
+organisations,organisation,"Department for Culture, Media and Sport",1,0,0,0,0,0.0,NA,False,58,NA
+organisations,organisation,"Department for Digital, Culture, Media and Sport",1,0,0,0,0,0.0,NA,False,59,NA
+organisations,organisation,Department for International Trade,7,0,0,0,0,0.0,NA,True,60,19
+organisations,organisation,"Department for Levelling Up, Housing and Communities (DLUHC)",3,0,0,0,0,0.0,NA,False,61,NA
+organisations,organisation,Department for the Economy (Northern Ireland),1,0,0,0,0,0.0,NA,False,62,NA
+organisations,organisation,Department of Health (Northern Ireland),1,0,0,0,0,0.0,NA,False,63,NA
+organisations,organisation,Department of Health and Social Care (DHSC),5,0,0,0,0,0.0,NA,True,64,20
+organisations,organisation,Digital Health and Care Wales,2,0,0,0,0,0.0,NA,False,65,NA
+organisations,organisation,Durham University,19,0,0,0,0,0.0,NA,True,66,21
+organisations,organisation,Economic Statistics Centre of Excellence,2,0,0,0,0,0.0,NA,False,67,NA
+organisations,organisation,Economic and Social Research Institute (ESRI),2,0,0,0,0,0.0,NA,False,68,NA
+organisations,organisation,Ecorys UK,1,0,0,0,0,0.0,NA,False,69,NA
+organisations,organisation,Edinburgh Napier University,7,0,0,0,0,0.0,NA,True,70,22
+organisations,organisation,Education Policy Institute,6,0,0,0,0,0.0,NA,True,71,23
+organisations,organisation,Emory University,1,0,0,0,0,0.0,NA,False,72,NA
+organisations,organisation,Engineering Construction Industry Training Board (ECITB),1,0,0,0,0,0.0,NA,False,73,NA
+organisations,organisation,European University Institute,2,0,0,0,0,0.0,NA,False,74,NA
+organisations,organisation,Experian,1,0,0,0,0,0.0,NA,False,75,NA
+organisations,organisation,FFT Education Ltd,9,0,0,0,0,0.0,NA,True,76,24
+organisations,organisation,Federal Reserve Bank of Philadelphia,1,0,0,0,0,0.0,NA,False,77,NA
+organisations,organisation,Federal Reserve Board of Governors,1,0,0,0,0,0.0,NA,False,78,NA
+organisations,organisation,Financial Conduct Authority (FCA),1,0,0,0,0,0.0,NA,False,79,NA
+organisations,organisation,Fraser of Allander Institute (University of Strathclyde),2,0,0,0,0,0.0,NA,False,80,NA
+organisations,organisation,Frazer-Nash Consultancy,1,0,0,0,0,0.0,NA,False,81,NA
+organisations,organisation,Free University of Bozen-Bolzano,1,0,0,0,0,0.0,NA,False,82,NA
+organisations,organisation,Frontier Economics Ltd,24,0,0,0,0,0.0,NA,True,83,25
+organisations,organisation,Georgetown University,2,0,0,0,0,0.0,NA,False,84,NA
+organisations,organisation,Glasgow City Council,2,0,0,0,0,0.0,NA,False,85,NA
+organisations,organisation,Greater London Authority (GLA),9,0,0,0,0,0.0,NA,True,86,26
+organisations,organisation,Greater Manchester Combined Authority,4,0,0,0,0,0.0,NA,False,87,NA
+organisations,organisation,HM Revenue and Customs (HMRC),1,0,0,0,0,0.0,NA,False,88,NA
+organisations,organisation,HM Treasury,3,0,0,0,0,0.0,NA,False,89,NA
+organisations,organisation,Hackney Council,1,0,0,0,0,0.0,NA,False,90,NA
+organisations,organisation,Happy City Initiative,1,0,0,0,0,0.0,NA,False,91,NA
+organisations,organisation,Hardisty Jones Associates,1,0,0,0,0,0.0,NA,False,92,NA
+organisations,organisation,Harvard University,4,0,0,0,0,0.0,NA,False,93,NA
+organisations,organisation,Health Data Research UK (HDR UK),1,0,0,0,0,0.0,NA,False,94,NA
+organisations,organisation,Henley Business School (University of Reading),2,0,0,0,0,0.0,NA,False,95,NA
+organisations,organisation,Heriot-Watt University,6,0,0,0,0,0.0,NA,True,96,27
+organisations,organisation,Home Office,1,0,0,0,0,0.0,NA,False,97,NA
+organisations,organisation,ICF International,1,0,0,0,0,0.0,NA,False,98,NA
+organisations,organisation,IFF Research,1,0,0,0,0,0.0,NA,False,99,NA
+organisations,organisation,IFS,1,0,0,0,0,0.0,NA,False,100,NA
+organisations,organisation,Ifo Institute for Economic Research,1,0,0,0,0,0.0,NA,False,101,NA
+organisations,organisation,Incomes Data Research,1,0,0,0,0,0.0,NA,False,102,NA
+organisations,organisation,Independent Researcher,1,0,0,0,0,0.0,NA,False,103,NA
+organisations,organisation,Infact Systems Limited,1,0,0,0,0,0.0,NA,False,104,NA
+organisations,organisation,Innovate UK,5,0,0,0,0,0.0,NA,True,105,28
+organisations,organisation,Institut Européen d'Administration des Affaires (INSEAD),1,0,0,0,0,0.0,NA,False,106,NA
+organisations,organisation,Institute & Faculty of Actuaries,1,0,0,0,0,0.0,NA,False,107,NA
+organisations,organisation,Institute for Fiscal Studies (IFS),67,0,0,0,0,0.0,NA,True,108,29
+organisations,organisation,Institute for Government (IfG),1,0,0,0,0,0.0,NA,False,109,NA
+organisations,organisation,Institute for Social and Economic Research (University of Essex),3,0,0,0,0,0.0,NA,False,110,NA
+organisations,organisation,Institute for the Future of Work (IFOW),1,0,0,0,0,0.0,NA,False,111,NA
+organisations,organisation,Institute of Occupational Medicine,2,0,0,0,0,0.0,NA,False,112,NA
+organisations,organisation,Institute of the Motor Industry,1,0,0,0,0,0.0,NA,False,113,NA
+organisations,organisation,Intellectual Property Office (IPO),3,0,0,0,0,0.0,NA,False,114,NA
+organisations,organisation,International Monetary Fund (IMF),1,0,0,0,0,0.0,NA,False,115,NA
+organisations,organisation,Ipsos,27,0,0,0,0,0.0,NA,True,116,30
+organisations,organisation,Johannes Kepler University Linz,1,0,0,0,0,0.0,NA,False,117,NA
+organisations,organisation,Joint Biosecurity Centre,1,0,0,0,0,0.0,NA,False,118,NA
+organisations,organisation,King's College London (KCL),32,0,0,0,0,0.0,NA,True,119,31
+organisations,organisation,King's Fund,1,0,0,0,0,0.0,NA,False,120,NA
+organisations,organisation,Kingston University,3,0,0,0,0,0.0,NA,False,121,NA
+organisations,organisation,Knowledge Transfer Network,1,0,0,0,0,0.0,NA,False,122,NA
+organisations,organisation,Lancaster University,18,0,0,0,0,0.0,NA,True,123,32
+organisations,organisation,Lancaster University Management School,1,0,0,0,0,0.0,NA,False,124,NA
+organisations,organisation,Learning and Work Institute,2,0,0,0,0,0.0,NA,False,125,NA
+organisations,organisation,Lightcast,1,0,0,0,0,0.0,NA,False,126,NA
+organisations,organisation,Liverpool City Region Combined Authority,1,0,0,0,0,0.0,NA,False,127,NA
+organisations,organisation,London Borough of Redbridge,1,0,0,0,0,0.0,NA,False,128,NA
+organisations,organisation,London Economics,10,0,0,0,0,0.0,NA,True,129,33
+organisations,organisation,London Metropolitan University,1,0,0,0,0,0.0,NA,False,130,NA
+organisations,organisation,London School of Hygiene and Tropical Medicine (LSHTM),13,0,0,0,0,0.0,NA,True,131,34
+organisations,organisation,Loughborough University,8,0,0,0,0,0.0,NA,True,132,35
+organisations,organisation,Low Pay Commission (LPC),4,0,0,0,0,0.0,NA,False,133,NA
+organisations,organisation,MIME Consulting Ltd,2,0,0,0,0,0.0,NA,False,134,NA
+organisations,organisation,Manchester Metropolitan University,3,0,0,0,0,0.0,NA,False,135,NA
+organisations,organisation,Marie Curie,1,0,0,0,0,0.0,NA,False,136,NA
+organisations,organisation,Massachusetts Institute of Technology (MIT),5,0,0,0,0,0.0,NA,True,137,36
+organisations,organisation,Methods Analytics,1,0,0,0,0,0.0,NA,False,138,NA
+organisations,organisation,Middlesex University,2,0,0,0,0,0.0,NA,False,139,NA
+organisations,organisation,Ministry of Justice (MoJ),1,0,0,0,0,0.0,NA,False,140,NA
+organisations,organisation,Municipal & General (M&G),1,0,0,0,0,0.0,NA,False,141,NA
+organisations,organisation,NHS England,1,0,0,0,0,0.0,NA,False,142,NA
+organisations,organisation,National Centre for Social Research (NatCen),3,0,0,0,0,0.0,NA,False,143,NA
+organisations,organisation,National Foundation for Education Research (NFER),14,0,0,0,0,0.0,NA,True,144,37
+organisations,organisation,National Infrastructure Commission,1,0,0,0,0,0.0,NA,False,145,NA
+organisations,organisation,National Institute for Economic and Social Research (NIESR),15,0,0,0,0,0.0,NA,True,146,38
+organisations,organisation,National Institute of Social and Economic Research,1,0,0,0,0,0.0,NA,False,147,NA
+organisations,organisation,National Physical Laboratory (NPL),2,0,0,0,0,0.0,NA,False,148,NA
+organisations,organisation,Nesta,4,0,0,0,0,0.0,NA,False,149,NA
+organisations,organisation,Netherlands Interdisciplinary Demographic Institute,1,0,0,0,0,0.0,NA,False,150,NA
+organisations,organisation,Nevin Economic Research Institute,1,0,0,0,0,0.0,NA,False,151,NA
+organisations,organisation,New Economics Foundation,1,0,0,0,0,0.0,NA,False,152,NA
+organisations,organisation,Newcastle City Council,1,0,0,0,0,0.0,NA,False,153,NA
+organisations,organisation,Newcastle University,9,0,0,0,0,0.0,NA,True,154,39
+organisations,organisation,Northern Ireland Statistics and Research Agency (NISRA),7,0,0,0,0,0.0,NA,True,155,40
+organisations,organisation,Northumbria University,4,0,0,0,0,0.0,NA,False,156,NA
+organisations,organisation,Nottingham Trent University,3,0,0,0,0,0.0,NA,False,157,NA
+organisations,organisation,Nuffield Family Justice Observatory,2,0,0,0,0,0.0,NA,False,158,NA
+organisations,organisation,Nuffield Foundation,1,0,0,0,0,0.0,NA,False,159,NA
+organisations,organisation,OECD,1,0,0,0,0,0.0,NA,False,160,NA
+organisations,organisation,OFSTED,2,0,0,0,0,0.0,NA,False,161,NA
+organisations,organisation,OREC,1,0,0,0,0,0.0,NA,False,162,NA
+organisations,organisation,Office for Health Improvement and Disparities (OHID),1,0,0,0,0,0.0,NA,False,163,NA
+organisations,organisation,Office for National Statistics (ONS),47,0,0,0,0,0.0,NA,True,164,41
+organisations,organisation,Office of the Victims' Commissioner for England and Wales,1,0,0,0,0,0.0,NA,False,165,NA
+organisations,organisation,Oxford Brookes University,1,0,0,0,0,0.0,NA,False,166,NA
+organisations,organisation,Oxford Economics,1,0,0,0,0,0.0,NA,False,167,NA
+organisations,organisation,Oxford Economics Ltd,3,0,0,0,0,0.0,NA,False,168,NA
+organisations,organisation,PA Consulting,2,0,0,0,0,0.0,NA,False,169,NA
+organisations,organisation,Pearson,1,0,0,0,0,0.0,NA,False,170,NA
+organisations,organisation,Pensions Policy Institute,1,0,0,0,0,0.0,NA,False,171,NA
+organisations,organisation,Perspective Economics,1,0,0,0,0,0.0,NA,False,172,NA
+organisations,organisation,Pro Bono Economics,2,0,0,0,0,0.0,NA,False,173,NA
+organisations,organisation,Public Health England (PHE),4,0,0,0,0,0.0,NA,False,174,NA
+organisations,organisation,Public Health Scotland (PHS),1,0,0,0,0,0.0,NA,False,175,NA
+organisations,organisation,Public Health Wales (PHW),15,0,0,0,0,0.0,NA,True,176,42
+organisations,organisation,Publishers Association,1,0,0,0,0,0.0,NA,False,177,NA
+organisations,organisation,PwC LLP,7,0,0,0,0,0.0,NA,True,178,43
+organisations,organisation,Queen Mary University of London,16,0,0,0,0,0.0,NA,True,179,44
+organisations,organisation,Queen's University Belfast,20,0,0,0,0,0.0,NA,True,180,45
+organisations,organisation,"Queen's University Belfast Management, School",1,0,0,0,0,0.0,NA,False,181,NA
+organisations,organisation,RAND Europe,3,0,0,0,0,0.0,NA,False,182,NA
+organisations,organisation,RSM UK,4,0,0,0,0,0.0,NA,False,183,NA
+organisations,organisation,Research Center in Applied Economics for Development CREAD - Algeria,1,0,0,0,0,0.0,NA,False,184,NA
+organisations,organisation,Resolution Foundation,8,0,0,0,0,0.0,NA,True,185,46
+organisations,organisation,"Royal Holloway, University of London",9,0,0,0,0,0.0,NA,True,186,47
+organisations,organisation,"SAIL Databank, Swansea University",1,0,0,0,0,0.0,NA,False,187,NA
+organisations,organisation,SGN,1,0,0,0,0,0.0,NA,False,188,NA
+organisations,organisation,SQW - Economic and Management Consultants,6,0,0,0,0,0.0,NA,True,189,48
+organisations,organisation,Saga City Research,1,0,0,0,0,0.0,NA,False,190,NA
+organisations,organisation,ScaleUp Institute,1,0,0,0,0,0.0,NA,False,191,NA
+organisations,organisation,Scottish Government,3,0,0,0,0,0.0,NA,False,192,NA
+organisations,organisation,Sheffield Hallam University,2,0,0,0,0,0.0,NA,False,193,NA
+organisations,organisation,Sheffield Teaching Hospitals NHS Foundation Trust,1,0,0,0,0,0.0,NA,False,194,NA
+organisations,organisation,Simetrica,12,0,0,0,0,0.0,NA,True,195,49
+organisations,organisation,Skills Development Scotland,2,0,0,0,0,0.0,NA,False,196,NA
+organisations,organisation,Social Care Wales,1,0,0,0,0,0.0,NA,False,197,NA
+organisations,organisation,Social Market Foundation,1,0,0,0,0,0.0,NA,False,198,NA
+organisations,organisation,Social Mobility Commission (SMC),1,0,0,0,0,0.0,NA,False,199,NA
+organisations,organisation,St Mungo's,1,0,0,0,0,0.0,NA,False,200,NA
+organisations,organisation,Stanford University,1,0,0,0,0,0.0,NA,False,201,NA
+organisations,organisation,State of Life,1,0,0,0,0,0.0,NA,False,202,NA
+organisations,organisation,Stripe Partners,1,0,0,0,0,0.0,NA,False,203,NA
+organisations,organisation,Swansea Bay University Health Board,1,0,0,0,0,0.0,NA,False,204,NA
+organisations,organisation,Swansea University,66,0,0,0,0,0.0,NA,True,205,50
+organisations,organisation,Tech City UK,2,0,0,0,0,0.0,NA,False,206,NA
+organisations,organisation,Technological University Dublin,1,0,0,0,0,0.0,NA,False,207,NA
+organisations,organisation,Technopolis,5,0,0,0,0,0.0,NA,True,208,51
+organisations,organisation,Tees Valley Combined Authority,1,0,0,0,0,0.0,NA,False,209,NA
+organisations,organisation,The Lesbian Project,1,0,0,0,0,0.0,NA,False,210,NA
+organisations,organisation,The Police Foundation,1,0,0,0,0,0.0,NA,False,211,NA
+organisations,organisation,The Work Foundation,3,0,0,0,0,0.0,NA,False,212,NA
+organisations,organisation,The Young Foundation - Institute for Community Studies,1,0,0,0,0,0.0,NA,False,213,NA
+organisations,organisation,Trier University,1,0,0,0,0,0.0,NA,False,214,NA
+organisations,organisation,UCL Institute of Education,8,0,0,0,0,0.0,NA,True,215,52
+organisations,organisation,UK Export Finance,1,0,0,0,0,0.0,NA,False,216,NA
+organisations,organisation,UK Health Security Agency,2,0,0,0,0,0.0,NA,False,217,NA
+organisations,organisation,UK Research and Innovation,2,0,0,0,0,0.0,NA,False,218,NA
+organisations,organisation,UK Space Agency,2,0,0,0,0,0.0,NA,False,219,NA
+organisations,organisation,Ulster University,10,0,0,0,0,0.0,NA,True,220,53
+organisations,organisation,Umeå University,1,0,0,0,0,0.0,NA,False,221,NA
+organisations,organisation,University of Aberdeen,1,0,0,0,0,0.0,NA,False,222,NA
+organisations,organisation,University of Antwerp,1,0,0,0,0,0.0,NA,False,223,NA
+organisations,organisation,University of Barcelona,3,0,0,0,0,0.0,NA,False,224,NA
+organisations,organisation,University of Bath,23,0,0,0,0,0.0,NA,True,225,54
+organisations,organisation,University of Birmingham,16,0,0,0,0,0.0,NA,True,226,55
+organisations,organisation,University of Brighton,3,0,0,0,0,0.0,NA,False,227,NA
+organisations,organisation,University of Bristol,29,0,0,0,0,0.0,NA,True,228,56
+organisations,organisation,University of California,1,0,0,0,0,0.0,NA,False,229,NA
+organisations,organisation,University of Cambridge,26,0,0,0,0,0.0,NA,True,230,57
+organisations,organisation,University of Central Lancashire,3,0,0,0,0,0.0,NA,False,231,NA
+organisations,organisation,University of Derby,2,0,0,0,0,0.0,NA,False,232,NA
+organisations,organisation,University of Dundee,10,0,0,0,0,0.0,NA,True,233,58
+organisations,organisation,University of East Anglia,12,0,0,0,0,0.0,NA,True,234,59
+organisations,organisation,University of Edinburgh,31,0,0,0,0,0.0,NA,True,235,60
+organisations,organisation,University of Essex,26,0,0,0,0,0.0,NA,True,236,61
+organisations,organisation,University of Exeter,17,0,0,0,0,0.0,NA,True,237,62
+organisations,organisation,University of Florida,1,0,0,0,0,0.0,NA,False,238,NA
+organisations,organisation,University of Glasgow,9,0,0,0,0,0.0,NA,True,239,63
+organisations,organisation,University of Greenwich,1,0,0,0,0,0.0,NA,False,240,NA
+organisations,organisation,University of Hertfordshire,3,0,0,0,0,0.0,NA,False,241,NA
+organisations,organisation,University of Hull,2,0,0,0,0,0.0,NA,False,242,NA
+organisations,organisation,University of Illinois Urbana-Champaign,1,0,0,0,0,0.0,NA,False,243,NA
+organisations,organisation,University of Kent,8,0,0,0,0,0.0,NA,True,244,64
+organisations,organisation,University of Leicester,11,0,0,0,0,0.0,NA,True,245,65
+organisations,organisation,University of Liverpool,20,0,0,0,0,0.0,NA,True,246,66
+organisations,organisation,University of London,16,0,0,0,0,0.0,NA,True,247,67
+organisations,organisation,University of Lugano,1,0,0,0,0,0.0,NA,False,248,NA
+organisations,organisation,University of Manchester,43,0,0,0,0,0.0,NA,True,249,68
+organisations,organisation,University of Northampton,2,0,0,0,0,0.0,NA,False,250,NA
+organisations,organisation,University of Nottingham,23,0,0,0,0,0.0,NA,True,251,69
+organisations,organisation,University of Oxford,50,0,0,0,0,0.0,NA,True,252,70
+organisations,organisation,University of Oxford - Sociology,4,0,0,0,0,0.0,NA,False,253,NA
+organisations,organisation,University of Padova,2,0,0,0,0,0.0,NA,False,254,NA
+organisations,organisation,University of Plymouth,2,0,0,0,0,0.0,NA,False,255,NA
+organisations,organisation,University of Portsmouth,1,0,0,0,0,0.0,NA,False,256,NA
+organisations,organisation,University of Roehampton,1,0,0,0,0,0.0,NA,False,257,NA
+organisations,organisation,University of Sheffield,31,0,0,0,0,0.0,NA,True,258,71
+organisations,organisation,University of South Wales,1,0,0,0,0,0.0,NA,False,259,NA
+organisations,organisation,University of Southampton,23,0,0,0,0,0.0,NA,True,260,72
+organisations,organisation,University of St Andrews,15,0,0,0,0,0.0,NA,True,261,73
+organisations,organisation,University of Stirling,5,0,0,0,0,0.0,NA,True,262,74
+organisations,organisation,University of Strathclyde,32,0,0,0,0,0.0,NA,True,263,75
+organisations,organisation,University of Suffolk,2,0,0,0,0,0.0,NA,False,264,NA
+organisations,organisation,University of Surrey,17,0,0,0,0,0.0,NA,True,265,76
+organisations,organisation,University of Sussex,19,0,0,0,0,0.0,NA,True,266,77
+organisations,organisation,University of Texas,1,0,0,0,0,0.0,NA,False,267,NA
+organisations,organisation,University of Texas at Austin,1,0,0,0,0,0.0,NA,False,268,NA
+organisations,organisation,University of Westminster,10,0,0,0,0,0.0,NA,True,269,78
+organisations,organisation,University of the West of England,10,0,0,0,0,0.0,NA,True,270,79
+organisations,organisation,University of the West of Scotland,1,0,0,0,0,0.0,NA,False,271,NA
+organisations,organisation,Utrecht University,1,0,0,0,0,0.0,NA,False,272,NA
+organisations,organisation,Vanguard,1,0,0,0,0,0.0,NA,False,273,NA
+organisations,organisation,WPI Economics,1,0,0,0,0,0.0,NA,False,274,NA
+organisations,organisation,Wavehill Limited,1,0,0,0,0,0.0,NA,False,275,NA
+organisations,organisation,Welsh Government,14,0,0,0,0,0.0,NA,True,276,80
+organisations,organisation,Welsh Value in Health Centre,1,0,0,0,0,0.0,NA,False,277,NA
+organisations,organisation,West Midlands Combined Authority,2,0,0,0,0,0.0,NA,False,278,NA
+organisations,organisation,What Works for Children's Social Care,1,0,0,0,0,0.0,NA,False,279,NA
+organisations,organisation,Whole Life Consultants,4,0,0,0,0,0.0,NA,False,280,NA
+organisations,organisation,Yale University,1,0,0,0,0,0.0,NA,False,281,NA

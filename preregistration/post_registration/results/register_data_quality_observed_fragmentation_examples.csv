@@ -1,0 +1,172 @@
+analysis_type,field,rank,canonical_entity,distinct_observed_forms,total_occurrences,modal_form_occurrences,minimum_required_relabels,records,form_rank,raw_observed_form,form_occurrences,form_records,production_canonical_form,transformation_class,disclosure_status
+fragmented_entity,datasets,1,Business Structure Database (BSD),7,283,176,107,283,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,1,Business Structure Database (BSD),,,,,,1,Business Structure Database,176,176,Business Structure Database (BSD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,1,Business Structure Database (BSD),,,,,,2,Business Structure Database - UK,88,88,Business Structure Database (BSD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,1,Business Structure Database (BSD),,,,,,3,Business Structure Database UK,14,14,Business Structure Database (BSD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,1,Business Structure Database (BSD),,,,,,4,Business Structure Database (BSD),2,2,Business Structure Database (BSD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,1,Business Structure Database (BSD),,,,,,5,Business Structure Database (1997-2023),1,1,Business Structure Database (BSD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,1,Business Structure Database (BSD),,,,,,6,Business structure Database - UK,1,1,Business Structure Database (BSD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,1,Business Structure Database (BSD),,,,,,7,Business structure database,1,1,Business Structure Database (BSD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,2,Annual Business Survey (ABS),10,231,143,88,231,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,1,Annual Business Survey,143,143,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,2,Annual Business Survey - GB,44,44,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,3,Annual Business Survey - UK,31,31,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,4,Annual Business Survey GB,4,4,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,5,Annual Business Survey UK,4,4,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,6,Annual Business Survey (ABS),1,1,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,7,Annual Business Survey 1973 onwards),1,1,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,8,Annual Business Survey 2005-2022,1,1,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,9,Annual Business Survey Household Datasets,1,1,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,2,Annual Business Survey (ABS),,,,,,10,Annual Business Survey in Great Britain,1,1,Annual Business Survey (ABS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,3,Annual Survey of Hours and Earnings (ASHE),11,205,123,82,204,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,1,Annual Survey of Hours and Earnings,123,123,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,2,Annual Survey of Hours and Earnings - UK,41,41,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,3,Annual Survey of Hours and Earnings - GB,24,24,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,4,Annual Survey of Hours and Earnings UK,7,7,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,5,Annual Survey of Hours and Earnings (ASHE),4,4,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,6,ASHE,1,1,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,7,Annual Survey for Hours and Earnings,1,1,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,8,Annual Survey of Hours and Earnings (1997-2024),1,1,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,9,Annual Survey of Hours and Earnings 1997-2023,1,1,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,10,Annual Survey of Hours and Earnings 1997-2024,1,1,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,3,Annual Survey of Hours and Earnings (ASHE),,,,,,11,Annual Survey of Hours and Earnings GB,1,1,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,4,Longitudinal Education Outcomes (LEO),15,119,55,64,118,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,1,Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England,55,55,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,2,Longitudinal Education Outcomes SRS Iteration 1 Standard Extract - England,27,26,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,3,LEO via SRS Iteration 1 Standard Extract,18,18,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,4,Longitudinal Education,4,4,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,5,LEO via SRS Iteration 2 Standard Extract,2,2,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,6,Longitudinal Education Outcomes (LEO),2,2,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,7,Longitudinal Education Outcomes SRS Iteration 2,2,2,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,8,Longitudinal Education Outcomes SRS Iteration 2 standard extract - England,2,2,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,9,LEO,1,1,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,10,LEO Scotland,1,1,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,11,Longitudinal Education Outcomes,1,1,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,12,Longitudinal Education Outcomes - England,1,1,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,13,Longitudinal Education Outcomes Iteration 2,1,1,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,14,Longitudinal Education Outcomes SRS Iteration 1 standard extract - England,1,1,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,4,Longitudinal Education Outcomes (LEO),,,,,,15,Longitudinal Education Outcomes SRS Iteration 2 - England,1,1,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,5,Annual Population Survey (APS),9,183,131,52,176,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,1,Annual Population Survey,131,126,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,2,Annual Population Survey - UK,40,39,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,3,Annual Population Survey UK,4,3,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,4,Annual Population Survey (APS),3,3,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,5,Annual Population Survey (2004-2022 secure access),1,1,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,6,Annual Population Survey (2004-2023 secure access),1,1,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,7,Annual Population Survey 2004-2022,1,1,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,8,Annual Population Surveys - Wales,1,1,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,5,Annual Population Survey (APS),,,,,,9,Annual population survey - UK,1,1,Annual Population Survey (APS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,6,Business Enterprise Research and Development (BERD),10,83,33,50,82,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,1,Business Enterprise Research and Development,33,33,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,2,Business Enterprise Research and Development - Great Britain,30,30,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,3,Business Enterprise Research and Development - GB,7,7,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,4,Business Enterprise Research and Development England,5,5,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,5,Business Enterprise Research and Development - England,2,2,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,6,Business Enterprise Research and Development - Northern Ireland,2,2,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,7,Business Enterprise Research Development - GB,1,1,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,8,Business Enterprise Research and Developement,1,1,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,9,Business Enterprise Research and Development (BERD),1,1,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,6,Business Enterprise Research and Development (BERD),,,,,,10,Business enterprise research and development,1,1,Business Enterprise Research and Development (BERD),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,7,Business Register and Employment Survey (BRES),6,67,25,42,66,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,7,Business Register and Employment Survey (BRES),,,,,,1,Business Register Employment Survey - UK,25,25,Business Register and Employment Survey (BRES),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,7,Business Register and Employment Survey (BRES),,,,,,2,Business Register and Employment Survey,20,19,Business Register and Employment Survey (BRES),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,7,Business Register and Employment Survey (BRES),,,,,,3,Business Register Employment Survey,19,19,Business Register and Employment Survey (BRES),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,7,Business Register and Employment Survey (BRES),,,,,,4,Business Register Employment Survey (BRES),1,1,Business Register and Employment Survey (BRES),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,7,Business Register and Employment Survey (BRES),,,,,,5,Business Register Employment survey - UK,1,1,Business Register and Employment Survey (BRES),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,7,Business Register and Employment Survey (BRES),,,,,,6,Business Register and Employment Survey (BRES),1,1,Business Register and Employment Survey (BRES),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,8,Annual Respondents Database X,10,62,23,39,62,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,1,Annual Respondents Database x - UK,23,23,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,2,Annual Respondents Database X,21,21,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,3,Annual Respondents Database x,6,6,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,4,Annual Respondents Database x UK,5,5,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,5,Annual Respondents Database X - UK,2,2,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,6,Annual Respondent Database X,1,1,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,7,Annual Respondents Database ARDx UK,1,1,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,8,Annual Respondents Database X (ARDX),1,1,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,9,Annual Respondents Database X- UK,1,1,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,8,Annual Respondents Database X,,,,,,10,Annual Respondents DatabaseX,1,1,Annual Respondents Database X,fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,9,ONS Longitudinal Study (LS),7,57,21,36,56,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,9,ONS Longitudinal Study (LS),,,,,,1,Longitudinal Study of England and Wales,21,21,ONS Longitudinal Study (LS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,9,ONS Longitudinal Study (LS),,,,,,2,ONS Longitudinal Study - England and Wales,19,18,ONS Longitudinal Study (LS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,9,ONS Longitudinal Study (LS),,,,,,3,Longitudinal Study,8,8,ONS Longitudinal Study (LS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,9,ONS Longitudinal Study (LS),,,,,,4,ONS Longitudinal Study,5,5,ONS Longitudinal Study (LS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,9,ONS Longitudinal Study (LS),,,,,,5,ONS Longitudinal Study (LS),2,2,ONS Longitudinal Study (LS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,9,ONS Longitudinal Study (LS),,,,,,6,Longitudinal Study - England and Wales,1,1,ONS Longitudinal Study (LS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,9,ONS Longitudinal Study (LS),,,,,,7,ONS Longitudinal Study of England and Wales,1,1,ONS Longitudinal Study (LS),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,datasets,10,Understanding Society,4,58,28,30,58,,,,,,,aggregate_only
+fragmented_entity_source_form,datasets,10,Understanding Society,,,,,,1,Understanding Society - UK,28,28,Understanding Society,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,10,Understanding Society,,,,,,2,Understanding Society,26,26,Understanding Society,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,10,Understanding Society,,,,,,3,British Household Panel Survey,3,3,Understanding Society,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,datasets,10,Understanding Society,,,,,,4,Understanding Society UK,1,1,Understanding Society,fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,1,London School of Economics and Political Science (LSE),9,97,55,42,97,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,1,London School of Economics,55,55,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,2,London School of Economics and Political Science,23,23,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,3,The London School of Economics and Political Science,12,12,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,4,The London School of Economics,2,2,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,5,LSE,1,1,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,6,London School of Economics and Polictical Science,1,1,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,7,"London School of Economics and Political Science, University of London",1,1,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,8,London School of Economics; and University College London,1,1,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,1,London School of Economics and Political Science (LSE),,,,,,9,University of Warwick/London School of Economics,1,1,London School of Economics and Political Science (LSE),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,2,University College London (UCL),12,120,99,21,120,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,1,University College London,99,99,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,2,University of London - University College,11,11,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,3,[source form 03 withheld: contains researcher name],1,1,University College London (UCL),fragmented_observed_forms,withheld_researcher_name
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,4,CASA University College London,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,5,London School of Economics; and University College London,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,6,UCL,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,7,UCL Centre for Longitudinal Studies,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,8,UCL Institute of Epidemiology and Health,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,9,Univeristy College London,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,10,University of London / University College,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,11,University of London University College,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,2,University College London (UCL),,,,,,12,University of London-University College,1,1,University College London (UCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,3,University of Manchester,4,43,23,20,43,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,3,University of Manchester,,,,,,1,The University of Manchester,23,23,University of Manchester,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,3,University of Manchester,,,,,,2,University of Manchester,18,18,University of Manchester,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,3,University of Manchester,,,,,,3,Manchester University,1,1,University of Manchester,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,3,University of Manchester,,,,,,4,"The Productivity Institute, University of Manchester",1,1,University of Manchester,fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,4,University of Edinburgh,2,31,18,13,31,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,4,University of Edinburgh,,,,,,1,The University of Edinburgh,18,18,University of Edinburgh,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,4,University of Edinburgh,,,,,,2,University of Edinburgh,13,13,University of Edinburgh,fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,5,Cardiff University,3,37,28,9,37,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,5,Cardiff University,,,,,,1,Cardiff University,28,28,Cardiff University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,5,Cardiff University,,,,,,2,Cardiff Business School,6,6,Cardiff University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,5,Cardiff University,,,,,,3,University of Cardiff,3,3,Cardiff University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,6,Ipsos,5,27,18,9,27,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,6,Ipsos,,,,,,1,IPSOS MORI,18,18,Ipsos,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,6,Ipsos,,,,,,2,Ipsos,5,5,Ipsos,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,6,Ipsos,,,,,,3,Ipsos UK,2,2,Ipsos,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,6,Ipsos,,,,,,4,IPSOS UK,1,1,Ipsos,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,6,Ipsos,,,,,,5,Ipsos MORI,1,1,Ipsos,fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,7,Queen Mary University of London,6,16,7,9,16,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,7,Queen Mary University of London,,,,,,1,[source form 01 withheld: contains researcher name],7,7,Queen Mary University of London,fragmented_observed_forms,withheld_researcher_name
+fragmented_entity_source_form,organisations,7,Queen Mary University of London,,,,,,2,[source form 02 withheld: contains researcher name],5,5,Queen Mary University of London,fragmented_observed_forms,withheld_researcher_name
+fragmented_entity_source_form,organisations,7,Queen Mary University of London,,,,,,3,[source form 03 withheld: contains researcher name],1,1,Queen Mary University of London,fragmented_observed_forms,withheld_researcher_name
+fragmented_entity_source_form,organisations,7,Queen Mary University of London,,,,,,4,[source form 04 withheld: contains researcher name],1,1,Queen Mary University of London,fragmented_observed_forms,withheld_researcher_name
+fragmented_entity_source_form,organisations,7,Queen Mary University of London,,,,,,5,[source form 05 withheld: contains researcher name],1,1,Queen Mary University of London,fragmented_observed_forms,withheld_researcher_name
+fragmented_entity_source_form,organisations,7,Queen Mary University of London,,,,,,6,[source form 06 withheld: contains researcher name],1,1,Queen Mary University of London,fragmented_observed_forms,withheld_researcher_name
+fragmented_entity,organisations,8,King's College London (KCL),5,32,24,8,32,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,8,King's College London (KCL),,,,,,1,King's College London,24,24,King's College London (KCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,8,King's College London (KCL),,,,,,2,University of London - Kings College,4,4,King's College London (KCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,8,King's College London (KCL),,,,,,3,Kings College London,2,2,King's College London (KCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,8,King's College London (KCL),,,,,,4,"The Policy Institute, King's College London",1,1,King's College London (KCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,8,King's College London (KCL),,,,,,5,University of London Kings College,1,1,King's College London (KCL),fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,9,Durham University,2,19,11,8,19,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,9,Durham University,,,,,,1,University of Durham,11,11,Durham University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,9,Durham University,,,,,,2,Durham University,8,8,Durham University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity,organisations,10,Aston University,4,14,6,8,14,,,,,,,aggregate_only
+fragmented_entity_source_form,organisations,10,Aston University,,,,,,1,Aston University,6,6,Aston University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,10,Aston University,,,,,,2,University of Aston,6,6,Aston University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,10,Aston University,,,,,,3,Aston Business School,1,1,Aston University,fragmented_observed_forms,public_register_raw_form
+fragmented_entity_source_form,organisations,10,Aston University,,,,,,4,The university of Aston,1,1,Aston University,fragmented_observed_forms,public_register_raw_form
+optional_standardisation_mapping,organisations,1,Public Health Wales (PHW),1,15,15,0,15,1,Public Health Wales,15,15,Public Health Wales (PHW),identity_with_display_change,public_register_raw_form
+optional_standardisation_mapping,organisations,2,London School of Hygiene and Tropical Medicine (LSHTM),1,13,13,0,13,1,London School of Hygiene and Tropical Medicine,13,13,London School of Hygiene and Tropical Medicine (LSHTM),identity_with_display_change,public_register_raw_form
+optional_standardisation_mapping,datasets,3,Growing Up in England Wave 1 (GUIE),1,12,12,0,12,1,Growing Up in England Wave 1,12,12,Growing Up in England Wave 1 (GUIE),alias,public_register_raw_form
+optional_standardisation_mapping,organisations,4,Greater London Authority (GLA),1,9,9,0,9,1,Greater London Authority,9,9,Greater London Authority (GLA),alias,public_register_raw_form
+optional_standardisation_mapping,organisations,5,Competition and Markets Authority (CMA),1,8,8,0,8,1,Competition and Markets Authority,8,8,Competition and Markets Authority (CMA),identity_with_display_change,public_register_raw_form
+optional_standardisation_mapping,datasets,6,Labour Force Survey Five-Quarter Longitudinal,1,7,7,0,7,1,Labour Force Survey Five-Quarter Longitudinal Dataset,7,7,Labour Force Survey Five-Quarter Longitudinal,normalised_format,public_register_raw_form
+optional_standardisation_mapping,datasets,7,New Earnings Survey Panel,1,7,7,0,7,1,New Earnings Survey Panel Dataset,7,7,New Earnings Survey Panel,normalised_format,public_register_raw_form
+optional_standardisation_mapping,datasets,8,English School Census Absences,1,6,6,0,6,1,Absences and English School Census,6,6,English School Census Absences,alias,public_register_raw_form
+optional_standardisation_mapping,organisations,9,Department for Business and Trade (DBT),1,5,5,0,5,1,Department for Business and Trade,5,5,Department for Business and Trade (DBT),alias,public_register_raw_form
+optional_standardisation_mapping,datasets,10,Labour Force Survey Two-Quarter Longitudinal,1,5,5,0,5,1,Labour Force Survey Two-Quarter Longitudinal Dataset,5,5,Labour Force Survey Two-Quarter Longitudinal,normalised_format,public_register_raw_form

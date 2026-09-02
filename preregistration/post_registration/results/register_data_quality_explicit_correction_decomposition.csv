@@ -1,0 +1,10 @@
+rank,field,rule_id,operation,occurrences,unique_records,affected_canonical_entities,pct_of_78_explicit_occurrences
+1,datasets,provider_repeated_word_correction,recognised repeated provider word removed,53,49,1,67.9487
+2,organisations,institution_parser_cleanup,production parser_cleanup match status,12,7,10,15.3846
+3,organisations,institution_reviewed_typo_alias,aliases labelled as typos by production tests/source comments,6,6,6,7.6923
+4,datasets,provider_spelling_correction_01,recognised provider spelling correction,2,1,1,2.5641
+5,datasets,dataset_leading_character_artifact,reviewed leading-character artefact correction,1,1,1,1.2821
+6,datasets,dataset_spelling_correction_01,existing dataset spelling correction,1,1,1,1.2821
+7,datasets,dataset_spelling_correction_02,existing dataset spelling correction,1,1,1,1.2821
+8,datasets,dataset_truncation_correction_01,reviewed truncated alias correction,1,1,1,1.2821
+9,datasets,provider_spelling_correction_02,recognised provider spelling correction,1,1,1,1.2821

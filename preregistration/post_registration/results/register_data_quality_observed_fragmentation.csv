@@ -1,0 +1,629 @@
+field,canonical_entity,source_form_class,distinct_observed_forms,total_occurrences,modal_form_occurrences,minimum_required_relabels,records,changed_occurrences,fragmentation_rank
+datasets,Annual Respondents Database,fragmented_observed_forms,3,45,43,2,40,2,74
+datasets,Annual Population Survey (APS),fragmented_observed_forms,9,183,131,52,176,180,5
+datasets,Crime Survey for England and Wales (CSEW),fragmented_observed_forms,3,41,39,2,40,40,75
+datasets,Labour Force Survey (LFS),fragmented_observed_forms,4,81,70,11,62,80,23
+datasets,Understanding Society,fragmented_observed_forms,4,58,28,30,58,32,10
+datasets,Business Structure Database (BSD),fragmented_observed_forms,7,283,176,107,283,281,1
+datasets,UK Innovation Survey (UKIS),fragmented_observed_forms,4,79,75,4,79,79,52
+datasets,Annual Business Survey (ABS),fragmented_observed_forms,10,231,143,88,231,230,2
+datasets,Business Enterprise Research and Development (BERD),fragmented_observed_forms,10,83,33,50,82,82,6
+datasets,Business Register and Employment Survey (BRES),fragmented_observed_forms,6,67,25,42,66,66,7
+datasets,UK Manufacturers' Sales by Product Survey,fragmented_observed_forms,5,18,7,11,18,11,28
+datasets,Quarterly Acquisitions and Disposals of Capital Assets Survey,fragmented_observed_forms,3,14,11,3,14,3,62
+datasets,Living Costs and Food Survey (LCF),fragmented_observed_forms,4,39,29,10,39,39,29
+datasets,International Trade in Services,fragmented_observed_forms,6,36,17,19,36,19,15
+datasets,Business Expenditure on Research and Development,fragmented_observed_forms,3,16,14,2,16,2,76
+datasets,E-Commerce Survey,fragmented_observed_forms,5,17,7,10,17,10,31
+datasets,Annual Survey of Goods and Services,fragmented_observed_forms,2,6,3,3,6,3,70
+datasets,Wealth and Assets Survey (WAS),fragmented_observed_forms,4,29,17,12,29,29,22
+datasets,Annual Survey of Hours and Earnings (ASHE),fragmented_observed_forms,11,205,123,82,204,201,3
+datasets,Retail Price Index,single_observed_form,1,1,1,0,1,0,
+datasets,Annual Foreign Direct Investment Survey,fragmented_observed_forms,4,22,11,11,22,11,25
+datasets,Mergers and Acquisitions Survey,fragmented_observed_forms,3,4,2,2,4,4,90
+datasets,Business Structure Database Longitudinal,fragmented_observed_forms,6,20,7,13,20,14,21
+datasets,Death Registrations,fragmented_observed_forms,4,22,18,4,21,4,54
+datasets,Census 2011 Household Sample,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2011,fragmented_observed_forms,3,29,25,4,27,4,53
+datasets,ONS Longitudinal Study (LS),fragmented_observed_forms,7,57,21,36,56,55,9
+datasets,Longitudinal Small Business Survey (LSBS),fragmented_observed_forms,4,35,25,10,35,34,30
+datasets,Small Business Survey,fragmented_observed_forms,2,7,5,2,7,2,81
+datasets,Census 2011 Individual Sample England and Wales,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2011 Origin-Destination Flow,single_observed_form,1,1,1,0,1,1,
+datasets,Business Insights and Conditions Survey (BICS),fragmented_observed_forms,7,41,16,25,41,40,13
+datasets,UK Household Longitudinal Study Mainstage Survey Wave 9,single_observed_form,1,1,1,0,1,1,
+datasets,UK Household Longitudinal Study Mainstage Survey Wave 6,single_observed_form,1,1,1,0,1,0,
+datasets,Universities and Colleges Admissions Service (UCAS),fragmented_observed_forms,6,25,8,17,25,25,18
+datasets,Monthly Business Survey,fragmented_observed_forms,3,9,7,2,9,2,78
+datasets,Quarterly Labour Force Survey,single_observed_form,1,48,48,0,46,0,
+datasets,Labour Force Survey Person,fragmented_observed_forms,7,68,39,29,68,49,11
+datasets,Survey of Innovation and Patent Use,single_observed_form,1,2,2,0,2,0,
+datasets,Community Innovation Survey,single_observed_form,1,9,9,0,9,0,
+datasets,Annual Business Inquiry,fragmented_observed_forms,2,11,9,2,11,2,77
+datasets,Annual Inquiry into Foreign Direct Investment,single_observed_form,1,4,4,0,4,0,
+datasets,Annual Respondents Database X,fragmented_observed_forms,10,62,23,39,62,41,8
+datasets,Capital Stock Dataset,fragmented_observed_forms,3,5,3,2,5,4,84
+datasets,Financial Assets and Liabilities Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Inter-Departmental Business Register (IDBR),single_observed_form,1,1,1,0,1,1,
+datasets,Investment in Intangible Assets,single_observed_form,1,1,1,0,1,0,
+datasets,Monthly Wages and Salary Survey,fragmented_observed_forms,5,10,4,6,10,9,44
+datasets,New Earnings Survey (NES),fragmented_observed_forms,5,19,8,11,18,19,27
+datasets,Quarterly Capital Expenditure Survey,fragmented_observed_forms,3,14,10,4,14,4,55
+datasets,Vacancy Survey,fragmented_observed_forms,2,13,7,6,13,6,43
+datasets,Employer Skills Survey,fragmented_observed_forms,3,9,4,5,9,5,49
+datasets,Workplace Employment Relations Survey,fragmented_observed_forms,2,14,9,5,13,5,47
+datasets,Small Business Survey Longitudinal,single_observed_form,1,1,1,0,1,0,
+datasets,Annual Respondents Database 2,fragmented_observed_forms,5,18,10,8,18,14,33
+datasets,Designs and Trade Marks Office for National Statistics /,single_observed_form,1,1,1,0,1,0,
+datasets,COVID-19 Infection Survey linked to UK Innovation Survey,single_observed_form,1,1,1,0,1,1,
+datasets,Longitudinal Inter-Departmental Business Register,fragmented_observed_forms,6,17,10,7,17,7,35
+datasets,Producer Price Index,fragmented_observed_forms,3,9,5,4,9,4,58
+datasets,National Employer Skills Survey,fragmented_observed_forms,3,9,5,4,9,6,57
+datasets,Longitudinal Labour Force Survey,single_observed_form,1,3,3,0,3,0,
+datasets,COVID-19 Weekly Opinions Survey,fragmented_observed_forms,2,2,1,1,2,1,116
+datasets,COVID-19 Infection Survey linked to VOA and EPC,single_observed_form,1,2,2,0,2,2,
+datasets,COVID-19 Infection Survey with National Immunisation Management Service,single_observed_form,1,1,1,0,1,1,
+datasets,COVID-19 Infection Survey linked to Death Occurrences England and Wales Office for National Statistics /,single_observed_form,1,1,1,0,1,1,
+datasets,COVID-19 Infection Survey linked to Public Health Research Database,single_observed_form,1,1,1,0,1,1,
+datasets,Labour Force Survey Five-Quarter Longitudinal,single_observed_form,1,7,7,0,7,7,
+datasets,Annual Population Survey: Well-Being,fragmented_observed_forms,2,5,4,1,5,1,101
+datasets,Valuation data of Scottish properties,single_observed_form,1,1,1,0,1,0,
+datasets,Quarterly Fuels Inquiry,fragmented_observed_forms,3,10,7,3,10,3,65
+datasets,Death,single_observed_form,1,1,1,0,1,1,
+datasets,Annual Survey of Hours and Earnings linked to Census 2011,fragmented_observed_forms,6,24,18,6,24,23,39
+datasets,Census Wales 2011,fragmented_observed_forms,6,30,17,13,30,23,20
+datasets,Monthly Inquiry into the Distributive and Services Sector (MIDSS),fragmented_observed_forms,2,2,1,1,2,2,124
+datasets,Monthly Production Inquiry (MPI),fragmented_observed_forms,2,2,1,1,2,2,125
+datasets,Linked Inter-Departmental Business Register and Valuation Office Agency,single_observed_form,1,1,1,0,1,0,
+datasets,Management and Expectations Survey (MES),fragmented_observed_forms,4,25,14,11,25,25,24
+datasets,Low Carbon and Renewable Energy Economy Survey,fragmented_observed_forms,4,14,7,7,14,7,37
+datasets,Coronavirus and the Social Impacts on Great Britain,fragmented_observed_forms,2,20,19,1,20,20,95
+datasets,Annual Gas and Electricity Consumption at Meter Level,fragmented_observed_forms,2,3,2,1,3,2,106
+datasets,Census 1961,fragmented_observed_forms,2,4,3,1,4,1,102
+datasets,Census 1971,fragmented_observed_forms,2,4,3,1,4,1,103
+datasets,Census 1981,fragmented_observed_forms,3,3,1,2,3,2,91
+datasets,2020 Wave 1 Labour Force Survey,single_observed_form,1,1,1,0,1,0,
+datasets,COVID-19 Infection Survey (CIS),fragmented_observed_forms,5,23,9,14,23,23,19
+datasets,Annual Population Survey Persons,fragmented_observed_forms,3,4,2,2,4,4,87
+datasets,Annual Population Survey Household,single_observed_form,1,6,6,0,6,0,
+datasets,Occupational differences in mortality from COVID-19,single_observed_form,1,1,1,0,1,0,
+datasets,Labour Force Survey Household,fragmented_observed_forms,8,48,21,27,48,36,12
+datasets,Labour Force Survey Longitudinal,fragmented_observed_forms,5,39,22,17,39,27,17
+datasets,Quarterly Survey of Financial Assets and Liabilities,single_observed_form,1,1,1,0,1,0,
+datasets,Death Registration Data - Provisional Monthly Extracts,fragmented_observed_forms,5,10,5,5,10,10,48
+datasets,Death Registrations in England and Wales,fragmented_observed_forms,3,4,2,2,4,3,89
+datasets,Census 2001 Individual,fragmented_observed_forms,2,3,2,1,3,3,108
+datasets,Census 2011 England and Wales Household Structure for COVID-19 Models,fragmented_observed_forms,3,3,1,2,3,3,93
+datasets,Census 2011 Household Sample England and Wales,single_observed_form,1,1,1,0,1,1,
+datasets,Linked Trade-in-Goods/IDBR,fragmented_observed_forms,5,10,3,7,10,8,38
+datasets,National Energy Efficiency,single_observed_form,1,1,1,0,1,1,
+datasets,Linked Director's mortality,single_observed_form,1,1,1,0,1,1,
+datasets,New Earnings Survey Panel,single_observed_form,1,7,7,0,7,7,
+datasets,Opinions and Lifestyle Survey (OPN),fragmented_observed_forms,5,18,12,6,18,17,41
+datasets,COVID-19 Schools Infection Survey,fragmented_observed_forms,3,4,2,2,4,3,88
+datasets,COVID-19 Schools Infection Survey linked to National Immunisation Management Service,single_observed_form,1,1,1,0,1,1,
+datasets,COVID-19 School Infection Survey linked to NHS Test,single_observed_form,1,1,1,0,1,1,
+datasets,Trace,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2011 Origin-Destination,fragmented_observed_forms,3,3,1,2,3,2,94
+datasets,Understanding Society Waves 1-9,single_observed_form,1,1,1,0,1,0,
+datasets,Harmonised BHPS Waves 1-18,single_observed_form,1,1,1,0,1,0,
+datasets,Linked Census and Death Occurrences,fragmented_observed_forms,3,7,5,2,7,7,80
+datasets,Census 2011 Ethnicity,single_observed_form,1,1,1,0,1,1,
+datasets,Census 1991,single_observed_form,1,2,2,0,2,0,
+datasets,Census 2001,single_observed_form,1,1,1,0,1,0,
+datasets,Annual Purchases Survey,fragmented_observed_forms,4,22,11,11,22,11,26
+datasets,Census 2011 England and Wales: Household structure for COVID-19 models,single_observed_form,1,1,1,0,1,0,
+datasets,Effects of Taxes and Benefits on Household Income,fragmented_observed_forms,2,2,1,1,2,2,121
+datasets,Management Practices Survey,fragmented_observed_forms,2,9,6,3,9,3,66
+datasets,Consumer Prices Index,fragmented_observed_forms,5,15,5,10,15,13,32
+datasets,Census 2011 England,fragmented_observed_forms,2,2,1,1,2,1,117
+datasets,Understanding Society BHPS,fragmented_observed_forms,2,2,1,1,2,1,126
+datasets,Understanding Society UKHLS,fragmented_observed_forms,2,3,2,1,3,1,114
+datasets,COVID-19 Infection Survey linked to Combined Vaccination,fragmented_observed_forms,2,3,2,1,3,3,107
+datasets,Growing Up in England Wave 1 (GUIE),single_observed_form,1,12,12,0,12,12,
+datasets,"Linked Census, HES and Mortality Data",single_observed_form,1,3,3,0,3,0,
+datasets,Public Health Research Database,single_observed_form,1,7,7,0,7,0,
+datasets,MoJ Data First Crown Court Defendant Case Level,fragmented_observed_forms,2,11,8,3,10,11,63
+datasets,MoJ Data First Linked Criminal Courts Defendant Case Level,single_observed_form,1,5,5,0,5,5,
+datasets,MoJ Data First Magistrates' Court Defendant Case Level,fragmented_observed_forms,3,10,6,4,10,10,56
+datasets,MoJ Data First Prisoner Custodial Journey,fragmented_observed_forms,6,9,3,6,9,6,46
+datasets,MoJ Data First Probation,fragmented_observed_forms,4,7,4,3,7,3,69
+datasets,Linked Census and death occurrences Office for National Statistics /,single_observed_form,1,1,1,0,1,0,
+datasets,Wealth and Assets Survey Great Britain,single_observed_form,1,1,1,0,1,0,
+datasets,Capital Stock 2014,single_observed_form,1,1,1,0,1,0,
+datasets,Investment in Intangible Assets Survey,fragmented_observed_forms,2,7,4,3,7,4,68
+datasets,Trade in Services,single_observed_form,1,1,1,0,1,0,
+datasets,Birth Registrations in England and Wales,fragmented_observed_forms,2,6,3,3,6,6,71
+datasets,Longitudinal Education Outcomes (LEO),fragmented_observed_forms,15,119,55,64,118,117,4
+datasets,State-funded schools inspections and outcomes,single_observed_form,1,1,1,0,1,1,
+datasets,Annual Survey of Hours and Earnings Longitudinal,fragmented_observed_forms,10,42,25,17,41,37,16
+datasets,General Lifestyle Survey to 2010,single_observed_form,1,1,1,0,1,0,
+datasets,Department for Business,single_observed_form,1,3,3,0,3,0,
+datasets,Energy and Industrial Strategy: Community Innovation Survey,single_observed_form,1,1,1,0,1,0,
+datasets,BHPS,single_observed_form,1,2,2,0,2,0,
+datasets,Earnings and Employees Study (EES) 2011 - Northern Ireland,fragmented_observed_forms,2,4,3,1,4,4,104
+datasets,Prices Survey Microdata,fragmented_observed_forms,2,3,2,1,3,1,112
+datasets,Census 2011 Aggregate,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2001 Household,fragmented_observed_forms,3,3,1,2,3,3,92
+datasets,Understanding Society and Harmonised BHPS,single_observed_form,1,1,1,0,1,0,
+datasets,Provisional Monthly Extracts England and Wales,single_observed_form,1,1,1,0,1,0,
+datasets,UK Gross Value Added,single_observed_form,1,2,2,0,2,0,
+datasets,Secure Access version of Understanding Society Data and Harmonised BHPS Geography files,single_observed_form,1,1,1,0,1,0,
+datasets,Annual Acquisition and Disposals of Capital Assets Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Workplace Employee Relations Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2011 Northern Ireland,single_observed_form,1,1,1,0,1,1,
+datasets,Secure Census 2011 Scotland,single_observed_form,1,1,1,0,1,0,
+datasets,Northern Ireland School Census,single_observed_form,1,2,2,0,2,0,
+datasets,Northern Ireland School Leavers Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Northern Ireland Exams Database,single_observed_form,1,1,1,0,1,0,
+datasets,MoJ Data First Linked Criminal Courts,fragmented_observed_forms,2,4,3,1,4,1,105
+datasets,MoJ Data First Crown Court Defendant,fragmented_observed_forms,5,7,2,5,7,6,50
+datasets,Infant Mortality linkage of 2011 Census,single_observed_form,1,1,1,0,1,0,
+datasets,Births and Deaths,single_observed_form,1,1,1,0,1,0,
+datasets,Waves 1-10 and Harmonised BHPS Geography files,single_observed_form,1,2,2,0,2,0,
+datasets,COVID-19 Infection Survey with Combined Vaccination,single_observed_form,1,2,2,0,2,2,
+datasets,Census 2011 Household,fragmented_observed_forms,4,5,2,3,3,5,73
+datasets,Foreign Direct Investment Index,fragmented_observed_forms,2,2,1,1,2,1,122
+datasets,Racial Disparity Audit,single_observed_form,1,2,2,0,2,2,
+datasets,Growing Up in England Wave 2 Vulnerability Measures,single_observed_form,1,1,1,0,1,0,
+datasets,National Travel Survey England,single_observed_form,1,1,1,0,1,0,
+datasets,Northern Ireland Annual Business Inquiry,single_observed_form,1,6,6,0,6,0,
+datasets,Broad Economy Sales and Exports,fragmented_observed_forms,2,6,5,1,6,6,99
+datasets,UK Gross Value Added for lower layer super output areas,single_observed_form,1,1,1,0,1,0,
+datasets,MoJ Data First Family Court Data Extract,single_observed_form,1,1,1,0,1,1,
+datasets,Skills and Employment Surveys Series,single_observed_form,1,1,1,0,1,1,
+datasets,Annual Population Survey Longitudinal,fragmented_observed_forms,3,6,4,2,6,5,82
+datasets,Administrative Data | Agricultural Research Collection (AD|ARC),fragmented_observed_forms,3,5,2,3,5,5,72
+datasets,NI Annual Business Inquiry,single_observed_form,1,1,1,0,1,0,
+datasets,Linked Trade-in-Goods/Inter-Departmental Business Register,fragmented_observed_forms,4,20,14,6,20,16,40
+datasets,Research and Development Expenditures and Subsidies,single_observed_form,1,3,3,0,3,0,
+datasets,Firm Productivity,single_observed_form,1,3,3,0,3,0,
+datasets,Employment Creation and Survival,single_observed_form,1,3,3,0,3,0,
+datasets,Statutory Homelessness Flows - England,single_observed_form,1,2,2,0,2,2,
+datasets,MoJ Data First Magistrates' Court Defendant,fragmented_observed_forms,2,3,2,1,3,1,109
+datasets,MoJ Data First Linked Criminal Courts And Prisons Defendant,single_observed_form,1,1,1,0,1,1,
+datasets,COVID-19 Infection Survey linked to NHS Test and Trace,single_observed_form,1,1,1,0,1,1,
+datasets,COVID-19 Schools Infection Survey linked to Test and Trace,fragmented_observed_forms,2,2,1,1,2,2,115
+datasets,Decision Maker Panel,fragmented_observed_forms,2,9,8,1,9,8,97
+datasets,Northern Ireland School Leavers Survey Northern Ireland Exams Database,single_observed_form,1,1,1,0,1,0,
+datasets,Statutory Homelessness Flows,single_observed_form,1,1,1,0,1,1,
+datasets,Growing Up in England Wave 2 (GUIE),fragmented_observed_forms,3,7,3,4,7,7,61
+datasets,Growing Up in England Wave 2 - Exclusions,fragmented_observed_forms,2,6,5,1,6,1,100
+datasets,English School Census Absences,single_observed_form,1,6,6,0,6,6,
+datasets,Bespoke Refugee Integration Outcomes Cohort Study England,single_observed_form,1,1,1,0,1,0,
+datasets,Labour Force Survey Two-Quarter Longitudinal,single_observed_form,1,5,5,0,5,5,
+datasets,Monthly Business Survey for Construction and Allied Trades,single_observed_form,1,1,1,0,1,1,
+datasets,Short Term Employment Survey,single_observed_form,1,1,1,0,1,1,
+datasets,Employer Skills Survey and Investment in Training,fragmented_observed_forms,2,15,14,1,15,14,96
+datasets,COVID-19 Infection Survey linked to Combined Vaccination - UK ONS,single_observed_form,1,2,2,0,2,0,
+datasets,DHSC: COVID-19 Infection Survey linked to NHS Test and Trace,single_observed_form,1,2,2,0,2,2,
+datasets,Schools Daily Contact Testing,single_observed_form,1,1,1,0,1,1,
+datasets,COVID-19 Vaccine Opinions Survey,single_observed_form,1,2,2,0,2,2,
+datasets,NHS Test and Trace,single_observed_form,1,1,1,0,1,1,
+datasets,Children and Family Court Advisory and Support Service (CAFCASS England),single_observed_form,1,1,1,0,1,0,
+datasets,MoJ Data First Family Court,fragmented_observed_forms,6,6,1,5,6,6,51
+datasets,MoJ Data First Familyman Family Court,single_observed_form,1,1,1,0,1,1,
+datasets,Bespoke Admin Data: Agricultural Research Collection,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2011 linked to Benefits and Income,single_observed_form,1,3,3,0,3,3,
+datasets,EOL,fragmented_observed_forms,2,2,1,1,2,1,120
+datasets,Bespoke Equalities Data Asset: Companies House - Census 2011,single_observed_form,1,1,1,0,1,1,
+datasets,Investment by insurance companies,single_observed_form,1,1,1,0,1,0,
+datasets,pension funds and trusts,single_observed_form,1,1,1,0,1,1,
+datasets,British Election Panel Study,single_observed_form,1,1,1,0,1,0,
+datasets,British Local Election Database,single_observed_form,1,1,1,0,1,0,
+datasets,Childcare and Early Years Provision: Providers' Survey,single_observed_form,1,1,1,0,1,0,
+datasets,English Longitudinal Study of Ageing,single_observed_form,1,1,1,0,1,0,
+datasets,Expenditure and Food Survey,single_observed_form,1,2,2,0,2,0,
+datasets,Family Expenditure Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Family Resources Survey,fragmented_observed_forms,2,8,5,3,8,5,67
+datasets,General Household Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Health and Lifestyle Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Health Survey for England,single_observed_form,1,1,1,0,1,0,
+datasets,Households Below Average Income,single_observed_form,1,1,1,0,1,0,
+datasets,International Passenger Survey,single_observed_form,1,2,2,0,2,0,
+datasets,National Travel Survey,fragmented_observed_forms,2,5,3,2,5,2,86
+datasets,ONS Omnibus Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Quarterly Labour Force Survey Household,single_observed_form,1,1,1,0,1,1,
+datasets,Survey of Personal Incomes,single_observed_form,1,1,1,0,1,0,
+datasets,COVID-19 Study,single_observed_form,1,2,2,0,2,0,
+datasets,Innovation Panel,single_observed_form,1,2,2,0,2,0,
+datasets,E-Commerce and Digital Economy Survey,fragmented_observed_forms,3,8,6,2,8,7,79
+datasets,Death Registrations Finalised,fragmented_observed_forms,2,7,6,1,7,6,98
+datasets,COVID-19 Infection Survey linked to Mortality - England and Wales ONS,single_observed_form,1,1,1,0,1,0,
+datasets,COVID-19 Infection Survey linked to VOA and EPC - England and Wales Office for National,single_observed_form,1,1,1,0,1,1,
+datasets,Bespoke Data Tables for Project,single_observed_form,1,1,1,0,1,0,
+datasets,Understanding Society - UK Office for National,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2021,fragmented_observed_forms,3,25,18,7,25,7,34
+datasets,NN4B,single_observed_form,1,1,1,0,1,0,
+datasets,Maternal Deaths,single_observed_form,1,1,1,0,1,1,
+datasets,Over 50s Lifestyle Study,fragmented_observed_forms,2,3,2,1,3,1,111
+datasets,Nursing and Midwifery Council Register,single_observed_form,1,3,3,0,3,3,
+datasets,Further Education Workforce Data Collection,single_observed_form,1,3,3,0,3,3,
+datasets,Bespoke National Pupil Database extract,single_observed_form,1,1,1,0,1,0,
+datasets,Longitudinal Business Database,fragmented_observed_forms,3,14,7,7,14,9,36
+datasets,Business Enterprise Research and Development Great Britain,single_observed_form,1,1,1,0,1,0,
+datasets,Business Enterprise Research and Development Northern Ireland,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2011 Individual England and Wales,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2011 Individual Northern Ireland,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2011 Individual Scotland,single_observed_form,1,1,1,0,1,0,
+datasets,Industrial Strategy: UK Innovation Survey,single_observed_form,1,2,2,0,2,0,
+datasets,Bespoke National Council for Voluntary Organisations,single_observed_form,1,1,1,0,1,1,
+datasets,Census Wales 2021,fragmented_observed_forms,4,7,3,4,7,4,60
+datasets,Census Wales 2021 Household,single_observed_form,1,1,1,0,1,1,
+datasets,RETIRED MoJ Data First Magistrates Court Defendant,fragmented_observed_forms,2,3,2,1,3,3,113
+datasets,RETIRED MoJ Data First Probation,single_observed_form,1,1,1,0,1,1,
+datasets,MoJ Data First Cross-Justice System Linking Dataset,fragmented_observed_forms,4,8,4,4,8,8,59
+datasets,Public Attitudes Tracker,single_observed_form,1,1,1,0,1,0,
+datasets,Childcare and Early Years Survey of Parents,fragmented_observed_forms,2,2,1,1,2,1,119
+datasets,Labour Force Survey Indexed,single_observed_form,1,1,1,0,1,0,
+datasets,Online Time Use Survey (OTUS),fragmented_observed_forms,2,3,2,1,3,3,110
+datasets,Working Lives of Teachers and Leaders Survey,single_observed_form,1,3,3,0,3,3,
+datasets,UCAS Grading and Admissions Qualifications Wales,single_observed_form,1,1,1,0,1,0,
+datasets,GRading and Admissions Data England (GRADE),fragmented_observed_forms,5,13,7,6,13,12,42
+datasets,Education and Child Health Insights from Linked Data (ECHILD),fragmented_observed_forms,4,41,20,21,41,40,14
+datasets,UCAS Grading and Admissions,single_observed_form,1,1,1,0,1,1,
+datasets,Standard Industrial Classification and Occupational lookup,single_observed_form,1,1,1,0,1,0,
+datasets,UK small area gross value added estimates,single_observed_form,1,1,1,0,1,0,
+datasets,O2 mobile network operator travel and location data,single_observed_form,1,1,1,0,1,1,
+datasets,Nursing and Midwifery Council Register linked to Census 2021,single_observed_form,1,3,3,0,3,3,
+datasets,Street Level Crime for England,single_observed_form,1,1,1,0,1,0,
+datasets,MoJ Data First Probation Iteration 2,fragmented_observed_forms,2,2,1,1,2,2,123
+datasets,MoJ Data First Magistrates Court Iteration 2,fragmented_observed_forms,2,5,3,2,5,5,85
+datasets,MoJ Data First Crown Court Iteration 2,fragmented_observed_forms,2,6,4,2,6,6,83
+datasets,MoJ Data First Prison Iteration 2,single_observed_form,1,1,1,0,1,1,
+datasets,Digital Economy Survey,single_observed_form,1,1,1,0,1,0,
+datasets,RETIRED MoJ Data First Crown Court Defendant,single_observed_form,1,1,1,0,1,1,
+datasets,The Second Longitudinal Study of Young People in England,single_observed_form,1,2,2,0,2,0,
+datasets,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,fragmented_observed_forms,5,9,3,6,9,9,45
+datasets,Census 2021 Non-Response Link Study England and Wales,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2021 Household Secure Microdata Sample England and Wales,single_observed_form,1,1,1,0,1,1,
+datasets,CGIAD,single_observed_form,1,1,1,0,1,1,
+datasets,Enhanced Linked Trade-in-Goods/Inter-Departmental Business Register,single_observed_form,1,1,1,0,1,0,
+datasets,Annual International Trade in Services,fragmented_observed_forms,3,10,7,3,10,8,64
+datasets,Designs and Trade Marks from Intellectual Property Office,single_observed_form,1,2,2,0,2,2,
+datasets,Census 2021 England and Wales,single_observed_form,1,2,2,0,2,0,
+datasets,Census 2021 Origin-Destination Tables England and Wales,single_observed_form,1,1,1,0,1,1,
+datasets,Integrated Data Service,single_observed_form,1,1,1,0,1,1,
+datasets,Death Registrations in England and Wales Indexed,single_observed_form,1,1,1,0,1,1,
+datasets,Emergency Care Data Set monthly in England indexed,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2021 Indexed,single_observed_form,1,1,1,0,1,1,
+datasets,Integrated Data Asset Hospital Episode,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2021 Non-Response Link Study England and Wales Indexed,single_observed_form,1,1,1,0,1,1,
+datasets,Telephone-Operated Crime Survey for England and Wales,single_observed_form,1,2,2,0,2,0,
+datasets,ONS Longitudinal Study 1971,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2021 Comprehensive Microdata,fragmented_observed_forms,2,2,1,1,2,2,118
+datasets,Annual Survey of Hours and Earnings linked to Census 2011 England and Wales,single_observed_form,1,1,1,0,1,1,
+datasets,Bespoke Admin Data - Agricultural Research Collection Phase 2,single_observed_form,1,2,2,0,2,2,
+datasets,Bespoke Admin Data - Agricultural Research Collection Phase 1,single_observed_form,1,1,1,0,1,1,
+datasets,Council Tax Property Attributes,single_observed_form,1,1,1,0,1,1,
+datasets,Energy Performance Certification,single_observed_form,1,1,1,0,1,1,
+datasets,Civil Society Organisations,single_observed_form,1,1,1,0,1,1,
+datasets,Food Survey,single_observed_form,1,1,1,0,1,1,
+datasets,Northern Ireland Census 2021 Microdata,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2011 100% Household and Individual - England an d Wales,single_observed_form,1,1,1,0,1,0,
+datasets,Department for Education: Employer Skills Survey,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2011 Individual Secure Sample England and Wales,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2011 and Census 2021 England and Wales,single_observed_form,1,2,2,0,2,2,
+datasets,Integrated Census Microdata,single_observed_form,1,2,2,0,2,0,
+datasets,Annual Business Survey - UK,single_observed_form,1,1,1,0,1,1,
+datasets,Business Register Employment Survey - UK Living Costs and Food Survey - UK Labour Force Survey Household - UK Consumer and Retail Price Index - UK Annual Survey of Hours and Earnings Longitudinal - UK Annual Population Survey,single_observed_form,1,1,1,0,1,1,
+datasets,National Travel Survey English Housing Survey,single_observed_form,1,1,1,0,1,0,
+datasets,English Housing Survey UK Household Electricity and Activity Survey Smart Energy Research Lab Observatory,single_observed_form,1,1,1,0,1,1,
+datasets,DEA Research Project Accreditation Understanding Society,single_observed_form,1,1,1,0,1,0,
+datasets,MoJ Data First Link Ed Criminal Courts,single_observed_form,1,1,1,0,1,1,
+datasets,MoJ Data First Magistrates Court Defendant Iteration 2,single_observed_form,1,1,1,0,1,1,
+datasets,Children of the 2020s Longitudinal Study,single_observed_form,1,2,2,0,2,2,
+datasets,Census Microdata 9% Sample,single_observed_form,1,1,1,0,1,0,
+datasets,Digital library of historical directories,single_observed_form,1,1,1,0,1,0,
+datasets,Urban Population Database,single_observed_form,1,1,1,0,1,0,
+datasets,Longitudinal Study of young people in England,single_observed_form,1,1,1,0,1,0,
+datasets,Low carbon and renewable energy economy,single_observed_form,1,1,1,0,1,0,
+datasets,UK: 2023,single_observed_form,1,1,1,0,1,0,
+datasets,UK research and Innovation Workforce Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Longitudinal Inter-Development Business Register,single_observed_form,1,1,1,0,1,0,
+datasets,Employer Skills Survey: Investment in Training,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2021 10% Sample,single_observed_form,1,1,1,0,1,1,
+datasets,Linked Credit Reference Agency (CRA),single_observed_form,1,1,1,0,1,1,
+datasets,Northern Ireland Economic Trade,single_observed_form,1,1,1,0,1,1,
+datasets,Census 2022,single_observed_form,1,1,1,0,1,1,
+datasets,Annual Respondents Database X (ARDx) Business Register and Employment Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Structure Database,single_observed_form,1,1,1,0,1,1,
+datasets,udinal Business Database,single_observed_form,1,1,1,0,1,1,
+datasets,Safeguarded Living Costs and Food Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2011 (CENW),single_observed_form,1,1,1,0,1,0,
+datasets,Census 2021 (CENS) Ministry of Justice,single_observed_form,1,1,1,0,1,0,
+datasets,MoJ Data First Magistrates Court Defendant,single_observed_form,1,1,1,0,1,1,
+datasets,Annual Business Survey - GB Annual Survey of Hours and Earnings,single_observed_form,1,1,1,0,1,1,
+datasets,Longitudinal Business Register,single_observed_form,1,1,1,0,1,0,
+datasets,Census 2021 Household Secure Microdata Sample,single_observed_form,1,2,2,0,2,2,
+datasets,MoJ Data First Offender Assessment,single_observed_form,1,1,1,0,1,1,
+datasets,Business Structure Database - UK Annual Survey of Hours and Earnings - GB Annual Population Survey - UK Annual International Trade in Services,single_observed_form,1,1,1,0,1,1,
+datasets,Business Register Emplyment Survey,single_observed_form,1,1,1,0,1,1,
+datasets,Quarterly Fuels Inquiry / Quarterly Fuels Survey,single_observed_form,1,1,1,0,1,0,
+datasets,Northern Ireland Annual Business Inquiry (NIABI),single_observed_form,1,2,2,0,2,0,
+datasets,Northern Ireland Economic Trade Statistics (NIETS),single_observed_form,1,1,1,0,1,0,
+datasets,Business Data Research (BDR) 2022 Themed,single_observed_form,1,1,1,0,1,1,
+datasets,ONS Census 2021,single_observed_form,1,1,1,0,1,0,
+datasets,Children of the 2020s: Wave 1,single_observed_form,1,1,1,0,1,0,
+datasets,Northern Ireland Economic Trade Statistics (NIETS) Northern Ireland Annual Survey of Hours and Earnings (NI ASHE),single_observed_form,1,1,1,0,1,0,
+organisations,London School of Economics and Political Science (LSE),fragmented_observed_forms,9,97,55,42,97,97,1
+organisations,Chartered Institute of Personnel and Development (CIPD),single_observed_form,1,1,1,0,1,1,
+organisations,Office for National Statistics (ONS),fragmented_observed_forms,3,47,40,7,47,47,11
+organisations,Office of the Victims' Commissioner for England and Wales,single_observed_form,1,1,1,0,1,0,
+organisations,Happy City Initiative,single_observed_form,1,1,1,0,1,0,
+organisations,New Economics Foundation,single_observed_form,1,1,1,0,1,0,
+organisations,The Work Foundation,single_observed_form,1,3,3,0,3,0,
+organisations,ARUP,fragmented_observed_forms,2,2,1,1,2,1,63
+organisations,Aston University,fragmented_observed_forms,4,14,6,8,14,8,10
+organisations,University of Bath,fragmented_observed_forms,2,23,21,2,23,2,31
+organisations,Oxford Economics,single_observed_form,1,1,1,0,1,0,
+organisations,Frontier Economics Ltd,fragmented_observed_forms,2,24,21,3,24,3,24
+organisations,Cardiff University,fragmented_observed_forms,3,37,28,9,37,9,5
+organisations,Institute for Fiscal Studies (IFS),fragmented_observed_forms,3,67,64,3,67,67,20
+organisations,Bank of England,single_observed_form,1,22,22,0,22,0,
+organisations,Department for International Trade,single_observed_form,1,7,7,0,7,0,
+organisations,University of Sussex,fragmented_observed_forms,2,19,18,1,19,1,42
+organisations,Competition and Markets Authority (CMA),single_observed_form,1,8,8,0,8,8,
+organisations,University of Strathclyde,single_observed_form,1,32,32,0,32,0,
+organisations,University College London (UCL),fragmented_observed_forms,12,120,99,21,120,120,2
+organisations,King's College London (KCL),fragmented_observed_forms,5,32,24,8,32,32,8
+organisations,St Mungo's,single_observed_form,1,1,1,0,1,0,
+organisations,University of York,fragmented_observed_forms,2,13,12,1,13,1,48
+organisations,Columbia University,single_observed_form,1,1,1,0,1,0,
+organisations,Northern Ireland Statistics and Research Agency (NISRA),fragmented_observed_forms,2,7,6,1,7,6,53
+organisations,University of Oxford,fragmented_observed_forms,2,50,47,3,50,3,22
+organisations,Ipsos,fragmented_observed_forms,5,27,18,9,27,22,6
+organisations,Hardisty Jones Associates,single_observed_form,1,1,1,0,1,0,
+organisations,BOP Consulting,single_observed_form,1,1,1,0,1,0,
+organisations,Bournemouth University,single_observed_form,1,1,1,0,1,1,
+organisations,University of Essex,single_observed_form,1,26,26,0,26,0,
+organisations,University of Southampton,single_observed_form,1,23,23,0,23,0,
+organisations,National Institute for Economic and Social Research (NIESR),fragmented_observed_forms,2,15,13,2,15,15,33
+organisations,Knowledge Transfer Network,single_observed_form,1,1,1,0,1,0,
+organisations,Innovate UK,single_observed_form,1,5,5,0,5,0,
+organisations,University of East Anglia,fragmented_observed_forms,2,12,11,1,12,1,49
+organisations,University of London,single_observed_form,1,16,16,0,16,0,
+organisations,"Royal Holloway, University of London",fragmented_observed_forms,4,9,4,5,9,5,14
+organisations,Simetrica,single_observed_form,1,12,12,0,12,0,
+organisations,"Department for Business, Energy and Industrial Strategy (BEIS)",fragmented_observed_forms,2,5,4,1,5,5,55
+organisations,Imperial College London,fragmented_observed_forms,4,17,14,3,17,3,25
+organisations,Cambridge Econometrics,single_observed_form,1,2,2,0,2,0,
+organisations,University of Manchester,fragmented_observed_forms,4,43,23,20,43,25,3
+organisations,Department of Health (Northern Ireland),single_observed_form,1,1,1,0,1,1,
+organisations,Scottish Government,single_observed_form,1,3,3,0,3,0,
+organisations,Public Health England (PHE),single_observed_form,1,4,4,0,4,4,
+organisations,University of Edinburgh,fragmented_observed_forms,2,31,18,13,31,18,4
+organisations,Methods Analytics,single_observed_form,1,1,1,0,1,0,
+organisations,Welsh Government,single_observed_form,1,14,14,0,14,0,
+organisations,University of Cambridge,fragmented_observed_forms,3,26,24,2,26,2,30
+organisations,Durham University,fragmented_observed_forms,2,19,11,8,19,11,9
+organisations,Lancaster University,fragmented_observed_forms,2,18,12,6,18,6,12
+organisations,University of Leeds,fragmented_observed_forms,3,12,10,2,12,2,34
+organisations,"Queen's University Belfast Management, School",single_observed_form,1,1,1,0,1,0,
+organisations,Nesta,single_observed_form,1,4,4,0,4,0,
+organisations,University of St Andrews,fragmented_observed_forms,2,15,14,1,15,1,45
+organisations,University of Birmingham,single_observed_form,1,16,16,0,16,0,
+organisations,Alan Turing Institute,fragmented_observed_forms,3,5,2,3,5,4,28
+organisations,European University Institute,fragmented_observed_forms,2,2,1,1,2,1,67
+organisations,University of the West of England,fragmented_observed_forms,3,10,7,3,10,8,26
+organisations,University of Reading,fragmented_observed_forms,2,13,12,1,13,1,47
+organisations,Low Pay Commission (LPC),single_observed_form,1,4,4,0,4,4,
+organisations,Swansea University,fragmented_observed_forms,4,66,63,3,66,3,21
+organisations,"ADS (Aerospace, Defence, Security, Space) Group Limited",single_observed_form,1,2,2,0,2,2,
+organisations,Public Health Wales (PHW),single_observed_form,1,15,15,0,15,15,
+organisations,Health Data Research UK (HDR UK),single_observed_form,1,1,1,0,1,1,
+organisations,Cancer Research UK,single_observed_form,1,1,1,0,1,0,
+organisations,University of Nottingham,single_observed_form,1,23,23,0,23,0,
+organisations,Economic Statistics Centre of Excellence,fragmented_observed_forms,2,2,1,1,2,1,64
+organisations,University of Warwick,fragmented_observed_forms,4,34,31,3,34,3,23
+organisations,UCL Institute of Education,fragmented_observed_forms,3,8,6,2,8,2,36
+organisations,Belmana,fragmented_observed_forms,2,15,14,1,15,1,44
+organisations,SQW - Economic and Management Consultants,fragmented_observed_forms,3,6,3,3,6,3,27
+organisations,Be the Business,single_observed_form,1,1,1,0,1,0,
+organisations,London Metropolitan University,single_observed_form,1,1,1,0,1,1,
+organisations,National Institute of Social and Economic Research,single_observed_form,1,1,1,0,1,0,
+organisations,Joint Biosecurity Centre,single_observed_form,1,1,1,0,1,1,
+organisations,Department of Health and Social Care (DHSC),fragmented_observed_forms,2,5,3,2,5,5,37
+organisations,PA Consulting,single_observed_form,1,2,2,0,2,0,
+organisations,UK Health Security Agency,single_observed_form,1,2,2,0,2,0,
+organisations,Greater London Authority (GLA),single_observed_form,1,9,9,0,9,9,
+organisations,Tech City UK,single_observed_form,1,2,2,0,2,0,
+organisations,Kingston University,fragmented_observed_forms,2,3,2,1,3,2,58
+organisations,London School of Hygiene and Tropical Medicine (LSHTM),single_observed_form,1,13,13,0,13,13,
+organisations,Queen's University Belfast,single_observed_form,1,20,20,0,20,0,
+organisations,Queen Mary University of London,fragmented_observed_forms,6,16,7,9,16,9,7
+organisations,Nottingham Trent University,fragmented_observed_forms,2,3,2,1,3,1,60
+organisations,"Birkbeck, University of London",single_observed_form,1,1,1,0,1,1,
+organisations,Glasgow City Council,single_observed_form,1,2,2,0,2,0,
+organisations,"City, University of London",fragmented_observed_forms,4,11,7,4,11,9,15
+organisations,University of Liverpool,fragmented_observed_forms,2,20,15,5,20,5,13
+organisations,Saga City Research,single_observed_form,1,1,1,0,1,0,
+organisations,National Foundation for Education Research (NFER),fragmented_observed_forms,2,14,13,1,14,14,46
+organisations,RSM UK,fragmented_observed_forms,2,4,3,1,4,1,56
+organisations,British Psychological Society,single_observed_form,1,1,1,0,1,0,
+organisations,Nuffield Family Justice Observatory,single_observed_form,1,2,2,0,2,0,
+organisations,Lancaster University Management School,single_observed_form,1,1,1,0,1,1,
+organisations,Nuffield Foundation,single_observed_form,1,1,1,0,1,0,
+organisations,Institute for Employment Studies (IES),single_observed_form,1,1,1,0,1,1,
+organisations,Free University of Bozen-Bolzano,single_observed_form,1,1,1,0,1,0,
+organisations,West Midlands Combined Authority,single_observed_form,1,2,2,0,2,0,
+organisations,Cranfield University,single_observed_form,1,1,1,0,1,1,
+organisations,University of Surrey,fragmented_observed_forms,2,17,16,1,17,1,43
+organisations,University of Bristol,fragmented_observed_forms,3,29,27,2,29,2,29
+organisations,University of Exeter,fragmented_observed_forms,3,17,15,2,17,2,32
+organisations,University of Oxford - Sociology,fragmented_observed_forms,2,4,2,2,4,2,39
+organisations,University of Sheffield,fragmented_observed_forms,2,31,30,1,31,1,41
+organisations,Hackney Council,single_observed_form,1,1,1,0,1,0,
+organisations,University of Dundee,fragmented_observed_forms,2,10,9,1,10,1,51
+organisations,Newcastle University,single_observed_form,1,9,9,0,9,0,
+organisations,University of Leicester,single_observed_form,1,11,11,0,11,0,
+organisations,Loughborough University,fragmented_observed_forms,2,8,6,2,8,2,35
+organisations,University of Hertfordshire,single_observed_form,1,3,3,0,3,0,
+organisations,Manchester Metropolitan University,fragmented_observed_forms,2,3,2,1,3,1,59
+organisations,Institute of Occupational Medicine,single_observed_form,1,2,2,0,2,0,
+organisations,University of Brighton,single_observed_form,1,3,3,0,3,0,
+organisations,What Works for Children's Social Care,single_observed_form,1,1,1,0,1,0,
+organisations,Technopolis,single_observed_form,1,5,5,0,5,0,
+organisations,Middlesex University,fragmented_observed_forms,2,2,1,1,2,1,72
+organisations,London Borough of Redbridge,single_observed_form,1,1,1,0,1,0,
+organisations,Skills Development Scotland,single_observed_form,1,2,2,0,2,0,
+organisations,WPI Economics,single_observed_form,1,1,1,0,1,0,
+organisations,University of Westminster,fragmented_observed_forms,2,10,6,4,10,4,16
+organisations,FFT Education Ltd,fragmented_observed_forms,2,9,5,4,9,4,17
+organisations,OFSTED,single_observed_form,1,2,2,0,2,0,
+organisations,Netherlands Interdisciplinary Demographic Institute,single_observed_form,1,1,1,0,1,1,
+organisations,Ifo Institute for Economic Research,single_observed_form,1,1,1,0,1,0,
+organisations,London Economics,fragmented_observed_forms,2,10,9,1,10,1,50
+organisations,Ulster University,single_observed_form,1,10,10,0,10,0,
+organisations,Resolution Foundation,single_observed_form,1,8,8,0,8,0,
+organisations,Institute of the Motor Industry,single_observed_form,1,1,1,0,1,0,
+organisations,University of Greenwich,single_observed_form,1,1,1,0,1,0,
+organisations,UK Research and Innovation,single_observed_form,1,2,2,0,2,0,
+organisations,Johannes Kepler University Linz,single_observed_form,1,1,1,0,1,1,
+organisations,Heriot-Watt University,fragmented_observed_forms,2,6,5,1,6,1,54
+organisations,Health Foundation,fragmented_observed_forms,2,2,1,1,2,1,69
+organisations,Academy of Medical Sciences,single_observed_form,1,1,1,0,1,1,
+organisations,Brunel University London,single_observed_form,1,3,3,0,3,0,
+organisations,Institute & Faculty of Actuaries,single_observed_form,1,1,1,0,1,0,
+organisations,Municipal & General (M&G),single_observed_form,1,1,1,0,1,1,
+organisations,HM Treasury,single_observed_form,1,3,3,0,3,0,
+organisations,University of Glasgow,single_observed_form,1,9,9,0,9,0,
+organisations,British Sociological Society,single_observed_form,1,1,1,0,1,0,
+organisations,Cabinet Office,single_observed_form,1,3,3,0,3,0,
+organisations,MIME Consulting Ltd,single_observed_form,1,2,2,0,2,0,
+organisations,State of Life,single_observed_form,1,1,1,0,1,0,
+organisations,University of Plymouth,fragmented_observed_forms,2,2,1,1,2,1,75
+organisations,University of Portsmouth,single_observed_form,1,1,1,0,1,0,
+organisations,PwC LLP,fragmented_observed_forms,4,7,3,4,7,7,19
+organisations,University of Stirling,single_observed_form,1,5,5,0,5,0,
+organisations,Georgetown University,single_observed_form,1,2,2,0,2,0,
+organisations,Oxford Economics Ltd,single_observed_form,1,3,3,0,3,0,
+organisations,Office for Health Improvement and Disparities (OHID),single_observed_form,1,1,1,0,1,1,
+organisations,HM Revenue and Customs (HMRC),single_observed_form,1,1,1,0,1,1,
+organisations,University of Florida,single_observed_form,1,1,1,0,1,0,
+organisations,Centre for Cities,single_observed_form,1,5,5,0,5,0,
+organisations,University of Barcelona,fragmented_observed_forms,2,3,2,1,3,1,62
+organisations,Institute for the Future of Work (IFOW),single_observed_form,1,1,1,0,1,1,
+organisations,University of Hull,single_observed_form,1,2,2,0,2,0,
+organisations,Coventry University,single_observed_form,1,1,1,0,1,1,
+organisations,Cambridge Policy Consultants,single_observed_form,1,1,1,0,1,0,
+organisations,University of Roehampton,single_observed_form,1,1,1,0,1,0,
+organisations,Harvard University,single_observed_form,1,4,4,0,4,0,
+organisations,Emory University,single_observed_form,1,1,1,0,1,0,
+organisations,University of Kent,fragmented_observed_forms,2,8,7,1,8,1,52
+organisations,Greater Manchester Combined Authority,single_observed_form,1,4,4,0,4,0,
+organisations,University of Aberdeen,single_observed_form,1,1,1,0,1,0,
+organisations,National Centre for Social Research (NatCen),single_observed_form,1,3,3,0,3,3,
+organisations,Massachusetts Institute of Technology (MIT),single_observed_form,1,5,5,0,5,5,
+organisations,Pro Bono Economics,single_observed_form,1,2,2,0,2,0,
+organisations,DASCROSE Limited,single_observed_form,1,1,1,0,1,0,
+organisations,Education Policy Institute,single_observed_form,1,6,6,0,6,0,
+organisations,"Department for Digital, Culture, Media and Sport",single_observed_form,1,1,1,0,1,1,
+organisations,University of Derby,single_observed_form,1,2,2,0,2,0,
+organisations,Henley Business School (University of Reading),fragmented_observed_forms,2,2,1,1,2,1,70
+organisations,Home Office,single_observed_form,1,1,1,0,1,0,
+organisations,Social Market Foundation,single_observed_form,1,1,1,0,1,0,
+organisations,Perspective Economics,single_observed_form,1,1,1,0,1,0,
+organisations,Edinburgh Napier University,single_observed_form,1,7,7,0,7,0,
+organisations,Equality and Human Rights Commission (EHRC),fragmented_observed_forms,2,2,1,1,2,2,66
+organisations,Technological University Dublin,single_observed_form,1,1,1,0,1,1,
+organisations,Sheffield Hallam University,single_observed_form,1,2,2,0,2,0,
+organisations,Frazer-Nash Consultancy,single_observed_form,1,1,1,0,1,0,
+organisations,The Young Foundation - Institute for Community Studies,single_observed_form,1,1,1,0,1,0,
+organisations,Administrative Data Research Wales,single_observed_form,1,1,1,0,1,1,
+organisations,"SAIL Databank, Swansea University",single_observed_form,1,1,1,0,1,1,
+organisations,Lightcast,single_observed_form,1,1,1,0,1,0,
+organisations,King's Fund,single_observed_form,1,1,1,0,1,0,
+organisations,Federal Reserve Board of Governors,single_observed_form,1,1,1,0,1,0,
+organisations,Learning and Work Institute,fragmented_observed_forms,2,2,1,1,2,1,71
+organisations,Umeå University,single_observed_form,1,1,1,0,1,1,
+organisations,University of Central Lancashire,single_observed_form,1,3,3,0,3,0,
+organisations,UK Space Agency,single_observed_form,1,2,2,0,2,0,
+organisations,Experian,single_observed_form,1,1,1,0,1,0,
+organisations,National Physical Laboratory (NPL),single_observed_form,1,2,2,0,2,2,
+organisations,Northumbria University,fragmented_observed_forms,3,4,2,2,4,2,38
+organisations,Intellectual Property Office (IPO),single_observed_form,1,3,3,0,3,3,
+organisations,Liverpool City Region Combined Authority,single_observed_form,1,1,1,0,1,0,
+organisations,Tees Valley Combined Authority,single_observed_form,1,1,1,0,1,0,
+organisations,Teesside University,fragmented_observed_forms,2,2,1,1,2,1,73
+organisations,Yale University,single_observed_form,1,1,1,0,1,1,
+organisations,Department for Business and Trade (DBT),single_observed_form,1,5,5,0,5,5,
+organisations,"Department for Business, Innovation and Skills",single_observed_form,1,1,1,0,1,1,
+organisations,Federal Reserve Bank of Philadelphia,single_observed_form,1,1,1,0,1,0,
+organisations,University of Northampton,fragmented_observed_forms,2,2,1,1,2,1,74
+organisations,ScaleUp Institute,single_observed_form,1,1,1,0,1,0,
+organisations,Incomes Data Research,single_observed_form,1,1,1,0,1,0,
+organisations,Institute for Social and Economic Research (University of Essex),fragmented_observed_forms,2,3,2,1,3,3,57
+organisations,Newcastle City Council,single_observed_form,1,1,1,0,1,0,
+organisations,RAND Europe,fragmented_observed_forms,2,3,2,1,3,1,61
+organisations,"Department for Levelling Up, Housing and Communities (DLUHC)",single_observed_form,1,3,3,0,3,3,
+organisations,University of Illinois Urbana-Champaign,single_observed_form,1,1,1,0,1,1,
+organisations,Cardiff and Vale University Health Board,single_observed_form,1,1,1,0,1,0,
+organisations,Digital Health and Care Wales,single_observed_form,1,2,2,0,2,0,
+organisations,"Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)",single_observed_form,1,1,1,0,1,1,
+organisations,Welsh Value in Health Centre,single_observed_form,1,1,1,0,1,0,
+organisations,OECD,single_observed_form,1,1,1,0,1,0,
+organisations,Pearson,single_observed_form,1,1,1,0,1,0,
+organisations,Behavioural Insights Team,single_observed_form,1,1,1,0,1,0,
+organisations,Stripe Partners,single_observed_form,1,1,1,0,1,0,
+organisations,University of California,single_observed_form,1,1,1,0,1,0,
+organisations,Infact Systems Limited,single_observed_form,1,1,1,0,1,0,
+organisations,SGN,single_observed_form,1,1,1,0,1,0,
+organisations,The Police Foundation,single_observed_form,1,1,1,0,1,0,
+organisations,University of Padova,single_observed_form,1,2,2,0,2,0,
+organisations,Anglia Ruskin University Higher Education Corporation,single_observed_form,1,2,2,0,2,0,
+organisations,Utrecht University,single_observed_form,1,1,1,0,1,1,
+organisations,University of Lugano,single_observed_form,1,1,1,0,1,0,
+organisations,Agri-Food and Biosciences Institute,fragmented_observed_forms,4,7,3,4,7,7,18
+organisations,Cardiff Metropolitan University,single_observed_form,1,1,1,0,1,1,
+organisations,International Monetary Fund (IMF),single_observed_form,1,1,1,0,1,1,
+organisations,Wavehill Limited,single_observed_form,1,1,1,0,1,0,
+organisations,Stanford University,single_observed_form,1,1,1,0,1,0,
+organisations,Ministry of Justice (MoJ),single_observed_form,1,1,1,0,1,1,
+organisations,UK Export Finance,single_observed_form,1,1,1,0,1,0,
+organisations,ICF International,single_observed_form,1,1,1,0,1,0,
+organisations,"Department for Culture, Media and Sport",single_observed_form,1,1,1,0,1,0,
+organisations,Swansea Bay University Health Board,single_observed_form,1,1,1,0,1,0,
+organisations,University of South Wales,single_observed_form,1,1,1,0,1,0,
+organisations,Institut Européen d'Administration des Affaires (INSEAD),single_observed_form,1,1,1,0,1,1,
+organisations,Financial Conduct Authority (FCA),single_observed_form,1,1,1,0,1,1,
+organisations,National Infrastructure Commission,single_observed_form,1,1,1,0,1,0,
+organisations,Vanguard,single_observed_form,1,1,1,0,1,0,
+organisations,University of Antwerp,single_observed_form,1,1,1,0,1,0,
+organisations,Whole Life Consultants,fragmented_observed_forms,2,4,2,2,4,2,40
+organisations,AQA Education,single_observed_form,1,1,1,0,1,0,
+organisations,NHS England,single_observed_form,1,1,1,0,1,1,
+organisations,Nevin Economic Research Institute,single_observed_form,1,1,1,0,1,0,
+organisations,Institute for Government (IfG),single_observed_form,1,1,1,0,1,1,
+organisations,Marie Curie,single_observed_form,1,1,1,0,1,0,
+organisations,University of Suffolk,single_observed_form,1,2,2,0,2,0,
+organisations,Ecorys UK,single_observed_form,1,1,1,0,1,0,
+organisations,University of the West of Scotland,single_observed_form,1,1,1,0,1,0,
+organisations,Department for the Economy (Northern Ireland),single_observed_form,1,1,1,0,1,0,
+organisations,Social Care Wales,single_observed_form,1,1,1,0,1,0,
+organisations,IFF Research,single_observed_form,1,1,1,0,1,0,
+organisations,Economic and Social Research Institute (ESRI),fragmented_observed_forms,2,2,1,1,2,1,65
+organisations,Research Center in Applied Economics for Development CREAD - Algeria,single_observed_form,1,1,1,0,1,0,
+organisations,Public Health Scotland (PHS),single_observed_form,1,1,1,0,1,1,
+organisations,Alma Economics,single_observed_form,1,2,2,0,2,0,
+organisations,Fraser of Allander Institute (University of Strathclyde),fragmented_observed_forms,2,2,1,1,2,1,68
+organisations,Cambridge OCR,single_observed_form,1,1,1,0,1,0,
+organisations,Pensions Policy Institute,single_observed_form,1,1,1,0,1,0,
+organisations,Centre for Economic and Business Research (CEBR),single_observed_form,1,1,1,0,1,1,
+organisations,University of Texas,single_observed_form,1,1,1,0,1,0,
+organisations,University of Texas at Austin,single_observed_form,1,1,1,0,1,1,
+organisations,The Lesbian Project,single_observed_form,1,1,1,0,1,0,
+organisations,Independent Researcher,single_observed_form,1,1,1,0,1,0,
+organisations,Sentencing Academy,single_observed_form,1,1,1,0,1,1,
+organisations,Publishers Association,single_observed_form,1,1,1,0,1,0,
+organisations,Trier University,single_observed_form,1,1,1,0,1,0,
+organisations,Social Mobility Commission (SMC),single_observed_form,1,1,1,0,1,1,
+organisations,OREC,single_observed_form,1,1,1,0,1,0,
+organisations,Cyber Monitoring Centre,single_observed_form,1,1,1,0,1,0,
+organisations,Sheffield Teaching Hospitals NHS Foundation Trust,single_observed_form,1,1,1,0,1,0,
+organisations,Engineering Construction Industry Training Board (ECITB),single_observed_form,1,1,1,0,1,1,
+organisations,"Ministry of National Education, Republic of Türkiye",single_observed_form,1,1,1,0,1,1,
+organisations,IFS,single_observed_form,1,1,1,0,1,0,
+organisations,Calver Pang,single_observed_form,1,1,1,0,1,0,
+organisations,Oxford Brookes University,single_observed_form,1,1,1,0,1,0,
+organisations,Anna Freud Centre,single_observed_form,1,1,1,0,1,0,

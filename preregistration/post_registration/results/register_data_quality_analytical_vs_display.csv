@@ -1,0 +1,54 @@
+field,analysis_level,category,native_class,rank,raw_observed_form,canonical_form,occurrences,records,denominator,percentage,pct_of_changed_occurrences,notes
+datasets,occurrence_decomposition,unchanged,,,,,711,,3350,21.2239,,Parsed dataset name already equals its canonical value.
+datasets,occurrence_decomposition,display_only_acronym,,,,,965,,3350,28.8060,36.5669,Approved terminal acronym is the only dataset-name change.
+datasets,occurrence_decomposition,analytically_necessary_normalisation,,,,,1674,,3350,49.9701,63.4331,Changed dataset-name occurrences not satisfying the exact acronym-only test.
+organisations,occurrence_decomposition,unchanged,,,,,1078,,1839,58.6188,,Parsed organisation already equals its canonical value.
+organisations,occurrence_decomposition,display_only_acronym,,,,,306,,1839,16.6395,40.2102,Approved terminal acronym is the only organisation-name change.
+organisations,occurrence_decomposition,analytically_necessary_normalisation,,,,,455,,1839,24.7417,59.7898,Changed organisation occurrences not satisfying the exact acronym-only test.
+combined,occurrence_decomposition,unchanged,,,,,1789,,5189,34.4768,,Dataset plus organisation occurrences.
+combined,occurrence_decomposition,display_only_acronym,,,,,1271,,5189,24.4941,37.3824,Dataset plus organisation occurrences.
+combined,occurrence_decomposition,analytically_necessary_normalisation,,,,,2129,,5189,41.0291,62.6176,Dataset plus organisation occurrences.
+combined_records,record_decomposition,no_changed_entity,,,,,,72,1308,5.5046,,Mutually exclusive fixed entity-name category.
+combined_records,record_decomposition,display_only_changes_only,,,,,,263,1308,20.1070,,At least one display-only change and no analytically necessary entity-name change.
+combined_records,record_decomposition,analytically_necessary_changes_only,,,,,,542,1308,41.4373,,At least one analytically necessary entity-name change and no display-only change.
+combined_records,record_decomposition,both_display_only_and_analytically_necessary,,,,,,431,1308,32.9511,,Contains both changed classes.
+combined_records,record_headline,records_requiring_analytically_necessary_normalisation,,,,,,973,1308,74.3884,,Set union of necessary-only and both categories; not calculated by subtraction.
+combined_records,record_headline,records_changed_only_for_display_consistency,,,,,,263,1308,20.1070,,Display-only changes only under the fixed entity-name numerator.
+combined_records,record_headline,records_receiving_any_display_only_acronym,,,,,,694,1308,53.0581,,Set union of display-only-only and both categories.
+combined_records,record_headline,records_receiving_both_classes,,,,,,431,1308,32.9511,,Same as the mutually exclusive both category.
+datasets,native_class_crosstab,display_only_acronym,alias,,,,965,,2211,43.6454,,
+datasets,native_class_crosstab,analytically_necessary_normalisation,alias,,,,1246,,2211,56.3546,,
+datasets,native_class_crosstab,display_only_acronym,normalised_format,,,,0,,426,0.0000,,
+datasets,native_class_crosstab,analytically_necessary_normalisation,normalised_format,,,,426,,426,100.0000,,
+datasets,native_class_crosstab,display_only_acronym,compound_or_multi_dataset,,,,0,,2,0.0000,,
+datasets,native_class_crosstab,analytically_necessary_normalisation,compound_or_multi_dataset,,,,2,,2,100.0000,,
+organisations,native_class_crosstab,display_only_acronym,alias,,,,71,,514,13.8132,,
+organisations,native_class_crosstab,analytically_necessary_normalisation,alias,,,,443,,514,86.1868,,
+organisations,native_class_crosstab,display_only_acronym,identity_with_display_change,,,,235,,235,100.0000,,
+organisations,native_class_crosstab,analytically_necessary_normalisation,identity_with_display_change,,,,0,,235,0.0000,,
+organisations,native_class_crosstab,display_only_acronym,parser_cleanup,,,,0,,12,0.0000,,
+organisations,native_class_crosstab,analytically_necessary_normalisation,parser_cleanup,,,,12,,12,100.0000,,
+combined,explicit_correction_relationship,analytically_necessary_entity_name_occurrences,,,,,2129,,3400,62.6176,,Fixed changed entity-name numerator.
+combined,explicit_correction_relationship,explicit_corrections_overlapping_necessary_entity_name_occurrences,,,,,53,,78,67.9487,,53 of 78 explicit correction occurrences coincide with an analytically necessary entity-name change.
+combined,explicit_correction_relationship,necessary_entity_name_occurrences_without_explicit_correction,,,,,2076,,2129,97.5106,,Analytically necessary but not explicitly corrective entity-name occurrences.
+datasets,explicit_correction_relationship,provider_corrections_on_unchanged_dataset_name,,,,,25,25,78,32.0513,,Separate provider-component changes outside the fixed 2639 changed dataset-name numerator.
+combined,display_only_example,display_only_acronym,,1,Business Structure Database,Business Structure Database (BSD),176,176,,,,
+combined,display_only_example,display_only_acronym,,2,Annual Business Survey,Annual Business Survey (ABS),143,143,,,,
+combined,display_only_example,display_only_acronym,,3,Annual Population Survey,Annual Population Survey (APS),131,126,,,,
+combined,display_only_example,display_only_acronym,,4,Annual Survey of Hours and Earnings,Annual Survey of Hours and Earnings (ASHE),123,123,,,,
+combined,display_only_example,display_only_acronym,,5,University College London,University College London (UCL),99,99,,,,
+combined,display_only_example,display_only_acronym,,6,UK Innovation Survey,UK Innovation Survey (UKIS),75,75,,,,
+combined,display_only_example,display_only_acronym,,7,Labour Force Survey,Labour Force Survey (LFS),70,54,,,,
+combined,display_only_example,display_only_acronym,,8,Institute for Fiscal Studies,Institute for Fiscal Studies (IFS),64,64,,,,
+combined,display_only_example,display_only_acronym,,9,Office for National Statistics,Office for National Statistics (ONS),40,40,,,,
+combined,display_only_example,display_only_acronym,,10,Crime Survey for England and Wales,Crime Survey for England and Wales (CSEW),39,38,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,1,Business Structure Database - UK,Business Structure Database (BSD),88,88,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,2,London School of Economics,London School of Economics and Political Science (LSE),55,55,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,3,Longitudinal Education Outcomes SRS Iteration 2 Standard Extract - England,Longitudinal Education Outcomes (LEO),55,55,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,4,Annual Business Survey - GB,Annual Business Survey (ABS),44,44,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,5,Annual Survey of Hours and Earnings - UK,Annual Survey of Hours and Earnings (ASHE),41,41,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,6,Annual Population Survey - UK,Annual Population Survey (APS),40,39,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,7,Labour Force Survey Person - UK,Labour Force Survey Person,39,39,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,8,Annual Business Survey - UK,Annual Business Survey (ABS),31,31,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,9,Business Enterprise Research and Development - Great Britain,Business Enterprise Research and Development (BERD),30,30,,,,
+combined,analytically_necessary_example,analytically_necessary_normalisation,,10,Understanding Society - UK,Understanding Society,28,28,,,,
