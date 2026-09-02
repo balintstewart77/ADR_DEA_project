@@ -177,3 +177,4 @@ analysis/outputs/model_comparison_fable_5_run2/*
 
 # Preserve the deterministic generator used to reproduce current cross-model evidence.
 !analysis/outputs/gpt55_crossmodel_stratum_run.py
+/analysis/ari_exploration/
