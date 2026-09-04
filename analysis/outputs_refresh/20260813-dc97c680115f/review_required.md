@@ -1,17 +1,12 @@
 # Review required: reference-layer coverage gaps
 
-- Dataset mentions matched: 3,277/3,387
-- Organisation mentions matched: 1,882/1,891
+- Dataset mentions matched: 3,288/3,388
+- Organisation mentions matched: 1,888/1,891
 - Known residuals (adjudicated unclassifiable, no action): 3
 
 ## Unmatched organisations (add to register_reference.yaml or alias maps)
 
-- Migration Advisory Committee (1 mention)
-- University of Chester (1 mention)
-- EngineeringUK (1 mention)
-- Southampton University (1 mention)
-- Health and Safety Executive (1 mention)
-- NIESR (1 mention)
+- (none)
 
 ## Unmatched datasets (top 30 by mentions)
 
@@ -19,7 +14,6 @@
 - Firm Productivity (3 mentions)
 - Employment Creation and Survival (3 mentions)
 - Foreign Direct Investment Index (2 mentions)
-- United Kingdom Time Use Survey (2 mentions)
 - Financial Assets and Liabilities Survey (1 mention)
 - Investment in Intangible Assets (1 mention)
 - Small Business Survey Longitudinal (1 mention)
@@ -45,4 +39,5 @@
 - National Travel Survey England (1 mention)
 - UK Gross Value Added for lower layer super output areas (1 mention)
 - Skills and Employment Surveys Series (1 mention)
-- ... and 72 more
+- NI Annual Business Inquiry (1 mention)
+- ... and 63 more

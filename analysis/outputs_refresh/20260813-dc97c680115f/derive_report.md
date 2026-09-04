@@ -2,7 +2,7 @@
 
 ## Scope
 
-Reference version `0.5.7` was applied to 1,343 cleaned DEA register records. Output CSV: `analysis/outputs_deterministic_rc2/register_properties.csv`.
+Reference version `0.5.8` was applied to 1,343 cleaned DEA register records. Output CSV: `analysis\outputs_deterministic_rc2\register_properties.csv`.
 
 This run is deterministic and uses no LLM calls.
 
@@ -24,9 +24,9 @@ A linked component contributes the "Migration & Demographics" domain only when t
 
 | Record linkage span | Count |
 |---|---:|
-| No record linkage | 961 |
-| Within-domain record linkage | 93 |
-| Cross-domain record linkage | 289 |
+| No record linkage | 958 |
+| Within-domain record linkage | 95 |
+| Cross-domain record linkage | 290 |
 
 ### Linkage edge checks
 
@@ -54,10 +54,10 @@ ASHE is survey by design even though sampled from PAYE administrative records, b
 
 | Project collection-method set | Count |
 |---|---:|
-| survey | 688 |
-| administrative | 337 |
-| survey; administrative | 293 |
-| (none matched) | 25 |
+| survey | 686 |
+| administrative | 338 |
+| survey; administrative | 296 |
+| (none matched) | 23 |
 
 ## Dataset Temporal Structure
 
@@ -75,19 +75,19 @@ The former cohort category is retired because it conflated collection method wit
 
 | Project temporal-structure set | Count |
 |---|---:|
-| cross-sectional | 718 |
-| longitudinal | 356 |
-| cross-sectional; longitudinal | 244 |
-| (none matched) | 25 |
+| cross-sectional | 716 |
+| longitudinal | 358 |
+| cross-sectional; longitudinal | 246 |
+| (none matched) | 23 |
 
 ### Temporal distribution delta from 0.4.0
 
 | Project temporal-structure set | 0.4.0 | 0.4.1 | Delta |
 |---|---|---|---|
-| cross-sectional | 485 | 718 | +233 |
-| longitudinal | 387 | 356 | -31 |
-| cross-sectional; longitudinal | 378 | 244 | -134 |
-| (none matched) | 22 | 25 | +3 |
+| cross-sectional | 485 | 716 | +231 |
+| longitudinal | 387 | 358 | -29 |
+| cross-sectional; longitudinal | 378 | 246 | -132 |
+| (none matched) | 22 | 23 | +1 |
 
 ### Reclassified aggregate-indicator datasets
 
@@ -116,7 +116,7 @@ No additional longitudinal dataset records with time-series/index/aggregate cues
 | Labour Force Survey Longitudinal | longitudinal | longitudinal | True |
 | Annual Survey of Hours and Earnings (ASHE) | cross-sectional | cross-sectional | True |
 
-Full migration review table: `analysis/outputs_deterministic_rc2/quality/dataset_collection_split_review.csv`. It lists every dataset with `legacy_collection_type`, `collection_method`, `temporal_structure`, and `temporal_is_new_decision`, now refreshed under reference 0.4.1.
+Full migration review table: `analysis\outputs_deterministic_rc2\quality\dataset_collection_split_review.csv`. It lists every dataset with `legacy_collection_type`, `collection_method`, `temporal_structure`, and `temporal_is_new_decision`, now refreshed under reference 0.4.1.
 
 ## Dataset unit of observation
 
@@ -131,20 +131,20 @@ Census appears in three facets as survey, individual, and Migration & Demographi
 
 | Project unit set | Count |
 |---|---:|
-| individual | 725 |
-| business | 248 |
-| individual; business | 166 |
+| individual | 726 |
+| business | 247 |
+| individual; business | 167 |
 | individual; household | 65 |
 | household | 46 |
 | individual; household; business | 34 |
-| (none matched) | 25 |
+| (none matched) | 23 |
 | household; business | 12 |
 | individual; household; business; area | 6 |
 | area | 4 |
-| individual; business; area | 3 |
 | household; area | 3 |
+| individual; business; area | 3 |
+| individual; area | 3 |
 | business; area | 2 |
-| individual; area | 2 |
 | household; business; area | 1 |
 | individual; household; area | 1 |
 
@@ -183,14 +183,14 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 
 | Project researcher-sector set | Count |
 |---|---:|
-| academic | 834 |
+| academic | 835 |
 | commercial | 116 |
-| third-sector | 108 |
-| government | 99 |
+| third-sector | 110 |
+| government | 101 |
 | academic; government | 65 |
-| academic; third-sector | 55 |
-| unclassified | 15 |
+| academic; third-sector | 56 |
 | academic; commercial | 14 |
+| unclassified | 11 |
 | government; commercial | 10 |
 | academic; government; third-sector | 7 |
 | academic; government; commercial | 5 |
@@ -201,8 +201,6 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 | academic; government; unclassified | 1 |
 | commercial; unclassified | 1 |
 | academic; third-sector; commercial | 1 |
-| government; unclassified | 1 |
-| academic; third-sector; unclassified | 1 |
 
 ### Sector edge checks
 
@@ -223,9 +221,9 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 
 ## Coverage and unmatched tail
 
-Dataset reference coverage: 3,277/3,387 project-dataset mentions (96.8%), 240/342 unique canonical datasets.
+Dataset reference coverage: 3,288/3,388 project-dataset mentions (97.0%), 245/338 unique canonical datasets.
 
-Organisation reference coverage: 1,882/1,891 project-organisation mentions (99.5%), 278/287 unique canonical organisations.
+Organisation reference coverage: 1,888/1,891 project-organisation mentions (99.8%), 282/285 unique canonical organisations.
 
 Largest unmatched datasets:
 
@@ -235,7 +233,6 @@ Largest unmatched datasets:
 | Firm Productivity | 3 |
 | Employment Creation and Survival | 3 |
 | Foreign Direct Investment Index | 2 |
-| United Kingdom Time Use Survey | 2 |
 | Financial Assets and Liabilities Survey | 1 |
 | Investment in Intangible Assets | 1 |
 | Small Business Survey Longitudinal | 1 |
@@ -256,6 +253,7 @@ Largest unmatched datasets:
 | Workplace Employee Relations Survey | 1 |
 | Secure Census 2011 Scotland | 1 |
 | Northern Ireland School Leavers Survey | 1 |
+| Northern Ireland Exams Database | 1 |
 
 Largest unmatched organisations:
 
@@ -264,12 +262,6 @@ Largest unmatched organisations:
 | Independent Researcher | 1 |
 | OREC | 1 |
 | Calver Pang | 1 |
-| Migration Advisory Committee | 1 |
-| University of Chester | 1 |
-| EngineeringUK | 1 |
-| Southampton University | 1 |
-| Health and Safety Executive | 1 |
-| NIESR | 1 |
 
 ### Deliberate non-mappings and manual-review dataset names
 
@@ -332,14 +324,14 @@ Largest unmatched organisations:
 - Cross-table validation passed during reference load: every linked product resolves to a dataset facet record.
 - `PROMPT_VERSION` is not read or changed by this deterministic derivation; no LLM classification is run.
 - The rc1 output prefixes are checked below from git status.
-- Reference version is `0.5.7`.
+- Reference version is `0.5.8`.
 
 ## Manifests and rc1
 
-Deterministic output manifest: `analysis/outputs_deterministic_rc2/manifest.json`.
+Deterministic output manifest: `analysis\outputs_deterministic_rc2\manifest.json`.
 
-Quality output manifest: `analysis/outputs_deterministic_rc2/quality/manifest.json`.
+Quality output manifest: `analysis\outputs_deterministic_rc2\quality\manifest.json`.
 
-Report output manifest: `analysis/outputs_refresh/20260813-dc97c680115f/manifest.json`.
+Report output manifest: `analysis\outputs_refresh\20260813-dc97c680115f\manifest.json`.
 
 No git status entries under rc1 output prefixes were present after this run.

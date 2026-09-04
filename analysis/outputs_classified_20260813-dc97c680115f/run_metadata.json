@@ -1,0 +1,24 @@
+{
+  "created_at_utc": "2026-09-04T12:21:04.5743298Z",
+  "run_type": "incremental_register_refresh",
+  "model": "claude-fable-5",
+  "prompt_version": "dict-1.0-rc2",
+  "taxonomy_version": "dict-1.0-rc2",
+  "cache_schema_version": 6,
+  "source_register": "data/register_snapshots/dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40/canonical.csv",
+  "source_snapshot_id": "sha256:dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
+  "n_projects": 1343,
+  "seed_classification_csv": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+  "seed_cache_entries": 1308,
+  "fresh_api_classifications": 35,
+  "api_batches": 4,
+  "api_batch_sizes": [10, 10, 10, 5],
+  "final_cache_entries": 1343,
+  "output_dir": "analysis/outputs_classified_20260813-dc97c680115f",
+  "prompt_cache_observed": {
+    "cache_creation_input_tokens": 9139,
+    "cache_read_input_tokens_per_reuse_batch": 9139,
+    "reuse_batches": 3
+  },
+  "usage_note": "The standard incremental refresh runner reports cache-token usage to the console but does not persist complete per-response input/output token usage. No unobserved token totals or cost estimate are asserted here."
+}
