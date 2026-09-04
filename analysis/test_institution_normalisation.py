@@ -459,6 +459,39 @@ class InstitutionNormalisationTest(unittest.TestCase):
             ],
         )
 
+    def test_august_2026_register_institutions_and_sectors(self):
+        cases = {
+            # 2026/095, 2026/096, 2026/105, 2026/106, 2026/120, 2026/123.
+            "Migration Advisory Committee": ("Migration Advisory Committee", "government"),
+            "University of Chester": ("University of Chester", "academic"),
+            "EngineeringUK": ("EngineeringUK", "third-sector"),
+            "Southampton University": ("University of Southampton", "academic"),
+            "Health and Safety Executive": ("Health and Safety Executive", "government"),
+            "NIESR": (
+                "National Institute for Economic and Social Research (NIESR)",
+                "third-sector",
+            ),
+        }
+        for raw, (canonical, sector) in cases.items():
+            with self.subTest(raw=raw):
+                description = describe_institution_normalisation(raw)
+                self.assertEqual(description["institution"], canonical)
+                self.assertEqual(description["institution_sector"], sector)
+                self.assertEqual(description["needs_review"], 0)
+
+        self.assertEqual(
+            self.parse(
+                "Fiza Aslam, Migration Advisory Committee\n"
+                "Abdul Muqeem, University of Chester\n"
+                "Eliza da Silva Gomes, NIESR"
+            ),
+            [
+                "Migration Advisory Committee",
+                "University of Chester",
+                "National Institute for Economic and Social Research (NIESR)",
+            ],
+        )
+
     def test_june_2026_merged_line_residue_resolves_without_person_orgs(self):
         # 2026/085: a "Name ," line with no institution merges the next
         # researcher's "Name, Institution" pair into one fragment; the alias

@@ -131,6 +131,7 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Longitudinal Study of England and Wales": "Cross-domain record linkage",
             "Linked Trade-in-Goods/IDBR": "Within-domain record linkage",
             "Linked Trade-in-Goods/Inter-Departmental Business Register": "Within-domain record linkage",
+            "Decision Maker Panel matched to Business Insights and Conditions Survey UK": "Within-domain record linkage",
             "2011 Census linked to Benefits and Income - England and Wales": "Cross-domain record linkage",
             "Nursing and Midwifery Council Register - UK Linked to Census 2021": "Cross-domain record linkage",
             "EOL": "Within-domain record linkage",
@@ -268,6 +269,10 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Labour Force Survey": ("survey", "cross-sectional", "individual"),
             "Labour Force Survey Longitudinal": ("survey", "longitudinal", "individual"),
             "Decision Maker Panel": ("survey", "longitudinal", "business"),
+            "Decision Maker Panel matched to Business Insights and Conditions Survey UK": ("survey", "longitudinal", "business"),
+            "UK Research and Innovation Workforce Survey": ("survey", "cross-sectional", "individual"),
+            "United Kingdom Time Use Survey (UKTUS)": ("survey", "cross-sectional", "individual"),
+            "Smart Energy Research Lab: Statistical Data": ("administrative", "cross-sectional", "area"),
             "Longitudinal Small Business Survey (LSBS)": ("survey", "longitudinal", "business"),
             "Business Enterprise Research and Development England": ("survey", "cross-sectional", "business"),
             "Products of the European Community": ("survey", "cross-sectional", "business"),
@@ -340,12 +345,29 @@ class DeterministicRegisterPropertiesTest(unittest.TestCase):
             "Columbia University": "academic",
             "Hardisty Jones Associates": "commercial",
             "BOP Consulting": "commercial",
+            "EngineeringUK": "third-sector",
+            "Migration Advisory Committee": "government",
+            "Health and Safety Executive": "government",
+            "University of Chester": "academic",
+            "Southampton University": "academic",
+            "NIESR": "third-sector",
         }
         for organisation, sector in cases.items():
             with self.subTest(organisation=organisation):
                 record = lookup_organisation_record(organisation, self.indexes)
                 self.assertIsNotNone(record)
                 self.assertIn(sector, record["sectors"])
+
+    def test_august_2026_dmp_bics_record_detects_linked_product(self):
+        properties = self.current_register_properties().set_index("Record ID")
+        self.assertIn(
+            "Decision Maker Panel matched to Business Insights and Conditions Survey UK",
+            properties.at["2026/111", "matched_products"].split("; "),
+        )
+        self.assertEqual(
+            properties.at["2026/111", "record_linkage"],
+            "Within-domain record linkage",
+        )
 
     def test_researcher_sector_acronym_suffixes_match_plain_reference_keys(self):
         cases = {

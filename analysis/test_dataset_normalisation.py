@@ -256,6 +256,83 @@ class DatasetNormalisationTest(unittest.TestCase):
                 ("Ministry of Justice", "Family Man"),
             ],
         )
+
+    def test_august_2026_register_dataset_strings_resolve_to_canonicals(self):
+        cases = {
+            # 2026/095
+            "Office for National Statistics: Longitduinal Education Outcomes Iteration 2": [
+                "Longitudinal Education Outcomes (LEO)",
+            ],
+            # 2026/096
+            "Office for National Statistics: Longitudinal Business Database, UK Research and Innovation Workforce Survey, Business Structure Database": [
+                "Longitudinal Business Database",
+                "UK Research and Innovation Workforce Survey",
+                "Business Structure Database (BSD)",
+            ],
+            # 2026/104
+            "Northern Ireland Statistics and Research Agency: Education Outcomes Linkage (EOL)": [
+                "EOL",
+            ],
+            # 2026/108
+            "Office for National Statistics: Annual Respondents Database X, Annual Business Survey, Business Structure Database and Longitudinal Business Database": [
+                "Annual Respondents Database X",
+                "Annual Business Survey (ABS)",
+                "Business Structure Database (BSD)",
+                "Longitudinal Business Database",
+            ],
+            # 2026/111
+            "Office for National Statistics: Business Insights and Conditions Survey, Decision Maker Panel - Business Insights and Conditions Survey matched data": [
+                "Business Insights and Conditions Survey (BICS)",
+                "Decision Maker Panel matched to Business Insights and Conditions Survey UK",
+            ],
+            # 2026/114
+            "Office for National Statistics: Online Time Use Survey, United Kingdom Time Use Survey, Smart Energy Research Lab: Statistical Data, United Kingdom Time Use Survey": [
+                "Online Time Use Survey (OTUS)",
+                "United Kingdom Time Use Survey (UKTUS)",
+                "Smart Energy Research Lab: Statistical Data",
+                "United Kingdom Time Use Survey (UKTUS)",
+            ],
+        }
+        for raw, expected in cases.items():
+            with self.subTest(raw=raw):
+                actual = [
+                    normalise_dataset_name(part)
+                    for _, _, part in iter_dataset_entries(raw)
+                ]
+                self.assertEqual(actual, expected)
+
+    def test_august_2026_understanding_society_wrap_keeps_ons_provider(self):
+        # Exact 2026/123 string.
+        raw = (
+            "Office for National Statistics: Living Costs and Food Survey,\n"
+            "Understanding Society: Waves 1-15, Wealth and Assets Survey"
+        )
+        entries = [
+            (provider, normalise_dataset_name(part))
+            for _, provider, part in iter_dataset_entries(raw)
+        ]
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Living Costs and Food Survey (LCF)"),
+                ("Office for National Statistics", "Understanding Society"),
+                ("Office for National Statistics", "Wealth and Assets Survey (WAS)"),
+            ],
+        )
+
+    def test_only_reviewed_business_database_and_compound_is_split(self):
+        self.assertEqual(
+            [part for _, _, part in iter_dataset_entries(
+                "Office for National Statistics: Business Structure Database and Longitudinal Business Database"
+            )],
+            ["Business Structure Database (BSD)", "Longitudinal Business Database"],
+        )
+        self.assertEqual(
+            [part for _, _, part in iter_dataset_entries(
+                "Office for National Statistics: Research and Development Survey"
+            )],
+            ["Research and Development Survey"],
+        )
         self.assertEqual(normalise_dataset_name("Family Man"), "MoJ Data First Family Court")
 
     def test_known_comma_bearing_dataset_is_not_split(self):

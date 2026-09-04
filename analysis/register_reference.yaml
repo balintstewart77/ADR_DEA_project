@@ -1,4 +1,4 @@
-reference_version: "0.5.7"
+reference_version: "0.5.8"
 
 adr_england_flagship_source: &adr_england_flagship_source "https://www.adruk.org/data-access/flagship-datasets/"
 adr_england_flagship_note: &adr_england_flagship_note >
@@ -330,6 +330,7 @@ linked_products:
     aliases:
       - "LEO"
       - "Longitudinal Education Outcomes (LEO)"
+      - "Longitduinal Education Outcomes Iteration 2"
     component_domains:
       - "Education & Skills"
       - "Labour Market & Employment"
@@ -886,6 +887,30 @@ linked_products:
     component_datasets_verified: true
     component_datasets_source: "https://ons.metadata.works/browser/dataset/374/0 ; https://app.integrateddataservice.gov.uk/data-catalogue/linked_trade_in_goods_inter_departmental_business_register"
 
+  - canonical: "Decision Maker Panel matched to Business Insights and Conditions Survey UK"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2025-Q3"
+    availability_basis: "documented_accessible"
+    availability_source: "https://ons.metadata.works/browser/dataset/1395096/0"
+    availability_note: "ONS metadata catalogue availability for the matched DMP-BICS product."
+    aliases:
+      - "Decision Maker Panel matched to Business Insights and Conditions Survey UK"
+      - "Decision Maker Panel - Business Insights and Conditions Survey matched data"
+    component_domains:
+      - "Business & Productivity"
+    notes: "Business survey panel matched within the Business & Productivity domain; the derived linkage span is within-domain."
+    component_datasets:
+      - dataset: "Decision Maker Panel"
+        domain_reading: "Business & Productivity"
+        reason: "longitudinal business decision-maker panel."
+      - dataset: "Business Insights and Conditions Survey"
+        domain_reading: "Business & Productivity"
+        reason: "business conditions survey."
+    component_datasets_verified: true
+    component_datasets_source: "https://ons.metadata.works/browser/dataset/1395096/0"
+
   - canonical: "2011 Census linked to Benefits and Income - England and Wales"
     status: "standing"
     available_from: null
@@ -953,6 +978,7 @@ linked_products:
     aliases:
       - "EOL"
       - "EOL Dataset (2015-2022)"
+      - "Education Outcomes Linkage (EOL)"
     component_domains:
       - "Education & Skills"
     notes: "Education Outcomes Linkage for Northern Ireland; EOL is a real NISRA education linkage, not a parse artifact."
@@ -1137,6 +1163,7 @@ datasets:
   - canonical: "Understanding Society"
     aliases:
       - "Understanding Society"
+      - "Understanding Society: Waves 1-15"
       - "UK Household Longitudinal Study"
       - "BHPS"
       - "British Household Panel Survey"
@@ -1218,6 +1245,7 @@ datasets:
     aliases:
       - "LEO"
       - "Longitudinal Education Outcomes (LEO)"
+      - "Longitduinal Education Outcomes Iteration 2"
     collection_method: "administrative"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
@@ -1245,6 +1273,7 @@ datasets:
     aliases:
       - "EOL"
       - "EOL Dataset (2015-2022)"
+      - "Education Outcomes Linkage (EOL)"
     collection_method: "administrative"
     temporal_structure: "longitudinal"
     unit_of_observation: "individual"
@@ -1348,6 +1377,15 @@ datasets:
     temporal_structure: "longitudinal"
     unit_of_observation: "business"
     notes: "Longitudinal business dataset."
+
+  - canonical: "UK Research and Innovation Workforce Survey"
+    aliases:
+      - "UK Research and Innovation Workforce Survey"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "individual"
+    notes: "Cross-sectional workforce survey of individuals."
+    source: "https://ons.metadata.works/browser/dataset/1353110/0"
 
   - canonical: "Quarterly Fuels Inquiry"
     aliases:
@@ -1535,6 +1573,16 @@ datasets:
     unit_of_observation: "business"
     notes: "Business-panel edge case."
 
+  - canonical: "Decision Maker Panel matched to Business Insights and Conditions Survey UK"
+    aliases:
+      - "Decision Maker Panel matched to Business Insights and Conditions Survey UK"
+      - "Decision Maker Panel - Business Insights and Conditions Survey matched data"
+    collection_method: "survey"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "business"
+    notes: "Matched Decision Maker Panel and Business Insights and Conditions Survey product; longitudinal business panel linkage."
+    source: "https://ons.metadata.works/browser/dataset/1395096/0"
+
   - canonical: "Management and Expectations Survey (MES)"
     aliases:
       - "Management and Expectations Survey (MES)"
@@ -1655,6 +1703,28 @@ datasets:
     temporal_structure: "cross-sectional"
     unit_of_observation: "individual"
     notes: "ONS individual time-use survey."
+
+  - canonical: "United Kingdom Time Use Survey (UKTUS)"
+    aliases:
+      - "United Kingdom Time Use Survey"
+      - "United Kingdom Time Use Survey (UKTUS)"
+    collection_method: "survey"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "individual"
+    notes: "United Kingdom individual time-use survey."
+    source: "https://datasciencecampus.ons.gov.uk/projects/using-data-science-to-explore-changes-in-behaviour-and-well-being-during-the-coronavirus-covid-19-pandemic/"
+
+  - canonical: "Smart Energy Research Lab: Statistical Data"
+    aliases:
+      - "Smart Energy Research Lab: Statistical Data"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "area"
+    notes: >
+      Primary content is operational smart-meter data. The released product
+      contains aggregate statistics rather than a unit-following panel, so it
+      is cross-sectional; area is the nearest permitted unit category.
+    source: "https://serl.ac.uk/key-documents/reports/"
 
   - canonical: "Working Lives of Teachers and Leaders Survey"
     aliases:
@@ -2074,7 +2144,11 @@ organisations:
     sectors: ["commercial"]
     notes: "For-profit company."
   - canonical: "University of Southampton"
-    aliases: ["University of Southampton"]
+    aliases: ["University of Southampton", "Southampton University"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+  - canonical: "University of Chester"
+    aliases: ["University of Chester"]
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "University of Nottingham"
@@ -2126,9 +2200,24 @@ organisations:
     sectors: ["academic"]
     notes: "UK HEI."
   - canonical: "National Institute for Economic and Social Research"
-    aliases: ["National Institute for Economic and Social Research"]
+    aliases:
+      - "National Institute for Economic and Social Research"
+      - "National Institute for Economic and Social Research (NIESR)"
+      - "NIESR"
     sectors: ["third-sector"]
     notes: "Independent research institute/charity."
+  - canonical: "EngineeringUK"
+    aliases: ["EngineeringUK"]
+    sectors: ["third-sector"]
+    notes: "Independent not-for-profit organisation."
+  - canonical: "Migration Advisory Committee"
+    aliases: ["Migration Advisory Committee"]
+    sectors: ["government"]
+    notes: "Independent public advisory body sponsored by the Home Office."
+  - canonical: "Health and Safety Executive"
+    aliases: ["Health and Safety Executive"]
+    sectors: ["government"]
+    notes: "UK government regulator and public body."
   - canonical: "University of St Andrews"
     aliases: ["University of St Andrews"]
     sectors: ["academic"]

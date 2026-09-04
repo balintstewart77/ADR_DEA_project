@@ -382,6 +382,13 @@ COMMA_BEARING_DATASET_ALIASES = {
     re.compile(r"(?i)\blinked census,\s*hes and mortality data\b"): "Linked Census, HES and Mortality Data",
 }
 
+EXACT_COMPOUND_DATASET_SPLITS = {
+    "Business Structure Database and Longitudinal Business Database": (
+        "Business Structure Database (BSD)",
+        "Longitudinal Business Database",
+    ),
+}
+
 GEOGRAPHY_SUFFIX_FALLBACK_NAMES = {
     "benefits", "earnings", "income", "services", "trace",
 }
@@ -511,6 +518,22 @@ DATASET_ALIASES = [
     (re.compile(r"(?i)^uk innovation survey$"), "UK Innovation Survey (UKIS)"),
     (re.compile(r"(?i)^universities and colleges admissions service(?: \(UCAS\))?$"), "Universities and Colleges Admissions Service (UCAS)"),
     (re.compile(r"(?i)^wealth and assets survey$"), "Wealth and Assets Survey (WAS)"),
+    (re.compile(r"(?i)^education outcomes linkage \(EOL\)$"), "EOL"),
+    (
+        re.compile(
+            r"(?i)^decision maker panel - business insights and conditions "
+            r"survey matched(?: data)?$"
+        ),
+        "Decision Maker Panel matched to Business Insights and Conditions Survey UK",
+    ),
+    (
+        re.compile(r"(?i)^united kingdom time use survey$"),
+        "United Kingdom Time Use Survey (UKTUS)",
+    ),
+    (
+        re.compile(r"(?i)^smart energy research lab: statistical data$"),
+        "Smart Energy Research Lab: Statistical Data",
+    ),
     (re.compile(r"(?i)^workplace employment relations study$"), "Workplace Employment Relations Study (WERS)"),
     (re.compile(r"(?i)^interdepartmental business register$"), "Inter-Departmental Business Register (IDBR)"),
     (re.compile(r"(?i)^registered deaths$"), "Death Registrations"),
@@ -707,6 +730,14 @@ def _clean_datasets_text(raw: str) -> str:
     text = re.sub(r"\s*_x000D_\s*", " ", text, flags=re.IGNORECASE)
     text = _decode_html_entities(text)
     text = re.sub(r"<[^>]+>", " ", text)
+    # In 2026/123 this is a dataset with a wave qualifier, not a provider
+    # header; removing only this exact qualifier preserves the ONS provider for
+    # both Understanding Society and the following Wealth and Assets Survey.
+    text = re.sub(
+        r"(?i)\bUnderstanding Society:\s*Waves 1-15\b",
+        "Understanding Society",
+        text,
+    )
     text = text.replace("\r", "\n")
     text = re.sub(r"\s{2,}", " ", text)
     text = re.sub(r"\s*\n\s*", "\n", text)
@@ -725,11 +756,14 @@ def _split_dataset_parts(rest: str) -> list[str]:
         protected_values[token] = canonical
 
     parts = re.split(r"\s*,\s*|\s*;\s*|\s+&\s+", protected)
-    return [
-        protected_values.get(part.strip(" ,;:"), part.strip(" ,;:"))
-        for part in parts
-        if part.strip(" ,;:")
-    ]
+    expanded: list[str] = []
+    for part in parts:
+        cleaned = part.strip(" ,;:")
+        if not cleaned:
+            continue
+        cleaned = protected_values.get(cleaned, cleaned)
+        expanded.extend(EXACT_COMPOUND_DATASET_SPLITS.get(cleaned, (cleaned,)))
+    return expanded
 
 
 def _is_valid_dataset_fragment(name: str) -> bool:
@@ -776,6 +810,11 @@ def _apply_systematic_normalisation(name: str) -> str:
         name.strip(),
     ):
         return "Education and Child Health Insights from Linked Data (ECHILD)"
+
+    # "Data" is semantic here, unlike the generic trailing noise removed
+    # below, so preserve the complete reviewed product title.
+    if name.casefold() == "smart energy research lab: statistical data".casefold():
+        return "Smart Energy Research Lab: Statistical Data"
 
     name = re.sub(
         r"\s*-\s*(UK|GB|Great Britain|England|England and Wales|Wales|Scotland|Northern Ireland)\s*$",
@@ -825,6 +864,7 @@ def _apply_systematic_normalisation(name: str) -> str:
     name = re.sub(r"\bAquisitions\b", "Acquisitions", name)
     name = re.sub(r"\bLongit?udunal\b", "Longitudinal", name)
     name = re.sub(r"\bLongistudinal\b", "Longitudinal", name)
+    name = re.sub(r"\bLongitduinal\b", "Longitudinal", name)
     name = re.sub(r"\bIndicies\b", "Indices", name)
     name = re.sub(r"Surv\s+ey\b", "Survey", name)
     name = re.sub(r"Busin\s+ess\b", "Business", name)
