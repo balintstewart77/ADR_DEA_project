@@ -5,7 +5,8 @@ Replaces the dated scraper scripts. Differences that matter:
 - Discovers the projects-report xlsx with plain requests; Selenium is only an
   optional fallback (--selenium) if the page ever stops rendering statically.
 - Picks the latest file by parsing dates out of candidate URLs (filename
-  DD-MM-YYYY, month names, or the /uploads/YYYY/MM/ path) and filters to
+  DD-MM-YYYY or DD_MM_YYYY, month names, or WordPress upload paths with an
+  optional numeric site ID) and filters to
   project-report files. The page also hosts an "Accredited Researchers" report
   whose name sorts after the projects report, so naive lexicographic
   selection downloads the wrong dataset.
@@ -72,8 +73,8 @@ EXPECTED_COLUMNS = [
 MAX_UNPARSEABLE_DATE_SHARE = 0.05
 
 XLSX_HREF_RE = re.compile(r'href=["\']([^"\']+\.xlsx)["\']', re.IGNORECASE)
-_FILENAME_DMY_RE = re.compile(r"(\d{1,2})-(\d{1,2})-(\d{4})")
-_UPLOADS_PATH_RE = re.compile(r"/uploads/(\d{4})/(\d{2})/")
+_FILENAME_DMY_RE = re.compile(r"(\d{1,2})[-_](\d{1,2})[-_](\d{4})")
+_UPLOADS_PATH_RE = re.compile(r"/uploads/(?:sites/\d+/)?(\d{4})/(\d{2})/")
 _MONTHS = {
     name: i + 1
     for i, name in enumerate(
@@ -97,8 +98,9 @@ def find_xlsx_urls(html: str) -> list[str]:
 def parse_url_date(url: str) -> date | None:
     """Best-effort date for a register file URL.
 
-    Tries, in order: DD-MM-YYYY in the filename, a month name + year in the
-    filename, and the wordpress /uploads/YYYY/MM/ path (day pinned to 1).
+    Tries, in order: DD-MM-YYYY or DD_MM_YYYY in the filename, a month name +
+    year in the filename, and a WordPress /uploads/YYYY/MM/ or
+    /uploads/sites/<numeric-site-id>/YYYY/MM/ path (day pinned to 1).
     """
     filename = url.rsplit("/", 1)[-1]
     match = _FILENAME_DMY_RE.search(filename)
@@ -118,7 +120,7 @@ def parse_url_date(url: str) -> date | None:
 
 
 def parse_upload_directory_date(url: str) -> str | None:
-    """Return the independent WordPress upload directory (YYYY-MM), if present."""
+    """Return YYYY-MM from a standard or numeric-site WordPress upload path."""
     match = _UPLOADS_PATH_RE.search(url)
     return f"{match.group(1)}-{match.group(2)}" if match else None
 
