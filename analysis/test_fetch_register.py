@@ -21,7 +21,7 @@ from fetch_register import (  # noqa: E402
     xlsx_to_dataframe,
 )
 
-# The link shapes actually observed on the UKSA page (June 2026).
+# Link shapes observed on the UKSA page in June and August 2026.
 PROJECTS_JUNE = (
     "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/"
     "01-06-2026-UKSA-Accredited-Research-Projects-Report-1.xlsx"
@@ -29,6 +29,10 @@ PROJECTS_JUNE = (
 PROJECTS_NOV = (
     "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2025/11/"
     "06-11-2025-UKSA-Accredited-Research-Projects-Report-1.xlsx"
+)
+PROJECTS_AUGUST = (
+    "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/08/"
+    "13_08_2026_UKSA-Accredited-Research-Projects-Report.xlsx"
 )
 RESEARCHERS_JUNE = (
     "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/2026/06/"
@@ -56,6 +60,12 @@ class UrlDiscoveryTest(unittest.TestCase):
         self.assertEqual(parse_url_date(PROJECTS_JUNE), date(2026, 6, 1))
         self.assertEqual(parse_url_date(PROJECTS_NOV), date(2025, 11, 6))
 
+    def test_parse_underscore_filename_dmy_date(self):
+        self.assertEqual(parse_url_date(PROJECTS_AUGUST), date(2026, 8, 13))
+
+    def test_parse_numeric_site_upload_directory_date(self):
+        self.assertEqual(parse_upload_directory_date(PROJECTS_AUGUST), "2026-08")
+
     def test_parse_month_name_date(self):
         url = "https://example.org/uploads/Accredited-projects-March-2026.xlsx"
         self.assertEqual(parse_url_date(url), date(2026, 3, 1))
@@ -80,6 +90,11 @@ class UrlDiscoveryTest(unittest.TestCase):
         url, source_date = select_register_url(urls)
         self.assertEqual(url, PROJECTS_JUNE)
         self.assertEqual(source_date, date(2026, 6, 1))
+
+    def test_selects_numeric_site_underscore_date_as_latest_project_report(self):
+        url, source_date = select_register_url([PROJECTS_JUNE, PROJECTS_AUGUST])
+        self.assertEqual(url, PROJECTS_AUGUST)
+        self.assertEqual(source_date, date(2026, 8, 13))
 
     def test_no_projects_candidates_raises(self):
         with self.assertRaises(RuntimeError):
