@@ -1,5 +1,6 @@
 """Thematic Analysis callbacks."""
 
+import pandas as pd
 from dash import dcc, Input, Output, State
 
 from dashboard.data.thematic import (
@@ -39,6 +40,23 @@ from dashboard.charts.thematic import (
 )
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 from dashboard.data.uptake import SERVED_DOMAIN_PAIRS
+
+
+def _filter_enriched_accreditation_year_range(display, year_range, year_min, year_max):
+    dates = pd.to_datetime(
+        display["Accreditation Date"], format="%d %b %Y", errors="coerce",
+    )
+    try:
+        selected_years = sorted(int(year) for year in year_range)
+    except (TypeError, ValueError):
+        selected_years = []
+
+    if len(selected_years) == 2:
+        full_range = selected_years[0] <= int(year_min) and selected_years[1] >= int(year_max)
+        if not full_range:
+            display = display.loc[dates.dt.year.between(*selected_years)]
+
+    return display.copy(), dates.loc[display.index]
 
 
 def register(app):
@@ -320,6 +338,9 @@ def register(app):
         Input("enriched-unit-filter", "value"),
         Input("enriched-researcher-sector-filter", "value"),
         Input("enriched-page-size", "value"),
+        Input("enriched-accreditation-year-filter", "value"),
+        State("enriched-accreditation-year-filter", "min"),
+        State("enriched-accreditation-year-filter", "max"),
     )
     def update_enriched_register(
         search,
@@ -337,8 +358,11 @@ def register(app):
         unit_filter,
         researcher_sector_filter,
         page_size,
+        accreditation_year_range,
+        accreditation_year_min,
+        accreditation_year_max,
     ):
-        display, count_text = _get_enriched_register_display_df(
+        display, _ = _get_enriched_register_display_df(
             search,
             dataset_filter,
             provider_filter,
@@ -353,6 +377,15 @@ def register(app):
             temporal_structure_filter,
             unit_filter,
             researcher_sector_filter,
+        )
+
+        display, accreditation_dates = _filter_enriched_accreditation_year_range(
+            display, accreditation_year_range, accreditation_year_min, accreditation_year_max,
+        )
+        display["Accreditation Date"] = accreditation_dates.dt.strftime("%Y-%m-%d").fillna("")
+        count_text = (
+            f"Showing {len(display):,} accreditation "
+            f"record{'s' if len(display) != 1 else ''}"
         )
 
         return (
@@ -378,6 +411,9 @@ def register(app):
         State("enriched-temporal-structure-filter", "value"),
         State("enriched-unit-filter", "value"),
         State("enriched-researcher-sector-filter", "value"),
+        State("enriched-accreditation-year-filter", "value"),
+        State("enriched-accreditation-year-filter", "min"),
+        State("enriched-accreditation-year-filter", "max"),
         prevent_initial_call=True,
     )
     def download_enriched_csv(
@@ -396,6 +432,9 @@ def register(app):
         temporal_structure_filter,
         unit_filter,
         researcher_sector_filter,
+        accreditation_year_range,
+        accreditation_year_min,
+        accreditation_year_max,
     ):
         display, _ = _get_enriched_register_display_df(
             search,
@@ -414,4 +453,7 @@ def register(app):
             researcher_sector_filter,
         )
         filename = f"dea-enriched-register-{_csv_date_stamp()}.csv"
+        display, _ = _filter_enriched_accreditation_year_range(
+            display, accreditation_year_range, accreditation_year_min, accreditation_year_max,
+        )
         return dcc.send_data_frame(display.to_csv, filename, index=False)

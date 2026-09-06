@@ -1,5 +1,6 @@
 """Thematic Analysis sub-tab."""
 
+import pandas as pd
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
@@ -11,6 +12,7 @@ from dashboard import taxonomy
 from dashboard import reference_definitions
 from dashboard.config import RELEASE_MODEL
 from dashboard.config import REGISTER_SOURCE_ICON, DERIVED_FIELD_ICON
+from dashboard.data.filtering import _get_enriched_register_display_df
 from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS, _ALL_INSTITUTION_OPTIONS, _ALL_TRE_OPTIONS,
 )
@@ -279,6 +281,13 @@ def _deterministic_intro() -> html.P:
 
 
 def _analyses_accordion():
+    enriched_display, _ = _get_enriched_register_display_df(None, *(["ALL"] * 13))
+    accreditation_dates = pd.to_datetime(
+        enriched_display["Accreditation Date"], format="%d %b %Y", errors="coerce",
+    )
+    accreditation_year_min = int(accreditation_dates.min().year)
+    accreditation_year_max = int(accreditation_dates.max().year)
+
     return dbc.Accordion(
         [
             dbc.AccordionItem(
@@ -487,6 +496,28 @@ def _analyses_accordion():
             dbc.AccordionItem(
                 [
                     html.P(_enriched_register_desc, className="section-desc"),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Label("Accreditation year", className="filter-label"),
+                            dcc.RangeSlider(
+                                id="enriched-accreditation-year-filter",
+                                min=accreditation_year_min,
+                                max=accreditation_year_max,
+                                step=1,
+                                value=[accreditation_year_min, accreditation_year_max],
+                                marks={
+                                    year: str(year)
+                                    for year in range(accreditation_year_min, accreditation_year_max + 1)
+                                },
+                                allowCross=False,
+                            ),
+                            *([html.Small(
+                                "Records without a usable accreditation date are included "
+                                "in the full year range and excluded from narrower ranges.",
+                                className="text-muted",
+                            )] if accreditation_dates.isna().any() else []),
+                        ], md=6),
+                    ], className="mb-3 g-2"),
                     dbc.Row([
                         dbc.Col([
                             html.Label("Search", className="filter-label"),
