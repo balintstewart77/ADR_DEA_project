@@ -83,8 +83,9 @@ def table(headers, rows):
 
 
 class Report:
-    def __init__(self, sources):
+    def __init__(self, sources, supplement=None):
         self.s = sources
+        self.supplement = supplement
         self.meta = sources.meta
         self.tables = []
         self.items = self.meta.setdefault("result_items", [])
@@ -357,6 +358,8 @@ class Report:
         self.meta["schema_adapters"].update({n: dict(self.meta["schema_adapters"][n], metric_columns=list(cols),
             interval_aliases={c: list(self.bounds(n, self.s.tables[n][0], c)) for c in cols},
             support_aliases={"human_reference_support": "baseline_human_majority_positive_n" if n == "label_support" else "support_n / baseline_support_n / human_majority_positive_n as explicitly keyed", "tag_dimension": "tag"}) for n, cols in METRICS.items()})
+        if self.supplement:
+            self.supplement.apply(self)
         self.validate()
 
     def taxonomy_denominators(self):
@@ -415,6 +418,10 @@ class Report:
                 coverage[c["result_id"]].add(c["document_cell_role"])
             elif c["lineage_type"] == "policy_withholding":
                 coverage[c["result_id"]].add("estimate")
+            elif c["lineage_type"] in ("supplement_interval_cell", "reused_interval_cell"):
+                if c["displayed_value"] != c["raw_value"]:
+                    raise Fatal(f"Supplement/reuse lineage display mismatch: {c}")
+                coverage[c["result_id"]].add(c["document_cell_role"])
         for i in self.items:
             if "estimate" not in coverage[i["result_id"]]:
                 raise Fatal(f"Missing estimate lineage: {i['result_id']}")
@@ -422,7 +429,8 @@ class Report:
                 raise Fatal(f"Missing interval lineage: {i['result_id']}")
         self.meta["source_map"] = []
         for t in self.tables:
-            refs = [x for x in self.lineage if x["table_id"] == t["id"] and x["lineage_type"] == "summary_csv_cell"]
+            refs = [x for x in self.lineage if x["table_id"] == t["id"] and x["lineage_type"] in
+                    ("summary_csv_cell", "supplement_interval_cell", "reused_interval_cell")]
             grouped = defaultdict(lambda: {"columns": set(), "keys": {}})
             for r in refs:
                 g = grouped[r["source_path"]]
@@ -436,7 +444,11 @@ class Report:
             domain_purpose_rare_withholding="passed", metric_status_attribution="passed", macro_scope_and_explicit_membership="passed",
             exact_source_cell_copy="passed", join_cardinality="passed", result_lineage="passed", table_source_maps="passed",
             result_items=len(self.items), result_tables=len(self.tables), source_csv_cells=len([c for c in self.lineage if c["lineage_type"] == "summary_csv_cell"]),
-            statistical_validation="not performed; collation only", replicate_files_loaded=0)
+            statistical_validation=("37 supplementary Wilson intervals calculated in the dated supplement; no other statistical validation performed"
+                                    if self.supplement else "not performed; collation only"), replicate_files_loaded=0)
+        if self.supplement:
+            self.meta["validation_results"].update(supplement_interval_rows=37, supplement_join_coverage="37 new plus one equivalent-result reuse",
+                                                   original_unresolved_entries="69 retained unchanged")
 
     def row_label(self, item):
         key = item["source_key"]
@@ -486,6 +498,12 @@ class Report:
             status = ESTIMATE_CODES[i["estimate_status"]] + "/" + INTERVAL_CODES[i["interval_status"]]
             if i["interval_status"] == "reported":
                 status += "; " + i["interval_method"] + "; confidence " + (i["confidence_level"] or "unresolved")
+                if i.get("supplement_interval"):
+                    supplement = i["supplement_interval"]
+                    if supplement["origin"] == "newly_calculated_supplementary_wilson":
+                        status += "; supplementary Wilson 95%; calculated " + supplement["calculation_timestamp_utc"] + "; source " + supplement["source_path"]
+                    else:
+                        status += "; reused from strict-sufficiency result; source " + supplement["source_path"]
             if i["valid_replicate_count"] is not None:
                 status += "; valid/invalid/requested draws " + str(i["valid_replicate_count"]) + "/" + str(i["invalid_replicate_count"] if i["invalid_replicate_count"] is not None else "unavailable") + "/" + str(i["requested_replicate_count"] if i["requested_replicate_count"] is not None else "unavailable")
             if i["interval_status"] in ("suppressed_valid_replicate_threshold", "suppressed_diagnostic_policy"):
@@ -557,7 +575,8 @@ class Report:
                "### Unresolved entries grouped by recorded explanation",
                table(["Cannot be established", "Appendix entry count"], [[row["cannot_establish"], row["count"]] for row in rollup]),
                "Entries can concern overlapping limitations. Grouping by exact recorded explanation does not change any entry's status.",
-               "Analytical results are collated from existing outputs; no analytical statistics have been recomputed.",
+               ("Original point estimates and other source quantities are unchanged. Thirty-seven supplementary Wilson intervals were newly calculated; three interval entries use existing source bounds, comprising two retained original sufficiency-subset intervals and one verified equivalent-result lookup."
+                if self.supplement else "Analytical results are collated from existing outputs; no analytical statistics have been recomputed."),
                "No replicate files were loaded; no replicate-validity count exception was used. Validation covers structure, identifiers, copying and presentation, not independent statistical validation.",
                "Generation time (UTC): `" + self.meta["generation_timestamp_utc"] + "`. Generator HEAD: `" + str(self.meta["generator"]["git_head"]) + "`. Generator working-tree state: " + ("dirty" if self.meta["generator"]["git_status_before"] else "clean") + ". These describe the generator, not the source runs.",
                "Source directories and run timestamps:"]
@@ -572,6 +591,12 @@ class Report:
         out.append("The deviation log was consulted for reporting context. Its open hidden-child-value item concerns owner responses and does not supply a scratch-coder reporting amendment. "
                    "The saved analysis methods and hash-verified protocol are distinguished from current generating code, whose exact historical version is unavailable.")
         out.append("Status legend used in every table: before the slash = estimate; after the slash = interval. R reported; W withheld by the domain/purpose support rule; D undefined; A unavailable in source; U unresolved; N not applicable; SD interval suppressed by explicit diagnostic policy; SV interval suppressed by valid-replicate policy. Full definitions and source maps are in Appendix B. All values preserve source precision and scale.")
+        if self.supplement:
+            supplement = self.meta["supplement"]
+            out += ["### Supplement coverage",
+                    "The dated post-registration supplement at `" + supplement["directory"] + "` supplies 37 newly calculated marginal two-sided 95% Wilson score intervals without continuity correction. WSA0082 and WSA0083 retain their original Stage A intervals; WSA0074 reuses WSA0083 after the verified one-to-one equivalent-result lookup. Newly supplied cells are marked in their table status. Original source absence/status remains in metadata lineage.",
+                    "The selected scope covers the specified named-coder and record-level research-reporting outcomes. QA frequencies remain descriptive; ordinary Wilson intervals are not applied to pooled within-project ratings. This is an explicit interpretation of the protocol’s broad baseline-proportions clause, not a claim that every baseline proportion has received an interval or that QA intervals would necessarily be mathematically invalid.",
+                    "All 69 original-source unresolved reporting/provenance entries remain open and retain their identifiers and descriptions. U0069's undocumented historical omission reason remains unresolved; the supplement supplies intervals for only the selected cells and is a partial presentational remedy, not recovery of that reason."]
         for sec in range(1, 12):
             out += [f"## Section {sec} — {TITLES[sec]}", notes[sec]]
             out.extend(self.render_table(t) for t in self.bysection[sec])
@@ -579,9 +604,12 @@ class Report:
         if not self.s.unresolved:
             out.append("There are no unresolved items.")
         else:
-            out.append("Source-defined suppression and intentional rare-domain/purpose blanks are not unresolved errors. Entries below identify unavailable provenance or reporting semantics.")
+            out.append(("These are the 69 original-source limitations from the Task B consolidation, retained without renumbering or closure. Historical wording such as ‘not computed here’ describes the original consolidation. Source-defined suppression and intentional rare-domain/purpose blanks are not unresolved errors. Entries below identify unavailable provenance or reporting semantics."
+                        if self.supplement else "Source-defined suppression and intentional rare-domain/purpose blanks are not unresolved errors. Entries below identify unavailable provenance or reporting semantics."))
             out.append(table(["ID", "Section / result key", "Affected field", "Known", "Cannot be established", "Source"],
                 [[x["id"], str(x["section"]) + " / " + str(x["result_key"]) + (" / " + DIAGNOSTIC if str(x["section"]) == "11" or "hard_case" in str(x["result_key"]) else ""), x["field"], x["known"], x["cannot_establish"], x["source_location"]] for x in self.s.unresolved]))
+            if self.supplement:
+                out.append("Supplement coverage does not alter these original-source records. U0069 remains open because newly supplied intervals do not establish why the historical distribution intervals were omitted, and its scope also includes excluded rows.")
         out += ["## Appendix B — Source map and status definitions",
                 "Detailed cell lineage, original strings/statuses, metric statuses, schema adapters, coverage keys and non-applicability entries are in `run_metadata.json`. "
                 "A missing source field remains unavailable. Zero, NO and False are substantive values. Empty domain/purpose rare-metric cells are intentional W/W; tags are always reported with their exported caution. "

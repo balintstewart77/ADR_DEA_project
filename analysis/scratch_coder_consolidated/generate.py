@@ -1,6 +1,7 @@
 """Create one exclusively named run; publish final filenames only after validation."""
 from __future__ import annotations
 
+import argparse
 from datetime import datetime, timezone
 import json
 import os
@@ -10,6 +11,7 @@ import sys
 
 from .preflight import Fatal, PACKAGE, ROOT, Sources, git, sha
 from .report import DIAGNOSTIC, Report, esc
+from .supplement import WilsonSupplement
 
 
 def timestamp():
@@ -33,14 +35,20 @@ def outside_task_status(status, out):
     return [line for line in status.splitlines() if not any(line[3:].startswith(p) for p in allowed)]
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--wilson-supplement", type=Path)
+    args = parser.parse_args(argv)
     # -B is the documented invocation; refuse a cache-producing invocation.
     if not sys.dont_write_bytecode:
         print("Use Python -B (or PYTHONDONTWRITEBYTECODE=1) to prevent caches.", file=sys.stderr)
         return 2
     out = fresh_directory()
     before = git("status", "--porcelain=v1", "--untracked-files=all")
-    meta = dict(generator={"identity": "scratch_coder_consolidated v2", "invocation": [sys.executable, "-B", "-m", "analysis.scratch_coder_consolidated"],
+    invocation = [sys.executable, "-B", "-m", "analysis.scratch_coder_consolidated"]
+    if args.wilson_supplement:
+        invocation += ["--wilson-supplement", str(args.wilson_supplement)]
+    meta = dict(generator={"identity": "scratch_coder_consolidated v2", "invocation": invocation,
                            "git_head": git("rev-parse", "HEAD"), "git_status_before": before,
                            "source_hashes": {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(PACKAGE.iterdir()) if p.suffix in (".py", ".json", ".md")}},
                 generation_timestamp_utc=datetime.now(timezone.utc).isoformat(), output_directory=out.relative_to(ROOT).as_posix(),
@@ -51,7 +59,8 @@ def main():
     published_metadata = False
     try:
         sources.load()
-        report = Report(sources)
+        supplement = WilsonSupplement(args.wilson_supplement, sources) if args.wilson_supplement else None
+        report = Report(sources, supplement=supplement)
         report.build()
         document = report.render()
         # Validate the actual rendered table fragments, not only internal flags.
