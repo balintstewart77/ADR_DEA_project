@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch
 
 from .preflight import Fatal, Sources, TAGS
-from .report import Report, esc
+from .report import Report, esc, unresolved_explanation_rollup
 
 
 class CollationChecks(unittest.TestCase):
@@ -83,6 +83,27 @@ class CollationChecks(unittest.TestCase):
 
     def test_markdown_pipe_escape(self):
         self.assertEqual(esc("dimension | label\nnext"), "dimension \\| label next")
+
+    def test_unresolved_rollup_uses_exact_explanations_and_all_identifiers(self):
+        fixture = [
+            {"id": "U1", "cannot_establish": "Repeated explanation."},
+            {"id": "U2", "cannot_establish": "Singleton explanation."},
+            {"id": "U3", "cannot_establish": "Repeated explanation."},
+        ]
+        rows = unresolved_explanation_rollup(fixture)
+        self.assertEqual(rows, [
+            {"cannot_establish": "Repeated explanation.", "count": 2, "member_ids": ["U1", "U3"]},
+            {"cannot_establish": "Singleton explanation.", "count": 1, "member_ids": ["U2"]},
+        ])
+        self.assertEqual(sum(row["count"] for row in rows), len(fixture))
+
+    def test_unresolved_rollup_rejects_duplicate_identifiers(self):
+        fixture = [
+            {"id": "U1", "cannot_establish": "First."},
+            {"id": "U1", "cannot_establish": "Second."},
+        ]
+        with self.assertRaisesRegex(Fatal, "Duplicate canonical unresolved identifier"):
+            unresolved_explanation_rollup(fixture)
 
 
 if __name__ == "__main__":

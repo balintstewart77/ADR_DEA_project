@@ -55,6 +55,25 @@ ESTIMATE_CODES = {"reported": "R", "withheld_support_rule": "W", "undefined": "D
 INTERVAL_CODES = {"reported": "R", "suppressed_diagnostic_policy": "SD", "suppressed_valid_replicate_threshold": "SV", "withheld_support_rule": "W", "undefined": "D", "not_applicable": "N", "unavailable_in_source": "A", "unresolved": "U"}
 
 
+def unresolved_explanation_rollup(items):
+    """Group canonical Appendix A entries by their complete recorded explanation."""
+    identifiers = [item["id"] for item in items]
+    if len(identifiers) != len(set(identifiers)):
+        raise Fatal("Duplicate canonical unresolved identifier")
+    groups = defaultdict(list)
+    for item in items:
+        groups[item["cannot_establish"]].append(item["id"])
+    rows = [
+        {"cannot_establish": explanation, "count": len(member_ids), "member_ids": member_ids}
+        for explanation, member_ids in groups.items()
+    ]
+    rows.sort(key=lambda row: (-row["count"], row["cannot_establish"]))
+    grouped_ids = [identifier for row in rows for identifier in row["member_ids"]]
+    if len(grouped_ids) != len(identifiers) or set(grouped_ids) != set(identifiers):
+        raise Fatal("Canonical unresolved identifiers are missing from or duplicated across rollup groups")
+    return rows
+
+
 def esc(value):
     return str(value).replace("|", "\\|").replace("\r", " ").replace("\n", " ")
 
@@ -528,9 +547,16 @@ class Report:
         status = "INCOMPLETE — unresolved metadata or reporting semantics" if self.s.unresolved else "COMPLETE"
         self.meta["status"] = status
         self.meta["unresolved_item_count"] = len(self.s.unresolved)
+        rollup = unresolved_explanation_rollup(self.s.unresolved)
+        if sum(row["count"] for row in rollup) != len(self.s.unresolved):
+            raise Fatal("Unresolved explanation rollup total differs from canonical Appendix A total")
+        self.meta["unresolved_explanation_rollup"] = rollup
         notes = self.methodological_notes()
         out = ["# Consolidated scratch-coder results", "## Section 0 — Provenance and report status",
                f"{status}. Unresolved-item count: {len(self.s.unresolved)}; see [Appendix A](#appendix-a--unresolved-or-unavailable-items).",
+               "### Unresolved entries grouped by recorded explanation",
+               table(["Cannot be established", "Appendix entry count"], [[row["cannot_establish"], row["count"]] for row in rollup]),
+               "Entries can concern overlapping limitations. Grouping by exact recorded explanation does not change any entry's status.",
                "Analytical results are collated from existing outputs; no analytical statistics have been recomputed.",
                "No replicate files were loaded; no replicate-validity count exception was used. Validation covers structure, identifiers, copying and presentation, not independent statistical validation.",
                "Generation time (UTC): `" + self.meta["generation_timestamp_utc"] + "`. Generator HEAD: `" + str(self.meta["generator"]["git_head"]) + "`. Generator working-tree state: " + ("dirty" if self.meta["generator"]["git_status_before"] else "clean") + ". These describe the generator, not the source runs.",
