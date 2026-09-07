@@ -19,6 +19,7 @@ from analysis.validation.intervals import Z_975, wilson_interval
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json"
+ASSESSMENT = ROOT / "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md"
 PROTOCOL = ROOT / "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx"
 METHODS_A = ROOT / "analysis/outputs_validation_scratch_20260824/methods_stage_a.md"
 IMPLEMENTATION = ROOT / "analysis/validation/intervals.py"
@@ -225,7 +226,7 @@ def methods_text(timestamp: str, implementation_hash: str, checks: list[dict], c
 
 This dated post-registration supplement was calculated at `{timestamp}` under the explicit selected scope in the user instruction. It adds 37 newly calculated marginal two-sided 95% Wilson score intervals without continuity correction. It is not simultaneous coverage across categories and does not support inference to a population of coders.
 
-The selection uses `{manifest_path.relative_to(ROOT)}` (SHA-256 `{manifest_hash}`) without regenerating its classifications. Included IDs are `{', '.join(SELECTED_IDS)}`: nine named-coder sufficiency, three record-majority sufficiency, twelve named-coder taxonomy fit, five record-majority taxonomy fit, and four record-level Unclear-use rows in each set-valued dimension. Each source denominator is 150.
+The selection uses `{manifest_path.relative_to(ROOT)}` (SHA-256 `{manifest_hash}`) and its companion assessment `{ASSESSMENT.relative_to(ROOT)}` (SHA-256 `{sha(ASSESSMENT.read_bytes())}`) without regenerating their candidate classifications. Included IDs are `{', '.join(SELECTED_IDS)}`: nine named-coder sufficiency, three record-majority sufficiency, twelve named-coder taxonomy fit, five record-majority taxonomy fit, and four record-level Unclear-use rows in each set-valued dimension. Each source denominator is 150.
 
 The explicit scope interpretation covers these research-reporting outcomes. The eight QA candidates remain descriptive, pooled within-project responses receive no ordinary Wilson interval, structural ratios and all nonbaseline rows remain excluded. This does not claim that every baseline proportion has an interval or that a QA interval would necessarily be mathematically invalid.
 
@@ -253,7 +254,8 @@ def main(argv=None) -> int:
     before_status = git("status", "--porcelain=v1", "--untracked-files=all")
     head = git("rev-parse", "HEAD")
     code_check = git("diff", "--exit-code", "HEAD", "--", "analysis/scratch_coder_consolidation_followup", "analysis/scratch_coder_consolidated", "analysis/validation/intervals.py")
-    if head["exit_code"] or code_check["exit_code"]:
+    untracked_code = git("ls-files", "--others", "--exclude-standard", "--", "analysis/scratch_coder_consolidation_followup", "analysis/scratch_coder_consolidated")
+    if head["exit_code"] or code_check["exit_code"] or untracked_code["exit_code"] or untracked_code["stdout"]:
         raise SystemExit("Relevant calculation/adapter code does not match HEAD")
     scope, manifest_bytes = load_manifest(manifest_path)
     selected, source_hashes = validate_selected(scope)
@@ -271,6 +273,7 @@ def main(argv=None) -> int:
         after = sha((ROOT / path).read_bytes()); record["sha256_after"] = after; record["unchanged"] = after == record["sha256_before"]
     input_records = {
         manifest_path.relative_to(ROOT).as_posix(): {"sha256_before": sha(manifest_bytes), "sha256_after": sha(manifest_path.read_bytes())},
+        ASSESSMENT.relative_to(ROOT).as_posix(): {"sha256_before": sha(ASSESSMENT.read_bytes()), "sha256_after": sha(ASSESSMENT.read_bytes())},
         IMPLEMENTATION.relative_to(ROOT).as_posix(): {"sha256_before": implementation_hash, "sha256_after": sha(IMPLEMENTATION.read_bytes())},
         PROTOCOL.relative_to(ROOT).as_posix(): {"sha256_before": sha(PROTOCOL.read_bytes()), "sha256_after": sha(PROTOCOL.read_bytes())},
         METHODS_A.relative_to(ROOT).as_posix(): {"sha256_before": sha(METHODS_A.read_bytes()), "sha256_after": sha(METHODS_A.read_bytes())},
@@ -297,6 +300,8 @@ def main(argv=None) -> int:
             "sha256":implementation_hash,"git_blob":git("hash-object",IMPLEMENTATION.relative_to(ROOT).as_posix())["stdout"],
             "signature":str(inspect.signature(wilson_interval)),"z":repr(Z_975),"python_version":sys.version,
             "statsmodels":"not installed; repository implementation used"},
+        "task_code":{path.relative_to(ROOT).as_posix():{"sha256":sha(path.read_bytes()),"git_blob":git("hash-object",path.relative_to(ROOT).as_posix())["stdout"]} for path in
+                     (Path(__file__).resolve(), ROOT/"analysis/scratch_coder_consolidated/supplement.py")},
         "method":{"name":"Wilson score","confidence_level":0.95,"alpha":0.05,"two_sided":True,"continuity_correction":False,
                   "finite_population_adjustment":False,"validation_absolute_tolerance":TOLERANCE,"coverage":"marginal, not simultaneous"},
         "selection_list":list(SELECTED_IDS),"selection_count":len(rows),"reused_report_entries":list(REUSED_IDS),
