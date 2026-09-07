@@ -1,0 +1,89 @@
+"""Targeted mutation checks for concrete collation risks; no output files."""
+import copy
+import unittest
+from unittest.mock import patch
+
+from .preflight import Fatal, Sources, TAGS
+from .report import Report, esc
+
+
+class CollationChecks(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.sources = Sources({})
+        cls.sources.load()
+
+    def fresh(self):
+        return copy.deepcopy(self.sources)
+
+    def test_duplicate_key_is_fatal(self):
+        s = Sources({})
+        original = s.text
+
+        def text_with_duplicate(path):
+            result = original(path)
+            if path.endswith("replacement_panel_results.csv"):
+                result += result.splitlines()[1] + "\n"
+            return result
+
+        with patch.object(s, "text", side_effect=text_with_duplicate):
+            with self.assertRaisesRegex(Fatal, "duplicate row key"):
+                s.load()
+
+    def test_missing_baseline_tag_row_is_fatal(self):
+        s = self.fresh()
+        del s.index["tag_diagnostics"][("baseline", TAGS[0])]
+        with self.assertRaisesRegex(Fatal, "Coverage failure"):
+            s.coverage()
+
+    def test_tag_rare_band_does_not_blank_diagnostics(self):
+        # Synthetic in-memory policy mutation; never saved as analytical output.
+        s = self.fresh()
+        support = s.lookup("label_support", dimension="Cross-cutting tag", label=TAGS[0])
+        support["support_band"] = "RARE"
+        support["low_support_caution_required"] = "True"
+        r = Report(s)
+        t = r.new_table(2, "Synthetic policy test", "baseline", TAGS[0])
+        source = s.lookup("tag_diagnostics", population="baseline", tag=TAGS[0])
+        item = r.add(t, "tag_diagnostics", source, "cohen_kappa")
+        self.assertEqual(item["displayed_estimate"], source["cohen_kappa"])
+        self.assertEqual(item["estimate_status"], "reported")
+        self.assertIn("RARE", item["support_display"])
+
+    def test_withholding_cannot_leak_into_second_table(self):
+        s = self.fresh()
+        r = Report(s)
+        source = next(x for x in s.tables["per_label_contingencies"] if x["support_band"] == "RARE")
+        for _ in range(2):
+            t = r.new_table(5, "Synthetic withholding test", "baseline", source["dimension"])
+            item = r.add(t, "per_label_contingencies", source, "kappa", force_withheld=True)
+            self.assertEqual([item[k] for k in ("displayed_estimate", "displayed_lower", "displayed_upper")], ["", "", ""])
+            self.assertEqual(item["estimate_status"], "withheld_support_rule")
+        self.assertFalse(any(x["field"] == "kappa.interval" for x in s.unresolved))
+
+    def test_zero_false_and_missing_remain_distinct(self):
+        s = self.fresh()
+        r = Report(s)
+        source = next(x for x in s.tables["qa_summary"] if x["count"] == "0")
+        t = r.new_table(1, "Missingness test", source["population"], source["dimension"])
+        self.assertEqual(r.add(t, "qa_summary", source, "count")["displayed_estimate"], "0")
+        flag = dict(s.tables["replacement_trigger_summary"][0])
+        col = "all_three_replacement_deltas_below_zero"
+        for raw in ("NO", "False", ""):
+            flag[col] = raw
+            item = r.add(t, "replacement_trigger_summary", flag, col)
+            self.assertEqual(item["displayed_estimate"], raw)
+            self.assertEqual(item["estimate_status"], "unresolved" if raw == "" else "reported")
+
+    def test_support_join_conflict_is_fatal(self):
+        s = self.fresh()
+        s.tables["per_label_pairwise_kappa"][0]["support_band"] = "RARE"
+        with self.assertRaisesRegex(Fatal, "Support join conflict"):
+            s.support_joins()
+
+    def test_markdown_pipe_escape(self):
+        self.assertEqual(esc("dimension | label\nnext"), "dimension \\| label next")
+
+
+if __name__ == "__main__":
+    unittest.main()
