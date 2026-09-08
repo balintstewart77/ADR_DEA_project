@@ -23,7 +23,6 @@ ASSESSMENT = ROOT / "analysis/outputs_validation_consolidation_followup_20260907
 PROTOCOL = ROOT / "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx"
 METHODS_A = ROOT / "analysis/outputs_validation_scratch_20260824/methods_stage_a.md"
 IMPLEMENTATION = ROOT / "analysis/validation/intervals.py"
-TASK_B = ROOT / "analysis/outputs_validation_consolidated_20260907T131344836676Z"
 SELECTED_RANGES = ((53, 61), (75, 77), (90, 101), (118, 122), (135, 138), (146, 149))
 SELECTED_IDS = tuple(f"WSA{i:04d}" for start, end in SELECTED_RANGES for i in range(start, end + 1))
 REUSED_IDS = ("WSA0074", "WSA0082", "WSA0083")
@@ -247,10 +246,15 @@ These are newly calculated supplementary intervals, not intervals present in the
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--scope-manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--task-b-metadata", type=Path, required=True,
+                        help="Explicit restored historical Task B metadata used only for provenance; no deleted-path default")
     args = parser.parse_args(argv)
     manifest_path = args.scope_manifest.resolve()
     if not manifest_path.is_relative_to(ROOT) or "preregistration_restricted" in manifest_path.parts:
         raise SystemExit("Scope manifest must be an unrestricted repository file")
+    task_b_metadata = args.task_b_metadata.resolve()
+    if not task_b_metadata.is_relative_to(ROOT) or task_b_metadata.is_symlink() or not task_b_metadata.is_file() or "preregistration_restricted" in task_b_metadata.parts:
+        raise SystemExit("Task B metadata must be an explicit unrestricted repository file")
     before_status = git("status", "--porcelain=v1", "--untracked-files=all")
     head = git("rev-parse", "HEAD")
     code_check = git("diff", "--exit-code", "HEAD", "--", "analysis/scratch_coder_consolidation_followup", "analysis/scratch_coder_consolidated", "analysis/validation/intervals.py")
@@ -277,7 +281,7 @@ def main(argv=None) -> int:
         IMPLEMENTATION.relative_to(ROOT).as_posix(): {"sha256_before": implementation_hash, "sha256_after": sha(IMPLEMENTATION.read_bytes())},
         PROTOCOL.relative_to(ROOT).as_posix(): {"sha256_before": sha(PROTOCOL.read_bytes()), "sha256_after": sha(PROTOCOL.read_bytes())},
         METHODS_A.relative_to(ROOT).as_posix(): {"sha256_before": sha(METHODS_A.read_bytes()), "sha256_after": sha(METHODS_A.read_bytes())},
-        f"{TASK_B.relative_to(ROOT)}/run_metadata.json": {"sha256_before": sha((TASK_B/"run_metadata.json").read_bytes()), "sha256_after": sha((TASK_B/"run_metadata.json").read_bytes())},
+        task_b_metadata.relative_to(ROOT).as_posix(): {"sha256_before": sha(task_b_metadata.read_bytes()), "sha256_after": sha(task_b_metadata.read_bytes())},
     }
     if not all(x["unchanged"] for x in source_hashes.values()) or not all(x["sha256_before"] == x["sha256_after"] for x in input_records.values()):
         raise ValueError("An immutable input changed during supplement generation")
@@ -293,7 +297,8 @@ def main(argv=None) -> int:
     after_status = git("status", "--porcelain=v1", "--untracked-files=all")
     metadata = {"status":"complete","artifact_type":"new_dated_post_registration_supplement",
         "calculation_timestamp_utc":calculation_time,"output_directory":output.relative_to(ROOT).as_posix(),
-        "invocation":[sys.executable,"-B","-m","analysis.scratch_coder_consolidation_followup.wilson_supplement","--scope-manifest",manifest_path.relative_to(ROOT).as_posix()],
+        "invocation":[sys.executable,"-B","-m","analysis.scratch_coder_consolidation_followup.wilson_supplement","--scope-manifest",manifest_path.relative_to(ROOT).as_posix(),
+                      "--task-b-metadata",task_b_metadata.relative_to(ROOT).as_posix()],
         "git_head":head["stdout"],"relevant_code_matches_head":True,
         "repository_status_before":before_status["stdout"],"repository_status_after_artifacts_created":after_status["stdout"],
         "implementation":{"callable":"analysis.validation.intervals.wilson_interval","path":IMPLEMENTATION.relative_to(ROOT).as_posix(),

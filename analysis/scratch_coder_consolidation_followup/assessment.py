@@ -1,6 +1,7 @@
 """Inventory Wilson-scope candidates without calculating analytical quantities."""
 from __future__ import annotations
 
+import argparse
 import csv
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -19,9 +20,7 @@ PACKAGE = Path(__file__).resolve().parent
 STAGE_A = "analysis/outputs_validation_scratch_20260824"
 PROTOCOL = "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx"
 METHODS = f"{STAGE_A}/methods_stage_a.md"
-REFERENCE = "analysis/outputs_validation_consolidated_20260907T082625857355Z"
-TASK_A = "analysis/outputs_validation_consolidated_20260907T085849219598Z"
-TASK_B = "analysis/outputs_validation_consolidated_20260907T131344836676Z"
+REFERENCE = TASK_A = TASK_B = None  # Populated only from required explicit historical inputs.
 GOVERNANCE = ("preregistration/README.md", "preregistration/package/09_logs_and_templates/README.md")
 FILES = {
     "qa_summary": ("population", "dimension", "measure"),
@@ -271,7 +270,20 @@ def compare_runs():
             "task_b":{"path":TASK_B,"commit":b["generator"]["git_head"],"result":"bounded change only","ignored_metadata_fields":bignored,"added_metadata_key":"unresolved_explanation_rollup","sections_1_11_and_appendices_identical":True,"canonical_unresolved_identical":True,"rollup":roll}}
 
 
-def main():
+def main(argv=None):
+    global REFERENCE, TASK_A, TASK_B
+    parser = argparse.ArgumentParser(description="One-off historical comparison and Wilson-scope assessment; deleted historical runs must be supplied explicitly.")
+    parser.add_argument("--reference-run", type=Path, required=True, help="Restored historical reference consolidation directory")
+    parser.add_argument("--task-a-run", type=Path, required=True, help="Restored historical Task A consolidation directory")
+    parser.add_argument("--task-b-run", type=Path, required=True, help="Restored historical Task B consolidation directory")
+    args = parser.parse_args(argv)
+    resolved = []
+    for candidate in (args.reference_run, args.task_a_run, args.task_b_run):
+        path = candidate.resolve()
+        if not path.is_relative_to(ROOT) or path.is_symlink() or not path.is_dir() or "preregistration_restricted" in path.parts:
+            raise SystemExit(f"Historical comparison input is unavailable or unsupported: {candidate}")
+        resolved.append(path.relative_to(ROOT).as_posix())
+    REFERENCE, TASK_A, TASK_B = resolved
     if not sys.dont_write_bytecode:
         raise SystemExit("Run with -B to keep caches disabled")
     stamp=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
@@ -338,7 +350,8 @@ def main():
     deliverables={p.name:{"bytes":p.stat().st_size,"sha256":sha(p.read_bytes())} for p in out.iterdir() if p.name!="followup_metadata.json"}
     metadata={"status":"complete_scope_assessment_no_intervals_calculated","generated_at_utc":scope["generated_at_utc"],
               "task_commits":{"task_a":"808e5993cd41893a57896b35b12d9c498c16931f","task_b":"a69ac7289b662675d71c3afa95bab02217f7800c","assessment_helper":head["stdout"]},
-              "invocation":[sys.executable,"-B","-m","analysis.scratch_coder_consolidation_followup"],
+              "invocation":[sys.executable,"-B","-m","analysis.scratch_coder_consolidation_followup",
+                            "--reference-run",REFERENCE,"--task-a-run",TASK_A,"--task-b-run",TASK_B],
               "external_versions":{"python":sys.version,"task_a_generator_PyYAML":"6.0.3","assessment_helper":"standard library only"},
               "comparisons":comparisons,"reference_unresolved_count":69,"reference_unresolved_entries":refmeta["unresolved_items"],
               "unresolved_remedy_mapping":remedies,"assessment_totals":scope["totals"],"immutable_inputs_read":hashes,
