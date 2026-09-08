@@ -1,0 +1,1891 @@
+{
+  "status": "complete_scope_assessment_no_intervals_calculated",
+  "generated_at_utc": "2026-09-07T13:29:40.171079+00:00",
+  "task_commits": {
+    "task_a": "808e5993cd41893a57896b35b12d9c498c16931f",
+    "task_b": "a69ac7289b662675d71c3afa95bab02217f7800c",
+    "assessment_helper": "9fa004bcc322fa4d513eeceea57ce1a8eeb45372"
+  },
+  "invocation": [
+    "/Users/balintstewart/Desktop/ADR_DEA_project/.venv/bin/python",
+    "-B",
+    "-m",
+    "analysis.scratch_coder_consolidation_followup"
+  ],
+  "external_versions": {
+    "python": "3.12.5 (main, Aug  6 2024, 19:08:49) [Clang 15.0.0 (clang-1500.3.9.4)]",
+    "task_a_generator_PyYAML": "6.0.3",
+    "assessment_helper": "standard library only"
+  },
+  "comparisons": {
+    "reference": {
+      "path": "analysis/outputs_validation_consolidated_20260907T082625857355Z",
+      "reported_head": "732bf6668d9e9d702f0eb798fee5d46a16eb8a1e",
+      "unresolved_count": 69
+    },
+    "task_a": {
+      "path": "analysis/outputs_validation_consolidated_20260907T085849219598Z",
+      "commit": "808e5993cd41893a57896b35b12d9c498c16931f",
+      "result": "equivalent outside generator-run allowlist",
+      "ignored_fields": [
+        {
+          "key": "generation_timestamp_utc",
+          "old": "2026-09-07T08:26:25.919418+00:00",
+          "new": "2026-09-07T08:58:49.264304+00:00"
+        },
+        {
+          "key": "output_directory",
+          "old": "analysis/outputs_validation_consolidated_20260907T082625857355Z",
+          "new": "analysis/outputs_validation_consolidated_20260907T085849219598Z"
+        },
+        {
+          "key": "document_sha256",
+          "old": "3f7c57f4952c5029e2e482849ba5523096a680f95e1ea9a790e2ce9952989027",
+          "new": "05412c139480388bc2975772a6e49602c9adf9984366516572845bca1f11f3f6"
+        },
+        {
+          "key": "generator/git_head",
+          "old": "732bf6668d9e9d702f0eb798fee5d46a16eb8a1e",
+          "new": "808e5993cd41893a57896b35b12d9c498c16931f"
+        },
+        {
+          "key": "generator/git_status_before",
+          "old": "?? analysis/scratch_coder_consolidated/README.md\n?? analysis/scratch_coder_consolidated/__init__.py\n?? analysis/scratch_coder_consolidated/__main__.py\n?? analysis/scratch_coder_consolidated/generate.py\n?? analysis/scratch_coder_consolidated/preflight.py\n?? analysis/scratch_coder_consolidated/report.py\n?? analysis/scratch_coder_consolidated/schemas.json\n?? analysis/scratch_coder_consolidated/test_collation.py",
+          "new": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json"
+        },
+        {
+          "key": "generator/git_status_after_validation",
+          "old": "?? analysis/scratch_coder_consolidated/README.md\n?? analysis/scratch_coder_consolidated/__init__.py\n?? analysis/scratch_coder_consolidated/__main__.py\n?? analysis/scratch_coder_consolidated/generate.py\n?? analysis/scratch_coder_consolidated/preflight.py\n?? analysis/scratch_coder_consolidated/report.py\n?? analysis/scratch_coder_consolidated/schemas.json\n?? analysis/scratch_coder_consolidated/test_collation.py",
+          "new": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json"
+        }
+      ],
+      "lineage_identical": true,
+      "source_files_identical": true
+    },
+    "task_b": {
+      "path": "analysis/outputs_validation_consolidated_20260907T131344836676Z",
+      "commit": "a69ac7289b662675d71c3afa95bab02217f7800c",
+      "result": "bounded change only",
+      "ignored_metadata_fields": [
+        {
+          "key": "generation_timestamp_utc",
+          "old": "2026-09-07T08:58:49.264304+00:00",
+          "new": "2026-09-07T13:13:44.880108+00:00"
+        },
+        {
+          "key": "output_directory",
+          "old": "analysis/outputs_validation_consolidated_20260907T085849219598Z",
+          "new": "analysis/outputs_validation_consolidated_20260907T131344836676Z"
+        },
+        {
+          "key": "document_sha256",
+          "old": "05412c139480388bc2975772a6e49602c9adf9984366516572845bca1f11f3f6",
+          "new": "5ddb496fe52086bd0cd38ad323b46626a80641001ff106b5475901ad193d1529"
+        },
+        {
+          "key": "generator/git_head",
+          "old": "808e5993cd41893a57896b35b12d9c498c16931f",
+          "new": "a69ac7289b662675d71c3afa95bab02217f7800c"
+        },
+        {
+          "key": "generator/git_status_before",
+          "old": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json",
+          "new": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json"
+        },
+        {
+          "key": "generator/git_status_after_validation",
+          "old": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json",
+          "new": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json"
+        },
+        {
+          "key": "generator/source_hashes/analysis/scratch_coder_consolidated/report.py",
+          "old": "63b3e5459802ed7a1708374f2e5b9ac26931a773bd310f0683e52fe585ed230a",
+          "new": "f3ebaf1ae288cd02d593104aa2f237ee0ccf4d497ac13965b2f3004b24a893be"
+        },
+        {
+          "key": "generator/source_hashes/analysis/scratch_coder_consolidated/test_collation.py",
+          "old": "a844ba7049d9d5df90c376a0984bc9c3bb6a52fc9a5e88dea3e9f4f428e8537f",
+          "new": "a4fa3cab54b6d397f260a058529789a5bc2b79da7603c7c24d879c8c52beb558"
+        }
+      ],
+      "added_metadata_key": "unresolved_explanation_rollup",
+      "sections_1_11_and_appendices_identical": true,
+      "canonical_unresolved_identical": true,
+      "rollup": [
+        {
+          "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+          "count": 52,
+          "member_ids": [
+            "U0014",
+            "U0015",
+            "U0016",
+            "U0017",
+            "U0018",
+            "U0019",
+            "U0020",
+            "U0023",
+            "U0024",
+            "U0025",
+            "U0026",
+            "U0027",
+            "U0028",
+            "U0029",
+            "U0030",
+            "U0031",
+            "U0032",
+            "U0033",
+            "U0034",
+            "U0035",
+            "U0036",
+            "U0037",
+            "U0038",
+            "U0039",
+            "U0040",
+            "U0041",
+            "U0042",
+            "U0043",
+            "U0044",
+            "U0045",
+            "U0046",
+            "U0047",
+            "U0048",
+            "U0049",
+            "U0050",
+            "U0051",
+            "U0052",
+            "U0053",
+            "U0054",
+            "U0055",
+            "U0056",
+            "U0057",
+            "U0058",
+            "U0059",
+            "U0060",
+            "U0061",
+            "U0062",
+            "U0063",
+            "U0064",
+            "U0065",
+            "U0066",
+            "U0067"
+          ]
+        },
+        {
+          "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+          "count": 10,
+          "member_ids": [
+            "U0006",
+            "U0007",
+            "U0008",
+            "U0009",
+            "U0010",
+            "U0011",
+            "U0012",
+            "U0013",
+            "U0021",
+            "U0022"
+          ]
+        },
+        {
+          "cannot_establish": "An exact snapshot/hash of the uncommitted analysis code used by the run is unavailable. Current code is corroborating evidence only.",
+          "count": 3,
+          "member_ids": [
+            "U0001",
+            "U0002",
+            "U0003"
+          ]
+        },
+        {
+          "cannot_establish": "The historical replacement bootstrap confidence level is not explicitly recorded in saved methods/metadata.",
+          "count": 1,
+          "member_ids": [
+            "U0005"
+          ]
+        },
+        {
+          "cannot_establish": "The historical uncommitted code snapshot is unavailable; the misleading exported names are retained and are not described as model-versus-human results in that table.",
+          "count": 1,
+          "member_ids": [
+            "U0068"
+          ]
+        },
+        {
+          "cannot_establish": "The reason distribution proportion intervals were not exported is not documented; all source values are retained with unavailable interval status.",
+          "count": 1,
+          "member_ids": [
+            "U0069"
+          ]
+        },
+        {
+          "cannot_establish": "The saved Stage A metadata/methods do not state the bootstrap confidence level, and current code has no verified historical snapshot. Bounds are retained without a confidence-level claim.",
+          "count": 1,
+          "member_ids": [
+            "U0004"
+          ]
+        }
+      ]
+    }
+  },
+  "reference_unresolved_count": 69,
+  "reference_unresolved_entries": [
+    {
+      "id": "U0001",
+      "section": 0,
+      "result_key": "a",
+      "field": "historical_code_snapshot",
+      "known": "The source run records its HEAD and uncommitted code; saved methods describe the run.",
+      "cannot_establish": "An exact snapshot/hash of the uncommitted analysis code used by the run is unavailable. Current code is corroborating evidence only.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/run_metadata.json; analysis/outputs_validation_scratch_20260824/methods_stage_a.md"
+    },
+    {
+      "id": "U0002",
+      "section": 0,
+      "result_key": "b",
+      "field": "historical_code_snapshot",
+      "known": "The source run records its HEAD and uncommitted code; saved methods describe the run.",
+      "cannot_establish": "An exact snapshot/hash of the uncommitted analysis code used by the run is unavailable. Current code is corroborating evidence only.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/run_metadata.json; analysis/outputs_validation_scratch_stage_b_20260825/methods_stage_b.md"
+    },
+    {
+      "id": "U0003",
+      "section": 0,
+      "result_key": "h",
+      "field": "historical_code_snapshot",
+      "known": "The source run records its HEAD and uncommitted code; saved methods describe the run.",
+      "cannot_establish": "An exact snapshot/hash of the uncommitted analysis code used by the run is unavailable. Current code is corroborating evidence only.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/run_metadata.json; analysis/outputs_validation_scratch_hard_case_strata_20260825/methods_hard_case_strata.md"
+    },
+    {
+      "id": "U0004",
+      "section": 0,
+      "result_key": "Stage A intervals",
+      "field": "confidence_level",
+      "known": "Saved methods identify percentile intervals, Type 7 and replicate policy; current code uses 0.025/0.975.",
+      "cannot_establish": "The saved Stage A metadata/methods do not state the bootstrap confidence level, and current code has no verified historical snapshot. Bounds are retained without a confidence-level claim.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/methods_stage_a.md; analysis/outputs_validation_scratch_20260824/run_metadata.json"
+    },
+    {
+      "id": "U0005",
+      "section": 11,
+      "result_key": "replacement intervals",
+      "field": "confidence_level",
+      "known": "Strata methods document reuse of Stage A bootstrap and Type 7.",
+      "cannot_establish": "The historical replacement bootstrap confidence level is not explicitly recorded in saved methods/metadata.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/methods_hard_case_strata.md"
+    },
+    {
+      "id": "U0006",
+      "section": 2,
+      "result_key": "baseline_exposure_sensitivity/Demographic disparities / equity",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0007",
+      "section": 2,
+      "result_key": "baseline_exposure_sensitivity/COVID-19 & Pandemic",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0008",
+      "section": 2,
+      "result_key": "baseline_structural_sensitivity/Demographic disparities / equity",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0009",
+      "section": 2,
+      "result_key": "baseline_structural_sensitivity/COVID-19 & Pandemic",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0010",
+      "section": 2,
+      "result_key": "baseline_broad_usable/Demographic disparities / equity",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0011",
+      "section": 2,
+      "result_key": "baseline_broad_usable/COVID-19 & Pandemic",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0012",
+      "section": 2,
+      "result_key": "baseline_strict_sufficient/Demographic disparities / equity",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0013",
+      "section": 2,
+      "result_key": "baseline_strict_sufficient/COVID-19 & Pandemic",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0014",
+      "section": 2,
+      "result_key": "label_support/baseline",
+      "field": "baseline_human_majority_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0015",
+      "section": 2,
+      "result_key": "label_support/baseline",
+      "field": "baseline_model_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0016",
+      "section": 2,
+      "result_key": "tag_diagnostics/baseline",
+      "field": "human_majority_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/tag_diagnostics.csv"
+    },
+    {
+      "id": "U0017",
+      "section": 2,
+      "result_key": "tag_diagnostics/baseline",
+      "field": "model_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/tag_diagnostics.csv"
+    },
+    {
+      "id": "U0018",
+      "section": 2,
+      "result_key": "tag_diagnostics/hard_case",
+      "field": "human_majority_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/tag_diagnostics.csv"
+    },
+    {
+      "id": "U0019",
+      "section": 2,
+      "result_key": "tag_diagnostics/hard_case",
+      "field": "model_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/tag_diagnostics.csv"
+    },
+    {
+      "id": "U0020",
+      "section": 1,
+      "result_key": "qa_summary/overall",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/qa_summary.csv"
+    },
+    {
+      "id": "U0021",
+      "section": 2,
+      "result_key": "overall/Demographic disparities / equity",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0022",
+      "section": 2,
+      "result_key": "overall/COVID-19 & Pandemic",
+      "field": "population_specific_support",
+      "known": "Replacement quantities and complete-case record totals are exported; the support band is defined on baseline.",
+      "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv; analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0023",
+      "section": 1,
+      "result_key": "qa_summary/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/qa_summary.csv"
+    },
+    {
+      "id": "U0024",
+      "section": 1,
+      "result_key": "qa_summary/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/qa_summary.csv"
+    },
+    {
+      "id": "U0025",
+      "section": 5,
+      "result_key": "label_support/baseline",
+      "field": "baseline_human_majority_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0026",
+      "section": 5,
+      "result_key": "label_support/baseline",
+      "field": "baseline_model_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv"
+    },
+    {
+      "id": "U0027",
+      "section": 5,
+      "result_key": "per_label_contingencies/baseline",
+      "field": "human_majority_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/per_label_contingencies.csv"
+    },
+    {
+      "id": "U0028",
+      "section": 5,
+      "result_key": "per_label_contingencies/baseline",
+      "field": "model_prevalence.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/per_label_contingencies.csv"
+    },
+    {
+      "id": "U0029",
+      "section": 7,
+      "result_key": "exact_set_jaccard_summary/baseline",
+      "field": "median_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/exact_set_jaccard_summary.csv"
+    },
+    {
+      "id": "U0030",
+      "section": 7,
+      "result_key": "exact_set_jaccard_summary/baseline",
+      "field": "q1_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/exact_set_jaccard_summary.csv"
+    },
+    {
+      "id": "U0031",
+      "section": 7,
+      "result_key": "exact_set_jaccard_summary/baseline",
+      "field": "q3_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/exact_set_jaccard_summary.csv"
+    },
+    {
+      "id": "U0032",
+      "section": 7,
+      "result_key": "exact_set_jaccard_summary/hard_case",
+      "field": "median_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/exact_set_jaccard_summary.csv"
+    },
+    {
+      "id": "U0033",
+      "section": 7,
+      "result_key": "exact_set_jaccard_summary/hard_case",
+      "field": "q1_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/exact_set_jaccard_summary.csv"
+    },
+    {
+      "id": "U0034",
+      "section": 7,
+      "result_key": "exact_set_jaccard_summary/hard_case",
+      "field": "q3_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_stage_b_20260825/exact_set_jaccard_summary.csv"
+    },
+    {
+      "id": "U0035",
+      "section": 8,
+      "result_key": "sufficiency_response_distribution/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_response_distribution.csv"
+    },
+    {
+      "id": "U0036",
+      "section": 8,
+      "result_key": "sufficiency_response_distribution/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_response_distribution.csv"
+    },
+    {
+      "id": "U0037",
+      "section": 8,
+      "result_key": "sufficiency_record_distribution/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv"
+    },
+    {
+      "id": "U0038",
+      "section": 8,
+      "result_key": "sufficiency_record_distribution/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv"
+    },
+    {
+      "id": "U0039",
+      "section": 9,
+      "result_key": "taxonomy_fit_response_distribution/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_response_distribution.csv"
+    },
+    {
+      "id": "U0040",
+      "section": 9,
+      "result_key": "taxonomy_fit_response_distribution/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_response_distribution.csv"
+    },
+    {
+      "id": "U0041",
+      "section": 9,
+      "result_key": "taxonomy_fit_record_distribution/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_record_distribution.csv"
+    },
+    {
+      "id": "U0042",
+      "section": 9,
+      "result_key": "taxonomy_fit_record_distribution/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_record_distribution.csv"
+    },
+    {
+      "id": "U0043",
+      "section": 9,
+      "result_key": "taxonomy_issue_summary/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_issue_summary.csv"
+    },
+    {
+      "id": "U0044",
+      "section": 9,
+      "result_key": "taxonomy_issue_summary/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_issue_summary.csv"
+    },
+    {
+      "id": "U0045",
+      "section": 10,
+      "result_key": "unclear_register_summary/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/unclear_register_summary.csv"
+    },
+    {
+      "id": "U0046",
+      "section": 10,
+      "result_key": "unclear_register_summary/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/unclear_register_summary.csv"
+    },
+    {
+      "id": "U0047",
+      "section": 10,
+      "result_key": "taxonomy_coherence_summary/baseline",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_coherence_summary.csv"
+    },
+    {
+      "id": "U0048",
+      "section": 10,
+      "result_key": "taxonomy_coherence_summary/hard_case",
+      "field": "proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_coherence_summary.csv"
+    },
+    {
+      "id": "U0049",
+      "section": 11,
+      "result_key": "hard_case_stratum_replacement/hard_case",
+      "field": "human_alpha.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
+    },
+    {
+      "id": "U0050",
+      "section": 11,
+      "result_key": "hard_case_stratum_replacement/hard_case",
+      "field": "replace_a_alpha.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
+    },
+    {
+      "id": "U0051",
+      "section": 11,
+      "result_key": "hard_case_stratum_replacement/hard_case",
+      "field": "replace_b_alpha.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
+    },
+    {
+      "id": "U0052",
+      "section": 11,
+      "result_key": "hard_case_stratum_replacement/hard_case",
+      "field": "replace_c_alpha.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
+    },
+    {
+      "id": "U0053",
+      "section": 11,
+      "result_key": "hard_case_stratum_replacement/hard_case",
+      "field": "delta_a.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
+    },
+    {
+      "id": "U0054",
+      "section": 11,
+      "result_key": "hard_case_stratum_replacement/hard_case",
+      "field": "delta_b.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
+    },
+    {
+      "id": "U0055",
+      "section": 11,
+      "result_key": "hard_case_stratum_replacement/hard_case",
+      "field": "delta_c.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
+    },
+    {
+      "id": "U0056",
+      "section": 11,
+      "result_key": "hard_case_stratum_human_pair_agreement/hard_case",
+      "field": "exact_match_proportion.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv"
+    },
+    {
+      "id": "U0057",
+      "section": 11,
+      "result_key": "hard_case_stratum_human_pair_agreement/hard_case",
+      "field": "mean_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv"
+    },
+    {
+      "id": "U0058",
+      "section": 11,
+      "result_key": "hard_case_stratum_human_pair_agreement/hard_case",
+      "field": "median_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv"
+    },
+    {
+      "id": "U0059",
+      "section": 11,
+      "result_key": "hard_case_stratum_human_pair_agreement/hard_case",
+      "field": "q1_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv"
+    },
+    {
+      "id": "U0060",
+      "section": 11,
+      "result_key": "hard_case_stratum_human_pair_agreement/hard_case",
+      "field": "q3_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv"
+    },
+    {
+      "id": "U0061",
+      "section": 11,
+      "result_key": "hard_case_stratum_human_pair_agreement/hard_case",
+      "field": "mean_model_coder_exact_set.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv"
+    },
+    {
+      "id": "U0062",
+      "section": 11,
+      "result_key": "hard_case_stratum_human_pair_agreement/hard_case",
+      "field": "mean_model_coder_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv"
+    },
+    {
+      "id": "U0063",
+      "section": 11,
+      "result_key": "hard_case_stratum_exact_set_jaccard/hard_case",
+      "field": "median_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_exact_set_jaccard.csv"
+    },
+    {
+      "id": "U0064",
+      "section": 11,
+      "result_key": "hard_case_stratum_exact_set_jaccard/hard_case",
+      "field": "q1_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_exact_set_jaccard.csv"
+    },
+    {
+      "id": "U0065",
+      "section": 11,
+      "result_key": "hard_case_stratum_exact_set_jaccard/hard_case",
+      "field": "q3_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_exact_set_jaccard.csv"
+    },
+    {
+      "id": "U0066",
+      "section": 11,
+      "result_key": "hard_case_stratum_exact_set_jaccard/hard_case",
+      "field": "mean_model_coder_exact_set.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_exact_set_jaccard.csv"
+    },
+    {
+      "id": "U0067",
+      "section": 11,
+      "result_key": "hard_case_stratum_exact_set_jaccard/hard_case",
+      "field": "mean_model_coder_jaccard.interval",
+      "known": "The existing summary exports this quantity without interval columns.",
+      "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_exact_set_jaccard.csv"
+    },
+    {
+      "id": "U0068",
+      "section": 11,
+      "result_key": "human-pair summaries",
+      "field": "mean_model_coder_* column naming",
+      "known": "The human-pair CSV exports mean_model_coder_exact_set and mean_model_coder_jaccard. Current code assigns averages of the selected human pairs to these column names.",
+      "cannot_establish": "The historical uncommitted code snapshot is unavailable; the misleading exported names are retained and are not described as model-versus-human results in that table.",
+      "source_location": "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv; analysis/scratch_coder_hard_case_strata/analysis.py:_set_rows"
+    },
+    {
+      "id": "U0069",
+      "section": 8,
+      "result_key": "baseline proportions",
+      "field": "protocol/output interval scope",
+      "known": "Protocol §8.9 and saved methods specify Wilson intervals for baseline proportions. Only subset proportions export Wilson endpoints among these Stage A distribution tables.",
+      "cannot_establish": "The reason distribution proportion intervals were not exported is not documented; all source values are retained with unavailable interval status.",
+      "source_location": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx §8.9; Stage A distribution CSV schemas"
+    }
+  ],
+  "unresolved_remedy_mapping": [
+    {
+      "unresolved_id": "U0020",
+      "canonical_entry": {
+        "id": "U0020",
+        "section": 1,
+        "result_key": "qa_summary/overall",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/qa_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0001",
+        "WSA0002",
+        "WSA0003",
+        "WSA0004",
+        "WSA0005",
+        "WSA0006",
+        "WSA0007",
+        "WSA0008",
+        "WSA0009",
+        "WSA0010",
+        "WSA0011",
+        "WSA0012",
+        "WSA0013",
+        "WSA0014",
+        "WSA0015",
+        "WSA0016"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 16
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0023",
+      "canonical_entry": {
+        "id": "U0023",
+        "section": 1,
+        "result_key": "qa_summary/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/qa_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0017",
+        "WSA0018",
+        "WSA0019",
+        "WSA0020",
+        "WSA0021",
+        "WSA0022",
+        "WSA0023",
+        "WSA0024",
+        "WSA0025",
+        "WSA0026",
+        "WSA0027",
+        "WSA0028",
+        "WSA0029",
+        "WSA0030",
+        "WSA0031"
+      ],
+      "decision_counts": {
+        "no_inferential_interval_proposed": 2,
+        "methodological_decision_required": 5,
+        "candidate_for_later_authorised_wilson": 8
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0024",
+      "canonical_entry": {
+        "id": "U0024",
+        "section": 1,
+        "result_key": "qa_summary/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/qa_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0032",
+        "WSA0033",
+        "WSA0034",
+        "WSA0035",
+        "WSA0036",
+        "WSA0037",
+        "WSA0038",
+        "WSA0039",
+        "WSA0040",
+        "WSA0041",
+        "WSA0042",
+        "WSA0043",
+        "WSA0044",
+        "WSA0045",
+        "WSA0046",
+        "WSA0047",
+        "WSA0048",
+        "WSA0049"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 18
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0035",
+      "canonical_entry": {
+        "id": "U0035",
+        "section": 8,
+        "result_key": "sufficiency_response_distribution/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_response_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0050",
+        "WSA0051",
+        "WSA0052",
+        "WSA0053",
+        "WSA0054",
+        "WSA0055",
+        "WSA0056",
+        "WSA0057",
+        "WSA0058",
+        "WSA0059",
+        "WSA0060",
+        "WSA0061"
+      ],
+      "decision_counts": {
+        "methodological_decision_required": 3,
+        "candidate_for_later_authorised_wilson": 9
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0036",
+      "canonical_entry": {
+        "id": "U0036",
+        "section": 8,
+        "result_key": "sufficiency_response_distribution/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_response_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0062",
+        "WSA0063",
+        "WSA0064",
+        "WSA0065",
+        "WSA0066",
+        "WSA0067",
+        "WSA0068",
+        "WSA0069",
+        "WSA0070",
+        "WSA0071",
+        "WSA0072",
+        "WSA0073"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 12
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0037",
+      "canonical_entry": {
+        "id": "U0037",
+        "section": 8,
+        "result_key": "sufficiency_record_distribution/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0074",
+        "WSA0075",
+        "WSA0076",
+        "WSA0077"
+      ],
+      "decision_counts": {
+        "already_exported": 1,
+        "candidate_for_later_authorised_wilson": 3
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0038",
+      "canonical_entry": {
+        "id": "U0038",
+        "section": 8,
+        "result_key": "sufficiency_record_distribution/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0078",
+        "WSA0079",
+        "WSA0080",
+        "WSA0081"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 4
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0039",
+      "canonical_entry": {
+        "id": "U0039",
+        "section": 9,
+        "result_key": "taxonomy_fit_response_distribution/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_response_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0086",
+        "WSA0087",
+        "WSA0088",
+        "WSA0089",
+        "WSA0090",
+        "WSA0091",
+        "WSA0092",
+        "WSA0093",
+        "WSA0094",
+        "WSA0095",
+        "WSA0096",
+        "WSA0097",
+        "WSA0098",
+        "WSA0099",
+        "WSA0100",
+        "WSA0101"
+      ],
+      "decision_counts": {
+        "methodological_decision_required": 4,
+        "candidate_for_later_authorised_wilson": 12
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0040",
+      "canonical_entry": {
+        "id": "U0040",
+        "section": 9,
+        "result_key": "taxonomy_fit_response_distribution/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_response_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0102",
+        "WSA0103",
+        "WSA0104",
+        "WSA0105",
+        "WSA0106",
+        "WSA0107",
+        "WSA0108",
+        "WSA0109",
+        "WSA0110",
+        "WSA0111",
+        "WSA0112",
+        "WSA0113",
+        "WSA0114",
+        "WSA0115",
+        "WSA0116",
+        "WSA0117"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 16
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0041",
+      "canonical_entry": {
+        "id": "U0041",
+        "section": 9,
+        "result_key": "taxonomy_fit_record_distribution/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_record_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0118",
+        "WSA0119",
+        "WSA0120",
+        "WSA0121",
+        "WSA0122"
+      ],
+      "decision_counts": {
+        "candidate_for_later_authorised_wilson": 5
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0042",
+      "canonical_entry": {
+        "id": "U0042",
+        "section": 9,
+        "result_key": "taxonomy_fit_record_distribution/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_fit_record_distribution.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0123",
+        "WSA0124",
+        "WSA0125",
+        "WSA0126",
+        "WSA0127"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 5
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0043",
+      "canonical_entry": {
+        "id": "U0043",
+        "section": 9,
+        "result_key": "taxonomy_issue_summary/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_issue_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0128",
+        "WSA0129",
+        "WSA0130"
+      ],
+      "decision_counts": {
+        "methodological_decision_required": 3
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0044",
+      "canonical_entry": {
+        "id": "U0044",
+        "section": 9,
+        "result_key": "taxonomy_issue_summary/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_issue_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0131",
+        "WSA0132",
+        "WSA0133"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 3
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0045",
+      "canonical_entry": {
+        "id": "U0045",
+        "section": 10,
+        "result_key": "unclear_register_summary/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/unclear_register_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0134",
+        "WSA0135",
+        "WSA0136",
+        "WSA0137",
+        "WSA0138",
+        "WSA0139",
+        "WSA0140",
+        "WSA0141",
+        "WSA0142",
+        "WSA0143",
+        "WSA0144",
+        "WSA0145",
+        "WSA0146",
+        "WSA0147",
+        "WSA0148",
+        "WSA0149",
+        "WSA0150",
+        "WSA0151",
+        "WSA0152",
+        "WSA0153",
+        "WSA0154",
+        "WSA0155"
+      ],
+      "decision_counts": {
+        "methodological_decision_required": 14,
+        "candidate_for_later_authorised_wilson": 8
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0046",
+      "canonical_entry": {
+        "id": "U0046",
+        "section": 10,
+        "result_key": "unclear_register_summary/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/unclear_register_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0156",
+        "WSA0157",
+        "WSA0158",
+        "WSA0159",
+        "WSA0160",
+        "WSA0161",
+        "WSA0162",
+        "WSA0163",
+        "WSA0164",
+        "WSA0165",
+        "WSA0166",
+        "WSA0167",
+        "WSA0168",
+        "WSA0169",
+        "WSA0170",
+        "WSA0171",
+        "WSA0172",
+        "WSA0173",
+        "WSA0174",
+        "WSA0175",
+        "WSA0176",
+        "WSA0177"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 22
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0047",
+      "canonical_entry": {
+        "id": "U0047",
+        "section": 10,
+        "result_key": "taxonomy_coherence_summary/baseline",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_coherence_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0178",
+        "WSA0179",
+        "WSA0180",
+        "WSA0181",
+        "WSA0182",
+        "WSA0183",
+        "WSA0184",
+        "WSA0185"
+      ],
+      "decision_counts": {
+        "methodological_decision_required": 8
+      },
+      "later_supplement_could_address": "Missing interval presentation for rows marked candidate_for_later_authorised_wilson; an already-exported equivalent can be linked without recomputation.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0048",
+      "canonical_entry": {
+        "id": "U0048",
+        "section": 10,
+        "result_key": "taxonomy_coherence_summary/hard_case",
+        "field": "proportion.interval",
+        "known": "The existing summary exports this quantity without interval columns.",
+        "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+        "source_location": "analysis/outputs_validation_scratch_20260824/taxonomy_coherence_summary.csv"
+      },
+      "affected_candidate_ids": [
+        "WSA0186",
+        "WSA0187",
+        "WSA0188",
+        "WSA0189",
+        "WSA0190",
+        "WSA0191",
+        "WSA0192",
+        "WSA0193"
+      ],
+      "decision_counts": {
+        "excluded_nonbaseline": 8
+      },
+      "later_supplement_could_address": "No rows: the proposed supplement is baseline-only.",
+      "would_remain": "Original omission reason/source status remains unavailable; pooled/ambiguous, structural and nonbaseline rows remain outside calculation unless separately resolved. The item is not automatically closed."
+    },
+    {
+      "unresolved_id": "U0069",
+      "canonical_entry": {
+        "id": "U0069",
+        "section": 8,
+        "result_key": "baseline proportions",
+        "field": "protocol/output interval scope",
+        "known": "Protocol §8.9 and saved methods specify Wilson intervals for baseline proportions. Only subset proportions export Wilson endpoints among these Stage A distribution tables.",
+        "cannot_establish": "The reason distribution proportion intervals were not exported is not documented; all source values are retained with unavailable interval status.",
+        "source_location": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx §8.9; Stage A distribution CSV schemas"
+      },
+      "affected_candidate_ids": [
+        "WSA0050",
+        "WSA0051",
+        "WSA0052",
+        "WSA0053",
+        "WSA0054",
+        "WSA0055",
+        "WSA0056",
+        "WSA0057",
+        "WSA0058",
+        "WSA0059",
+        "WSA0060",
+        "WSA0061",
+        "WSA0074",
+        "WSA0075",
+        "WSA0076",
+        "WSA0077",
+        "WSA0082",
+        "WSA0083",
+        "WSA0086",
+        "WSA0087",
+        "WSA0088",
+        "WSA0089",
+        "WSA0090",
+        "WSA0091",
+        "WSA0092",
+        "WSA0093",
+        "WSA0094",
+        "WSA0095",
+        "WSA0096",
+        "WSA0097",
+        "WSA0098",
+        "WSA0099",
+        "WSA0100",
+        "WSA0101",
+        "WSA0118",
+        "WSA0119",
+        "WSA0120",
+        "WSA0121",
+        "WSA0122",
+        "WSA0128",
+        "WSA0129",
+        "WSA0130",
+        "WSA0134",
+        "WSA0135",
+        "WSA0136",
+        "WSA0137",
+        "WSA0138",
+        "WSA0139",
+        "WSA0140",
+        "WSA0141",
+        "WSA0142",
+        "WSA0143",
+        "WSA0144",
+        "WSA0145",
+        "WSA0146",
+        "WSA0147",
+        "WSA0148",
+        "WSA0149",
+        "WSA0150",
+        "WSA0151",
+        "WSA0152",
+        "WSA0153",
+        "WSA0154",
+        "WSA0155",
+        "WSA0178",
+        "WSA0179",
+        "WSA0180",
+        "WSA0181",
+        "WSA0182",
+        "WSA0183",
+        "WSA0184",
+        "WSA0185"
+      ],
+      "decision_counts": {
+        "methodological_decision_required": 32,
+        "candidate_for_later_authorised_wilson": 37,
+        "already_exported": 3
+      },
+      "later_supplement_could_address": "Supply new, explicitly supplemental intervals for eligible rows after the methodological choices and a separate calculation authorisation; link the existing strict-sufficiency equivalent.",
+      "would_remain": "The undocumented historical reason the original distribution intervals were omitted would remain unavailable. Pooled-response decisions and any excluded rows are not remedied by eligible-row intervals, so no future unresolved count is predicted."
+    }
+  ],
+  "assessment_totals": {
+    "inventoried": 193,
+    "decisions": {
+      "already_exported": 3,
+      "candidate_for_later_authorised_wilson": 45,
+      "excluded_nonbaseline": 106,
+      "methodological_decision_required": 37,
+      "no_inferential_interval_proposed": 2
+    },
+    "observational_units": {
+      "individual_coder_binary": 42,
+      "pooled_coder_responses": 79,
+      "record_binary": 65,
+      "structural_ratio": 7
+    }
+  },
+  "immutable_inputs_read": {
+    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx": {
+      "sha256_before": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "bytes": 413032,
+      "sha256_after": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/methods_stage_a.md": {
+      "sha256_before": "a78393b73ad39e3bde4dd949cce99575d257938b9cfd8c72d43dfa25df6f5f67",
+      "bytes": 5085,
+      "sha256_after": "a78393b73ad39e3bde4dd949cce99575d257938b9cfd8c72d43dfa25df6f5f67",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/qa_summary.csv": {
+      "sha256_before": "66efc1009971a1406f8c7a3cb1947981e45cee7f4d3de1d108d1b93b738abbc3",
+      "bytes": 3412,
+      "sha256_after": "66efc1009971a1406f8c7a3cb1947981e45cee7f4d3de1d108d1b93b738abbc3",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_response_distribution.csv": {
+      "sha256_before": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "bytes": 1220,
+      "sha256_after": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv": {
+      "sha256_before": "180a48013f5f01ea6a03bf6bdc906b24e0f7ca9972c3e3626f560eb4f0331395",
+      "bytes": 422,
+      "sha256_after": "180a48013f5f01ea6a03bf6bdc906b24e0f7ca9972c3e3626f560eb4f0331395",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv": {
+      "sha256_before": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "bytes": 463,
+      "sha256_after": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_fit_response_distribution.csv": {
+      "sha256_before": "57f9808c16727e8bee92137133b22f5a176f34db0dc28cf5ca9fbb5d44cdf0c3",
+      "bytes": 1661,
+      "sha256_after": "57f9808c16727e8bee92137133b22f5a176f34db0dc28cf5ca9fbb5d44cdf0c3",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_fit_record_distribution.csv": {
+      "sha256_before": "e58d68d46e8a69b028b2d194b3f1fc63e41c7795e8359353f0c694bae376a845",
+      "bytes": 487,
+      "sha256_after": "e58d68d46e8a69b028b2d194b3f1fc63e41c7795e8359353f0c694bae376a845",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_issue_summary.csv": {
+      "sha256_before": "42300a89f7c2f554a95a7c23b58b83ec16a8b1c7fae421876ed86fa618eb76b0",
+      "bytes": 717,
+      "sha256_after": "42300a89f7c2f554a95a7c23b58b83ec16a8b1c7fae421876ed86fa618eb76b0",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/unclear_register_summary.csv": {
+      "sha256_before": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "bytes": 4289,
+      "sha256_after": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_coherence_summary.csv": {
+      "sha256_before": "094c296db5e0b3ab423b22285fef167094508487dec67456f0d40426023ef23a",
+      "bytes": 1214,
+      "sha256_after": "094c296db5e0b3ab423b22285fef167094508487dec67456f0d40426023ef23a",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md": {
+      "sha256_before": "3f7c57f4952c5029e2e482849ba5523096a680f95e1ea9a790e2ce9952989027",
+      "bytes": 473307,
+      "sha256_after": "3f7c57f4952c5029e2e482849ba5523096a680f95e1ea9a790e2ce9952989027",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json": {
+      "sha256_before": "2261092245972aa4bb8619ab1be2eab93d1290e354bfa107b279a1cef9ed4616",
+      "bytes": 13149001,
+      "sha256_after": "2261092245972aa4bb8619ab1be2eab93d1290e354bfa107b279a1cef9ed4616",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md": {
+      "sha256_before": "05412c139480388bc2975772a6e49602c9adf9984366516572845bca1f11f3f6",
+      "bytes": 473307,
+      "sha256_after": "05412c139480388bc2975772a6e49602c9adf9984366516572845bca1f11f3f6",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json": {
+      "sha256_before": "a4abd702e284fa8bda20a993bfbdc762db9c83722684640bde864745e163e36c",
+      "bytes": 13148517,
+      "sha256_after": "a4abd702e284fa8bda20a993bfbdc762db9c83722684640bde864745e163e36c",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_consolidated_20260907T131344836676Z/consolidated_results.md": {
+      "sha256_before": "5ddb496fe52086bd0cd38ad323b46626a80641001ff106b5475901ad193d1529",
+      "bytes": 474583,
+      "sha256_after": "5ddb496fe52086bd0cd38ad323b46626a80641001ff106b5475901ad193d1529",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json": {
+      "sha256_before": "826b22e19f044f7177d85c70247f406f57a3f6e9e8731e3dbe3da589a0c59cab",
+      "bytes": 13151689,
+      "sha256_after": "826b22e19f044f7177d85c70247f406f57a3f6e9e8731e3dbe3da589a0c59cab",
+      "unchanged": true
+    },
+    "preregistration/README.md": {
+      "sha256_before": "f1871c30c7fc5807675bc581985b6524c51994bae5aed1ae41c13d0106e59961",
+      "bytes": 16506,
+      "sha256_after": "f1871c30c7fc5807675bc581985b6524c51994bae5aed1ae41c13d0106e59961",
+      "unchanged": true
+    },
+    "preregistration/package/09_logs_and_templates/README.md": {
+      "sha256_before": "215df9b4f9525f5c0e6090984b7313dc7c8cda263b17e7957fdcb35481d56505",
+      "bytes": 3407,
+      "sha256_after": "215df9b4f9525f5c0e6090984b7313dc7c8cda263b17e7957fdcb35481d56505",
+      "unchanged": true
+    }
+  },
+  "task_a_overlapping_sources": {
+    "analysis/outputs_validation_scratch_20260824/qa_summary.csv": {
+      "task_a_reference_sha256": "66efc1009971a1406f8c7a3cb1947981e45cee7f4d3de1d108d1b93b738abbc3",
+      "current_sha256": "66efc1009971a1406f8c7a3cb1947981e45cee7f4d3de1d108d1b93b738abbc3",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/replacement_delta_results.csv": {
+      "task_a_reference_sha256": "135593dc3e05ed541c141da38a915f250f90728c05457fc7bd104ac129c517ac",
+      "current_sha256": "135593dc3e05ed541c141da38a915f250f90728c05457fc7bd104ac129c517ac",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv": {
+      "task_a_reference_sha256": "d9a3201b4965e678c29e375775c410c2b770d65c1421be85835f00bcd5fe1f82",
+      "current_sha256": "d9a3201b4965e678c29e375775c410c2b770d65c1421be85835f00bcd5fe1f82",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/replacement_trigger_summary.csv": {
+      "task_a_reference_sha256": "f89694176a0dc3cd5db4ceb90c73e3238b709de9712d6d7cf8abaa0219ff4dd3",
+      "current_sha256": "f89694176a0dc3cd5db4ceb90c73e3238b709de9712d6d7cf8abaa0219ff4dd3",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv": {
+      "task_a_reference_sha256": "180a48013f5f01ea6a03bf6bdc906b24e0f7ca9972c3e3626f560eb4f0331395",
+      "current_sha256": "180a48013f5f01ea6a03bf6bdc906b24e0f7ca9972c3e3626f560eb4f0331395",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_response_distribution.csv": {
+      "task_a_reference_sha256": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "current_sha256": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv": {
+      "task_a_reference_sha256": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "current_sha256": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_coherence_summary.csv": {
+      "task_a_reference_sha256": "094c296db5e0b3ab423b22285fef167094508487dec67456f0d40426023ef23a",
+      "current_sha256": "094c296db5e0b3ab423b22285fef167094508487dec67456f0d40426023ef23a",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_fit_record_distribution.csv": {
+      "task_a_reference_sha256": "e58d68d46e8a69b028b2d194b3f1fc63e41c7795e8359353f0c694bae376a845",
+      "current_sha256": "e58d68d46e8a69b028b2d194b3f1fc63e41c7795e8359353f0c694bae376a845",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_fit_response_distribution.csv": {
+      "task_a_reference_sha256": "57f9808c16727e8bee92137133b22f5a176f34db0dc28cf5ca9fbb5d44cdf0c3",
+      "current_sha256": "57f9808c16727e8bee92137133b22f5a176f34db0dc28cf5ca9fbb5d44cdf0c3",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_issue_summary.csv": {
+      "task_a_reference_sha256": "42300a89f7c2f554a95a7c23b58b83ec16a8b1c7fae421876ed86fa618eb76b0",
+      "current_sha256": "42300a89f7c2f554a95a7c23b58b83ec16a8b1c7fae421876ed86fa618eb76b0",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/unclear_register_summary.csv": {
+      "task_a_reference_sha256": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "current_sha256": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/exact_set_jaccard_summary.csv": {
+      "task_a_reference_sha256": "b4a76965359f503480c8e166c7787bee17ba31295d84d47691899a22228e709d",
+      "current_sha256": "b4a76965359f503480c8e166c7787bee17ba31295d84d47691899a22228e709d",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/label_support.csv": {
+      "task_a_reference_sha256": "6d19cc6a5da51282052757a5170154a76dcf90c49f73efab60f79a97b623ab41",
+      "current_sha256": "6d19cc6a5da51282052757a5170154a76dcf90c49f73efab60f79a97b623ab41",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/macro_performance.csv": {
+      "task_a_reference_sha256": "3b0c6bce64fffc1b1b3285bb66d9c5432e9e935ed4348d9ec80abf9d29e6c09c",
+      "current_sha256": "3b0c6bce64fffc1b1b3285bb66d9c5432e9e935ed4348d9ec80abf9d29e6c09c",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/per_label_contingencies.csv": {
+      "task_a_reference_sha256": "e18fcabc373055c4c86106d29e16760aa6b53da2b9dc0a580ae938a778aa550f",
+      "current_sha256": "e18fcabc373055c4c86106d29e16760aa6b53da2b9dc0a580ae938a778aa550f",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/per_label_model_performance.csv": {
+      "task_a_reference_sha256": "b224c1d140c0620189c2d9f920fc4d4315e4af8084205b692b0c92eca0974787",
+      "current_sha256": "b224c1d140c0620189c2d9f920fc4d4315e4af8084205b692b0c92eca0974787",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/per_label_pairwise_kappa.csv": {
+      "task_a_reference_sha256": "e1aa8d24877f76a12830d9e5b72dafbfdabf3ce3f336de42feee8341de1c7b7f",
+      "current_sha256": "e1aa8d24877f76a12830d9e5b72dafbfdabf3ce3f336de42feee8341de1c7b7f",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/tag_diagnostics.csv": {
+      "task_a_reference_sha256": "fd8471dfdc2d853d830def91e70be847202264820e8022ef3a952bf0738953d9",
+      "current_sha256": "fd8471dfdc2d853d830def91e70be847202264820e8022ef3a952bf0738953d9",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_exact_set_jaccard.csv": {
+      "task_a_reference_sha256": "45be84850e84f69eb52c5f3926fa7144604e3ef3b5faa0be162e4a86d9e2a1b0",
+      "current_sha256": "45be84850e84f69eb52c5f3926fa7144604e3ef3b5faa0be162e4a86d9e2a1b0",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_human_pair_agreement.csv": {
+      "task_a_reference_sha256": "556afd5ea53c22eeb1b35ef807143db5efaf3ebaa9b53b285e4f9b51b70593d3",
+      "current_sha256": "556afd5ea53c22eeb1b35ef807143db5efaf3ebaa9b53b285e4f9b51b70593d3",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv": {
+      "task_a_reference_sha256": "36f343dbae8eb69eae55139f1ad9a16f1281359417567288026e6d2da91c2c4d",
+      "current_sha256": "36f343dbae8eb69eae55139f1ad9a16f1281359417567288026e6d2da91c2c4d",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/run_metadata.json": {
+      "task_a_reference_sha256": "a685d524fcb90195d7e4badf17a56aa8feb54e28b848d39df33ef1f8cf1debf4",
+      "current_sha256": "a685d524fcb90195d7e4badf17a56aa8feb54e28b848d39df33ef1f8cf1debf4",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_20260824/methods_stage_a.md": {
+      "task_a_reference_sha256": "a78393b73ad39e3bde4dd949cce99575d257938b9cfd8c72d43dfa25df6f5f67",
+      "current_sha256": "a78393b73ad39e3bde4dd949cce99575d257938b9cfd8c72d43dfa25df6f5f67",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/run_metadata.json": {
+      "task_a_reference_sha256": "e489563c5ba91da0d0e0c89678084dbb503b1cc4191c2e1843a7b38831b38b48",
+      "current_sha256": "e489563c5ba91da0d0e0c89678084dbb503b1cc4191c2e1843a7b38831b38b48",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_stage_b_20260825/methods_stage_b.md": {
+      "task_a_reference_sha256": "13ef12d9315a2ba5a9952be35950bb5e1c3751a8468165fd85cde881d2051394",
+      "current_sha256": "13ef12d9315a2ba5a9952be35950bb5e1c3751a8468165fd85cde881d2051394",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_hard_case_strata_20260825/run_metadata.json": {
+      "task_a_reference_sha256": "0daf36993621dda4bd73a69957d3ac6e098f955c3af2e8c915a2aa503705b087",
+      "current_sha256": "0daf36993621dda4bd73a69957d3ac6e098f955c3af2e8c915a2aa503705b087",
+      "matches": true
+    },
+    "analysis/outputs_validation_scratch_hard_case_strata_20260825/methods_hard_case_strata.md": {
+      "task_a_reference_sha256": "ef57b1d519adbce2e5cf66af2f5f346a4f6a690e89b75a18ededfa76b99fca3f",
+      "current_sha256": "ef57b1d519adbce2e5cf66af2f5f346a4f6a690e89b75a18ededfa76b99fca3f",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_a/config.py": {
+      "task_a_reference_sha256": "785d5dc69adcb6fd8562396cfbe3621438043b702e4f8b2d1587a023ad12b807",
+      "current_sha256": "785d5dc69adcb6fd8562396cfbe3621438043b702e4f8b2d1587a023ad12b807",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_a/agreement.py": {
+      "task_a_reference_sha256": "c20cb10bbd73e94b158cc1993e53c6250ad8cec5ac7789a228c074d5a47900a1",
+      "current_sha256": "c20cb10bbd73e94b158cc1993e53c6250ad8cec5ac7789a228c074d5a47900a1",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_a/panels.py": {
+      "task_a_reference_sha256": "3a8688b38699f21753179297f18fa2438cc4d91e5e298f59d3b074318f5f794b",
+      "current_sha256": "3a8688b38699f21753179297f18fa2438cc4d91e5e298f59d3b074318f5f794b",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_a/sufficiency.py": {
+      "task_a_reference_sha256": "52ce46c546501614d89f1cb66660cd2b570dc892bda2668877ed325c39ac27ab",
+      "current_sha256": "52ce46c546501614d89f1cb66660cd2b570dc892bda2668877ed325c39ac27ab",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_a/taxonomy.py": {
+      "task_a_reference_sha256": "1dd444daec9232f3fc1a203aa14cc736e2bdb1ae2491b387df6be241b9f7cd72",
+      "current_sha256": "1dd444daec9232f3fc1a203aa14cc736e2bdb1ae2491b387df6be241b9f7cd72",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_a/report.py": {
+      "task_a_reference_sha256": "156f4184d39ed3a5635324601b8e8216329e58f8f0261f193c0d08f405c82849",
+      "current_sha256": "156f4184d39ed3a5635324601b8e8216329e58f8f0261f193c0d08f405c82849",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_b/config.py": {
+      "task_a_reference_sha256": "526880de671ab87793a683d545dae03cbfbb71ef628b03394dc2d86af438fea1",
+      "current_sha256": "526880de671ab87793a683d545dae03cbfbb71ef628b03394dc2d86af438fea1",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_b/performance.py": {
+      "task_a_reference_sha256": "e43220796452e3f09c7e88b4b179d6b400b5ac48dde9bb426dbea3865813350d",
+      "current_sha256": "e43220796452e3f09c7e88b4b179d6b400b5ac48dde9bb426dbea3865813350d",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_b/tags.py": {
+      "task_a_reference_sha256": "b443d50df4890e3c53f1832dc33a0ccc403440abf669a8bc91298dcb410b515e",
+      "current_sha256": "b443d50df4890e3c53f1832dc33a0ccc403440abf669a8bc91298dcb410b515e",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_b/support.py": {
+      "task_a_reference_sha256": "62e3cb33fba1065aa8295d48d713a5c1c5116a942f48fd1f9c53b4de052a2dd0",
+      "current_sha256": "62e3cb33fba1065aa8295d48d713a5c1c5116a942f48fd1f9c53b4de052a2dd0",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_b/agreement.py": {
+      "task_a_reference_sha256": "85f57e240be8aebfa95a64cbce5badbfb089c498cc8016595c3f2c44cd631e6e",
+      "current_sha256": "85f57e240be8aebfa95a64cbce5badbfb089c498cc8016595c3f2c44cd631e6e",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_b/bootstrap.py": {
+      "task_a_reference_sha256": "e67524a3f25ef7cb540fe9256c2b59bad66f8fe005bde4c0b59832fa896a78ea",
+      "current_sha256": "e67524a3f25ef7cb540fe9256c2b59bad66f8fe005bde4c0b59832fa896a78ea",
+      "matches": true
+    },
+    "analysis/scratch_coder_stage_b/metrics.py": {
+      "task_a_reference_sha256": "806ec0cc6e0fc49032d1310bd27a15c3ebff3c4d137ab876ccae49fa812dd442",
+      "current_sha256": "806ec0cc6e0fc49032d1310bd27a15c3ebff3c4d137ab876ccae49fa812dd442",
+      "matches": true
+    },
+    "analysis/scratch_coder_hard_case_strata/analysis.py": {
+      "task_a_reference_sha256": "f552a1ff2351cd83cb293e7f629ca3ec402b9affc48c2af9b3cdb120646ee637",
+      "current_sha256": "f552a1ff2351cd83cb293e7f629ca3ec402b9affc48c2af9b3cdb120646ee637",
+      "matches": true
+    },
+    "taxonomy_data_dictionary.yaml": {
+      "task_a_reference_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "current_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "matches": true
+    },
+    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx": {
+      "task_a_reference_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "current_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "matches": true
+    },
+    "preregistration/package/06_redcap/redcap_data_dictionary_frozen_0.7_2026-07-22.csv": {
+      "task_a_reference_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "current_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "matches": true
+    },
+    "preregistration/package/02_taxonomy_prompt_and_model/production_release_manifest.yaml": {
+      "task_a_reference_sha256": "1d9d0f0e838b5bf7a8e0ef4cb587ec497bf6eb634b12dcb4371d9e4e2a708df6",
+      "current_sha256": "1d9d0f0e838b5bf7a8e0ef4cb587ec497bf6eb634b12dcb4371d9e4e2a708df6",
+      "matches": true
+    },
+    "preregistration/package/09_logs_and_templates/protocol_deviation_log.csv": {
+      "task_a_reference_sha256": "6111d7a02b43a103a9106fd891eb609e621d0525d9c3d400cfb2aa513a10818e",
+      "current_sha256": "6111d7a02b43a103a9106fd891eb609e621d0525d9c3d400cfb2aa513a10818e",
+      "matches": true
+    }
+  },
+  "relevant_code": {
+    "generator_task_b_recorded_hashes": {
+      "analysis/scratch_coder_consolidated/README.md": "b73ba15b8d8b8001045f96b51044bb8d26c312fe207850b191cb9a7fe1dba04d",
+      "analysis/scratch_coder_consolidated/__init__.py": "f7dba01b79fa1ecf1aaf8e874ef452f89f278f272cc6dbeb41fd1938baaa4197",
+      "analysis/scratch_coder_consolidated/__main__.py": "79554155abe9b87a215dd50ea7dd73d57589b7e0b8e567d9864748d1dbc12888",
+      "analysis/scratch_coder_consolidated/generate.py": "5308c748595ed696fd4a1f27e31f29427f8952b18204b4bdf0dd9cf5f09469d4",
+      "analysis/scratch_coder_consolidated/preflight.py": "aff760385384dc1f8192a1336c1934a6c40299c32ce87a42ad5d4ac0b9cd198c",
+      "analysis/scratch_coder_consolidated/report.py": "f3ebaf1ae288cd02d593104aa2f237ee0ccf4d497ac13965b2f3004b24a893be",
+      "analysis/scratch_coder_consolidated/schemas.json": "54eeedfd781da307f5b54152f523c17e151fdb7288a5c3af4c402b6887df8a96",
+      "analysis/scratch_coder_consolidated/test_collation.py": "a4fa3cab54b6d397f260a058529789a5bc2b79da7603c7c24d879c8c52beb558"
+    },
+    "git_diff_against_head_exit_code": 0,
+    "helper_files": {
+      "analysis/scratch_coder_consolidation_followup/__init__.py": "fc8690a5966801c0580dfa3f19a180dd88981f6faec4be1f8bad2c41954d73bc",
+      "analysis/scratch_coder_consolidation_followup/__main__.py": "248f7f383727d45b43f412b2cbd25c74502c5b76e401e106a1f1dfbbcac70187",
+      "analysis/scratch_coder_consolidation_followup/assessment.py": "140bfc5f7c4e18be6ce32cbc0a9baa9169972c80abe88163652c986317a0a1a0",
+      "analysis/scratch_coder_consolidation_followup/test_assessment.py": "75c1683be055c716644df7180e0706f962c93bd13211187c96bd6cc52413405c"
+    }
+  },
+  "repository_state": {
+    "actual_status_after_task_b_run": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json",
+    "actual_status_after_followup_artifacts_created": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json",
+    "head_at_assessment": "9fa004bcc322fa4d513eeceea57ce1a8eeb45372"
+  },
+  "output_artifacts": {
+    "directory": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z",
+    "files": {
+      "wilson_scope_assessment.md": {
+        "bytes": 7085,
+        "sha256": "6d888d2124a7a4c0e4f0ea995ceb261bb1c95d621aeda4596ae1fef47d887152"
+      },
+      "wilson_scope_manifest.json": {
+        "bytes": 598158,
+        "sha256": "4d9cbee51a2f4dc1d253b7fc4ec1c70187915d3f8dbc555926f344688c33b903"
+      },
+      "command_log.json": {
+        "bytes": 3772,
+        "sha256": "549cfe9900ec3b852df1306de85c744aac020522bfb7cbe5fd8b7ac722d0c5d1"
+      }
+    },
+    "note": "Output paths are recorded separately from Git status, including when untracked/ignored."
+  },
+  "governance_assessment": {
+    "evidence_paths": [
+      "preregistration/README.md",
+      "preregistration/package/09_logs_and_templates/README.md"
+    ],
+    "finding": "Post-registration changes require a new version; substantive changes also require an amendment. Whether this supplement is substantive and whether a deviation-log entry is appropriate are not established and remain documentation decisions."
+  },
+  "boundaries": {
+    "wilson_endpoints_computed": false,
+    "analytical_proportions_computed": false,
+    "bootstrap_files_read": false,
+    "restricted_paths_read": false,
+    "unresolved_entries_closed": false
+  }
+}

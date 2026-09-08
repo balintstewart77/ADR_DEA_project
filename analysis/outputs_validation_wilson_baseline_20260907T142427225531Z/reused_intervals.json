@@ -1,0 +1,367 @@
+{
+  "originating_interval_count": 2,
+  "report_entry_count": 3,
+  "originating_intervals": {
+    "WSA0082": {
+      "candidate_id": "WSA0082",
+      "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+      "source_hash": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "source_key": {
+        "population": "baseline",
+        "subset": "broad_register_usable"
+      },
+      "metric": "proportion",
+      "numerator": "148",
+      "denominator": "150",
+      "proportion": "0.9866666666666667",
+      "method": "Wilson score 95%",
+      "confidence_level": "95%",
+      "lower": "0.9526930912996325",
+      "upper": "0.9963358708487731",
+      "cell_lineage": {
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "row_key": {
+          "population": "baseline",
+          "subset": "broad_register_usable"
+        },
+        "column": "count",
+        "raw_value": "148"
+      },
+      "denominator_lineage": {
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "row_key": {
+          "population": "baseline",
+          "subset": "broad_register_usable"
+        },
+        "column": "denominator",
+        "raw_value": "150"
+      },
+      "proportion_lineage": {
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "row_key": {
+          "population": "baseline",
+          "subset": "broad_register_usable"
+        },
+        "column": "proportion",
+        "raw_value": "0.9866666666666667"
+      },
+      "interval_lineage": [
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "broad_register_usable"
+          },
+          "column": "ci_method",
+          "raw_value": "Wilson score 95%"
+        },
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "broad_register_usable"
+          },
+          "column": "ci_lower",
+          "raw_value": "0.9526930912996325"
+        },
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "broad_register_usable"
+          },
+          "column": "ci_upper",
+          "raw_value": "0.9963358708487731"
+        }
+      ]
+    },
+    "WSA0083": {
+      "candidate_id": "WSA0083",
+      "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+      "source_hash": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "source_key": {
+        "population": "baseline",
+        "subset": "strict_register_sufficient"
+      },
+      "metric": "proportion",
+      "numerator": "92",
+      "denominator": "150",
+      "proportion": "0.6133333333333333",
+      "method": "Wilson score 95%",
+      "confidence_level": "95%",
+      "lower": "0.5334979124018292",
+      "upper": "0.6875088322080735",
+      "cell_lineage": {
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "row_key": {
+          "population": "baseline",
+          "subset": "strict_register_sufficient"
+        },
+        "column": "count",
+        "raw_value": "92"
+      },
+      "denominator_lineage": {
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "row_key": {
+          "population": "baseline",
+          "subset": "strict_register_sufficient"
+        },
+        "column": "denominator",
+        "raw_value": "150"
+      },
+      "proportion_lineage": {
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "row_key": {
+          "population": "baseline",
+          "subset": "strict_register_sufficient"
+        },
+        "column": "proportion",
+        "raw_value": "0.6133333333333333"
+      },
+      "interval_lineage": [
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "ci_method",
+          "raw_value": "Wilson score 95%"
+        },
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "ci_lower",
+          "raw_value": "0.5334979124018292"
+        },
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "ci_upper",
+          "raw_value": "0.6875088322080735"
+        }
+      ]
+    }
+  },
+  "report_entries": [
+    {
+      "candidate_id": "WSA0082",
+      "origin": "WSA0082",
+      "use": "retain_existing_source_interval",
+      "target": {
+        "candidate_id": "WSA0082",
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "source_hash": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+        "source_key": {
+          "population": "baseline",
+          "subset": "broad_register_usable"
+        },
+        "metric": "proportion",
+        "numerator": "148",
+        "denominator": "150",
+        "proportion": "0.9866666666666667",
+        "method": "Wilson score 95%",
+        "confidence_level": "95%",
+        "lower": "0.9526930912996325",
+        "upper": "0.9963358708487731",
+        "cell_lineage": {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "broad_register_usable"
+          },
+          "column": "count",
+          "raw_value": "148"
+        },
+        "denominator_lineage": {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "broad_register_usable"
+          },
+          "column": "denominator",
+          "raw_value": "150"
+        },
+        "proportion_lineage": {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "broad_register_usable"
+          },
+          "column": "proportion",
+          "raw_value": "0.9866666666666667"
+        },
+        "interval_lineage": [
+          {
+            "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+            "row_key": {
+              "population": "baseline",
+              "subset": "broad_register_usable"
+            },
+            "column": "ci_method",
+            "raw_value": "Wilson score 95%"
+          },
+          {
+            "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+            "row_key": {
+              "population": "baseline",
+              "subset": "broad_register_usable"
+            },
+            "column": "ci_lower",
+            "raw_value": "0.9526930912996325"
+          },
+          {
+            "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+            "row_key": {
+              "population": "baseline",
+              "subset": "broad_register_usable"
+            },
+            "column": "ci_upper",
+            "raw_value": "0.9963358708487731"
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "WSA0083",
+      "origin": "WSA0083",
+      "use": "retain_existing_source_interval",
+      "target": {
+        "candidate_id": "WSA0083",
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+        "source_hash": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+        "source_key": {
+          "population": "baseline",
+          "subset": "strict_register_sufficient"
+        },
+        "metric": "proportion",
+        "numerator": "92",
+        "denominator": "150",
+        "proportion": "0.6133333333333333",
+        "method": "Wilson score 95%",
+        "confidence_level": "95%",
+        "lower": "0.5334979124018292",
+        "upper": "0.6875088322080735",
+        "cell_lineage": {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "count",
+          "raw_value": "92"
+        },
+        "denominator_lineage": {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "denominator",
+          "raw_value": "150"
+        },
+        "proportion_lineage": {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "proportion",
+          "raw_value": "0.6133333333333333"
+        },
+        "interval_lineage": [
+          {
+            "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+            "row_key": {
+              "population": "baseline",
+              "subset": "strict_register_sufficient"
+            },
+            "column": "ci_method",
+            "raw_value": "Wilson score 95%"
+          },
+          {
+            "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+            "row_key": {
+              "population": "baseline",
+              "subset": "strict_register_sufficient"
+            },
+            "column": "ci_lower",
+            "raw_value": "0.5334979124018292"
+          },
+          {
+            "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+            "row_key": {
+              "population": "baseline",
+              "subset": "strict_register_sufficient"
+            },
+            "column": "ci_upper",
+            "raw_value": "0.6875088322080735"
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "WSA0074",
+      "origin": "WSA0083",
+      "use": "reuse_verified_equivalent_result",
+      "target": {
+        "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv",
+        "source_hash": "180a48013f5f01ea6a03bf6bdc906b24e0f7ca9972c3e3626f560eb4f0331395",
+        "source_key": {
+          "population": "baseline",
+          "category": "Sufficient"
+        },
+        "metric": "proportion",
+        "numerator": "92",
+        "denominator": "150",
+        "proportion": "0.6133333333333333"
+      },
+      "equivalence_evidence": "Exact exported count, denominator and proportion strings match; saved methods define both as at least two Sufficient ratings.",
+      "join_cardinality": "one_to_one",
+      "exact_cells_equal": [
+        "count",
+        "denominator",
+        "proportion"
+      ],
+      "lower": "0.5334979124018292",
+      "upper": "0.6875088322080735",
+      "method": "Wilson score 95%",
+      "confidence_level": "95%",
+      "interval_lineage": [
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "ci_method",
+          "raw_value": "Wilson score 95%"
+        },
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "ci_lower",
+          "raw_value": "0.5334979124018292"
+        },
+        {
+          "source_path": "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv",
+          "row_key": {
+            "population": "baseline",
+            "subset": "strict_register_sufficient"
+          },
+          "column": "ci_upper",
+          "raw_value": "0.6875088322080735"
+        }
+      ]
+    }
+  ]
+}

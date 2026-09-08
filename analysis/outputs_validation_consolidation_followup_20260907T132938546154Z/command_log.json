@@ -1,0 +1,74 @@
+[
+  {
+    "command": "git status --porcelain=v1 --untracked-files=all; git diff --stat; git diff --cached --stat; git rev-parse --verify HEAD",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Initial index empty; only generator/reference paths untracked; HEAD 732bf6668d9e9d702f0eb798fee5d46a16eb8a1e."
+  },
+  {
+    "command": "git add analysis/scratch_coder_consolidated/README.md analysis/scratch_coder_consolidated/__init__.py analysis/scratch_coder_consolidated/__main__.py analysis/scratch_coder_consolidated/generate.py analysis/scratch_coder_consolidated/preflight.py analysis/scratch_coder_consolidated/report.py analysis/scratch_coder_consolidated/schemas.json analysis/scratch_coder_consolidated/test_collation.py",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Exact Task A allowlist staged after sandbox approval."
+  },
+  {
+    "command": "git commit -m \"Commit consolidation generator for reproducibility check\"",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Created 808e5993cd41893a57896b35b12d9c498c16931f; commit hooks passed."
+  },
+  {
+    "command": ".venv/bin/python -B -m analysis.scratch_coder_consolidated",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "analysis/outputs_validation_consolidated_20260907T085849219598Z"
+  },
+  {
+    "command": ".venv/bin/python -B -m unittest analysis.scratch_coder_consolidated.test_collation",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Task B precommit: 9 tests passed."
+  },
+  {
+    "command": "git add analysis/scratch_coder_consolidated/report.py analysis/scratch_coder_consolidated/test_collation.py",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Exact Task B allowlist staged after sandbox approval."
+  },
+  {
+    "command": "git commit -m \"Add unresolved-entry explanation rollup to consolidation provenance\"",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Created a69ac7289b662675d71c3afa95bab02217f7800c; commit hooks passed."
+  },
+  {
+    "command": ".venv/bin/python -B -m analysis.scratch_coder_consolidated",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "analysis/outputs_validation_consolidated_20260907T131344836676Z"
+  },
+  {
+    "command": ".venv/bin/python -B -m unittest analysis.scratch_coder_consolidation_followup.test_assessment analysis.scratch_coder_consolidated.test_collation",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "12 tests passed before the assessment-helper commit."
+  },
+  {
+    "command": "git add analysis/scratch_coder_consolidation_followup/__init__.py analysis/scratch_coder_consolidation_followup/__main__.py analysis/scratch_coder_consolidation_followup/assessment.py analysis/scratch_coder_consolidation_followup/test_assessment.py",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Exact Task C helper allowlist staged after sandbox approval."
+  },
+  {
+    "command": "git commit -m \"Add Wilson scope assessment helper\"",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "Assessment-helper commit is recorded in task_commits.assessment_helper; commit hooks passed."
+  },
+  {
+    "command": ".venv/bin/python -B -m analysis.scratch_coder_consolidation_followup",
+    "cwd": "/Users/balintstewart/Desktop/ADR_DEA_project",
+    "exit_code": 0,
+    "result": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z"
+  }
+]

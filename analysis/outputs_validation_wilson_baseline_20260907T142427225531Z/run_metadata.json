@@ -1,0 +1,253 @@
+{
+  "status": "complete",
+  "artifact_type": "new_dated_post_registration_supplement",
+  "calculation_timestamp_utc": "2026-09-07T14:24:27.146711+00:00",
+  "output_directory": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
+  "invocation": [
+    "/Users/balintstewart/Desktop/ADR_DEA_project/.venv/bin/python",
+    "-B",
+    "-m",
+    "analysis.scratch_coder_consolidation_followup.wilson_supplement",
+    "--scope-manifest",
+    "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json"
+  ],
+  "git_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
+  "relevant_code_matches_head": true,
+  "repository_status_before": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/run_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/methods_wilson_baseline.md\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/reused_intervals.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/run_metadata.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/wilson_intervals.csv",
+  "repository_status_after_artifacts_created": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/run_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/methods_wilson_baseline.md\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/reused_intervals.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/run_metadata.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/wilson_intervals.csv\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/methods_wilson_baseline.md\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/reused_intervals.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/run_metadata.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/wilson_intervals.csv",
+  "implementation": {
+    "callable": "analysis.validation.intervals.wilson_interval",
+    "path": "analysis/validation/intervals.py",
+    "sha256": "7e2e383c5004c1a61e314ac1825e47f5be3335403aeca201a946d8f9c9eca571",
+    "git_blob": "f5f7ceee2adc2ee22fda99a7a9c4ce8272fad93c",
+    "signature": "(successes: 'int', n: 'int', *, z: 'float' = 1.959963984540054) -> 'Interval'",
+    "z": "1.959963984540054",
+    "python_version": "3.12.5 (main, Aug  6 2024, 19:08:49) [Clang 15.0.0 (clang-1500.3.9.4)]",
+    "statsmodels": "not installed; repository implementation used"
+  },
+  "task_code": {
+    "analysis/scratch_coder_consolidation_followup/wilson_supplement.py": {
+      "sha256": "bf2755022db484d049dfa57b721cd6612ed18b195ada856777d054ffe1663c41",
+      "git_blob": "bf7ece4143f72645e24ae00645475ddacb49e8b1"
+    },
+    "analysis/scratch_coder_consolidated/supplement.py": {
+      "sha256": "981d8268666304ee50b5b6ce0bf1b64b3c6a09090d173f4e90fffee2099184cc",
+      "git_blob": "9eaff053090c9954aff428c75019dff75b546d26"
+    }
+  },
+  "method": {
+    "name": "Wilson score",
+    "confidence_level": 0.95,
+    "alpha": 0.05,
+    "two_sided": true,
+    "continuity_correction": false,
+    "finite_population_adjustment": false,
+    "validation_absolute_tolerance": 1e-12,
+    "coverage": "marginal, not simultaneous"
+  },
+  "selection_list": [
+    "WSA0053",
+    "WSA0054",
+    "WSA0055",
+    "WSA0056",
+    "WSA0057",
+    "WSA0058",
+    "WSA0059",
+    "WSA0060",
+    "WSA0061",
+    "WSA0075",
+    "WSA0076",
+    "WSA0077",
+    "WSA0090",
+    "WSA0091",
+    "WSA0092",
+    "WSA0093",
+    "WSA0094",
+    "WSA0095",
+    "WSA0096",
+    "WSA0097",
+    "WSA0098",
+    "WSA0099",
+    "WSA0100",
+    "WSA0101",
+    "WSA0118",
+    "WSA0119",
+    "WSA0120",
+    "WSA0121",
+    "WSA0122",
+    "WSA0135",
+    "WSA0136",
+    "WSA0137",
+    "WSA0138",
+    "WSA0146",
+    "WSA0147",
+    "WSA0148",
+    "WSA0149"
+  ],
+  "selection_count": 37,
+  "reused_report_entries": [
+    "WSA0074",
+    "WSA0082",
+    "WSA0083"
+  ],
+  "scope_decision": {
+    "included": "Specified research-reporting outcomes only",
+    "excluded": {
+      "qa_candidates": 8,
+      "pooled_response_rows": 37,
+      "structural_ratios": 2,
+      "nonbaseline_rows": 106
+    },
+    "interpretation": "QA frequencies remain descriptive; ordinary Wilson intervals are not applied to pooled within-project ratings."
+  },
+  "source_files": {
+    "analysis/outputs_validation_scratch_20260824/sufficiency_response_distribution.csv": {
+      "sha256_before": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "bytes": 1220,
+      "sha256_after": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_record_distribution.csv": {
+      "sha256_before": "180a48013f5f01ea6a03bf6bdc906b24e0f7ca9972c3e3626f560eb4f0331395",
+      "bytes": 422,
+      "sha256_after": "180a48013f5f01ea6a03bf6bdc906b24e0f7ca9972c3e3626f560eb4f0331395",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_fit_response_distribution.csv": {
+      "sha256_before": "57f9808c16727e8bee92137133b22f5a176f34db0dc28cf5ca9fbb5d44cdf0c3",
+      "bytes": 1661,
+      "sha256_after": "57f9808c16727e8bee92137133b22f5a176f34db0dc28cf5ca9fbb5d44cdf0c3",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/taxonomy_fit_record_distribution.csv": {
+      "sha256_before": "e58d68d46e8a69b028b2d194b3f1fc63e41c7795e8359353f0c694bae376a845",
+      "bytes": 487,
+      "sha256_after": "e58d68d46e8a69b028b2d194b3f1fc63e41c7795e8359353f0c694bae376a845",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/unclear_register_summary.csv": {
+      "sha256_before": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "bytes": 4289,
+      "sha256_after": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "unchanged": true
+    },
+    "analysis/outputs_validation_scratch_20260824/sufficiency_subset_summary.csv": {
+      "sha256_before": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "bytes": 463,
+      "sha256_after": "23320702d9665a68dc40d7b945b14d185a1c6cedc3fa0f9243f4b52a7cd59f12",
+      "unchanged": true
+    }
+  },
+  "inputs": {
+    "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json": {
+      "sha256_before": "4d9cbee51a2f4dc1d253b7fc4ec1c70187915d3f8dbc555926f344688c33b903",
+      "sha256_after": "4d9cbee51a2f4dc1d253b7fc4ec1c70187915d3f8dbc555926f344688c33b903"
+    },
+    "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md": {
+      "sha256_before": "6d888d2124a7a4c0e4f0ea995ceb261bb1c95d621aeda4596ae1fef47d887152",
+      "sha256_after": "6d888d2124a7a4c0e4f0ea995ceb261bb1c95d621aeda4596ae1fef47d887152"
+    },
+    "analysis/validation/intervals.py": {
+      "sha256_before": "7e2e383c5004c1a61e314ac1825e47f5be3335403aeca201a946d8f9c9eca571",
+      "sha256_after": "7e2e383c5004c1a61e314ac1825e47f5be3335403aeca201a946d8f9c9eca571"
+    },
+    "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx": {
+      "sha256_before": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "sha256_after": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77"
+    },
+    "analysis/outputs_validation_scratch_20260824/methods_stage_a.md": {
+      "sha256_before": "a78393b73ad39e3bde4dd949cce99575d257938b9cfd8c72d43dfa25df6f5f67",
+      "sha256_after": "a78393b73ad39e3bde4dd949cce99575d257938b9cfd8c72d43dfa25df6f5f67"
+    },
+    "analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json": {
+      "sha256_before": "826b22e19f044f7177d85c70247f406f57a3f6e9e8731e3dbe3da589a0c59cab",
+      "sha256_after": "826b22e19f044f7177d85c70247f406f57a3f6e9e8731e3dbe3da589a0c59cab"
+    }
+  },
+  "focused_numerical_checks": [
+    {
+      "case": "zero-success",
+      "k": 0,
+      "n": 150,
+      "lower": "0.0",
+      "upper": "0.0249702443680766",
+      "status": "passed"
+    },
+    {
+      "case": "all-success",
+      "k": 150,
+      "n": 150,
+      "lower": "0.9750297556319235",
+      "upper": "1.0",
+      "status": "passed"
+    },
+    {
+      "case": "interior",
+      "k": 75,
+      "n": 150,
+      "lower": "0.42099012028854144",
+      "upper": "0.5790098797114586",
+      "status": "passed"
+    },
+    {
+      "case": "interior-source-scale",
+      "k": 92,
+      "n": 150,
+      "lower": "0.5334979124018292",
+      "upper": "0.6875088322080735",
+      "status": "passed"
+    }
+  ],
+  "boundary_corrections": [
+    {
+      "candidate_id": "WSA0100",
+      "endpoint": "lower",
+      "raw": "1.734723475976807e-18",
+      "corrected": "0.0",
+      "reason": "Repository implementation fixes the zero-success lower boundary at 0"
+    },
+    {
+      "candidate_id": "WSA0120",
+      "endpoint": "lower",
+      "raw": "1.734723475976807e-18",
+      "corrected": "0.0",
+      "reason": "Repository implementation fixes the zero-success lower boundary at 0"
+    }
+  ],
+  "validation": {
+    "manifest_identities_checked": true,
+    "source_hashes_match_manifest": true,
+    "complete_source_key_joins": "one_to_one",
+    "selected_population": "baseline",
+    "selected_units": [
+      "individual_coder_binary",
+      "record_binary"
+    ],
+    "all_denominators": "150",
+    "integer_and_range_checks": "passed",
+    "source_count_and_proportion_strings_match_manifest": true,
+    "point_within_bounds": "passed",
+    "bounds_within_unit_interval": "passed",
+    "formula_cross_check": "passed",
+    "new_interval_rows": 37,
+    "originating_existing_intervals": 2,
+    "report_interval_entries_from_existing_bounds": 3,
+    "archived_inputs_unchanged": true,
+    "bootstrap_files_read": 0,
+    "other_statistics_calculated": 0
+  },
+  "files": {
+    "wilson_intervals.csv": {
+      "bytes": 22877,
+      "sha256": "c1f238b5578d573efa2c06dbdaeb82e7c9e60f4ff43b0e751c5e8c1f411d6130"
+    },
+    "reused_intervals.json": {
+      "bytes": 13002,
+      "sha256": "31f53eacc0aa404da8067a84a6f49c1a02ed50d3fbb2c6f0b5106a4fab2223f1"
+    },
+    "methods_wilson_baseline.md": {
+      "bytes": 4109,
+      "sha256": "6893a122b54a36b5ce21eb461978b6c33a166fc1582d4b3f0821a3253f6acfcc"
+    }
+  }
+}

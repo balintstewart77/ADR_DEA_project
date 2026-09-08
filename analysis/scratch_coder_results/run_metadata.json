@@ -379609,6 +379609,135 @@
     "active_documentation": [
       "analysis/scratch_coder_consolidated/README.md"
     ],
+    "dependency_audit": {
+      "checked_at_utc": "2026-09-08T07:26:38Z",
+      "normal_regeneration": {
+        "analytical_source_files": {
+          "exact_manifest_location": "$.source_files",
+          "file_count": 47,
+          "note": "The existing source_files object contains each exact retained analytical/configuration path and SHA-256 hash."
+        },
+        "generator_package_files": [
+          {
+            "path": "analysis/scratch_coder_consolidated/README.md",
+            "sha256": "77a0ab41fabfc25c72405cdc6d811610821d481663d02fbf7fb8057e0f687bd7"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/__init__.py",
+            "sha256": "f7dba01b79fa1ecf1aaf8e874ef452f89f278f272cc6dbeb41fd1938baaa4197"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/__main__.py",
+            "sha256": "79554155abe9b87a215dd50ea7dd73d57589b7e0b8e567d9864748d1dbc12888"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/generate.py",
+            "sha256": "2019cf51c9bfb45b03803566a883287c8bc2e193c7d215b52dfef419e3d815c5"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/preflight.py",
+            "sha256": "aff760385384dc1f8192a1336c1934a6c40299c32ce87a42ad5d4ac0b9cd198c"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/report.py",
+            "sha256": "c3d8a7e13a4f39b2c14d29c3f98bf0290718152c53b7c89c3fd900ee44a00911"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/schemas.json",
+            "sha256": "54eeedfd781da307f5b54152f523c17e151fdb7288a5c3af4c402b6887df8a96"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/supplement.py",
+            "sha256": "95e1ad6cfd1106f225d3578268d5da099e27b6837fbb69bff7c0a85a12956d28"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/test_collation.py",
+            "sha256": "a4fa3cab54b6d397f260a058529789a5bc2b79da7603c7c24d879c8c52beb558"
+          }
+        ],
+        "approved_wilson_supplement_files": [
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/methods_wilson_baseline.md",
+            "sha256": "6893a122b54a36b5ce21eb461978b6c33a166fc1582d4b3f0821a3253f6acfcc"
+          },
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/reused_intervals.json",
+            "sha256": "31f53eacc0aa404da8067a84a6f49c1a02ed50d3fbb2c6f0b5106a4fab2223f1"
+          },
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/run_metadata.json",
+            "sha256": "b1747a8ca8c9814d4835cc2a8279fb990f31bbe776ca062e33ccfeabf86d04be"
+          },
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/wilson_intervals.csv",
+            "sha256": "c1f238b5578d573efa2c06dbdaeb82e7c9e60f4ff43b0e751c5e8c1f411d6130"
+          }
+        ],
+        "canonical_state_files_read_before_replacement": [
+          "analysis/scratch_coder_results/results.md",
+          "analysis/scratch_coder_results/run_metadata.json"
+        ]
+      },
+      "required_followup_evidence_files": [
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json",
+          "sha256": "549cfe9900ec3b852df1306de85c744aac020522bfb7cbe5fd8b7ac722d0c5d1"
+        },
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json",
+          "sha256": "8e83b86462e93676433871bc1bb65d28a6360d6c8c1952be6f8dd3333e88991c"
+        },
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md",
+          "sha256": "6d888d2124a7a4c0e4f0ea995ceb261bb1c95d621aeda4596ae1fef47d887152"
+        },
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json",
+          "sha256": "4d9cbee51a2f4dc1d253b7fc4ec1c70187915d3f8dbc555926f344688c33b903"
+        }
+      ],
+      "git_index_check": {
+        "all_normal_regeneration_and_provenance_dependency_paths_present": true,
+        "approved_supplement_staged_as_exact_files": true,
+        "followup_evidence_staged_as_exact_files": true,
+        "canonical_metadata_self_hash_recorded": false
+      },
+      "earlier_wilson_run": {
+        "historical_path": "analysis/outputs_validation_wilson_baseline_20260907T142055636248Z",
+        "calculation_timestamp_utc": "2026-09-07T14:20:55.558491+00:00",
+        "generator_head": "e33ab97326d34022c0f558de2a7398e2d99e8a8b",
+        "file_inventory": {
+          "methods_wilson_baseline.md": {
+            "bytes": 3888,
+            "sha256": "cc383ae703fdec207759bb8f9021d30c81cf8931c07b7486fdf5acf6ac72f71c"
+          },
+          "reused_intervals.json": {
+            "bytes": 13002,
+            "sha256": "31f53eacc0aa404da8067a84a6f49c1a02ed50d3fbb2c6f0b5106a4fab2223f1"
+          },
+          "run_metadata.json": {
+            "bytes": 10961,
+            "sha256": "b5d31cccaf1498bbdbea05a36594232959b7266d32975eb121600e30a3649673"
+          },
+          "wilson_intervals.csv": {
+            "bytes": 22877,
+            "sha256": "f325f8c8259dbb3e857154d39f989fdf55372c49e3a60023e3b5cd7cfa752f7a"
+          }
+        },
+        "comparison_with_approved_run": {
+          "interval_rows": 37,
+          "analytical_csv_fields_identical": true,
+          "only_csv_difference_field": "calculation_timestamp_utc",
+          "reused_intervals_json_byte_identical": true,
+          "unique_evidence_preserved": "Historical first-execution timestamp, generator HEAD, repository-status provenance and exact file inventory/hashes.",
+          "unique_analytical_values": false,
+          "approved_run_additions": "Companion assessment provenance and exact task-code hashes."
+        },
+        "live_dependency": false,
+        "deletion_verified": true,
+        "deleted_at_utc": "2026-09-08T07:31:49Z"
+      }
+    },
     "completed_at_utc": "2026-09-07T15:03:32.069595+00:00",
     "deleted_directories": [
       "analysis/outputs_validation_consolidated_20260907T082625857355Z",
