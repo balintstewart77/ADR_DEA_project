@@ -157,11 +157,11 @@ def _linked_data_uptake_content() -> list:
         _uptake_graph("uptake-adoption-curves", height=UPTAKE_CURVES_HEIGHT),
         html.H6("Adoption summary", className="mt-3"),
         html.P(
-            "Exposure begins at the first accredited use of each linked dataset observed in "
-            "the DEA register. Exposure-years therefore measure observed DEA-gateway uptake "
+            "Exposure begins at the first accredited use of each linked dataset observed within "
+            "the selected register window. Exposure-years therefore measure observed DEA-gateway uptake "
             "from first use onwards; they do not claim to identify when the dataset first "
             "became technically available through any route. For grouped collections, exposure "
-            "begins at the earliest first accredited use among the collection members included "
+            "begins at the earliest selected-window use among the collection members included "
             "in that line. Rates over short exposures are initial-adoption rates, not sustained demand.",
             className="section-desc",
         ),

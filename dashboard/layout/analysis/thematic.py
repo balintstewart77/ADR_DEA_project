@@ -1,6 +1,5 @@
 """Thematic Analysis sub-tab."""
 
-import pandas as pd
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
@@ -27,6 +26,8 @@ from dashboard.data.thematic import (
     _DETERMINISTIC_UNIT_OPTIONS,
     _DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
 )
+from dashboard.data.registry import df_all
+from dashboard.data.year_filter import year_slider_kwargs
 
 _MD_STYLE = {"fontSize": "0.88rem", "lineHeight": "1.6"}
 DOMAIN_MATRIX_HEIGHT = 724
@@ -255,14 +256,19 @@ def _latent_demand_accordion_item() -> dbc.AccordionItem:
                 "no-record-linkage filter is deterministic. Treat the cell values as "
                 "indicative rather than definitive.",
             ], color="warning", className="mb-3"),
-            html.P(
-                f"Domain co-occurrence computed ONLY over the {LATENT_NO_LINKAGE_COUNT:,} "
-                "classified projects with no record linkage — researchers combining domains "
+            html.P([
+                html.Span(
+                    f"Domain co-occurrence computed ONLY over the {LATENT_NO_LINKAGE_COUNT:,} "
+                    "classified projects with no record linkage",
+                    id="thematic-latent-demand-summary",
+                ),
+                " — researchers combining domains "
                 "without using any linked product. Dot-marked cells indicate domain pairs already "
                 "served by an existing linked product (the pair is contained in some product's "
                 "component domains). Reading: a heavy unserved cell suggests latent demand for "
                 "a new cross-domain asset; a heavy served cell suggests an awareness gap or "
                 "deliberate non-use of the existing product.",
+            ],
                 className="section-desc",
             ),
             _metric_dropdown("thematic-latent-demand-metric"),
@@ -281,13 +287,6 @@ def _deterministic_intro() -> html.P:
 
 
 def _analyses_accordion():
-    enriched_display, _ = _get_enriched_register_display_df(None, *(["ALL"] * 13))
-    accreditation_dates = pd.to_datetime(
-        enriched_display["Accreditation Date"], format="%d %b %Y", errors="coerce",
-    )
-    accreditation_year_min = int(accreditation_dates.min().year)
-    accreditation_year_max = int(accreditation_dates.max().year)
-
     return dbc.Accordion(
         [
             dbc.AccordionItem(
@@ -349,12 +348,18 @@ def _analyses_accordion():
             ),
             dbc.AccordionItem(
                 [
-                    html.P(
+                    html.P([
                         f"Cross-cutting tags, orthogonal to the layers, mark projects whose "
-                        f"analysis centres on a tag-defined lens or condition. At least one tag applies to "
-                        f"{THEMATIC_TAGGED_COUNT:,} of {THEMATIC_PROJECT_COUNT:,} classified projects. "
+                        f"analysis centres on a tag-defined lens or condition. ",
+                        html.Span(
+                            f"At least one tag applies to {THEMATIC_TAGGED_COUNT:,} of "
+                            f"{THEMATIC_PROJECT_COUNT:,} classified projects.",
+                            id="thematic-tagged-summary",
+                        ),
+                        " "
                         "The trend has its own metric control; the domain bars below split the two "
                         "active tags into separate charts.",
+                    ],
                         className="section-desc",
                     ),
                     _metric_dropdown("thematic-tag-trend-metric"),
@@ -501,21 +506,13 @@ def _analyses_accordion():
                             html.Label("Accreditation year", className="filter-label"),
                             dcc.RangeSlider(
                                 id="enriched-accreditation-year-filter",
-                                min=accreditation_year_min,
-                                max=accreditation_year_max,
-                                step=1,
-                                value=[accreditation_year_min, accreditation_year_max],
-                                marks={
-                                    year: str(year)
-                                    for year in range(accreditation_year_min, accreditation_year_max + 1)
-                                },
-                                allowCross=False,
+                                **year_slider_kwargs(df_all),
                             ),
-                            *([html.Small(
+                            html.Small(
                                 "Records without a usable accreditation date are included "
                                 "in the full year range and excluded from narrower ranges.",
                                 className="text-muted",
-                            )] if accreditation_dates.isna().any() else []),
+                            ),
                         ], md=6),
                     ], className="mb-3 g-2"),
                     dbc.Row([
@@ -753,7 +750,10 @@ def build_thematic_tab():
 
             # Summary stats
             dbc.Row([
-                stat_card(f"{THEMATIC_PROJECT_COUNT:,}", "Projects Classified", "#2a9d8f"),
+                stat_card(
+                    f"{THEMATIC_PROJECT_COUNT:,}", "Projects Classified", "#2a9d8f",
+                    value_id="thematic-project-count",
+                ),
                 stat_card(f"{len(taxonomy.DOMAIN_LABELS)}", "Substantive Domains", "#264653"),
                 stat_card(f"{len(taxonomy.PURPOSE_LABELS)}", "Analytical Purposes", "#e76f51"),
                 stat_card(f"{len(taxonomy.TAG_LABELS)}", "Cross-Cutting Tags", "#457b9d"),

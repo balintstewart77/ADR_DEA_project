@@ -1,10 +1,10 @@
 """Project Explorer callbacks."""
 
-import pandas as pd
 from dash import dcc, Input, Output, State
 
 from dashboard.config import _BROWSE_DISPLAY_COLUMNS
 from dashboard.data.filtering import _get_browse_display_df, _csv_date_stamp
+from dashboard.data.year_filter import YearRange, filter_records_by_year, parse_accreditation_dates
 
 
 def _filter_accreditation_year_range(
@@ -13,28 +13,9 @@ def _filter_accreditation_year_range(
     accreditation_year_min,
     accreditation_year_max,
 ):
-    accreditation_dates = pd.to_datetime(
-        display["Accreditation Date"],
-        format="%d %b %Y",
-        errors="coerce",
-    )
-    try:
-        selected_years = sorted(int(year) for year in accreditation_year_range)
-    except (TypeError, ValueError):
-        selected_years = []
-
-    if len(selected_years) == 2:
-        full_range_selected = (
-            selected_years[0] <= int(accreditation_year_min)
-            and selected_years[-1] >= int(accreditation_year_max)
-        )
-        if not full_range_selected:
-            lower_year, upper_year = selected_years
-            display = display.loc[
-                accreditation_dates.dt.year.between(lower_year, upper_year)
-            ].copy()
-
-    return display, accreditation_dates
+    bounds = YearRange(int(accreditation_year_min), int(accreditation_year_max))
+    filtered = filter_records_by_year(display, accreditation_year_range, bounds)
+    return filtered, parse_accreditation_dates(display)
 
 
 def register(app):

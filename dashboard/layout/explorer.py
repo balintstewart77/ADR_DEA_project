@@ -1,6 +1,5 @@
 """Project Explorer tab."""
 
-import pandas as pd
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
@@ -9,13 +8,10 @@ from dashboard.data.registry import (
     df_all,
 )
 from dashboard.components.table_styles import BROWSE_TABLE_STYLES
+from dashboard.data.year_filter import year_slider_kwargs
 
 
 def build_explorer_tab():
-    accreditation_dates = pd.to_datetime(df_all["Accreditation Date"], errors="coerce")
-    accreditation_year_min = int(accreditation_dates.min().year)
-    accreditation_year_max = int(accreditation_dates.max().year)
-
     return dbc.Tab(label="\U0001F50D Project Explorer", tab_id="tab-browse", children=[
         html.H5(
             "Project Explorer",
@@ -117,15 +113,7 @@ def build_explorer_tab():
                 html.Label("Accreditation year", className="filter-label"),
                 dcc.RangeSlider(
                     id="browse-accreditation-year-filter",
-                    min=accreditation_year_min,
-                    max=accreditation_year_max,
-                    step=1,
-                    value=[accreditation_year_min, accreditation_year_max],
-                    marks={
-                        year: str(year)
-                        for year in range(accreditation_year_min, accreditation_year_max + 1)
-                    },
-                    allowCross=False,
+                    **year_slider_kwargs(df_all),
                 ),
             ], md=6),
         ], className="mb-3 g-2"),

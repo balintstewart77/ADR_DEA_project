@@ -64,12 +64,27 @@ def _apply_common(fig: go.Figure, height: int = CHART_HEIGHT) -> go.Figure:
     return fig
 
 
+def annotate_empty(fig: go.Figure, is_empty: bool) -> go.Figure:
+    """Give filtered charts an explicit, non-numeric empty state."""
+    if not is_empty:
+        return fig
+    fig.add_annotation(
+        text="No projects match the selected filters.",
+        xref="paper", yref="paper", x=0.5, y=0.5,
+        showarrow=False,
+        font=dict(size=14, color="#7f8c8d"),
+    )
+    return fig
+
+
 def _annotate_partial_year(fig: go.Figure, years=None, partial_year_info=None) -> go.Figure:
     """Add a footnote and asterisked x-tick for the partial final year."""
     if not partial_year_info or not partial_year_info.year:
         return fig
     if years is not None:
         tickvals = sorted(years)
+        if partial_year_info.year not in set(tickvals):
+            return fig
         ticktext = [f"{yr}*" if yr == partial_year_info.year else str(yr) for yr in tickvals]
         fig.update_xaxes(tickvals=tickvals, ticktext=ticktext)
     fig.add_annotation(

@@ -7,7 +7,7 @@ import plotly.express as px
 from dash import Input, Output
 
 from dashboard.config import PRIMARY_BAR
-from dashboard.charts.template import _apply_common, _annotate_partial_year
+from dashboard.charts.template import _apply_common, _annotate_partial_year, annotate_empty
 from dashboard.data.collection_view import (
     COLLECTION_VIEW_GROUPED,
     COLLECTION_VIEW_INDIVIDUAL,
@@ -16,8 +16,17 @@ from dashboard.data.collection_view import (
     normalise_collection_view,
     with_collection_display,
 )
-from dashboard.data.registry import df_datasets, PARTIAL_YEAR_INFO
-from dashboard.data.uptake import DATASET_EXPOSURE
+from dashboard.data.registry import df_all, df_datasets, PARTIAL_YEAR_INFO
+from dashboard.data.uptake import DATASET_EXPOSURE, dataset_exposure_table
+from dashboard.data.year_filter import (
+    filter_records_by_year,
+    filter_related_by_record_ids,
+    selected_record_ids,
+    year_range,
+)
+
+
+_YEAR_RANGE = year_range(df_all)
 
 
 def _wrap_axis_label(value, width=36):
@@ -29,14 +38,17 @@ def _wrap_axis_label(value, width=36):
     )
 
 
-def build_dataset_demand_figures(preset, custom, provider, topn_metric, collection_view):
+def build_dataset_demand_figures(
+    preset, custom, provider, topn_metric, collection_view, source_df=None,
+    dataset_exposure=None,
+):
     top_n = int(custom) if preset == -1 and custom else (preset if preset != -1 else 10)
     top_n = max(1, int(top_n))
     selected_view = normalise_collection_view(collection_view)
     grouped = selected_view == COLLECTION_VIEW_GROUPED
     entity_noun = "Collections / datasets" if grouped else "Datasets"
     entity_label = "Collection / dataset" if grouped else "Dataset"
-    sub = df_datasets.copy()
+    sub = (df_datasets if source_df is None else source_df).copy()
 
     if provider and provider != "ALL":
         sub = sub[sub["provider"] == provider]
@@ -49,7 +61,8 @@ def build_dataset_demand_figures(preset, custom, provider, topn_metric, collecti
         # Demand normalised by exposure WITHIN the register window (years
         # from max(availability, window start) to the latest register date,
         # current year fractional) -- never by raw dataset age.
-        exposure = display_entity_exposure(display_sub, DATASET_EXPOSURE).reindex(
+        exposure_source = DATASET_EXPOSURE if dataset_exposure is None else dataset_exposure
+        exposure = display_entity_exposure(display_sub, exposure_source).reindex(
             dataset_counts["display_dataset"]
         )
         dataset_counts["exposure_years"] = exposure["exposure_years"].to_numpy()
@@ -223,14 +236,21 @@ def register(app):
         Input("datasets-topn-custom", "value"),
         Input("datasets-provider-filter", "value"),
         Input("datasets-topn-metric", "value"),
+        Input("portfolio-accreditation-year-filter", "value"),
     )
-    def update_datasets_tab(preset, custom, provider, topn_metric):
+    def update_datasets_tab(preset, custom, provider, topn_metric, year_selection):
         # Top-of-section demand always shows individual datasets; the collections
         # toggle scopes only the Linked Data Uptake views.
-        return build_dataset_demand_figures(
+        record_ids = selected_record_ids(df_all, year_selection, _YEAR_RANGE)
+        selected = filter_related_by_record_ids(df_datasets, record_ids)
+        selected_register = filter_records_by_year(df_all, year_selection, _YEAR_RANGE)
+        figures = build_dataset_demand_figures(
             preset,
             custom,
             provider,
             topn_metric,
             COLLECTION_VIEW_INDIVIDUAL,
+            source_df=selected,
+            dataset_exposure=dataset_exposure_table(selected_register),
         )
+        return tuple(annotate_empty(fig, selected.empty) for fig in figures)

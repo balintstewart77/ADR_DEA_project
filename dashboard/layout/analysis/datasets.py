@@ -74,11 +74,12 @@ def build_datasets_tab():
         ]),
         html.P(
             "\"Projects per year available\" divides each dataset's distinct-project count by its "
-            "exposure within the register window: the years from max(availability date, 2019-01-01) "
-            "to the latest register date, with the partial current year counted fractionally. "
+            "exposure within the selected register window: the years from max(availability date, "
+            "2019-01-01, selected lower year) to the latest selected register date, with a partial "
+            "final year counted fractionally. "
             "Availability defaults to the dataset's first appearance in the register (a proxy); "
             "curated availability dates from the reference override the proxy where present. "
-            "Datasets available before 2019 get the full window as exposure. The hover shows "
+            "Datasets available before the selected window get that full window as exposure. The hover shows "
             "each dataset's exposure years — rates over short exposures are initial-adoption "
             "rates, not sustained demand. In grouped collection view, reference-defined "
             "collection members are de-duplicated to one project per collection.",

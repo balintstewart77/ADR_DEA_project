@@ -101,17 +101,23 @@ def _quarter_label(ts) -> str:
     return f"{ts.year} Q{(ts.month - 1) // 3 + 1}"
 
 
-def _exposure_years(exposure_start: pd.Timestamp | None) -> float:
+def _exposure_years(
+    exposure_start: pd.Timestamp | None,
+    *,
+    window_start: pd.Timestamp = REGISTER_WINDOW_START,
+    window_end: pd.Timestamp | None = None,
+) -> float:
     """Observed exposure years within the register window, fractional current year.
 
     Starts before the window get the full window. Linked-product callers pass
     first accredited DEA-register use, while the general dataset-demand view
     retains its separately documented availability calculation.
     """
-    start = REGISTER_WINDOW_START
+    start = max(REGISTER_WINDOW_START, pd.Timestamp(window_start))
     if exposure_start is not None and not pd.isna(exposure_start):
         start = max(start, pd.Timestamp(exposure_start))
-    days = (LATEST_REGISTER_DATE - start).days
+    end = LATEST_REGISTER_DATE if window_end is None else pd.Timestamp(window_end)
+    days = (end - start).days
     return max(days, 0) / 365.25
 
 
@@ -175,8 +181,17 @@ def _dataset_curated_date(dataset: str) -> pd.Timestamp | None:
     return min(dates) if dates else None
 
 
-def dataset_exposure_table() -> pd.DataFrame:
+def dataset_exposure_table(register_df: pd.DataFrame | None = None) -> pd.DataFrame:
     """Per-dataset availability, exposure years and basis (curated vs proxy)."""
+    selected_register = df_all if register_df is None else register_df
+    window_start = (
+        pd.Timestamp(int(selected_register["Year"].min()), 1, 1)
+        if not selected_register.empty else REGISTER_WINDOW_START
+    )
+    window_end = (
+        selected_register["Accreditation Date"].max()
+        if not selected_register.empty else window_start
+    )
     rows = []
     for dataset, first_seen in _dataset_first_seen.items():
         curated = _dataset_curated_date(dataset)
@@ -188,7 +203,11 @@ def dataset_exposure_table() -> pd.DataFrame:
                 "curated" if curated is not None else "first register appearance"
             ),
             "first_seen": first_seen,
-            "exposure_years": _exposure_years(availability),
+            "exposure_years": _exposure_years(
+                availability,
+                window_start=window_start,
+                window_end=window_end,
+            ),
         })
     return pd.DataFrame(rows).set_index("dataset")
 
@@ -204,13 +223,8 @@ if "Record ID" in df_all.columns and not _properties.empty:
     _product_lookup = (
         _properties.set_index("Record ID")["matched_products"]
     )
-    _project_key_col = (
-        "Project Row ID"
-        if "Project Row ID" in df_all.columns
-        else "Project ID" if "Project ID" in df_all.columns else "Record ID"
-    )
-    _matched = df_all[["Record ID", _project_key_col, "Year", "quarter_date"]].copy()
-    _matched["project_key"] = _matched[_project_key_col].astype(str)
+    _matched = df_all[["Record ID", "Year", "quarter_date"]].copy()
+    _matched["project_key"] = _matched["Record ID"].astype(str)
     _matched["matched_products"] = (
         _matched["Record ID"].fillna("").astype(str).str.strip().map(_product_lookup).fillna("")
     )
@@ -219,9 +233,9 @@ if "Record ID" in df_all.columns and not _properties.empty:
     _matched = _matched.explode("product")
     _matched["product"] = _matched["product"].str.strip()
     _matched = _matched[_matched["product"] != ""]
-    DF_PRODUCT_PROJECTS = _matched[["project_key", "product", "Year", "quarter_date"]].reset_index(drop=True)
+    DF_PRODUCT_PROJECTS = _matched[["Record ID", "project_key", "product", "Year", "quarter_date"]].reset_index(drop=True)
 else:
-    DF_PRODUCT_PROJECTS = pd.DataFrame(columns=["project_key", "product", "Year", "quarter_date"])
+    DF_PRODUCT_PROJECTS = pd.DataFrame(columns=["Record ID", "project_key", "product", "Year", "quarter_date"])
 
 PRODUCT_TOTALS = Counter(DF_PRODUCT_PROJECTS["product"])
 
@@ -398,15 +412,26 @@ def adoption_curve_table(
     *,
     selected_products: list[str] | None = None,
     collection_view: str | None = None,
+    eligible_record_ids: list[str] | None = None,
 ) -> pd.DataFrame:
     """Per-product adoption-curve rows for selected linked products."""
     selected = list(dict.fromkeys(selected_products or []))
     if not selected:
         return _empty_adoption_frame()
-    if DF_PRODUCT_PROJECTS.empty:
+    product_projects = DF_PRODUCT_PROJECTS
+    register = df_all
+    if eligible_record_ids is not None:
+        wanted = {str(value).strip() for value in eligible_record_ids}
+        product_projects = product_projects[
+            product_projects["Record ID"].astype(str).str.strip().isin(wanted)
+        ]
+        register = register[
+            register["Record ID"].astype(str).str.strip().isin(wanted)
+        ]
+    if product_projects.empty:
         return _empty_adoption_frame()
 
-    work = DF_PRODUCT_PROJECTS[DF_PRODUCT_PROJECTS["product"].isin(selected)].copy()
+    work = product_projects[product_projects["product"].isin(selected)].copy()
     if work.empty:
         return _empty_adoption_frame()
     work = _with_product_metadata(work)
@@ -436,29 +461,36 @@ def adoption_curve_table(
         work["period_label"] = work["period_date"].dt.to_period("Q").map(
             lambda quarter: f"{quarter.year} Q{quarter.quarter}"
         )
+        register_quarters = (
+            sorted(pd.to_datetime(register["quarter_date"]).dropna().dt.to_period("Q").unique())
+            if not register.empty else []
+        )
+        total_by_quarter = register.groupby("quarter_date").size()
         period_values = [
             {
                 "period_key": quarter.start_time,
                 "period_date": quarter.start_time,
                 "period_label": f"{quarter.year} Q{quarter.quarter}",
                 "Year": int(quarter.year),
-                "total": int(_total_by_quarter.get(quarter.start_time, 0)),
+                "total": int(total_by_quarter.get(quarter.start_time, 0)),
             }
-            for quarter in _register_quarters
+            for quarter in register_quarters
         ]
         count_keys = ["line_id", "period_date"]
     else:
         work["period_date"] = work["Year"].map(lambda year: pd.Timestamp(int(year), 1, 1))
         work["period_label"] = work["Year"].astype(int).astype(str)
+        register_years = sorted(int(year) for year in register["Year"].dropna().unique())
+        total_by_year = register.groupby("Year").size()
         period_values = [
             {
                 "period_key": int(year),
                 "period_date": pd.Timestamp(int(year), 1, 1),
                 "period_label": str(int(year)),
                 "Year": int(year),
-                "total": int(_total_by_year.get(year, 0)),
+                "total": int(total_by_year.get(year, 0)),
             }
-            for year in _register_years
+            for year in register_years
         ]
         count_keys = ["line_id", "Year"]
 
@@ -484,6 +516,7 @@ def adoption_curve_table(
             line_linkage_span=("linkage_span", _line_span),
             products=("product", lambda values: list(dict.fromkeys(values))),
             total_projects=("project_key", lambda values: values.nunique()),
+            first_selected_use=("quarter_date", "min"),
         )
         .sort_values("total_projects", ascending=False, kind="stable")
     )
@@ -491,7 +524,12 @@ def adoption_curve_table(
     rows = []
     for line_id, meta in line_meta.iterrows():
         products = list(meta["products"])
-        start = _line_start_for_products(products, granularity)
+        first_selected_use = pd.Timestamp(meta["first_selected_use"])
+        start = (
+            first_selected_use.to_period("Q").start_time
+            if granularity == "quarter"
+            else pd.Timestamp(first_selected_use.year, 1, 1)
+        )
         for period in period_values:
             period_date = period["period_date"]
             if period_date < start:
@@ -524,7 +562,13 @@ def adoption_curve_table(
         kind="stable",
     ).reset_index(drop=True)
 
-def _group_product_summary(summary: pd.DataFrame) -> pd.DataFrame:
+def _group_product_summary(
+    summary: pd.DataFrame,
+    product_projects: pd.DataFrame = DF_PRODUCT_PROJECTS,
+    *,
+    window_start: pd.Timestamp = REGISTER_WINDOW_START,
+    window_end: pd.Timestamp | None = None,
+) -> pd.DataFrame:
     if summary.empty:
         return summary
 
@@ -540,8 +584,8 @@ def _group_product_summary(summary: pd.DataFrame) -> pd.DataFrame:
             collection = str(group["collection_label"].iloc[0])
             products = group["product"].dropna().astype(str).tolist()
             project_count = int(
-                DF_PRODUCT_PROJECTS.loc[
-                    DF_PRODUCT_PROJECTS["product"].isin(products),
+                product_projects.loc[
+                    product_projects["product"].isin(products),
                     ["project_key"],
                 ]["project_key"].nunique()
             )
@@ -551,7 +595,14 @@ def _group_product_summary(summary: pd.DataFrame) -> pd.DataFrame:
             ]
             first_values = [value for value in first_values if not pd.isna(value)]
             first_use = min(first_values) if first_values else pd.NaT
-            exposure = _exposure_years(first_use) if not pd.isna(first_use) else 0.0
+            exposure = (
+                _exposure_years(
+                    first_use,
+                    window_start=window_start,
+                    window_end=window_end,
+                )
+                if not pd.isna(first_use) else 0.0
+            )
             span = _line_span(group["linkage_span"])
             rows.append({
                 "product": collection,
@@ -577,6 +628,7 @@ def product_summary_table(
     *,
     collection_view: str | None = None,
     selected_products: list[str] | None = None,
+    eligible_record_ids: list[str] | None = None,
 ) -> pd.DataFrame:
     """Observed first use, exposure years and demand rate per linked product.
 
@@ -584,12 +636,34 @@ def product_summary_table(
     register. Curated availability and announcement metadata remain in
     ``LINKED_PRODUCTS`` for provenance but have no effect on this table.
     """
+    product_projects = DF_PRODUCT_PROJECTS
+    register = df_all
+    if eligible_record_ids is not None:
+        wanted = {str(value).strip() for value in eligible_record_ids}
+        product_projects = product_projects[
+            product_projects["Record ID"].astype(str).str.strip().isin(wanted)
+        ]
+        register = register[
+            register["Record ID"].astype(str).str.strip().isin(wanted)
+        ]
+    totals = Counter(product_projects["product"])
+    first_seen = product_projects.groupby("product")["quarter_date"].min()
+    window_start = (
+        pd.Timestamp(int(register["Year"].min()), 1, 1)
+        if not register.empty else REGISTER_WINDOW_START
+    )
+    window_end = register["Accreditation Date"].max() if not register.empty else window_start
+
     rows = []
     for product in LINKED_PRODUCTS:
         canonical = product["canonical"]
-        first_use = _product_first_accredited_use(canonical)
-        exposure = _exposure_years(first_use) if first_use is not None else 0.0
-        total = int(PRODUCT_TOTALS.get(canonical, 0))
+        seen = first_seen.get(canonical, pd.NaT)
+        first_use = pd.Timestamp(seen) if not pd.isna(seen) else None
+        exposure = (
+            _exposure_years(first_use, window_start=window_start, window_end=window_end)
+            if first_use is not None else 0.0
+        )
+        total = int(totals.get(canonical, 0))
         rows.append({
             "product": canonical,
             "short": product["short"],
@@ -618,7 +692,12 @@ def product_summary_table(
         else COLLECTION_VIEW_INDIVIDUAL
     )
     if summary_mode == COLLECTION_VIEW_GROUPED:
-        summary = _group_product_summary(summary)
+        summary = _group_product_summary(
+            summary,
+            product_projects,
+            window_start=window_start,
+            window_end=window_end,
+        )
     return summary.sort_values(
         "total_projects", ascending=False, kind="stable"
     ).reset_index(drop=True)

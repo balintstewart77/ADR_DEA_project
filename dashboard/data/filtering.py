@@ -305,9 +305,14 @@ def _get_enriched_register_display_df(
     temporal_structure_filter="ALL",
     unit_filter="ALL",
     researcher_sector_filter="ALL",
+    eligible_record_ids=None,
 ) -> tuple[pd.DataFrame, str]:
     base = _ensure_enriched_register_columns(df_thematic_projects)
     base = base[_classified_mask(base)]
+
+    if eligible_record_ids is not None:
+        base = _filter_by_record_ids(base, eligible_record_ids)
+    n_classified_total = len(base)
 
     base = _apply_register_filters(
         base,
@@ -353,7 +358,6 @@ def _get_enriched_register_display_df(
         ]
 
     n_displayed = len(base)
-    n_classified_total = _CLASSIFIED_REGISTER_COUNT
     count_text = (
         f"Showing {n_displayed:,} of {n_classified_total:,} classified projects"
     )

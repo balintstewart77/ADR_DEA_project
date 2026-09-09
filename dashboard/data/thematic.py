@@ -481,6 +481,130 @@ def _domain_cooccurrence(df: pd.DataFrame) -> pd.DataFrame:
     return matrix
 
 
+def _classification_trends(
+    df: pd.DataFrame,
+    source_col: str,
+    category_col: str,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Rebuild the frozen release's multi-label trend and totals tables."""
+    by_year_columns = ["Year", category_col, "count", "total", "pct_of_projects"]
+    total_columns = [category_col, "count"]
+    if df.empty or source_col not in df.columns or "Year" not in df.columns:
+        return pd.DataFrame(columns=by_year_columns), pd.DataFrame(columns=total_columns)
+    key = "Record ID" if "Record ID" in df.columns else "Project ID"
+    base = df[[key, "Year", source_col]].copy()
+    base[category_col] = base[source_col].apply(_split_semicolon_values)
+    exploded = base.explode(category_col)
+    exploded = exploded[
+        exploded[category_col].notna()
+        & exploded[category_col].astype(str).str.strip().ne("")
+    ]
+    totals_by_year = base.groupby("Year")[key].count().rename("total")
+    by_year = (
+        exploded.groupby(["Year", category_col])[key].count()
+        .reset_index().rename(columns={key: "count"})
+        .merge(totals_by_year, on="Year")
+    )
+    by_year["pct_of_projects"] = (
+        by_year["count"] / by_year["total"] * 100
+    ).round(1)
+    totals = (
+        exploded.groupby(category_col)[key].count()
+        .reset_index().rename(columns={key: "count"})
+        .sort_values("count", ascending=False, kind="stable")
+        .reset_index(drop=True)
+    )
+    return by_year[by_year_columns], totals[total_columns]
+
+
+def build_thematic_aggregates(df: pd.DataFrame) -> dict:
+    """Aggregate one already record-filtered classified-project population."""
+    work = df.copy()
+    by_year_a, totals_a = _classification_trends(
+        work, "substantive_domains", "domain",
+    )
+    by_year_c, totals_c = _classification_trends(
+        work, "analytical_purpose", "purpose",
+    )
+    tag_values = _tag_series(work)
+    tagged_count = int(tag_values.apply(_has_any_tag).sum())
+    years = sorted(int(y) for y in work.get("Year", pd.Series(dtype=float)).dropna().unique())
+    totals_by_year = work.groupby("Year").size() if "Year" in work.columns else pd.Series(dtype=int)
+    tag_rows = []
+    for tag in TAG_LABELS:
+        tag_mask = tag_values.apply(lambda value, selected=tag: selected in _split_semicolon_values(value))
+        counts = work.loc[tag_mask].groupby("Year").size() if "Year" in work.columns else pd.Series(dtype=int)
+        for year in years:
+            total = int(totals_by_year.get(year, 0))
+            count = int(counts.get(year, 0))
+            tag_rows.append({
+                "Year": year,
+                "tag": tag,
+                "count": count,
+                "total": total,
+                "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+            })
+    no_linkage = (
+        work["record_linkage"].fillna("").astype(str).str.strip().eq("No record linkage")
+        if "record_linkage" in work.columns else pd.Series(False, index=work.index)
+    )
+    sector_matrix, sector_excluded = _researcher_sector_cooccurrence(work)
+    return {
+        "df_thematic_a": by_year_a,
+        "df_thematic_c": by_year_c,
+        "df_thematic_a_totals": totals_a,
+        "df_thematic_c_totals": totals_c,
+        "df_cross_domain_purpose": _domain_crosstab(
+            work, "analytical_purpose", True, PURPOSE_LABELS,
+        ),
+        "df_thematic_tag_by_year": pd.DataFrame(
+            tag_rows,
+            columns=["Year", "tag", "count", "total", "pct_of_projects"],
+        ),
+        "df_thematic_covid_tag_by_domain": _tag_domain_totals(
+            work, tag_values, "COVID-19 & Pandemic",
+        ),
+        "df_thematic_demographic_tag_by_domain": _tag_domain_totals(
+            work, tag_values, "Demographic disparities / equity tag",
+        ),
+        "df_domain_cooccurrence": _domain_cooccurrence(work),
+        "df_latent_demand_cooccurrence": _domain_cooccurrence(work.loc[no_linkage]),
+        "LATENT_NO_LINKAGE_COUNT": int(no_linkage.sum()),
+        "df_record_linkage_totals": _single_value_totals(
+            work, "record_linkage", "record_linkage",
+            ["No record linkage", "Cross-domain", "Within-domain"],
+        ),
+        "df_collection_method_totals": _semicolon_value_totals(
+            work, "dataset_collection_methods", "collection_method",
+        ),
+        "df_temporal_structure_totals": _semicolon_value_totals(
+            work, "dataset_temporal_structures", "temporal_structure",
+        ),
+        "df_unit_totals": _semicolon_value_totals(
+            work, "dataset_units", "unit_of_observation",
+        ),
+        "df_researcher_sector_totals": _semicolon_value_totals(
+            work, "researcher_sectors", "researcher_sector",
+        ),
+        "df_record_linkage_by_year": _record_linkage_by_year(work),
+        "df_record_linkage_by_quarter": _record_linkage_by_quarter(work),
+        "df_collection_method_by_year": _facet_values_by_year(
+            work, "dataset_collection_methods", "collection_method",
+        ),
+        "df_temporal_structure_by_year": _facet_values_by_year(
+            work, "dataset_temporal_structures", "temporal_structure",
+        ),
+        "df_unit_by_year": _facet_values_by_year(
+            work, "dataset_units", "unit_of_observation",
+        ),
+        "df_domain_record_linkage": _domain_record_linkage_crosstab(work),
+        "df_researcher_sector_cooccurrence": sector_matrix,
+        "RESEARCHER_SECTOR_EXCLUDED_COUNT": sector_excluded,
+        "THEMATIC_PROJECT_COUNT": int(len(work)),
+        "THEMATIC_TAGGED_COUNT": tagged_count,
+    }
+
+
 def load_thematic_data(thematic_dir):
     """Returns (data_dict, available_flag)."""
     try:
