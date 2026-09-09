@@ -113,10 +113,16 @@ def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institu
             if "Researchers" in base.columns
             else pd.Series("", index=base.index)
         )
+        rationale = (
+            base[RATIONALE_COL]
+            if RATIONALE_COL in base.columns
+            else pd.Series("", index=base.index)
+        )
         mask = (
             project_id.astype(str).str.contains(search, case=False, na=False, regex=False)
             | title.astype(str).str.contains(search, case=False, na=False, regex=False)
             | researchers.astype(str).str.contains(search, case=False, na=False, regex=False)
+            | rationale.astype(str).str.contains(search, case=False, na=False, regex=False)
         )
         base = base[mask]
 
@@ -306,6 +312,7 @@ def _get_enriched_register_display_df(
     unit_filter="ALL",
     researcher_sector_filter="ALL",
     eligible_record_ids=None,
+    include_record_id=False,
 ) -> tuple[pd.DataFrame, str]:
     base = _ensure_enriched_register_columns(df_thematic_projects)
     base = base[_classified_mask(base)]
@@ -384,7 +391,12 @@ def _get_enriched_register_display_df(
         else:
             display[col] = _format_deterministic_facet(display[col])
 
-    return display[_ENRICHED_REGISTER_DISPLAY_COLUMNS], count_text
+    columns = list(_ENRICHED_REGISTER_DISPLAY_COLUMNS)
+    if include_record_id:
+        if "Record ID" not in display.columns:
+            raise KeyError("Enriched Register rows require the unique Record ID")
+        columns.insert(0, "Record ID")
+    return display[columns], count_text
 
 
 def _csv_date_stamp() -> str:

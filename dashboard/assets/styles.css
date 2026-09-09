@@ -203,6 +203,47 @@
     border-color: #f0f0f0 !important;
     font-size: 0.85rem;
 }
+.rationale-details {
+    margin: 0;
+}
+.rationale-details summary {
+    cursor: pointer;
+    list-style: none;
+    outline-offset: 3px;
+}
+.rationale-details summary::-webkit-details-marker {
+    display: none;
+}
+.rationale-preview {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+}
+.rationale-toggle {
+    display: inline-block;
+    margin-top: 0.3rem;
+    color: #245f91;
+    font-weight: 600;
+    text-decoration: underline;
+}
+.rationale-show-less,
+.rationale-details[open] .rationale-read-more,
+.rationale-details[open] .rationale-preview {
+    display: none;
+}
+.rationale-details[open] .rationale-show-less {
+    display: inline;
+}
+.rationale-full {
+    margin-top: 0.45rem;
+    white-space: pre-wrap;
+}
+.rationale-short {
+    white-space: pre-wrap;
+}
 
 /* Footer */
 .dea-footer {

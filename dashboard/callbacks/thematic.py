@@ -1,6 +1,9 @@
 """Thematic Analysis callbacks."""
 
 from functools import lru_cache
+from html import escape
+
+import pandas as pd
 
 from dash import dcc, Input, Output, State
 
@@ -33,6 +36,7 @@ from dashboard.data.year_filter import (
 
 
 _YEAR_RANGE = year_range(df_all)
+RATIONALE_PREVIEW_CHARACTER_LIMIT = 120
 
 
 @lru_cache(maxsize=16)
@@ -52,9 +56,83 @@ def _filter_enriched_accreditation_year_range(display, year_range, year_min, yea
     return filtered, parse_accreditation_dates(filtered)
 
 
+def _rationale_display(rationale, title, record_id) -> str:
+    """Return escaped inline details markup without changing the source text."""
+    if rationale is None or pd.isna(rationale) or not str(rationale).strip():
+        return '<span class="rationale-short">—</span>'
+
+    source = str(rationale)
+    safe_rationale = escape(source, quote=True)
+    if len(source.strip()) <= RATIONALE_PREVIEW_CHARACTER_LIMIT:
+        return f'<span class="rationale-short">{safe_rationale}</span>'
+
+    label_target = str(title).strip() if title is not None else ""
+    if not label_target:
+        label_target = str(record_id).strip() or "this project"
+    safe_target = escape(label_target, quote=True)
+    safe_record_id = escape(str(record_id).strip(), quote=True)
+    return (
+        f'<details class="rationale-details" data-record-id="{safe_record_id}">'
+        f'<summary aria-label="Toggle full model-generated rationale for {safe_target}">'
+        f'<span class="rationale-preview">{safe_rationale}</span>'
+        '<span class="rationale-toggle">'
+        '<span class="rationale-read-more">Read more</span>'
+        '<span class="rationale-show-less">Show less</span>'
+        '</span>'
+        '</summary>'
+        f'<div class="rationale-full">{safe_rationale}</div>'
+        '</details>'
+    )
+
+
+def _enriched_table_records(display) -> list[dict]:
+    """Build keyed table rows with full and presentation-only rationale values."""
+    if "Record ID" not in display.columns:
+        raise KeyError("Enriched Register table rows require Record ID")
+    record_ids = display["Record ID"].astype("string").str.strip()
+    if record_ids.isna().any() or record_ids.eq("").any() or record_ids.duplicated().any():
+        raise ValueError("Enriched Register Record ID values must be unique and non-blank")
+
+    records = []
+    for row in display.to_dict("records"):
+        record_id = str(row.pop("Record ID")).strip()
+        row["id"] = record_id
+        row["rationale_display"] = _rationale_display(
+            row.get("rationale"), row.get("Title"), record_id,
+        )
+        records.append(row)
+    return records
+
+
 def register(app):
     if not THEMATIC_DATA_AVAILABLE:
         return
+
+    app.clientside_callback(
+        """
+        function(viewportRows, pageCurrent, sortBy) {
+            const closeExpandedRationales = function() {
+                document.querySelectorAll(
+                    '#enriched-register-table details.rationale-details[open]'
+                ).forEach(function(details) {
+                    details.open = false;
+                });
+            };
+            window.requestAnimationFrame(function() {
+                window.requestAnimationFrame(closeExpandedRationales);
+            });
+            return {
+                page: pageCurrent,
+                sort: sortBy || [],
+                recordIds: (viewportRows || []).map(function(row) { return row.id; })
+            };
+        }
+        """,
+        Output("enriched-rationale-view-reset", "data"),
+        Input("enriched-register-table", "derived_viewport_data"),
+        Input("enriched-register-table", "page_current"),
+        Input("enriched-register-table", "sort_by"),
+    )
 
     @app.callback(
         Output("thematic-domain-totals", "figure"),
@@ -431,6 +509,7 @@ def register(app):
             unit_filter,
             researcher_sector_filter,
             eligible_ids,
+            include_record_id=True,
         )
 
         display, accreditation_dates = _filter_enriched_accreditation_year_range(
@@ -443,7 +522,7 @@ def register(app):
         )
 
         return (
-            display.to_dict("records"),
+            _enriched_table_records(display),
             page_size or 20,
             count_text,
         )
