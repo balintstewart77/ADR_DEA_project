@@ -1,0 +1,73 @@
+population,dimension,pair_family,relation,eligible_records,count,total_pairs_classified,nonidentical_nonempty_pairs,all_nonidentical_pairs,empty_set_involved_pairs,proportion_of_nonidentical_nonempty_pairs,nonempty_proportion_status,proportion_of_all_nonidentical_pairs,all_proportion_status
+baseline,Research Domains,human_human,both_empty,150,0,450,220,220,0,,not_applicable,,not_applicable
+baseline,Research Domains,human_human,exactly_one_empty,150,0,450,220,220,0,,not_applicable,0,reported
+baseline,Research Domains,human_human,identical,150,230,450,220,220,0,,not_applicable,,not_applicable
+baseline,Research Domains,human_human,containment,150,105,450,220,220,0,0.47727272727272729,reported,0.47727272727272729,reported
+baseline,Research Domains,human_human,overlap,150,11,450,220,220,0,0.050000000000000003,reported,0.050000000000000003,reported
+baseline,Research Domains,human_human,disjoint,150,104,450,220,220,0,0.47272727272727272,reported,0.47272727272727272,reported
+baseline,Research Domains,model_human,both_empty,150,0,450,199,199,0,,not_applicable,,not_applicable
+baseline,Research Domains,model_human,exactly_one_empty,150,0,450,199,199,0,,not_applicable,0,reported
+baseline,Research Domains,model_human,identical,150,251,450,199,199,0,,not_applicable,,not_applicable
+baseline,Research Domains,model_human,containment,150,103,450,199,199,0,0.51758793969849248,reported,0.51758793969849248,reported
+baseline,Research Domains,model_human,overlap,150,16,450,199,199,0,0.080402010050251257,reported,0.080402010050251257,reported
+baseline,Research Domains,model_human,disjoint,150,80,450,199,199,0,0.4020100502512563,reported,0.4020100502512563,reported
+baseline,Analytical Purposes,human_human,both_empty,150,0,450,272,272,0,,not_applicable,,not_applicable
+baseline,Analytical Purposes,human_human,exactly_one_empty,150,0,450,272,272,0,,not_applicable,0,reported
+baseline,Analytical Purposes,human_human,identical,150,178,450,272,272,0,,not_applicable,,not_applicable
+baseline,Analytical Purposes,human_human,containment,150,38,450,272,272,0,0.13970588235294118,reported,0.13970588235294118,reported
+baseline,Analytical Purposes,human_human,overlap,150,1,450,272,272,0,0.0036764705882352941,reported,0.0036764705882352941,reported
+baseline,Analytical Purposes,human_human,disjoint,150,233,450,272,272,0,0.85661764705882348,reported,0.85661764705882348,reported
+baseline,Analytical Purposes,model_human,both_empty,150,0,450,270,270,0,,not_applicable,,not_applicable
+baseline,Analytical Purposes,model_human,exactly_one_empty,150,0,450,270,270,0,,not_applicable,0,reported
+baseline,Analytical Purposes,model_human,identical,150,180,450,270,270,0,,not_applicable,,not_applicable
+baseline,Analytical Purposes,model_human,containment,150,40,450,270,270,0,0.14814814814814814,reported,0.14814814814814814,reported
+baseline,Analytical Purposes,model_human,overlap,150,4,450,270,270,0,0.014814814814814815,reported,0.014814814814814815,reported
+baseline,Analytical Purposes,model_human,disjoint,150,226,450,270,270,0,0.83703703703703702,reported,0.83703703703703702,reported
+baseline,Joint cross-cutting tag set,human_human,both_empty,150,365,450,7,37,395,,not_applicable,,not_applicable
+baseline,Joint cross-cutting tag set,human_human,exactly_one_empty,150,30,450,7,37,395,,not_applicable,0.81081081081081086,reported
+baseline,Joint cross-cutting tag set,human_human,identical,150,48,450,7,37,395,,not_applicable,,not_applicable
+baseline,Joint cross-cutting tag set,human_human,containment,150,6,450,7,37,395,0.8571428571428571,reported,0.16216216216216217,reported
+baseline,Joint cross-cutting tag set,human_human,overlap,150,0,450,7,37,395,0,reported,0,reported
+baseline,Joint cross-cutting tag set,human_human,disjoint,150,1,450,7,37,395,0.14285714285714285,reported,0.027027027027027029,reported
+baseline,Joint cross-cutting tag set,model_human,both_empty,150,346,450,6,51,391,,not_applicable,,not_applicable
+baseline,Joint cross-cutting tag set,model_human,exactly_one_empty,150,45,450,6,51,391,,not_applicable,0.88235294117647056,reported
+baseline,Joint cross-cutting tag set,model_human,identical,150,53,450,6,51,391,,not_applicable,,not_applicable
+baseline,Joint cross-cutting tag set,model_human,containment,150,5,450,6,51,391,0.83333333333333337,reported,0.098039215686274508,reported
+baseline,Joint cross-cutting tag set,model_human,overlap,150,0,450,6,51,391,0,reported,0,reported
+baseline,Joint cross-cutting tag set,model_human,disjoint,150,1,450,6,51,391,0.16666666666666666,reported,0.019607843137254902,reported
+hard_case,Research Domains,human_human,both_empty,75,0,225,131,131,0,,not_applicable,,not_applicable
+hard_case,Research Domains,human_human,exactly_one_empty,75,0,225,131,131,0,,not_applicable,0,reported
+hard_case,Research Domains,human_human,identical,75,94,225,131,131,0,,not_applicable,,not_applicable
+hard_case,Research Domains,human_human,containment,75,67,225,131,131,0,0.51145038167938928,reported,0.51145038167938928,reported
+hard_case,Research Domains,human_human,overlap,75,9,225,131,131,0,0.068702290076335881,reported,0.068702290076335881,reported
+hard_case,Research Domains,human_human,disjoint,75,55,225,131,131,0,0.41984732824427479,reported,0.41984732824427479,reported
+hard_case,Research Domains,model_human,both_empty,75,0,225,142,142,0,,not_applicable,,not_applicable
+hard_case,Research Domains,model_human,exactly_one_empty,75,0,225,142,142,0,,not_applicable,0,reported
+hard_case,Research Domains,model_human,identical,75,83,225,142,142,0,,not_applicable,,not_applicable
+hard_case,Research Domains,model_human,containment,75,77,225,142,142,0,0.54225352112676062,reported,0.54225352112676062,reported
+hard_case,Research Domains,model_human,overlap,75,20,225,142,142,0,0.14084507042253522,reported,0.14084507042253522,reported
+hard_case,Research Domains,model_human,disjoint,75,45,225,142,142,0,0.31690140845070425,reported,0.31690140845070425,reported
+hard_case,Analytical Purposes,human_human,both_empty,75,0,225,132,132,0,,not_applicable,,not_applicable
+hard_case,Analytical Purposes,human_human,exactly_one_empty,75,0,225,132,132,0,,not_applicable,0,reported
+hard_case,Analytical Purposes,human_human,identical,75,93,225,132,132,0,,not_applicable,,not_applicable
+hard_case,Analytical Purposes,human_human,containment,75,12,225,132,132,0,0.090909090909090912,reported,0.090909090909090912,reported
+hard_case,Analytical Purposes,human_human,overlap,75,0,225,132,132,0,0,reported,0,reported
+hard_case,Analytical Purposes,human_human,disjoint,75,120,225,132,132,0,0.90909090909090906,reported,0.90909090909090906,reported
+hard_case,Analytical Purposes,model_human,both_empty,75,0,225,174,174,0,,not_applicable,,not_applicable
+hard_case,Analytical Purposes,model_human,exactly_one_empty,75,0,225,174,174,0,,not_applicable,0,reported
+hard_case,Analytical Purposes,model_human,identical,75,51,225,174,174,0,,not_applicable,,not_applicable
+hard_case,Analytical Purposes,model_human,containment,75,44,225,174,174,0,0.25287356321839083,reported,0.25287356321839083,reported
+hard_case,Analytical Purposes,model_human,overlap,75,1,225,174,174,0,0.0057471264367816091,reported,0.0057471264367816091,reported
+hard_case,Analytical Purposes,model_human,disjoint,75,129,225,174,174,0,0.74137931034482762,reported,0.74137931034482762,reported
+hard_case,Joint cross-cutting tag set,human_human,both_empty,75,173,225,2,22,193,,not_applicable,,not_applicable
+hard_case,Joint cross-cutting tag set,human_human,exactly_one_empty,75,20,225,2,22,193,,not_applicable,0.90909090909090906,reported
+hard_case,Joint cross-cutting tag set,human_human,identical,75,30,225,2,22,193,,not_applicable,,not_applicable
+hard_case,Joint cross-cutting tag set,human_human,containment,75,2,225,2,22,193,1,reported,0.090909090909090912,reported
+hard_case,Joint cross-cutting tag set,human_human,overlap,75,0,225,2,22,193,0,reported,0,reported
+hard_case,Joint cross-cutting tag set,human_human,disjoint,75,0,225,2,22,193,0,reported,0,reported
+hard_case,Joint cross-cutting tag set,model_human,both_empty,75,171,225,1,25,195,,not_applicable,,not_applicable
+hard_case,Joint cross-cutting tag set,model_human,exactly_one_empty,75,24,225,1,25,195,,not_applicable,0.95999999999999996,reported
+hard_case,Joint cross-cutting tag set,model_human,identical,75,29,225,1,25,195,,not_applicable,,not_applicable
+hard_case,Joint cross-cutting tag set,model_human,containment,75,1,225,1,25,195,1,reported,0.040000000000000001,reported
+hard_case,Joint cross-cutting tag set,model_human,overlap,75,0,225,1,25,195,0,reported,0,reported
+hard_case,Joint cross-cutting tag set,model_human,disjoint,75,0,225,1,25,195,0,reported,0,reported
