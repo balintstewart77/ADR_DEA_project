@@ -271,10 +271,11 @@ def test_chart_surfaces_excluded_no_domain_records_without_changing_series(bread
     assert len(figure.data) == len(baseline.data) == 3
     assert [trace.name for trace in figure.data] == [trace.name for trace in baseline.data]
     assert [list(trace.y) for trace in figure.data] == [list(trace.y) for trace in baseline.data]
+    assert figure.layout.margin.b == baseline.layout.margin.b == 104
     assert any(
         annotation.text
         == (
-            "1 selected record has no substantive domain and cannot be placed on the "
+            "1 selected dated record has no substantive domain<br>and cannot be placed on the "
             "domain-breadth scale; it is outside the denominator."
         )
         for annotation in figure.layout.annotations
@@ -375,7 +376,7 @@ def test_actual_callback_handles_empty_and_all_excluded_populations(breadth_data
     assert any(
         item.text
         == (
-            "1 selected record has no substantive domain and cannot be placed on the "
+            "1 selected dated record has no substantive domain<br>and cannot be placed on the "
             "domain-breadth scale; it is outside the denominator."
         )
         for item in figure.layout.annotations
@@ -415,3 +416,15 @@ def test_current_release_reconciles_against_an_independent_record_level_count():
         "invalid_classification": 0,
         "zero_substantive_domains": 2,
     }
+    figure = make_domain_breadth_trend(
+        result["df_domain_breadth_by_year"],
+        zero_substantive_domains=result["domain_breadth_selection_coverage"]["zero_substantive_domains"],
+    )
+    assert any(
+        annotation.text
+        == (
+            "2 selected dated records have no substantive domain<br>and cannot be placed on the "
+            "domain-breadth scale; they are outside the denominator."
+        )
+        for annotation in figure.layout.annotations
+    )

@@ -401,7 +401,7 @@ def make_domain_breadth_trend(
         ),
         yaxis=dict(range=[0, 100] if metric == "pct" else None),
         legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
-        margin=dict(r=24, t=96, b=104 if excluded_no_domain_count > 0 else 56),
+        margin=dict(r=24, t=96, b=104),
     )
     if df_by_period.empty or not df_by_period["eligible_denominator"].gt(0).any():
         fig.add_annotation(
@@ -424,12 +424,12 @@ def make_domain_breadth_trend(
     if excluded_no_domain_count > 0:
         record_label = "record" if excluded_no_domain_count == 1 else "records"
         verb = "has" if excluded_no_domain_count == 1 else "have"
-        pronoun = "It is" if excluded_no_domain_count == 1 else "They are"
+        pronoun = "it is" if excluded_no_domain_count == 1 else "they are"
         fig.add_annotation(
             text=(
-                f"{excluded_no_domain_count:,} selected {record_label} {verb} no substantive domain "
-                "and cannot be placed on the domain-breadth scale; "
-                f"{pronoun.lower()} outside the denominator."
+                f"{excluded_no_domain_count:,} selected dated {record_label} {verb} no substantive "
+                "domain<br>and cannot be placed on the domain-breadth scale; "
+                f"{pronoun} outside the denominator."
             ),
             xref="paper",
             yref="paper",

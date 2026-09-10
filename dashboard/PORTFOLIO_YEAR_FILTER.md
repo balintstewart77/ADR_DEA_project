@@ -76,10 +76,11 @@ excluding the taxonomy's `Unclear` fallback; a set with an unrecognised token
 is excluded as invalid rather than partially counted. The three plotted buckets
 are 1, 2 and 3+ domains, with each period's percentage denominator restricted
 to records in one of those buckets. The coverage table separately reconciles
-unmatched, missing, invalid and zero-substantive classifications; undated
-records remain a selection-level exclusion. This is an indicative description
-of assigned domains, not evidence of interdisciplinary methods or
-collaboration.
+unmatched, missing, invalid and zero-substantive classifications; the chart
+footnote surfaces the zero-substantive subset because those dated records
+cannot be placed on the breadth scale. Undated records remain a selection-level
+exclusion. This is an indicative description of assigned domains, not evidence
+of interdisciplinary methods or collaboration.
 
 ## Domain-breadth count provenance and release-pinning limitation
 
