@@ -81,35 +81,40 @@ records remain a selection-level exclusion. This is an indicative description
 of assigned domains, not evidence of interdisciplinary methods or
 collaboration.
 
-## Domain-breadth count diagnostic
+## Domain-breadth count provenance and release-pinning limitation
 
 The active release pointer, `data/release_pointers.json`, selects
 `analysis/outputs_classified_20260813-dc97c680115f/layer_classifications.csv`.
 That production CSV has no `substantive_domain_count` column. The dashboard
-creates the displayed field while loading it in
-`dashboard/data/thematic.py:_count_substantive_domains`, by counting every
-non-empty semicolon-delimited token. It is therefore a dashboard-derived
-display count, not a historical count loaded from the release file.
+creates the Enriched Register display/filter/export field while loading it in
+`dashboard/data/thematic.py:_count_substantive_domains`; it is not a stored or
+historical release value.
 
-The chart resolves its label universe from the active Layer A labels in
-`taxonomy_data_dictionary.yaml`, whose `dictionary_version` is `1.0-rc2`: 12
-recognised labels, including `Unclear from Register Entry`, of which 11 are
-substantive for this chart. The active release metadata identifies its taxonomy
-as `dict-1.0-rc2`. Explicitly comparing the trimmed labels used in the release
-CSV with the current 12-label universe found no extra or missing label. The
-release does not separately preserve a frozen label list, but its version
-identifier and observed values agree with the active universe. The displayed
-count itself has no taxonomy label universe: it counts tokens indiscriminately.
-Consequently, the discrepancy is a counting-rule difference, not evidence of a
-taxonomy-version mismatch.
+Both the Enriched Register field and the domain-breadth chart now use the same
+rule: count distinct recognised substantive Layer A labels, exclude
+`Unclear from Register Entry`, and make a set with an unrecognised token
+unavailable rather than partially counting it. The chart still uses its
+separate eligibility statuses and denominators. The former
+`stored_domain_count_discrepancies` coverage metric was removed: it compared
+two dashboard calculations, not a loaded value with a calculation, and would
+be permanently zero after this reconciliation.
 
-There are two discrepancies (below the 20-record documentation limit), both
-with the same fallback-only pattern:
+The chart's active label universe comes from `taxonomy_data_dictionary.yaml`
+(`dictionary_version: 1.0-rc2`): 12 recognised Layer A labels, including the
+fallback, of which 11 are substantive. The active release metadata identifies
+its taxonomy as `dict-1.0-rc2`. Comparing trimmed labels observed in the release
+CSV with the current 12-label universe found no extra or missing label; the
+earlier difference was therefore a counting-rule difference, not a taxonomy
+version mismatch. The following two Enriched Register values changed when the
+rules were unified:
 
-| Record ID | Original domain-label value | Stored count (dashboard-derived) | Chart-derived count | Chart status | Evidence-based explanation |
+| Record ID | Original domain-label value | Previous dashboard count | Current substantive count | Chart status | Explanation |
 |---|---|---:|---:|---|---|
-| 2024/019 | `Unclear from Register Entry` | 1 | 0 | zero substantive domains; excluded | The loader counts the fallback token. The chart recognises it but excludes it from substantive breadth. |
-| 2025/200 | `Unclear from Register Entry` | 1 | 0 | zero substantive domains; excluded | The loader counts the fallback token. The chart recognises it but excludes it from substantive breadth. |
+| 2024/019 | `Unclear from Register Entry` | 1 | 0 | zero substantive domains; excluded | The prior dashboard token count included the fallback; the substantive-only rule excludes it. |
+| 2025/200 | `Unclear from Register Entry` | 1 | 0 | zero substantive domains; excluded | The prior dashboard token count included the fallback; the substantive-only rule excludes it. |
 
-No classifications, source counts, or taxonomy labels were changed by this
-diagnostic.
+Release-pinning limitation: release metadata retains a taxonomy version string,
+not a frozen label list or label-list hash. A dictionary revision that changed
+labels without changing the release pointer or version identifier would not be
+detected by this comparison. Label-list pinning is intentionally not implemented
+here. No classifications, release data, or taxonomy labels were changed.

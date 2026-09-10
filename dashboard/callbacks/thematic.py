@@ -395,12 +395,6 @@ def register(app):
                 f" {selection_coverage['undated_omitted_records']:,} undated records are omitted "
                 "by the restricted year selection."
             )
-        if selection_coverage["stored_domain_count_discrepancies"]:
-            note += (
-                f" The stored domain-count field differs from the taxonomy-validated breadth for "
-                f"{selection_coverage['stored_domain_count_discrepancies']:,} records; this chart "
-                "uses the validated count."
-            )
         return (
             make_domain_breadth_trend(
                 source,

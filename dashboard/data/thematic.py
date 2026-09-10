@@ -346,8 +346,20 @@ def _researcher_sector_cooccurrence(df: pd.DataFrame) -> tuple[pd.DataFrame, int
 
 
 def _count_substantive_domains(value):
-    domains = _split_semicolon_values(value)
-    return len(domains) if domains else pd.NA
+    """Count distinct recognised substantive domains, matching breadth eligibility.
+
+    The ``substantive_domains`` source field can contain the taxonomy fallback
+    or an invalid token. The Enriched Register's count must not describe either
+    as a substantive domain, and an invalid set must not be partially counted.
+    """
+    substantive_labels = {
+        label for label in DOMAIN_LABELS if not label.lower().startswith("unclear")
+    }
+    unclear_labels = set(DOMAIN_LABELS) - substantive_labels
+    _, _, count = _domain_breadth_classification(
+        value, substantive_labels, unclear_labels,
+    )
+    return pd.NA if count is None else count
 
 
 def _is_missing_value(value) -> bool:
@@ -527,12 +539,6 @@ def domain_breadth_aggregates(
         if "substantive_domains" in classifications.columns
         else classifications[["_record_key"]].assign(substantive_domains=pd.NA)
     )
-    if SUBSTANTIVE_DOMAIN_COUNT_COL in classifications.columns:
-        domain_column[SUBSTANTIVE_DOMAIN_COUNT_COL] = classifications[
-            SUBSTANTIVE_DOMAIN_COUNT_COL
-        ].to_numpy()
-    else:
-        domain_column[SUBSTANTIVE_DOMAIN_COUNT_COL] = pd.NA
     merged = dated.merge(
         domain_column,
         on="_record_key",
@@ -559,11 +565,6 @@ def domain_breadth_aggregates(
         columns=["_reason", "_bucket", "_derived_domain_count"],
     )
     merged = pd.concat([merged, result], axis=1)
-    stored = pd.to_numeric(merged[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce")
-    comparable = merged["_derived_domain_count"].notna() & stored.notna()
-    stored_discrepancies = int(
-        (stored.loc[comparable] != merged.loc[comparable, "_derived_domain_count"]).sum()
-    )
 
     year_periods = _domain_breadth_calendar_periods(dates, selection, bounds, "year")
     quarter_periods = _domain_breadth_calendar_periods(dates, selection, bounds, "quarter")
@@ -586,7 +587,6 @@ def domain_breadth_aggregates(
             "missing_classification": int(merged["_reason"].eq("missing_classification").sum()),
             "invalid_classification": int(merged["_reason"].eq("invalid_classification").sum()),
             "zero_substantive_domains": int(merged["_reason"].eq("zero_substantive_domains").sum()),
-            "stored_domain_count_discrepancies": stored_discrepancies,
         },
     }
 

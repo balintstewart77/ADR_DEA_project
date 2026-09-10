@@ -10,7 +10,11 @@ from dashboard.charts.thematic import make_domain_breadth_trend
 from dashboard.config import PartialYearInfo
 from dashboard.data import thematic
 from dashboard.data.registry import df_all
-from dashboard.data.thematic import domain_breadth_aggregates
+from dashboard.data.thematic import (
+    _count_substantive_domains,
+    _domain_breadth_classification,
+    domain_breadth_aggregates,
+)
 from dashboard.data.year_filter import YearRange, year_range
 
 
@@ -41,22 +45,23 @@ def _fixture_register():
 
 def _fixture_classifications():
     rows = [
-        ("r1", DOMAIN_A, 1),
-        ("r2", f"{DOMAIN_A}; {DOMAIN_B}", 2),
-        ("r3", f"{DOMAIN_A}; {DOMAIN_B}; {DOMAIN_C}", 3),
-        ("r4", f"{DOMAIN_A}; {DOMAIN_B}; {DOMAIN_C}; {DOMAIN_D}", 4),
-        ("r5", f"{DOMAIN_A}; {DOMAIN_A}", 1),
-        ("r6", UNCLEAR, 1),
-        ("r7", None, None),
-        ("r8", f"{DOMAIN_A}; invented domain", 2),
-        ("r10", f"{DOMAIN_A}; {UNCLEAR}", 2),
-        ("r11", f"{DOMAIN_A}; {DOMAIN_B}", 2),
-        ("r12", f"{DOMAIN_A}; {DOMAIN_B}; {DOMAIN_C}", 3),
+        ("r1", DOMAIN_A),
+        ("r2", f"{DOMAIN_A}; {DOMAIN_B}"),
+        ("r3", f"{DOMAIN_A}; {DOMAIN_B}; {DOMAIN_C}"),
+        ("r4", f"{DOMAIN_A}; {DOMAIN_B}; {DOMAIN_C}; {DOMAIN_D}"),
+        ("r5", f"{DOMAIN_A}; {DOMAIN_A}"),
+        ("r6", UNCLEAR),
+        ("r7", None),
+        ("r8", f"{DOMAIN_A}; invented domain"),
+        ("r10", f"{DOMAIN_A}; {UNCLEAR}"),
+        ("r11", f"{DOMAIN_A}; {DOMAIN_B}"),
+        ("r12", f"{DOMAIN_A}; {DOMAIN_B}; {DOMAIN_C}"),
     ]
-    return pd.DataFrame(
-        rows,
-        columns=["Record ID", "substantive_domains", "substantive_domain_count"],
+    classifications = pd.DataFrame(rows, columns=["Record ID", "substantive_domains"])
+    classifications["substantive_domain_count"] = classifications["substantive_domains"].apply(
+        _count_substantive_domains,
     )
+    return classifications
 
 
 @pytest.fixture
@@ -104,8 +109,36 @@ def test_domain_breadth_uses_distinct_taxonomy_domains_and_reconciles_coverage(b
         coverage.loc["2024 Q1", "included_records"]
         + coverage.loc["2024 Q1", "excluded_records"]
     )
-    # The Unclear-only stored count is deliberately not reused by this chart.
-    assert breadth_data["domain_breadth_selection_coverage"]["stored_domain_count_discrepancies"] == 2
+    # The fixture's derived display count uses the same substantive-only rule
+    # as the chart, including its handling of fallback and invalid token sets.
+    assert "stored_domain_count_discrepancies" not in breadth_data["domain_breadth_selection_coverage"]
+
+
+def test_substantive_count_matches_chart_rule_for_fallback_invalid_and_duplicate_sets():
+    assert _count_substantive_domains(UNCLEAR) == 0
+    assert _count_substantive_domains(f"{DOMAIN_A}; {UNCLEAR}") == 1
+    assert _count_substantive_domains(f"{DOMAIN_A}; {DOMAIN_A}") == 1
+    assert pd.isna(_count_substantive_domains(f"{DOMAIN_A}; invented domain"))
+    assert pd.isna(_count_substantive_domains(None))
+
+    classifications = _fixture_classifications().set_index("Record ID")
+    assert classifications.loc["r6", "substantive_domain_count"] == 0
+    # This pins the non-Unclear former divergence: an unrecognised companion
+    # makes the count unavailable and the chart classifies the complete set as
+    # invalid rather than partially counting the recognised label.
+    assert pd.isna(classifications.loc["r8", "substantive_domain_count"])
+
+    substantive = {
+        label for label in taxonomy.DOMAIN_LABELS if not label.lower().startswith("unclear")
+    }
+    unclear = set(taxonomy.DOMAIN_LABELS) - substantive
+    for value in classifications["substantive_domains"]:
+        _, _, chart_count = _domain_breadth_classification(value, substantive, unclear)
+        register_count = _count_substantive_domains(value)
+        if chart_count is None:
+            assert pd.isna(register_count)
+        else:
+            assert register_count == chart_count
 
 
 def test_quarterly_zero_periods_and_yearly_reconciliation_are_record_level(breadth_data):
@@ -292,7 +325,6 @@ def test_actual_callback_handles_empty_and_all_excluded_populations(breadth_data
         "undated_omitted_records": 0, "included_records": 0,
         "unmatched_classification": 1, "missing_classification": 1,
         "invalid_classification": 1, "zero_substantive_domains": 1,
-        "stored_domain_count_discrepancies": 0,
     }
     with patch.object(callbacks, "_aggregates", return_value=excluded_data):
         figure, coverage, note = callback("pct", "year", [2024, 2024])
@@ -333,5 +365,4 @@ def test_current_release_reconciles_against_an_independent_record_level_count():
         "missing_classification": 0,
         "invalid_classification": 0,
         "zero_substantive_domains": 2,
-        "stored_domain_count_discrepancies": 2,
     }
