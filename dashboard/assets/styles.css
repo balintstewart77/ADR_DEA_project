@@ -203,13 +203,23 @@
     border-color: #f0f0f0 !important;
     font-size: 0.85rem;
 }
+.rationale-cell {
+    min-width: 0;
+}
 .rationale-details {
     margin: 0;
+}
+.rationale-details[data-overflow="false"] {
+    display: none;
 }
 .rationale-details summary {
     cursor: pointer;
     list-style: none;
     outline-offset: 3px;
+}
+#enriched-register-table .rationale-details summary:focus-visible {
+    outline: 2px solid #245f91;
+    border-radius: 2px;
 }
 .rationale-details summary::-webkit-details-marker {
     display: none;
@@ -220,7 +230,8 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    white-space: normal;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 .rationale-toggle {
     display: inline-block;
@@ -230,12 +241,14 @@
     text-decoration: underline;
 }
 .rationale-show-less,
-.rationale-details[open] .rationale-read-more,
-.rationale-details[open] .rationale-preview {
+.rationale-details[open] .rationale-read-more {
     display: none;
 }
 .rationale-details[open] .rationale-show-less {
     display: inline;
+}
+.rationale-cell.rationale-expanded > .rationale-preview {
+    display: none;
 }
 .rationale-full {
     margin-top: 0.45rem;

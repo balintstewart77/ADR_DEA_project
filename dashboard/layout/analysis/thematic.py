@@ -721,7 +721,7 @@ def _analyses_accordion():
                             ],
                             page_size=20,
                             page_current=0,
-                            sort_action="native",
+                            sort_action="custom",
                             filter_action="none",
                             markdown_options={"html": True},
                             style_cell_conditional=[{

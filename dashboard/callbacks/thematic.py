@@ -1,11 +1,11 @@
 """Thematic Analysis callbacks."""
 
-from functools import lru_cache
+from functools import cmp_to_key, lru_cache
 from html import escape
 
 import pandas as pd
 
-from dash import dcc, Input, Output, State
+from dash import ClientsideFunction, dcc, Input, Output, State
 
 from dashboard.data.thematic import (
     THEMATIC_DATA_AVAILABLE,
@@ -36,7 +36,6 @@ from dashboard.data.year_filter import (
 
 
 _YEAR_RANGE = year_range(df_all)
-RATIONALE_PREVIEW_CHARACTER_LIMIT = 120
 
 
 @lru_cache(maxsize=16)
@@ -57,24 +56,22 @@ def _filter_enriched_accreditation_year_range(display, year_range, year_min, yea
 
 
 def _rationale_display(rationale, title, record_id) -> str:
-    """Return escaped inline details markup without changing the source text."""
+    """Return escaped, measurable details markup without changing source text."""
     if rationale is None or pd.isna(rationale) or not str(rationale).strip():
         return '<span class="rationale-short">—</span>'
 
     source = str(rationale)
     safe_rationale = escape(source, quote=True)
-    if len(source.strip()) <= RATIONALE_PREVIEW_CHARACTER_LIMIT:
-        return f'<span class="rationale-short">{safe_rationale}</span>'
-
     label_target = str(title).strip() if title is not None else ""
     if not label_target:
         label_target = str(record_id).strip() or "this project"
     safe_target = escape(label_target, quote=True)
     safe_record_id = escape(str(record_id).strip(), quote=True)
     return (
-        f'<details class="rationale-details" data-record-id="{safe_record_id}">'
-        f'<summary aria-label="Toggle full model-generated rationale for {safe_target}">'
+        f'<div class="rationale-cell" data-record-id="{safe_record_id}">'
         f'<span class="rationale-preview">{safe_rationale}</span>'
+        '<details class="rationale-details" data-overflow="unknown">'
+        f'<summary aria-label="Toggle full model-generated rationale for {safe_target}">'
         '<span class="rationale-toggle">'
         '<span class="rationale-read-more">Read more</span>'
         '<span class="rationale-show-less">Show less</span>'
@@ -82,6 +79,7 @@ def _rationale_display(rationale, title, record_id) -> str:
         '</summary>'
         f'<div class="rationale-full">{safe_rationale}</div>'
         '</details>'
+        '</div>'
     )
 
 
@@ -104,30 +102,59 @@ def _enriched_table_records(display) -> list[dict]:
     return records
 
 
+def _is_sort_null(value) -> bool:
+    """Match DataTable's null handling without treating blank strings as null."""
+    if value is None:
+        return True
+    try:
+        return bool(pd.isna(value))
+    except (TypeError, ValueError):
+        return False
+
+
+def _sort_enriched_table_records(records: list[dict], sort_by) -> list[dict]:
+    """Sort complete table data, mapping the rendered rationale to its raw value."""
+    sort_specs = [
+        spec for spec in (sort_by or [])
+        if spec.get("column_id") and spec.get("direction") in {"asc", "desc"}
+    ]
+    if not sort_specs:
+        return records
+
+    def compare(left, right):
+        for spec in sort_specs:
+            column_id = spec["column_id"]
+            source_id = "rationale" if column_id == "rationale_display" else column_id
+            left_value = left.get(source_id)
+            right_value = right.get(source_id)
+            left_null = _is_sort_null(left_value)
+            right_null = _is_sort_null(right_value)
+            if left_null or right_null:
+                if left_null and right_null:
+                    continue
+                # Dash DataTable keeps actual nulls after non-null values in either direction.
+                return 1 if left_null else -1
+
+            try:
+                result = (left_value > right_value) - (left_value < right_value)
+            except TypeError:
+                left_text = str(left_value)
+                right_text = str(right_value)
+                result = (left_text > right_text) - (left_text < right_text)
+            if result:
+                return -result if spec["direction"] == "desc" else result
+        return 0
+
+    # Python's stable sort preserves filtered register order for complete ties.
+    return sorted(records, key=cmp_to_key(compare))
+
+
 def register(app):
     if not THEMATIC_DATA_AVAILABLE:
         return
 
     app.clientside_callback(
-        """
-        function(viewportRows, pageCurrent, sortBy) {
-            const closeExpandedRationales = function() {
-                document.querySelectorAll(
-                    '#enriched-register-table details.rationale-details[open]'
-                ).forEach(function(details) {
-                    details.open = false;
-                });
-            };
-            window.requestAnimationFrame(function() {
-                window.requestAnimationFrame(closeExpandedRationales);
-            });
-            return {
-                page: pageCurrent,
-                sort: sortBy || [],
-                recordIds: (viewportRows || []).map(function(row) { return row.id; })
-            };
-        }
-        """,
+        ClientsideFunction(namespace="enrichedRationale", function_name="update"),
         Output("enriched-rationale-view-reset", "data"),
         Input("enriched-register-table", "derived_viewport_data"),
         Input("enriched-register-table", "page_current"),
@@ -468,6 +495,7 @@ def register(app):
         Input("enriched-page-size", "value"),
         Input("enriched-accreditation-year-filter", "value"),
         Input("portfolio-accreditation-year-filter", "value"),
+        Input("enriched-register-table", "sort_by"),
         State("enriched-accreditation-year-filter", "min"),
         State("enriched-accreditation-year-filter", "max"),
     )
@@ -489,6 +517,7 @@ def register(app):
         page_size,
         accreditation_year_range,
         portfolio_year_range,
+        sort_by,
         accreditation_year_min,
         accreditation_year_max,
     ):
@@ -521,8 +550,11 @@ def register(app):
             f"record{'s' if len(display) != 1 else ''}"
         )
 
+        records = _sort_enriched_table_records(
+            _enriched_table_records(display), sort_by,
+        )
         return (
-            _enriched_table_records(display),
+            records,
             page_size or 20,
             count_text,
         )

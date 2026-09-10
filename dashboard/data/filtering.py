@@ -52,8 +52,17 @@ def _filter_by_record_ids(df: pd.DataFrame, record_ids) -> pd.DataFrame:
     return df[df["Record ID"].astype(str).str.strip().isin(wanted)]
 
 
-def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institution, tre) -> pd.DataFrame:
-    """Apply the common register-side filters used by Project Explorer and Enriched Register."""
+def _apply_register_filters(
+    df: pd.DataFrame,
+    search,
+    dataset,
+    provider,
+    institution,
+    tre,
+    *,
+    include_rationale_search: bool = False,
+) -> pd.DataFrame:
+    """Apply shared register filters, with enriched-only rationale search opt-in."""
     base = df.copy()
 
     if dataset and dataset != "ALL":
@@ -113,17 +122,20 @@ def _apply_register_filters(df: pd.DataFrame, search, dataset, provider, institu
             if "Researchers" in base.columns
             else pd.Series("", index=base.index)
         )
-        rationale = (
-            base[RATIONALE_COL]
-            if RATIONALE_COL in base.columns
-            else pd.Series("", index=base.index)
-        )
         mask = (
             project_id.astype(str).str.contains(search, case=False, na=False, regex=False)
             | title.astype(str).str.contains(search, case=False, na=False, regex=False)
             | researchers.astype(str).str.contains(search, case=False, na=False, regex=False)
-            | rationale.astype(str).str.contains(search, case=False, na=False, regex=False)
         )
+        if include_rationale_search:
+            rationale = (
+                base[RATIONALE_COL]
+                if RATIONALE_COL in base.columns
+                else pd.Series("", index=base.index)
+            )
+            mask |= rationale.astype("string").str.contains(
+                search, case=False, na=False, regex=False,
+            )
         base = base[mask]
 
     return base
@@ -328,6 +340,7 @@ def _get_enriched_register_display_df(
         provider_filter,
         institution_filter,
         tre_filter,
+        include_rationale_search=True,
     )
 
     if domain_filter and domain_filter != "ALL":
@@ -372,11 +385,13 @@ def _get_enriched_register_display_df(
     display = base.copy()
     for col in _DERIVED_CLASSIFICATION_COLUMNS:
         display[col] = display[col].fillna(DERIVED_EMPTY_VALUE)
-    # Tag is blank (not "—") when no equity/demographic lens applies; rationale
-    # is always present for a classified row but filled defensively.
-    for col in (CROSS_CUTTING_TAGS_COL, RATIONALE_COL):
-        if col in display.columns:
-            display[col] = display[col].fillna("")
+    # Tag is blank (not "—") when no equity/demographic lens applies. Preserve
+    # missing rationale values so table sorting retains DataTable's nulls-last policy.
+    if CROSS_CUTTING_TAGS_COL in display.columns:
+        display[CROSS_CUTTING_TAGS_COL] = display[CROSS_CUTTING_TAGS_COL].fillna("")
+    if RATIONALE_COL in display.columns:
+        rationale = display[RATIONALE_COL]
+        display[RATIONALE_COL] = rationale.astype("object").where(rationale.notna(), None)
     domain_counts = pd.to_numeric(display[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce").astype("Int64")
     display[SUBSTANTIVE_DOMAIN_COUNT_COL] = (
         domain_counts.astype("object").where(domain_counts.notna(), None)
