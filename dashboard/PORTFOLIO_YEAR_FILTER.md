@@ -113,6 +113,12 @@ rules were unified:
 | 2024/019 | `Unclear from Register Entry` | 1 | 0 | zero substantive domains; excluded | The prior dashboard token count included the fallback; the substantive-only rule excludes it. |
 | 2025/200 | `Unclear from Register Entry` | 1 | 0 | zero substantive domains; excluded | The prior dashboard token count included the fallback; the substantive-only rule excludes it. |
 
+Before unification, these were simultaneously user-visible values: the
+Domain-breadth count chart and the Enriched Register domain-count options were
+separately openable items in the same `always_open` dashboard accordion, and
+reported 855 versus 857 one-domain records for the same all-years release. The
+values are now reconciled.
+
 Release-pinning limitation: release metadata retains a taxonomy version string,
 not a frozen label list or label-list hash. A dictionary revision that changed
 labels without changing the release pointer or version identifier would not be
