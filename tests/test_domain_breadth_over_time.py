@@ -166,10 +166,59 @@ def test_chart_has_stable_series_unavailable_gaps_and_complete_hover_data(breadt
     assert [trace.name for trace in fig.data] == ["1 domain", "2 domains", "3+ domains"]
     assert [trace.marker.symbol for trace in fig.data] == ["circle", "square", "diamond"]
     assert fig.layout.yaxis.title.text == "Percentage of records with ≥1 substantive domain"
-    assert "Eligible denominator" in fig.data[0].hovertemplate
+    assert "Eligible denominator" in fig.data[0].hovertemplate[0]
     q2_index = list(fig.data[0].x).index("2024 Q2")
     assert fig.data[0].y[q2_index] is None
     assert any("2025 data covers" in annotation.text for annotation in fig.layout.annotations)
+
+
+@pytest.mark.parametrize(
+    ("metric", "zero_period_value", "adjacent_values"),
+    [
+        ("count", 0, (2, 1)),
+        ("pct", None, (40.0, 100.0)),
+    ],
+)
+def test_chart_zeroes_and_unavailable_percentages_are_distinguished(
+    breadth_data, metric, zero_period_value, adjacent_values,
+):
+    quarterly = make_domain_breadth_trend(
+        breadth_data["df_domain_breadth_by_quarter"], metric=metric, granularity="quarter",
+    )
+    q1_index = list(quarterly.data[0].x).index("2024 Q1")
+    q2_index = list(quarterly.data[0].x).index("2024 Q2")
+    q3_index = list(quarterly.data[0].x).index("2024 Q3")
+
+    # The zero-event quarter retains a numeric zero for count mode and an
+    # unavailable gap for percentage mode, without disturbing adjacent values.
+    assert [trace.y[q2_index] for trace in quarterly.data] == [zero_period_value] * 3
+    assert quarterly.data[0].y[q1_index] == adjacent_values[0]
+    assert quarterly.data[0].y[q3_index] == adjacent_values[1]
+    assert quarterly.data[0].customdata[q2_index] == [0, 0, "Unavailable"]
+    assert "no records were eligible" in quarterly.data[0].hovertemplate[q2_index]
+    assert "not a measured category count" in quarterly.data[0].hovertemplate[q2_index]
+
+    # In Q3, a denominator exists but the two-domain bucket is genuinely zero.
+    two_domain = next(trace for trace in quarterly.data if trace.name == "2 domains")
+    assert two_domain.y[q3_index] == 0
+    assert two_domain.customdata[q3_index] == [0, 1, "0.0%"]
+    assert "eligible records were present; none were assigned" in two_domain.hovertemplate[q3_index]
+
+
+def test_chart_year_mode_retains_measured_zeroes(breadth_data):
+    yearly = make_domain_breadth_trend(
+        breadth_data["df_domain_breadth_by_year"], metric="count", granularity="year",
+    )
+    percent_yearly = make_domain_breadth_trend(
+        breadth_data["df_domain_breadth_by_year"], metric="pct", granularity="year",
+    )
+    year_index = list(yearly.data[0].x).index(2025)
+    one_domain = next(trace for trace in yearly.data if trace.name == "1 domain")
+    one_domain_pct = next(trace for trace in percent_yearly.data if trace.name == "1 domain")
+    assert one_domain.y[year_index] == 0
+    assert one_domain_pct.y[year_index] == 0.0
+    assert one_domain.customdata[year_index] == [0, 1, "0.0%"]
+    assert "eligible records were present; none were assigned" in one_domain.hovertemplate[year_index]
 
 
 def _component_by_id(root, component_id):

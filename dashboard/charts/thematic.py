@@ -334,7 +334,11 @@ def make_domain_breadth_trend(
         ].sort_values(sort_cols)
         x_values = sub[x_col] if not sub.empty else []
         values = [
-            row[metric_col] if int(row["eligible_denominator"]) > 0 else None
+            (
+                row[metric_col]
+                if metric != "pct" or int(row["eligible_denominator"]) > 0
+                else None
+            )
             for _, row in sub.iterrows()
         ]
         customdata = [
@@ -344,6 +348,29 @@ def make_domain_breadth_trend(
             )]
             for _, row in sub.iterrows()
         ]
+        hovertemplates = []
+        for _, row in sub.iterrows():
+            denominator = int(row["eligible_denominator"])
+            count = int(row["count"])
+            if denominator == 0:
+                eligibility_note = (
+                    "Eligibility: no records were eligible in this period; zero is not a "
+                    "measured category count."
+                )
+            elif count == 0:
+                eligibility_note = (
+                    "Eligibility: eligible records were present; none were assigned to "
+                    "this category."
+                )
+            else:
+                eligibility_note = "Eligibility: eligible records were present in this period."
+            hovertemplates.append(
+                f"<b>{breadth}</b><br>Period: %{{x}}"
+                "<br>Accreditation records: %{customdata[0]}"
+                "<br>Eligible denominator: %{customdata[1]}"
+                "<br>Percentage: %{customdata[2]}"
+                f"<br>{eligibility_note}<extra></extra>"
+            )
         fig.add_trace(go.Scatter(
             x=x_values,
             y=values,
@@ -353,12 +380,7 @@ def make_domain_breadth_trend(
             line=dict(color=colours[breadth], width=2.5, dash=dashes[breadth]),
             marker=dict(color=colours[breadth], symbol=markers[breadth], size=7),
             customdata=customdata,
-            hovertemplate=(
-                f"<b>{breadth}</b><br>Period: %{{x}}"
-                "<br>Accreditation records: %{customdata[0]}"
-                "<br>Eligible denominator: %{customdata[1]}"
-                "<br>Percentage: %{customdata[2]}<extra></extra>"
-            ),
+            hovertemplate=hovertemplates,
         ))
 
     fig.update_layout(
