@@ -99,9 +99,9 @@ def test_adoption_summary_hides_availability_and_lag_presentation():
         "n/a (bounded)",
     ):
         assert obsolete not in rendered
-    assert "First accredited use" in column_names
-    assert "Exposure (years)" in column_names
-    assert "Projects / exposure-year" in column_names
+    assert "Historical first accredited use" in column_names
+    assert "Selected-window exposure (years)" in column_names
+    assert "Selected projects / exposure-year" in column_names
 
 
 def test_reference_availability_and_announcement_metadata_are_preserved():

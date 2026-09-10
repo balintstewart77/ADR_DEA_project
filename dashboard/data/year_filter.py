@@ -31,6 +31,18 @@ class YearRange:
         return {year: str(year) for year in range(self.minimum, self.maximum + 1)}
 
 
+@dataclass(frozen=True)
+class ObservationWindow:
+    """Half-open observation interval used by exposure and period calculations."""
+
+    start: pd.Timestamp
+    end: pd.Timestamp
+
+    @property
+    def is_empty(self) -> bool:
+        return self.end <= self.start
+
+
 def parse_accreditation_dates(df: pd.DataFrame) -> pd.Series:
     """Parse the authoritative field using Explorer's established display contract."""
     if DATE_FIELD not in df.columns:
@@ -78,6 +90,33 @@ def is_all_years(selection, bounds: YearRange) -> bool:
     selected = _selected_bounds(selection, bounds)
     return selected is None or (
         selected[0] <= bounds.minimum and selected[1] >= bounds.maximum
+    )
+
+
+def observation_window(
+    selection,
+    bounds: YearRange,
+    *,
+    register_start: pd.Timestamp,
+    observation_cutoff: pd.Timestamp,
+) -> ObservationWindow:
+    """Return the explicit half-open window for an inclusive year selection.
+
+    All years preserves the caller's established full-register interval
+    ``[register_start, observation_cutoff)``. A restricted inclusive selection
+    ``[L, U]`` maps to ``[max(register_start, L-01-01),
+    min(observation_cutoff, (U + 1)-01-01))``. The cutoff is passed in so this
+    shared helper cannot silently infer it from the selected records.
+    """
+    start = pd.Timestamp(register_start)
+    end = pd.Timestamp(observation_cutoff)
+    if is_all_years(selection, bounds):
+        return ObservationWindow(start=start, end=end)
+
+    lower, upper = _selected_bounds(selection, bounds)
+    return ObservationWindow(
+        start=max(start, pd.Timestamp(lower, 1, 1)),
+        end=min(end, pd.Timestamp(upper + 1, 1, 1)),
     )
 
 

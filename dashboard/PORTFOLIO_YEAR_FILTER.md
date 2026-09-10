@@ -21,6 +21,15 @@
   included or omitted. Current retained data contain none.
 - Options: constructed once from the full canonical register before any
   Explorer, Portfolio, or sub-view filter. They do not narrow with selections.
+- Exposure observation window: the established register start `R0` is
+  `2019-01-01`. The established cutoff `C` is the maximum authoritative
+  `Accreditation Date` in the full cleaned register, currently `2026-08-12`;
+  it is not inferred from selected records. As in the pre-filter calculation,
+  duration is `(C - start).days / 365.25`: the interval is half-open at `C`
+  and no extra day is added. All years preserves `[R0, C)`. An inclusive
+  restricted selection `[L, U]` uses
+  `[max(R0, L-01-01), min(C, (U+1)-01-01))`, so a completed calendar year runs
+  to the following 1 January even if its last accreditation was earlier.
 - Reset/session state: Portfolio's **All years** button restores the full range.
   Explorer and Portfolio use distinct component values; Dash retains each while
   switching tabs, with no new reload-persistence mechanism.
@@ -38,8 +47,8 @@ record units and 234 distinct official Project IDs.
 | View | Outputs | Record source and aggregation | Status |
 |---|---|---|---|
 | Overall Trends | yearly entries, quarterly entries, processing-environment pie | canonical register; record counts before aggregation | deterministic register values |
-| Dataset Demand | top-N demand/rate, annual trend, provider breakdown | dataset rows expanded from canonical records; distinct `Record ID` per dataset/provider; exposure denominator clipped to selected register window | deterministic derived values |
-| Linked Data Uptake | adoption curve, exposure-rate bar, adoption summary table | matched-product rows joined by `Record ID`; project and request definitions preserved; exposure recomputed within selected window | deterministic derived values with existing DEA-route caveats |
+| Dataset Demand | top-N demand/rate, annual trend, provider breakdown | dataset rows expanded from canonical records; distinct selected `Record ID` per dataset/provider; historical availability is curated where present and otherwise proxied by first full-register appearance; exposure is its intersection with the explicit observation window | deterministic derived values |
+| Linked Data Uptake | adoption curve, exposure-rate bar, adoption summary table | matched-product rows joined by `Record ID`; selected-period project/request definitions preserved; historical first accredited use comes from the full matched-product history and exposure is its intersection with the explicit observation window | deterministic derived values with existing DEA-route caveats |
 | Institutions | top-N bar and annual trend | affiliation rows expanded from canonical records; distinct `Record ID` | deterministic derived values |
 | Thematic Analysis | headline count; domain/purpose totals and trends; domain-purpose and domain co-occurrence; tag trend and tag-domain bars | frozen classifications filtered by canonical `Record ID`, then expanded/aggregated | indicative LLM classifications; existing warning retained |
 | Deterministic thematic facets | record-linkage distributions/trend/domain breakdown; researcher-sector distribution/co-occurrence; unit, collection-method and temporal-structure distributions/trends | frozen deterministic facets filtered at record level, then expanded/aggregated | deterministic derived values; mixed-layer latent-demand warning retained |
@@ -55,3 +64,8 @@ The compact pre-change regression baseline is
 `tests/fixtures/portfolio_analysis_prechange_baseline.json`. It records the
 input identity, headline values, chart-eligibility totals, yearly series, and
 canonical hashes of the numeric figure/table payloads at the original defaults.
+Provider and product filters affect selected numerators, never the calendar
+window or historical anchors. Adoption curves enumerate every year or quarter
+intersecting the explicit window, retain eligible zero-use periods after
+historical first use, report percentages as unavailable when a period has no
+selected register records, and never extend beyond `C`.

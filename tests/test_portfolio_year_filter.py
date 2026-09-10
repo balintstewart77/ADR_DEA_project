@@ -2,6 +2,7 @@ import hashlib
 import json
 from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -13,7 +14,7 @@ from dashboard.callbacks.explorer import _filter_accreditation_year_range
 from dashboard.callbacks.portfolio import build_overall_figures, portfolio_filter_summary
 from dashboard.charts.institutions import make_institution_bar, make_institution_trend
 from dashboard.charts.uptake import make_exposure_rate_bar
-from dashboard.data import registry, thematic
+from dashboard.data import registry, thematic, uptake
 from dashboard.data.collection_view import COLLECTION_VIEW_INDIVIDUAL
 from dashboard.data.filtering import _get_enriched_register_display_df
 from dashboard.data.uptake import (
@@ -23,10 +24,13 @@ from dashboard.data.uptake import (
 )
 from dashboard.data.year_filter import (
     DATE_FIELD,
+    ObservationWindow,
     RECORD_KEY,
+    YearRange,
     date_coverage,
     filter_records_by_year,
     filter_related_by_record_ids,
+    observation_window,
     selected_record_ids,
     year_range,
 )
@@ -288,6 +292,286 @@ def test_2024_selection_filters_before_expansion_and_combines_with_other_filters
     ).dt.year.unique().tolist()
     assert len(exported) == 236
     assert exported_years == [2024]
+
+
+def _synthetic_uptake_history():
+    products = ["Early member", "Selected member", "Also selected member"]
+    linked_products = [
+        {
+            "canonical": product,
+            "short": product,
+            "component_domains": ["Health", "Education"],
+            "is_cross_domain": True,
+            "flagship_collection": uptake.ADR_ENGLAND_FLAGSHIP_COLLECTION,
+            "collection_label": "Synthetic collection",
+        }
+        for product in products
+    ]
+    metadata = pd.DataFrame([
+        {
+            "product": product,
+            "short": product,
+            "linkage_span": "Cross-domain",
+            "flagship_collection": uptake.ADR_ENGLAND_FLAGSHIP_COLLECTION,
+            "collection_label": "Synthetic collection",
+            "is_adr_england_flagship": True,
+            "flagship_group": "ADR England flagship",
+        }
+        for product in products
+    ])
+    register = pd.DataFrame([
+        {
+            "Record ID": "historical-early",
+            "Accreditation Date": pd.Timestamp("2020-05-20"),
+            "Year": 2020,
+            "quarter_date": pd.Timestamp("2020-04-01"),
+        },
+        {
+            "Record ID": "historical-selected",
+            "Accreditation Date": pd.Timestamp("2022-05-20"),
+            "Year": 2022,
+            "quarter_date": pd.Timestamp("2022-04-01"),
+        },
+        {
+            "Record ID": "late-2024",
+            "Accreditation Date": pd.Timestamp("2024-11-15"),
+            "Year": 2024,
+            "quarter_date": pd.Timestamp("2024-10-01"),
+        },
+    ])
+    matched = pd.DataFrame([
+        {
+            "Record ID": "historical-early", "project_key": "historical-early",
+            "product": products[0], "Year": 2020,
+            "quarter_date": pd.Timestamp("2020-04-01"),
+        },
+        {
+            "Record ID": "historical-selected", "project_key": "historical-selected",
+            "product": products[1], "Year": 2022,
+            "quarter_date": pd.Timestamp("2022-04-01"),
+        },
+        {
+            "Record ID": "late-2024", "project_key": "late-2024",
+            "product": products[1], "Year": 2024,
+            "quarter_date": pd.Timestamp("2024-10-01"),
+        },
+        {
+            "Record ID": "late-2024", "project_key": "late-2024",
+            "product": products[2], "Year": 2024,
+            "quarter_date": pd.Timestamp("2024-10-01"),
+        },
+    ])
+    first_seen = pd.Series({
+        products[0]: pd.Timestamp("2020-04-01"),
+        products[1]: pd.Timestamp("2022-04-01"),
+        products[2]: pd.Timestamp("2024-10-01"),
+    })
+    return products, linked_products, metadata, register, matched, first_seen
+
+
+def test_explicit_windows_preserve_completed_and_partial_calendar_boundaries():
+    bounds = YearRange(2019, 2026)
+    full = observation_window(
+        bounds.value,
+        bounds,
+        register_start=pd.Timestamp("2019-01-01"),
+        observation_cutoff=pd.Timestamp("2026-08-12"),
+    )
+    completed = observation_window(
+        [2024, 2024],
+        bounds,
+        register_start=pd.Timestamp("2019-01-01"),
+        observation_cutoff=pd.Timestamp("2026-08-12"),
+    )
+    partial = observation_window(
+        [2026, 2026],
+        bounds,
+        register_start=pd.Timestamp("2019-01-01"),
+        observation_cutoff=pd.Timestamp("2026-08-12"),
+    )
+
+    assert full == ObservationWindow(
+        pd.Timestamp("2019-01-01"), pd.Timestamp("2026-08-12")
+    )
+    assert completed == ObservationWindow(
+        pd.Timestamp("2024-01-01"), pd.Timestamp("2025-01-01")
+    )
+    assert partial == ObservationWindow(
+        pd.Timestamp("2026-01-01"), pd.Timestamp("2026-08-12")
+    )
+    assert uptake._exposure_years(
+        pd.Timestamp("2020-04-01"),
+        window_start=completed.start,
+        window_end=completed.end,
+    ) == 366 / 365.25
+    assert uptake._exposure_years(
+        pd.Timestamp("2020-04-01"),
+        window_start=partial.start,
+        window_end=partial.end,
+    ) == 223 / 365.25
+
+
+def test_historical_anchor_keeps_zero_use_periods_and_unavailable_shares():
+    products, linked, metadata, register, matched, first_seen = _synthetic_uptake_history()
+    window = ObservationWindow(pd.Timestamp("2024-01-01"), pd.Timestamp("2025-01-01"))
+    with patch.multiple(
+        uptake,
+        df_all=register,
+        DF_PRODUCT_PROJECTS=matched,
+        LINKED_PRODUCTS=linked,
+        PRODUCT_METADATA=metadata,
+        _first_seen_by_product=first_seen,
+    ):
+        quarters = uptake.adoption_curve_table(
+            "quarter",
+            selected_products=[products[1]],
+            collection_view="individual",
+            eligible_record_ids=["late-2024"],
+            observation_window=window,
+        )
+        summary = uptake.product_summary_table(
+            selected_products=[products[1]],
+            collection_view="individual",
+            eligible_record_ids=["late-2024"],
+            observation_window=window,
+        ).iloc[0]
+
+    assert quarters["period_label"].tolist() == [
+        "2024 Q1", "2024 Q2", "2024 Q3", "2024 Q4",
+    ]
+    assert quarters["count"].tolist() == [0, 0, 0, 1]
+    assert quarters["total"].tolist() == [0, 0, 0, 1]
+    assert quarters["pct_of_projects"].isna().tolist() == [True, True, True, False]
+    assert quarters["pct_of_projects"].iloc[-1] == 100.0
+    assert summary["exposure_start"] == pd.Timestamp("2022-04-01")
+    assert summary["exposure_years"] == 1.0
+    assert summary["total_projects"] == 1
+    assert summary["projects_per_exposure_year"] == 1.0
+
+
+def test_multi_year_zero_event_periods_and_group_anchor_survive_filtering():
+    products, linked, metadata, register, matched, first_seen = _synthetic_uptake_history()
+    window = ObservationWindow(pd.Timestamp("2023-01-01"), pd.Timestamp("2026-01-01"))
+    with patch.multiple(
+        uptake,
+        df_all=register,
+        DF_PRODUCT_PROJECTS=matched,
+        LINKED_PRODUCTS=linked,
+        PRODUCT_METADATA=metadata,
+        _first_seen_by_product=first_seen,
+    ):
+        curve = uptake.adoption_curve_table(
+            "year",
+            selected_products=products,
+            collection_view="grouped",
+            eligible_record_ids=["late-2024"],
+            observation_window=window,
+        )
+        summary = uptake.product_summary_table(
+            selected_products=products,
+            collection_view="grouped",
+            eligible_record_ids=["late-2024"],
+            observation_window=window,
+        ).iloc[0]
+
+    assert curve["Year"].tolist() == [2023, 2024, 2025]
+    assert curve["count"].tolist() == [0, 1, 0]
+    assert curve["requests"].tolist() == [0, 2, 0]
+    assert curve["total"].tolist() == [0, 1, 0]
+    assert curve["pct_of_projects"].isna().tolist() == [True, False, True]
+    assert summary["exposure_start"] == pd.Timestamp("2020-04-01")
+    assert summary["total_projects"] == 1
+    expected_exposure = (pd.Timestamp("2026-01-01") - pd.Timestamp("2023-01-01")).days / 365.25
+    assert summary["exposure_years"] == round(expected_exposure, 1)
+    assert summary["projects_per_exposure_year"] == round(1 / expected_exposure, 1)
+
+
+def test_missing_historical_anchor_is_explicitly_unavailable():
+    missing = {
+        "canonical": "Never observed",
+        "short": "Never observed",
+        "component_domains": [],
+        "is_cross_domain": False,
+        "flagship_collection": "",
+        "collection_label": "",
+    }
+    empty_matches = pd.DataFrame(columns=[
+        "Record ID", "project_key", "product", "Year", "quarter_date",
+    ])
+    with patch.multiple(
+        uptake,
+        DF_PRODUCT_PROJECTS=empty_matches,
+        LINKED_PRODUCTS=[missing],
+        _first_seen_by_product=pd.Series(dtype="datetime64[ns]"),
+    ):
+        row = uptake.product_summary_table(
+            selected_products=["Never observed"],
+            eligible_record_ids=[],
+            observation_window=ObservationWindow(
+                pd.Timestamp("2024-01-01"), pd.Timestamp("2025-01-01")
+            ),
+        ).iloc[0]
+
+    assert row["first_use"] == "Unavailable"
+    assert pd.isna(row["exposure_years"])
+    assert pd.isna(row["projects_per_exposure_year"])
+
+
+def test_dataset_rate_uses_historical_availability_and_explicit_window():
+    window = ObservationWindow(pd.Timestamp("2024-01-01"), pd.Timestamp("2025-01-01"))
+    selected = pd.DataFrame([
+        {"Record ID": "a", "Project ID": "a", "dataset": "Dataset A", "provider": "P", "Year": 2024},
+        {"Record ID": "b", "Project ID": "b", "dataset": "Dataset A", "provider": "P", "Year": 2024},
+    ])
+    first_seen = pd.Series({"Dataset A": pd.Timestamp("2020-04-01")})
+    with patch.object(uptake, "_dataset_first_seen", first_seen), patch.object(
+        uptake, "_dataset_curated_date", return_value=pd.Timestamp("2018-06-01")
+    ):
+        exposure = uptake.dataset_exposure_table(window)
+    figures = build_dataset_demand_figures(
+        10, None, "ALL", "rate", COLLECTION_VIEW_INDIVIDUAL,
+        source_df=selected, dataset_exposure=exposure,
+    )
+
+    expected_exposure = 366 / 365.25
+    assert exposure.loc["Dataset A", "availability_date"] == pd.Timestamp("2018-06-01")
+    assert exposure.loc["Dataset A", "exposure_years"] == expected_exposure
+    assert list(figures[0].data[0].x) == [round(2 / expected_exposure, 2)]
+    assert list(figures[0].data[0].customdata)[0][0] == 2
+
+
+def test_empty_and_zero_exposure_execute_dataset_and_uptake_callback_paths():
+    from dashboard.app import app
+
+    dataset_key = next(key for key in app.callback_map if "datasets-topn-chart" in key)
+    uptake_key = next(key for key in app.callback_map if "uptake-adoption-curves" in key)
+    dataset_callback = app.callback_map[dataset_key]["callback"].__wrapped__
+    uptake_callback = app.callback_map[uptake_key]["callback"].__wrapped__
+
+    dataset_figures = dataset_callback(10, None, "ALL", "rate", [2030, 2030])
+    uptake_figure, rate_figure, table = uptake_callback(
+        "pct", "year", [FLAGSHIP_PRODUCTS[0]], "individual", [2030, 2030]
+    )
+    empty_curve, empty_rate, empty_table = uptake_callback(
+        "count", "year", [], "individual", [2024, 2024]
+    )
+
+    for figure in [*dataset_figures, uptake_figure, rate_figure]:
+        numeric_values = [
+            value
+            for trace in figure.data
+            for axis in (getattr(trace, "x", None), getattr(trace, "y", None))
+            if axis is not None
+            for value in axis
+            if isinstance(value, (int, float, np.integer, np.floating))
+        ]
+        assert all(np.isfinite(value) for value in numeric_values)
+    assert any("No projects match" in str(item.text) for item in rate_figure.layout.annotations)
+    assert table.data[0]["exposure_years"] == 0.0
+    assert table.data[0]["projects_per_exposure_year"] is None
+    assert not empty_curve.data
+    assert not empty_rate.data
+    assert empty_table.data == []
 
 
 def test_zero_match_is_explicit_and_reset_value_restores_full_population():

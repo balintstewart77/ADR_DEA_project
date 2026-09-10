@@ -26,7 +26,7 @@ def make_adoption_curves(
 
     Cross-domain products draw solid, within-domain dashed, so the two kinds
     stay distinguishable however many products are selected. The data frame is
-    already clipped so each product starts at its first accredited-use period.
+    spans the explicit window from each product's historical first-use period.
     """
     fig = go.Figure()
     if df_adoption.empty:
@@ -114,19 +114,19 @@ def make_adoption_curves(
         if metric_col == "requests":
             note = (
                 "Access requests count each (project, member dataset) pair, so a collection "
-                "line equals the sum of its member lines. Lines begin at the earliest "
-                "selected member's first accredited use. DEA-gateway use only."
+                "line equals the sum of its member lines. Lines use the earliest historical "
+                "first accredited use among included members and the selected window. DEA-gateway use only."
             )
         else:
             note = (
                 "Reference-defined collections are de-duplicated to one project per collection. "
-                "Lines begin at the earliest selected member's first accredited use. "
+                "Lines use the earliest historical first accredited use among included members and the selected window. "
                 "DEA-gateway use only."
             )
     else:
         note = (
-            "Selected linked datasets shown individually. Lines begin at each dataset's first "
-            "accredited use in the DEA register. Solid = cross-domain; dashed = within-domain."
+            "Selected linked datasets shown individually. Lines use full-history first accredited "
+            "use and the selected observation window. Solid = cross-domain; dashed = within-domain."
         )
     fig.add_annotation(
         text=note,
@@ -190,15 +190,15 @@ def make_exposure_rate_bar(
         hovertemplate=(
             "<b>%{customdata[0]}</b><br>"
             "%{customdata[1]}<br>"
-            "%{x:.1f} projects per exposure-year<br>"
-            "%{customdata[2]} total projects<br>"
-            "%{customdata[3]:.1f} exposure years"
+            "%{x:.1f} selected projects per exposure-year<br>"
+            "%{customdata[2]} selected projects<br>"
+            "%{customdata[3]:.1f} years exposed within the selected window"
             "<extra></extra>"
         ),
     ))
     fig.update_layout(
-        title="Projects per Exposure-Year",
-        xaxis_title="Projects per exposure-year",
+        title="Selected Projects per Exposure-Year",
+        xaxis_title="Selected projects per exposure-year",
         yaxis_title="",
         yaxis=dict(
             tickmode="array",
@@ -212,7 +212,7 @@ def make_exposure_rate_bar(
     fig.add_annotation(
         text=(
             "Teal = ADR England flagship; grey = Other linked datasets. "
-            "Exposure-years are counted from first accredited use in the DEA register; "
+            "Exposure intersects historical first accredited use with the selected window; "
             "short exposures are initial-adoption rates."
         ),
         xref="paper", yref="paper",

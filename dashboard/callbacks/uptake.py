@@ -6,10 +6,12 @@ from dashboard.charts.uptake import make_adoption_curves, make_exposure_rate_bar
 from dashboard.charts.template import annotate_empty
 from dashboard.layout.analysis.uptake import build_adoption_summary_table
 from dashboard.data.registry import PARTIAL_YEAR_INFO, df_all
-from dashboard.data.year_filter import selected_record_ids, year_range
+from dashboard.data.year_filter import observation_window, selected_record_ids, year_range
 from dashboard.data.uptake import (
     FLAGSHIP_PRODUCTS,
+    LATEST_REGISTER_DATE,
     OTHER_PRODUCTS,
+    REGISTER_WINDOW_START,
     adoption_curve_table,
     product_summary_table,
 )
@@ -67,16 +69,24 @@ def register(app):
         selected_granularity = granularity or "year"
         selected = selected_products or []
         record_ids = selected_record_ids(df_all, year_selection, _YEAR_RANGE)
+        window = observation_window(
+            year_selection,
+            _YEAR_RANGE,
+            register_start=REGISTER_WINDOW_START,
+            observation_cutoff=LATEST_REGISTER_DATE,
+        )
         source = adoption_curve_table(
             selected_granularity,
             selected_products=selected,
             collection_view=collection_view,
             eligible_record_ids=record_ids,
+            observation_window=window,
         )
         summary = product_summary_table(
             collection_view=collection_view,
             selected_products=selected,
             eligible_record_ids=record_ids,
+            observation_window=window,
         )
         curves = make_adoption_curves(
             source,

@@ -55,7 +55,7 @@ def build_datasets_tab():
                     id="datasets-topn-metric",
                     options=[
                         {"label": "Total projects", "value": "count"},
-                        {"label": "Projects per year available", "value": "rate"},
+                        {"label": "Selected projects per exposure-year", "value": "rate"},
                     ],
                     value="count",
                     clearable=False,
@@ -73,16 +73,12 @@ def build_datasets_tab():
             ),
         ]),
         html.P(
-            "\"Projects per year available\" divides each dataset's distinct-project count by its "
-            "exposure within the selected register window: the years from max(availability date, "
-            "2019-01-01, selected lower year) to the latest selected register date, with a partial "
-            "final year counted fractionally. "
-            "Availability defaults to the dataset's first appearance in the register (a proxy); "
-            "curated availability dates from the reference override the proxy where present. "
-            "Datasets available before the selected window get that full window as exposure. The hover shows "
-            "each dataset's exposure years — rates over short exposures are initial-adoption "
-            "rates, not sustained demand. In grouped collection view, reference-defined "
-            "collection members are de-duplicated to one project per collection.",
+            "The rate divides selected-period distinct projects by exposure within the selected "
+            "calendar window. Exposure is the intersection of that window with the dataset's "
+            "historical availability: a curated reference date where present, otherwise its first "
+            "full-register appearance. Completed years run to the following 1 January; the partial "
+            "final year stops at the full-register cutoff. Rates over short exposures are "
+            "initial-adoption rates, not sustained demand.",
             className="section-desc text-muted small",
         ),
         dbc.Row([

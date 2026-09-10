@@ -176,7 +176,9 @@ class CollectionToggleTest(unittest.TestCase):
             "dashboard.callbacks.datasets.build_dataset_demand_figures",
             return_value=("top", "trend", "provider"),
         ) as mocked:
-            spec["callback"](10, None, "ALL", "count", outputs_list=outputs_list)
+            spec["callback"](
+                10, None, "ALL", "count", [2019, 2026], outputs_list=outputs_list
+            )
 
         self.assertEqual(mocked.call_count, 1)
         self.assertEqual(mocked.call_args.args[-1], "individual")

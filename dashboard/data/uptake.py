@@ -32,9 +32,18 @@ from dashboard.data.collection_view import (
     normalise_collection_view,
 )
 from dashboard.data.registry import df_all, df_datasets
+from dashboard.data.year_filter import ObservationWindow
 
 REGISTER_WINDOW_START = pd.Timestamp("2019-01-01")
+# This is the pre-year-filter observation cutoff: the latest authoritative
+# accreditation date in the full cleaned register. Exposure uses the half-open
+# interval ending at this date, preserving the established ``.days`` convention
+# without adding a day.
 LATEST_REGISTER_DATE = df_all["Accreditation Date"].max()
+FULL_OBSERVATION_WINDOW = ObservationWindow(
+    start=REGISTER_WINDOW_START,
+    end=LATEST_REGISTER_DATE,
+)
 
 # Short display labels for annotation/legend use; canonical names stay the key.
 PRODUCT_SHORT_LABELS = {
@@ -96,7 +105,7 @@ def _availability_to_timestamp(value) -> pd.Timestamp | None:
 
 def _quarter_label(ts) -> str:
     if ts is None or pd.isna(ts):
-        return ""
+        return "Unavailable"
     ts = pd.Timestamp(ts)
     return f"{ts.year} Q{(ts.month - 1) // 3 + 1}"
 
@@ -181,17 +190,10 @@ def _dataset_curated_date(dataset: str) -> pd.Timestamp | None:
     return min(dates) if dates else None
 
 
-def dataset_exposure_table(register_df: pd.DataFrame | None = None) -> pd.DataFrame:
+def dataset_exposure_table(
+    observation_window: ObservationWindow = FULL_OBSERVATION_WINDOW,
+) -> pd.DataFrame:
     """Per-dataset availability, exposure years and basis (curated vs proxy)."""
-    selected_register = df_all if register_df is None else register_df
-    window_start = (
-        pd.Timestamp(int(selected_register["Year"].min()), 1, 1)
-        if not selected_register.empty else REGISTER_WINDOW_START
-    )
-    window_end = (
-        selected_register["Accreditation Date"].max()
-        if not selected_register.empty else window_start
-    )
     rows = []
     for dataset, first_seen in _dataset_first_seen.items():
         curated = _dataset_curated_date(dataset)
@@ -205,8 +207,8 @@ def dataset_exposure_table(register_df: pd.DataFrame | None = None) -> pd.DataFr
             "first_seen": first_seen,
             "exposure_years": _exposure_years(
                 availability,
-                window_start=window_start,
-                window_end=window_end,
+                window_start=observation_window.start,
+                window_end=observation_window.end,
             ),
         })
     return pd.DataFrame(rows).set_index("dataset")
@@ -407,95 +409,127 @@ def _empty_adoption_frame() -> pd.DataFrame:
     ])
 
 
+def _observation_periods(
+    observation_window: ObservationWindow,
+    granularity: str,
+) -> list[dict]:
+    """Calendar periods intersecting the explicit half-open observation window."""
+    if observation_window.is_empty:
+        return []
+    if granularity == "quarter":
+        starts = pd.date_range(
+            observation_window.start.to_period("Q").start_time,
+            observation_window.end,
+            freq="QS",
+            inclusive="left",
+        )
+        return [
+            {
+                "period_key": start,
+                "period_date": start,
+                "period_label": f"{start.year} Q{start.quarter}",
+                "Year": int(start.year),
+            }
+            for start in starts
+        ]
+    starts = pd.date_range(
+        pd.Timestamp(observation_window.start.year, 1, 1),
+        observation_window.end,
+        freq="YS",
+        inclusive="left",
+    )
+    return [
+        {
+            "period_key": int(start.year),
+            "period_date": start,
+            "period_label": str(int(start.year)),
+            "Year": int(start.year),
+        }
+        for start in starts
+    ]
+
+
 def adoption_curve_table(
     granularity: str = "year",
     *,
     selected_products: list[str] | None = None,
     collection_view: str | None = None,
     eligible_record_ids: list[str] | None = None,
+    observation_window: ObservationWindow = FULL_OBSERVATION_WINDOW,
 ) -> pd.DataFrame:
-    """Per-product adoption-curve rows for selected linked products."""
+    """Selected-period adoption rows anchored to full matched-product history."""
     selected = list(dict.fromkeys(selected_products or []))
     if not selected:
         return _empty_adoption_frame()
-    product_projects = DF_PRODUCT_PROJECTS
+    historical = DF_PRODUCT_PROJECTS[
+        DF_PRODUCT_PROJECTS["product"].isin(selected)
+    ].copy()
+    if historical.empty:
+        return _empty_adoption_frame()
+
+    historical = _with_product_metadata(historical)
     register = df_all
+    wanted = None
     if eligible_record_ids is not None:
         wanted = {str(value).strip() for value in eligible_record_ids}
-        product_projects = product_projects[
-            product_projects["Record ID"].astype(str).str.strip().isin(wanted)
-        ]
         register = register[
             register["Record ID"].astype(str).str.strip().isin(wanted)
         ]
-    if product_projects.empty:
-        return _empty_adoption_frame()
-
-    work = product_projects[product_projects["product"].isin(selected)].copy()
-    if work.empty:
-        return _empty_adoption_frame()
-    work = _with_product_metadata(work)
     mode = (
         normalise_collection_view(collection_view)
         if collection_view is not None
         else COLLECTION_VIEW_INDIVIDUAL
     )
     grouped = mode == COLLECTION_VIEW_GROUPED
-    has_collection = work["collection_label"].astype(str) != ""
+    has_collection = historical["collection_label"].astype(str) != ""
 
     if grouped:
-        work["line_id"] = work["product"]
-        work.loc[has_collection, "line_id"] = (
-            "collection::" + work.loc[has_collection, "collection_label"].astype(str)
+        historical["line_id"] = historical["product"]
+        historical.loc[has_collection, "line_id"] = (
+            "collection::" + historical.loc[has_collection, "collection_label"].astype(str)
         )
-        work["line_label"] = work["short"]
-        work.loc[has_collection, "line_label"] = work.loc[has_collection, "collection_label"]
-        work["line_group"] = work["flagship_group"]
+        historical["line_label"] = historical["short"]
+        historical.loc[has_collection, "line_label"] = historical.loc[has_collection, "collection_label"]
+        historical["line_group"] = historical["flagship_group"]
     else:
-        work["line_id"] = work["product"]
-        work["line_label"] = work["short"]
-        work["line_group"] = work["flagship_group"]
+        historical["line_id"] = historical["product"]
+        historical["line_label"] = historical["short"]
+        historical["line_group"] = historical["flagship_group"]
+
+    # Select numerators only after assigning line metadata from full history.
+    # This retains lines whose selected count is zero.
+    if wanted is None:
+        product_projects = historical
+    else:
+        product_projects = historical[
+            historical["Record ID"].astype(str).str.strip().isin(wanted)
+        ]
 
     if granularity == "quarter":
-        work["period_date"] = pd.to_datetime(work["quarter_date"])
-        work["period_label"] = work["period_date"].dt.to_period("Q").map(
+        product_projects = product_projects.copy()
+        product_projects["period_date"] = pd.to_datetime(product_projects["quarter_date"])
+        product_projects["period_label"] = product_projects["period_date"].dt.to_period("Q").map(
             lambda quarter: f"{quarter.year} Q{quarter.quarter}"
         )
-        register_quarters = (
-            sorted(pd.to_datetime(register["quarter_date"]).dropna().dt.to_period("Q").unique())
-            if not register.empty else []
-        )
         total_by_quarter = register.groupby("quarter_date").size()
-        period_values = [
-            {
-                "period_key": quarter.start_time,
-                "period_date": quarter.start_time,
-                "period_label": f"{quarter.year} Q{quarter.quarter}",
-                "Year": int(quarter.year),
-                "total": int(total_by_quarter.get(quarter.start_time, 0)),
-            }
-            for quarter in register_quarters
-        ]
+        period_values = _observation_periods(observation_window, "quarter")
+        for period in period_values:
+            period["total"] = int(total_by_quarter.get(period["period_date"], 0))
         count_keys = ["line_id", "period_date"]
     else:
-        work["period_date"] = work["Year"].map(lambda year: pd.Timestamp(int(year), 1, 1))
-        work["period_label"] = work["Year"].astype(int).astype(str)
-        register_years = sorted(int(year) for year in register["Year"].dropna().unique())
+        product_projects = product_projects.copy()
+        product_projects["period_date"] = product_projects["Year"].map(
+            lambda year: pd.Timestamp(int(year), 1, 1)
+        )
+        product_projects["period_label"] = product_projects["Year"].astype(int).astype(str)
         total_by_year = register.groupby("Year").size()
-        period_values = [
-            {
-                "period_key": int(year),
-                "period_date": pd.Timestamp(int(year), 1, 1),
-                "period_label": str(int(year)),
-                "Year": int(year),
-                "total": int(total_by_year.get(year, 0)),
-            }
-            for year in register_years
-        ]
+        period_values = _observation_periods(observation_window, "year")
+        for period in period_values:
+            period["total"] = int(total_by_year.get(period["Year"], 0))
         count_keys = ["line_id", "Year"]
 
     counts = (
-        work.drop_duplicates(subset=["line_id", *count_keys[1:], "project_key"])
+        product_projects.drop_duplicates(subset=["line_id", *count_keys[1:], "project_key"])
         .groupby(count_keys)["project_key"]
         .nunique()
     )
@@ -504,32 +538,27 @@ def adoption_curve_table(
     # grouped collection line equals the sum of its member lines. For
     # individual lines (one product per line) requests == projects.
     request_counts = (
-        work.drop_duplicates(subset=["line_id", *count_keys[1:], "project_key", "product"])
+        product_projects.drop_duplicates(subset=["line_id", *count_keys[1:], "project_key", "product"])
         .groupby(count_keys)
         .size()
     )
     line_meta = (
-        work.groupby("line_id", sort=False)
+        historical.groupby("line_id", sort=False)
         .agg(
             line_label=("line_label", "first"),
             line_group=("line_group", "first"),
             line_linkage_span=("linkage_span", _line_span),
             products=("product", lambda values: list(dict.fromkeys(values))),
-            total_projects=("project_key", lambda values: values.nunique()),
-            first_selected_use=("quarter_date", "min"),
         )
-        .sort_values("total_projects", ascending=False, kind="stable")
     )
+    selected_totals = product_projects.groupby("line_id")["project_key"].nunique()
+    line_meta["total_projects"] = line_meta.index.map(selected_totals).fillna(0).astype(int)
+    line_meta = line_meta.sort_values("total_projects", ascending=False, kind="stable")
 
     rows = []
     for line_id, meta in line_meta.iterrows():
         products = list(meta["products"])
-        first_selected_use = pd.Timestamp(meta["first_selected_use"])
-        start = (
-            first_selected_use.to_period("Q").start_time
-            if granularity == "quarter"
-            else pd.Timestamp(first_selected_use.year, 1, 1)
-        )
+        start = _line_start_for_products(products, granularity)
         for period in period_values:
             period_date = period["period_date"]
             if period_date < start:
@@ -552,7 +581,7 @@ def adoption_curve_table(
                 "count": count,
                 "requests": int(request_counts.get(count_key, 0)),
                 "total": total,
-                "pct_of_projects": round(count / total * 100, 1) if total else 0.0,
+                "pct_of_projects": round(count / total * 100, 1) if total else pd.NA,
             })
 
     if not rows:
@@ -566,8 +595,7 @@ def _group_product_summary(
     summary: pd.DataFrame,
     product_projects: pd.DataFrame = DF_PRODUCT_PROJECTS,
     *,
-    window_start: pd.Timestamp = REGISTER_WINDOW_START,
-    window_end: pd.Timestamp | None = None,
+    observation_window: ObservationWindow = FULL_OBSERVATION_WINDOW,
 ) -> pd.DataFrame:
     if summary.empty:
         return summary
@@ -598,10 +626,10 @@ def _group_product_summary(
             exposure = (
                 _exposure_years(
                     first_use,
-                    window_start=window_start,
-                    window_end=window_end,
+                    window_start=observation_window.start,
+                    window_end=observation_window.end,
                 )
-                if not pd.isna(first_use) else 0.0
+                if not pd.isna(first_use) else None
             )
             span = _line_span(group["linkage_span"])
             rows.append({
@@ -614,9 +642,11 @@ def _group_product_summary(
                 "flagship_group": str(group["flagship_group"].iloc[0]),
                 "first_use": _quarter_label(first_use),
                 "exposure_start": first_use,
-                "exposure_years": round(exposure, 1),
+                "exposure_years": round(exposure, 1) if exposure is not None else None,
                 "total_projects": project_count,
-                "projects_per_exposure_year": round(project_count / exposure, 1) if exposure else None,
+                "projects_per_exposure_year": (
+                    round(project_count / exposure, 1) if exposure else None
+                ),
             })
         else:
             row = group.iloc[0].drop(labels=["line_id"]).to_dict()
@@ -629,39 +659,34 @@ def product_summary_table(
     collection_view: str | None = None,
     selected_products: list[str] | None = None,
     eligible_record_ids: list[str] | None = None,
+    observation_window: ObservationWindow = FULL_OBSERVATION_WINDOW,
 ) -> pd.DataFrame:
-    """Observed first use, exposure years and demand rate per linked product.
+    """Historical first use and selected-window exposure rate per linked product.
 
-    Exposure begins in the quarter of first accredited use observed in the DEA
-    register. Curated availability and announcement metadata remain in
-    ``LINKED_PRODUCTS`` for provenance but have no effect on this table.
+    Historical anchors come from the full matched-product history. Curated
+    availability and announcement metadata remain in ``LINKED_PRODUCTS`` for
+    provenance but have no effect on this table. Eligible record IDs affect
+    only selected-period numerators.
     """
     product_projects = DF_PRODUCT_PROJECTS
-    register = df_all
     if eligible_record_ids is not None:
         wanted = {str(value).strip() for value in eligible_record_ids}
         product_projects = product_projects[
             product_projects["Record ID"].astype(str).str.strip().isin(wanted)
         ]
-        register = register[
-            register["Record ID"].astype(str).str.strip().isin(wanted)
-        ]
     totals = Counter(product_projects["product"])
-    first_seen = product_projects.groupby("product")["quarter_date"].min()
-    window_start = (
-        pd.Timestamp(int(register["Year"].min()), 1, 1)
-        if not register.empty else REGISTER_WINDOW_START
-    )
-    window_end = register["Accreditation Date"].max() if not register.empty else window_start
 
     rows = []
     for product in LINKED_PRODUCTS:
         canonical = product["canonical"]
-        seen = first_seen.get(canonical, pd.NaT)
-        first_use = pd.Timestamp(seen) if not pd.isna(seen) else None
+        first_use = _product_first_accredited_use(canonical)
         exposure = (
-            _exposure_years(first_use, window_start=window_start, window_end=window_end)
-            if first_use is not None else 0.0
+            _exposure_years(
+                first_use,
+                window_start=observation_window.start,
+                window_end=observation_window.end,
+            )
+            if first_use is not None else None
         )
         total = int(totals.get(canonical, 0))
         rows.append({
@@ -678,13 +703,13 @@ def product_summary_table(
             ),
             "first_use": _quarter_label(first_use),
             "exposure_start": first_use,
-            "exposure_years": round(exposure, 1),
+            "exposure_years": round(exposure, 1) if exposure is not None else None,
             "total_projects": total,
             "projects_per_exposure_year": round(total / exposure, 1) if exposure else None,
         })
     summary = pd.DataFrame(rows)
-    selected = list(dict.fromkeys(selected_products or []))
-    if selected:
+    if selected_products is not None:
+        selected = list(dict.fromkeys(selected_products))
         summary = summary[summary["product"].isin(selected)].copy()
     summary_mode = (
         normalise_collection_view(collection_view)
@@ -695,8 +720,7 @@ def product_summary_table(
         summary = _group_product_summary(
             summary,
             product_projects,
-            window_start=window_start,
-            window_end=window_end,
+            observation_window=observation_window,
         )
     return summary.sort_values(
         "total_projects", ascending=False, kind="stable"

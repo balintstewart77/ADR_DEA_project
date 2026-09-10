@@ -17,10 +17,15 @@ from dashboard.data.collection_view import (
     with_collection_display,
 )
 from dashboard.data.registry import df_all, df_datasets, PARTIAL_YEAR_INFO
-from dashboard.data.uptake import DATASET_EXPOSURE, dataset_exposure_table
+from dashboard.data.uptake import (
+    DATASET_EXPOSURE,
+    LATEST_REGISTER_DATE,
+    REGISTER_WINDOW_START,
+    dataset_exposure_table,
+)
 from dashboard.data.year_filter import (
-    filter_records_by_year,
     filter_related_by_record_ids,
+    observation_window,
     selected_record_ids,
     year_range,
 )
@@ -58,9 +63,8 @@ def build_dataset_demand_figures(
     # -- Top N datasets / collections bar chart --
     dataset_counts = display_entity_counts(display_sub)
     if (topn_metric or "count") == "rate":
-        # Demand normalised by exposure WITHIN the register window (years
-        # from max(availability, window start) to the latest register date,
-        # current year fractional) -- never by raw dataset age.
+        # Selected-period demand normalised by the intersection of the explicit
+        # observation window and full-history dataset availability.
         exposure_source = DATASET_EXPOSURE if dataset_exposure is None else dataset_exposure
         exposure = display_entity_exposure(display_sub, exposure_source).reindex(
             dataset_counts["display_dataset"]
@@ -80,10 +84,10 @@ def build_dataset_demand_figures(
             x="Rate",
             y="display_dataset",
             orientation="h",
-            title=f"Top {top_n} {entity_noun} by Demand Rate (per year available)",
+            title=f"Top {top_n} {entity_noun} by Selected-Period Demand Rate",
             labels={
                 "display_dataset": "",
-                "Rate": "Retained entries per year available",
+                "Rate": "Selected entries per exposure-year",
             },
             color_discrete_sequence=[PRIMARY_BAR],
             custom_data=["Projects", "exposure_years", "availability_basis", "display_kind"],
@@ -92,9 +96,10 @@ def build_dataset_demand_figures(
             marker_line_width=0,
             hovertemplate=(
                 "<b>%{y}</b><br>%{customdata[3]}<br>"
-                "%{x:.2f} retained entries per year available<br>"
-                "%{customdata[0]} retained entries over %{customdata[1]:.1f} exposure years<br>"
-                "availability basis: %{customdata[2]}<extra></extra>"
+                "%{x:.2f} selected entries per exposure-year<br>"
+                "%{customdata[0]} selected entries over %{customdata[1]:.1f} years "
+                "exposed within the selected window<br>"
+                "historical availability basis: %{customdata[2]}<extra></extra>"
             ),
         )
     else:
@@ -124,10 +129,10 @@ def build_dataset_demand_figures(
 
     # -- Trend: top N datasets / collections over time --
     trend_n = min(top_n, 15)  # cap legend at 15 for readability
+    trend_counts = display_entity_counts(display_sub)
     top_trend = (
-        display_entity_counts(display_sub)
-        .nlargest(trend_n, "Projects")["display_dataset"]
-        .tolist()
+        trend_counts.nlargest(trend_n, "Projects")["display_dataset"].tolist()
+        if not trend_counts.empty else []
     )
     trend_data = (
         display_sub[display_sub["display_dataset"].isin(top_trend)]
@@ -243,7 +248,12 @@ def register(app):
         # toggle scopes only the Linked Data Uptake views.
         record_ids = selected_record_ids(df_all, year_selection, _YEAR_RANGE)
         selected = filter_related_by_record_ids(df_datasets, record_ids)
-        selected_register = filter_records_by_year(df_all, year_selection, _YEAR_RANGE)
+        window = observation_window(
+            year_selection,
+            _YEAR_RANGE,
+            register_start=REGISTER_WINDOW_START,
+            observation_cutoff=LATEST_REGISTER_DATE,
+        )
         figures = build_dataset_demand_figures(
             preset,
             custom,
@@ -251,6 +261,6 @@ def register(app):
             topn_metric,
             COLLECTION_VIEW_INDIVIDUAL,
             source_df=selected,
-            dataset_exposure=dataset_exposure_table(selected_register),
+            dataset_exposure=dataset_exposure_table(window),
         )
         return tuple(annotate_empty(fig, selected.empty) for fig in figures)

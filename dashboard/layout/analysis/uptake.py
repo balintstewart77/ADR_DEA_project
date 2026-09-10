@@ -39,10 +39,10 @@ def build_adoption_summary_table(summary: pd.DataFrame) -> dash_table.DataTable:
         {"name": "Linked product", "id": "product"},
         {"name": "Flagship grouping", "id": "flagship_group"},
         {"name": "Linkage span", "id": "linkage_span"},
-        {"name": "First accredited use", "id": "first_use"},
-        {"name": "Exposure (years)", "id": "exposure_years", "type": "numeric"},
-        {"name": "Total projects", "id": "total_projects", "type": "numeric"},
-        {"name": "Projects / exposure-year", "id": "projects_per_exposure_year", "type": "numeric"},
+        {"name": "Historical first accredited use", "id": "first_use"},
+        {"name": "Selected-window exposure (years)", "id": "exposure_years", "type": "numeric"},
+        {"name": "Selected projects", "id": "total_projects", "type": "numeric"},
+        {"name": "Selected projects / exposure-year", "id": "projects_per_exposure_year", "type": "numeric"},
     ]
     table_cols = [column["id"] for column in columns]
     table_data = display[table_cols].astype(object).where(pd.notna(display[table_cols]), None)
@@ -73,8 +73,8 @@ def _linked_data_uptake_content() -> list:
         ),
         html.P(
             "ADR England flagship datasets are selected by default. Other linked datasets "
-            "can be added as a group or chosen individually. Lines begin at each dataset's "
-            "first accredited use in the DEA register. The Collections toggle switches between reference-defined "
+            "can be added as a group or chosen individually. Lines cover the selected observation "
+            "window from each dataset's historical first accredited-use period. The Collections toggle switches between reference-defined "
             "collection lines and individual linked-product lines. DEA-gateway use only.",
             className="section-desc text-muted",
         ),
@@ -157,12 +157,12 @@ def _linked_data_uptake_content() -> list:
         _uptake_graph("uptake-adoption-curves", height=UPTAKE_CURVES_HEIGHT),
         html.H6("Adoption summary", className="mt-3"),
         html.P(
-            "Exposure begins at the first accredited use of each linked dataset observed within "
-            "the selected register window. Exposure-years therefore measure observed DEA-gateway uptake "
-            "from first use onwards; they do not claim to identify when the dataset first "
-            "became technically available through any route. For grouped collections, exposure "
-            "begins at the earliest selected-window use among the collection members included "
-            "in that line. Rates over short exposures are initial-adoption rates, not sustained demand.",
+            "Historical first use comes from the full matched-product register history. Exposure is "
+            "its intersection with the selected calendar window; completed years run to the following "
+            "1 January and the partial final year stops at the full-register cutoff. Counts and rates "
+            "use only selected records. Grouped collections use the earliest historical first use "
+            "among their included members. These are DEA-route uptake measures; short exposures show "
+            "initial adoption, not sustained demand.",
             className="section-desc",
         ),
         html.Div(
