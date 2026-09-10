@@ -444,13 +444,16 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             else:
                 callback_by_output[str(output)] = meta
 
+        # Every listed Portfolio figure shares the year selection while retaining
+        # its own metric controls. Exact equality still rejects unrelated inputs.
+        portfolio_inputs = {"portfolio-accreditation-year-filter.value"}
         for output, allowed_inputs in expected.items():
             with self.subTest(output=output):
                 self.assertIn(output, callback_by_output)
                 meta = callback_by_output[output]
                 inputs = {f"{item['id']}.{item['property']}" for item in meta["inputs"]}
                 states = {f"{item['id']}.{item['property']}" for item in meta["state"]}
-                self.assertEqual(inputs, allowed_inputs)
+                self.assertEqual(inputs, allowed_inputs | portfolio_inputs)
                 self.assertFalse(states)
 
 
