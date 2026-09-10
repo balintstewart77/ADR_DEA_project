@@ -297,6 +297,109 @@ def make_record_linkage_trend(
     return _apply_common(fig, height=height)
 
 
+def make_domain_breadth_trend(
+    df_by_period: pd.DataFrame,
+    metric: str = "pct",
+    height: int = 400,
+    granularity: str = "year",
+    partial_year_info=None,
+) -> go.Figure:
+    """Record-level substantive-domain breadth, preserving unavailable shares."""
+    fig = go.Figure()
+    breadth_order = ["1 domain", "2 domains", "3+ domains"]
+    colours = {
+        "1 domain": "#2a9d8f",
+        "2 domains": "#e9c46a",
+        "3+ domains": "#e76f51",
+    }
+    markers = {"1 domain": "circle", "2 domains": "square", "3+ domains": "diamond"}
+    dashes = {"1 domain": "solid", "2 domains": "dash", "3+ domains": "dot"}
+    metric_col = "pct_of_eligible" if metric == "pct" else "count"
+    is_quarter = granularity == "quarter" and "Quarter" in df_by_period.columns
+    x_col = "period_label" if is_quarter else "Year"
+    sort_cols = ["period_date"] if "period_date" in df_by_period.columns else ["Year"]
+    category_order = []
+    if is_quarter and not df_by_period.empty:
+        category_order = (
+            df_by_period[["period_label", "period_date"]]
+            .drop_duplicates()
+            .sort_values("period_date", kind="stable")["period_label"]
+            .astype(str)
+            .tolist()
+        )
+
+    for breadth in breadth_order:
+        sub = df_by_period.loc[
+            df_by_period.get("domain_breadth", pd.Series(dtype=object)).eq(breadth)
+        ].sort_values(sort_cols)
+        x_values = sub[x_col] if not sub.empty else []
+        values = [
+            row[metric_col] if int(row["eligible_denominator"]) > 0 else None
+            for _, row in sub.iterrows()
+        ]
+        customdata = [
+            [int(row["count"]), int(row["eligible_denominator"]), (
+                f"{float(row['pct_of_eligible']):.1f}%"
+                if pd.notna(row["pct_of_eligible"]) else "Unavailable"
+            )]
+            for _, row in sub.iterrows()
+        ]
+        fig.add_trace(go.Scatter(
+            x=x_values,
+            y=values,
+            name=breadth,
+            mode="lines+markers",
+            connectgaps=False,
+            line=dict(color=colours[breadth], width=2.5, dash=dashes[breadth]),
+            marker=dict(color=colours[breadth], symbol=markers[breadth], size=7),
+            customdata=customdata,
+            hovertemplate=(
+                f"<b>{breadth}</b><br>Period: %{{x}}"
+                "<br>Accreditation records: %{customdata[0]}"
+                "<br>Eligible denominator: %{customdata[1]}"
+                "<br>Percentage: %{customdata[2]}<extra></extra>"
+            ),
+        ))
+
+    fig.update_layout(
+        title="Domain Breadth Over Time",
+        xaxis_title="Quarter" if is_quarter else "Accreditation year",
+        yaxis_title=(
+            "Percentage of records with ≥1 substantive domain"
+            if metric == "pct" else "Accreditation records"
+        ),
+        xaxis=dict(
+            dtick=1 if not is_quarter else None,
+            type="category" if is_quarter else None,
+            categoryorder="array" if category_order else None,
+            categoryarray=category_order if category_order else None,
+            tickangle=-35 if is_quarter else 0,
+        ),
+        yaxis=dict(range=[0, 100] if metric == "pct" else None),
+        legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
+        margin=dict(r=24, t=96, b=56),
+    )
+    if df_by_period.empty or not df_by_period["eligible_denominator"].gt(0).any():
+        fig.add_annotation(
+            text="No usable substantive-domain classifications in the selected records.",
+            xref="paper", yref="paper", x=0.5, y=0.5,
+            showarrow=False, font=dict(size=14, color="#7f8c8d"),
+        )
+    elif is_quarter:
+        partial_year = getattr(partial_year_info, "year", None)
+        if partial_year and int(partial_year) in set(df_by_period["Year"]):
+            fig.add_annotation(
+                text=partial_year_info.note,
+                xref="paper", yref="paper", x=1, y=-0.15,
+                showarrow=False, font=dict(size=10, color="#7f8c8d"), xanchor="right",
+            )
+    else:
+        _annotate_partial_year(
+            fig, years=df_by_period["Year"].unique(), partial_year_info=partial_year_info,
+        )
+    return _apply_common(fig, height=height)
+
+
 def make_domain_record_linkage_breakdown(
     df_cross: pd.DataFrame,
     metric: str = "pct",

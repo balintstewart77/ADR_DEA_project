@@ -410,6 +410,10 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             "thematic-purpose-trend.figure": {"thematic-purpose-trend-metric.value"},
             "thematic-cross-domain-purpose.figure": {"thematic-cross-domain-purpose-metric.value"},
             "thematic-domain-cooccurrence.figure": {"thematic-domain-cooccurrence-metric.value"},
+            "thematic-domain-breadth-trend.figure": {
+                "thematic-domain-breadth-metric.value",
+                "thematic-domain-breadth-granularity.value",
+            },
             "thematic-tag-trend.figure": {"thematic-tag-trend-metric.value"},
             "thematic-covid-tag-domain.figure": {"thematic-covid-tag-domain-metric.value"},
             "thematic-demographic-tag-domain.figure": {"thematic-demographic-tag-domain-metric.value"},

@@ -50,7 +50,7 @@ record units and 234 distinct official Project IDs.
 | Dataset Demand | top-N demand/rate, annual trend, provider breakdown | dataset rows expanded from canonical records; distinct selected `Record ID` per dataset/provider; historical availability is curated where present and otherwise proxied by first full-register appearance; exposure is its intersection with the explicit observation window | deterministic derived values |
 | Linked Data Uptake | adoption curve, exposure-rate bar, adoption summary table | matched-product rows joined by `Record ID`; selected-period project/request definitions preserved; historical first accredited use comes from the full matched-product history and exposure is its intersection with the explicit observation window | deterministic derived values with existing DEA-route caveats |
 | Institutions | top-N bar and annual trend | affiliation rows expanded from canonical records; distinct `Record ID` | deterministic derived values |
-| Thematic Analysis | headline count; domain/purpose totals and trends; domain-purpose and domain co-occurrence; tag trend and tag-domain bars | frozen classifications filtered by canonical `Record ID`, then expanded/aggregated | indicative LLM classifications; existing warning retained |
+| Thematic Analysis | headline count; domain/purpose totals and trends; domain-purpose and domain co-occurrence; domain-breadth trend and coverage; tag trend and tag-domain bars | frozen classifications filtered by canonical `Record ID`, then expanded/aggregated | indicative LLM classifications; existing warning retained |
 | Deterministic thematic facets | record-linkage distributions/trend/domain breakdown; researcher-sector distribution/co-occurrence; unit, collection-method and temporal-structure distributions/trends | frozen deterministic facets filtered at record level, then expanded/aggregated | deterministic derived values; mixed-layer latent-demand warning retained |
 | Enriched Register | displayed count/table and CSV download | classified records joined and filtered by `Record ID`; global and local filters intersect | register fields plus clearly marked deterministic/indicative derived fields |
 
@@ -69,3 +69,14 @@ window or historical anchors. Adoption curves enumerate every year or quarter
 intersecting the explicit window, retain eligible zero-use periods after
 historical first use, report percentages as unavailable when a period has no
 selected register records, and never extend beyond `C`.
+
+Domain breadth uses the active taxonomy's substantive-domain labels on each
+selected, dated `Record ID`. It counts distinct recognised labels after
+excluding the taxonomy's `Unclear` fallback; a set with an unrecognised token
+is excluded as invalid rather than partially counted. The three plotted buckets
+are 1, 2 and 3+ domains, with each period's percentage denominator restricted
+to records in one of those buckets. The coverage table separately reconciles
+unmatched, missing, invalid and zero-substantive classifications; undated
+records remain a selection-level exclusion. This is an indicative description
+of assigned domains, not evidence of interdisciplinary methods or
+collaboration.

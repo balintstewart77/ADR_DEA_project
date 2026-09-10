@@ -31,6 +31,7 @@ from dashboard.data.year_filter import year_slider_kwargs
 
 _MD_STYLE = {"fontSize": "0.88rem", "lineHeight": "1.6"}
 DOMAIN_MATRIX_HEIGHT = 724
+DOMAIN_BREADTH_HEIGHT = 400
 LATENT_DEMAND_HEIGHT = 724
 DOMAIN_PURPOSE_HEIGHT = 560
 DOMAIN_LINKAGE_HEIGHT = 560
@@ -98,6 +99,37 @@ def _domain_share_dropdown(dropdown_id: str) -> dbc.Row:
                 searchable=False,
             ),
         ], md=6),
+    ], className="mb-2 g-2")
+
+
+def _domain_breadth_controls() -> dbc.Row:
+    return dbc.Row([
+        dbc.Col([
+            html.Label("Metric", className="filter-label"),
+            dcc.Dropdown(
+                id="thematic-domain-breadth-metric",
+                options=[
+                    {"label": "Percentage", "value": "pct"},
+                    {"label": "Count", "value": "count"},
+                ],
+                value="pct",
+                clearable=False,
+                searchable=False,
+            ),
+        ], md=3),
+        dbc.Col([
+            html.Label("Granularity", className="filter-label"),
+            dcc.Dropdown(
+                id="thematic-domain-breadth-granularity",
+                options=[
+                    {"label": "Year", "value": "year"},
+                    {"label": "Quarter", "value": "quarter"},
+                ],
+                value="year",
+                clearable=False,
+                searchable=False,
+            ),
+        ], md=3),
     ], className="mb-2 g-2")
 
 
@@ -343,6 +375,51 @@ def _analyses_accordion():
                     ),
                     _metric_dropdown("thematic-domain-cooccurrence-metric"),
                     _graph("thematic-domain-cooccurrence", height=DOMAIN_MATRIX_HEIGHT),
+                    html.H5("Domain breadth over time", className="mt-4 mb-1"),
+                    html.P(
+                        "Indicative model classifications. Domain breadth describes the number "
+                        "of substantive domains assigned to a project; it does not establish "
+                        "interdisciplinary methods or collaboration.",
+                        className="section-desc",
+                    ),
+                    _domain_breadth_controls(),
+                    _graph("thematic-domain-breadth-trend", height=DOMAIN_BREADTH_HEIGHT),
+                    html.H6("Coverage by period", className="mt-3 mb-1"),
+                    html.P(
+                        id="thematic-domain-breadth-coverage-note",
+                        className="text-muted small mb-2",
+                    ),
+                    dash_table.DataTable(
+                        id="thematic-domain-breadth-coverage-table",
+                        columns=[
+                            {"name": "Period", "id": "period_label"},
+                            {"name": "Dated selected", "id": "dated_selected_records"},
+                            {"name": "Included", "id": "included_records"},
+                            {"name": "Unmatched", "id": "unmatched_classification"},
+                            {"name": "Missing", "id": "missing_classification"},
+                            {"name": "Invalid", "id": "invalid_classification"},
+                            {"name": "No substantive", "id": "zero_substantive_domains"},
+                            {"name": "Excluded", "id": "excluded_records"},
+                        ],
+                        page_action="none",
+                        style_table={"overflowX": "auto"},
+                        style_header={
+                            "fontWeight": 600,
+                            "fontSize": "0.76rem",
+                            "backgroundColor": "#f5f8fa",
+                        },
+                        style_cell={
+                            "fontSize": "0.76rem",
+                            "padding": "0.35rem",
+                            "textAlign": "right",
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                        },
+                        style_cell_conditional=[{
+                            "if": {"column_id": "period_label"},
+                            "textAlign": "left",
+                        }],
+                    ),
                 ],
                 title="Domain Co-occurrence",
             ),

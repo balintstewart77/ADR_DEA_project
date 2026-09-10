@@ -14,6 +14,7 @@ from dashboard.config import (
     PURPOSE_LABELS,
     _PROJECT_ID_KEY_COL,
 )
+from dashboard.taxonomy import DOMAIN_LABELS
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
     RECORD_LINKAGE_DISPLAY_LABELS,
@@ -21,10 +22,27 @@ from dashboard.data.deterministic import (
     load_register_properties,
 )
 from dashboard.data.keys import _project_id_key
+from dashboard.data.year_filter import (
+    YearRange,
+    is_all_years,
+    parse_accreditation_dates,
+    year_selection_mask,
+)
 
 
 _DETERMINISTIC_ENRICHED_COLUMNS = DETERMINISTIC_FACET_COLUMNS
 RESEARCHER_SECTOR_HEATMAP_ORDER = ["academic", "government", "third-sector", "commercial"]
+DOMAIN_BREADTH_ORDER = ["1 domain", "2 domains", "3+ domains"]
+DOMAIN_BREADTH_COVERAGE_COLUMNS = [
+    "period_label",
+    "dated_selected_records",
+    "included_records",
+    "unmatched_classification",
+    "missing_classification",
+    "invalid_classification",
+    "zero_substantive_domains",
+    "excluded_records",
+]
 
 
 def _filter_label_with_count(label: str, count: int) -> str:
@@ -332,6 +350,247 @@ def _count_substantive_domains(value):
     return len(domains) if domains else pd.NA
 
 
+def _is_missing_value(value) -> bool:
+    try:
+        return bool(pd.isna(value))
+    except (TypeError, ValueError):
+        return False
+
+
+def _validated_record_keys(df: pd.DataFrame, source_name: str) -> pd.Series:
+    """Return stripped Record ID keys, rejecting an ambiguous join source."""
+    if "Record ID" not in df.columns:
+        raise ValueError(f"{source_name} is missing Record ID")
+    keys = df["Record ID"].astype("string").str.strip()
+    if keys.isna().any() or keys.eq("").any():
+        raise ValueError(f"{source_name} contains blank Record ID values")
+    if keys.duplicated().any():
+        raise ValueError(f"{source_name} contains duplicate Record ID values")
+    return keys.astype(str)
+
+
+def _domain_breadth_classification(value, substantive_labels, unclear_labels):
+    """Classify one raw domain set without accepting unknown tokens partially."""
+    if _is_missing_value(value):
+        return "missing_classification", None, None
+    tokens = set(_split_semicolon_values(value))
+    if not tokens:
+        return "zero_substantive_domains", None, 0
+    unknown = tokens - substantive_labels - unclear_labels
+    if unknown:
+        return "invalid_classification", None, None
+    breadth = len(tokens & substantive_labels)
+    if breadth == 0:
+        return "zero_substantive_domains", None, 0
+    bucket = "1 domain" if breadth == 1 else "2 domains" if breadth == 2 else "3+ domains"
+    return "included", bucket, breadth
+
+
+def _domain_breadth_calendar_periods(
+    dates: pd.Series,
+    selection,
+    bounds: YearRange,
+    granularity: str,
+) -> pd.DataFrame:
+    """Build complete selected calendar periods, clipped to register coverage."""
+    valid_dates = dates.dropna()
+    columns = ["period_key", "Year", "period_date", "period_label"]
+    if valid_dates.empty:
+        return pd.DataFrame(columns=columns)
+
+    if is_all_years(selection, bounds):
+        start = pd.Timestamp(int(valid_dates.min().year), 1, 1)
+        end = pd.Timestamp(valid_dates.max())
+    else:
+        try:
+            lower, upper = sorted(int(year) for year in selection)
+        except (TypeError, ValueError):
+            return pd.DataFrame(columns=columns)
+        start = max(pd.Timestamp(int(valid_dates.min().year), 1, 1), pd.Timestamp(lower, 1, 1))
+        end = min(pd.Timestamp(valid_dates.max()), pd.Timestamp(upper, 12, 31))
+    if start > end:
+        return pd.DataFrame(columns=columns)
+
+    if granularity == "quarter":
+        periods = pd.period_range(start=start, end=end, freq="Q")
+        return pd.DataFrame({
+            "period_key": periods.astype(str),
+            "Year": [period.year for period in periods],
+            "period_date": periods.start_time,
+            "period_label": [f"{period.year} Q{period.quarter}" for period in periods],
+        })
+
+    years = list(range(start.year, end.year + 1))
+    return pd.DataFrame({
+        "period_key": [str(year) for year in years],
+        "Year": years,
+        "period_date": [pd.Timestamp(year, 1, 1) for year in years],
+        "period_label": [str(year) for year in years],
+    })
+
+
+def _domain_breadth_period_tables(
+    records: pd.DataFrame,
+    periods: pd.DataFrame,
+    granularity: str,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    trend_columns = [
+        "Year", "Quarter", "period_date", "period_label", "domain_breadth",
+        "count", "eligible_denominator", "pct_of_eligible",
+    ]
+    if periods.empty:
+        return (
+            pd.DataFrame(columns=trend_columns),
+            pd.DataFrame(columns=DOMAIN_BREADTH_COVERAGE_COLUMNS),
+        )
+
+    if granularity == "quarter":
+        period_values = records["_date"].dt.to_period("Q").astype(str)
+    else:
+        period_values = records["_date"].dt.year.astype(str)
+    dated = records.assign(_period_key=period_values)
+    reason_counts = dated.groupby(["_period_key", "_reason"]).size()
+    bucket_counts = dated.loc[dated["_reason"].eq("included")].groupby(
+        ["_period_key", "_bucket"]
+    ).size()
+
+    trend_rows = []
+    coverage_rows = []
+    for _, period in periods.iterrows():
+        key = period["period_key"]
+        included = int(reason_counts.get((key, "included"), 0))
+        reasons = {
+            reason: int(reason_counts.get((key, reason), 0))
+            for reason in [
+                "unmatched_classification",
+                "missing_classification",
+                "invalid_classification",
+                "zero_substantive_domains",
+            ]
+        }
+        coverage_rows.append({
+            "period_label": period["period_label"],
+            "dated_selected_records": included + sum(reasons.values()),
+            "included_records": included,
+            **reasons,
+            "excluded_records": sum(reasons.values()),
+        })
+        for bucket in DOMAIN_BREADTH_ORDER:
+            count = int(bucket_counts.get((key, bucket), 0))
+            trend_rows.append({
+                "Year": int(period["Year"]),
+                "Quarter": key if granularity == "quarter" else None,
+                "period_date": period["period_date"],
+                "period_label": period["period_label"],
+                "domain_breadth": bucket,
+                "count": count,
+                "eligible_denominator": included,
+                "pct_of_eligible": round(count / included * 100, 1) if included else None,
+            })
+    return (
+        pd.DataFrame(trend_rows, columns=trend_columns),
+        pd.DataFrame(coverage_rows, columns=DOMAIN_BREADTH_COVERAGE_COLUMNS),
+    )
+
+
+def domain_breadth_aggregates(
+    register_df: pd.DataFrame,
+    classification_df: pd.DataFrame,
+    selection,
+    bounds: YearRange,
+) -> dict:
+    """Aggregate taxonomy-validated substantive-domain breadth by record period.
+
+    The authoritative register supplies selection and dates. Frozen production
+    classifications join one-to-one on Record ID. Invalid token sets are kept
+    wholly outside the denominator so a recognised token cannot mask an
+    unrecognised companion token.
+    """
+    register = register_df.copy()
+    classifications = classification_df.copy()
+    register["_record_key"] = _validated_record_keys(register, "Register")
+    classifications["_record_key"] = _validated_record_keys(
+        classifications, "Classifications",
+    )
+    dates = parse_accreditation_dates(register)
+    selected_mask = year_selection_mask(register, selection, bounds)
+    selected = register.loc[selected_mask].copy()
+    selected["_date"] = dates.loc[selected_mask]
+
+    all_undated = int(dates.isna().sum())
+    undated_selected = int(selected["_date"].isna().sum())
+    undated_omitted = 0 if is_all_years(selection, bounds) else all_undated - undated_selected
+    dated = selected.loc[selected["_date"].notna()].copy()
+
+    domain_column = (
+        classifications[["_record_key", "substantive_domains"]].copy()
+        if "substantive_domains" in classifications.columns
+        else classifications[["_record_key"]].assign(substantive_domains=pd.NA)
+    )
+    if SUBSTANTIVE_DOMAIN_COUNT_COL in classifications.columns:
+        domain_column[SUBSTANTIVE_DOMAIN_COUNT_COL] = classifications[
+            SUBSTANTIVE_DOMAIN_COUNT_COL
+        ].to_numpy()
+    else:
+        domain_column[SUBSTANTIVE_DOMAIN_COUNT_COL] = pd.NA
+    merged = dated.merge(
+        domain_column,
+        on="_record_key",
+        how="left",
+        validate="one_to_one",
+        indicator="_classification_join",
+    )
+
+    substantive_labels = {
+        label for label in DOMAIN_LABELS if not label.lower().startswith("unclear")
+    }
+    unclear_labels = set(DOMAIN_LABELS) - substantive_labels
+    classifications_result = []
+    for _, row in merged.iterrows():
+        if row["_classification_join"] != "both":
+            classifications_result.append(("unmatched_classification", None, None))
+        else:
+            classifications_result.append(_domain_breadth_classification(
+                row["substantive_domains"], substantive_labels, unclear_labels,
+            ))
+    result = pd.DataFrame(
+        classifications_result,
+        index=merged.index,
+        columns=["_reason", "_bucket", "_derived_domain_count"],
+    )
+    merged = pd.concat([merged, result], axis=1)
+    stored = pd.to_numeric(merged[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce")
+    comparable = merged["_derived_domain_count"].notna() & stored.notna()
+    stored_discrepancies = int(
+        (stored.loc[comparable] != merged.loc[comparable, "_derived_domain_count"]).sum()
+    )
+
+    year_periods = _domain_breadth_calendar_periods(dates, selection, bounds, "year")
+    quarter_periods = _domain_breadth_calendar_periods(dates, selection, bounds, "quarter")
+    by_year, coverage_by_year = _domain_breadth_period_tables(merged, year_periods, "year")
+    by_quarter, coverage_by_quarter = _domain_breadth_period_tables(
+        merged, quarter_periods, "quarter",
+    )
+    return {
+        "df_domain_breadth_by_year": by_year,
+        "df_domain_breadth_by_quarter": by_quarter,
+        "df_domain_breadth_coverage_by_year": coverage_by_year,
+        "df_domain_breadth_coverage_by_quarter": coverage_by_quarter,
+        "domain_breadth_selection_coverage": {
+            "selected_records": int(len(selected)),
+            "dated_selected_records": int(len(dated)),
+            "undated_selected_records": undated_selected,
+            "undated_omitted_records": int(undated_omitted),
+            "included_records": int(merged["_reason"].eq("included").sum()),
+            "unmatched_classification": int(merged["_reason"].eq("unmatched_classification").sum()),
+            "missing_classification": int(merged["_reason"].eq("missing_classification").sum()),
+            "invalid_classification": int(merged["_reason"].eq("invalid_classification").sum()),
+            "zero_substantive_domains": int(merged["_reason"].eq("zero_substantive_domains").sum()),
+            "stored_domain_count_discrepancies": stored_discrepancies,
+        },
+    }
+
+
 def _merge_deterministic_facets(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     base = df.copy()
     for col in columns:
@@ -527,7 +786,7 @@ def build_thematic_aggregates(df: pd.DataFrame) -> dict:
         work, "analytical_purpose", "purpose",
     )
     tag_values = _tag_series(work)
-    tagged_count = int(tag_values.apply(_has_any_tag).sum())
+    tagged_count = int(tag_values.apply(_has_any_tag).sum()) if len(work) else 0
     years = sorted(int(y) for y in work.get("Year", pd.Series(dtype=float)).dropna().unique())
     totals_by_year = work.groupby("Year").size() if "Year" in work.columns else pd.Series(dtype=int)
     tag_rows = []

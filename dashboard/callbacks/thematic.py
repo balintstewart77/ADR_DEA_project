@@ -10,6 +10,7 @@ from dash import ClientsideFunction, dcc, Input, Output, State
 from dashboard.data.thematic import (
     THEMATIC_DATA_AVAILABLE,
     build_thematic_aggregates,
+    domain_breadth_aggregates,
     df_thematic_projects,
 )
 from dashboard.data.registry import PARTIAL_YEAR_INFO, df_all
@@ -21,7 +22,7 @@ from dashboard.charts.thematic import (
     make_domain_cooccurrence, make_latent_demand_cooccurrence,
     make_compact_distribution_bar,
     make_record_linkage_trend, make_domain_record_linkage_breakdown,
-    make_researcher_sector_cooccurrence,
+    make_researcher_sector_cooccurrence, make_domain_breadth_trend,
 )
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
 from dashboard.data.uptake import SERVED_DOMAIN_PAIRS
@@ -42,7 +43,11 @@ _YEAR_RANGE = year_range(df_all)
 def _cached_aggregates(selection_key: tuple) -> dict:
     record_ids = selected_record_ids(df_all, selection_key, _YEAR_RANGE)
     selected = filter_related_by_record_ids(df_thematic_projects, record_ids)
-    return build_thematic_aggregates(selected)
+    aggregates = build_thematic_aggregates(selected)
+    aggregates.update(domain_breadth_aggregates(
+        df_all, df_thematic_projects, selection_key, _YEAR_RANGE,
+    ))
+    return aggregates
 
 
 def _aggregates(selection) -> dict:
@@ -354,6 +359,58 @@ def register(app):
             metric=metric or "pct",
         )
         return annotate_empty(fig, data["THEMATIC_PROJECT_COUNT"] == 0)
+
+    @app.callback(
+        Output("thematic-domain-breadth-trend", "figure"),
+        Output("thematic-domain-breadth-coverage-table", "data"),
+        Output("thematic-domain-breadth-coverage-note", "children"),
+        Input("thematic-domain-breadth-metric", "value"),
+        Input("thematic-domain-breadth-granularity", "value"),
+        Input("portfolio-accreditation-year-filter", "value"),
+    )
+    def update_domain_breadth_trend(metric, granularity, year_selection):
+        data = _aggregates(year_selection)
+        selected_granularity = granularity or "year"
+        source = (
+            data["df_domain_breadth_by_quarter"]
+            if selected_granularity == "quarter"
+            else data["df_domain_breadth_by_year"]
+        )
+        coverage = (
+            data["df_domain_breadth_coverage_by_quarter"]
+            if selected_granularity == "quarter"
+            else data["df_domain_breadth_coverage_by_year"]
+        )
+        selection_coverage = data["domain_breadth_selection_coverage"]
+        note = (
+            f"{selection_coverage['dated_selected_records']:,} selected dated records; "
+            f"{selection_coverage['included_records']:,} have a usable substantive-domain set. "
+            f"{selection_coverage['undated_selected_records']:,} selected records have no usable "
+            "accreditation date. "
+            f"Zero substantive domains ({selection_coverage['zero_substantive_domains']:,}) includes "
+            "Unclear-only and explicit empty sets."
+        )
+        if selection_coverage["undated_omitted_records"]:
+            note += (
+                f" {selection_coverage['undated_omitted_records']:,} undated records are omitted "
+                "by the restricted year selection."
+            )
+        if selection_coverage["stored_domain_count_discrepancies"]:
+            note += (
+                f" The stored domain-count field differs from the taxonomy-validated breadth for "
+                f"{selection_coverage['stored_domain_count_discrepancies']:,} records; this chart "
+                "uses the validated count."
+            )
+        return (
+            make_domain_breadth_trend(
+                source,
+                metric=metric or "pct",
+                granularity=selected_granularity,
+                partial_year_info=PARTIAL_YEAR_INFO,
+            ),
+            coverage.to_dict("records"),
+            note,
+        )
 
     @app.callback(
         Output("thematic-latent-demand", "figure"),
