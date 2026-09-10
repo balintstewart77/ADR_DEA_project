@@ -254,6 +254,47 @@ def test_chart_year_mode_retains_measured_zeroes(breadth_data):
     assert "eligible records were present; none were assigned" in one_domain.hovertemplate[year_index]
 
 
+def test_chart_surfaces_excluded_no_domain_records_without_changing_series(breadth_data):
+    by_year = breadth_data["df_domain_breadth_by_year"]
+    baseline = make_domain_breadth_trend(by_year, metric="pct", granularity="year")
+    zero_substantive_domains = breadth_data["domain_breadth_selection_coverage"][
+        "zero_substantive_domains"
+    ]
+    figure = make_domain_breadth_trend(
+        by_year,
+        metric="pct",
+        granularity="year",
+        zero_substantive_domains=zero_substantive_domains,
+    )
+
+    assert zero_substantive_domains == 1
+    assert len(figure.data) == len(baseline.data) == 3
+    assert [trace.name for trace in figure.data] == [trace.name for trace in baseline.data]
+    assert [list(trace.y) for trace in figure.data] == [list(trace.y) for trace in baseline.data]
+    assert any(
+        annotation.text
+        == (
+            "1 selected record has no substantive domain and cannot be placed on the "
+            "domain-breadth scale; it is outside the denominator."
+        )
+        for annotation in figure.layout.annotations
+    )
+
+
+def test_chart_hides_no_domain_footnote_when_no_records_are_excluded(breadth_data):
+    figure = make_domain_breadth_trend(
+        breadth_data["df_domain_breadth_by_year"],
+        metric="count",
+        granularity="year",
+        zero_substantive_domains=0,
+    )
+
+    assert not any(
+        "cannot be placed on the domain-breadth scale" in annotation.text
+        for annotation in (figure.layout.annotations or [])
+    )
+
+
 def _component_by_id(root, component_id):
     if isinstance(root, Component):
         if getattr(root, "id", None) == component_id:
@@ -331,6 +372,14 @@ def test_actual_callback_handles_empty_and_all_excluded_populations(breadth_data
     assert coverage[0]["excluded_records"] == 4
     assert "Zero substantive domains (1)" in note
     assert any("No usable substantive-domain" in item.text for item in figure.layout.annotations)
+    assert any(
+        item.text
+        == (
+            "1 selected record has no substantive domain and cannot be placed on the "
+            "domain-breadth scale; it is outside the denominator."
+        )
+        for item in figure.layout.annotations
+    )
 
 
 def test_current_release_reconciles_against_an_independent_record_level_count():

@@ -303,9 +303,11 @@ def make_domain_breadth_trend(
     height: int = 400,
     granularity: str = "year",
     partial_year_info=None,
+    zero_substantive_domains: int = 0,
 ) -> go.Figure:
     """Record-level substantive-domain breadth, preserving unavailable shares."""
     fig = go.Figure()
+    excluded_no_domain_count = int(zero_substantive_domains or 0)
     breadth_order = ["1 domain", "2 domains", "3+ domains"]
     colours = {
         "1 domain": "#2a9d8f",
@@ -399,7 +401,7 @@ def make_domain_breadth_trend(
         ),
         yaxis=dict(range=[0, 100] if metric == "pct" else None),
         legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
-        margin=dict(r=24, t=96, b=56),
+        margin=dict(r=24, t=96, b=104 if excluded_no_domain_count > 0 else 56),
     )
     if df_by_period.empty or not df_by_period["eligible_denominator"].gt(0).any():
         fig.add_annotation(
@@ -418,6 +420,25 @@ def make_domain_breadth_trend(
     else:
         _annotate_partial_year(
             fig, years=df_by_period["Year"].unique(), partial_year_info=partial_year_info,
+        )
+    if excluded_no_domain_count > 0:
+        record_label = "record" if excluded_no_domain_count == 1 else "records"
+        verb = "has" if excluded_no_domain_count == 1 else "have"
+        pronoun = "It is" if excluded_no_domain_count == 1 else "They are"
+        fig.add_annotation(
+            text=(
+                f"{excluded_no_domain_count:,} selected {record_label} {verb} no substantive domain "
+                "and cannot be placed on the domain-breadth scale; "
+                f"{pronoun.lower()} outside the denominator."
+            ),
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=-0.28,
+            showarrow=False,
+            xanchor="left",
+            yanchor="top",
+            font=dict(size=10, color="#7f8c8d"),
         )
     return _apply_common(fig, height=height)
 

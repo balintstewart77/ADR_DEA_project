@@ -401,6 +401,7 @@ def register(app):
                 metric=metric or "pct",
                 granularity=selected_granularity,
                 partial_year_info=PARTIAL_YEAR_INFO,
+                zero_substantive_domains=selection_coverage["zero_substantive_domains"],
             ),
             coverage.to_dict("records"),
             note,
