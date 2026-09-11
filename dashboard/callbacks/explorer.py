@@ -3,7 +3,11 @@
 from dash import dcc, Input, Output, State
 
 from dashboard.config import _BROWSE_DISPLAY_COLUMNS
-from dashboard.data.filtering import _get_browse_display_df, _csv_date_stamp
+from dashboard.data.filtering import (
+    _get_browse_display_df,
+    _get_browse_facet_options,
+    _csv_date_stamp,
+)
 from dashboard.data.year_filter import YearRange, filter_records_by_year, parse_accreditation_dates
 
 
@@ -24,6 +28,10 @@ def register(app):
         Output("browse-table", "tooltip_data"),
         Output("browse-table", "page_size"),
         Output("browse-count", "children"),
+        Output("browse-dataset-filter", "options"),
+        Output("browse-provider-filter", "options"),
+        Output("browse-institution-filter", "options"),
+        Output("browse-tre-filter", "options"),
         Input("browse-dataset-filter", "value"),
         Input("browse-provider-filter", "value"),
         Input("browse-institution-filter", "value"),
@@ -76,7 +84,26 @@ def register(app):
             f"Showing {len(table_data):,} accreditation "
             f"record{'s' if len(table_data) != 1 else ''}"
         )
-        return table_data, tooltip_data, page_size or 20, count_text
+        facet_options = _get_browse_facet_options(
+            search,
+            dataset_filter,
+            provider_filter,
+            institution_filter,
+            tre_filter,
+            accreditation_year_range,
+            accreditation_year_min,
+            accreditation_year_max,
+        )
+        return (
+            table_data,
+            tooltip_data,
+            page_size or 20,
+            count_text,
+            facet_options["dataset"],
+            facet_options["provider"],
+            facet_options["institution"],
+            facet_options["tre"],
+        )
 
     @app.callback(
         Output("browse-download-csv", "data"),

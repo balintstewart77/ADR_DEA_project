@@ -16,7 +16,11 @@ from dashboard.data.thematic import (
 )
 from dashboard.dataset_normalisation import iter_dataset_entries
 from dashboard.data.registry import PARTIAL_YEAR_INFO, df_all
-from dashboard.data.filtering import _get_enriched_register_display_df, _csv_date_stamp
+from dashboard.data.filtering import (
+    _get_enriched_register_display_df,
+    _get_enriched_register_facet_options,
+    _csv_date_stamp,
+)
 from dashboard.charts.template import CHART_HEIGHT, annotate_empty
 from dashboard.charts.thematic import (
     make_thematic_trend, make_thematic_totals_bar, make_tag_domain_bar,
@@ -745,6 +749,19 @@ def register(app):
         Output("enriched-register-table", "data"),
         Output("enriched-register-table", "page_size"),
         Output("enriched-browse-count", "children"),
+        Output("enriched-dataset-filter", "options"),
+        Output("enriched-provider-filter", "options"),
+        Output("enriched-institution-filter", "options"),
+        Output("enriched-tre-filter", "options"),
+        Output("enriched-domain-filter", "options"),
+        Output("enriched-domain-count-filter", "options"),
+        Output("enriched-purpose-filter", "options"),
+        Output("enriched-tag-filter", "options"),
+        Output("enriched-record-linkage-filter", "options"),
+        Output("enriched-collection-method-filter", "options"),
+        Output("enriched-temporal-structure-filter", "options"),
+        Output("enriched-unit-filter", "options"),
+        Output("enriched-researcher-sector-filter", "options"),
         Input("enriched-search", "value"),
         Input("enriched-dataset-filter", "value"),
         Input("enriched-provider-filter", "value"),
@@ -820,10 +837,43 @@ def register(app):
         records = _sort_enriched_table_records(
             _enriched_table_records(display), sort_by,
         )
+        facet_options = _get_enriched_register_facet_options(
+            search,
+            dataset_filter,
+            provider_filter,
+            institution_filter,
+            tre_filter,
+            domain_filter,
+            domain_count_filter,
+            purpose_filter,
+            tag_filter,
+            record_linkage_filter,
+            collection_method_filter,
+            temporal_structure_filter,
+            unit_filter,
+            researcher_sector_filter,
+            eligible_ids,
+            accreditation_year_range,
+            accreditation_year_min,
+            accreditation_year_max,
+        )
         return (
             records,
             page_size or 20,
             count_text,
+            facet_options["dataset"],
+            facet_options["provider"],
+            facet_options["institution"],
+            facet_options["tre"],
+            facet_options["domain"],
+            facet_options["domain_count"],
+            facet_options["purpose"],
+            facet_options["tag"],
+            facet_options["record_linkage"],
+            facet_options["collection_method"],
+            facet_options["temporal_structure"],
+            facet_options["unit"],
+            facet_options["researcher_sector"],
         )
 
     @app.callback(

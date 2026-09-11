@@ -1,0 +1,2960 @@
+{
+  "release": "20260813",
+  "static_option_counts": {
+    "dataset": [
+      {
+        "value": "2020 Wave 1 Labour Force Survey",
+        "count": 1
+      },
+      {
+        "value": "Administrative Data | Agricultural Research Collection (AD|ARC)",
+        "count": 5
+      },
+      {
+        "value": "Annual Acquisition and Disposals of Capital Assets Survey",
+        "count": 1
+      },
+      {
+        "value": "Annual Business Inquiry",
+        "count": 11
+      },
+      {
+        "value": "Annual Business Survey (ABS)",
+        "count": 235
+      },
+      {
+        "value": "Annual Business Survey - GB Annual Survey of Hours and Earnings",
+        "count": 1
+      },
+      {
+        "value": "Annual Business Survey - UK",
+        "count": 1
+      },
+      {
+        "value": "Annual Foreign Direct Investment Survey",
+        "count": 23
+      },
+      {
+        "value": "Annual Gas and Electricity Consumption at Meter Level",
+        "count": 4
+      },
+      {
+        "value": "Annual Inquiry into Foreign Direct Investment",
+        "count": 4
+      },
+      {
+        "value": "Annual International Trade in Services",
+        "count": 10
+      },
+      {
+        "value": "Annual Population Survey (APS)",
+        "count": 176
+      },
+      {
+        "value": "Annual Population Survey Household",
+        "count": 6
+      },
+      {
+        "value": "Annual Population Survey Longitudinal",
+        "count": 6
+      },
+      {
+        "value": "Annual Population Survey Persons",
+        "count": 4
+      },
+      {
+        "value": "Annual Population Survey: Well-Being",
+        "count": 4
+      },
+      {
+        "value": "Annual Purchases Survey",
+        "count": 22
+      },
+      {
+        "value": "Annual Respondents Database",
+        "count": 40
+      },
+      {
+        "value": "Annual Respondents Database 2",
+        "count": 18
+      },
+      {
+        "value": "Annual Respondents Database X",
+        "count": 64
+      },
+      {
+        "value": "Annual Respondents Database X (ARDx) Business Register and Employment Survey",
+        "count": 1
+      },
+      {
+        "value": "Annual Survey of Goods and Services",
+        "count": 6
+      },
+      {
+        "value": "Annual Survey of Hours and Earnings (ASHE)",
+        "count": 206
+      },
+      {
+        "value": "Annual Survey of Hours and Earnings Longitudinal",
+        "count": 41
+      },
+      {
+        "value": "Annual Survey of Hours and Earnings linked to Census 2011",
+        "count": 25
+      },
+      {
+        "value": "Annual Survey of Hours and Earnings linked to Census 2011 England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Annual Survey of Hours and Earnings linked to Migrant Worker Scan",
+        "count": 1
+      },
+      {
+        "value": "Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment",
+        "count": 9
+      },
+      {
+        "value": "BHPS",
+        "count": 2
+      },
+      {
+        "value": "Bespoke Admin Data - Agricultural Research Collection Phase 1",
+        "count": 1
+      },
+      {
+        "value": "Bespoke Admin Data - Agricultural Research Collection Phase 2",
+        "count": 2
+      },
+      {
+        "value": "Bespoke Admin Data: Agricultural Research Collection",
+        "count": 1
+      },
+      {
+        "value": "Bespoke Data Tables for Project",
+        "count": 1
+      },
+      {
+        "value": "Bespoke Equalities Data Asset: Companies House - Census 2011",
+        "count": 1
+      },
+      {
+        "value": "Bespoke National Pupil Database extract",
+        "count": 1
+      },
+      {
+        "value": "Bespoke Refugee Integration Outcomes Cohort Study England",
+        "count": 1
+      },
+      {
+        "value": "Birth Registrations in England and Wales",
+        "count": 6
+      },
+      {
+        "value": "Births and Deaths",
+        "count": 1
+      },
+      {
+        "value": "British Election Panel Study",
+        "count": 1
+      },
+      {
+        "value": "British Local Election Database",
+        "count": 1
+      },
+      {
+        "value": "Broad Economy Sales and Exports",
+        "count": 6
+      },
+      {
+        "value": "Business Data Research (BDR) 2022 Themed",
+        "count": 1
+      },
+      {
+        "value": "Business Enterprise Research and Development (BERD)",
+        "count": 82
+      },
+      {
+        "value": "Business Enterprise Research and Development Great Britain",
+        "count": 1
+      },
+      {
+        "value": "Business Enterprise Research and Development Northern Ireland",
+        "count": 1
+      },
+      {
+        "value": "Business Expenditure on Research and Development",
+        "count": 16
+      },
+      {
+        "value": "Business Insights and Conditions Survey (BICS)",
+        "count": 42
+      },
+      {
+        "value": "Business Register Employment Survey - UK Living Costs and Food Survey - UK Labour Force Survey Household - UK Consumer and Retail Price Index - UK Annual Survey of Hours and Earnings Longitudinal - UK Annual Population Survey",
+        "count": 1
+      },
+      {
+        "value": "Business Register Emplyment Survey",
+        "count": 1
+      },
+      {
+        "value": "Business Register and Employment Survey (BRES)",
+        "count": 66
+      },
+      {
+        "value": "Business Structure Database (BSD)",
+        "count": 287
+      },
+      {
+        "value": "Business Structure Database - UK Annual Survey of Hours and Earnings - GB Annual Population Survey - UK Annual International Trade in Services",
+        "count": 1
+      },
+      {
+        "value": "Business Structure Database Longitudinal",
+        "count": 20
+      },
+      {
+        "value": "COVID-19 Infection Survey (CIS)",
+        "count": 23
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to Combined Vaccination",
+        "count": 5
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to Death Occurrences England and Wales Office for National Statistics /",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to Mortality - England and Wales ONS",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to NHS Test and Trace",
+        "count": 3
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to Public Health Research Database",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to UK Innovation Survey",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to VOA and EPC",
+        "count": 2
+      },
+      {
+        "value": "COVID-19 Infection Survey linked to VOA and EPC - England and Wales Office for National",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 Infection Survey with Combined Vaccination",
+        "count": 2
+      },
+      {
+        "value": "COVID-19 Infection Survey with National Immunisation Management Service",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 School Infection Survey linked to NHS Test",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 Schools Infection Survey",
+        "count": 4
+      },
+      {
+        "value": "COVID-19 Schools Infection Survey linked to National Immunisation Management Service",
+        "count": 1
+      },
+      {
+        "value": "COVID-19 Schools Infection Survey linked to Test and Trace",
+        "count": 2
+      },
+      {
+        "value": "COVID-19 Study",
+        "count": 2
+      },
+      {
+        "value": "COVID-19 Vaccine Opinions Survey",
+        "count": 2
+      },
+      {
+        "value": "COVID-19 Weekly Opinions Survey",
+        "count": 2
+      },
+      {
+        "value": "Capital Stock 2014",
+        "count": 1
+      },
+      {
+        "value": "Capital Stock Dataset",
+        "count": 5
+      },
+      {
+        "value": "Census 1961",
+        "count": 4
+      },
+      {
+        "value": "Census 1971",
+        "count": 4
+      },
+      {
+        "value": "Census 1981",
+        "count": 3
+      },
+      {
+        "value": "Census 1991",
+        "count": 2
+      },
+      {
+        "value": "Census 2001",
+        "count": 1
+      },
+      {
+        "value": "Census 2001 Household",
+        "count": 3
+      },
+      {
+        "value": "Census 2001 Individual",
+        "count": 3
+      },
+      {
+        "value": "Census 2011",
+        "count": 28
+      },
+      {
+        "value": "Census 2011 (CENW)",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 100% Household and Individual - England an d Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Aggregate",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 England",
+        "count": 2
+      },
+      {
+        "value": "Census 2011 England and Wales Household Structure for COVID-19 Models",
+        "count": 3
+      },
+      {
+        "value": "Census 2011 Ethnicity",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Household",
+        "count": 3
+      },
+      {
+        "value": "Census 2011 Household Sample",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Household Sample England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Individual England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Individual Northern Ireland",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Individual Sample England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Individual Scotland",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Individual Secure Sample England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Northern Ireland",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 Origin-Destination",
+        "count": 3
+      },
+      {
+        "value": "Census 2011 Origin-Destination Flow",
+        "count": 1
+      },
+      {
+        "value": "Census 2011 and Census 2021 England and Wales",
+        "count": 2
+      },
+      {
+        "value": "Census 2011 linked to Benefits and Income",
+        "count": 3
+      },
+      {
+        "value": "Census 2021",
+        "count": 29
+      },
+      {
+        "value": "Census 2021 (CENS) Ministry of Justice",
+        "count": 1
+      },
+      {
+        "value": "Census 2021 10% Sample",
+        "count": 1
+      },
+      {
+        "value": "Census 2021 Comprehensive Microdata",
+        "count": 2
+      },
+      {
+        "value": "Census 2021 England and Wales",
+        "count": 2
+      },
+      {
+        "value": "Census 2021 Household Secure Microdata Sample",
+        "count": 2
+      },
+      {
+        "value": "Census 2021 Household Secure Microdata Sample England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2021 Indexed",
+        "count": 1
+      },
+      {
+        "value": "Census 2021 Non-Response Link Study England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2021 Non-Response Link Study England and Wales Indexed",
+        "count": 1
+      },
+      {
+        "value": "Census 2021 Origin-Destination Tables England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Census 2022",
+        "count": 1
+      },
+      {
+        "value": "Census Microdata 9% Sample",
+        "count": 1
+      },
+      {
+        "value": "Census Wales 2011",
+        "count": 30
+      },
+      {
+        "value": "Census Wales 2021",
+        "count": 7
+      },
+      {
+        "value": "Census Wales 2021 Household",
+        "count": 1
+      },
+      {
+        "value": "Childcare and Early Years Provision: Providers' Survey",
+        "count": 1
+      },
+      {
+        "value": "Childcare and Early Years Survey of Parents",
+        "count": 2
+      },
+      {
+        "value": "Children and Family Court Advisory and Support Service (CAFCASS England)",
+        "count": 1
+      },
+      {
+        "value": "Children of the 2020s Longitudinal Study",
+        "count": 2
+      },
+      {
+        "value": "Children of the 2020s: Wave 1",
+        "count": 1
+      },
+      {
+        "value": "Civil Society Organisations",
+        "count": 1
+      },
+      {
+        "value": "Community Innovation Survey",
+        "count": 9
+      },
+      {
+        "value": "Consumer Prices Index",
+        "count": 15
+      },
+      {
+        "value": "Coronavirus and the Social Impacts on Great Britain",
+        "count": 20
+      },
+      {
+        "value": "Council Tax Property Attributes",
+        "count": 1
+      },
+      {
+        "value": "Crime Survey for England and Wales (CSEW)",
+        "count": 41
+      },
+      {
+        "value": "DEA Research Project Accreditation Understanding Society",
+        "count": 1
+      },
+      {
+        "value": "Death Registration Data - Provisional Monthly Extracts",
+        "count": 10
+      },
+      {
+        "value": "Death Registrations",
+        "count": 21
+      },
+      {
+        "value": "Death Registrations Finalised",
+        "count": 8
+      },
+      {
+        "value": "Death Registrations in England and Wales",
+        "count": 4
+      },
+      {
+        "value": "Death Registrations in England and Wales Indexed",
+        "count": 1
+      },
+      {
+        "value": "Decision Maker Panel",
+        "count": 10
+      },
+      {
+        "value": "Decision Maker Panel matched to Business Insights and Conditions Survey UK",
+        "count": 1
+      },
+      {
+        "value": "Department for Business",
+        "count": 1
+      },
+      {
+        "value": "Department for Education: Employer Skills Survey",
+        "count": 1
+      },
+      {
+        "value": "Designs and Trade Marks Office for National Statistics /",
+        "count": 1
+      },
+      {
+        "value": "Digital Economy Survey",
+        "count": 1
+      },
+      {
+        "value": "Digital library of historical directories",
+        "count": 1
+      },
+      {
+        "value": "E-Commerce Survey",
+        "count": 17
+      },
+      {
+        "value": "E-Commerce and Digital Economy Survey",
+        "count": 8
+      },
+      {
+        "value": "EOL",
+        "count": 3
+      },
+      {
+        "value": "Earnings and Employees Study (EES) 2011 - Northern Ireland",
+        "count": 4
+      },
+      {
+        "value": "Education and Child Health Insights from Linked Data (ECHILD)",
+        "count": 43
+      },
+      {
+        "value": "Effects of Taxes and Benefits on Household Income",
+        "count": 2
+      },
+      {
+        "value": "Emergency Care Data Set monthly in England indexed",
+        "count": 1
+      },
+      {
+        "value": "Employer Skills Survey",
+        "count": 9
+      },
+      {
+        "value": "Employer Skills Survey and Investment in Training",
+        "count": 15
+      },
+      {
+        "value": "Employer Skills Survey: Investment in Training",
+        "count": 1
+      },
+      {
+        "value": "Employment Creation and Survival",
+        "count": 3
+      },
+      {
+        "value": "Energy Performance Certification",
+        "count": 1
+      },
+      {
+        "value": "Energy and Industrial Strategy: Community Innovation Survey",
+        "count": 1
+      },
+      {
+        "value": "English Housing Survey UK Household Electricity and Activity Survey Smart Energy Research Lab Observatory",
+        "count": 1
+      },
+      {
+        "value": "English Longitudinal Study of Ageing",
+        "count": 1
+      },
+      {
+        "value": "English School Census Absences",
+        "count": 6
+      },
+      {
+        "value": "Enhanced Linked Trade-in-Goods/Inter-Departmental Business Register",
+        "count": 1
+      },
+      {
+        "value": "Expenditure and Food Survey",
+        "count": 2
+      },
+      {
+        "value": "Family Expenditure Survey",
+        "count": 1
+      },
+      {
+        "value": "Family Resources Survey",
+        "count": 8
+      },
+      {
+        "value": "Financial Assets and Liabilities Survey",
+        "count": 1
+      },
+      {
+        "value": "Firm Productivity",
+        "count": 3
+      },
+      {
+        "value": "Foreign Direct Investment Index",
+        "count": 2
+      },
+      {
+        "value": "Further Education Workforce Data Collection",
+        "count": 3
+      },
+      {
+        "value": "GRading and Admissions Data England (GRADE)",
+        "count": 13
+      },
+      {
+        "value": "General Household Survey",
+        "count": 1
+      },
+      {
+        "value": "General Lifestyle Survey to 2010",
+        "count": 1
+      },
+      {
+        "value": "Growing Up in England Wave 1 (GUIE)",
+        "count": 12
+      },
+      {
+        "value": "Growing Up in England Wave 2 (GUIE)",
+        "count": 7
+      },
+      {
+        "value": "Growing Up in England Wave 2 - Exclusions",
+        "count": 6
+      },
+      {
+        "value": "Growing Up in England Wave 2 Vulnerability Measures",
+        "count": 1
+      },
+      {
+        "value": "Harmonised BHPS Waves 1-18",
+        "count": 1
+      },
+      {
+        "value": "Health Survey for England",
+        "count": 1
+      },
+      {
+        "value": "Health and Lifestyle Survey",
+        "count": 1
+      },
+      {
+        "value": "Household structure for COVID-19 models",
+        "count": 1
+      },
+      {
+        "value": "Households Below Average Income",
+        "count": 1
+      },
+      {
+        "value": "Infant Mortality linkage of 2011 Census",
+        "count": 1
+      },
+      {
+        "value": "Innovation Panel",
+        "count": 2
+      },
+      {
+        "value": "Integrated Census Microdata",
+        "count": 2
+      },
+      {
+        "value": "Integrated Data Asset Hospital Episode",
+        "count": 1
+      },
+      {
+        "value": "Integrated Data Service",
+        "count": 1
+      },
+      {
+        "value": "Inter-Departmental Business Register (IDBR)",
+        "count": 1
+      },
+      {
+        "value": "International Passenger Survey",
+        "count": 2
+      },
+      {
+        "value": "International Trade in Services",
+        "count": 36
+      },
+      {
+        "value": "Investment by insurance companies",
+        "count": 1
+      },
+      {
+        "value": "Investment in Intangible Assets",
+        "count": 1
+      },
+      {
+        "value": "Investment in Intangible Assets Survey",
+        "count": 7
+      },
+      {
+        "value": "Labour Force Survey (LFS)",
+        "count": 62
+      },
+      {
+        "value": "Labour Force Survey Five-Quarter Longitudinal",
+        "count": 7
+      },
+      {
+        "value": "Labour Force Survey Household",
+        "count": 48
+      },
+      {
+        "value": "Labour Force Survey Indexed",
+        "count": 1
+      },
+      {
+        "value": "Labour Force Survey Longitudinal",
+        "count": 40
+      },
+      {
+        "value": "Labour Force Survey Person",
+        "count": 69
+      },
+      {
+        "value": "Labour Force Survey Two-Quarter Longitudinal",
+        "count": 5
+      },
+      {
+        "value": "Linked Census and Death Occurrences",
+        "count": 7
+      },
+      {
+        "value": "Linked Census and death occurrences Office for National Statistics /",
+        "count": 1
+      },
+      {
+        "value": "Linked Census, HES and Mortality Data",
+        "count": 3
+      },
+      {
+        "value": "Linked Credit Reference Agency (CRA)",
+        "count": 1
+      },
+      {
+        "value": "Linked Director's mortality",
+        "count": 1
+      },
+      {
+        "value": "Linked Inter-Departmental Business Register and Valuation Office Agency",
+        "count": 1
+      },
+      {
+        "value": "Linked Trade-in-Goods/IDBR",
+        "count": 10
+      },
+      {
+        "value": "Linked Trade-in-Goods/Inter-Departmental Business Register",
+        "count": 20
+      },
+      {
+        "value": "Living Costs and Food Survey (LCF)",
+        "count": 40
+      },
+      {
+        "value": "Longitudinal Business Database",
+        "count": 17
+      },
+      {
+        "value": "Longitudinal Business Register",
+        "count": 1
+      },
+      {
+        "value": "Longitudinal Education Outcomes (LEO)",
+        "count": 125
+      },
+      {
+        "value": "Longitudinal Inter-Departmental Business Register",
+        "count": 17
+      },
+      {
+        "value": "Longitudinal Inter-Development Business Register",
+        "count": 1
+      },
+      {
+        "value": "Longitudinal Labour Force Survey",
+        "count": 3
+      },
+      {
+        "value": "Longitudinal Small Business Survey (LSBS)",
+        "count": 35
+      },
+      {
+        "value": "Longitudinal Study of young people in England",
+        "count": 1
+      },
+      {
+        "value": "Low Carbon and Renewable Energy Economy Survey",
+        "count": 14
+      },
+      {
+        "value": "Low carbon and renewable energy economy",
+        "count": 1
+      },
+      {
+        "value": "Management Practices Survey",
+        "count": 9
+      },
+      {
+        "value": "Management and Expectations Survey (MES)",
+        "count": 25
+      },
+      {
+        "value": "Mergers and Acquisitions Survey",
+        "count": 4
+      },
+      {
+        "value": "MoJ Data First Cross-Justice System Linking Dataset",
+        "count": 8
+      },
+      {
+        "value": "MoJ Data First Crown Court Defendant",
+        "count": 7
+      },
+      {
+        "value": "MoJ Data First Crown Court Defendant Case Level",
+        "count": 10
+      },
+      {
+        "value": "MoJ Data First Crown Court Iteration 2",
+        "count": 6
+      },
+      {
+        "value": "MoJ Data First Family Court",
+        "count": 6
+      },
+      {
+        "value": "MoJ Data First Family Court Data Extract",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Familyman Family Court",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Link Ed Criminal Courts",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Linked Criminal Courts",
+        "count": 4
+      },
+      {
+        "value": "MoJ Data First Linked Criminal Courts And Prisons Defendant",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Linked Criminal Courts Defendant Case Level",
+        "count": 5
+      },
+      {
+        "value": "MoJ Data First Magistrates Court Defendant",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Magistrates Court Defendant Iteration 2",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Magistrates Court Iteration 2",
+        "count": 5
+      },
+      {
+        "value": "MoJ Data First Magistrates' Court Defendant",
+        "count": 3
+      },
+      {
+        "value": "MoJ Data First Magistrates' Court Defendant Case Level",
+        "count": 10
+      },
+      {
+        "value": "MoJ Data First Offender Assessment",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Prison Iteration 2",
+        "count": 1
+      },
+      {
+        "value": "MoJ Data First Prisoner Custodial Journey",
+        "count": 9
+      },
+      {
+        "value": "MoJ Data First Probation",
+        "count": 7
+      },
+      {
+        "value": "MoJ Data First Probation Iteration 2",
+        "count": 2
+      },
+      {
+        "value": "Monthly Business Survey",
+        "count": 9
+      },
+      {
+        "value": "Monthly Business Survey for Construction and Allied Trades",
+        "count": 1
+      },
+      {
+        "value": "Monthly Inquiry into the Distributive and Services Sector (MIDSS)",
+        "count": 2
+      },
+      {
+        "value": "Monthly Production Inquiry (MPI)",
+        "count": 2
+      },
+      {
+        "value": "Monthly Wages and Salary Survey",
+        "count": 10
+      },
+      {
+        "value": "NHS Test and Trace",
+        "count": 1
+      },
+      {
+        "value": "NI Annual Business Inquiry",
+        "count": 1
+      },
+      {
+        "value": "NN4B",
+        "count": 1
+      },
+      {
+        "value": "National Employer Skills Survey",
+        "count": 9
+      },
+      {
+        "value": "National Travel Survey",
+        "count": 5
+      },
+      {
+        "value": "National Travel Survey England",
+        "count": 1
+      },
+      {
+        "value": "National Travel Survey English Housing Survey",
+        "count": 1
+      },
+      {
+        "value": "New Earnings Survey (NES)",
+        "count": 18
+      },
+      {
+        "value": "New Earnings Survey Panel",
+        "count": 7
+      },
+      {
+        "value": "Northern Ireland Annual Business Inquiry",
+        "count": 6
+      },
+      {
+        "value": "Northern Ireland Annual Business Inquiry (NIABI)",
+        "count": 2
+      },
+      {
+        "value": "Northern Ireland Census 2021 Microdata",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland Economic Trade",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland Economic Trade Statistics (NIETS)",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland Economic Trade Statistics (NIETS) Northern Ireland Annual Survey of Hours and Earnings (NI ASHE)",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland Exams Database",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland School Census",
+        "count": 2
+      },
+      {
+        "value": "Northern Ireland School Leavers Survey",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland School Leavers Survey Northern Ireland Exams Database",
+        "count": 1
+      },
+      {
+        "value": "Nursing and Midwifery Council Register",
+        "count": 3
+      },
+      {
+        "value": "Nursing and Midwifery Council Register linked to Census 2021",
+        "count": 4
+      },
+      {
+        "value": "O2 mobile network operator travel and location data",
+        "count": 1
+      },
+      {
+        "value": "ONS Census 2021",
+        "count": 1
+      },
+      {
+        "value": "ONS Longitudinal Study (LS)",
+        "count": 57
+      },
+      {
+        "value": "ONS Longitudinal Study 1971",
+        "count": 1
+      },
+      {
+        "value": "ONS Omnibus Survey",
+        "count": 1
+      },
+      {
+        "value": "Occupational differences in mortality from COVID-19",
+        "count": 1
+      },
+      {
+        "value": "Online Time Use Survey (OTUS)",
+        "count": 4
+      },
+      {
+        "value": "Opinions and Lifestyle Survey (OPN)",
+        "count": 18
+      },
+      {
+        "value": "Over 50s Lifestyle Study",
+        "count": 3
+      },
+      {
+        "value": "Prices Survey Microdata",
+        "count": 3
+      },
+      {
+        "value": "Producer Price Index",
+        "count": 9
+      },
+      {
+        "value": "Provisional Monthly Extracts England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Public Attitudes Tracker",
+        "count": 1
+      },
+      {
+        "value": "Public Health Research Database",
+        "count": 7
+      },
+      {
+        "value": "Quarterly Acquisitions and Disposals of Capital Assets Survey",
+        "count": 14
+      },
+      {
+        "value": "Quarterly Capital Expenditure Survey",
+        "count": 14
+      },
+      {
+        "value": "Quarterly Fuels Inquiry",
+        "count": 10
+      },
+      {
+        "value": "Quarterly Fuels Inquiry / Quarterly Fuels Survey",
+        "count": 1
+      },
+      {
+        "value": "Quarterly Labour Force Survey",
+        "count": 48
+      },
+      {
+        "value": "Quarterly Labour Force Survey Household",
+        "count": 1
+      },
+      {
+        "value": "Quarterly Survey of Financial Assets and Liabilities",
+        "count": 1
+      },
+      {
+        "value": "RETIRED MoJ Data First Crown Court Defendant",
+        "count": 1
+      },
+      {
+        "value": "RETIRED MoJ Data First Magistrates Court Defendant",
+        "count": 3
+      },
+      {
+        "value": "RETIRED MoJ Data First Probation",
+        "count": 1
+      },
+      {
+        "value": "Research and Development Expenditures and Subsidies",
+        "count": 3
+      },
+      {
+        "value": "Retail Price Index",
+        "count": 1
+      },
+      {
+        "value": "Safeguarded Living Costs and Food Survey",
+        "count": 1
+      },
+      {
+        "value": "Schools Daily Contact Testing",
+        "count": 1
+      },
+      {
+        "value": "Secure Access version of Understanding Society Data and Harmonised BHPS Geography files",
+        "count": 1
+      },
+      {
+        "value": "Secure Census 2011 Scotland",
+        "count": 1
+      },
+      {
+        "value": "Short Term Employment Survey",
+        "count": 1
+      },
+      {
+        "value": "Skills and Employment Surveys Series",
+        "count": 1
+      },
+      {
+        "value": "Small Business Survey",
+        "count": 7
+      },
+      {
+        "value": "Small Business Survey Longitudinal",
+        "count": 1
+      },
+      {
+        "value": "Smart Energy Research Lab: Statistical Data",
+        "count": 1
+      },
+      {
+        "value": "Standard Industrial Classification and Occupational lookup",
+        "count": 1
+      },
+      {
+        "value": "State-funded schools inspections and outcomes",
+        "count": 1
+      },
+      {
+        "value": "Statutory Homelessness Flows",
+        "count": 1
+      },
+      {
+        "value": "Statutory Homelessness Flows - England",
+        "count": 2
+      },
+      {
+        "value": "Street Level Crime for England",
+        "count": 1
+      },
+      {
+        "value": "Survey of Innovation and Patent Use",
+        "count": 2
+      },
+      {
+        "value": "Survey of Personal Incomes",
+        "count": 1
+      },
+      {
+        "value": "Telephone-Operated Crime Survey for England and Wales",
+        "count": 2
+      },
+      {
+        "value": "The Second Longitudinal Study of Young People in England",
+        "count": 2
+      },
+      {
+        "value": "Trade in Services",
+        "count": 1
+      },
+      {
+        "value": "UCAS Grading and Admissions",
+        "count": 1
+      },
+      {
+        "value": "UCAS Grading and Admissions Qualifications Wales",
+        "count": 1
+      },
+      {
+        "value": "UK Gross Value Added",
+        "count": 2
+      },
+      {
+        "value": "UK Gross Value Added for lower layer super output areas",
+        "count": 1
+      },
+      {
+        "value": "UK Household Longitudinal Study Mainstage Survey Wave 6",
+        "count": 1
+      },
+      {
+        "value": "UK Household Longitudinal Study Mainstage Survey Wave 9",
+        "count": 1
+      },
+      {
+        "value": "UK Innovation Survey (UKIS)",
+        "count": 81
+      },
+      {
+        "value": "UK Manufacturers' Sales by Product Survey",
+        "count": 18
+      },
+      {
+        "value": "UK Research and Innovation Workforce Survey",
+        "count": 1
+      },
+      {
+        "value": "UK research and Innovation Workforce Survey",
+        "count": 1
+      },
+      {
+        "value": "UK small area gross value added estimates",
+        "count": 1
+      },
+      {
+        "value": "UK: 2023",
+        "count": 1
+      },
+      {
+        "value": "Understanding Society",
+        "count": 60
+      },
+      {
+        "value": "Understanding Society - UK Office for National",
+        "count": 1
+      },
+      {
+        "value": "Understanding Society BHPS",
+        "count": 2
+      },
+      {
+        "value": "Understanding Society UKHLS",
+        "count": 3
+      },
+      {
+        "value": "Understanding Society Waves 1-9",
+        "count": 1
+      },
+      {
+        "value": "Understanding Society and Harmonised BHPS",
+        "count": 1
+      },
+      {
+        "value": "United Kingdom Time Use Survey (UKTUS)",
+        "count": 1
+      },
+      {
+        "value": "Universities and Colleges Admissions Service (UCAS)",
+        "count": 25
+      },
+      {
+        "value": "Urban Population Database",
+        "count": 1
+      },
+      {
+        "value": "Vacancy Survey",
+        "count": 13
+      },
+      {
+        "value": "Valuation data of Scottish properties",
+        "count": 1
+      },
+      {
+        "value": "Waves 1-10 and Harmonised BHPS Geography files",
+        "count": 2
+      },
+      {
+        "value": "Wealth and Assets Survey (WAS)",
+        "count": 30
+      },
+      {
+        "value": "Wealth and Assets Survey Great Britain",
+        "count": 1
+      },
+      {
+        "value": "Well-Being",
+        "count": 1
+      },
+      {
+        "value": "Working Lives of Teachers and Leaders Survey",
+        "count": 3
+      },
+      {
+        "value": "Workplace Employee Relations Survey",
+        "count": 1
+      },
+      {
+        "value": "Workplace Employment Relations Survey",
+        "count": 13
+      }
+    ],
+    "provider": [
+      {
+        "value": "Annual Population Survey",
+        "count": 1
+      },
+      {
+        "value": "Bank of England",
+        "count": 11
+      },
+      {
+        "value": "Department for Business and Trade (DBT)",
+        "count": 30
+      },
+      {
+        "value": "Department for Business, Energy and Industrial Strategy (BEIS)",
+        "count": 53
+      },
+      {
+        "value": "Department for Education (DfE)",
+        "count": 73
+      },
+      {
+        "value": "Department for Environment, Food & Rural Affairs (DEFRA)",
+        "count": 5
+      },
+      {
+        "value": "Department for Levelling Up, Housing and Communities (DLUHC)",
+        "count": 2
+      },
+      {
+        "value": "Department for Transport (DfT)",
+        "count": 4
+      },
+      {
+        "value": "Department for Work and Pensions (DWP)",
+        "count": 5
+      },
+      {
+        "value": "Department of Health and Social Care (DHSC)",
+        "count": 1
+      },
+      {
+        "value": "DfE, DWP and HMRC",
+        "count": 87
+      },
+      {
+        "value": "DfE, DWP, HMRC and Scottish Government",
+        "count": 1
+      },
+      {
+        "value": "Economic and Social Research Council",
+        "count": 1
+      },
+      {
+        "value": "HM Revenue and Customs (HMRC)",
+        "count": 2
+      },
+      {
+        "value": "Institute for Social and Economic Research",
+        "count": 50
+      },
+      {
+        "value": "Intellectual Property Office (IPO)",
+        "count": 1
+      },
+      {
+        "value": "Ministry of Justice (MoJ)",
+        "count": 30
+      },
+      {
+        "value": "NHS",
+        "count": 1
+      },
+      {
+        "value": "NHS Digital",
+        "count": 4
+      },
+      {
+        "value": "NHS England",
+        "count": 3
+      },
+      {
+        "value": "NHS; DfE",
+        "count": 41
+      },
+      {
+        "value": "NHSD / University of Oxford",
+        "count": 1
+      },
+      {
+        "value": "National Records Scotland",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland Registrar General's Office",
+        "count": 1
+      },
+      {
+        "value": "Northern Ireland Statistics and Research Agency (NISRA)",
+        "count": 22
+      },
+      {
+        "value": "Nursing and Midwifery Council",
+        "count": 6
+      },
+      {
+        "value": "OFSTED",
+        "count": 1
+      },
+      {
+        "value": "ONS / HMRC / Companies House",
+        "count": 6
+      },
+      {
+        "value": "ONS / University of Oxford",
+        "count": 18
+      },
+      {
+        "value": "ONS / University of Oxford / Valuation Office Agency / Ministry of Housing, Communities and Local Government",
+        "count": 2
+      },
+      {
+        "value": "ONS Secure Research Service (SRS)",
+        "count": 4
+      },
+      {
+        "value": "ONS, HMRC",
+        "count": 18
+      },
+      {
+        "value": "ONS, University of Oxford",
+        "count": 4
+      },
+      {
+        "value": "ONS. HMRC",
+        "count": 1
+      },
+      {
+        "value": "ONS; University of Oxford; DHSC",
+        "count": 2
+      },
+      {
+        "value": "Office for National Statistcs",
+        "count": 1
+      },
+      {
+        "value": "Office for National Statistics (ONS)",
+        "count": 956
+      },
+      {
+        "value": "Office for the National Statistics",
+        "count": 1
+      },
+      {
+        "value": "Office of Qualifications and Examinations Regulation (Ofqual)",
+        "count": 2
+      },
+      {
+        "value": "Ofqual and DfE",
+        "count": 2
+      },
+      {
+        "value": "Qualifications Wales, DfE, UCAS",
+        "count": 7
+      },
+      {
+        "value": "SAIL Databank",
+        "count": 63
+      },
+      {
+        "value": "Scottish Government",
+        "count": 2
+      },
+      {
+        "value": "UK Data Service (UKDS)",
+        "count": 2
+      },
+      {
+        "value": "UK Health Security Agency",
+        "count": 1
+      },
+      {
+        "value": "Understanding Society",
+        "count": 7
+      },
+      {
+        "value": "Universities and Colleges Admissions Service (UCAS)",
+        "count": 23
+      },
+      {
+        "value": "University of Leicester",
+        "count": 1
+      },
+      {
+        "value": "Valuation Office Agency",
+        "count": 1
+      },
+      {
+        "value": "World Bank open data",
+        "count": 1
+      }
+    ],
+    "institution": [
+      {
+        "value": "ADS (Aerospace, Defence, Security, Space) Group Limited",
+        "count": 2
+      },
+      {
+        "value": "AQA Education",
+        "count": 1
+      },
+      {
+        "value": "ARUP",
+        "count": 2
+      },
+      {
+        "value": "Academy of Medical Sciences",
+        "count": 1
+      },
+      {
+        "value": "Administrative Data Research Wales",
+        "count": 1
+      },
+      {
+        "value": "Agri-Food and Biosciences Institute",
+        "count": 7
+      },
+      {
+        "value": "Alan Turing Institute",
+        "count": 5
+      },
+      {
+        "value": "Alma Economics",
+        "count": 2
+      },
+      {
+        "value": "Anglia Ruskin University Higher Education Corporation",
+        "count": 2
+      },
+      {
+        "value": "Anna Freud Centre",
+        "count": 1
+      },
+      {
+        "value": "Aston University",
+        "count": 14
+      },
+      {
+        "value": "BOP Consulting",
+        "count": 1
+      },
+      {
+        "value": "Bank of England",
+        "count": 22
+      },
+      {
+        "value": "Be the Business",
+        "count": 1
+      },
+      {
+        "value": "Behavioural Insights Team",
+        "count": 1
+      },
+      {
+        "value": "Belmana",
+        "count": 15
+      },
+      {
+        "value": "Birkbeck, University of London",
+        "count": 1
+      },
+      {
+        "value": "Bournemouth University",
+        "count": 1
+      },
+      {
+        "value": "British Psychological Society",
+        "count": 1
+      },
+      {
+        "value": "British Sociological Society",
+        "count": 1
+      },
+      {
+        "value": "Brunel University London",
+        "count": 3
+      },
+      {
+        "value": "Cabinet Office",
+        "count": 3
+      },
+      {
+        "value": "Calver Pang",
+        "count": 1
+      },
+      {
+        "value": "Cambridge Econometrics",
+        "count": 2
+      },
+      {
+        "value": "Cambridge OCR",
+        "count": 1
+      },
+      {
+        "value": "Cambridge Policy Consultants",
+        "count": 1
+      },
+      {
+        "value": "Cancer Research UK",
+        "count": 1
+      },
+      {
+        "value": "Cardiff Metropolitan University",
+        "count": 1
+      },
+      {
+        "value": "Cardiff University",
+        "count": 37
+      },
+      {
+        "value": "Cardiff and Vale University Health Board",
+        "count": 1
+      },
+      {
+        "value": "Centre for Cities",
+        "count": 5
+      },
+      {
+        "value": "Centre for Economic and Business Research (CEBR)",
+        "count": 1
+      },
+      {
+        "value": "Centre for Healthcare Evaluation, Device Assessment, and Research (CEDAR)",
+        "count": 1
+      },
+      {
+        "value": "Chartered Institute of Personnel and Development (CIPD)",
+        "count": 1
+      },
+      {
+        "value": "City, University of London",
+        "count": 12
+      },
+      {
+        "value": "Columbia University",
+        "count": 1
+      },
+      {
+        "value": "Competition and Markets Authority (CMA)",
+        "count": 8
+      },
+      {
+        "value": "Coventry University",
+        "count": 1
+      },
+      {
+        "value": "Cranfield University",
+        "count": 1
+      },
+      {
+        "value": "Cyber Monitoring Centre",
+        "count": 1
+      },
+      {
+        "value": "DASCROSE Limited",
+        "count": 1
+      },
+      {
+        "value": "Department for Business and Trade (DBT)",
+        "count": 5
+      },
+      {
+        "value": "Department for Business, Energy and Industrial Strategy (BEIS)",
+        "count": 5
+      },
+      {
+        "value": "Department for Business, Innovation and Skills",
+        "count": 1
+      },
+      {
+        "value": "Department for Culture, Media and Sport",
+        "count": 1
+      },
+      {
+        "value": "Department for Digital, Culture, Media and Sport",
+        "count": 1
+      },
+      {
+        "value": "Department for International Trade",
+        "count": 7
+      },
+      {
+        "value": "Department for Levelling Up, Housing and Communities (DLUHC)",
+        "count": 3
+      },
+      {
+        "value": "Department for the Economy (Northern Ireland)",
+        "count": 1
+      },
+      {
+        "value": "Department of Health (Northern Ireland)",
+        "count": 1
+      },
+      {
+        "value": "Department of Health and Social Care (DHSC)",
+        "count": 5
+      },
+      {
+        "value": "Digital Health and Care Wales",
+        "count": 2
+      },
+      {
+        "value": "Durham University",
+        "count": 19
+      },
+      {
+        "value": "Economic Statistics Centre of Excellence",
+        "count": 2
+      },
+      {
+        "value": "Economic and Social Research Institute (ESRI)",
+        "count": 2
+      },
+      {
+        "value": "Ecorys UK",
+        "count": 1
+      },
+      {
+        "value": "Edinburgh Napier University",
+        "count": 8
+      },
+      {
+        "value": "Education Policy Institute",
+        "count": 6
+      },
+      {
+        "value": "Emory University",
+        "count": 1
+      },
+      {
+        "value": "Engineering Construction Industry Training Board (ECITB)",
+        "count": 1
+      },
+      {
+        "value": "EngineeringUK",
+        "count": 1
+      },
+      {
+        "value": "Equality and Human Rights Commission (EHRC)",
+        "count": 2
+      },
+      {
+        "value": "European University Institute",
+        "count": 2
+      },
+      {
+        "value": "Experian",
+        "count": 1
+      },
+      {
+        "value": "FFT Education Ltd",
+        "count": 9
+      },
+      {
+        "value": "Federal Reserve Bank of Philadelphia",
+        "count": 1
+      },
+      {
+        "value": "Federal Reserve Board of Governors",
+        "count": 1
+      },
+      {
+        "value": "Financial Conduct Authority (FCA)",
+        "count": 1
+      },
+      {
+        "value": "Fraser of Allander Institute (University of Strathclyde)",
+        "count": 2
+      },
+      {
+        "value": "Frazer-Nash Consultancy",
+        "count": 1
+      },
+      {
+        "value": "Free University of Bozen-Bolzano",
+        "count": 1
+      },
+      {
+        "value": "Frontier Economics Ltd",
+        "count": 24
+      },
+      {
+        "value": "Georgetown University",
+        "count": 2
+      },
+      {
+        "value": "Glasgow City Council",
+        "count": 2
+      },
+      {
+        "value": "Greater London Authority (GLA)",
+        "count": 10
+      },
+      {
+        "value": "Greater Manchester Combined Authority",
+        "count": 4
+      },
+      {
+        "value": "HM Revenue and Customs (HMRC)",
+        "count": 1
+      },
+      {
+        "value": "HM Treasury",
+        "count": 3
+      },
+      {
+        "value": "Hackney Council",
+        "count": 1
+      },
+      {
+        "value": "Happy City Initiative",
+        "count": 1
+      },
+      {
+        "value": "Hardisty Jones Associates",
+        "count": 1
+      },
+      {
+        "value": "Harvard University",
+        "count": 4
+      },
+      {
+        "value": "Health Data Research UK (HDR UK)",
+        "count": 2
+      },
+      {
+        "value": "Health Foundation",
+        "count": 2
+      },
+      {
+        "value": "Health and Safety Executive",
+        "count": 1
+      },
+      {
+        "value": "Henley Business School (University of Reading)",
+        "count": 2
+      },
+      {
+        "value": "Heriot-Watt University",
+        "count": 6
+      },
+      {
+        "value": "Home Office",
+        "count": 2
+      },
+      {
+        "value": "ICF International",
+        "count": 1
+      },
+      {
+        "value": "IFF Research",
+        "count": 1
+      },
+      {
+        "value": "IFS",
+        "count": 1
+      },
+      {
+        "value": "Ifo Institute for Economic Research",
+        "count": 1
+      },
+      {
+        "value": "Imperial College London",
+        "count": 17
+      },
+      {
+        "value": "Incomes Data Research",
+        "count": 1
+      },
+      {
+        "value": "Independent Researcher",
+        "count": 1
+      },
+      {
+        "value": "Infact Systems Limited",
+        "count": 1
+      },
+      {
+        "value": "Innovate UK",
+        "count": 5
+      },
+      {
+        "value": "Institut Européen d'Administration des Affaires (INSEAD)",
+        "count": 1
+      },
+      {
+        "value": "Institute & Faculty of Actuaries",
+        "count": 1
+      },
+      {
+        "value": "Institute for Employment Studies (IES)",
+        "count": 1
+      },
+      {
+        "value": "Institute for Fiscal Studies (IFS)",
+        "count": 70
+      },
+      {
+        "value": "Institute for Government (IfG)",
+        "count": 1
+      },
+      {
+        "value": "Institute for Social and Economic Research (University of Essex)",
+        "count": 3
+      },
+      {
+        "value": "Institute for the Future of Work (IFOW)",
+        "count": 1
+      },
+      {
+        "value": "Institute of Occupational Medicine",
+        "count": 2
+      },
+      {
+        "value": "Institute of the Motor Industry",
+        "count": 1
+      },
+      {
+        "value": "Intellectual Property Office (IPO)",
+        "count": 3
+      },
+      {
+        "value": "International Monetary Fund (IMF)",
+        "count": 1
+      },
+      {
+        "value": "Ipsos",
+        "count": 27
+      },
+      {
+        "value": "Johannes Kepler University Linz",
+        "count": 1
+      },
+      {
+        "value": "Joint Biosecurity Centre",
+        "count": 1
+      },
+      {
+        "value": "King's College London (KCL)",
+        "count": 34
+      },
+      {
+        "value": "King's Fund",
+        "count": 1
+      },
+      {
+        "value": "Kingston University",
+        "count": 3
+      },
+      {
+        "value": "Knowledge Transfer Network",
+        "count": 1
+      },
+      {
+        "value": "Lancaster University",
+        "count": 19
+      },
+      {
+        "value": "Lancaster University Management School",
+        "count": 1
+      },
+      {
+        "value": "Learning and Work Institute",
+        "count": 2
+      },
+      {
+        "value": "Lightcast",
+        "count": 1
+      },
+      {
+        "value": "Liverpool City Region Combined Authority",
+        "count": 1
+      },
+      {
+        "value": "London Borough of Redbridge",
+        "count": 1
+      },
+      {
+        "value": "London Economics",
+        "count": 10
+      },
+      {
+        "value": "London Metropolitan University",
+        "count": 1
+      },
+      {
+        "value": "London School of Economics and Political Science (LSE)",
+        "count": 99
+      },
+      {
+        "value": "London School of Hygiene and Tropical Medicine (LSHTM)",
+        "count": 13
+      },
+      {
+        "value": "Loughborough University",
+        "count": 8
+      },
+      {
+        "value": "Low Pay Commission (LPC)",
+        "count": 4
+      },
+      {
+        "value": "MIME Consulting Ltd",
+        "count": 2
+      },
+      {
+        "value": "Manchester Metropolitan University",
+        "count": 3
+      },
+      {
+        "value": "Marie Curie",
+        "count": 2
+      },
+      {
+        "value": "Massachusetts Institute of Technology (MIT)",
+        "count": 5
+      },
+      {
+        "value": "Methods Analytics",
+        "count": 1
+      },
+      {
+        "value": "Middlesex University",
+        "count": 2
+      },
+      {
+        "value": "Migration Advisory Committee",
+        "count": 1
+      },
+      {
+        "value": "Ministry of Justice (MoJ)",
+        "count": 1
+      },
+      {
+        "value": "Ministry of National Education, Republic of Türkiye",
+        "count": 1
+      },
+      {
+        "value": "Municipal & General (M&G)",
+        "count": 1
+      },
+      {
+        "value": "NHS England",
+        "count": 1
+      },
+      {
+        "value": "National Centre for Social Research (NatCen)",
+        "count": 3
+      },
+      {
+        "value": "National Foundation for Education Research (NFER)",
+        "count": 14
+      },
+      {
+        "value": "National Infrastructure Commission",
+        "count": 1
+      },
+      {
+        "value": "National Institute for Economic and Social Research (NIESR)",
+        "count": 17
+      },
+      {
+        "value": "National Institute of Social and Economic Research",
+        "count": 1
+      },
+      {
+        "value": "National Physical Laboratory (NPL)",
+        "count": 2
+      },
+      {
+        "value": "Nesta",
+        "count": 4
+      },
+      {
+        "value": "Netherlands Interdisciplinary Demographic Institute",
+        "count": 1
+      },
+      {
+        "value": "Nevin Economic Research Institute",
+        "count": 1
+      },
+      {
+        "value": "New Economics Foundation",
+        "count": 1
+      },
+      {
+        "value": "Newcastle City Council",
+        "count": 1
+      },
+      {
+        "value": "Newcastle University",
+        "count": 10
+      },
+      {
+        "value": "Northern Ireland Statistics and Research Agency (NISRA)",
+        "count": 7
+      },
+      {
+        "value": "Northumbria University",
+        "count": 4
+      },
+      {
+        "value": "Nottingham Trent University",
+        "count": 3
+      },
+      {
+        "value": "Nuffield Family Justice Observatory",
+        "count": 2
+      },
+      {
+        "value": "Nuffield Foundation",
+        "count": 1
+      },
+      {
+        "value": "OECD",
+        "count": 1
+      },
+      {
+        "value": "OFSTED",
+        "count": 2
+      },
+      {
+        "value": "OREC",
+        "count": 1
+      },
+      {
+        "value": "Office for Health Improvement and Disparities (OHID)",
+        "count": 1
+      },
+      {
+        "value": "Office for National Statistics (ONS)",
+        "count": 47
+      },
+      {
+        "value": "Office of the Victims' Commissioner for England and Wales",
+        "count": 1
+      },
+      {
+        "value": "Oxford Brookes University",
+        "count": 1
+      },
+      {
+        "value": "Oxford Economics",
+        "count": 2
+      },
+      {
+        "value": "Oxford Economics Ltd",
+        "count": 3
+      },
+      {
+        "value": "PA Consulting",
+        "count": 2
+      },
+      {
+        "value": "Pearson",
+        "count": 1
+      },
+      {
+        "value": "Pensions Policy Institute",
+        "count": 2
+      },
+      {
+        "value": "Perspective Economics",
+        "count": 1
+      },
+      {
+        "value": "Pro Bono Economics",
+        "count": 2
+      },
+      {
+        "value": "Public Health England (PHE)",
+        "count": 4
+      },
+      {
+        "value": "Public Health Scotland (PHS)",
+        "count": 1
+      },
+      {
+        "value": "Public Health Wales (PHW)",
+        "count": 15
+      },
+      {
+        "value": "Publishers Association",
+        "count": 1
+      },
+      {
+        "value": "PwC LLP",
+        "count": 7
+      },
+      {
+        "value": "Queen Mary University of London",
+        "count": 16
+      },
+      {
+        "value": "Queen's University Belfast",
+        "count": 21
+      },
+      {
+        "value": "Queen's University Belfast Management, School",
+        "count": 1
+      },
+      {
+        "value": "RAND Europe",
+        "count": 3
+      },
+      {
+        "value": "RSM UK",
+        "count": 4
+      },
+      {
+        "value": "Research Center in Applied Economics for Development CREAD - Algeria",
+        "count": 1
+      },
+      {
+        "value": "Resolution Foundation",
+        "count": 8
+      },
+      {
+        "value": "Royal Holloway, University of London",
+        "count": 9
+      },
+      {
+        "value": "SAIL Databank, Swansea University",
+        "count": 1
+      },
+      {
+        "value": "SGN",
+        "count": 1
+      },
+      {
+        "value": "SQW - Economic and Management Consultants",
+        "count": 6
+      },
+      {
+        "value": "Saga City Research",
+        "count": 1
+      },
+      {
+        "value": "ScaleUp Institute",
+        "count": 1
+      },
+      {
+        "value": "Scottish Government",
+        "count": 3
+      },
+      {
+        "value": "Sentencing Academy",
+        "count": 1
+      },
+      {
+        "value": "Sheffield Hallam University",
+        "count": 2
+      },
+      {
+        "value": "Sheffield Teaching Hospitals NHS Foundation Trust",
+        "count": 1
+      },
+      {
+        "value": "Simetrica",
+        "count": 12
+      },
+      {
+        "value": "Skills Development Scotland",
+        "count": 2
+      },
+      {
+        "value": "Social Care Wales",
+        "count": 1
+      },
+      {
+        "value": "Social Market Foundation",
+        "count": 1
+      },
+      {
+        "value": "Social Mobility Commission (SMC)",
+        "count": 1
+      },
+      {
+        "value": "St Mungo's",
+        "count": 1
+      },
+      {
+        "value": "Stanford University",
+        "count": 1
+      },
+      {
+        "value": "State of Life",
+        "count": 1
+      },
+      {
+        "value": "Stripe Partners",
+        "count": 1
+      },
+      {
+        "value": "Swansea Bay University Health Board",
+        "count": 1
+      },
+      {
+        "value": "Swansea University",
+        "count": 68
+      },
+      {
+        "value": "Tech City UK",
+        "count": 2
+      },
+      {
+        "value": "Technological University Dublin",
+        "count": 1
+      },
+      {
+        "value": "Technopolis",
+        "count": 5
+      },
+      {
+        "value": "Tees Valley Combined Authority",
+        "count": 1
+      },
+      {
+        "value": "Teesside University",
+        "count": 2
+      },
+      {
+        "value": "The Lesbian Project",
+        "count": 1
+      },
+      {
+        "value": "The Police Foundation",
+        "count": 1
+      },
+      {
+        "value": "The Work Foundation",
+        "count": 3
+      },
+      {
+        "value": "The Young Foundation - Institute for Community Studies",
+        "count": 1
+      },
+      {
+        "value": "Trier University",
+        "count": 1
+      },
+      {
+        "value": "UCL Institute of Education",
+        "count": 8
+      },
+      {
+        "value": "UK Export Finance",
+        "count": 1
+      },
+      {
+        "value": "UK Health Security Agency",
+        "count": 2
+      },
+      {
+        "value": "UK Research and Innovation",
+        "count": 2
+      },
+      {
+        "value": "UK Space Agency",
+        "count": 2
+      },
+      {
+        "value": "Ulster University",
+        "count": 11
+      },
+      {
+        "value": "Umeå University",
+        "count": 1
+      },
+      {
+        "value": "University College London (UCL)",
+        "count": 125
+      },
+      {
+        "value": "University of Aberdeen",
+        "count": 1
+      },
+      {
+        "value": "University of Antwerp",
+        "count": 1
+      },
+      {
+        "value": "University of Barcelona",
+        "count": 3
+      },
+      {
+        "value": "University of Bath",
+        "count": 23
+      },
+      {
+        "value": "University of Birmingham",
+        "count": 17
+      },
+      {
+        "value": "University of Brighton",
+        "count": 3
+      },
+      {
+        "value": "University of Bristol",
+        "count": 29
+      },
+      {
+        "value": "University of California",
+        "count": 1
+      },
+      {
+        "value": "University of Cambridge",
+        "count": 28
+      },
+      {
+        "value": "University of Central Lancashire",
+        "count": 3
+      },
+      {
+        "value": "University of Chester",
+        "count": 1
+      },
+      {
+        "value": "University of Derby",
+        "count": 2
+      },
+      {
+        "value": "University of Dundee",
+        "count": 12
+      },
+      {
+        "value": "University of East Anglia",
+        "count": 12
+      },
+      {
+        "value": "University of Edinburgh",
+        "count": 32
+      },
+      {
+        "value": "University of Essex",
+        "count": 26
+      },
+      {
+        "value": "University of Exeter",
+        "count": 17
+      },
+      {
+        "value": "University of Florida",
+        "count": 1
+      },
+      {
+        "value": "University of Glasgow",
+        "count": 10
+      },
+      {
+        "value": "University of Greenwich",
+        "count": 1
+      },
+      {
+        "value": "University of Hertfordshire",
+        "count": 3
+      },
+      {
+        "value": "University of Hull",
+        "count": 2
+      },
+      {
+        "value": "University of Illinois Urbana-Champaign",
+        "count": 1
+      },
+      {
+        "value": "University of Kent",
+        "count": 8
+      },
+      {
+        "value": "University of Leeds",
+        "count": 12
+      },
+      {
+        "value": "University of Leicester",
+        "count": 13
+      },
+      {
+        "value": "University of Liverpool",
+        "count": 20
+      },
+      {
+        "value": "University of London",
+        "count": 16
+      },
+      {
+        "value": "University of Lugano",
+        "count": 1
+      },
+      {
+        "value": "University of Manchester",
+        "count": 43
+      },
+      {
+        "value": "University of Northampton",
+        "count": 2
+      },
+      {
+        "value": "University of Nottingham",
+        "count": 24
+      },
+      {
+        "value": "University of Oxford",
+        "count": 53
+      },
+      {
+        "value": "University of Oxford - Sociology",
+        "count": 4
+      },
+      {
+        "value": "University of Padova",
+        "count": 2
+      },
+      {
+        "value": "University of Plymouth",
+        "count": 2
+      },
+      {
+        "value": "University of Portsmouth",
+        "count": 1
+      },
+      {
+        "value": "University of Reading",
+        "count": 14
+      },
+      {
+        "value": "University of Roehampton",
+        "count": 1
+      },
+      {
+        "value": "University of Sheffield",
+        "count": 33
+      },
+      {
+        "value": "University of South Wales",
+        "count": 1
+      },
+      {
+        "value": "University of Southampton",
+        "count": 24
+      },
+      {
+        "value": "University of St Andrews",
+        "count": 17
+      },
+      {
+        "value": "University of Stirling",
+        "count": 5
+      },
+      {
+        "value": "University of Strathclyde",
+        "count": 32
+      },
+      {
+        "value": "University of Suffolk",
+        "count": 2
+      },
+      {
+        "value": "University of Surrey",
+        "count": 17
+      },
+      {
+        "value": "University of Sussex",
+        "count": 19
+      },
+      {
+        "value": "University of Texas",
+        "count": 1
+      },
+      {
+        "value": "University of Texas at Austin",
+        "count": 1
+      },
+      {
+        "value": "University of Warwick",
+        "count": 35
+      },
+      {
+        "value": "University of Westminster",
+        "count": 10
+      },
+      {
+        "value": "University of York",
+        "count": 13
+      },
+      {
+        "value": "University of the West of England",
+        "count": 10
+      },
+      {
+        "value": "University of the West of Scotland",
+        "count": 1
+      },
+      {
+        "value": "Utrecht University",
+        "count": 1
+      },
+      {
+        "value": "Vanguard",
+        "count": 1
+      },
+      {
+        "value": "WPI Economics",
+        "count": 1
+      },
+      {
+        "value": "Wavehill Limited",
+        "count": 1
+      },
+      {
+        "value": "Welsh Government",
+        "count": 14
+      },
+      {
+        "value": "Welsh Value in Health Centre",
+        "count": 1
+      },
+      {
+        "value": "West Midlands Combined Authority",
+        "count": 2
+      },
+      {
+        "value": "What Works for Children's Social Care",
+        "count": 1
+      },
+      {
+        "value": "Whole Life Consultants",
+        "count": 4
+      },
+      {
+        "value": "Yale University",
+        "count": 1
+      }
+    ],
+    "tre": [
+      {
+        "value": "Integrated Data Service (IDS)",
+        "count": 13
+      },
+      {
+        "value": "Northern Ireland Statistics and Research Agency (NISRA)",
+        "count": 23
+      },
+      {
+        "value": "ONS Secure Research Service (SRS)",
+        "count": 1039
+      },
+      {
+        "value": "Research Data Scotland",
+        "count": 1
+      },
+      {
+        "value": "SAIL Databank",
+        "count": 80
+      },
+      {
+        "value": "UK Data Service (UKDS)",
+        "count": 186
+      }
+    ],
+    "domain": [
+      {
+        "value": "Business & Productivity",
+        "count": 380
+      },
+      {
+        "value": "Crime & Justice",
+        "count": 81
+      },
+      {
+        "value": "Data Infrastructure & Methodology",
+        "count": 80
+      },
+      {
+        "value": "Education & Skills",
+        "count": 263
+      },
+      {
+        "value": "Environment & Agriculture",
+        "count": 79
+      },
+      {
+        "value": "Health & Social Care",
+        "count": 270
+      },
+      {
+        "value": "Housing & Planning",
+        "count": 47
+      },
+      {
+        "value": "Labour Market & Employment",
+        "count": 454
+      },
+      {
+        "value": "Migration & Demographics",
+        "count": 72
+      },
+      {
+        "value": "Poverty, Wealth & Living Standards",
+        "count": 97
+      },
+      {
+        "value": "Public Finance & Taxation",
+        "count": 32
+      },
+      {
+        "value": "Unclear from Register Entry",
+        "count": 2
+      }
+    ],
+    "domain_count": [
+      {
+        "value": 0,
+        "count": 2
+      },
+      {
+        "value": 1,
+        "count": 855
+      },
+      {
+        "value": 2,
+        "count": 459
+      },
+      {
+        "value": 3,
+        "count": 26
+      },
+      {
+        "value": 4,
+        "count": 1
+      }
+    ],
+    "purpose": [
+      {
+        "value": "Descriptive Monitoring",
+        "count": 436
+      },
+      {
+        "value": "Life-Course / Trajectory Analysis",
+        "count": 100
+      },
+      {
+        "value": "Methodological / Infrastructure Research",
+        "count": 124
+      },
+      {
+        "value": "Outcome Tracking",
+        "count": 498
+      },
+      {
+        "value": "Policy Evaluation / Impact Analysis",
+        "count": 264
+      },
+      {
+        "value": "Risk Prediction / Early Identification",
+        "count": 13
+      },
+      {
+        "value": "Service Interaction / Systems Analysis",
+        "count": 36
+      },
+      {
+        "value": "Unclear from Register Entry",
+        "count": 6
+      }
+    ],
+    "tag": [
+      {
+        "value": "Demographic disparities / equity tag",
+        "count": 179
+      },
+      {
+        "value": "COVID-19 & Pandemic",
+        "count": 81
+      }
+    ],
+    "record_linkage": [
+      {
+        "value": "No record linkage",
+        "count": 958
+      },
+      {
+        "value": "Cross-domain",
+        "count": 290
+      },
+      {
+        "value": "Within-domain",
+        "count": 95
+      }
+    ],
+    "collection_method": [
+      {
+        "value": "administrative",
+        "count": 634
+      },
+      {
+        "value": "survey",
+        "count": 982
+      }
+    ],
+    "temporal_structure": [
+      {
+        "value": "cross-sectional",
+        "count": 962
+      },
+      {
+        "value": "longitudinal",
+        "count": 604
+      }
+    ],
+    "unit": [
+      {
+        "value": "area",
+        "count": 23
+      },
+      {
+        "value": "business",
+        "count": 472
+      },
+      {
+        "value": "household",
+        "count": 168
+      },
+      {
+        "value": "individual",
+        "count": 1005
+      }
+    ],
+    "researcher_sector": [
+      {
+        "value": "academic",
+        "count": 985
+      },
+      {
+        "value": "commercial",
+        "count": 153
+      },
+      {
+        "value": "government",
+        "count": 196
+      },
+      {
+        "value": "third-sector",
+        "count": 184
+      },
+      {
+        "value": "unclassified",
+        "count": 13
+      }
+    ]
+  },
+  "explained_baseline_discrepancies": [
+    {
+      "table": "enriched",
+      "facet": "domain_count",
+      "value": 0,
+      "old_count": 2,
+      "new_count": 1343,
+      "independently_verified_expected_count": 1343,
+      "cause": "The pre-existing domain-count predicate treats integer 0 as false, so selecting its option applies no domain-count restriction."
+    }
+  ],
+  "representative_prechange_results": {
+    "explorer": {
+      "filters": {
+        "dataset": "2020 Wave 1 Labour Force Survey",
+        "provider": "ALL",
+        "institution": "ALL",
+        "tre": "ALL",
+        "search": null
+      },
+      "record_ids": [
+        "2020/063"
+      ],
+      "export_sha256": "e4a9ffebd1d446749408fa4efbaafcc6b52f711bb21b8531be36f83cead6dbe9"
+    },
+    "enriched": {
+      "filters": {
+        "domain": "Unclear from Register Entry",
+        "dataset": "ALL",
+        "provider": "ALL",
+        "institution": "ALL",
+        "tre": "ALL",
+        "search": null
+      },
+      "record_ids": [
+        "2024/019",
+        "2025/200"
+      ],
+      "export_sha256": "db97adf3d6e77a056d201868cff9d318f6c395a3f92aa557a64deee18690c9d3"
+    }
+  }
+}

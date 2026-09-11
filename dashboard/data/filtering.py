@@ -1,5 +1,8 @@
 """Data filtering, thematic merging, display shaping, and CSV export."""
 
+import re
+from collections.abc import Callable, Mapping
+
 import numpy as np
 import pandas as pd
 
@@ -21,8 +24,23 @@ from dashboard.data.registry import (
     df_datasets,
     df_institutions,
     _format_tre_provider,
+    _ALL_DATASET_OPTIONS,
+    _ALL_PROVIDER_OPTIONS,
+    _ALL_INSTITUTION_OPTIONS,
+    _ALL_TRE_OPTIONS,
 )
-from dashboard.data.thematic import df_thematic_projects
+from dashboard.data.thematic import (
+    df_thematic_projects,
+    _THEMATIC_DOMAIN_OPTIONS,
+    _THEMATIC_DOMAIN_COUNT_OPTIONS,
+    _THEMATIC_PURPOSE_OPTIONS,
+    _THEMATIC_TAG_OPTIONS,
+    _DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
+    _DETERMINISTIC_COLLECTION_METHOD_OPTIONS,
+    _DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS,
+    _DETERMINISTIC_UNIT_OPTIONS,
+    _DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
+)
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
     RECORD_LINKAGE_COL,
@@ -30,6 +48,7 @@ from dashboard.data.deterministic import (
     display_deterministic_set,
 )
 from dashboard.data.keys import _project_id_key, _title_key
+from dashboard.data.year_filter import YearRange, filter_records_by_year
 
 
 def _filter_by_project_ids(df: pd.DataFrame, project_ids) -> pd.DataFrame:
@@ -52,6 +71,66 @@ def _filter_by_record_ids(df: pd.DataFrame, record_ids) -> pd.DataFrame:
     return df[df["Record ID"].astype(str).str.strip().isin(wanted)]
 
 
+def _apply_dataset_filter(base: pd.DataFrame, dataset) -> pd.DataFrame:
+    if not dataset or dataset == "ALL":
+        return base
+    if isinstance(dataset, str) and dataset.startswith("collection::"):
+        selected_collection = dataset.split("::", 1)[1]
+        if "collections" in base.columns:
+            return base[
+                base["collections"].apply(
+                    lambda collections: selected_collection in collections
+                    if isinstance(collections, list)
+                    else False
+                )
+            ]
+        matching_ids = set(
+            df_all.loc[
+                df_all["collections"].apply(lambda x: selected_collection in x),
+                "Record ID" if "Record ID" in df_all.columns else "Project ID",
+            ]
+        )
+        return _filter_by_record_ids(base, matching_ids)
+
+    id_col = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
+    matching_ids = set(df_datasets.loc[df_datasets["dataset"] == dataset, id_col])
+    return _filter_by_record_ids(base, matching_ids)
+
+
+def _apply_provider_filter(base: pd.DataFrame, provider) -> pd.DataFrame:
+    if not provider or provider == "ALL":
+        return base
+    id_col = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
+    matching_ids = set(df_datasets.loc[df_datasets["provider"] == provider, id_col])
+    return _filter_by_record_ids(base, matching_ids)
+
+
+def _apply_institution_filter(base: pd.DataFrame, institution) -> pd.DataFrame:
+    if not institution or institution == "ALL":
+        return base
+    id_col = "Record ID" if "Record ID" in df_institutions.columns else "Project ID"
+    matching_ids = set(
+        df_institutions.loc[df_institutions["institution"] == institution, id_col]
+    )
+    return _filter_by_record_ids(base, matching_ids)
+
+
+def _apply_tre_filter(base: pd.DataFrame, tre) -> pd.DataFrame:
+    if not tre or tre == "ALL" or "Secure Research Service" not in base.columns:
+        return base
+    return base[
+        base["Secure Research Service"].astype("string").str.strip() == str(tre).strip()
+    ]
+
+
+_REGISTER_FACET_PREDICATES: dict[str, Callable[[pd.DataFrame, object], pd.DataFrame]] = {
+    "dataset": _apply_dataset_filter,
+    "provider": _apply_provider_filter,
+    "institution": _apply_institution_filter,
+    "tre": _apply_tre_filter,
+}
+
+
 def _apply_register_filters(
     df: pd.DataFrame,
     search,
@@ -61,54 +140,25 @@ def _apply_register_filters(
     tre,
     *,
     include_rationale_search: bool = False,
+    excluded_facets=frozenset(),
 ) -> pd.DataFrame:
-    """Apply shared register filters, with enriched-only rationale search opt-in."""
+    """Apply shared register filters, with enriched-only rationale search opt-in.
+
+    Facet counting passes ``excluded_facets`` to omit an entire current
+    selection while retaining these exact table predicates for every other
+    restriction.
+    """
     base = df.copy()
-
-    if dataset and dataset != "ALL":
-        if isinstance(dataset, str) and dataset.startswith("collection::"):
-            selected_collection = dataset.split("::", 1)[1]
-            if "collections" in base.columns:
-                base = base[
-                    base["collections"].apply(
-                        lambda collections: selected_collection in collections
-                        if isinstance(collections, list)
-                        else False
-                    )
-                ]
-            else:
-                matching_ids = set(
-                    df_all.loc[
-                        df_all["collections"].apply(lambda x: selected_collection in x),
-                        "Record ID" if "Record ID" in df_all.columns else "Project ID",
-                    ]
-                )
-                base = _filter_by_record_ids(base, matching_ids)
-        else:
-            id_col = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
-            matching_ids = set(
-                df_datasets.loc[df_datasets["dataset"] == dataset, id_col]
-            )
-            base = _filter_by_record_ids(base, matching_ids)
-
-    if provider and provider != "ALL":
-        id_col = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
-        matching_ids = set(
-            df_datasets.loc[df_datasets["provider"] == provider, id_col]
-        )
-        base = _filter_by_record_ids(base, matching_ids)
-
-    if institution and institution != "ALL":
-        id_col = "Record ID" if "Record ID" in df_institutions.columns else "Project ID"
-        matching_ids = set(
-            df_institutions.loc[df_institutions["institution"] == institution, id_col]
-        )
-        base = _filter_by_record_ids(base, matching_ids)
-
-    if tre and tre != "ALL" and "Secure Research Service" in base.columns:
-        base = base[
-            base["Secure Research Service"].astype("string").str.strip() == str(tre).strip()
-        ]
+    selected = {
+        "dataset": dataset,
+        "provider": provider,
+        "institution": institution,
+        "tre": tre,
+    }
+    excluded = set(excluded_facets or ())
+    for facet, predicate in _REGISTER_FACET_PREDICATES.items():
+        if facet not in excluded:
+            base = predicate(base, selected[facet])
 
     if search:
         project_id = (
@@ -264,6 +314,271 @@ def _classified_mask(df: pd.DataFrame) -> pd.Series:
     return df[_DERIVED_CLASSIFICATION_COLUMNS].notna().all(axis=1)
 
 
+_BROWSE_FACET_OPTIONS = {
+    "dataset": _ALL_DATASET_OPTIONS,
+    "provider": _ALL_PROVIDER_OPTIONS,
+    "institution": _ALL_INSTITUTION_OPTIONS,
+    "tre": _ALL_TRE_OPTIONS,
+}
+_ENRICHED_FACET_OPTIONS = {
+    **_BROWSE_FACET_OPTIONS,
+    "domain": _THEMATIC_DOMAIN_OPTIONS,
+    "domain_count": _THEMATIC_DOMAIN_COUNT_OPTIONS,
+    "purpose": _THEMATIC_PURPOSE_OPTIONS,
+    "tag": _THEMATIC_TAG_OPTIONS,
+    "record_linkage": _DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
+    "collection_method": _DETERMINISTIC_COLLECTION_METHOD_OPTIONS,
+    "temporal_structure": _DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS,
+    "unit": _DETERMINISTIC_UNIT_OPTIONS,
+    "researcher_sector": _DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
+}
+_OPTION_COUNT_SUFFIX = re.compile(r"  \(\d+ projects?\)$")
+
+
+def _canonical_option_label(option: Mapping) -> str:
+    """Recover the static option's label without its legacy count suffix."""
+    return _OPTION_COUNT_SUFFIX.sub("", str(option["label"]))
+
+
+def _distinct_record_id_count(df: pd.DataFrame) -> int:
+    if "Record ID" not in df.columns:
+        raise KeyError("Facet counts require the unique Record ID")
+    record_ids = df["Record ID"].astype("string").str.strip()
+    if record_ids.isna().any() or record_ids.eq("").any():
+        raise ValueError("Facet counts require non-blank Record ID values")
+    return int(record_ids.nunique())
+
+
+def _format_option_count(label: str, count: int) -> str:
+    return f"{label}  ({count} {'project' if count == 1 else 'projects'})"
+
+
+def _facet_options_with_dynamic_counts(
+    base: pd.DataFrame,
+    state: Mapping[str, object],
+    option_universes: Mapping[str, list[dict]],
+    apply_restrictions: Callable[[pd.DataFrame, Mapping[str, object], set[str]], pd.DataFrame],
+    facet_predicates: Mapping[str, Callable[[pd.DataFrame, object], pd.DataFrame]],
+) -> dict[str, list[dict]]:
+    """Decorate fixed option universes using the tables' actual predicates.
+
+    Each facet starts from the base record population, applies every active
+    restriction other than that facet, then applies its existing predicate for
+    each option.  The result is always a distinct-Record-ID count, so an
+    expanded source table or repeated official Project ID cannot inflate it.
+    """
+    counted_options = {}
+    for facet, options in option_universes.items():
+        without_facet = apply_restrictions(base, state, {facet})
+        predicate = facet_predicates[facet]
+        decorated = []
+        for option in options:
+            result = dict(option)
+            label = _canonical_option_label(option)
+            if option["value"] != "ALL":
+                count = _distinct_record_id_count(predicate(without_facet, option["value"]))
+                result["label"] = _format_option_count(label, count)
+            else:
+                # ALL is a reset sentinel, not an ordinary stored category.
+                result["label"] = label
+            decorated.append(result)
+        counted_options[facet] = decorated
+    return counted_options
+
+
+def _apply_domain_filter(base: pd.DataFrame, domain) -> pd.DataFrame:
+    if not domain or domain == "ALL":
+        return base
+    return base[_contains_semicolon_value(base["substantive_domains"], domain)]
+
+
+def _apply_domain_count_filter(base: pd.DataFrame, domain_count) -> pd.DataFrame:
+    if not domain_count or domain_count == "ALL":
+        return base
+    count = int(domain_count)
+    return base[pd.to_numeric(base[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce") == count]
+
+
+def _apply_purpose_filter(base: pd.DataFrame, purpose) -> pd.DataFrame:
+    if not purpose or purpose == "ALL":
+        return base
+    return base[_contains_semicolon_value(base["analytical_purpose"], purpose)]
+
+
+def _apply_tag_filter(base: pd.DataFrame, tag) -> pd.DataFrame:
+    if not tag or tag == "ALL":
+        return base
+    return base[_contains_semicolon_value(base[CROSS_CUTTING_TAGS_COL], tag)]
+
+
+def _apply_record_linkage_filter(base: pd.DataFrame, record_linkage) -> pd.DataFrame:
+    if not record_linkage or record_linkage == "ALL":
+        return base
+    return base[_format_record_linkage(base[RECORD_LINKAGE_COL]) == record_linkage]
+
+
+def _apply_collection_method_filter(base: pd.DataFrame, collection_method) -> pd.DataFrame:
+    if not collection_method or collection_method == "ALL":
+        return base
+    return base[_contains_semicolon_value(base["dataset_collection_methods"], collection_method)]
+
+
+def _apply_temporal_structure_filter(base: pd.DataFrame, temporal_structure) -> pd.DataFrame:
+    if not temporal_structure or temporal_structure == "ALL":
+        return base
+    return base[_contains_semicolon_value(base["dataset_temporal_structures"], temporal_structure)]
+
+
+def _apply_unit_filter(base: pd.DataFrame, unit) -> pd.DataFrame:
+    if not unit or unit == "ALL":
+        return base
+    return base[_contains_semicolon_value(base["dataset_units"], unit)]
+
+
+def _apply_researcher_sector_filter(base: pd.DataFrame, researcher_sector) -> pd.DataFrame:
+    if not researcher_sector or researcher_sector == "ALL":
+        return base
+    return base[_contains_semicolon_value(base["researcher_sectors"], researcher_sector)]
+
+
+_ENRICHED_DERIVED_FACET_PREDICATES = {
+    "domain": _apply_domain_filter,
+    "domain_count": _apply_domain_count_filter,
+    "purpose": _apply_purpose_filter,
+    "tag": _apply_tag_filter,
+    "record_linkage": _apply_record_linkage_filter,
+    "collection_method": _apply_collection_method_filter,
+    "temporal_structure": _apply_temporal_structure_filter,
+    "unit": _apply_unit_filter,
+    "researcher_sector": _apply_researcher_sector_filter,
+}
+_ENRICHED_FACET_PREDICATES = {
+    **_REGISTER_FACET_PREDICATES,
+    **_ENRICHED_DERIVED_FACET_PREDICATES,
+}
+
+
+def _enriched_register_base(eligible_record_ids=None) -> pd.DataFrame:
+    base = _ensure_enriched_register_columns(df_thematic_projects)
+    base = base[_classified_mask(base)]
+    if eligible_record_ids is not None:
+        base = _filter_by_record_ids(base, eligible_record_ids)
+    return base
+
+
+def _apply_enriched_register_filters(
+    base: pd.DataFrame,
+    state: Mapping[str, object],
+    excluded_facets=frozenset(),
+) -> pd.DataFrame:
+    excluded = set(excluded_facets or ())
+    filtered = _apply_register_filters(
+        base,
+        state.get("search"),
+        state.get("dataset"),
+        state.get("provider"),
+        state.get("institution"),
+        state.get("tre"),
+        include_rationale_search=True,
+        excluded_facets=excluded,
+    )
+    for facet, predicate in _ENRICHED_DERIVED_FACET_PREDICATES.items():
+        if facet not in excluded:
+            filtered = predicate(filtered, state.get(facet, "ALL"))
+    return filtered
+
+
+def _get_browse_facet_options(
+    search,
+    dataset,
+    provider,
+    institution,
+    tre,
+    accreditation_year_range,
+    accreditation_year_min,
+    accreditation_year_max,
+) -> dict[str, list[dict]]:
+    state = {
+        "search": search,
+        "dataset": dataset,
+        "provider": provider,
+        "institution": institution,
+        "tre": tre,
+    }
+    bounds = YearRange(int(accreditation_year_min), int(accreditation_year_max))
+
+    def apply_restrictions(base, selected, excluded):
+        filtered = _apply_register_filters(
+            base,
+            selected["search"],
+            selected["dataset"],
+            selected["provider"],
+            selected["institution"],
+            selected["tre"],
+            excluded_facets=excluded,
+        )
+        return filter_records_by_year(filtered, accreditation_year_range, bounds)
+
+    return _facet_options_with_dynamic_counts(
+        df_all,
+        state,
+        _BROWSE_FACET_OPTIONS,
+        apply_restrictions,
+        _REGISTER_FACET_PREDICATES,
+    )
+
+
+def _get_enriched_register_facet_options(
+    search,
+    dataset_filter,
+    provider_filter,
+    institution_filter,
+    tre_filter,
+    domain_filter,
+    domain_count_filter,
+    purpose_filter,
+    tag_filter,
+    record_linkage_filter="ALL",
+    collection_method_filter="ALL",
+    temporal_structure_filter="ALL",
+    unit_filter="ALL",
+    researcher_sector_filter="ALL",
+    eligible_record_ids=None,
+    accreditation_year_range=None,
+    accreditation_year_min=None,
+    accreditation_year_max=None,
+) -> dict[str, list[dict]]:
+    state = {
+        "search": search,
+        "dataset": dataset_filter,
+        "provider": provider_filter,
+        "institution": institution_filter,
+        "tre": tre_filter,
+        "domain": domain_filter,
+        "domain_count": domain_count_filter,
+        "purpose": purpose_filter,
+        "tag": tag_filter,
+        "record_linkage": record_linkage_filter,
+        "collection_method": collection_method_filter,
+        "temporal_structure": temporal_structure_filter,
+        "unit": unit_filter,
+        "researcher_sector": researcher_sector_filter,
+    }
+    bounds = YearRange(int(accreditation_year_min), int(accreditation_year_max))
+
+    def apply_restrictions(base, selected, excluded):
+        filtered = _apply_enriched_register_filters(base, selected, excluded)
+        return filter_records_by_year(filtered, accreditation_year_range, bounds)
+
+    return _facet_options_with_dynamic_counts(
+        _enriched_register_base(eligible_record_ids),
+        state,
+        _ENRICHED_FACET_OPTIONS,
+        apply_restrictions,
+        _ENRICHED_FACET_PREDICATES,
+    )
+
+
 def _compute_classified_register_count() -> int:
     if not len(df_thematic_projects):
         return 0
@@ -326,56 +641,25 @@ def _get_enriched_register_display_df(
     eligible_record_ids=None,
     include_record_id=False,
 ) -> tuple[pd.DataFrame, str]:
-    base = _ensure_enriched_register_columns(df_thematic_projects)
-    base = base[_classified_mask(base)]
-
-    if eligible_record_ids is not None:
-        base = _filter_by_record_ids(base, eligible_record_ids)
+    base = _enriched_register_base(eligible_record_ids)
     n_classified_total = len(base)
-
-    base = _apply_register_filters(
-        base,
-        search,
-        dataset_filter,
-        provider_filter,
-        institution_filter,
-        tre_filter,
-        include_rationale_search=True,
-    )
-
-    if domain_filter and domain_filter != "ALL":
-        base = base[_contains_semicolon_value(base["substantive_domains"], domain_filter)]
-    if domain_count_filter and domain_count_filter != "ALL":
-        domain_count = int(domain_count_filter)
-        base = base[
-            pd.to_numeric(base[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce") == domain_count
-        ]
-    if purpose_filter and purpose_filter != "ALL":
-        base = base[_contains_semicolon_value(base["analytical_purpose"], purpose_filter)]
-    if tag_filter and tag_filter != "ALL":
-        base = base[_contains_semicolon_value(base[CROSS_CUTTING_TAGS_COL], tag_filter)]
-    if record_linkage_filter and record_linkage_filter != "ALL":
-        base = base[_format_record_linkage(base[RECORD_LINKAGE_COL]) == record_linkage_filter]
-    if collection_method_filter and collection_method_filter != "ALL":
-        base = base[
-            _contains_semicolon_value(
-                base["dataset_collection_methods"],
-                collection_method_filter,
-            )
-        ]
-    if temporal_structure_filter and temporal_structure_filter != "ALL":
-        base = base[
-            _contains_semicolon_value(
-                base["dataset_temporal_structures"],
-                temporal_structure_filter,
-            )
-        ]
-    if unit_filter and unit_filter != "ALL":
-        base = base[_contains_semicolon_value(base["dataset_units"], unit_filter)]
-    if researcher_sector_filter and researcher_sector_filter != "ALL":
-        base = base[
-            _contains_semicolon_value(base["researcher_sectors"], researcher_sector_filter)
-        ]
+    state = {
+        "search": search,
+        "dataset": dataset_filter,
+        "provider": provider_filter,
+        "institution": institution_filter,
+        "tre": tre_filter,
+        "domain": domain_filter,
+        "domain_count": domain_count_filter,
+        "purpose": purpose_filter,
+        "tag": tag_filter,
+        "record_linkage": record_linkage_filter,
+        "collection_method": collection_method_filter,
+        "temporal_structure": temporal_structure_filter,
+        "unit": unit_filter,
+        "researcher_sector": researcher_sector_filter,
+    }
+    base = _apply_enriched_register_filters(base, state)
 
     n_displayed = len(base)
     count_text = (

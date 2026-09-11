@@ -89,7 +89,7 @@ def _run_table(display, sort_by=None, page_size=10):
         "_get_enriched_register_display_df",
         return_value=(display.copy(), "old count"),
     ):
-        return callback(
+        result = callback(
             *FILTERS,
             page_size,
             [2023, 2024],
@@ -98,6 +98,7 @@ def _run_table(display, sort_by=None, page_size=10):
             2023,
             2024,
         )
+    return result[:3]
 
 
 def _fixture_rows():
