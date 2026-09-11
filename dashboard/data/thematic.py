@@ -398,6 +398,15 @@ def _domain_breadth_classification(value, substantive_labels, unclear_labels):
     return "included", bucket, breadth
 
 
+def _zero_substantive_domain_kind(value) -> str:
+    """Distinguish empty sets from non-empty Unclear-only classifications."""
+    return (
+        "explicit_empty_substantive_domains"
+        if not _split_semicolon_values(value)
+        else "unclear_only_substantive_domains"
+    )
+
+
 def _domain_breadth_calendar_periods(
     dates: pd.Series,
     selection,
@@ -554,15 +563,23 @@ def domain_breadth_aggregates(
     classifications_result = []
     for _, row in merged.iterrows():
         if row["_classification_join"] != "both":
-            classifications_result.append(("unmatched_classification", None, None))
+            classification = ("unmatched_classification", None, None)
         else:
-            classifications_result.append(_domain_breadth_classification(
+            classification = _domain_breadth_classification(
                 row["substantive_domains"], substantive_labels, unclear_labels,
-            ))
+            )
+        classifications_result.append((
+            *classification,
+            _zero_substantive_domain_kind(row["substantive_domains"])
+            if classification[0] == "zero_substantive_domains" else None,
+        ))
     result = pd.DataFrame(
         classifications_result,
         index=merged.index,
-        columns=["_reason", "_bucket", "_derived_domain_count"],
+        columns=[
+            "_reason", "_bucket", "_derived_domain_count",
+            "_zero_substantive_domain_kind",
+        ],
     )
     merged = pd.concat([merged, result], axis=1)
 
@@ -587,6 +604,16 @@ def domain_breadth_aggregates(
             "missing_classification": int(merged["_reason"].eq("missing_classification").sum()),
             "invalid_classification": int(merged["_reason"].eq("invalid_classification").sum()),
             "zero_substantive_domains": int(merged["_reason"].eq("zero_substantive_domains").sum()),
+            "unclear_only_substantive_domains": int(
+                merged["_zero_substantive_domain_kind"].eq(
+                    "unclear_only_substantive_domains",
+                ).sum(),
+            ),
+            "explicit_empty_substantive_domains": int(
+                merged["_zero_substantive_domain_kind"].eq(
+                    "explicit_empty_substantive_domains",
+                ).sum(),
+            ),
         },
     }
 

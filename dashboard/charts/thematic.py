@@ -300,14 +300,16 @@ def make_record_linkage_trend(
 def make_domain_breadth_trend(
     df_by_period: pd.DataFrame,
     metric: str = "pct",
-    height: int = 400,
+    height: int = 520,
     granularity: str = "year",
     partial_year_info=None,
-    zero_substantive_domains: int = 0,
+    unclear_only_substantive_domains: int = 0,
+    explicit_empty_substantive_domains: int = 0,
 ) -> go.Figure:
     """Record-level substantive-domain breadth, preserving unavailable shares."""
     fig = go.Figure()
-    excluded_no_domain_count = int(zero_substantive_domains or 0)
+    unclear_only_count = int(unclear_only_substantive_domains or 0)
+    explicit_empty_count = int(explicit_empty_substantive_domains or 0)
     breadth_order = ["1 domain", "2 domains", "3+ domains"]
     colours = {
         "1 domain": "#2a9d8f",
@@ -386,7 +388,6 @@ def make_domain_breadth_trend(
         ))
 
     fig.update_layout(
-        title="Domain Breadth Over Time",
         xaxis_title="Quarter" if is_quarter else "Accreditation year",
         yaxis_title=(
             "Percentage of records with ≥1 substantive domain"
@@ -401,7 +402,7 @@ def make_domain_breadth_trend(
         ),
         yaxis=dict(range=[0, 100] if metric == "pct" else None),
         legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
-        margin=dict(r=24, t=96, b=104),
+        margin=dict(r=24),
     )
     if df_by_period.empty or not df_by_period["eligible_denominator"].gt(0).any():
         fig.add_annotation(
@@ -421,26 +422,49 @@ def make_domain_breadth_trend(
         _annotate_partial_year(
             fig, years=df_by_period["Year"].unique(), partial_year_info=partial_year_info,
         )
-    if excluded_no_domain_count > 0:
-        record_label = "record" if excluded_no_domain_count == 1 else "records"
-        verb = "has" if excluded_no_domain_count == 1 else "have"
-        pronoun = "it is" if excluded_no_domain_count == 1 else "they are"
+    partial_period_note = partial_year_info and getattr(partial_year_info, "note", None)
+    has_partial_period_annotation = False
+    if partial_period_note:
+        for annotation in fig.layout.annotations or []:
+            if annotation.text == partial_period_note:
+                annotation.update(y=-0.28, yanchor="top")
+                has_partial_period_annotation = True
+    if unclear_only_count or explicit_empty_count:
+        exclusions = []
+        if unclear_only_count:
+            record_label = "record" if unclear_only_count == 1 else "records"
+            exclusions.append(
+                f"{unclear_only_count:,} {record_label} labelled 'Unclear from<br>Register Entry'"
+            )
+        if explicit_empty_count:
+            record_label = "record" if explicit_empty_count == 1 else "records"
+            exclusions.append(
+                f"{explicit_empty_count:,} {record_label} with an explicit empty<br>domain set"
+            )
+        total_exclusions = unclear_only_count + explicit_empty_count
+        verb = "is" if total_exclusions == 1 else "are"
         fig.add_annotation(
-            text=(
-                f"{excluded_no_domain_count:,} selected dated {record_label} {verb} no substantive "
-                "domain<br>and cannot be placed on the domain-breadth scale; "
-                f"{pronoun} outside the denominator."
-            ),
+            text=f"{'<br>and '.join(exclusions)}<br>{verb} excluded from the<br>denominator.",
             xref="paper",
             yref="paper",
             x=0,
-            y=-0.28,
+            y=-0.42 if has_partial_period_annotation else -0.28,
             showarrow=False,
             xanchor="left",
+            xshift=-100,
             yanchor="top",
+            align="left",
             font=dict(size=10, color="#7f8c8d"),
         )
-    return _apply_common(fig, height=height)
+    fig = _apply_common(fig, height=height)
+    # Apply these after the shared helper: the long rotated denominator label
+    # and below-plot caveats need dedicated room at responsive widths.
+    fig.update_layout(
+        title=None,
+        margin=dict(l=112, r=24, t=76, b=210),
+        yaxis=dict(title=dict(standoff=18), automargin=False),
+    )
+    return fig
 
 
 def make_domain_record_linkage_breakdown(

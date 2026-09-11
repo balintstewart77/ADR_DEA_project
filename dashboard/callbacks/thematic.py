@@ -362,8 +362,7 @@ def register(app):
 
     @app.callback(
         Output("thematic-domain-breadth-trend", "figure"),
-        Output("thematic-domain-breadth-coverage-table", "data"),
-        Output("thematic-domain-breadth-coverage-note", "children"),
+        Output("thematic-domain-breadth-coverage-warning", "children"),
         Input("thematic-domain-breadth-metric", "value"),
         Input("thematic-domain-breadth-granularity", "value"),
         Input("portfolio-accreditation-year-filter", "value"),
@@ -376,23 +375,33 @@ def register(app):
             if selected_granularity == "quarter"
             else data["df_domain_breadth_by_year"]
         )
-        coverage = (
-            data["df_domain_breadth_coverage_by_quarter"]
-            if selected_granularity == "quarter"
-            else data["df_domain_breadth_coverage_by_year"]
-        )
         selection_coverage = data["domain_breadth_selection_coverage"]
-        note = (
-            f"{selection_coverage['dated_selected_records']:,} selected dated records; "
-            f"{selection_coverage['included_records']:,} have a usable substantive-domain set. "
-            f"{selection_coverage['undated_selected_records']:,} selected records have no usable "
-            "accreditation date. "
-            f"Zero substantive domains ({selection_coverage['zero_substantive_domains']:,}) includes "
-            "Unclear-only and explicit empty sets."
+        notes = []
+        coverage_labels = (
+            ("unmatched_classification", "unmatched record", "unmatched records"),
+            ("missing_classification", "record with a missing classification", "records with missing classifications"),
+            ("invalid_classification", "record with an invalid domain label", "records with invalid domain labels"),
         )
+        coverage_notes = []
+        for field, singular, plural in coverage_labels:
+            count = int(selection_coverage[field])
+            if count:
+                coverage_notes.append(f"{count:,} {singular if count == 1 else plural}")
+        if coverage_notes:
+            notes.append(f"Classification coverage: {'; '.join(coverage_notes)}.")
+        undated_selected = int(selection_coverage["undated_selected_records"])
+        if undated_selected:
+            record_label = "record" if undated_selected == 1 else "records"
+            notes.append(
+                f"{undated_selected:,} selected {record_label} have no usable accreditation date "
+                "and are not shown in the trend."
+            )
         if selection_coverage["undated_omitted_records"]:
-            note += (
-                f" {selection_coverage['undated_omitted_records']:,} undated records are omitted "
+            undated_omitted = int(selection_coverage["undated_omitted_records"])
+            record_label = "record" if undated_omitted == 1 else "records"
+            verb = "is" if undated_omitted == 1 else "are"
+            notes.append(
+                f"{undated_omitted:,} undated {record_label} {verb} omitted "
                 "by the restricted year selection."
             )
         return (
@@ -401,10 +410,14 @@ def register(app):
                 metric=metric or "pct",
                 granularity=selected_granularity,
                 partial_year_info=PARTIAL_YEAR_INFO,
-                zero_substantive_domains=selection_coverage["zero_substantive_domains"],
+                unclear_only_substantive_domains=(
+                    selection_coverage["unclear_only_substantive_domains"]
+                ),
+                explicit_empty_substantive_domains=(
+                    selection_coverage["explicit_empty_substantive_domains"]
+                ),
             ),
-            coverage.to_dict("records"),
-            note,
+            " ".join(notes),
         )
 
     @app.callback(

@@ -203,6 +203,33 @@ def test_chart_has_stable_series_unavailable_gaps_and_complete_hover_data(breadt
     q2_index = list(fig.data[0].x).index("2024 Q2")
     assert fig.data[0].y[q2_index] is None
     assert any("2025 data covers" in annotation.text for annotation in fig.layout.annotations)
+    assert fig.layout.title.text is None
+    assert fig.layout.height == 520
+    assert fig.layout.yaxis.title.standoff == 18
+    assert fig.layout.margin.l == 112
+
+
+@pytest.mark.parametrize("granularity", ["year", "quarter"])
+@pytest.mark.parametrize("metric", ["count", "pct"])
+def test_footnote_subcounts_do_not_change_domain_breadth_series(
+    breadth_data, granularity, metric,
+):
+    source = (
+        breadth_data["df_domain_breadth_by_quarter"]
+        if granularity == "quarter"
+        else breadth_data["df_domain_breadth_by_year"]
+    )
+    baseline = make_domain_breadth_trend(source, metric=metric, granularity=granularity)
+    footnoted = make_domain_breadth_trend(
+        source,
+        metric=metric,
+        granularity=granularity,
+        unclear_only_substantive_domains=1,
+        explicit_empty_substantive_domains=0,
+    )
+    assert len(footnoted.data) == len(baseline.data)
+    assert [trace.name for trace in footnoted.data] == [trace.name for trace in baseline.data]
+    assert [list(trace.y) for trace in footnoted.data] == [list(trace.y) for trace in baseline.data]
 
 
 @pytest.mark.parametrize(
@@ -257,27 +284,32 @@ def test_chart_year_mode_retains_measured_zeroes(breadth_data):
 def test_chart_surfaces_excluded_no_domain_records_without_changing_series(breadth_data):
     by_year = breadth_data["df_domain_breadth_by_year"]
     baseline = make_domain_breadth_trend(by_year, metric="pct", granularity="year")
-    zero_substantive_domains = breadth_data["domain_breadth_selection_coverage"][
-        "zero_substantive_domains"
-    ]
+    selection_coverage = breadth_data["domain_breadth_selection_coverage"]
     figure = make_domain_breadth_trend(
         by_year,
         metric="pct",
         granularity="year",
-        zero_substantive_domains=zero_substantive_domains,
+        unclear_only_substantive_domains=selection_coverage[
+            "unclear_only_substantive_domains"
+        ],
+        explicit_empty_substantive_domains=selection_coverage[
+            "explicit_empty_substantive_domains"
+        ],
     )
 
-    assert zero_substantive_domains == 1
+    assert selection_coverage["zero_substantive_domains"] == 1
+    assert (
+        selection_coverage["unclear_only_substantive_domains"]
+        + selection_coverage["explicit_empty_substantive_domains"]
+        == selection_coverage["zero_substantive_domains"]
+    )
     assert len(figure.data) == len(baseline.data) == 3
     assert [trace.name for trace in figure.data] == [trace.name for trace in baseline.data]
     assert [list(trace.y) for trace in figure.data] == [list(trace.y) for trace in baseline.data]
-    assert figure.layout.margin.b == baseline.layout.margin.b == 104
+    assert figure.layout.margin.b == baseline.layout.margin.b == 210
     assert any(
-        annotation.text
-        == (
-            "1 selected dated record has no substantive domain<br>and cannot be placed on the "
-            "domain-breadth scale; it is outside the denominator."
-        )
+        annotation.text.replace("<br>", " ")
+        == "1 record labelled 'Unclear from Register Entry' is excluded from the denominator."
         for annotation in figure.layout.annotations
     )
 
@@ -287,12 +319,30 @@ def test_chart_hides_no_domain_footnote_when_no_records_are_excluded(breadth_dat
         breadth_data["df_domain_breadth_by_year"],
         metric="count",
         granularity="year",
-        zero_substantive_domains=0,
+        unclear_only_substantive_domains=0,
+        explicit_empty_substantive_domains=0,
     )
 
     assert not any(
-        "cannot be placed on the domain-breadth scale" in annotation.text
+        "excluded from the denominator" in annotation.text
         for annotation in (figure.layout.annotations or [])
+    )
+
+
+def test_chart_names_both_zero_substantive_domain_categories_when_present(breadth_data):
+    figure = make_domain_breadth_trend(
+        breadth_data["df_domain_breadth_by_year"],
+        unclear_only_substantive_domains=1,
+        explicit_empty_substantive_domains=2,
+    )
+
+    assert any(
+        annotation.text.replace("<br>", " ")
+        == (
+            "1 record labelled 'Unclear from Register Entry' and 2 records with an explicit "
+            "empty domain set are excluded from the denominator."
+        )
+        for annotation in figure.layout.annotations
     )
 
 
@@ -311,6 +361,17 @@ def _component_by_id(root, component_id):
     return None
 
 
+def _component_text(root):
+    if isinstance(root, str):
+        return [root]
+    if not isinstance(root, Component):
+        return []
+    children = getattr(root, "children", None)
+    if isinstance(children, (list, tuple)):
+        return [text for child in children for text in _component_text(child)]
+    return _component_text(children)
+
+
 def test_layout_and_callback_depend_only_on_breadth_controls_and_portfolio_filter():
     from dashboard.app import app
     from dashboard.layout.analysis.thematic import build_thematic_tab
@@ -318,11 +379,17 @@ def test_layout_and_callback_depend_only_on_breadth_controls_and_portfolio_filte
     layout = build_thematic_tab()
     assert _component_by_id(layout, "thematic-domain-breadth-metric").value == "pct"
     assert _component_by_id(layout, "thematic-domain-breadth-granularity").value == "year"
-    assert _component_by_id(layout, "thematic-domain-breadth-coverage-table") is not None
+    assert _component_by_id(layout, "thematic-domain-breadth-coverage-table") is None
+    assert _component_by_id(layout, "thematic-domain-breadth-coverage-warning") is not None
+    assert _component_text(layout).count("Domain breadth over time") == 1
     callback = next(
         spec for key, spec in app.callback_map.items()
         if "thematic-domain-breadth-trend.figure" in key
     )
+    assert [str(output) for output in callback["output"]] == [
+        "thematic-domain-breadth-trend.figure",
+        "thematic-domain-breadth-coverage-warning.children",
+    ]
     assert {
         f"{item['id']}.{item['property']}" for item in callback["inputs"]
     } == {
@@ -342,10 +409,9 @@ def test_actual_callback_handles_empty_and_all_excluded_populations(breadth_data
         for key, spec in app.callback_map.items()
         if "thematic-domain-breadth-trend.figure" in key
     )
-    empty_figure, empty_coverage, empty_note = callback("pct", "year", [2030, 2030])
+    empty_figure, empty_note = callback("pct", "year", [2030, 2030])
     assert len(empty_figure.data) == 3
-    assert empty_coverage == []
-    assert "0 have a usable" in empty_note
+    assert empty_note == ""
     assert any("No usable substantive-domain" in item.text for item in empty_figure.layout.annotations)
 
     excluded_data = dict(breadth_data)
@@ -367,19 +433,57 @@ def test_actual_callback_handles_empty_and_all_excluded_populations(breadth_data
         "undated_omitted_records": 0, "included_records": 0,
         "unmatched_classification": 1, "missing_classification": 1,
         "invalid_classification": 1, "zero_substantive_domains": 1,
+        "unclear_only_substantive_domains": 1,
+        "explicit_empty_substantive_domains": 0,
     }
     with patch.object(callbacks, "_aggregates", return_value=excluded_data):
-        figure, coverage, note = callback("pct", "year", [2024, 2024])
-    assert coverage[0]["excluded_records"] == 4
-    assert "Zero substantive domains (1)" in note
+        figure, note = callback("pct", "year", [2024, 2024])
+    assert (
+        note
+        == "Classification coverage: 1 unmatched record; 1 record with a missing classification; "
+        "1 record with an invalid domain label."
+    )
     assert any("No usable substantive-domain" in item.text for item in figure.layout.annotations)
     assert any(
-        item.text
-        == (
-            "1 selected dated record has no substantive domain<br>and cannot be placed on the "
-            "domain-breadth scale; it is outside the denominator."
-        )
+        item.text.replace("<br>", " ")
+        == "1 record labelled 'Unclear from Register Entry' is excluded from the denominator."
         for item in figure.layout.annotations
+    )
+
+
+def test_callback_hides_clear_coverage_warning_and_retains_undated_note(breadth_data):
+    from dashboard.app import app
+    from dashboard.callbacks import thematic as callbacks
+
+    callback = next(
+        spec["callback"].__wrapped__
+        for key, spec in app.callback_map.items()
+        if "thematic-domain-breadth-trend.figure" in key
+    )
+    clear_data = dict(breadth_data)
+    clear_data["domain_breadth_selection_coverage"] = {
+        **breadth_data["domain_breadth_selection_coverage"],
+        "unmatched_classification": 0,
+        "missing_classification": 0,
+        "invalid_classification": 0,
+        "undated_selected_records": 0,
+        "undated_omitted_records": 0,
+    }
+    with patch.object(callbacks, "_aggregates", return_value=clear_data):
+        _, clear_note = callback("pct", "year", [2024, 2024])
+    assert clear_note == ""
+
+    undated_data = dict(clear_data)
+    undated_data["domain_breadth_selection_coverage"] = {
+        **clear_data["domain_breadth_selection_coverage"],
+        "undated_selected_records": 2,
+        "undated_omitted_records": 1,
+    }
+    with patch.object(callbacks, "_aggregates", return_value=undated_data):
+        _, undated_note = callback("pct", "year", [2024, 2024])
+    assert undated_note == (
+        "2 selected records have no usable accreditation date and are not shown in the trend. "
+        "1 undated record is omitted by the restricted year selection."
     )
 
 
@@ -415,16 +519,25 @@ def test_current_release_reconciles_against_an_independent_record_level_count():
         "missing_classification": 0,
         "invalid_classification": 0,
         "zero_substantive_domains": 2,
+        "unclear_only_substantive_domains": 2,
+        "explicit_empty_substantive_domains": 0,
     }
+    assert (
+        result["domain_breadth_selection_coverage"]["unclear_only_substantive_domains"]
+        + result["domain_breadth_selection_coverage"]["explicit_empty_substantive_domains"]
+        == result["domain_breadth_selection_coverage"]["zero_substantive_domains"]
+    )
     figure = make_domain_breadth_trend(
         result["df_domain_breadth_by_year"],
-        zero_substantive_domains=result["domain_breadth_selection_coverage"]["zero_substantive_domains"],
+        unclear_only_substantive_domains=result["domain_breadth_selection_coverage"][
+            "unclear_only_substantive_domains"
+        ],
+        explicit_empty_substantive_domains=result["domain_breadth_selection_coverage"][
+            "explicit_empty_substantive_domains"
+        ],
     )
     assert any(
-        annotation.text
-        == (
-            "2 selected dated records have no substantive domain<br>and cannot be placed on the "
-            "domain-breadth scale; they are outside the denominator."
-        )
+        annotation.text.replace("<br>", " ")
+        == "2 records labelled 'Unclear from Register Entry' are excluded from the denominator."
         for annotation in figure.layout.annotations
     )

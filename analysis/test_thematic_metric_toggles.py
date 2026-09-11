@@ -34,6 +34,7 @@ def _metric_col(metric: str) -> str:
 
 EXPECTED_TOGGLE_GRAPH_HEIGHTS = {
     "thematic-domain-trend": 480,
+    "thematic-domain-breadth-trend": 520,
     "thematic-purpose-trend": 400,
     "thematic-cross-domain-purpose": 560,
     "thematic-domain-cooccurrence": 724,
