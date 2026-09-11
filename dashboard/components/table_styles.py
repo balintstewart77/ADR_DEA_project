@@ -29,7 +29,12 @@ BROWSE_TABLE_STYLES = dict(
 )
 
 ENRICHED_TABLE_STYLES = dict(
-    style_table={"overflowX": "auto"},
+    style_table={
+        "overflowX": "auto",
+        "width": "100%",
+        "minWidth": "0",
+        "maxWidth": "100%",
+    },
     style_cell={
         "textAlign": "left",
         "padding": "8px 12px",
@@ -54,12 +59,12 @@ ENRICHED_TABLE_STYLES = dict(
     style_data_conditional=[
         {"if": {"row_index": "odd"}, "backgroundColor": "#fafbfc"},
         {"if": {"column_id": "record_linkage"}, "backgroundColor": "#f5f8fa"},
-        {"if": {"column_id": "dataset_collection_methods"}, "backgroundColor": "#f5f8fa"},
-        {"if": {"column_id": "dataset_temporal_structures"}, "backgroundColor": "#f5f8fa"},
-        {"if": {"column_id": "dataset_units"}, "backgroundColor": "#f5f8fa"},
-        {"if": {"column_id": "researcher_sectors"}, "backgroundColor": "#f5f8fa"},
-        {"if": {"column_id": "substantive_domains"}, "backgroundColor": "#f5f8fa"},
+        {"if": {"column_id": "dataset_collection_methods_display"}, "backgroundColor": "#f5f8fa"},
+        {"if": {"column_id": "dataset_temporal_structures_display"}, "backgroundColor": "#f5f8fa"},
+        {"if": {"column_id": "dataset_units_display"}, "backgroundColor": "#f5f8fa"},
+        {"if": {"column_id": "researcher_sectors_display"}, "backgroundColor": "#f5f8fa"},
+        {"if": {"column_id": "substantive_domains_display"}, "backgroundColor": "#f5f8fa"},
         {"if": {"column_id": "substantive_domain_count"}, "backgroundColor": "#f5f8fa"},
-        {"if": {"column_id": "analytical_purpose"}, "backgroundColor": "#f5f8fa"},
+        {"if": {"column_id": "analytical_purpose_display"}, "backgroundColor": "#f5f8fa"},
     ],
 )

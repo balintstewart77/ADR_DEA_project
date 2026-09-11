@@ -203,6 +203,79 @@
     border-color: #f0f0f0 !important;
     font-size: 0.85rem;
 }
+.enriched-register-table-container,
+.enriched-register-table-container .dash-table-container,
+.enriched-register-table-container .dash-spreadsheet-container {
+    min-width: 0;
+    max-width: 100%;
+}
+.enriched-register-table-container .dash-table-container {
+    width: 100%;
+}
+.enriched-register-table-container .dash-spreadsheet-container {
+    overflow-x: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+.enriched-preview {
+    display: block;
+    min-width: 0;
+}
+.enriched-preview-text {
+    overflow-wrap: anywhere;
+}
+.enriched-detail-trigger {
+    display: inline;
+    margin: 0.35rem 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #245f91;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.enriched-detail-trigger:focus-visible {
+    outline: 2px solid #245f91;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+.enriched-record-detail-fields {
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+    gap: 0;
+    margin: 0;
+}
+.enriched-record-detail-fields > div {
+    display: contents;
+}
+.enriched-record-detail-fields dt,
+.enriched-record-detail-fields dd {
+    margin: 0;
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid #e9eef2;
+}
+.enriched-record-detail-fields dt {
+    font-weight: 600;
+    color: #2c3e50;
+    background: #f5f8fa;
+}
+.enriched-record-detail-fields dd {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+@media (max-width: 575.98px) {
+    .enriched-record-detail-fields {
+        grid-template-columns: 1fr;
+    }
+    .enriched-record-detail-fields dt {
+        padding-bottom: 0.2rem;
+    }
+    .enriched-record-detail-fields dd {
+        padding-top: 0.2rem;
+    }
+}
 .rationale-cell {
     min-width: 0;
 }

@@ -4,10 +4,13 @@ from unittest.mock import patch
 
 import pandas as pd
 from dash.development.base_component import Component
+from dash._callback_context import context_value
+from dash._utils import AttributeDict
 
 from dashboard.callbacks import thematic as callbacks
 from dashboard.callbacks.thematic import _enriched_table_records
 from dashboard.data import thematic
+from dashboard.data.registry import df_all
 from dashboard.data.filtering import _apply_register_filters
 from dashboard.layout.analysis import build_analysis_tab
 
@@ -39,6 +42,43 @@ def _table_callback():
     ]
     assert len(matches) == 1
     return matches[0]["callback"].__wrapped__, matches[0]
+
+
+def _detail_callback():
+    from dashboard.app import app
+
+    key = next(
+        key for key in app.callback_map
+        if "enriched-record-detail-modal.is_open" in key
+    )
+    return app.callback_map[key]["callback"].__wrapped__, app.callback_map[key]
+
+
+def _run_detail_callback(
+    active_cell,
+    viewport_rows,
+    table_rows,
+    viewport_record_ids,
+    selected_record_id=None,
+    trigger="enriched-register-table.active_cell",
+):
+    callback, _ = _detail_callback()
+    token = context_value.set(AttributeDict(triggered_inputs=[{
+        "prop_id": trigger,
+        "value": active_cell,
+    }]))
+    try:
+        return callback(
+            active_cell,
+            None,
+            viewport_rows,
+            0,
+            table_rows,
+            viewport_record_ids,
+            selected_record_id,
+        )
+    finally:
+        context_value.reset(token)
 
 
 def _run_table(display, sort_by=None, page_size=10):
@@ -313,3 +353,132 @@ def test_csv_export_keeps_full_rationale_and_existing_order():
             "rationale": original,
         }])
     )[0]["rationale_display"]
+
+
+def test_previews_reuse_existing_entry_parsers_and_keep_raw_values_for_sorting():
+    dataset_value = "ONS: Alpha Dataset, Beta Dataset, Gamma Dataset, Delta Dataset"
+    rows = pd.DataFrame([
+        {
+            "Record ID": "record/zulu",
+            "Project ID": "duplicate-project",
+            "Title": "Zulu " + ("title " * 24),
+            "Researchers": "Zoe " + ("unstructured affiliation text " * 8),
+            "Datasets Used": dataset_value,
+            "researcher_sectors": "Academic; Government; Commercial",
+            "rationale": "A rationale",
+        },
+        {
+            "Record ID": "record/alpha",
+            "Project ID": "duplicate-project",
+            "Title": "Alpha " + ("title " * 24),
+            "Researchers": "Ann " + ("unstructured affiliation text " * 8),
+            "Datasets Used": "ONS: One Dataset",
+            "researcher_sectors": "Academic",
+            "rationale": "B rationale",
+        },
+    ])
+
+    records = _enriched_table_records(rows)
+    zulu = next(record for record in records if record["id"] == "record/zulu")
+    assert zulu["Datasets Used"] == dataset_value
+    assert "Alpha Dataset; Beta Dataset" in zulu["Datasets Used_display"]
+    assert "+2 more entries" in zulu["Datasets Used_display"]
+    assert "Academic; Government" in zulu["researcher_sectors_display"]
+    assert "+1 more entries" in zulu["researcher_sectors_display"]
+    assert "View full value" in zulu["Researchers_display"]
+    assert "more researchers" not in zulu["Researchers_display"]
+    assert "View full value" in zulu["Title_display"]
+    assert 'data-record-id="record/zulu"' in zulu["details_action"]
+
+    sorted_records = callbacks._sort_enriched_table_records(
+        records, [{"column_id": "Title_display", "direction": "asc"}],
+    )
+    assert [record["id"] for record in sorted_records] == [
+        "record/alpha", "record/zulu",
+    ]
+
+
+def test_detail_callback_uses_record_id_not_duplicate_project_id_and_closes_out_of_view():
+    display = _fixture_rows()
+    records = _enriched_table_records(display)
+    open_result = _run_detail_callback(
+        {"row": 0, "column_id": "details_action"},
+        [records[1]],
+        records,
+        ["record/beta"],
+    )
+    is_open, body, selected = open_result
+    assert is_open is True
+    assert selected == "record/beta"
+    text = " ".join(str(child) for child in body.children)
+    assert "record/beta" in text
+    assert "Alpha title" in text
+    assert "Zulu rationale" not in text
+
+    close_result = _run_detail_callback(
+        None,
+        [records[0]],
+        records,
+        ["record/alpha"],
+        selected_record_id="record/beta",
+        trigger="enriched-register-table.derived_viewport_data",
+    )
+    assert close_result == (False, [], None)
+
+
+def test_detail_layout_is_accessible_keyed_and_keeps_rationale_lifecycle():
+    from dashboard.app import app
+
+    layout = build_analysis_tab()
+    table = _component_by_id(layout, "enriched-register-table")
+    assert table.fixed_columns == {"headers": True, "data": 1}
+    details_column = next(column for column in table.columns if column["id"] == "details_action")
+    assert details_column["presentation"] == "markdown"
+    assert _component_by_id(layout, "enriched-record-detail-modal") is not None
+    assert _component_by_id(layout, "enriched-record-detail-close") is not None
+
+    _, detail_spec = _detail_callback()
+    assert {item["property"] for item in detail_spec["inputs"]} == {
+        "active_cell", "n_clicks", "derived_viewport_data", "page_current",
+    }
+    assert [item["property"] for item in detail_spec["state"]] == [
+        "data", "derived_viewport_row_ids", "data",
+    ]
+
+    asset = (Path(__file__).parents[1] / "dashboard/assets/enriched_record_detail.js").read_text()
+    assert "Escape" in asset
+    assert "enriched-record-detail-close" in asset
+    assert "focus" in asset
+
+    rationale_asset = (Path(__file__).parents[1] / "dashboard/assets/rationale_overflow.js").read_text()
+    assert "ResizeObserver" in rationale_asset and "MutationObserver" in rationale_asset
+
+
+def test_csv_export_keeps_full_dataset_value_when_table_uses_a_preview():
+    from dashboard.app import app
+
+    full_dataset_value = str(df_all.loc[
+        df_all["Record ID"].astype(str).eq("2019/014"), "Datasets Used",
+    ].iloc[0])
+    assert len(full_dataset_value) > 96
+    table_row = _enriched_table_records(pd.DataFrame([{
+        "Record ID": "2019/014",
+        "Project ID": "2019/014",
+        "Datasets Used": full_dataset_value,
+    }]))[0]
+    assert "+7 more entries" in table_row["Datasets Used_display"]
+
+    callback = app.callback_map["enriched-download-csv.data"]["callback"].__wrapped__
+    bounds = callbacks._YEAR_RANGE
+    result = callback(
+        1,
+        "2019/014",
+        *( ["ALL"] * 13 ),
+        bounds.value,
+        bounds.minimum,
+        bounds.maximum,
+        bounds.value,
+    )
+    exported = pd.read_csv(StringIO(result["content"]))
+    assert full_dataset_value in exported["Datasets Used"].tolist()
+    assert not any(column.endswith("_display") for column in exported.columns)
