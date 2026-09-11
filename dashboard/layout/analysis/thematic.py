@@ -776,7 +776,7 @@ def _analyses_accordion():
                             fixed_columns={"headers": True, "data": 1},
                             markdown_options={"html": True},
                             style_cell_conditional=[
-                                {"if": {"column_id": "Project ID"}, "minWidth": "118px", "width": "118px", "maxWidth": "118px"},
+                                {"if": {"column_id": "Project ID"}, "minWidth": "90px", "width": "90px", "maxWidth": "90px"},
                                 {"if": {"column_id": "details_action"}, "minWidth": "118px", "width": "118px", "maxWidth": "118px", "verticalAlign": "top"},
                                 {"if": {"column_id": "Title_display"}, "minWidth": "260px", "width": "260px", "maxWidth": "260px", "verticalAlign": "top"},
                                 {"if": {"column_id": "Researchers_display"}, "minWidth": "270px", "width": "270px", "maxWidth": "270px", "verticalAlign": "top"},

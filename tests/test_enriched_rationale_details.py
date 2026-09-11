@@ -398,6 +398,30 @@ def test_previews_reuse_existing_entry_parsers_and_keep_raw_values_for_sorting()
     ]
 
 
+def test_preview_sort_uses_raw_value_when_the_truncated_previews_are_identical():
+    shared_prefix = "A common preview prefix " * 6
+    rows = pd.DataFrame([
+        {
+            "Record ID": "record/zulu",
+            "Project ID": "project/zulu",
+            "Title": shared_prefix + "Zulu full value",
+        },
+        {
+            "Record ID": "record/alpha",
+            "Project ID": "project/alpha",
+            "Title": shared_prefix + "Alpha full value",
+        },
+    ])
+    records = _enriched_table_records(rows)
+    previews = [record["Title_display"] for record in records]
+    assert previews[0].replace("record/zulu", "record") == previews[1].replace(
+        "record/alpha", "record",
+    )
+    assert [record["id"] for record in callbacks._sort_enriched_table_records(
+        records, [{"column_id": "Title_display", "direction": "asc"}],
+    )] == ["record/alpha", "record/zulu"]
+
+
 def test_detail_callback_uses_record_id_not_duplicate_project_id_and_closes_out_of_view():
     display = _fixture_rows()
     records = _enriched_table_records(display)
@@ -432,6 +456,11 @@ def test_detail_layout_is_accessible_keyed_and_keeps_rationale_lifecycle():
     layout = build_analysis_tab()
     table = _component_by_id(layout, "enriched-register-table")
     assert table.fixed_columns == {"headers": True, "data": 1}
+    project_id_style = next(
+        style for style in table.style_cell_conditional
+        if style["if"]["column_id"] == "Project ID"
+    )
+    assert project_id_style["width"] == "90px"
     details_column = next(column for column in table.columns if column["id"] == "details_action")
     assert details_column["presentation"] == "markdown"
     assert _component_by_id(layout, "enriched-record-detail-modal") is not None
@@ -481,4 +510,34 @@ def test_csv_export_keeps_full_dataset_value_when_table_uses_a_preview():
     )
     exported = pd.read_csv(StringIO(result["content"]))
     assert full_dataset_value in exported["Datasets Used"].tolist()
+    assert not any(column.endswith("_display") for column in exported.columns)
+
+
+def test_csv_export_keeps_full_researchers_value_when_its_preview_is_truncated():
+    from dashboard.app import app
+
+    full_researchers_value = str(df_all.loc[
+        df_all["Record ID"].astype(str).eq("2019/015"), "Researchers",
+    ].iloc[0])
+    assert len(full_researchers_value) > 96
+    table_row = _enriched_table_records(pd.DataFrame([{
+        "Record ID": "2019/015",
+        "Project ID": "2019/015",
+        "Researchers": full_researchers_value,
+    }]))[0]
+    assert "View full value" in table_row["Researchers_display"]
+
+    callback = app.callback_map["enriched-download-csv.data"]["callback"].__wrapped__
+    bounds = callbacks._YEAR_RANGE
+    result = callback(
+        1,
+        "2019/015",
+        *( ["ALL"] * 13 ),
+        bounds.value,
+        bounds.minimum,
+        bounds.maximum,
+        bounds.value,
+    )
+    exported = pd.read_csv(StringIO(result["content"]))
+    assert full_researchers_value in exported["Researchers"].tolist()
     assert not any(column.endswith("_display") for column in exported.columns)
