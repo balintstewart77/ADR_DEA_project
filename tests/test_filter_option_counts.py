@@ -127,13 +127,16 @@ def test_reset_counts_match_independent_predicates_and_recorded_static_baseline(
         }
         assert _counts(enriched[facet]) == expected
         static = {item["value"]: item["count"] for item in BASELINE["static_option_counts"][facet]}
-        if facet == "domain_count":
-            assert {key: value for key, value in expected.items() if key != 0} == {
-                key: value for key, value in static.items() if key != 0
-            }
-            assert (static[0], expected[0]) == (2, 1343)
-        else:
-            assert expected == static
+        assert expected == static
+
+
+def test_zero_domain_count_is_a_real_selection_not_a_falsy_reset_sentinel():
+    display, _ = _get_enriched_register_display_df(
+        None, "ALL", "ALL", "ALL", "ALL", "ALL", 0, "ALL", "ALL",
+        include_record_id=True,
+    )
+    assert _record_ids(display) == {"2024/019", "2025/200"}
+    assert _counts(_enriched_options()["domain_count"])[0] == 2
 
 
 def test_other_filters_constrain_counts_but_a_facet_own_selection_does_not():

@@ -2916,17 +2916,6 @@
       }
     ]
   },
-  "explained_baseline_discrepancies": [
-    {
-      "table": "enriched",
-      "facet": "domain_count",
-      "value": 0,
-      "old_count": 2,
-      "new_count": 1343,
-      "independently_verified_expected_count": 1343,
-      "cause": "The pre-existing domain-count predicate treats integer 0 as false, so selecting its option applies no domain-count restriction."
-    }
-  ],
   "representative_prechange_results": {
     "explorer": {
       "filters": {

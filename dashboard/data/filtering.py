@@ -40,6 +40,7 @@ from dashboard.data.thematic import (
     _DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS,
     _DETERMINISTIC_UNIT_OPTIONS,
     _DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
+    _split_semicolon_values,
 )
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
@@ -353,12 +354,86 @@ def _format_option_count(label: str, count: int) -> str:
     return f"{label}  ({count} {'project' if count == 1 else 'projects'})"
 
 
+def _normalised_record_ids(df: pd.DataFrame) -> pd.Series:
+    if "Record ID" not in df.columns:
+        raise KeyError("Facet counts require the unique Record ID")
+    record_ids = df["Record ID"].astype("string").str.strip()
+    if record_ids.isna().any() or record_ids.eq("").any():
+        raise ValueError("Facet counts require non-blank Record ID values")
+    return record_ids
+
+
+def _grouped_record_counts(record_ids: pd.Series, values: pd.Series) -> dict:
+    """Count distinct record IDs by an already predicate-normalised value."""
+    grouped = pd.DataFrame({"record_id": record_ids, "facet_value": values})
+    grouped = grouped.dropna(subset=["facet_value"])
+    grouped = grouped.drop_duplicates(subset=["record_id", "facet_value"])
+    return grouped.groupby("facet_value")["record_id"].nunique().to_dict()
+
+
+def _related_option_counts(
+    base: pd.DataFrame,
+    related: pd.DataFrame,
+    value_column: str,
+) -> dict | None:
+    """Group relation-backed predicates by option without repeated base scans."""
+    if "Record ID" not in base.columns or "Record ID" not in related.columns:
+        return None
+    base_ids = _normalised_record_ids(base)
+    related_ids = related["Record ID"].astype("string").str.strip()
+    relation = pd.DataFrame({
+        "record_id": related_ids,
+        "facet_value": related[value_column],
+    })
+    relation = relation[relation["record_id"].isin(set(base_ids))]
+    return _grouped_record_counts(relation["record_id"], relation["facet_value"])
+
+
+def _semicolon_option_counts(base: pd.DataFrame, column: str) -> dict:
+    """Use the same semicolon parser as the option-matching predicate."""
+    values = base[column].apply(_split_semicolon_values)
+    expanded = pd.DataFrame({
+        "record_id": _normalised_record_ids(base),
+        "facet_value": values,
+    }).explode("facet_value")
+    return _grouped_record_counts(expanded["record_id"], expanded["facet_value"])
+
+
+def _dataset_option_counts(base: pd.DataFrame, options: list[dict]) -> dict:
+    counts = _related_option_counts(base, df_datasets, "dataset")
+    if counts is None:
+        return {}
+    # Collections use a different established predicate. They are not in the
+    # current authoritative universe, but retain exact fallback semantics.
+    for option in options:
+        value = option["value"]
+        if isinstance(value, str) and value.startswith("collection::"):
+            counts[value] = _distinct_record_id_count(_apply_dataset_filter(base, value))
+    return counts
+
+
+def _provider_option_counts(base: pd.DataFrame, _options: list[dict]) -> dict:
+    return _related_option_counts(base, df_datasets, "provider") or {}
+
+
+def _institution_option_counts(base: pd.DataFrame, _options: list[dict]) -> dict:
+    return _related_option_counts(base, df_institutions, "institution") or {}
+
+
+def _tre_option_counts(base: pd.DataFrame, _options: list[dict]) -> dict:
+    return _grouped_record_counts(
+        _normalised_record_ids(base),
+        base["Secure Research Service"].astype("string").str.strip(),
+    )
+
+
 def _facet_options_with_dynamic_counts(
     base: pd.DataFrame,
     state: Mapping[str, object],
     option_universes: Mapping[str, list[dict]],
     apply_restrictions: Callable[[pd.DataFrame, Mapping[str, object], set[str]], pd.DataFrame],
     facet_predicates: Mapping[str, Callable[[pd.DataFrame, object], pd.DataFrame]],
+    facet_count_functions: Mapping[str, Callable[[pd.DataFrame, list[dict]], dict]] | None = None,
 ) -> dict[str, list[dict]]:
     """Decorate fixed option universes using the tables' actual predicates.
 
@@ -371,12 +446,18 @@ def _facet_options_with_dynamic_counts(
     for facet, options in option_universes.items():
         without_facet = apply_restrictions(base, state, {facet})
         predicate = facet_predicates[facet]
+        counter = (facet_count_functions or {}).get(facet)
+        grouped_counts = counter(without_facet, options) if counter else None
         decorated = []
         for option in options:
             result = dict(option)
             label = _canonical_option_label(option)
             if option["value"] != "ALL":
-                count = _distinct_record_id_count(predicate(without_facet, option["value"]))
+                count = (
+                    grouped_counts.get(option["value"], 0)
+                    if grouped_counts is not None
+                    else _distinct_record_id_count(predicate(without_facet, option["value"]))
+                )
                 result["label"] = _format_option_count(label, count)
             else:
                 # ALL is a reset sentinel, not an ordinary stored category.
@@ -393,7 +474,8 @@ def _apply_domain_filter(base: pd.DataFrame, domain) -> pd.DataFrame:
 
 
 def _apply_domain_count_filter(base: pd.DataFrame, domain_count) -> pd.DataFrame:
-    if not domain_count or domain_count == "ALL":
+    # ``0`` is a real selectable category, not an absence-of-selection value.
+    if domain_count is None or domain_count == "" or domain_count == "ALL":
         return base
     count = int(domain_count)
     return base[pd.to_numeric(base[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce") == count]
@@ -455,6 +537,45 @@ _ENRICHED_DERIVED_FACET_PREDICATES = {
 _ENRICHED_FACET_PREDICATES = {
     **_REGISTER_FACET_PREDICATES,
     **_ENRICHED_DERIVED_FACET_PREDICATES,
+}
+_BROWSE_FACET_COUNTERS = {
+    "dataset": _dataset_option_counts,
+    "provider": _provider_option_counts,
+    "institution": _institution_option_counts,
+    "tre": _tre_option_counts,
+}
+
+
+def _domain_count_option_counts(base: pd.DataFrame, _options: list[dict]) -> dict:
+    return _grouped_record_counts(
+        _normalised_record_ids(base),
+        pd.to_numeric(base[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce"),
+    )
+
+
+def _record_linkage_option_counts(base: pd.DataFrame, _options: list[dict]) -> dict:
+    return _grouped_record_counts(
+        _normalised_record_ids(base), _format_record_linkage(base[RECORD_LINKAGE_COL]),
+    )
+
+
+_ENRICHED_FACET_COUNTERS = {
+    **_BROWSE_FACET_COUNTERS,
+    "domain": lambda base, _options: _semicolon_option_counts(base, "substantive_domains"),
+    "domain_count": _domain_count_option_counts,
+    "purpose": lambda base, _options: _semicolon_option_counts(base, "analytical_purpose"),
+    "tag": lambda base, _options: _semicolon_option_counts(base, CROSS_CUTTING_TAGS_COL),
+    "record_linkage": _record_linkage_option_counts,
+    "collection_method": lambda base, _options: _semicolon_option_counts(
+        base, "dataset_collection_methods",
+    ),
+    "temporal_structure": lambda base, _options: _semicolon_option_counts(
+        base, "dataset_temporal_structures",
+    ),
+    "unit": lambda base, _options: _semicolon_option_counts(base, "dataset_units"),
+    "researcher_sector": lambda base, _options: _semicolon_option_counts(
+        base, "researcher_sectors",
+    ),
 }
 
 
@@ -525,6 +646,7 @@ def _get_browse_facet_options(
         _BROWSE_FACET_OPTIONS,
         apply_restrictions,
         _REGISTER_FACET_PREDICATES,
+        _BROWSE_FACET_COUNTERS,
     )
 
 
@@ -576,6 +698,7 @@ def _get_enriched_register_facet_options(
         _ENRICHED_FACET_OPTIONS,
         apply_restrictions,
         _ENRICHED_FACET_PREDICATES,
+        _ENRICHED_FACET_COUNTERS,
     )
 
 
