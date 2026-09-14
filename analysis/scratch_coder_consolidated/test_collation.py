@@ -105,6 +105,22 @@ class CollationChecks(unittest.TestCase):
         with self.assertRaisesRegex(Fatal, "Duplicate canonical unresolved identifier"):
             unresolved_explanation_rollup(fixture)
 
+    def test_reporting_followup_preserves_unresolved_inventory_and_renders_clarifications(self):
+        s = self.fresh()
+        s.meta.update(generation_timestamp_utc="test", generator={"git_head": "test", "git_status_before": ""})
+        r = Report(s)
+        r.build()
+        document = r.render()
+        self.assertEqual(len(s.unresolved), 69)
+        self.assertEqual(len({item["id"] for item in s.unresolved}), 69)
+        self.assertIn("Every hard-case record belongs to one of three 25-record strata", document)
+        self.assertIn("supplementary 95% Wilson-score intervals calculated on 7 September 2026", document)
+        self.assertIn("Dated audit evidence annotations — 2026-09-14", document)
+        self.assertIn("U0005 remains open pending review of the historical documentation", document)
+        followup = r.meta["reporting_followup"]
+        self.assertEqual(followup["ledger"], {"checks": 3496, "verified": 3488, "discrepant": 3, "blocked": 3, "not_checked": 2})
+        self.assertEqual(followup["original_unresolved_entries_retained"], 69)
+
 
 if __name__ == "__main__":
     unittest.main()

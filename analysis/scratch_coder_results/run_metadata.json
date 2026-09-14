@@ -5,34 +5,419 @@
       "/Users/balintstewart/Desktop/ADR_DEA_project/.venv/bin/python",
       "-B",
       "-m",
-      "analysis.scratch_coder_consolidated",
-      "--wilson-supplement",
-      "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z"
+      "analysis.scratch_coder_consolidated"
     ],
-    "git_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
-    "git_status_before": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/run_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/methods_wilson_baseline.md\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/reused_intervals.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/run_metadata.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/wilson_intervals.csv\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/methods_wilson_baseline.md\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/reused_intervals.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/run_metadata.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/wilson_intervals.csv",
+    "configuration": {
+      "canonical_output_directory": "analysis/scratch_coder_results",
+      "wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
+      "validation_only_staging": false
+    },
+    "git_head": "7585fed18ae5b7a4022d51d611d3148343b61afb",
+    "git_status_before": " M analysis/scratch_coder_consolidated/report.py\n M analysis/scratch_coder_consolidated/test_collation.py\n?? analysis/review/remaining_validation_20260914T071731Z/.git_status_before.txt\n?? analysis/review/remaining_validation_20260914T071731Z/.input_hashes_before.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_metadata.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_report.md\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/common.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/finalize_metadata.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/integration_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/run_all.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/strata_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/wilson_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_results_summary.json\n?? analysis/review/remaining_validation_20260914T071731Z/verification_ledger.csv\n?? analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md",
     "source_hashes": {
-      "analysis/scratch_coder_consolidated/README.md": "b73ba15b8d8b8001045f96b51044bb8d26c312fe207850b191cb9a7fe1dba04d",
+      "analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md": "47366604374952ff61cd1597ad64f57322b83d1c1c4814ff14d6bee8e598d706",
+      "analysis/scratch_coder_consolidated/README.md": "77a0ab41fabfc25c72405cdc6d811610821d481663d02fbf7fb8057e0f687bd7",
       "analysis/scratch_coder_consolidated/__init__.py": "f7dba01b79fa1ecf1aaf8e874ef452f89f278f272cc6dbeb41fd1938baaa4197",
       "analysis/scratch_coder_consolidated/__main__.py": "79554155abe9b87a215dd50ea7dd73d57589b7e0b8e567d9864748d1dbc12888",
-      "analysis/scratch_coder_consolidated/generate.py": "0cd9651d53452501b27190acd35da3dc0275a7197c86655a5f55c10a005ce7d3",
+      "analysis/scratch_coder_consolidated/generate.py": "2019cf51c9bfb45b03803566a883287c8bc2e193c7d215b52dfef419e3d815c5",
       "analysis/scratch_coder_consolidated/preflight.py": "aff760385384dc1f8192a1336c1934a6c40299c32ce87a42ad5d4ac0b9cd198c",
-      "analysis/scratch_coder_consolidated/report.py": "c3d8a7e13a4f39b2c14d29c3f98bf0290718152c53b7c89c3fd900ee44a00911",
+      "analysis/scratch_coder_consolidated/report.py": "5213d04a4e86e077e7c417d69ff58ddfb44f199108050c9dfb3f2f279023260f",
       "analysis/scratch_coder_consolidated/schemas.json": "54eeedfd781da307f5b54152f523c17e151fdb7288a5c3af4c402b6887df8a96",
-      "analysis/scratch_coder_consolidated/supplement.py": "981d8268666304ee50b5b6ce0bf1b64b3c6a09090d173f4e90fffee2099184cc",
-      "analysis/scratch_coder_consolidated/test_collation.py": "a4fa3cab54b6d397f260a058529789a5bc2b79da7603c7c24d879c8c52beb558"
+      "analysis/scratch_coder_consolidated/supplement.py": "95e1ad6cfd1106f225d3578268d5da099e27b6837fbb69bff7c0a85a12956d28",
+      "analysis/scratch_coder_consolidated/test_collation.py": "fc56fe4bb5fce60adb6e74eee0b630f9d154a383ecbc0bb6c99e4f3968372ba3"
     },
-    "git_status_after_validation": "?? analysis/outputs_validation_consolidated_20260907T082625857355Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T082625857355Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T085849219598Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142013800173Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142116917442Z/run_metadata.json\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/consolidated_results.md\n?? analysis/outputs_validation_consolidated_20260907T142409009270Z/run_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md\n?? analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/methods_wilson_baseline.md\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/reused_intervals.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/run_metadata.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142055636248Z/wilson_intervals.csv\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/methods_wilson_baseline.md\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/reused_intervals.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/run_metadata.json\n?? analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/wilson_intervals.csv"
+    "git_status_after_validation_before_publication": " M analysis/scratch_coder_consolidated/report.py\n M analysis/scratch_coder_consolidated/test_collation.py\n?? analysis/review/remaining_validation_20260914T071731Z/.git_status_before.txt\n?? analysis/review/remaining_validation_20260914T071731Z/.input_hashes_before.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_metadata.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_report.md\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/common.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/finalize_metadata.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/integration_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/run_all.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/strata_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/wilson_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_results_summary.json\n?? analysis/review/remaining_validation_20260914T071731Z/verification_ledger.csv\n?? analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md"
   },
-  "generation_timestamp_utc": "2026-09-07T14:24:35.944395+00:00",
+  "generation_timestamp_utc": "2026-09-14T08:09:57.411078+00:00",
   "output_directory": "analysis/scratch_coder_results",
-  "write_scope": "Only this exclusively created output directory; generator source code does not write elsewhere.",
+  "validation_staging_directory": "analysis/.scratch_coder_results_staging_nsbr_z74",
+  "write_scope": "Both deliverables are validated in a temporary staging directory before the canonical pair is replaced.",
   "boundaries": {
     "source_directories_read_only": true,
     "restricted_tree_accessed": false,
     "analysis_pipelines_executed": false,
     "owner_inputs_accessed": false,
-    "git_mutations": false
+    "git_mutations": false,
+    "source_directories_deleted": false
+  },
+  "housekeeping": {
+    "status": "complete",
+    "installed_at_utc": "2026-09-07T15:01:08.530085+00:00",
+    "selected_final_run": {
+      "historical_original_path": "analysis/outputs_validation_consolidated_20260907T142435900989Z",
+      "report_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6",
+      "metadata_sha256": "f629899cbe838c3d2d930f7046dd29c2c1ab205a6729c7fc94992d0982d512ba",
+      "selection_basis": "Successful Wilson-enriched consolidation: 37 supplementary rows, WSA0082/WSA0083 retained, WSA0074 reused, 69 original unresolved entries retained, structural validations passed."
+    },
+    "canonical": {
+      "report_path": "analysis/scratch_coder_results/results.md",
+      "metadata_path": "analysis/scratch_coder_results/run_metadata.json",
+      "report_sha256": "3bce6023f41e751d4906881ae61c394386c220ed1fca898375c89a37df2fd553"
+    },
+    "copy_comparison_allowlist": {
+      "report": [],
+      "metadata": [
+        "output_directory",
+        "housekeeping"
+      ],
+      "result": "Report bytes identical; metadata identical outside the two named keys."
+    },
+    "deletion_inventory": [
+      {
+        "historical_directory": "analysis/outputs_validation_consolidated_20260907T082625857355Z",
+        "files": {
+          "consolidated_results.md": {
+            "bytes": 473307,
+            "sha256": "3f7c57f4952c5029e2e482849ba5523096a680f95e1ea9a790e2ce9952989027"
+          },
+          "run_metadata.json": {
+            "bytes": 13149001,
+            "sha256": "2261092245972aa4bb8619ab1be2eab93d1290e354bfa107b279a1cef9ed4616"
+          }
+        },
+        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
+        "recorded_generator_head": "732bf6668d9e9d702f0eb798fee5d46a16eb8a1e",
+        "recorded_unresolved_count": 69,
+        "recorded_supplement": null,
+        "deletion_verified": true
+      },
+      {
+        "historical_directory": "analysis/outputs_validation_consolidated_20260907T085849219598Z",
+        "files": {
+          "consolidated_results.md": {
+            "bytes": 473307,
+            "sha256": "05412c139480388bc2975772a6e49602c9adf9984366516572845bca1f11f3f6"
+          },
+          "run_metadata.json": {
+            "bytes": 13148517,
+            "sha256": "a4abd702e284fa8bda20a993bfbdc762db9c83722684640bde864745e163e36c"
+          }
+        },
+        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
+        "recorded_generator_head": "808e5993cd41893a57896b35b12d9c498c16931f",
+        "recorded_unresolved_count": 69,
+        "recorded_supplement": null,
+        "deletion_verified": true
+      },
+      {
+        "historical_directory": "analysis/outputs_validation_consolidated_20260907T131344836676Z",
+        "files": {
+          "consolidated_results.md": {
+            "bytes": 474583,
+            "sha256": "5ddb496fe52086bd0cd38ad323b46626a80641001ff106b5475901ad193d1529"
+          },
+          "run_metadata.json": {
+            "bytes": 13151689,
+            "sha256": "826b22e19f044f7177d85c70247f406f57a3f6e9e8731e3dbe3da589a0c59cab"
+          }
+        },
+        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
+        "recorded_generator_head": "a69ac7289b662675d71c3afa95bab02217f7800c",
+        "recorded_unresolved_count": 69,
+        "recorded_supplement": null,
+        "deletion_verified": true
+      },
+      {
+        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142013800173Z",
+        "files": {
+          "consolidated_results.md": {
+            "bytes": 474583,
+            "sha256": "b34c0208b4acf70cdb2adc2b1df4912e92c69fd849156f1280f6553f3ea94c22"
+          },
+          "run_metadata.json": {
+            "bytes": 13152984,
+            "sha256": "1524147324aba8fa40126375d9845414255c88d4131680d4fd5ec135a913b454"
+          }
+        },
+        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
+        "recorded_generator_head": "e33ab97326d34022c0f558de2a7398e2d99e8a8b",
+        "recorded_unresolved_count": 69,
+        "recorded_supplement": null,
+        "deletion_verified": true
+      },
+      {
+        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142116917442Z",
+        "files": {
+          "consolidated_results.md": {
+            "bytes": 487434,
+            "sha256": "83ff8e331a916df68ad81c3546d747e7db938a9d33d1711791abc490597544f4"
+          },
+          "run_metadata.json": {
+            "bytes": 13243890,
+            "sha256": "992a1d5d23a17e905aedb8d4621049dbab07f9a65083c8849b5d1f9814c7334c"
+          }
+        },
+        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
+        "recorded_generator_head": "e33ab97326d34022c0f558de2a7398e2d99e8a8b",
+        "recorded_unresolved_count": 69,
+        "recorded_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142055636248Z",
+        "deletion_verified": true
+      },
+      {
+        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142409009270Z",
+        "files": {
+          "consolidated_results.md": {
+            "bytes": 474583,
+            "sha256": "855538e94893b3efb21e923883a297de2bf30ab4cbb4037b06eeb901676d30f0"
+          },
+          "run_metadata.json": {
+            "bytes": 13154440,
+            "sha256": "f6b81c72eebd7487537f50d9a260e6a1aac5f2cbdf568a2b7aafa3ef6c4a7a23"
+          }
+        },
+        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
+        "recorded_generator_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
+        "recorded_unresolved_count": 69,
+        "recorded_supplement": null,
+        "deletion_verified": true
+      },
+      {
+        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142435900989Z",
+        "files": {
+          "consolidated_results.md": {
+            "bytes": 487434,
+            "sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6"
+          },
+          "run_metadata.json": {
+            "bytes": 13245346,
+            "sha256": "f629899cbe838c3d2d930f7046dd29c2c1ab205a6729c7fc94992d0982d512ba"
+          }
+        },
+        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
+        "recorded_generator_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
+        "recorded_unresolved_count": 69,
+        "recorded_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
+        "deletion_verified": true
+      }
+    ],
+    "task_a_task_b_evidence": {
+      "evidence_path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json",
+      "evidence_sha256": "8e83b86462e93676433871bc1bb65d28a6360d6c8c1952be6f8dd3333e88991c",
+      "reference": {
+        "path": "analysis/outputs_validation_consolidated_20260907T082625857355Z",
+        "reported_head": "732bf6668d9e9d702f0eb798fee5d46a16eb8a1e",
+        "unresolved_count": 69
+      },
+      "task_a": {
+        "historical_run_path": "analysis/outputs_validation_consolidated_20260907T085849219598Z",
+        "commit": "808e5993cd41893a57896b35b12d9c498c16931f",
+        "recorded_result": "equivalent outside generator-run allowlist",
+        "lineage_identical": true,
+        "source_files_identical": true,
+        "generator_run_allowlist_entry_count": 6
+      },
+      "task_b": {
+        "historical_run_path": "analysis/outputs_validation_consolidated_20260907T131344836676Z",
+        "commit": "a69ac7289b662675d71c3afa95bab02217f7800c",
+        "recorded_result": "bounded change only",
+        "sections_1_11_and_appendices_identical": true,
+        "canonical_unresolved_identical": true,
+        "added_metadata_key": "unresolved_explanation_rollup",
+        "generator_run_allowlist_entry_count": 8,
+        "rollup_counts": [
+          {
+            "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
+            "count": 52
+          },
+          {
+            "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
+            "count": 10
+          },
+          {
+            "cannot_establish": "An exact snapshot/hash of the uncommitted analysis code used by the run is unavailable. Current code is corroborating evidence only.",
+            "count": 3
+          },
+          {
+            "cannot_establish": "The historical replacement bootstrap confidence level is not explicitly recorded in saved methods/metadata.",
+            "count": 1
+          },
+          {
+            "cannot_establish": "The historical uncommitted code snapshot is unavailable; the misleading exported names are retained and are not described as model-versus-human results in that table.",
+            "count": 1
+          },
+          {
+            "cannot_establish": "The reason distribution proportion intervals were not exported is not documented; all source values are retained with unavailable interval status.",
+            "count": 1
+          },
+          {
+            "cannot_establish": "The saved Stage A metadata/methods do not state the bootstrap confidence level, and current code has no verified historical snapshot. Bounds are retained without a confidence-level claim.",
+            "count": 1
+          }
+        ]
+      }
+    },
+    "retained_references": {
+      "analytical_source_archives": [
+        "analysis/outputs_validation_scratch_20260824",
+        "analysis/outputs_validation_scratch_stage_b_20260825",
+        "analysis/outputs_validation_scratch_hard_case_strata_20260825"
+      ],
+      "wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
+      "scope_manifest": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json",
+      "scope_assessment": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md",
+      "followup_evidence": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json"
+    },
+    "normal_regeneration": {
+      "invocation": ".venv/bin/python -B -m analysis.scratch_coder_consolidated",
+      "canonical_destination": "analysis/scratch_coder_results",
+      "default_wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
+      "staging_before_replacement": true,
+      "unsupplemented_canonical_replacement_guarded": true
+    },
+    "historical_facts_preserved": [
+      "generation_timestamp_utc",
+      "generator.git_head",
+      "generator.git_status_before",
+      "generator.git_status_after_validation"
+    ],
+    "active_documentation": [
+      "analysis/scratch_coder_consolidated/README.md"
+    ],
+    "dependency_audit": {
+      "checked_at_utc": "2026-09-08T07:26:38Z",
+      "normal_regeneration": {
+        "analytical_source_files": {
+          "exact_manifest_location": "$.source_files",
+          "file_count": 47,
+          "note": "The existing source_files object contains each exact retained analytical/configuration path and SHA-256 hash."
+        },
+        "generator_package_files": [
+          {
+            "path": "analysis/scratch_coder_consolidated/README.md",
+            "sha256": "77a0ab41fabfc25c72405cdc6d811610821d481663d02fbf7fb8057e0f687bd7"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/__init__.py",
+            "sha256": "f7dba01b79fa1ecf1aaf8e874ef452f89f278f272cc6dbeb41fd1938baaa4197"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/__main__.py",
+            "sha256": "79554155abe9b87a215dd50ea7dd73d57589b7e0b8e567d9864748d1dbc12888"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/generate.py",
+            "sha256": "2019cf51c9bfb45b03803566a883287c8bc2e193c7d215b52dfef419e3d815c5"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/preflight.py",
+            "sha256": "aff760385384dc1f8192a1336c1934a6c40299c32ce87a42ad5d4ac0b9cd198c"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/report.py",
+            "sha256": "c3d8a7e13a4f39b2c14d29c3f98bf0290718152c53b7c89c3fd900ee44a00911"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/schemas.json",
+            "sha256": "54eeedfd781da307f5b54152f523c17e151fdb7288a5c3af4c402b6887df8a96"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/supplement.py",
+            "sha256": "95e1ad6cfd1106f225d3578268d5da099e27b6837fbb69bff7c0a85a12956d28"
+          },
+          {
+            "path": "analysis/scratch_coder_consolidated/test_collation.py",
+            "sha256": "a4fa3cab54b6d397f260a058529789a5bc2b79da7603c7c24d879c8c52beb558"
+          }
+        ],
+        "approved_wilson_supplement_files": [
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/methods_wilson_baseline.md",
+            "sha256": "6893a122b54a36b5ce21eb461978b6c33a166fc1582d4b3f0821a3253f6acfcc"
+          },
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/reused_intervals.json",
+            "sha256": "31f53eacc0aa404da8067a84a6f49c1a02ed50d3fbb2c6f0b5106a4fab2223f1"
+          },
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/run_metadata.json",
+            "sha256": "b1747a8ca8c9814d4835cc2a8279fb990f31bbe776ca062e33ccfeabf86d04be"
+          },
+          {
+            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/wilson_intervals.csv",
+            "sha256": "c1f238b5578d573efa2c06dbdaeb82e7c9e60f4ff43b0e751c5e8c1f411d6130"
+          }
+        ],
+        "canonical_state_files_read_before_replacement": [
+          "analysis/scratch_coder_results/results.md",
+          "analysis/scratch_coder_results/run_metadata.json"
+        ]
+      },
+      "required_followup_evidence_files": [
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json",
+          "sha256": "549cfe9900ec3b852df1306de85c744aac020522bfb7cbe5fd8b7ac722d0c5d1"
+        },
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json",
+          "sha256": "8e83b86462e93676433871bc1bb65d28a6360d6c8c1952be6f8dd3333e88991c"
+        },
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md",
+          "sha256": "6d888d2124a7a4c0e4f0ea995ceb261bb1c95d621aeda4596ae1fef47d887152"
+        },
+        {
+          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json",
+          "sha256": "4d9cbee51a2f4dc1d253b7fc4ec1c70187915d3f8dbc555926f344688c33b903"
+        }
+      ],
+      "git_index_check": {
+        "all_normal_regeneration_and_provenance_dependency_paths_present": true,
+        "approved_supplement_staged_as_exact_files": true,
+        "followup_evidence_staged_as_exact_files": true,
+        "canonical_metadata_self_hash_recorded": false
+      },
+      "earlier_wilson_run": {
+        "historical_path": "analysis/outputs_validation_wilson_baseline_20260907T142055636248Z",
+        "calculation_timestamp_utc": "2026-09-07T14:20:55.558491+00:00",
+        "generator_head": "e33ab97326d34022c0f558de2a7398e2d99e8a8b",
+        "file_inventory": {
+          "methods_wilson_baseline.md": {
+            "bytes": 3888,
+            "sha256": "cc383ae703fdec207759bb8f9021d30c81cf8931c07b7486fdf5acf6ac72f71c"
+          },
+          "reused_intervals.json": {
+            "bytes": 13002,
+            "sha256": "31f53eacc0aa404da8067a84a6f49c1a02ed50d3fbb2c6f0b5106a4fab2223f1"
+          },
+          "run_metadata.json": {
+            "bytes": 10961,
+            "sha256": "b5d31cccaf1498bbdbea05a36594232959b7266d32975eb121600e30a3649673"
+          },
+          "wilson_intervals.csv": {
+            "bytes": 22877,
+            "sha256": "f325f8c8259dbb3e857154d39f989fdf55372c49e3a60023e3b5cd7cfa752f7a"
+          }
+        },
+        "comparison_with_approved_run": {
+          "interval_rows": 37,
+          "analytical_csv_fields_identical": true,
+          "only_csv_difference_field": "calculation_timestamp_utc",
+          "reused_intervals_json_byte_identical": true,
+          "unique_evidence_preserved": "Historical first-execution timestamp, generator HEAD, repository-status provenance and exact file inventory/hashes.",
+          "unique_analytical_values": false,
+          "approved_run_additions": "Companion assessment provenance and exact task-code hashes."
+        },
+        "live_dependency": false,
+        "deletion_verified": true,
+        "deleted_at_utc": "2026-09-08T07:31:49Z"
+      }
+    },
+    "completed_at_utc": "2026-09-07T15:03:32.069595+00:00",
+    "deleted_directories": [
+      "analysis/outputs_validation_consolidated_20260907T082625857355Z",
+      "analysis/outputs_validation_consolidated_20260907T085849219598Z",
+      "analysis/outputs_validation_consolidated_20260907T131344836676Z",
+      "analysis/outputs_validation_consolidated_20260907T142013800173Z",
+      "analysis/outputs_validation_consolidated_20260907T142116917442Z",
+      "analysis/outputs_validation_consolidated_20260907T142409009270Z",
+      "analysis/outputs_validation_consolidated_20260907T142435900989Z"
+    ],
+    "last_regeneration": {
+      "timestamp_utc": "2026-09-14T08:09:57.411078+00:00",
+      "generator_head": "7585fed18ae5b7a4022d51d611d3148343b61afb",
+      "wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
+      "validation_only": false
+    }
   },
   "source_files": {
     "analysis/outputs_validation_scratch_20260824/qa_summary.csv": {
@@ -379258,7 +379643,54 @@
     "hard_case_table_headers": "passed",
     "rendered_table_presence": "passed",
     "rendered_estimates_and_bounds": "passed",
-    "final_section_structure": "passed"
+    "final_section_structure": "passed",
+    "canonical_output_guard": "supplement required for canonical replacement"
+  },
+  "reporting_followup": {
+    "date": "2026-09-14",
+    "audit_reference": "analysis/review/remaining_validation_20260914T071731Z/audit_report.md",
+    "audited_head": "7585fed18ae5b7a4022d51d611d3148343b61afb",
+    "audited_report_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6",
+    "ledger": {
+      "checks": 3496,
+      "verified": 3488,
+      "discrepant": 3,
+      "blocked": 3,
+      "not_checked": 2
+    },
+    "unresolved_annotations": [
+      {
+        "id": "U0003",
+        "evidence": "Independent numerical reproduction covered every saved stratum output and replicate, but the missing run-time-code identity limitation remains.",
+        "status": "Open; no historical code identity is inferred."
+      },
+      {
+        "id": "U0005",
+        "evidence": "Saved summary labels these as 95% CIs; the independent audit reproduced the 2.5th/97.5th Type 7 percentile bounds.",
+        "status": "Open pending review of the historical documentation; nominal level is not a claim about actual coverage."
+      },
+      {
+        "id": "U0035, U0037, U0039, U0041, U0045",
+        "evidence": "The dated Wilson supplement is a partial presentational remedy for selected named-coder and record-level baseline rows.",
+        "status": "Open; pooled and other excluded rows retain unavailable-interval status and the historical omission reason is not recovered."
+      },
+      {
+        "id": "U0068",
+        "evidence": "The misleading mean_model_coder_* fields in the human-pair output are independently verified human-pair averages.",
+        "status": "Open; source field names and the historical-code qualification are retained."
+      },
+      {
+        "id": "U0069",
+        "evidence": "The supplement supplies selected intervals only.",
+        "status": "Open; it does not establish why historical distribution intervals were omitted or extend interval scope to excluded rows."
+      }
+    ],
+    "historical_and_governance_limitations": [
+      "Historical Wilson code is recoverable at dcf763b; current code differs and requires an additional argument. The historical Task B metadata bytes were deleted during housekeeping, although their hash remains. Independent numerical verification succeeded, but historical execution was not reproduced.",
+      "The auditor did not locate the original approval instruction for the 37-row Wilson scope. Consistency of the implemented scope across retained artifacts was verified. This absence neither establishes that approval did not occur nor decides whether governance documentation is required."
+    ],
+    "original_unresolved_entries_retained": 69,
+    "analytical_recomputation": "none; reporting and evidence annotation only"
   },
   "status": "INCOMPLETE — unresolved metadata or reporting semantics",
   "unresolved_item_count": 69,
@@ -379375,378 +379807,5 @@
       ]
     }
   ],
-  "document_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6",
-  "housekeeping": {
-    "status": "complete",
-    "installed_at_utc": "2026-09-07T15:01:08.530085+00:00",
-    "selected_final_run": {
-      "historical_original_path": "analysis/outputs_validation_consolidated_20260907T142435900989Z",
-      "report_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6",
-      "metadata_sha256": "f629899cbe838c3d2d930f7046dd29c2c1ab205a6729c7fc94992d0982d512ba",
-      "selection_basis": "Successful Wilson-enriched consolidation: 37 supplementary rows, WSA0082/WSA0083 retained, WSA0074 reused, 69 original unresolved entries retained, structural validations passed."
-    },
-    "canonical": {
-      "report_path": "analysis/scratch_coder_results/results.md",
-      "metadata_path": "analysis/scratch_coder_results/run_metadata.json",
-      "report_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6"
-    },
-    "copy_comparison_allowlist": {
-      "report": [],
-      "metadata": [
-        "output_directory",
-        "housekeeping"
-      ],
-      "result": "Report bytes identical; metadata identical outside the two named keys."
-    },
-    "deletion_inventory": [
-      {
-        "historical_directory": "analysis/outputs_validation_consolidated_20260907T082625857355Z",
-        "files": {
-          "consolidated_results.md": {
-            "bytes": 473307,
-            "sha256": "3f7c57f4952c5029e2e482849ba5523096a680f95e1ea9a790e2ce9952989027"
-          },
-          "run_metadata.json": {
-            "bytes": 13149001,
-            "sha256": "2261092245972aa4bb8619ab1be2eab93d1290e354bfa107b279a1cef9ed4616"
-          }
-        },
-        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
-        "recorded_generator_head": "732bf6668d9e9d702f0eb798fee5d46a16eb8a1e",
-        "recorded_unresolved_count": 69,
-        "recorded_supplement": null,
-        "deletion_verified": true
-      },
-      {
-        "historical_directory": "analysis/outputs_validation_consolidated_20260907T085849219598Z",
-        "files": {
-          "consolidated_results.md": {
-            "bytes": 473307,
-            "sha256": "05412c139480388bc2975772a6e49602c9adf9984366516572845bca1f11f3f6"
-          },
-          "run_metadata.json": {
-            "bytes": 13148517,
-            "sha256": "a4abd702e284fa8bda20a993bfbdc762db9c83722684640bde864745e163e36c"
-          }
-        },
-        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
-        "recorded_generator_head": "808e5993cd41893a57896b35b12d9c498c16931f",
-        "recorded_unresolved_count": 69,
-        "recorded_supplement": null,
-        "deletion_verified": true
-      },
-      {
-        "historical_directory": "analysis/outputs_validation_consolidated_20260907T131344836676Z",
-        "files": {
-          "consolidated_results.md": {
-            "bytes": 474583,
-            "sha256": "5ddb496fe52086bd0cd38ad323b46626a80641001ff106b5475901ad193d1529"
-          },
-          "run_metadata.json": {
-            "bytes": 13151689,
-            "sha256": "826b22e19f044f7177d85c70247f406f57a3f6e9e8731e3dbe3da589a0c59cab"
-          }
-        },
-        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
-        "recorded_generator_head": "a69ac7289b662675d71c3afa95bab02217f7800c",
-        "recorded_unresolved_count": 69,
-        "recorded_supplement": null,
-        "deletion_verified": true
-      },
-      {
-        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142013800173Z",
-        "files": {
-          "consolidated_results.md": {
-            "bytes": 474583,
-            "sha256": "b34c0208b4acf70cdb2adc2b1df4912e92c69fd849156f1280f6553f3ea94c22"
-          },
-          "run_metadata.json": {
-            "bytes": 13152984,
-            "sha256": "1524147324aba8fa40126375d9845414255c88d4131680d4fd5ec135a913b454"
-          }
-        },
-        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
-        "recorded_generator_head": "e33ab97326d34022c0f558de2a7398e2d99e8a8b",
-        "recorded_unresolved_count": 69,
-        "recorded_supplement": null,
-        "deletion_verified": true
-      },
-      {
-        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142116917442Z",
-        "files": {
-          "consolidated_results.md": {
-            "bytes": 487434,
-            "sha256": "83ff8e331a916df68ad81c3546d747e7db938a9d33d1711791abc490597544f4"
-          },
-          "run_metadata.json": {
-            "bytes": 13243890,
-            "sha256": "992a1d5d23a17e905aedb8d4621049dbab07f9a65083c8849b5d1f9814c7334c"
-          }
-        },
-        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
-        "recorded_generator_head": "e33ab97326d34022c0f558de2a7398e2d99e8a8b",
-        "recorded_unresolved_count": 69,
-        "recorded_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142055636248Z",
-        "deletion_verified": true
-      },
-      {
-        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142409009270Z",
-        "files": {
-          "consolidated_results.md": {
-            "bytes": 474583,
-            "sha256": "855538e94893b3efb21e923883a297de2bf30ab4cbb4037b06eeb901676d30f0"
-          },
-          "run_metadata.json": {
-            "bytes": 13154440,
-            "sha256": "f6b81c72eebd7487537f50d9a260e6a1aac5f2cbdf568a2b7aafa3ef6c4a7a23"
-          }
-        },
-        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
-        "recorded_generator_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
-        "recorded_unresolved_count": 69,
-        "recorded_supplement": null,
-        "deletion_verified": true
-      },
-      {
-        "historical_directory": "analysis/outputs_validation_consolidated_20260907T142435900989Z",
-        "files": {
-          "consolidated_results.md": {
-            "bytes": 487434,
-            "sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6"
-          },
-          "run_metadata.json": {
-            "bytes": 13245346,
-            "sha256": "f629899cbe838c3d2d930f7046dd29c2c1ab205a6729c7fc94992d0982d512ba"
-          }
-        },
-        "recorded_status": "INCOMPLETE — unresolved metadata or reporting semantics",
-        "recorded_generator_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
-        "recorded_unresolved_count": 69,
-        "recorded_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
-        "deletion_verified": true
-      }
-    ],
-    "task_a_task_b_evidence": {
-      "evidence_path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json",
-      "evidence_sha256": "8e83b86462e93676433871bc1bb65d28a6360d6c8c1952be6f8dd3333e88991c",
-      "reference": {
-        "path": "analysis/outputs_validation_consolidated_20260907T082625857355Z",
-        "reported_head": "732bf6668d9e9d702f0eb798fee5d46a16eb8a1e",
-        "unresolved_count": 69
-      },
-      "task_a": {
-        "historical_run_path": "analysis/outputs_validation_consolidated_20260907T085849219598Z",
-        "commit": "808e5993cd41893a57896b35b12d9c498c16931f",
-        "recorded_result": "equivalent outside generator-run allowlist",
-        "lineage_identical": true,
-        "source_files_identical": true,
-        "generator_run_allowlist_entry_count": 6
-      },
-      "task_b": {
-        "historical_run_path": "analysis/outputs_validation_consolidated_20260907T131344836676Z",
-        "commit": "a69ac7289b662675d71c3afa95bab02217f7800c",
-        "recorded_result": "bounded change only",
-        "sections_1_11_and_appendices_identical": true,
-        "canonical_unresolved_identical": true,
-        "added_metadata_key": "unresolved_explanation_rollup",
-        "generator_run_allowlist_entry_count": 8,
-        "rollup_counts": [
-          {
-            "cannot_establish": "Interval and any applicable absence reason unavailable; not computed here.",
-            "count": 52
-          },
-          {
-            "cannot_establish": "Human-majority positive support for this sensitivity/subset population is not exported. Baseline support is explicitly labelled and is not substituted for it.",
-            "count": 10
-          },
-          {
-            "cannot_establish": "An exact snapshot/hash of the uncommitted analysis code used by the run is unavailable. Current code is corroborating evidence only.",
-            "count": 3
-          },
-          {
-            "cannot_establish": "The historical replacement bootstrap confidence level is not explicitly recorded in saved methods/metadata.",
-            "count": 1
-          },
-          {
-            "cannot_establish": "The historical uncommitted code snapshot is unavailable; the misleading exported names are retained and are not described as model-versus-human results in that table.",
-            "count": 1
-          },
-          {
-            "cannot_establish": "The reason distribution proportion intervals were not exported is not documented; all source values are retained with unavailable interval status.",
-            "count": 1
-          },
-          {
-            "cannot_establish": "The saved Stage A metadata/methods do not state the bootstrap confidence level, and current code has no verified historical snapshot. Bounds are retained without a confidence-level claim.",
-            "count": 1
-          }
-        ]
-      }
-    },
-    "retained_references": {
-      "analytical_source_archives": [
-        "analysis/outputs_validation_scratch_20260824",
-        "analysis/outputs_validation_scratch_stage_b_20260825",
-        "analysis/outputs_validation_scratch_hard_case_strata_20260825"
-      ],
-      "wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
-      "scope_manifest": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json",
-      "scope_assessment": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md",
-      "followup_evidence": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json"
-    },
-    "normal_regeneration": {
-      "invocation": ".venv/bin/python -B -m analysis.scratch_coder_consolidated",
-      "canonical_destination": "analysis/scratch_coder_results",
-      "default_wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
-      "staging_before_replacement": true,
-      "unsupplemented_canonical_replacement_guarded": true
-    },
-    "historical_facts_preserved": [
-      "generation_timestamp_utc",
-      "generator.git_head",
-      "generator.git_status_before",
-      "generator.git_status_after_validation"
-    ],
-    "active_documentation": [
-      "analysis/scratch_coder_consolidated/README.md"
-    ],
-    "dependency_audit": {
-      "checked_at_utc": "2026-09-08T07:26:38Z",
-      "normal_regeneration": {
-        "analytical_source_files": {
-          "exact_manifest_location": "$.source_files",
-          "file_count": 47,
-          "note": "The existing source_files object contains each exact retained analytical/configuration path and SHA-256 hash."
-        },
-        "generator_package_files": [
-          {
-            "path": "analysis/scratch_coder_consolidated/README.md",
-            "sha256": "77a0ab41fabfc25c72405cdc6d811610821d481663d02fbf7fb8057e0f687bd7"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/__init__.py",
-            "sha256": "f7dba01b79fa1ecf1aaf8e874ef452f89f278f272cc6dbeb41fd1938baaa4197"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/__main__.py",
-            "sha256": "79554155abe9b87a215dd50ea7dd73d57589b7e0b8e567d9864748d1dbc12888"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/generate.py",
-            "sha256": "2019cf51c9bfb45b03803566a883287c8bc2e193c7d215b52dfef419e3d815c5"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/preflight.py",
-            "sha256": "aff760385384dc1f8192a1336c1934a6c40299c32ce87a42ad5d4ac0b9cd198c"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/report.py",
-            "sha256": "c3d8a7e13a4f39b2c14d29c3f98bf0290718152c53b7c89c3fd900ee44a00911"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/schemas.json",
-            "sha256": "54eeedfd781da307f5b54152f523c17e151fdb7288a5c3af4c402b6887df8a96"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/supplement.py",
-            "sha256": "95e1ad6cfd1106f225d3578268d5da099e27b6837fbb69bff7c0a85a12956d28"
-          },
-          {
-            "path": "analysis/scratch_coder_consolidated/test_collation.py",
-            "sha256": "a4fa3cab54b6d397f260a058529789a5bc2b79da7603c7c24d879c8c52beb558"
-          }
-        ],
-        "approved_wilson_supplement_files": [
-          {
-            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/methods_wilson_baseline.md",
-            "sha256": "6893a122b54a36b5ce21eb461978b6c33a166fc1582d4b3f0821a3253f6acfcc"
-          },
-          {
-            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/reused_intervals.json",
-            "sha256": "31f53eacc0aa404da8067a84a6f49c1a02ed50d3fbb2c6f0b5106a4fab2223f1"
-          },
-          {
-            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/run_metadata.json",
-            "sha256": "b1747a8ca8c9814d4835cc2a8279fb990f31bbe776ca062e33ccfeabf86d04be"
-          },
-          {
-            "path": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z/wilson_intervals.csv",
-            "sha256": "c1f238b5578d573efa2c06dbdaeb82e7c9e60f4ff43b0e751c5e8c1f411d6130"
-          }
-        ],
-        "canonical_state_files_read_before_replacement": [
-          "analysis/scratch_coder_results/results.md",
-          "analysis/scratch_coder_results/run_metadata.json"
-        ]
-      },
-      "required_followup_evidence_files": [
-        {
-          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/command_log.json",
-          "sha256": "549cfe9900ec3b852df1306de85c744aac020522bfb7cbe5fd8b7ac722d0c5d1"
-        },
-        {
-          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/followup_metadata.json",
-          "sha256": "8e83b86462e93676433871bc1bb65d28a6360d6c8c1952be6f8dd3333e88991c"
-        },
-        {
-          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_assessment.md",
-          "sha256": "6d888d2124a7a4c0e4f0ea995ceb261bb1c95d621aeda4596ae1fef47d887152"
-        },
-        {
-          "path": "analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json",
-          "sha256": "4d9cbee51a2f4dc1d253b7fc4ec1c70187915d3f8dbc555926f344688c33b903"
-        }
-      ],
-      "git_index_check": {
-        "all_normal_regeneration_and_provenance_dependency_paths_present": true,
-        "approved_supplement_staged_as_exact_files": true,
-        "followup_evidence_staged_as_exact_files": true,
-        "canonical_metadata_self_hash_recorded": false
-      },
-      "earlier_wilson_run": {
-        "historical_path": "analysis/outputs_validation_wilson_baseline_20260907T142055636248Z",
-        "calculation_timestamp_utc": "2026-09-07T14:20:55.558491+00:00",
-        "generator_head": "e33ab97326d34022c0f558de2a7398e2d99e8a8b",
-        "file_inventory": {
-          "methods_wilson_baseline.md": {
-            "bytes": 3888,
-            "sha256": "cc383ae703fdec207759bb8f9021d30c81cf8931c07b7486fdf5acf6ac72f71c"
-          },
-          "reused_intervals.json": {
-            "bytes": 13002,
-            "sha256": "31f53eacc0aa404da8067a84a6f49c1a02ed50d3fbb2c6f0b5106a4fab2223f1"
-          },
-          "run_metadata.json": {
-            "bytes": 10961,
-            "sha256": "b5d31cccaf1498bbdbea05a36594232959b7266d32975eb121600e30a3649673"
-          },
-          "wilson_intervals.csv": {
-            "bytes": 22877,
-            "sha256": "f325f8c8259dbb3e857154d39f989fdf55372c49e3a60023e3b5cd7cfa752f7a"
-          }
-        },
-        "comparison_with_approved_run": {
-          "interval_rows": 37,
-          "analytical_csv_fields_identical": true,
-          "only_csv_difference_field": "calculation_timestamp_utc",
-          "reused_intervals_json_byte_identical": true,
-          "unique_evidence_preserved": "Historical first-execution timestamp, generator HEAD, repository-status provenance and exact file inventory/hashes.",
-          "unique_analytical_values": false,
-          "approved_run_additions": "Companion assessment provenance and exact task-code hashes."
-        },
-        "live_dependency": false,
-        "deletion_verified": true,
-        "deleted_at_utc": "2026-09-08T07:31:49Z"
-      }
-    },
-    "completed_at_utc": "2026-09-07T15:03:32.069595+00:00",
-    "deleted_directories": [
-      "analysis/outputs_validation_consolidated_20260907T082625857355Z",
-      "analysis/outputs_validation_consolidated_20260907T085849219598Z",
-      "analysis/outputs_validation_consolidated_20260907T131344836676Z",
-      "analysis/outputs_validation_consolidated_20260907T142013800173Z",
-      "analysis/outputs_validation_consolidated_20260907T142116917442Z",
-      "analysis/outputs_validation_consolidated_20260907T142409009270Z",
-      "analysis/outputs_validation_consolidated_20260907T142435900989Z"
-    ]
-  }
+  "document_sha256": "3bce6023f41e751d4906881ae61c394386c220ed1fca898375c89a37df2fd553"
 }

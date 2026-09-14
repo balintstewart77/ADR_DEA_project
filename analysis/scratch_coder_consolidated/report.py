@@ -54,6 +54,28 @@ FLAG_COLS = {"eligible_for_per_label_performance", "eligible_for_macro_average",
 ESTIMATE_CODES = {"reported": "R", "withheld_support_rule": "W", "undefined": "D", "unavailable_in_source": "A", "unresolved": "U", "not_applicable": "N"}
 INTERVAL_CODES = {"reported": "R", "suppressed_diagnostic_policy": "SD", "suppressed_valid_replicate_threshold": "SV", "withheld_support_rule": "W", "undefined": "D", "not_applicable": "N", "unavailable_in_source": "A", "unresolved": "U"}
 
+# This is reporting evidence, not an alteration of the historical unresolved
+# inventory. It applies only to the canonical report snapshot audited on
+# 2026-09-14; regenerated reports retain the audit reference separately.
+AUDIT_REPORTING_FOLLOWUP = {
+    "date": "2026-09-14",
+    "audit_reference": "analysis/review/remaining_validation_20260914T071731Z/audit_report.md",
+    "audited_head": "7585fed18ae5b7a4022d51d611d3148343b61afb",
+    "audited_report_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6",
+    "ledger": {"checks": 3496, "verified": 3488, "discrepant": 3, "blocked": 3, "not_checked": 2},
+    "unresolved_annotations": [
+        {"id": "U0003", "evidence": "Independent numerical reproduction covered every saved stratum output and replicate, but the missing run-time-code identity limitation remains.", "status": "Open; no historical code identity is inferred."},
+        {"id": "U0005", "evidence": "Saved summary labels these as 95% CIs; the independent audit reproduced the 2.5th/97.5th Type 7 percentile bounds.", "status": "Open pending review of the historical documentation; nominal level is not a claim about actual coverage."},
+        {"id": "U0035, U0037, U0039, U0041, U0045", "evidence": "The dated Wilson supplement is a partial presentational remedy for selected named-coder and record-level baseline rows.", "status": "Open; pooled and other excluded rows retain unavailable-interval status and the historical omission reason is not recovered."},
+        {"id": "U0068", "evidence": "The misleading mean_model_coder_* fields in the human-pair output are independently verified human-pair averages.", "status": "Open; source field names and the historical-code qualification are retained."},
+        {"id": "U0069", "evidence": "The supplement supplies selected intervals only.", "status": "Open; it does not establish why historical distribution intervals were omitted or extend interval scope to excluded rows."},
+    ],
+    "historical_and_governance_limitations": [
+        "Historical Wilson code is recoverable at dcf763b; current code differs and requires an additional argument. The historical Task B metadata bytes were deleted during housekeeping, although their hash remains. Independent numerical verification succeeded, but historical execution was not reproduced.",
+        "The auditor did not locate the original approval instruction for the 37-row Wilson scope. Consistency of the implemented scope across retained artifacts was verified. This absence neither establishes that approval did not occur nor decides whether governance documentation is required.",
+    ],
+}
+
 
 def unresolved_explanation_rollup(items):
     """Group canonical Appendix A entries by their complete recorded explanation."""
@@ -361,6 +383,17 @@ class Report:
         if self.supplement:
             self.supplement.apply(self)
         self.validate()
+        self.record_reporting_followup()
+
+    def record_reporting_followup(self):
+        """Record dated audit evidence without changing original unresolved entries."""
+        expected = {"U0003", "U0005", "U0035", "U0037", "U0039", "U0041", "U0045", "U0068", "U0069"}
+        actual = {item["id"] for item in self.s.unresolved}
+        if len(self.s.unresolved) != 69 or not expected <= actual:
+            raise Fatal("Audit follow-up cannot annotate a changed unresolved inventory")
+        self.meta["reporting_followup"] = dict(AUDIT_REPORTING_FOLLOWUP,
+            original_unresolved_entries_retained=69,
+            analytical_recomputation="none; reporting and evidence annotation only")
 
     def taxonomy_denominators(self):
         for p in ("baseline", "hard_case"):
@@ -547,7 +580,8 @@ class Report:
                "The model is compared separately with each coder. No majority exact-set combination is constructed. Median and first/third quartile Jaccard quantities retain their exported names and are not confidence intervals. " + evidence,
             8: "Coder-response and record-majority distributions are separate. A record-majority category requires two identical ratings; No majority / split judgement remains its own category. "
                "Broad register-usable means at least two coders chose Sufficient or Partially sufficient; strict register-sufficient means at least two chose Sufficient. "
-               "The subsets use original pre-adjudication ratings. Counts have no confidence interval. Baseline subset proportions carry exported 95% Wilson-score intervals; hard-case subset intervals have an explicit diagnostic nonapplication source field. " + evidence,
+               "The subsets use original pre-adjudication ratings. Counts are presented without intervals. Baseline proportions include original exported 95% Wilson-score intervals and, for selected named-coder and record-level distributions, supplementary 95% Wilson-score intervals calculated on 7 September 2026. The tables identify interval provenance and the equivalent-result reuse. Pooled-response and other excluded rows retain their existing unavailable-interval status. "
+               "WSA0082 and WSA0083 are retained original intervals; WSA0074 reuses WSA0083 after a verified equivalent-result lookup; the other 37 displayed supplementary intervals are newly calculated. Included intervals are conditional on the fixed coder/panel, marginal rather than simultaneous, do not extend to pooled dependent responses, and use no finite-population correction. Hard-case subset intervals retain their explicit diagnostic nonapplication source field. " + evidence,
             9: "The four response categories retain their source labels: Fit, Partial Fit, No Fit, and Cannot assess from register entry. "
                "They concern whether the taxonomy can adequately represent the project. The frozen instrument says to select Cannot assess when the entry is too limited to determine taxonomy fit, and not to select Partial Fit or No Fit solely because the entry lacks information. "
                "Cannot assess is an evidence-sufficiency outcome, separate from No Fit and from taxonomy defects. Only Partial Fit and No Fit coder responses enter taxonomy-issue denominators; multiple issues can be selected. "
@@ -557,7 +591,10 @@ class Report:
                 "Coherence rows use Cannot assess responses as their denominator: the source validator marks Cannot assess with Sufficient as incoherent, and other sufficiency responses as coherent. " + evidence,
             11: "The saved methods explicitly state that this module covers Research Domains and Analytical Purposes and calculates no tag stratum analyses. The cross-cutting tags are absent from all stratum outputs; this is intentional non-applicability in the coverage manifest under user §3.3. "
                 "This is a post hoc exploratory diagnostic; no claim is made that the source scope decision was preregistered. "
-                "The parent population is hard_case. Source order is domain_only (cross-model Research Domain disagreement only), purpose_only (Analytical Purpose disagreement only), both (both dimensions); these refer to the production/comparison-model sampling disagreement strata, not scratch-coder disagreements. "
+                "The parent population is hard_case. Every hard-case record belongs to one of three 25-record strata: domain_only (cross-model Research Domain disagreement only), purpose_only (Analytical Purpose disagreement only), or both (both dimensions). Membership is restricted to sample_family == 'hard_case'; frame stratum labels on baseline records do not include those records in this analysis. "
+                "Five records entered through the protocol's accompanying-tag forced-inclusion rule: four in domain_only, one in purpose_only and none in both. The ordinary record bootstrap resamples the observed records within each stratum and does not reproduce that forced-inclusion sampling design. Its intervals are descriptive resampling intervals for these diagnostic samples, not design-based population coverage. "
+                "The strata are small, their intervals are unadjusted for multiple comparisons, and exclusion of zero is not a confirmatory release test. Interpret model–human agreement alongside the corresponding human–human tables: the observed pattern alone does not establish whether model error, human disagreement or ambiguity explains it. "
+                "Saved summary labels the Δmin bounds as 95% CIs, and the independent audit reproduced their 2.5th/97.5th Type 7 percentile bounds. This supports a nominal 95% label in the saved outputs, not a claim about actual statistical coverage; U0005 remains open pending review of the historical documentation. "
                 "Each table retains its exported denominator and separate comparisons. Existing bootstrap intervals remain visible. No strata are pooled. " + common + " " + evidence,
         }
 
@@ -610,6 +647,11 @@ class Report:
                 [[x["id"], str(x["section"]) + " / " + str(x["result_key"]) + (" / " + DIAGNOSTIC if str(x["section"]) == "11" or "hard_case" in str(x["result_key"]) else ""), x["field"], x["known"], x["cannot_establish"], x["source_location"]] for x in self.s.unresolved]))
             if self.supplement:
                 out.append("Supplement coverage does not alter these original-source records. U0069 remains open because newly supplied intervals do not establish why the historical distribution intervals were omitted, and its scope also includes excluded rows.")
+            followup = self.meta["reporting_followup"]
+            out += ["### Dated audit evidence annotations — 2026-09-14",
+                    "These annotations apply to the audited canonical-report snapshot only and are separate from the 69 original-source entries above. They add evidence without closing, renumbering or changing any historical explanation.",
+                    table(["Entry", "Dated audit evidence", "Status retained"], [[row["id"], row["evidence"], row["status"]] for row in followup["unresolved_annotations"]]),
+                    "Historical and governance limitations: " + " ".join(followup["historical_and_governance_limitations"])]
         out += ["## Appendix B — Source map and status definitions",
                 "Detailed cell lineage, original strings/statuses, metric statuses, schema adapters, coverage keys and non-applicability entries are in `run_metadata.json`. "
                 "A missing source field remains unavailable. Zero, NO and False are substantive values. Empty domain/purpose rare-metric cells are intentional W/W; tags are always reported with their exported caution. "
