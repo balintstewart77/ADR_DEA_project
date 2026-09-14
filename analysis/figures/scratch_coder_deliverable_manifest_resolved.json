@@ -1,0 +1,229 @@
+{
+  "manifest_version": 1,
+  "generated_utc": "2026-09-14T20:39:37.459459+00:00",
+  "workflow": {
+    "stage_1": "this extractor reads retained aggregate sources",
+    "stage_2": "renderer reads only this manifest and listed extracted CSV/JSON files"
+  },
+  "provenance": {
+    "resolved_commits": {
+      "initial_extractor": "4d5bbbd5fd4b072d488d859618200ef3f7649995",
+      "extractor_refinement": "a848a87c8d6907a8793cc1032ff762b825b05155",
+      "prior_data_outputs": "33a46415dc308db4d675c7c4638e8fcdf10cc2b8",
+      "majority_coverage": "ac7536806d3c7dcc1f4eb4a933772f8fb25eac42"
+    },
+    "pre_run_head": "960c38d1c2acb86a8fa87ab5ecb74a1d5c832419",
+    "pre_run_worktree": "D analysis/figures/scratch_coder_figure_1.png\n D analysis/figures/scratch_coder_figure_1.svg\n D analysis/figures/scratch_coder_figure_2.png\n D analysis/figures/scratch_coder_figure_2.svg\n D analysis/figures/scratch_coder_figure_3.png\n D analysis/figures/scratch_coder_figure_3.svg\n D analysis/figures/scratch_coder_figure_4.png\n D analysis/figures/scratch_coder_figure_4.svg\n D analysis/figures/scratch_coder_figure_5.png\n D analysis/figures/scratch_coder_figure_5.svg\n D analysis/figures/scratch_coder_figure_6.png\n D analysis/figures/scratch_coder_figure_6.svg\n?? analysis/figure_data/scratch_coder_deliverable_manifest.json\n?? analysis/figure_data/scratch_coder_figure_1_panel_agreement.csv\n?? analysis/figure_data/scratch_coder_figure_1_panel_agreement_metadata.json\n?? analysis/figure_data/scratch_coder_figure_2_sufficiency_sensitivity.csv\n?? analysis/figure_data/scratch_coder_figure_2_sufficiency_sensitivity_metadata.json\n?? analysis/figure_data/scratch_coder_figure_3_label_application_patterns.csv\n?? analysis/figure_data/scratch_coder_figure_3_label_application_patterns_metadata.json\n?? analysis/figure_data/scratch_coder_figure_4_baseline_hard_case.csv\n?? analysis/figure_data/scratch_coder_figure_4_baseline_hard_case_metadata.json\n?? analysis/figure_data/scratch_coder_prechange_inventory.json\n?? analysis/figure_data/scratch_coder_supplementary_table_s1_majority_coverage.csv\n?? analysis/figure_data/scratch_coder_supplementary_table_s1_majority_coverage_metadata.json\n?? analysis/figure_data/scratch_coder_table_1_pairwise_kappa_domains.csv\n?? analysis/figure_data/scratch_coder_table_1_pairwise_kappa_domains_metadata.json\n?? analysis/figure_data/scratch_coder_table_2_pairwise_kappa_purposes.csv\n?? analysis/figure_data/scratch_coder_table_2_pairwise_kappa_purposes_metadata.json\n?? analysis/figure_data/scratch_coder_table_3_contingencies_performance_domains.csv\n?? analysis/figure_data/scratch_coder_table_3_contingencies_performance_domains_metadata.json\n?? analysis/figure_data/scratch_coder_table_4_contingencies_performance_purposes.csv\n?? analysis/figure_data/scratch_coder_table_4_contingencies_performance_purposes_metadata.json\n?? analysis/figure_data/scratch_coder_table_5_disagreeing_pair_relations.csv\n?? analysis/figure_data/scratch_coder_table_5_disagreeing_pair_relations_metadata.json\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_1.png\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_1.svg\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_2.png\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_2.svg\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_3.png\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_3.svg\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_4.png\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_4.svg\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_5.png\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_5.svg\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_6.png\n?? analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_6.svg\n?? analysis/figures/scratch_coder_deliverable_manifest_resolved.json\n?? analysis/figures/scratch_coder_figure_1_panel_agreement.png\n?? analysis/figures/scratch_coder_figure_1_panel_agreement.svg\n?? analysis/figures/scratch_coder_figure_2_sufficiency_sensitivity.png\n?? analysis/figures/scratch_coder_figure_2_sufficiency_sensitivity.svg\n?? analysis/figures/scratch_coder_figure_3_label_application_patterns.png\n?? analysis/figures/scratch_coder_figure_3_label_application_patterns.svg\n?? analysis/figures/scratch_coder_figure_4_baseline_hard_case.png\n?? analysis/figures/scratch_coder_figure_4_baseline_hard_case.svg\n?? analysis/figures/scratch_coder_figure_captions.md\n?? analysis/figures/scratch_coder_rendering_report.json\n?? analysis/tables/scratch_coder_supplementary_table_s1_majority_coverage.csv\n?? analysis/tables/scratch_coder_supplementary_table_s1_majority_coverage.md\n?? analysis/tables/scratch_coder_table_1_pairwise_kappa_domains.csv\n?? analysis/tables/scratch_coder_table_1_pairwise_kappa_domains.md\n?? analysis/tables/scratch_coder_table_2_pairwise_kappa_purposes.csv\n?? analysis/tables/scratch_coder_table_2_pairwise_kappa_purposes.md\n?? analysis/tables/scratch_coder_table_3_contingencies_performance_domains.csv\n?? analysis/tables/scratch_coder_table_3_contingencies_performance_domains.md\n?? analysis/tables/scratch_coder_table_4_contingencies_performance_purposes.csv\n?? analysis/tables/scratch_coder_table_4_contingencies_performance_purposes.md\n?? analysis/tables/scratch_coder_table_5_disagreeing_pair_relations.csv\n?? analysis/tables/scratch_coder_table_5_disagreeing_pair_relations.md",
+    "canonical_report_commit": "9bcf38b089399390b77619189e8a08ca412cb518",
+    "canonical_report_sha256": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017",
+    "canonical_metadata_sha256": "17965b684ecd3f3e669f4c40ddfbb17ad46d802caa44729c7199080a468696e7",
+    "canonical_reporting_only_compatibility": {
+      "evidence": "analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md",
+      "status": "analytical content and source identities documented unchanged from audited snapshot"
+    },
+    "majority_working_sha256": {
+      "analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage.csv": "54e36e8dae515bd3fd1089337bc967b86feb139e4b11e10506f6c30e018d348d",
+      "analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage_summary.md": "3c92572527193f6c36f1a8ff9dd95330ac21c199b4571fbf1b6a6774e1324cd8",
+      "analysis/outputs_majority_coverage_20260914T170315Z/run_metadata.json": "4ea6a6095e5ee40a7319fd95422649ce7896af63f2fcc3bdc4b2de69dc376ffe"
+    },
+    "majority_ac75368_blob_sha256": {
+      "analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage.csv": "2921e341cf7fdd7b4769fc491fbe158947d9e750ebdcda60c111be20a784f95c",
+      "analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage_summary.md": "3c92572527193f6c36f1a8ff9dd95330ac21c199b4571fbf1b6a6774e1324cd8",
+      "analysis/outputs_majority_coverage_20260914T170315Z/run_metadata.json": "4ea6a6095e5ee40a7319fd95422649ce7896af63f2fcc3bdc4b2de69dc376ffe"
+    },
+    "majority_csv_checkout_note": "Raw working bytes differ only because the checkout uses CRLF while the committed blob uses LF; Git clean-filtered object equals the ac75368 blob. Source was not modified.",
+    "cohort_compatibility": {
+      "population_ids": [
+        "POST-009",
+        "POST-011"
+      ],
+      "crosswalk": "POST-019",
+      "responses": "POST-028",
+      "mask": "complete C01/C02/C03 and frozen model value per dimension",
+      "baseline_hard_case_disjointness_evidence": "analysis/scratch_coder_stage_a/panels.py rejects any baseline_ids & hard_ids overlap; its retained hash is recorded by the majority metadata",
+      "strict_subset_evidence": "Sufficiency subset IDs are derived only from baseline responses; population_ids returns the strict set"
+    },
+    "code_and_method_evidence_hashes": {
+      "analysis/visualisations/extract_scratch_coder_paper.py": "bf9b8b47ad2d88dd954b2f016d9db18a042a6ccbd62b8e7b00ece2f4cf5397c7",
+      "analysis/visualisations/render_scratch_coder_paper.py": "b69a9eaa26f89fdd1d1eaa60aea8ddb397d84786cc6de656f60d612b35b90a07",
+      "analysis/outputs_validation_scratch_20260824/methods_stage_a.md": "a78393b73ad39e3bde4dd949cce99575d257938b9cfd8c72d43dfa25df6f5f67",
+      "analysis/scratch_coder_stage_a/panels.py": "3a8688b38699f21753179297f18fa2438cc4d91e5e298f59d3b074318f5f794b",
+      "analysis/scratch_coder_stage_a/mappings.py": "f6192b0b37a5c1c57150b094302c9b1bb9ac39110f94e989e9f22b5c8352d1c6",
+      "analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md": "b5a8d974adf5b92be89c807781e2475ac6dc9fd2dbb477a71be37bac846e5c04"
+    }
+  },
+  "current": {
+    "Figure 1": {
+      "stem": "scratch_coder_figure_1_panel_agreement",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_figure_1_panel_agreement.csv",
+        "analysis/figure_data/scratch_coder_figure_1_panel_agreement_metadata.json"
+      ],
+      "outputs": [
+        "analysis/figures/scratch_coder_figure_1_panel_agreement.svg",
+        "analysis/figures/scratch_coder_figure_1_panel_agreement.png"
+      ],
+      "caption": "Panel agreement and replacement differences. Baseline n=150 records in each dimension. ABC is C01/C02/C03; LBC, ALC and ABL replace C01, C02 and C03 respectively with Fable 5. Each delta is substituted-panel alpha minus ABC: positive values indicate higher agreement after replacement and negative values lower agreement. The exported delta_min point estimate is the minimum component; all tied matching components are marked. Retained methods state that the minimum is selected again within each bootstrap resample, so its interval need not equal the interval of the observed matching component. Percentile-bootstrap confidence level is unresolved in the canonical report (U0004). Coincident reported endpoints use a barred diamond; this does not establish absent sampling uncertainty. Tag support bands count baseline human-majority-positive records and retain their cautions."
+    },
+    "Figure 2": {
+      "stem": "scratch_coder_figure_2_sufficiency_sensitivity",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_figure_2_sufficiency_sensitivity.csv",
+        "analysis/figure_data/scratch_coder_figure_2_sufficiency_sensitivity_metadata.json"
+      ],
+      "outputs": [
+        "analysis/figures/scratch_coder_figure_2_sufficiency_sensitivity.svg",
+        "analysis/figures/scratch_coder_figure_2_sufficiency_sensitivity.png"
+      ],
+      "caption": "Sufficiency sensitivity. Baseline (n=150 records) and strict register-sufficient subset (n=92 records), which retained methods define as a subset of baseline records with at least two Sufficient ratings. Populations are nested, not independent; comparison is descriptive. Panel and delta_min definitions follow Figure 1. The broad subset retained 148/150 records and is available in the accompanying figure data but omitted from this display. Percentile-bootstrap confidence level is unresolved in the canonical report. The alpha scale differs from Figures 1 and 4."
+    },
+    "Figure 3": {
+      "stem": "scratch_coder_figure_3_label_application_patterns",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_figure_3_label_application_patterns.csv",
+        "analysis/figure_data/scratch_coder_figure_3_label_application_patterns_metadata.json"
+      ],
+      "outputs": [
+        "analysis/figures/scratch_coder_figure_3_label_application_patterns.svg",
+        "analysis/figures/scratch_coder_figure_3_label_application_patterns.png"
+      ],
+      "caption": "Label application patterns, baseline n=150 records. Each point is a label, not a record; counts across labels do not partition the sample and must not be summed as a record total. Support bands count baseline human-majority-positive records: Standard >=30, Low support 10–29, Rare <10. Above/below the equality line means only that the model applies the label more/less often, not accuracy or error. No observed human-majority set contained both Unclear and a substantive label in either analysed population or dimension. Marginal counts and the coverage summary do not identify whether lower model use of Unclear and higher model use of substantive labels concern the same records. Five of 150 Domain records and 24 of 150 Purpose records had no majority label; they contribute to no human-majority-positive count but may contribute to model-positive counts. See Supplementary Table S1."
+    },
+    "Figure 4": {
+      "stem": "scratch_coder_figure_4_baseline_hard_case",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_figure_4_baseline_hard_case.csv",
+        "analysis/figure_data/scratch_coder_figure_4_baseline_hard_case_metadata.json"
+      ],
+      "outputs": [
+        "analysis/figures/scratch_coder_figure_4_baseline_hard_case.svg",
+        "analysis/figures/scratch_coder_figure_4_baseline_hard_case.png"
+      ],
+      "caption": "Baseline against hard-case. Baseline n=150 records; pooled hard-case n=75 records. The retained panel construction verifies these populations are disjoint. Hard-case is DIAGNOSTIC — non-representative and was selected on cross-model disagreement; no cause or quality inference is warranted. Panel, delta and delta_min definitions follow Figure 1. Percentile-bootstrap confidence level is unresolved in the pooled canonical rows (U0004); newer separate-strata evidence does not close or transfer to these pooled results (U0005 remains open). Hard-case tag bands remain baseline-scoped; the separately exported hard-case equity support is 8 human-majority-positive records. Cautions remain marked."
+    },
+    "Table 1": {
+      "stem": "scratch_coder_table_1_pairwise_kappa_domains",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_table_1_pairwise_kappa_domains.csv",
+        "analysis/figure_data/scratch_coder_table_1_pairwise_kappa_domains_metadata.json"
+      ],
+      "outputs": [
+        "analysis/tables/scratch_coder_table_1_pairwise_kappa_domains.csv",
+        "analysis/tables/scratch_coder_table_1_pairwise_kappa_domains.md"
+      ],
+      "caption": "Per-label pairwise kappa — Research Domains (baseline n=150 records)."
+    },
+    "Table 2": {
+      "stem": "scratch_coder_table_2_pairwise_kappa_purposes",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_table_2_pairwise_kappa_purposes.csv",
+        "analysis/figure_data/scratch_coder_table_2_pairwise_kappa_purposes_metadata.json"
+      ],
+      "outputs": [
+        "analysis/tables/scratch_coder_table_2_pairwise_kappa_purposes.csv",
+        "analysis/tables/scratch_coder_table_2_pairwise_kappa_purposes.md"
+      ],
+      "caption": "Per-label pairwise kappa — Analytical Purposes (baseline n=150 records)."
+    },
+    "Table 3": {
+      "stem": "scratch_coder_table_3_contingencies_performance_domains",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_table_3_contingencies_performance_domains.csv",
+        "analysis/figure_data/scratch_coder_table_3_contingencies_performance_domains_metadata.json"
+      ],
+      "outputs": [
+        "analysis/tables/scratch_coder_table_3_contingencies_performance_domains.csv",
+        "analysis/tables/scratch_coder_table_3_contingencies_performance_domains.md"
+      ],
+      "caption": "Per-label contingencies and model performance — Research Domains (baseline n=150 records)."
+    },
+    "Table 4": {
+      "stem": "scratch_coder_table_4_contingencies_performance_purposes",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_table_4_contingencies_performance_purposes.csv",
+        "analysis/figure_data/scratch_coder_table_4_contingencies_performance_purposes_metadata.json"
+      ],
+      "outputs": [
+        "analysis/tables/scratch_coder_table_4_contingencies_performance_purposes.csv",
+        "analysis/tables/scratch_coder_table_4_contingencies_performance_purposes.md"
+      ],
+      "caption": "Per-label contingencies and model performance — Analytical Purposes (baseline n=150 records)."
+    },
+    "Table 5": {
+      "stem": "scratch_coder_table_5_disagreeing_pair_relations",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_table_5_disagreeing_pair_relations.csv",
+        "analysis/figure_data/scratch_coder_table_5_disagreeing_pair_relations_metadata.json"
+      ],
+      "outputs": [
+        "analysis/tables/scratch_coder_table_5_disagreeing_pair_relations.csv",
+        "analysis/tables/scratch_coder_table_5_disagreeing_pair_relations.md"
+      ],
+      "caption": "Relation of disagreeing pairs (baseline). This table describes the composition of eligible disagreements, not their overall frequency or severity."
+    },
+    "Supplementary Table S1": {
+      "stem": "scratch_coder_supplementary_table_s1_majority_coverage",
+      "inputs": [
+        "analysis/figure_data/scratch_coder_supplementary_table_s1_majority_coverage.csv",
+        "analysis/figure_data/scratch_coder_supplementary_table_s1_majority_coverage_metadata.json"
+      ],
+      "outputs": [
+        "analysis/tables/scratch_coder_supplementary_table_s1_majority_coverage.csv",
+        "analysis/tables/scratch_coder_supplementary_table_s1_majority_coverage.md"
+      ],
+      "caption": "Record-majority response categories and majority-label coverage. Parts A and B use different majority rules and are not pooled into a common failure count."
+    }
+  },
+  "withdrawn": {
+    "old Figure 1": {
+      "status": "superseded by revised Figure 1",
+      "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_1.*",
+      "archived_outputs": [
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_1.png",
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_1.svg"
+      ]
+    },
+    "old Figure 2": {
+      "status": "superseded by revised Figure 2",
+      "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_2.*",
+      "archived_outputs": [
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_2.png",
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_2.svg"
+      ]
+    },
+    "old Figure 3": {
+      "status": "superseded by revised Figure 3",
+      "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_3.*",
+      "archived_outputs": [
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_3.png",
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_3.svg"
+      ]
+    },
+    "old Figure 4": {
+      "status": "withdrawn; replaced by Tables 3 and 4",
+      "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_4.*",
+      "archived_outputs": [
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_4.png",
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_4.svg"
+      ]
+    },
+    "old Figure 5": {
+      "status": "withdrawn; replaced by Table 5",
+      "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_5.*",
+      "archived_outputs": [
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_5.png",
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_5.svg"
+      ]
+    },
+    "old Figure 6": {
+      "status": "renumbered and replaced by new Figure 4",
+      "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_6.*",
+      "archived_outputs": [
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_6.png",
+        "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_6.svg"
+      ]
+    }
+  },
+  "reader_numbering_note": "Display numbering comes from deliverable_id in this manifest, never from obsolete filenames.",
+  "resolved_manifest_path": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/scratch_coder_deliverable_manifest_resolved.json"
+}

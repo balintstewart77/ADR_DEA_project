@@ -1,0 +1,107 @@
+{
+  "renderer": "analysis/visualisations/render_scratch_coder_paper.py",
+  "input_boundary": "manifest plus listed extracted CSV/JSON only",
+  "manifest": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figure_data/scratch_coder_deliverable_manifest.json",
+  "font": "DejaVu Sans",
+  "matplotlib_font_resolved": "/Users/balintstewart/Projects/ADR_DEA_project/.venv/lib/python3.12/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf",
+  "figure_dimensions_inches": {
+    "Figure 1": [
+      17.0,
+      15.0
+    ],
+    "Figure 2": [
+      15.0,
+      9.5
+    ],
+    "Figure 3": [
+      18.0,
+      10.5
+    ],
+    "Figure 4": [
+      17.0,
+      15.0
+    ]
+  },
+  "axis_limits": {
+    "delta": [
+      -0.45,
+      0.45
+    ],
+    "alpha_figures_1_4": [
+      0.05,
+      1.05
+    ],
+    "alpha_figure_2": [
+      0.15000000000000002,
+      0.75
+    ]
+  },
+  "visibility_validation": {
+    "Figure 1": {
+      "all_values_strictly_inside_axes": true,
+      "misses": []
+    },
+    "Figure 2": {
+      "all_values_strictly_inside_axes": true,
+      "misses": []
+    },
+    "Figure 4": {
+      "all_values_strictly_inside_axes": true,
+      "misses": []
+    }
+  },
+  "figure_2_layout": "population overlay with dodged positions succeeded",
+  "figure_4_layout": "population overlay with dodged positions succeeded",
+  "archived_legacy_outputs": [
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_1.png"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_1.svg"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_2.png"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_2.svg"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_3.png"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_3.svg"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_4.png"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_4.svg"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_5.png"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_5.svg"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_6.png"
+    },
+    {
+      "from": "already archived",
+      "to": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/archive/scratch_coder_pre_revision_20260914T201637Z/scratch_coder_figure_6.svg"
+    }
+  ],
+  "markdown_review_scope": "Markdown source rendered structurally; no journal-specific typesetter was available, so publication-layout typesetting remains unverified.",
+  "resolved_manifest": "/Users/balintstewart/Projects/ADR_DEA_project/analysis/figures/scratch_coder_deliverable_manifest_resolved.json"
+}
