@@ -1,0 +1,266 @@
+{
+  "strata": {
+    "pair_means": {
+      "model|domain_only|Research Domains": [
+        0.21333333333333335,
+        0.4577777777777778
+      ],
+      "human|domain_only|Research Domains": [
+        0.25333333333333335,
+        0.4633333333333333
+      ],
+      "model|domain_only|Analytical Purposes": [
+        0.32,
+        0.41333333333333333
+      ],
+      "human|domain_only|Analytical Purposes": [
+        0.44,
+        0.4533333333333333
+      ],
+      "model|purpose_only|Research Domains": [
+        0.64,
+        0.76
+      ],
+      "human|purpose_only|Research Domains": [
+        0.49333333333333335,
+        0.6633333333333333
+      ],
+      "model|purpose_only|Analytical Purposes": [
+        0.14666666666666667,
+        0.28444444444444444
+      ],
+      "human|purpose_only|Analytical Purposes": [
+        0.4,
+        0.4266666666666667
+      ],
+      "model|both|Research Domains": [
+        0.25333333333333335,
+        0.49
+      ],
+      "human|both|Research Domains": [
+        0.5066666666666667,
+        0.6133333333333333
+      ],
+      "model|both|Analytical Purposes": [
+        0.21333333333333335,
+        0.28
+      ],
+      "human|both|Analytical Purposes": [
+        0.4,
+        0.44
+      ]
+    },
+    "replacement": {
+      "domain_only|Research Domains": {
+        "alpha_ABC": 0.3155056698810058,
+        "alpha_LBC": 0.2868761140819964,
+        "alpha_ALC": 0.28430573158085987,
+        "alpha_ABL": 0.3059765622370656,
+        "delta_A": -0.028629555799009353,
+        "delta_B": -0.03119993830014592,
+        "delta_C": -0.009529107643940197,
+        "delta_min": -0.03119993830014592
+      },
+      "domain_only|Analytical Purposes": {
+        "alpha_ABC": 0.31644815256257447,
+        "alpha_LBC": 0.2716043425814234,
+        "alpha_ALC": 0.21180876416516706,
+        "alpha_ABL": 0.36604635667031554,
+        "delta_A": -0.04484380998115109,
+        "delta_B": -0.10463938839740743,
+        "delta_C": 0.04959820410774105,
+        "delta_min": -0.10463938839740743
+      },
+      "purpose_only|Research Domains": {
+        "alpha_ABC": 0.5329430269136666,
+        "alpha_LBC": 0.6268289344453223,
+        "alpha_ALC": 0.6268539702224408,
+        "alpha_ABL": 0.6004234113155484,
+        "delta_A": 0.09388590753165572,
+        "delta_B": 0.09391094330877424,
+        "delta_C": 0.06748038440188192,
+        "delta_min": 0.06748038440188192
+      },
+      "purpose_only|Analytical Purposes": {
+        "alpha_ABC": 0.2984512954117817,
+        "alpha_LBC": 0.16400328296239078,
+        "alpha_ALC": 0.19984050288502134,
+        "alpha_ABL": 0.13044719314938155,
+        "delta_A": -0.13444801244939097,
+        "delta_B": -0.09861079252676039,
+        "delta_C": -0.1680041022624002,
+        "delta_min": -0.1680041022624002
+      },
+      "both|Research Domains": {
+        "alpha_ABC": 0.5203713020500478,
+        "alpha_LBC": 0.3884367330631813,
+        "alpha_ALC": 0.4064588698324888,
+        "alpha_ABL": 0.3830743561513229,
+        "delta_A": -0.13193456898686648,
+        "delta_B": -0.11391243221755903,
+        "delta_C": -0.13729694589872493,
+        "delta_min": -0.13729694589872493
+      },
+      "both|Analytical Purposes": {
+        "alpha_ABC": 0.2302026772754153,
+        "alpha_LBC": 0.07588677531661536,
+        "alpha_ALC": 0.09941403315470526,
+        "alpha_ABL": 0.262782634174928,
+        "delta_A": -0.15431590195879993,
+        "delta_B": -0.13078864412071003,
+        "delta_C": 0.032579956899512666,
+        "delta_min": -0.15431590195879993
+      }
+    },
+    "delta_min_ci": {
+      "domain_only|Research Domains|lower": -0.13282868111126736,
+      "domain_only|Research Domains|upper": 0.014467480282828866,
+      "domain_only|Analytical Purposes|lower": -0.21019570966699005,
+      "domain_only|Analytical Purposes|upper": -0.01612660930823881,
+      "purpose_only|Research Domains|lower": -0.026008550712826824,
+      "purpose_only|Research Domains|upper": 0.11441420698160175,
+      "purpose_only|Analytical Purposes|lower": -0.29268884953684404,
+      "purpose_only|Analytical Purposes|upper": -0.07790205388867497,
+      "both|Research Domains|lower": -0.25109028718404675,
+      "both|Research Domains|upper": -0.056800593142236844,
+      "both|Analytical Purposes|lower": -0.2694688249665838,
+      "both|Analytical Purposes|upper": -0.06279017421066227
+    }
+  },
+  "wilson": {
+    "z975": "1.95996398454005423552459443052055152795",
+    "max_abs_bound_difference": "1.396e-16",
+    "reconstructed_counts": 40
+  },
+  "integration": {
+    "tables_parsed": 109
+  },
+  "ledger": {
+    "rows": 3496,
+    "status": {
+      "VERIFIED": 3488,
+      "NOT_CHECKED": 2,
+      "BLOCKED": 3,
+      "DISCREPANT": 3
+    },
+    "by_family": {
+      "report_document|DISCREPANT": 1,
+      "report_document|VERIFIED": 11,
+      "report_strata|VERIFIED": 1071,
+      "report_unresolved|VERIFIED": 5,
+      "report_wilson|VERIFIED": 775,
+      "strata_bootstrap|VERIFIED": 321,
+      "strata_interpretation|VERIFIED": 10,
+      "strata_membership|NOT_CHECKED": 2,
+      "strata_membership|VERIFIED": 48,
+      "strata_point|VERIFIED": 384,
+      "strata_reconciliation|VERIFIED": 54,
+      "strata_summary_display|VERIFIED": 40,
+      "wilson_counts|VERIFIED": 222,
+      "wilson_lineage|BLOCKED": 2,
+      "wilson_lineage|DISCREPANT": 2,
+      "wilson_lineage|VERIFIED": 131,
+      "wilson_numeric|VERIFIED": 304,
+      "wilson_reuse|VERIFIED": 18,
+      "wilson_scope|BLOCKED": 1,
+      "wilson_scope|VERIFIED": 88,
+      "wilson_unit_dependence|VERIFIED": 6
+    }
+  },
+  "discrepant_or_blocked": [
+    {
+      "check_id": "V00027",
+      "family": "strata_membership",
+      "source_identifier": "official draw 2026-07-24",
+      "check": "re-execution of the stratified draw (SEED_DRAW 20260713) from the 380-record frame",
+      "saved_value": "",
+      "independent_value": "",
+      "status": "NOT_CHECKED",
+      "finding_ref": "",
+      "note": "Not attempted: re-execution would materialise embargoed reserve identities; membership taken from hash-verified POST-011 and cross-checked against POST-019"
+    },
+    {
+      "check_id": "V00043",
+      "family": "strata_membership",
+      "source_identifier": "sample_set / hard_stratum (formal rows)",
+      "check": "export hidden sample/stratum fields as a third membership source",
+      "saved_value": "",
+      "independent_value": "non-blank sample_set 0; non-blank hard_stratum 0 of 675",
+      "status": "NOT_CHECKED",
+      "finding_ref": "",
+      "note": "Both fields are blank for every formal row; membership rests on POST-011 and POST-019, which agree"
+    },
+    {
+      "check_id": "V00864",
+      "family": "wilson_scope",
+      "source_identifier": "approval instruction",
+      "check": "archived approval text defining the 37-row selection",
+      "saved_value": "methods cite 'the explicit selected scope in the user instruction'",
+      "independent_value": "no repository record located",
+      "status": "BLOCKED",
+      "finding_ref": "N-WILSON-APPROVAL-RECORD",
+      "note": "Consistency of the list across methods, metadata, CSV, canonical metadata and manifest decisions is verified instead"
+    },
+    {
+      "check_id": "V01625",
+      "family": "wilson_lineage",
+      "source_identifier": "inputs.analysis/outputs_validation_consolidated_20260907T131344836676Z/run_metadata.json",
+      "check": "recorded input still available for historical re-run",
+      "saved_value": "826b22e19f044f7177d85c70247f406f57a3f6e9e8731e3dbe3da589a0c59cab",
+      "independent_value": "file absent",
+      "status": "BLOCKED",
+      "finding_ref": "N-WILSON-HIST-REPRO",
+      "note": "Deleted by housekeeping; canonical deletion inventory SHA-256 matches"
+    },
+    {
+      "check_id": "V01627",
+      "family": "wilson_lineage",
+      "source_identifier": "task_code at HEAD",
+      "check": "current generator code identical to the historical run code",
+      "saved_value": "bf2755022db484d049dfa57b721cd6612ed18b195ada856777d054ffe1663c41",
+      "independent_value": "f40ea4e2769cc6ab4864cc48a775b6c7854068ae6437356c25ec107c4342b213",
+      "status": "DISCREPANT",
+      "finding_ref": "N-WILSON-HIST-REPRO",
+      "note": "Changed in commit 5559da3 (2026-09-08); historical version recoverable from git"
+    },
+    {
+      "check_id": "V01629",
+      "family": "wilson_lineage",
+      "source_identifier": "task_code at HEAD",
+      "check": "current generator code identical to the historical run code",
+      "saved_value": "981d8268666304ee50b5b6ce0bf1b64b3c6a09090d173f4e90fffee2099184cc",
+      "independent_value": "95e1ad6cfd1106f225d3578268d5da099e27b6837fbb69bff7c0a85a12956d28",
+      "status": "DISCREPANT",
+      "finding_ref": "N-WILSON-HIST-REPRO",
+      "note": "Changed in commit 5559da3 (2026-09-08); historical version recoverable from git"
+    },
+    {
+      "check_id": "V01631",
+      "family": "wilson_lineage",
+      "source_identifier": "invocation",
+      "check": "recorded invocation is runnable with current generator code",
+      "saved_value": "-m analysis.scratch_coder_consolidation_followup.wilson_supplement --scope-manifest analysis/outputs_validation_consolidation_followup_20260907T132938546154Z/wilson_scope_manifest.json",
+      "independent_value": "current code requires --task-b-metadata",
+      "status": "BLOCKED",
+      "finding_ref": "N-WILSON-HIST-REPRO",
+      "note": "Numerical results verified independently; this limits historical re-execution only"
+    },
+    {
+      "check_id": "V03496",
+      "family": "report_document",
+      "source_identifier": "Section 8 introduction",
+      "check": "section prose describes the supplementary distribution intervals shown in its tables",
+      "saved_value": "Baseline subset proportions carry exported 95% Wilson-score intervals",
+      "independent_value": "supplement not mentioned",
+      "status": "DISCREPANT",
+      "finding_ref": "N-REPORT-S8-PROSE",
+      "note": "Cell annotations and Section 0 do disclose the supplement; the section prose is incomplete, not wrong"
+    }
+  ],
+  "runtime_seconds": 5.8,
+  "masking": {
+    "tokens_scanned": 900,
+    "titles_scanned": 224,
+    "files_with_hits": {}
+  }
+}
