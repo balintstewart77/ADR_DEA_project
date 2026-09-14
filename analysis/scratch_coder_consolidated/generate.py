@@ -38,7 +38,7 @@ def outside_task_status(status, staging):
     return [line for line in status.splitlines() if not any(line[3:].startswith(prefix) for prefix in prefixes)]
 
 
-def existing_housekeeping():
+def historical_housekeeping():
     if not CANONICAL.exists():
         return None
     if CANONICAL.is_symlink() or not CANONICAL.is_dir():
@@ -47,11 +47,34 @@ def existing_housekeeping():
     if actual != OUTPUT_NAMES or any(path.is_dir() for path in CANONICAL.iterdir()):
         raise Fatal(f"Canonical directory contains unexpected content: {sorted(path.name for path in CANONICAL.iterdir())}")
     metadata = json.loads((CANONICAL / "run_metadata.json").read_text())
-    if metadata.get("generator", {}).get("identity") != "scratch_coder_consolidated v2" or "housekeeping" not in metadata:
+    if metadata.get("generator", {}).get("identity") != "scratch_coder_consolidated v2":
         raise Fatal("Canonical directory is not an established scratch-coder result pair")
     if sha((CANONICAL / "results.md").read_bytes()) != metadata.get("document_sha256"):
         raise Fatal("Existing canonical report does not match its metadata hash")
-    return copy.deepcopy(metadata["housekeeping"])
+    historical = metadata.get("historical_housekeeping", metadata.get("housekeeping"))
+    if historical is None:
+        raise Fatal("Canonical metadata lacks historical housekeeping provenance")
+    historical = copy.deepcopy(historical)
+    # Legacy regenerated metadata overwrote this historical report hash and
+    # appended a current-generation record. Restore only values verified from
+    # the housekeeping commit, never from current-generation facts.
+    historical["canonical"]["report_sha256"] = "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6"
+    historical.pop("last_regeneration", None)
+    historical["retrieved_from"] = {
+        "commit": "5559da39533bf061149f0dd335719f52c18d3dfc",
+        "path": "analysis/scratch_coder_results/run_metadata.json",
+        "historical_metadata_sha256": "f629899cbe838c3d2d930f7046dd29c2c1ab205a6729c7fc94992d0982d512ba",
+    }
+    historical["historical_generator_retrieval"] = {
+        "generation_timestamp_utc": "2026-09-07T14:24:35.944395+00:00",
+        "identity": "scratch_coder_consolidated v2",
+        "git_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
+        "git_status_before_sha256": "88ed2ada4db8492409f9040fc87b2fe20a9728583b7947d33c4a2f2e049dafcd",
+        "git_status_after_validation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source": "retrieved from the verified Git blob above; this is not the deleted Task B metadata file",
+    }
+    historical["interpretation_scope"] = "All copy-comparison results and preserved-field statements in this record describe the 2026-09-07 historical housekeeping operation only, not subsequent regenerations."
+    return historical
 
 
 def staging_directory(requested: Path | None) -> tuple[Path, bool]:
@@ -118,7 +141,7 @@ def main(argv=None):
         print("Refusing to replace canonical results with an unsupplemented report; use --staging-output for that audit path.", file=sys.stderr)
         return 2
 
-    housekeeping = existing_housekeeping()
+    housekeeping = historical_housekeeping()
     staging, caller_owned_staging = staging_directory(args.staging_output)
     before = git("status", "--porcelain=v1", "--untracked-files=all")
     actual_args = list(sys.argv[1:] if argv is None else argv)
@@ -138,13 +161,12 @@ def main(argv=None):
         },
         generation_timestamp_utc=datetime.now(timezone.utc).isoformat(),
         output_directory=CANONICAL.relative_to(ROOT).as_posix(),
-        validation_staging_directory=output_label(staging),
+        temporary_staging_provenance={"path": output_label(staging), "retention": "temporary execution provenance; not a retained output or evidence location"},
         write_scope="Both deliverables are validated in a temporary staging directory before the canonical pair is replaced.",
         boundaries={"source_directories_read_only": True, "restricted_tree_accessed": False, "analysis_pipelines_executed": False,
                     "owner_inputs_accessed": False, "git_mutations": False, "source_directories_deleted": False},
     )
-    if housekeeping is not None:
-        meta["housekeeping"] = housekeeping
+    meta["historical_housekeeping"] = housekeeping
     sources = Sources(meta)
     try:
         sources.load()
@@ -182,14 +204,6 @@ def main(argv=None):
             canonical_output_guard="supplement required for canonical replacement",
         )
         meta["document_sha256"] = sha(document.encode("utf-8"))
-        if housekeeping is not None:
-            meta["housekeeping"]["canonical"]["report_sha256"] = meta["document_sha256"]
-            meta["housekeeping"]["last_regeneration"] = {
-                "timestamp_utc": meta["generation_timestamp_utc"],
-                "generator_head": meta["generator"]["git_head"],
-                "wilson_supplement": meta["generator"]["configuration"]["wilson_supplement"],
-                "validation_only": caller_owned_staging,
-            }
         payload = json.dumps(meta, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
         metadata_temp = staging / ".run_metadata.json.tmp"
         document_temp = staging / ".results.md.tmp"

@@ -1,10 +1,16 @@
 """Targeted mutation checks for concrete collation risks; no output files."""
 import copy
+import json
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
-from .preflight import Fatal, Sources, TAGS
+from .audit_applicability import content_sha256, validate as validate_audit_applicability
+from .generate import historical_housekeeping
+from .preflight import Fatal, ROOT, Sources, TAGS
 from .report import Report, esc, unresolved_explanation_rollup
+from .supplement import WilsonSupplement
 
 
 class CollationChecks(unittest.TestCase):
@@ -15,6 +21,9 @@ class CollationChecks(unittest.TestCase):
 
     def fresh(self):
         return copy.deepcopy(self.sources)
+
+    def supplemented_report(self, sources):
+        return Report(sources, supplement=WilsonSupplement(ROOT / "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z", sources))
 
     def test_duplicate_key_is_fatal(self):
         s = Sources({})
@@ -42,7 +51,7 @@ class CollationChecks(unittest.TestCase):
         support = s.lookup("label_support", dimension="Cross-cutting tag", label=TAGS[0])
         support["support_band"] = "RARE"
         support["low_support_caution_required"] = "True"
-        r = Report(s)
+        r = self.supplemented_report(s)
         t = r.new_table(2, "Synthetic policy test", "baseline", TAGS[0])
         source = s.lookup("tag_diagnostics", population="baseline", tag=TAGS[0])
         item = r.add(t, "tag_diagnostics", source, "cohen_kappa")
@@ -52,7 +61,7 @@ class CollationChecks(unittest.TestCase):
 
     def test_withholding_cannot_leak_into_second_table(self):
         s = self.fresh()
-        r = Report(s)
+        r = self.supplemented_report(s)
         source = next(x for x in s.tables["per_label_contingencies"] if x["support_band"] == "RARE")
         for _ in range(2):
             t = r.new_table(5, "Synthetic withholding test", "baseline", source["dimension"])
@@ -63,7 +72,7 @@ class CollationChecks(unittest.TestCase):
 
     def test_zero_false_and_missing_remain_distinct(self):
         s = self.fresh()
-        r = Report(s)
+        r = self.supplemented_report(s)
         source = next(x for x in s.tables["qa_summary"] if x["count"] == "0")
         t = r.new_table(1, "Missingness test", source["population"], source["dimension"])
         self.assertEqual(r.add(t, "qa_summary", source, "count")["displayed_estimate"], "0")
@@ -108,18 +117,56 @@ class CollationChecks(unittest.TestCase):
     def test_reporting_followup_preserves_unresolved_inventory_and_renders_clarifications(self):
         s = self.fresh()
         s.meta.update(generation_timestamp_utc="test", generator={"git_head": "test", "git_status_before": ""})
-        r = Report(s)
+        r = self.supplemented_report(s)
         r.build()
         document = r.render()
         self.assertEqual(len(s.unresolved), 69)
         self.assertEqual(len({item["id"] for item in s.unresolved}), 69)
         self.assertIn("Every hard-case record belongs to one of three 25-record strata", document)
-        self.assertIn("supplementary 95% Wilson-score intervals calculated on 7 September 2026", document)
+        self.assertIn("Section 8 contains 12 of the report-wide 37 newly calculated supplementary Wilson-score intervals", document)
+        self.assertIn("Section 9 contains 17 of the report-wide 37 newly calculated supplementary Wilson-score intervals", document)
+        self.assertIn("Section 10 contains eight of the report-wide 37 newly calculated supplementary Wilson-score intervals", document)
         self.assertIn("Dated audit evidence annotations — 2026-09-14", document)
         self.assertIn("U0005 remains open pending review of the historical documentation", document)
         followup = r.meta["reporting_followup"]
         self.assertEqual(followup["ledger"], {"checks": 3496, "verified": 3488, "discrepant": 3, "blocked": 3, "not_checked": 2})
         self.assertEqual(followup["original_unresolved_entries_retained"], 69)
+        self.assertTrue(followup["applicability"]["analytical_content"]["current_matches_fixed_baseline"])
+
+    def test_audit_applicability_fails_closed_for_each_audit_relevant_mutation(self):
+        s = self.fresh()
+        r = self.supplemented_report(s)
+        r.build()
+        baseline = copy.deepcopy(r.meta)
+        self.assertEqual(content_sha256(baseline), "9da6e0dc6bcc7f8487a43aa89bb941d240064f61bdfb55ed1a3ebcd4689724ce")
+        self.assertTrue(validate_audit_applicability(baseline)["analytical_content"]["current_matches_fixed_baseline"])
+        mutations = [
+            ("result", lambda m: m["result_items"][0].__setitem__("displayed_estimate", "changed")),
+            ("denominator", lambda m: m["result_items"][0].__setitem__("denominator_display", "changed")),
+            ("population", lambda m: m["result_items"][0].__setitem__("population", "changed")),
+            ("source", lambda m: m["source_files"][next(iter(m["source_files"]))].__setitem__("sha256", "0" * 64)),
+            ("reuse", lambda m: m["supplement"].__setitem__("equivalent_result_reuse", "changed")),
+            ("unresolved", lambda m: m["unresolved_items"][0].__setitem__("known", "changed")),
+        ]
+        for name, mutate in mutations:
+            changed = copy.deepcopy(baseline)
+            mutate(changed)
+            with self.subTest(name=name), self.assertRaisesRegex(Fatal, "Audit applicability"):
+                validate_audit_applicability(changed)
+        volatile = copy.deepcopy(baseline)
+        volatile["generation_timestamp_utc"] = "changed"
+        volatile["generator"] = {"changed": True}
+        self.assertTrue(validate_audit_applicability(volatile)["analytical_content"]["current_matches_fixed_baseline"])
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaisesRegex(Fatal, "evidence is missing"):
+                validate_audit_applicability(baseline, root=temporary)
+
+    def test_historical_housekeeping_is_separate_from_current_generation(self):
+        historic = historical_housekeeping()
+        self.assertEqual(historic["canonical"]["report_sha256"], "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6")
+        self.assertNotIn("last_regeneration", historic)
+        self.assertEqual(historic["retrieved_from"]["commit"], "5559da39533bf061149f0dd335719f52c18d3dfc")
+        self.assertIn("historical housekeeping operation only", historic["interpretation_scope"])
 
 
 if __name__ == "__main__":

@@ -12,6 +12,11 @@ U0005, U0035, U0037, U0039, U0041, U0045, U0068 and U0069. It does not alter
 historical source artifacts, analytical values, the original unresolved-item
 descriptions, or their open status.
 
+The report binds those annotations to a fixed analytical-content fingerprint of
+the audited snapshot and verifies the retained audit report, ledger, metadata
+and reference-code hashes before canonical publication. Current reporting prose
+and generation timestamps are intentionally excluded from that fingerprint.
+
 The audit confirmed 3,488 VERIFIED checks out of 3,496; the remaining checks
 were three DISCREPANT reporting/code-identity items, three BLOCKED provenance or
 governance checks and two NOT_CHECKED items. No discrepancy was a numerical

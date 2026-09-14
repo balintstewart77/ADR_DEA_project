@@ -7,6 +7,7 @@ import json
 from .preflight import (CONFIG, DEVIATIONS, DICTIONARY, DIRS, Fatal, HUMAN_PAIRS, INSTRUMENT, KEYS,
                         METHODS, MODEL_PAIRS, PANELS, DELTAS, PROTOCOL, RELEASE,
                         SECTIONS, SETS, STRATA, TAGS)
+from .audit_applicability import validate as validate_audit_applicability
 
 DIAGNOSTIC = "DIAGNOSTIC — non-representative"
 TITLES = ["Provenance and report status", "Populations and denominators", "Cross-cutting tags",
@@ -387,13 +388,11 @@ class Report:
 
     def record_reporting_followup(self):
         """Record dated audit evidence without changing original unresolved entries."""
-        expected = {"U0003", "U0005", "U0035", "U0037", "U0039", "U0041", "U0045", "U0068", "U0069"}
-        actual = {item["id"] for item in self.s.unresolved}
-        if len(self.s.unresolved) != 69 or not expected <= actual:
-            raise Fatal("Audit follow-up cannot annotate a changed unresolved inventory")
+        applicability = validate_audit_applicability(self.meta)
         self.meta["reporting_followup"] = dict(AUDIT_REPORTING_FOLLOWUP,
             original_unresolved_entries_retained=69,
-            analytical_recomputation="none; reporting and evidence annotation only")
+            analytical_recomputation="none; reporting and evidence annotation only",
+            applicability=applicability)
 
     def taxonomy_denominators(self):
         for p in ("baseline", "hard_case"):
@@ -580,13 +579,13 @@ class Report:
                "The model is compared separately with each coder. No majority exact-set combination is constructed. Median and first/third quartile Jaccard quantities retain their exported names and are not confidence intervals. " + evidence,
             8: "Coder-response and record-majority distributions are separate. A record-majority category requires two identical ratings; No majority / split judgement remains its own category. "
                "Broad register-usable means at least two coders chose Sufficient or Partially sufficient; strict register-sufficient means at least two chose Sufficient. "
-               "The subsets use original pre-adjudication ratings. Counts are presented without intervals. Baseline proportions include original exported 95% Wilson-score intervals and, for selected named-coder and record-level distributions, supplementary 95% Wilson-score intervals calculated on 7 September 2026. The tables identify interval provenance and the equivalent-result reuse. Pooled-response and other excluded rows retain their existing unavailable-interval status. "
-               "WSA0082 and WSA0083 are retained original intervals; WSA0074 reuses WSA0083 after a verified equivalent-result lookup; the other 37 displayed supplementary intervals are newly calculated. Included intervals are conditional on the fixed coder/panel, marginal rather than simultaneous, do not extend to pooled dependent responses, and use no finite-population correction. Hard-case subset intervals retain their explicit diagnostic nonapplication source field. " + evidence,
-            9: "The four response categories retain their source labels: Fit, Partial Fit, No Fit, and Cannot assess from register entry. "
+               "The subsets use original pre-adjudication ratings. Counts are presented without intervals. Section 8 contains 12 of the report-wide 37 newly calculated supplementary Wilson-score intervals; it also contains WSA0074, the equivalent-result reuse from WSA0083, and the two retained original exported intervals WSA0082/WSA0083. The tables identify interval provenance. Pooled-response and other excluded rows retain their existing unavailable-interval status. "
+               "The Section 8–10 Wilson interpretation note applies to intervals in all three sections: they concern the fixed coder or fixed three-coder panel, are marginal rather than simultaneous, use no finite-population correction, and do not extend to pooled dependent responses. Hard-case subset intervals retain their explicit diagnostic nonapplication source field. " + evidence,
+            9: "The four response categories retain their source labels: Fit, Partial Fit, No Fit, and Cannot assess from register entry. Section 9 contains 17 of the report-wide 37 newly calculated supplementary Wilson-score intervals (12 in S9T001 and five in S9T003); see the shared Section 8–10 Wilson interpretation note in Section 8. "
                "They concern whether the taxonomy can adequately represent the project. The frozen instrument says to select Cannot assess when the entry is too limited to determine taxonomy fit, and not to select Partial Fit or No Fit solely because the entry lacks information. "
                "Cannot assess is an evidence-sufficiency outcome, separate from No Fit and from taxonomy defects. Only Partial Fit and No Fit coder responses enter taxonomy-issue denominators; multiple issues can be selected. "
                "Record majorities require two identical categories; split judgements remain separate. The exported operands and resulting issue denominator are displayed below without addition. " + evidence + " Instrument evidence: `" + INSTRUMENT + "`, sc_taxonomy_fit Field Note and response choices.",
-            10: "Unclear from Register Entry is a valid taxonomy label separately in Research Domains and Analytical Purposes. It is not a missing response or a sufficiency/taxonomy-fit response category. "
+            10: "Unclear from Register Entry is a valid taxonomy label separately in Research Domains and Analytical Purposes. It is not a missing response or a sufficiency/taxonomy-fit response category. Section 10 contains eight of the report-wide 37 newly calculated supplementary Wilson-score intervals (four each in S10T001 and S10T002); see the shared Section 8–10 Wilson interpretation note in Section 8. "
                 "Frequency rows distinguish coder-response uses and record-level use by one, two, three or a majority of coders. Response cross-tabs use the exported category-specific response denominators. "
                 "Coherence rows use Cannot assess responses as their denominator: the source validator marks Cannot assess with Sufficient as incoherent, and other sufficiency responses as coherent. " + evidence,
             11: "The saved methods explicitly state that this module covers Research Domains and Analytical Purposes and calculates no tag stratum analyses. The cross-cutting tags are absent from all stratum outputs; this is intentional non-applicability in the coverage manifest under user §3.3. "
@@ -649,7 +648,7 @@ class Report:
                 out.append("Supplement coverage does not alter these original-source records. U0069 remains open because newly supplied intervals do not establish why the historical distribution intervals were omitted, and its scope also includes excluded rows.")
             followup = self.meta["reporting_followup"]
             out += ["### Dated audit evidence annotations — 2026-09-14",
-                    "These annotations apply to the audited canonical-report snapshot only and are separate from the 69 original-source entries above. They add evidence without closing, renumbering or changing any historical explanation.",
+                    "These annotations are separate from the 69 original-source entries above. The independent audit applies to historical snapshot report SHA-256 `" + followup["applicability"]["audited_snapshot"]["report_sha256"] + "` at commit `" + followup["applicability"]["audited_snapshot"]["commit"] + "`. The current report's audit-relevant analytical content and source identities were checked unchanged against that fixed baseline; this does not imply that Claude reviewed later report prose or generator changes.",
                     table(["Entry", "Dated audit evidence", "Status retained"], [[row["id"], row["evidence"], row["status"]] for row in followup["unresolved_annotations"]]),
                     "Historical and governance limitations: " + " ".join(followup["historical_and_governance_limitations"])]
         out += ["## Appendix B — Source map and status definitions",

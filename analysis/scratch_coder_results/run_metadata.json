@@ -12,25 +12,30 @@
       "wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
       "validation_only_staging": false
     },
-    "git_head": "7585fed18ae5b7a4022d51d611d3148343b61afb",
-    "git_status_before": " M analysis/scratch_coder_consolidated/report.py\n M analysis/scratch_coder_consolidated/test_collation.py\n?? analysis/review/remaining_validation_20260914T071731Z/.git_status_before.txt\n?? analysis/review/remaining_validation_20260914T071731Z/.input_hashes_before.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_metadata.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_report.md\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/common.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/finalize_metadata.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/integration_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/run_all.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/strata_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/wilson_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_results_summary.json\n?? analysis/review/remaining_validation_20260914T071731Z/verification_ledger.csv\n?? analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md",
+    "git_head": "c411a8a840ea405de824f1e8acd19e99fa41ce33",
+    "git_status_before": " M analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md\n M analysis/scratch_coder_consolidated/generate.py\n M analysis/scratch_coder_consolidated/report.py\n M analysis/scratch_coder_consolidated/test_collation.py\n M analysis/scratch_coder_results/results.md\n M analysis/scratch_coder_results/run_metadata.json\n?? analysis/scratch_coder_consolidated/audit_applicability.py\n?? analysis/scratch_coder_consolidated/audit_baseline.json",
     "source_hashes": {
-      "analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md": "47366604374952ff61cd1597ad64f57322b83d1c1c4814ff14d6bee8e598d706",
+      "analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md": "b5a8d974adf5b92be89c807781e2475ac6dc9fd2dbb477a71be37bac846e5c04",
       "analysis/scratch_coder_consolidated/README.md": "77a0ab41fabfc25c72405cdc6d811610821d481663d02fbf7fb8057e0f687bd7",
       "analysis/scratch_coder_consolidated/__init__.py": "f7dba01b79fa1ecf1aaf8e874ef452f89f278f272cc6dbeb41fd1938baaa4197",
       "analysis/scratch_coder_consolidated/__main__.py": "79554155abe9b87a215dd50ea7dd73d57589b7e0b8e567d9864748d1dbc12888",
-      "analysis/scratch_coder_consolidated/generate.py": "2019cf51c9bfb45b03803566a883287c8bc2e193c7d215b52dfef419e3d815c5",
+      "analysis/scratch_coder_consolidated/audit_applicability.py": "05faf0c2033e295ae0804c67f3af061e36f4ad01604e92b88065f35ee9efa07f",
+      "analysis/scratch_coder_consolidated/audit_baseline.json": "67cdeed5918774280df0cd4cf368e76b678164e79570d3c52d974aec57b1064f",
+      "analysis/scratch_coder_consolidated/generate.py": "b935bee9f345e756df5b7dd76c68a3a6db087bfe2a3a25a8428bf58b776eed2c",
       "analysis/scratch_coder_consolidated/preflight.py": "aff760385384dc1f8192a1336c1934a6c40299c32ce87a42ad5d4ac0b9cd198c",
-      "analysis/scratch_coder_consolidated/report.py": "5213d04a4e86e077e7c417d69ff58ddfb44f199108050c9dfb3f2f279023260f",
+      "analysis/scratch_coder_consolidated/report.py": "b59571c39486a61247c9a650ee53744ba0a2a504ca15bb7d136cc95955d9c96a",
       "analysis/scratch_coder_consolidated/schemas.json": "54eeedfd781da307f5b54152f523c17e151fdb7288a5c3af4c402b6887df8a96",
       "analysis/scratch_coder_consolidated/supplement.py": "95e1ad6cfd1106f225d3578268d5da099e27b6837fbb69bff7c0a85a12956d28",
-      "analysis/scratch_coder_consolidated/test_collation.py": "fc56fe4bb5fce60adb6e74eee0b630f9d154a383ecbc0bb6c99e4f3968372ba3"
+      "analysis/scratch_coder_consolidated/test_collation.py": "19f2e44db236d667d84ad01b126b2896783654dae443dabf28854318e7b74639"
     },
-    "git_status_after_validation_before_publication": " M analysis/scratch_coder_consolidated/report.py\n M analysis/scratch_coder_consolidated/test_collation.py\n?? analysis/review/remaining_validation_20260914T071731Z/.git_status_before.txt\n?? analysis/review/remaining_validation_20260914T071731Z/.input_hashes_before.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_metadata.json\n?? analysis/review/remaining_validation_20260914T071731Z/audit_report.md\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/common.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/finalize_metadata.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/integration_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/run_all.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/strata_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_code/wilson_check.py\n?? analysis/review/remaining_validation_20260914T071731Z/reference_results_summary.json\n?? analysis/review/remaining_validation_20260914T071731Z/verification_ledger.csv\n?? analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md"
+    "git_status_after_validation_before_publication": " M analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md\n M analysis/scratch_coder_consolidated/generate.py\n M analysis/scratch_coder_consolidated/report.py\n M analysis/scratch_coder_consolidated/test_collation.py\n M analysis/scratch_coder_results/results.md\n M analysis/scratch_coder_results/run_metadata.json\n?? analysis/scratch_coder_consolidated/audit_applicability.py\n?? analysis/scratch_coder_consolidated/audit_baseline.json"
   },
-  "generation_timestamp_utc": "2026-09-14T08:09:57.411078+00:00",
+  "generation_timestamp_utc": "2026-09-14T08:33:22.988586+00:00",
   "output_directory": "analysis/scratch_coder_results",
-  "validation_staging_directory": "analysis/.scratch_coder_results_staging_nsbr_z74",
+  "temporary_staging_provenance": {
+    "path": "analysis/.scratch_coder_results_staging_wf0omjk2",
+    "retention": "temporary execution provenance; not a retained output or evidence location"
+  },
   "write_scope": "Both deliverables are validated in a temporary staging directory before the canonical pair is replaced.",
   "boundaries": {
     "source_directories_read_only": true,
@@ -40,7 +45,7 @@
     "git_mutations": false,
     "source_directories_deleted": false
   },
-  "housekeeping": {
+  "historical_housekeeping": {
     "status": "complete",
     "installed_at_utc": "2026-09-07T15:01:08.530085+00:00",
     "selected_final_run": {
@@ -52,7 +57,7 @@
     "canonical": {
       "report_path": "analysis/scratch_coder_results/results.md",
       "metadata_path": "analysis/scratch_coder_results/run_metadata.json",
-      "report_sha256": "3bce6023f41e751d4906881ae61c394386c220ed1fca898375c89a37df2fd553"
+      "report_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6"
     },
     "copy_comparison_allowlist": {
       "report": [],
@@ -412,12 +417,20 @@
       "analysis/outputs_validation_consolidated_20260907T142409009270Z",
       "analysis/outputs_validation_consolidated_20260907T142435900989Z"
     ],
-    "last_regeneration": {
-      "timestamp_utc": "2026-09-14T08:09:57.411078+00:00",
-      "generator_head": "7585fed18ae5b7a4022d51d611d3148343b61afb",
-      "wilson_supplement": "analysis/outputs_validation_wilson_baseline_20260907T142427225531Z",
-      "validation_only": false
-    }
+    "retrieved_from": {
+      "commit": "5559da39533bf061149f0dd335719f52c18d3dfc",
+      "path": "analysis/scratch_coder_results/run_metadata.json",
+      "historical_metadata_sha256": "f629899cbe838c3d2d930f7046dd29c2c1ab205a6729c7fc94992d0982d512ba"
+    },
+    "historical_generator_retrieval": {
+      "generation_timestamp_utc": "2026-09-07T14:24:35.944395+00:00",
+      "identity": "scratch_coder_consolidated v2",
+      "git_head": "dcf763bdec92a5f65d61cff4eeffaae6ded675fd",
+      "git_status_before_sha256": "88ed2ada4db8492409f9040fc87b2fe20a9728583b7947d33c4a2f2e049dafcd",
+      "git_status_after_validation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "retrieved from the verified Git blob above; this is not the deleted Task B metadata file"
+    },
+    "interpretation_scope": "All copy-comparison results and preserved-field statements in this record describe the 2026-09-07 historical housekeeping operation only, not subsequent regenerations."
   },
   "source_files": {
     "analysis/outputs_validation_scratch_20260824/qa_summary.csv": {
@@ -379690,7 +379703,56 @@
       "The auditor did not locate the original approval instruction for the 37-row Wilson scope. Consistency of the implemented scope across retained artifacts was verified. This absence neither establishes that approval did not occur nor decides whether governance documentation is required."
     ],
     "original_unresolved_entries_retained": 69,
-    "analytical_recomputation": "none; reporting and evidence annotation only"
+    "analytical_recomputation": "none; reporting and evidence annotation only",
+    "applicability": {
+      "audited_snapshot": {
+        "commit": "7585fed18ae5b7a4022d51d611d3148343b61afb",
+        "report_path": "analysis/scratch_coder_results/results.md",
+        "report_sha256": "5a7e4a3e3d140869511afb6c1b5dc97dff07f3705791c1380175ac90896e24a6",
+        "metadata_path": "analysis/scratch_coder_results/run_metadata.json"
+      },
+      "analytical_content": {
+        "serialization": "JSON UTF-8, sort_keys=true, separators=(',', ':'), ensure_ascii=false",
+        "included_fields": [
+          "result_items",
+          "cell_lineage",
+          "source_files",
+          "unresolved_items",
+          "supplement",
+          "source_run_metadata"
+        ],
+        "excluded_fields": [
+          "generation_timestamp_utc",
+          "temporary_staging_provenance",
+          "generator",
+          "current_generation",
+          "current report prose",
+          "document_sha256"
+        ],
+        "sha256": "9da6e0dc6bcc7f8487a43aa89bb941d240064f61bdfb55ed1a3ebcd4689724ce",
+        "counts": {
+          "result_items": 1588,
+          "cell_lineage": 14086,
+          "unresolved_items": 69
+        },
+        "current_matches_fixed_baseline": true
+      },
+      "audit_evidence": {
+        "directory": "analysis/review/remaining_validation_20260914T071731Z",
+        "files": {
+          "audit_report.md": "2a7708f16243cf3bd75674f709c310d4398e810f4bd269bcd47b8b616e817528",
+          "audit_metadata.json": "562d29999e1149abda1046dc8a9a4523c04c36d63f7df8b163dca193b4f873bd",
+          "verification_ledger.csv": "7f9a28a428c06d595b00e5ae4c7133ab0a49b217b15e7ada3142cc58df607286",
+          "reference_results_summary.json": "8190b299a82e8e8ea67793ba287128d07464c6f928444dce79b0feaee508b7b2",
+          "reference_code/common.py": "bcd8cad39b02c4d87fd60043f3799628284eebf3afc6a6ebbd6bb5efdc47af69",
+          "reference_code/finalize_metadata.py": "6a06bb89adc80b7363dd333b7f78a83412e46911486ca034b618edc3cbc967d3",
+          "reference_code/integration_check.py": "ae720770cfc8f18d1227fc41130547e70345613cefd8a3854e42904d8c63a9ae",
+          "reference_code/run_all.py": "3fedd5ae58f1b6d42f20aeba0b3575b4f46d0ed595fa9f02a83d3b4688867934",
+          "reference_code/strata_check.py": "405f1f4fcf3335106911d56dd35e3213465fa0f9cebd552d44344bdf6eeaefec",
+          "reference_code/wilson_check.py": "f3acb10d77d0e87d8c3e61c163f8d4253ab101c7f82737dc6b6b64347bb1e4b4"
+        }
+      }
+    }
   },
   "status": "INCOMPLETE — unresolved metadata or reporting semantics",
   "unresolved_item_count": 69,
@@ -379807,5 +379869,5 @@
       ]
     }
   ],
-  "document_sha256": "3bce6023f41e751d4906881ae61c394386c220ed1fca898375c89a37df2fd553"
+  "document_sha256": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017"
 }
