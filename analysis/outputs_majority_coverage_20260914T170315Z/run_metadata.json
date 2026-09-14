@@ -1,0 +1,122 @@
+{
+  "generation_time_utc": "2026-09-14T17:06:22.127223+00:00",
+  "git_head": "33a46415dc308db4d675c7c4638e8fcdf10cc2b8",
+  "working_tree_dirty": true,
+  "working_tree_entry_state": [
+    "?? analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage.csv",
+    "?? analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage_summary.md",
+    "?? analysis/outputs_majority_coverage_20260914T170315Z/run_majority_coverage.py"
+  ],
+  "restricted_inputs_before": {
+    "POST-028": {
+      "path": "preregistration_restricted/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "expected_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "observed_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "matched": true
+    },
+    "POST-009": {
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "expected_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "observed_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "matched": true
+    },
+    "POST-011": {
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "expected_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "observed_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "matched": true
+    },
+    "POST-019": {
+      "path": "preregistration_restricted/sampling/official_draw_20260724/formal_assignment_crosswalk.csv",
+      "expected_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "observed_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "matched": true
+    }
+  },
+  "restricted_inputs_after": {
+    "POST-028": {
+      "path": "preregistration_restricted/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "expected_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "observed_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "matched": true
+    },
+    "POST-009": {
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "expected_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "observed_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "matched": true
+    },
+    "POST-011": {
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "expected_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "observed_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "matched": true
+    },
+    "POST-019": {
+      "path": "preregistration_restricted/sampling/official_draw_20260724/formal_assignment_crosswalk.csv",
+      "expected_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "observed_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "matched": true
+    }
+  },
+  "restricted_hashes_unchanged": true,
+  "majority_helper": {
+    "path": "analysis/scratch_coder_stage_b/performance.py",
+    "function": "vectors",
+    "definition": "labelwise human membership sum >= 2"
+  },
+  "helper_code_hashes": {
+    "analysis/scratch_coder_stage_b/performance.py": "e43220796452e3f09c7e88b4b179d6b400b5ac48dde9bb426dbea3865813350d",
+    "analysis/scratch_coder_stage_b/support.py": "62e3cb33fba1065aa8295d48d713a5c1c5116a942f48fd1f9c53b4de052a2dd0",
+    "analysis/scratch_coder_stage_a/panels.py": "3a8688b38699f21753179297f18fa2438cc4d91e5e298f59d3b074318f5f794b",
+    "analysis/scratch_coder_stage_a/mappings.py": "f6192b0b37a5c1c57150b094302c9b1bb9ac39110f94e989e9f22b5c8352d1c6"
+  },
+  "mask": {
+    "status": "reconstructed",
+    "implementation": "analysis.scratch_coder_stage_a.panels.dimension_panels",
+    "condition": "all C01/C02/C03 dimension values and frozen model value present"
+  },
+  "cardinality_constraints": {
+    "Research Domains": {
+      "status": "not documented",
+      "violation_count_reported": false
+    },
+    "Analytical Purposes": {
+      "maximum_single_coder_labels": 2,
+      "source": "analysis/scratch_coder_stage_a/mappings.py"
+    }
+  },
+  "aggregate_exclusions": {
+    "baseline::Research Domains": {
+      "missing_formal_record_panel": 0,
+      "incomplete_or_missing_dimension_response": 0,
+      "missing_model_classification": 0
+    },
+    "baseline::Analytical Purposes": {
+      "missing_formal_record_panel": 0,
+      "incomplete_or_missing_dimension_response": 0,
+      "missing_model_classification": 0
+    },
+    "hard_case::Research Domains": {
+      "missing_formal_record_panel": 0,
+      "incomplete_or_missing_dimension_response": 0,
+      "missing_model_classification": 0
+    },
+    "hard_case::Analytical Purposes": {
+      "missing_formal_record_panel": 0,
+      "incomplete_or_missing_dimension_response": 0,
+      "missing_model_classification": 0
+    }
+  },
+  "baseline_reconciliation": {
+    "status": "passed",
+    "source_tables": [
+      "S5T001",
+      "S5T002"
+    ],
+    "mismatches": []
+  },
+  "output_content_scan": {
+    "record_identifier_strings_detected_in_outputs": 0
+  }
+}

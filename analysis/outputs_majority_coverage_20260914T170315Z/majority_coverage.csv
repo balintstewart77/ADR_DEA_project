@@ -1,0 +1,55 @@
+population,dimension,quantity,category,count,denominator,note
+baseline,Research Domains,exclusion,missing_formal_record_panel,0,150,Replacement-panel complete-case mask reconstruction.
+baseline,Research Domains,exclusion,incomplete_or_missing_dimension_response,0,150,Replacement-panel complete-case mask reconstruction.
+baseline,Research Domains,exclusion,missing_model_classification,0,150,Replacement-panel complete-case mask reconstruction.
+baseline,Research Domains,majority_set_size,size_0,5,150,Labelwise majority set size.
+baseline,Research Domains,majority_set_size,size_1,120,150,Labelwise majority set size.
+baseline,Research Domains,majority_set_size,size_2,22,150,Labelwise majority set size.
+baseline,Research Domains,majority_set_size,size_3,3,150,Labelwise majority set size.
+baseline,Research Domains,majority_set_size,size_4_plus,0,150,Labelwise majority set size.
+baseline,Research Domains,no_majority_label,size_0,5,150,No label reached the existing two-of-three rule.
+baseline,Research Domains,unclear_composition,unclear_absent__substantive_absent,5,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Research Domains,unclear_composition,unclear_absent__substantive_present,132,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Research Domains,unclear_composition,unclear_present__substantive_absent,13,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Research Domains,unclear_composition,unclear_present__substantive_present,0,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Analytical Purposes,exclusion,missing_formal_record_panel,0,150,Replacement-panel complete-case mask reconstruction.
+baseline,Analytical Purposes,exclusion,incomplete_or_missing_dimension_response,0,150,Replacement-panel complete-case mask reconstruction.
+baseline,Analytical Purposes,exclusion,missing_model_classification,0,150,Replacement-panel complete-case mask reconstruction.
+baseline,Analytical Purposes,majority_set_size,size_0,24,150,Labelwise majority set size.
+baseline,Analytical Purposes,majority_set_size,size_1,123,150,Labelwise majority set size.
+baseline,Analytical Purposes,majority_set_size,size_2,3,150,Labelwise majority set size.
+baseline,Analytical Purposes,majority_set_size,size_3,0,150,Labelwise majority set size.
+baseline,Analytical Purposes,majority_set_size,size_4_plus,0,150,Labelwise majority set size.
+baseline,Analytical Purposes,no_majority_label,size_0,24,150,No label reached the existing two-of-three rule.
+baseline,Analytical Purposes,unclear_composition,unclear_absent__substantive_absent,24,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Analytical Purposes,unclear_composition,unclear_absent__substantive_present,100,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Analytical Purposes,unclear_composition,unclear_present__substantive_absent,26,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Analytical Purposes,unclear_composition,unclear_present__substantive_present,0,150,Descriptive set-membership cross-tab; no interpretation is inferred.
+baseline,Analytical Purposes,majority_set_exceeds_single_coder_constraint,size_greater_than_2,0,150,Single-coder constraint: at most two Analytical Purposes.
+hard_case,Research Domains,exclusion,missing_formal_record_panel,0,75,Replacement-panel complete-case mask reconstruction.
+hard_case,Research Domains,exclusion,incomplete_or_missing_dimension_response,0,75,Replacement-panel complete-case mask reconstruction.
+hard_case,Research Domains,exclusion,missing_model_classification,0,75,Replacement-panel complete-case mask reconstruction.
+hard_case,Research Domains,majority_set_size,size_0,6,75,Labelwise majority set size.
+hard_case,Research Domains,majority_set_size,size_1,48,75,Labelwise majority set size.
+hard_case,Research Domains,majority_set_size,size_2,18,75,Labelwise majority set size.
+hard_case,Research Domains,majority_set_size,size_3,3,75,Labelwise majority set size.
+hard_case,Research Domains,majority_set_size,size_4_plus,0,75,Labelwise majority set size.
+hard_case,Research Domains,no_majority_label,size_0,6,75,No label reached the existing two-of-three rule.
+hard_case,Research Domains,unclear_composition,unclear_absent__substantive_absent,6,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Research Domains,unclear_composition,unclear_absent__substantive_present,66,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Research Domains,unclear_composition,unclear_present__substantive_absent,3,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Research Domains,unclear_composition,unclear_present__substantive_present,0,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Analytical Purposes,exclusion,missing_formal_record_panel,0,75,Replacement-panel complete-case mask reconstruction.
+hard_case,Analytical Purposes,exclusion,incomplete_or_missing_dimension_response,0,75,Replacement-panel complete-case mask reconstruction.
+hard_case,Analytical Purposes,exclusion,missing_model_classification,0,75,Replacement-panel complete-case mask reconstruction.
+hard_case,Analytical Purposes,majority_set_size,size_0,9,75,Labelwise majority set size.
+hard_case,Analytical Purposes,majority_set_size,size_1,62,75,Labelwise majority set size.
+hard_case,Analytical Purposes,majority_set_size,size_2,4,75,Labelwise majority set size.
+hard_case,Analytical Purposes,majority_set_size,size_3,0,75,Labelwise majority set size.
+hard_case,Analytical Purposes,majority_set_size,size_4_plus,0,75,Labelwise majority set size.
+hard_case,Analytical Purposes,no_majority_label,size_0,9,75,No label reached the existing two-of-three rule.
+hard_case,Analytical Purposes,unclear_composition,unclear_absent__substantive_absent,9,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Analytical Purposes,unclear_composition,unclear_absent__substantive_present,46,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Analytical Purposes,unclear_composition,unclear_present__substantive_absent,20,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Analytical Purposes,unclear_composition,unclear_present__substantive_present,0,75,Descriptive set-membership cross-tab; no interpretation is inferred.
+hard_case,Analytical Purposes,majority_set_exceeds_single_coder_constraint,size_greater_than_2,0,75,Single-coder constraint: at most two Analytical Purposes.
