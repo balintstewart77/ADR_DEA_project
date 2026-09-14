@@ -174,7 +174,12 @@ def render_overlay(rows: list[dict], out: Path, caption: str, limits: dict, deli
                 keyed = {r["quantity"]: r for r in rows if r["role"] == "plotted" and r["dimension"] == dimension and r["population"] == population and r["series"] == series}
                 for y, quantity in enumerate(order):
                     style = POP_STYLE[population]
-                    draw_value(ax, y + dodge[population], keyed[quantity], color=style["color"], marker="*" if quantity == "delta_min" else style["marker"])
+                    draw_value(ax, y + dodge[population], keyed[quantity], color=style["color"], marker=style["marker"])
+                    if quantity == "delta_min":
+                        estimate = f(keyed[quantity]["parsed_value"])
+                        if estimate is not None:
+                            ax.scatter(estimate, y + dodge[population], marker="*", s=24,
+                                       facecolor="white", edgecolor="black", linewidth=0.6, zorder=5)
             ax.set_yticks(range(len(order)), [q.replace("alpha ", "α ").replace("delta", "δ") for q in order])
             ax.invert_yaxis()
             ax.set_xlim(limits["alpha_figure_2"] if deliverable == "Figure 2" and series == "alpha" else limits["alpha_figures_1_4"] if series == "alpha" else limits["delta"])
@@ -328,7 +333,10 @@ def render_performance(rows: list[dict], csv_path: Path, md_path: Path, caption:
         wide.append(item)
     write_csv(csv_path, wide)
     headers = ["Label", "Support n", "TP", "FP", "FN", "TN", "Precision", "Recall", "F1", "Band"]
-    md_rows = [[label, grouped[label]["tp"]["support_string"]] + [display_value(grouped[label][q]) for q in ("tp", "fp", "fn", "tn", "precision", "recall", "f1")] + [grouped[label]["tp"]["support_band"]] for label in labels]
+    md_rows = [[label, grouped[label]["tp"]["support_string"]]
+               + [grouped[label][q]["source_value_string"] for q in ("tp", "fp", "fn", "tn")]
+               + [display_value(grouped[label][q]) for q in ("precision", "recall", "f1")]
+               + [grouped[label]["tp"]["support_band"]] for label in labels]
     unclear = grouped["Unclear from Register Entry"]
     unclear_note = f"In {dimension}, Unclear has model-positive n=1, TP=1, FP=0 and FN={unclear['fn']['source_value_string']}; precision 1.0 therefore reflects one model-positive record, not broad agreement. Its precision and F1 intervals are marked SV because only {re.search(r'valid/invalid/requested draws ([^;]+)', unclear['precision']['original_status_string']).group(1)} replicates were valid/invalid/requested, below the recorded 1,800-valid threshold."
     notes = (
@@ -359,7 +367,7 @@ def render_table5(rows: list[dict], csv_path: Path, md_path: Path, caption: str)
     write_csv(csv_path, wide)
     headers = ["Dimension", "Pair family", "Eligible pair denominator", "Containment n (proportion)", "Overlap n (proportion)", "Disjoint n (proportion)", "Both empty n", "Exactly one empty n", "Any empty-set-involved n"]
     def cp(row):
-        return f"{row['source_value_string']} ({row['interval_lower_string']})" if row["interval_status"] == "reported" else f"{row['source_value_string']} (Unavailable: {row['interval_status']})"
+        return f"{row['source_value_string']} ({float(row['interval_lower_string']):.3f})" if row["interval_status"] == "reported" else f"{row['source_value_string']} (Unavailable: {row['interval_status']})"
     md_rows = []
     for (dimension, family), rel in grouped.items():
         meta = json.loads(rel["both_empty"]["presentation_note"].split("; structurally", 1)[0])
@@ -386,7 +394,7 @@ def render_s1(rows: list[dict], csv_path: Path, md_path: Path, caption: str):
     for key, values in a_group.items():
         construct, population, category = key
         a_rows.append([construct, "Baseline" if population == "baseline" else "Hard-case — DIAGNOSTIC", category,
-                       values["count"]["source_value_string"], values["proportion"]["denominator_string"], display_value(values["proportion"])])
+                       values["count"]["source_value_string"], values["proportion"]["sample_size"], display_value(values["proportion"])])
     part_b = [r for r in rows if r["series"] == "Part B"]
     size = [r for r in part_b if r["quantity"] == "majority_set_size"]
     size_group: dict[tuple[str, str], dict[str, dict]] = defaultdict(dict)
@@ -450,6 +458,9 @@ def main():
     expected = {"Figure 1", "Figure 2", "Figure 3", "Figure 4", "Table 1", "Table 2", "Table 3", "Table 4", "Table 5", "Supplementary Table S1"}
     if set(datasets) != expected: raise RuntimeError(f"Manifest deliverable mismatch: {set(datasets) ^ expected}")
     moved = archive_legacy(figure_dir, args.archive_dir.resolve()) if args.archive_dir else []
+    if args.archive_dir and not moved:
+        archive_dir = args.archive_dir.resolve()
+        moved = [{"from": "already archived", "to": str(path)} for path in sorted(archive_dir.glob("scratch_coder_figure_[1-6].*"))]
     limits = calculate_limits(datasets)
     for deliverable in ("Figure 1", "Figure 2", "Figure 3", "Figure 4"):
         entry = manifest["current"][deliverable]; base = figure_dir / entry["stem"]
@@ -476,6 +487,15 @@ def main():
         "archived_legacy_outputs": moved,
         "markdown_review_scope": "Markdown source rendered structurally; no journal-specific typesetter was available, so publication-layout typesetting remains unverified.",
     }
+    resolved_manifest = json.loads(json.dumps(manifest))
+    for old_id, old_number in (("old Figure 4", "scratch_coder_figure_4"), ("old Figure 5", "scratch_coder_figure_5"), ("old Figure 6", "scratch_coder_figure_6")):
+        resolved_manifest["withdrawn"][old_id]["archived_outputs"] = [
+            item["to"] for item in moved if Path(item["to"]).stem == old_number
+        ]
+    resolved_path = figure_dir / "scratch_coder_deliverable_manifest_resolved.json"
+    resolved_manifest["resolved_manifest_path"] = str(resolved_path)
+    resolved_path.write_text(json.dumps(resolved_manifest, indent=2, ensure_ascii=False) + "\n")
+    report["resolved_manifest"] = str(resolved_path)
     (figure_dir / "scratch_coder_rendering_report.json").write_text(json.dumps(report, indent=2) + "\n")
 
 
