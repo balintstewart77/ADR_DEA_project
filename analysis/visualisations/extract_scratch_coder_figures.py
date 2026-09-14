@@ -173,6 +173,7 @@ def contingency_rows(figure_id, table_id, dimension, tables, *, include_excluded
             "performance_metrics_reportable": flag,
             "sample_size_string": sample_text, "sample_size": sample_n, "sample_unit": sample_unit,
             "support_band": band, "exported_caution": caution,
+            "estimate_status": "R", "interval_status": "N", "confidence_level_wording": "not applicable for exported counts",
         })
         if not human or not model:
             row["role"] = "unavailable"
