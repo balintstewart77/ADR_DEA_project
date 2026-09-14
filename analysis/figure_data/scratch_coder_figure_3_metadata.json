@@ -1,0 +1,195 @@
+{
+  "figure_id": "figure_3",
+  "figure_data_file": "analysis/figure_data/scratch_coder_figure_3.csv",
+  "caption": "Baseline (n=150 records). Each point compares the exported human-majority-positive record count (x) with the model-positive record count (y); bands are the exported baseline support bands. Differences in Unclear use and substantive-label application may involve overlapping records and must not be read as independent findings. This marginal-count figure does not establish the extent of that overlap.",
+  "authoritative_source_paths": [
+    "analysis/scratch_coder_results/results.md",
+    "analysis/scratch_coder_results/run_metadata.json"
+  ],
+  "authoritative_source_hashes_before_extraction": {
+    "analysis/scratch_coder_results/results.md": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017",
+    "analysis/scratch_coder_results/run_metadata.json": "17965b684ecd3f3e669f4c40ddfbb17ad46d802caa44729c7199080a468696e7"
+  },
+  "authoritative_source_hashes_after_extraction": {
+    "analysis/scratch_coder_results/results.md": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017",
+    "analysis/scratch_coder_results/run_metadata.json": "17965b684ecd3f3e669f4c40ddfbb17ad46d802caa44729c7199080a468696e7"
+  },
+  "source_hashes_unchanged": true,
+  "source_section_table_ids": [
+    "S5T003",
+    "S5T004"
+  ],
+  "population_and_dimension": [
+    "baseline \u2014 Analytical Purposes",
+    "baseline \u2014 Research Domains"
+  ],
+  "sample_sizes_and_units": [
+    "baseline \u2014 Analytical Purposes: 150 records",
+    "baseline \u2014 Research Domains: 150 records"
+  ],
+  "value_statuses": [
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Business & Productivity",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Crime & Justice",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Data Infrastructure & Methodology",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Education & Skills",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Environment & Agriculture",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Health & Social Care",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Housing & Planning",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Labour Market & Employment",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Migration & Demographics",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Poverty, Wealth & Living Standards",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Public Finance & Taxation",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T003",
+      "row_key": "Unclear from Register Entry",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Descriptive Monitoring",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Life-Course / Trajectory Analysis",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Methodological / Infrastructure Research",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Outcome Tracking",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Policy Evaluation / Impact Analysis",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Risk Prediction / Early Identification",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Service Interaction / Systems Analysis",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    },
+    {
+      "source_table_id": "S5T004",
+      "row_key": "Unclear from Register Entry",
+      "quantity": "label_counts",
+      "estimate_status": "R",
+      "interval_status": "N",
+      "confidence_level_wording": "not applicable for exported counts"
+    }
+  ],
+  "confidence_level_caution": "Intervals are labelled per exported status. \u2018confidence unresolved\u2019 is retained where the source reports percentile-bootstrap bounds without a resolved confidence level.",
+  "missing_requested_values": [],
+  "generation": "Extraction only: values are copied from the cited canonical source cells; parsed fields are for plotting."
+}

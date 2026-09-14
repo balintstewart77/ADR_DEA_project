@@ -1,0 +1,321 @@
+{
+  "figure_id": "figure_5",
+  "figure_data_file": "analysis/figure_data/scratch_coder_figure_5.csv",
+  "caption": "Baseline. Proportions are among non-identical pairs where both label sets are non-empty, separately for human\u2013human and model\u2013human pair families. Denominators are eligible pairs, not records. Empty-set-pair counts are exported where available; unavailable proportions are not rendered as zero and are not renormalised. No proportion intervals were exported.",
+  "authoritative_source_paths": [
+    "analysis/outputs_disagreement_types_20260909T084916Z/disagreement_type_distribution.csv"
+  ],
+  "authoritative_source_hashes_before_extraction": {
+    "analysis/outputs_disagreement_types_20260909T084916Z/disagreement_type_distribution.csv": "5dec756123059bcb4cf435dca2a6900e409a23b2ab003be963e25e415d1eeb2d"
+  },
+  "authoritative_source_hashes_after_extraction": {
+    "analysis/outputs_disagreement_types_20260909T084916Z/disagreement_type_distribution.csv": "5dec756123059bcb4cf435dca2a6900e409a23b2ab003be963e25e415d1eeb2d"
+  },
+  "source_hashes_unchanged": true,
+  "source_section_table_ids": [
+    "disagreement_type_distribution.csv"
+  ],
+  "population_and_dimension": [
+    "baseline \u2014 Analytical Purposes",
+    "baseline \u2014 Joint cross-cutting tag set",
+    "baseline \u2014 Research Domains"
+  ],
+  "sample_sizes_and_units": [
+    "baseline \u2014 Analytical Purposes: 150 records; 450 pairs classified",
+    "baseline \u2014 Joint cross-cutting tag set: 150 records; 450 pairs classified",
+    "baseline \u2014 Research Domains: 150 records; 450 pairs classified"
+  ],
+  "value_statuses": [
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:both_empty",
+      "quantity": "both_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:exactly_one_empty",
+      "quantity": "exactly_one_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:identical",
+      "quantity": "identical",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:containment",
+      "quantity": "containment",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:overlap",
+      "quantity": "overlap",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:disjoint",
+      "quantity": "disjoint",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:both_empty",
+      "quantity": "both_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:exactly_one_empty",
+      "quantity": "exactly_one_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:identical",
+      "quantity": "identical",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:containment",
+      "quantity": "containment",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:overlap",
+      "quantity": "overlap",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:disjoint",
+      "quantity": "disjoint",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:both_empty",
+      "quantity": "both_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:exactly_one_empty",
+      "quantity": "exactly_one_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:identical",
+      "quantity": "identical",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:containment",
+      "quantity": "containment",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:overlap",
+      "quantity": "overlap",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:disjoint",
+      "quantity": "disjoint",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:both_empty",
+      "quantity": "both_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:exactly_one_empty",
+      "quantity": "exactly_one_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:identical",
+      "quantity": "identical",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:containment",
+      "quantity": "containment",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:overlap",
+      "quantity": "overlap",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:disjoint",
+      "quantity": "disjoint",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:both_empty",
+      "quantity": "both_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:exactly_one_empty",
+      "quantity": "exactly_one_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:identical",
+      "quantity": "identical",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:containment",
+      "quantity": "containment",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:overlap",
+      "quantity": "overlap",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "human_human:disjoint",
+      "quantity": "disjoint",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:both_empty",
+      "quantity": "both_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:exactly_one_empty",
+      "quantity": "exactly_one_empty",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:identical",
+      "quantity": "identical",
+      "estimate_status": "N",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:containment",
+      "quantity": "containment",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:overlap",
+      "quantity": "overlap",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    },
+    {
+      "source_table_id": "disagreement_type_distribution.csv",
+      "row_key": "model_human:disjoint",
+      "quantity": "disjoint",
+      "estimate_status": "R",
+      "interval_status": "A",
+      "confidence_level_wording": "interval unavailable in source"
+    }
+  ],
+  "confidence_level_caution": "Intervals are labelled per exported status. \u2018confidence unresolved\u2019 is retained where the source reports percentile-bootstrap bounds without a resolved confidence level.",
+  "missing_requested_values": [],
+  "generation": "Extraction only: values are copied from the cited canonical source cells; parsed fields are for plotting."
+}

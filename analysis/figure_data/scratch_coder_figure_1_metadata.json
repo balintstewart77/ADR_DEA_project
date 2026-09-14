@@ -1,0 +1,297 @@
+{
+  "figure_id": "figure_1",
+  "figure_data_file": "analysis/figure_data/scratch_coder_figure_1.csv",
+  "caption": "Baseline (n=150 records). Krippendorff\u2019s alpha is shown for ABC (C01/C02/C03) and each model-substituted panel: LBC (Fable 5/C02/C03), ALC (C01/Fable 5/C03), and ABL (C01/C02/Fable 5). Replacement differences are source-exported panel alpha minus ABC: \u03b4_A=LBC\u2212ABC, \u03b4_B=ALC\u2212ABC, \u03b4_C=ABL\u2212ABC; \u03b4_min is the source-exported minimum. Bars are percentile-bootstrap intervals with confidence level unresolved in the source. Low-support tag rows carry the source caution that values are descriptive and not stable performance estimates.",
+  "authoritative_source_paths": [
+    "analysis/scratch_coder_results/results.md",
+    "analysis/scratch_coder_results/run_metadata.json"
+  ],
+  "authoritative_source_hashes_before_extraction": {
+    "analysis/scratch_coder_results/results.md": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017",
+    "analysis/scratch_coder_results/run_metadata.json": "17965b684ecd3f3e669f4c40ddfbb17ad46d802caa44729c7199080a468696e7"
+  },
+  "authoritative_source_hashes_after_extraction": {
+    "analysis/scratch_coder_results/results.md": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017",
+    "analysis/scratch_coder_results/run_metadata.json": "17965b684ecd3f3e669f4c40ddfbb17ad46d802caa44729c7199080a468696e7"
+  },
+  "source_hashes_unchanged": true,
+  "source_section_table_ids": [
+    "S3T001",
+    "S3T002",
+    "S2T001",
+    "S2T002"
+  ],
+  "population_and_dimension": [
+    "baseline \u2014 Analytical Purposes",
+    "baseline \u2014 COVID-19 tag",
+    "baseline \u2014 Demographic disparities / equity tag",
+    "baseline \u2014 Research Domains"
+  ],
+  "sample_sizes_and_units": [
+    "baseline \u2014 Analytical Purposes: 150 records",
+    "baseline \u2014 COVID-19 tag: 150 records",
+    "baseline \u2014 Demographic disparities / equity tag: 150 records",
+    "baseline \u2014 Research Domains: 150 records"
+  ],
+  "value_statuses": [
+    {
+      "source_table_id": "S3T001",
+      "row_key": "alpha ABC",
+      "quantity": "alpha ABC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T001",
+      "row_key": "alpha LBC",
+      "quantity": "alpha LBC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T001",
+      "row_key": "alpha ALC",
+      "quantity": "alpha ALC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T001",
+      "row_key": "alpha ABL",
+      "quantity": "alpha ABL",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T001",
+      "row_key": "delta_A",
+      "quantity": "delta_A",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T001",
+      "row_key": "delta_B",
+      "quantity": "delta_B",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T001",
+      "row_key": "delta_C",
+      "quantity": "delta_C",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T001",
+      "row_key": "delta_min",
+      "quantity": "delta_min",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "alpha ABC",
+      "quantity": "alpha ABC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "alpha LBC",
+      "quantity": "alpha LBC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "alpha ALC",
+      "quantity": "alpha ALC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "alpha ABL",
+      "quantity": "alpha ABL",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "delta_A",
+      "quantity": "delta_A",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "delta_B",
+      "quantity": "delta_B",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "delta_C",
+      "quantity": "delta_C",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S3T002",
+      "row_key": "delta_min",
+      "quantity": "delta_min",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "alpha ABC",
+      "quantity": "alpha ABC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "alpha LBC",
+      "quantity": "alpha LBC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "alpha ALC",
+      "quantity": "alpha ALC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "alpha ABL",
+      "quantity": "alpha ABL",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "delta_A",
+      "quantity": "delta_A",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "delta_B",
+      "quantity": "delta_B",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "delta_C",
+      "quantity": "delta_C",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T002",
+      "row_key": "delta_min",
+      "quantity": "delta_min",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "alpha ABC",
+      "quantity": "alpha ABC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "alpha LBC",
+      "quantity": "alpha LBC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "alpha ALC",
+      "quantity": "alpha ALC",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "alpha ABL",
+      "quantity": "alpha ABL",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "delta_A",
+      "quantity": "delta_A",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "delta_B",
+      "quantity": "delta_B",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "delta_C",
+      "quantity": "delta_C",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    },
+    {
+      "source_table_id": "S2T001",
+      "row_key": "delta_min",
+      "quantity": "delta_min",
+      "estimate_status": "R",
+      "interval_status": "R",
+      "confidence_level_wording": "confidence unresolved"
+    }
+  ],
+  "confidence_level_caution": "Intervals are labelled per exported status. \u2018confidence unresolved\u2019 is retained where the source reports percentile-bootstrap bounds without a resolved confidence level.",
+  "missing_requested_values": [],
+  "generation": "Extraction only: values are copied from the cited canonical source cells; parsed fields are for plotting."
+}
