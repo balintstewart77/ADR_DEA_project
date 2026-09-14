@@ -28,6 +28,11 @@ DISAGREE_DIR = ROOT / "analysis/outputs_disagreement_types_20260909T084916Z"
 DISAGREE_CSV = DISAGREE_DIR / "disagreement_type_distribution.csv"
 DISAGREE_SUMMARY = DISAGREE_DIR / "disagreement_type_summary.md"
 DISAGREE_META = DISAGREE_DIR / "run_metadata.json"
+METHODS_STAGE_A = ROOT / "analysis/outputs_validation_scratch_20260824/methods_stage_a.md"
+PANELS_CODE = ROOT / "analysis/scratch_coder_stage_a/panels.py"
+MAPPINGS_CODE = ROOT / "analysis/scratch_coder_stage_a/mappings.py"
+AUDIT_FOLLOWUP = ROOT / "analysis/scratch_coder_consolidated/2026-09-14_audit_reporting_followup.md"
+RENDERER = ROOT / "analysis/visualisations/render_scratch_coder_paper.py"
 
 EXPECTED_COMMITS = {
     "initial_extractor": "4d5bbbd5fd4b072d488d859618200ef3f7649995",
@@ -303,6 +308,10 @@ def verify_prerequisites() -> dict:
             "mask": "complete C01/C02/C03 and frozen model value per dimension",
             "baseline_hard_case_disjointness_evidence": "analysis/scratch_coder_stage_a/panels.py rejects any baseline_ids & hard_ids overlap; its retained hash is recorded by the majority metadata",
             "strict_subset_evidence": "Sufficiency subset IDs are derived only from baseline responses; population_ids returns the strict set",
+        },
+        "code_and_method_evidence_hashes": {
+            path.relative_to(ROOT).as_posix(): sha256(path)
+            for path in (Path(__file__).resolve(), RENDERER, METHODS_STAGE_A, PANELS_CODE, MAPPINGS_CODE, AUDIT_FOLLOWUP)
         },
     }
 
@@ -602,6 +611,39 @@ CAPTIONS = {
     "Supplementary Table S1": "Record-majority response categories and majority-label coverage. Parts A and B use different majority rules and are not pooled into a common failure count.",
 }
 
+CAPTION_EVIDENCE = {
+    "Figure 1": [
+        {"fact": "panel/coder mappings, delta sign and exported delta_min", "locator": "results.md::Section 3 introductory text"},
+        {"fact": "delta_min selected within each bootstrap resample", "locator": "methods_stage_a.md::Bootstrap procedure"},
+        {"fact": "confidence level unresolved", "locator": "run_metadata.json::unresolved entry U0004"},
+        {"fact": "support and caution meanings", "locator": "results.md::Section 2/Section 5 introductory text"},
+    ],
+    "Figure 2": [
+        {"fact": "strict and broad subset definitions and nested baseline scope", "locator": "results.md::Section 1 and Section 8 introductory text; methods_stage_a.md::Population and subsets"},
+        {"fact": "baseline/strict/broad denominators", "locator": "results.md::S3T001/S3T002/S3T009/S3T010/S3T011/S3T012"},
+    ],
+    "Figure 3": [
+        {"fact": "label-count meanings and support bands", "locator": "results.md::S5T001-S5T004 and Section 5 introductory text"},
+        {"fact": "no-majority counts and Unclear/substantive exclusivity", "locator": "majority_coverage.csv::majority_set_size and unclear_composition rows"},
+        {"fact": "coverage rule/population scope", "locator": "majority_coverage_summary.md::Rule and cohort"},
+    ],
+    "Figure 4": [
+        {"fact": "baseline/hard-case disjointness", "locator": "panels.py::load_data overlap guard; majority run_metadata.json::helper_code_hashes"},
+        {"fact": "hard-case diagnostic selection", "locator": "results.md::Section 1 and hard-case table headings"},
+        {"fact": "pooled confidence unresolved and separate-strata evidence not transferred", "locator": "run_metadata.json::U0004/U0005; results.md::Section 11 introductory text"},
+        {"fact": "hard-case equity support 8 and baseline-scoped band", "locator": "results.md::S2T007"},
+    ],
+    "Table 1": [{"fact": "pair identities, baseline support and withholding", "locator": "results.md::S5T001/S5T005/S5T009"}],
+    "Table 2": [{"fact": "pair identities, baseline support and withholding", "locator": "results.md::S5T002/S5T006/S5T010"}],
+    "Table 3": [{"fact": "reference orientation, metric definitions, statuses and Unclear counts", "locator": "results.md::Section 2/Section 5; S5T001/S5T003/S5T007/S5T009"}],
+    "Table 4": [{"fact": "reference orientation, metric definitions, statuses and Unclear counts", "locator": "results.md::Section 2/Section 5; S5T002/S5T004/S5T008/S5T010"}],
+    "Table 5": [{"fact": "relation, pair-family and empty-set definitions", "locator": "disagreement_type_summary.md::Relation definitions and Rule/cohort"}],
+    "Supplementary Table S1": [
+        {"fact": "Part A record-majority categories and interval applicability", "locator": "results.md::Section 8/Section 9; S8T003/S8T004/S9T003/S9T004"},
+        {"fact": "Part B rule, cardinality constraint and coverage meanings", "locator": "majority_coverage_summary.md::Rule and cohort; majority_coverage.csv; run_metadata.json::cardinality_constraints"},
+    ],
+}
+
 
 def write_dataset(data_dir: Path, stem: str, rows: list[dict], source_paths: list[Path], provenance: dict, caption: str) -> tuple[str, str]:
     csv_path = data_dir / f"{stem}.csv"
@@ -621,7 +663,7 @@ def write_dataset(data_dir: Path, stem: str, rows: list[dict], source_paths: lis
         "source_table_ids": sorted({row["source_table_id"] for row in rows}),
         "populations_dimensions": sorted({f"{row['population']}|{row['dimension']}" for row in rows}),
         "generation_provenance": provenance, "display_mappings": {"replacement_panels": REPLACEMENT_MAPPING, "pair_columns": PAIR_DISPLAY},
-        "caption_evidence": [{"fact": "caption", "locator": row} for row in sorted({f"{r['source_file']}::{r['source_table_id']}" for r in rows})],
+        "caption_evidence": CAPTION_EVIDENCE[rows[0]["deliverable_id"]],
         "status_legend": {"R": "reported", "SV": "suppressed by valid-replicate rule", "SD": "suppressed by source decision", "A": "unavailable", "N": "not applicable", "W": "withheld", "D": "undefined", "U": "unresolved"},
     }
     meta_path.write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
