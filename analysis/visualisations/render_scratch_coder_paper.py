@@ -488,7 +488,8 @@ def main():
         "markdown_review_scope": "Markdown source rendered structurally; no journal-specific typesetter was available, so publication-layout typesetting remains unverified.",
     }
     resolved_manifest = json.loads(json.dumps(manifest))
-    for old_id, old_number in (("old Figure 4", "scratch_coder_figure_4"), ("old Figure 5", "scratch_coder_figure_5"), ("old Figure 6", "scratch_coder_figure_6")):
+    for number in range(1, 7):
+        old_id, old_number = f"old Figure {number}", f"scratch_coder_figure_{number}"
         resolved_manifest["withdrawn"][old_id]["archived_outputs"] = [
             item["to"] for item in moved if Path(item["to"]).stem == old_number
         ]

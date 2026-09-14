@@ -674,6 +674,9 @@ def main() -> None:
         "provenance": provenance,
         "current": {},
         "withdrawn": {
+            "old Figure 1": {"status": "superseded by revised Figure 1", "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_1.*"},
+            "old Figure 2": {"status": "superseded by revised Figure 2", "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_2.*"},
+            "old Figure 3": {"status": "superseded by revised Figure 3", "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_3.*"},
             "old Figure 4": {"status": "withdrawn; replaced by Tables 3 and 4", "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_4.*"},
             "old Figure 5": {"status": "withdrawn; replaced by Table 5", "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_5.*"},
             "old Figure 6": {"status": "renumbered and replaced by new Figure 4", "archive_glob": "analysis/figures/archive/scratch_coder_pre_revision_*/scratch_coder_figure_6.*"},
