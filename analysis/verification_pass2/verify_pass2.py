@@ -78,6 +78,7 @@ class Missing(Exception):
 
 class Audit:
     def __init__(self):
+        self.started = datetime.now(timezone.utc).isoformat()
         self.checks, self.claims, self.cache, self.used, self.evidence = [], [], {}, set(), []
         self.meta = json.loads((ROOT / META).read_text(encoding='utf-8'))
         self.items = self.meta['result_items']
@@ -381,7 +382,8 @@ def main_checks(a):
             val=a.v('S5T005','kappa',part=1,label=UNCLEAR,pair=p)
             typ='negative zero' if val.is_zero() and val.is_signed() else 'zero' if val.is_zero() else 'small negative number' if val<0 and rnd(val,3)==0 else 'negative number' if val<0 else 'positive number'
             return rnd(val,3)==D('-0.000'),{'value':val,'classification':typ,'three_decimal_display':str(rnd(val,3))}
-        a.check('V8.1.'+pair,signed,'-0.000',log='G.14; P.3; P.4')
+        c=a.check('V8.1.'+pair,signed,'-0.000',log='G.14; P.3; P.4')
+        if c['status']=='FAIL':c['status']='DISCREPANCY'
     for tid,label,count in [('S5T002','Policy Evaluation / Impact Analysis',30),('S5T002','Descriptive Monitoring',36),('S5T002','Outcome Tracking',19),('S5T001',UNCLEAR,13),('S5T002',UNCLEAR,26)]:
         a.check(f'V7.named.{tid}.{count}',lambda t=tid,l=label,c=count:(a.v(t,'baseline_human_majority_positive_n',label=l)==c,a.v(t,'baseline_human_majority_positive_n',label=l)),count,label,'P.2; C.2; D.1')
     for pair,expected in [('A-C','-0.07'),('B-C','-0.04')]:
@@ -416,7 +418,15 @@ def quoted_checks(a):
         a.quote(log,tid,None,expected,{'delta' if comp.startswith('delta') else 'panel':comp},part,places)
     for tid,comp,part,expected in [('S2T007','delta_min',1,'-.330'),('S2T008','delta_B',2,'.381'),('S2T001','delta_min',1,'-.202')]:
         a.quote('G.6',tid,None,expected,{'delta':comp},part,3)
-    for comp in ['LBC','ALC']:a.quote('G.6','S3T008',None,'.096',{'panel':comp},1,3)
+    # "Minimum about 0.096 (LBC and ALC)" does not assert that each lower
+    # bound rounds to .096. Do not strengthen an approximate statement.
+    cid='V9.approximate_alpha_context'
+    c=a.check(cid,lambda:{comp:a.v('S3T008',part=1,panel=comp) for comp in ['LBC','ALC']},
+              'minimum about 0.096 (hard-case purposes, alpha LBC and alpha ALC)',
+              'V6.1 establishes the minimum. No tolerance for "about" is specified; no separate exact .096 claim is imposed on ALC.',
+              'G.6',success='NOT CHECKED')
+    a.claims.append({'claim_id':cid,'origin':'v2 supplied checklist','log_item':'G.6',
+                     'claim':c['expected'],'mapped_check':cid,'status':c['status'],'reason':c['notes']})
     c=a.check('V9.crosses_zero',lambda:(a.v('S3T008',part=1,delta='delta_C')<0<a.v('S3T008',part=2,delta='delta_C'),a.triple('S3T008',delta='delta_C')), 'lower < 0 < upper',log='S1.8')
     a.claims.append({'claim_id':c['id'],'origin':'v2 supplied checklist','log_item':'S1.8','claim':'S3T008 delta_C crosses zero','mapped_check':c['id'],'status':c['status'],'reason':''})
     for tid,log,values in [('S2T001','1.1',{'support':11}),('S2T002','1.1',{'support':12}),('S2T017','S1.3; O.1',{'human_majority_positive_n':8,'model_positive_n':8,'fp':3,'fn':3}),('S2T018','S1.3',{'human_majority_positive_n':6})]:
@@ -490,8 +500,9 @@ def publish(a):
     metadata={'run_start_head':START_HEAD,'initial_git_status_porcelain':'','initial_git_warnings':['Git global ignore and .pytest_cache access denied; no porcelain entries'],
       'script_commit':git('log','-1','--format=%H','--','analysis/verification_pass2/verify_pass2.py')[0],
       'script_commit_history':git('log','--format=%H %s','--','analysis/verification_pass2/verify_pass2.py')[0].splitlines(),
-      'script_fix_reasons':['Fix 1: distinguish legacy figure proportion columns from Table 5 count columns; follow reused Wilson interval lineage; extend aggregate search and combined-count/coverage/band source comparisons. Earlier results discarded and all checks rerun.'],
-      'run_timestamp_utc':datetime.now(timezone.utc).isoformat(),'software':{'python':sys.version,'platform':platform.platform(),'git':git('--version')[0]},
+      'script_fix_reasons':['44a13509c0d367c073314408eb6e2867e952c6df: distinguish legacy figure proportion columns from Table 5 count columns; follow reused Wilson interval lineage; extend aggregate search and combined-count/coverage/band source comparisons. Earlier results discarded and all checks rerun.',
+         'Final script commit (script_commit above): retain the approximate alpha statement without inventing an exact ALC quote; classify the signed-zero quote mismatch as DISCREPANCY; record run-start timestamp and direct-export mappings. Earlier results discarded and all checks rerun.'],
+      'run_timestamp_utc':a.started,'report_written_timestamp_utc':datetime.now(timezone.utc).isoformat(),'software':{'python':sys.version,'platform':platform.platform(),'git':git('--version')[0]},
       'provenance':[provenance(p) for p in [RESULTS,META,S1,'analysis/tables/scratch_coder_supplementary_table_s1_majority_coverage.csv']],
       'governing_log':[provenance(p) for p in logs] or {'status':'SOURCE MISSING','repository_search':'git ls-files and rg --files --hidden filename search','supplied_copy':'none attached; cannot hash'},
       'figure_data_commit':git('log','-1','--format=%H','--','analysis/figure_data')[0],
@@ -511,11 +522,15 @@ def publish(a):
          'V6.3 reports alpha extrema and uses [0,1] for range status because no narrower numerical range is specified.',
          'F.13 precision/recall intervals map to S5T007; the instructed S5T003 supplies contingencies only.',
          'An interval or tuple is one inventory claim; repeated V1-V8 assertions remain separately traceable. Unknown remainder is not counted as a claim.',
+         'The approximate alpha context is NOT CHECKED as a quotation because no tolerance for "about" is stated; exact extrema remain reported under V6.1.',
          'Every non-PASS status is listed for review, including neutral EQUAL, WITHIN RANGE and ASSUMPTION HOLDS classifications.'],
       'source_mapping':[{'table_id':t,'canonical':[s for x in a.meta['source_map'] if x['table_id']==t for s in x['sources']],
           'figure_data':sorted({p for p,n,r in a.figures if r.get('source_table_id')==t}),
           'gap':not any(r.get('source_table_id')==t for p,n,r in a.figures)} for t in sorted(a.used)],
       'aggregate_files_read':sorted(a.cache)}
+    metadata['source_mapping'] += [{'table_id':Path(p).name,'canonical':[{'path':p}],
+        'figure_data':sorted({f for f,n,r in a.figures if r.get('source_table_id')==Path(p).name}),
+        'results_md':'Not contained in results.md; later standalone aggregate export.'} for p in [COVERAGE,RELATIONS]]
     real=[c for c in a.claims if c['claim_id']!='REMAINDER']
     metadata['inventory_counts']={'enumerated_supplied_instruction_claims':len(real),'mapped':sum(bool(c['mapped_check']) for c in real),
       'passed':sum(c['status'] in GOOD for c in real),'not_passed':sum(c['status'] not in GOOD and c['status']!='NOT CHECKED' for c in real),
