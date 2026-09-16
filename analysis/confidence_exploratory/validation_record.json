@@ -1,0 +1,38 @@
+{
+  "1": {
+    "status": "passed",
+    "citation": "Klaus Krippendorff, Computing Krippendorff's Alpha-Reliability",
+    "url": "https://www.asc.upenn.edu/sites/default/files/2021-03/Computing%20Krippendorff%27s%20Alpha-Reliability.pdf",
+    "data_location": "Section C, printed page 4, four observers by twelve units",
+    "expected_location": "printed page 8, ordinal calculation",
+    "published_value": 0.815,
+    "reproduced_value": 0.8153875037548813,
+    "precision": "three decimal places",
+    "pairable_values": 40
+  },
+  "2": {
+    "status": "passed",
+    "implementation": "krippendorff",
+    "version": "0.8.2",
+    "version_source": "importlib.metadata.version",
+    "installation": "python -m pip install --no-deps krippendorff==0.8.2; existing project venv; no dependency-file changes",
+    "module_path": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Lib\\site-packages\\krippendorff\\__init__.py",
+    "url": "https://github.com/pln-fing-udelar/fast-krippendorff",
+    "datasets": 24,
+    "maximum_absolute_difference": 2.220446049250313e-16
+  },
+  "3": {
+    "status": "passed",
+    "reason": "Perfect and constant cases, invalid bootstrap handling, symmetry, diagonal, ordering, unit/rater permutations, singleton exclusion"
+  },
+  "4": {
+    "status": "passed",
+    "reason": "Exact AlphaResult equality through the same wrapper on all 24 synthetic datasets"
+  },
+  "5": {
+    "status": "passed",
+    "reason": "All 25 evaluator calls rebuilt distances matching their own sampled frequencies; distinct matrices observed",
+    "distinct_frequencies": 16,
+    "distinct_matrices": 16
+  }
+}
