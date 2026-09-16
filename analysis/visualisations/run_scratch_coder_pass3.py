@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -23,6 +24,19 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def comparable_sha256(path: Path) -> str:
+    """Hash exact bytes, except canonicalize opaque generated IDs in SVG."""
+    if path.suffix.lower() != ".svg":
+        return sha256(path)
+    text = path.read_text(encoding="utf-8")
+    identifiers = re.findall(r'\bid="([^"]+)"', text)
+    for index, identifier in enumerate(identifiers, 1):
+        replacement = f"pass3_svg_id_{index:04d}"
+        text = text.replace(f'id="{identifier}"', f'id="{replacement}"')
+        text = text.replace(f'#{identifier}', f'#{replacement}')
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def run(command: list[str], cwd: Path) -> None:
@@ -73,14 +87,15 @@ def main() -> None:
         for name in expected:
             production = figure_dir / name if (figure_dir / name).is_file() else table_dir / name
             isolated_output = isolated_figures / name if (isolated_figures / name).is_file() else isolated_tables / name
-            matches[name] = sha256(production) == sha256(isolated_output)
+            matches[name] = comparable_sha256(production) == comparable_sha256(isolated_output)
         isolation = {
             "status": "PASS" if not missing and all(matches.values()) else "FAIL",
             "completed_utc": datetime.now(timezone.utc).isoformat(), "renderer_copy": str(isolated_renderer),
             "working_directory": str(isolated), "analytical_inputs_present": [], "copied_inputs": sorted(copied),
             "forbidden_source_path_literals_in_renderer": found_literals, "expected_outputs": len(expected),
             "outputs_created": len(expected) - len(missing), "missing_outputs": missing,
-            "byte_identical_to_production": matches, "all_byte_identical": all(matches.values()),
+            "content_identical_to_production": matches, "all_content_identical": all(matches.values()),
+            "comparison_rule": "Exact bytes for PNG/CSV/Markdown; SVG after canonicalizing opaque generated id attributes and references by occurrence.",
         }
         if isolation["status"] != "PASS":
             raise RuntimeError(f"Stage 2 isolation failed: {isolation}")
