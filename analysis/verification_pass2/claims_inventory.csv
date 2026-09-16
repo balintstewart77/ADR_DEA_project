@@ -1,0 +1,193 @@
+claim_id,origin,log_item,claim,mapped_check,status,reason
+V9.Q001,v2 supplied checklist (governing log unavailable),1.4,S2T001 None {'delta': 'delta_B'} part=2: 0.004117088549351349,V9.Q001,PASS,S2T001 None {'delta': 'delta_B'}
+V9.Q002,v2 supplied checklist (governing log unavailable),1.4,S2T001 None {'delta': 'delta_min'} part=2: -0.006490658978949588,V9.Q002,PASS,S2T001 None {'delta': 'delta_min'}
+V9.Q003,v2 supplied checklist (governing log unavailable),2.4,"S3T002 None {'delta': 'delta_min'} part=None: ['-0.04266825138963548', '-0.09028046253808193', '-0.002141124278556386']",V9.Q003,PASS,S3T002 None {'delta': 'delta_min'}
+V9.Q004,v2 supplied checklist (governing log unavailable),2.4,"S3T011 None {'delta': 'delta_min'} part=None: ['0.04169778425221149', '0.0005992244570877603', '0.07637533196699833']",V9.Q004,PASS,S3T011 None {'delta': 'delta_min'}
+V9.Q005,v2 supplied checklist (governing log unavailable),S1.5,"S2T007 None {'delta': 'delta_min'} part=None: ['-0.11455822957777184', '-0.33012555322232656', '0.0']",V9.Q005,PASS,S2T007 None {'delta': 'delta_min'}
+V9.Q006,v2 supplied checklist (governing log unavailable),F.9,"S3T002 None {'panel': 'ABC'} part=None: ['0.292', '0.224', '0.355']",V9.Q006,PASS,S3T002 None {'panel': 'ABC'}
+V9.Q007,v2 supplied checklist (governing log unavailable),F.9,"S3T012 None {'panel': 'ABC'} part=None: ['0.289', '0.207', '0.366']",V9.Q007,PASS,S3T012 None {'panel': 'ABC'}
+V9.Q008,v2 supplied checklist (governing log unavailable),S1.8,S3T001 None {'panel': 'ABC'} part=0: 0.526,V9.Q008,PASS,S3T001 None {'panel': 'ABC'}
+V9.Q009,v2 supplied checklist (governing log unavailable),S1.8,S3T007 None {'panel': 'ABC'} part=0: 0.462,V9.Q009,PASS,S3T007 None {'panel': 'ABC'}
+V9.Q010,v2 supplied checklist (governing log unavailable),S1.8,S3T008 None {'panel': 'ABC'} part=0: 0.292,V9.Q010,PASS,S3T008 None {'panel': 'ABC'}
+V9.Q011,v2 supplied checklist (governing log unavailable),S1.8,"S3T007 None {'delta': 'delta_min'} part=None: ['-0.027', '-0.096', '0.010']",V9.Q011,PASS,S3T007 None {'delta': 'delta_min'}
+V9.Q012,v2 supplied checklist (governing log unavailable),S1.8,"S2T001 None {'panel': 'ABC'} part=None: ['0.512', '0.300', '0.691']",V9.Q012,PASS,S2T001 None {'panel': 'ABC'}
+V9.Q013,v2 supplied checklist (governing log unavailable),S1.8,"S2T007 None {'panel': 'ABC'} part=None: ['0.654', '0.386', '0.843']",V9.Q013,PASS,S2T007 None {'panel': 'ABC'}
+V9.Q014,v2 supplied checklist (governing log unavailable),F.7,"S2T001 None {'delta': 'delta_A'} part=None: ['-.044', '-.181', '.104']",V9.Q014,PASS,S2T001 None {'delta': 'delta_A'}
+V9.Q015,v2 supplied checklist (governing log unavailable),F.7,"S2T001 None {'delta': 'delta_B'} part=None: ['-.081', '-.174', '.004']",V9.Q015,PASS,S2T001 None {'delta': 'delta_B'}
+V9.Q016,v2 supplied checklist (governing log unavailable),F.7,"S2T001 None {'delta': 'delta_C'} part=None: ['-.060', '-.189', '.070']",V9.Q016,PASS,S2T001 None {'delta': 'delta_C'}
+V9.Q017,v2 supplied checklist (governing log unavailable),F.7,"S2T001 None {'delta': 'delta_min'} part=None: ['-.081', '-.202', '-.006']",V9.Q017,PASS,S2T001 None {'delta': 'delta_min'}
+V9.Q018,v2 supplied checklist (governing log unavailable),2.2,"S3T011 None {'delta': 'delta_A'} part=None: ['.088', '.039', '.144']",V9.Q018,PASS,S3T011 None {'delta': 'delta_A'}
+V9.Q019,v2 supplied checklist (governing log unavailable),2.2,"S3T011 None {'delta': 'delta_B'} part=None: ['.042', '.001', '.083']",V9.Q019,PASS,S3T011 None {'delta': 'delta_B'}
+V9.Q020,v2 supplied checklist (governing log unavailable),2.2,"S3T011 None {'delta': 'delta_C'} part=None: ['.073', '.023', '.124']",V9.Q020,PASS,S3T011 None {'delta': 'delta_C'}
+V9.Q021,v2 supplied checklist (governing log unavailable),2.2,"S3T012 None {'delta': 'delta_A'} part=None: ['.041', '-.010', '.096']",V9.Q021,PASS,S3T012 None {'delta': 'delta_A'}
+V9.Q022,v2 supplied checklist (governing log unavailable),2.2,"S3T012 None {'delta': 'delta_B'} part=None: ['.014', '-.035', '.068']",V9.Q022,PASS,S3T012 None {'delta': 'delta_B'}
+V9.Q023,v2 supplied checklist (governing log unavailable),2.2,"S3T012 None {'delta': 'delta_C'} part=None: ['.108', '.051', '.171']",V9.Q023,DISCREPANCY,S3T012 None {'delta': 'delta_C'}
+V9.Q024,v2 supplied checklist (governing log unavailable),S1.8,"S3T008 None {'delta': 'delta_A'} part=None: ['-.109', '-.183', '-.034']",V9.Q024,PASS,S3T008 None {'delta': 'delta_A'}
+V9.Q025,v2 supplied checklist (governing log unavailable),S1.8,"S3T008 None {'delta': 'delta_B'} part=None: ['-.114', '-.182', '-.046']",V9.Q025,PASS,S3T008 None {'delta': 'delta_B'}
+V9.Q026,v2 supplied checklist (governing log unavailable),S1.8,"S3T008 None {'delta': 'delta_min'} part=None: ['-.114', '-.191', '-.059']",V9.Q026,PASS,S3T008 None {'delta': 'delta_min'}
+V9.Q027,v2 supplied checklist (governing log unavailable),G.6,S2T007 None {'delta': 'delta_min'} part=1: -.330,V9.Q027,PASS,S2T007 None {'delta': 'delta_min'}
+V9.Q028,v2 supplied checklist (governing log unavailable),G.6,S2T008 None {'delta': 'delta_B'} part=2: .381,V9.Q028,PASS,S2T008 None {'delta': 'delta_B'}
+V9.Q029,v2 supplied checklist (governing log unavailable),G.6,S2T001 None {'delta': 'delta_min'} part=1: -.202,V9.Q029,PASS,S2T001 None {'delta': 'delta_min'}
+V9.approximate_alpha_context,v2 supplied checklist,G.6,"minimum about 0.096 (hard-case purposes, alpha LBC and alpha ALC)",V9.approximate_alpha_context,NOT CHECKED,"V6.1 establishes the minimum. No tolerance for ""about"" is specified; no separate exact .096 claim is imposed on ALC."
+V9.crosses_zero,v2 supplied checklist,S1.8,S3T008 delta_C crosses zero,V9.crosses_zero,PASS,
+V9.Q032,v2 supplied checklist (governing log unavailable),1.1,S2T015 human_majority_positive_n {} part=None: 11,V9.Q032,PASS,S2T015 human_majority_positive_n {}
+V9.Q033,v2 supplied checklist (governing log unavailable),1.1,S2T016 human_majority_positive_n {} part=None: 12,V9.Q033,PASS,S2T016 human_majority_positive_n {}
+V9.Q034,v2 supplied checklist (governing log unavailable),S1.3; O.1,S2T017 human_majority_positive_n {} part=None: 8,V9.Q034,PASS,S2T017 human_majority_positive_n {}
+V9.Q035,v2 supplied checklist (governing log unavailable),S1.3; O.1,S2T017 model_positive_n {} part=None: 8,V9.Q035,PASS,S2T017 model_positive_n {}
+V9.Q036,v2 supplied checklist (governing log unavailable),S1.3; O.1,S2T017 fp {} part=None: 3,V9.Q036,PASS,S2T017 fp {}
+V9.Q037,v2 supplied checklist (governing log unavailable),S1.3; O.1,S2T017 fn {} part=None: 3,V9.Q037,PASS,S2T017 fn {}
+V9.Q038,v2 supplied checklist (governing log unavailable),S1.3,S2T018 human_majority_positive_n {} part=None: 6,V9.Q038,PASS,S2T018 human_majority_positive_n {}
+V9.Q039,v2 supplied checklist (governing log unavailable),F.1,S2T015 model_positive_n {} part=None: 19,V9.Q039,PASS,S2T015 model_positive_n {}
+V9.Q040,v2 supplied checklist (governing log unavailable),F.1,S2T015 human_majority_positive_n {} part=None: 11,V9.Q040,PASS,S2T015 human_majority_positive_n {}
+V9.Q041,v2 supplied checklist (governing log unavailable),F.1,S2T015 fp {} part=None: 13,V9.Q041,PASS,S2T015 fp {}
+V9.Q042,v2 supplied checklist (governing log unavailable),F.1,S2T015 fn {} part=None: 5,V9.Q042,PASS,S2T015 fn {}
+V9.range.S5T005.A-B,v2 supplied checklist,K.4; F.2,"S5T005 Unclear ['A-B', 'A-C', 'B-C'] range ['.150', '.322']",V9.range.S5T005.A-B,PASS,
+V9.range.S5T005.L-A,v2 supplied checklist,K.4; F.2,"S5T005 Unclear ['L-A', 'L-B', 'L-C'] range ['.037', '.241']",V9.range.S5T005.L-A,PASS,
+V9.range.S5T006.A-B,v2 supplied checklist,K.4; F.2,"S5T006 Unclear ['A-B', 'A-C', 'B-C'] range ['.236', '.401']",V9.range.S5T006.A-B,PASS,
+V9.range.S5T006.L-A,v2 supplied checklist,K.4; F.2,"S5T006 Unclear ['L-A', 'L-B', 'L-C'] range ['.016', '.114']",V9.range.S5T006.L-A,PASS,
+V9.Q047,v2 supplied checklist (governing log unavailable),F.5,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'A-B'} part=None: ['.355', '.181', '.520']",V9.Q047,PASS,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'A-B'}"
+V9.Q048,v2 supplied checklist (governing log unavailable),F.5,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'A-C'} part=None: ['.055', '-.068', '.207']",V9.Q048,PASS,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'A-C'}"
+V9.Q049,v2 supplied checklist (governing log unavailable),F.5,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'B-C'} part=None: ['.076', '-.038', '.211']",V9.Q049,PASS,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'B-C'}"
+V9.Q050,v2 supplied checklist (governing log unavailable),F.5,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'L-C'} part=None: ['.127', '.017', '.246']",V9.Q050,PASS,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'L-C'}"
+V9.Q051,v2 supplied checklist (governing log unavailable),F.6,"S5T006 kappa {'label': 'Descriptive Monitoring', 'pair': 'L-B'} part=None: .554",V9.Q051,PASS,"S5T006 kappa {'label': 'Descriptive Monitoring', 'pair': 'L-B'}"
+V9.Q052,v2 supplied checklist (governing log unavailable),F.6,"S5T006 kappa {'label': 'Policy Evaluation / Impact Analysis', 'pair': 'L-B'} part=None: .615",V9.Q052,PASS,"S5T006 kappa {'label': 'Policy Evaluation / Impact Analysis', 'pair': 'L-B'}"
+V9.Q053,v2 supplied checklist (governing log unavailable),F.6,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'L-B'} part=None: .474",V9.Q053,PASS,"S5T006 kappa {'label': 'Outcome Tracking', 'pair': 'L-B'}"
+V9.Q054,v2 supplied checklist (governing log unavailable),F.13,S5T003 tp {'label': 'Labour Market & Employment'} part=None: 35,V9.Q054,PASS,S5T003 tp {'label': 'Labour Market & Employment'}
+V9.Q055,v2 supplied checklist (governing log unavailable),F.13,S5T003 fp {'label': 'Labour Market & Employment'} part=None: 21,V9.Q055,PASS,S5T003 fp {'label': 'Labour Market & Employment'}
+V9.Q056,v2 supplied checklist (governing log unavailable),F.13,S5T003 fn {'label': 'Labour Market & Employment'} part=None: 4,V9.Q056,PASS,S5T003 fn {'label': 'Labour Market & Employment'}
+V9.Q057,v2 supplied checklist (governing log unavailable),F.13,S5T003 fp {'label': 'Environment & Agriculture'} part=None: 6,V9.Q057,PASS,S5T003 fp {'label': 'Environment & Agriculture'}
+V9.Q058,v2 supplied checklist (governing log unavailable),F.13,S5T003 tp {'label': 'Environment & Agriculture'} part=None: 4,V9.Q058,PASS,S5T003 tp {'label': 'Environment & Agriculture'}
+V9.Q059,v2 supplied checklist (governing log unavailable),F.13,S5T003 fp {'label': 'Data Infrastructure & Methodology'} part=None: 4,V9.Q059,PASS,S5T003 fp {'label': 'Data Infrastructure & Methodology'}
+V9.Q060,v2 supplied checklist (governing log unavailable),F.13,S5T003 tp {'label': 'Data Infrastructure & Methodology'} part=None: 0,V9.Q060,PASS,S5T003 tp {'label': 'Data Infrastructure & Methodology'}
+V9.Q061,v2 supplied checklist (governing log unavailable),F.13,S5T003 fp {'label': 'Housing & Planning'} part=None: 1,V9.Q061,PASS,S5T003 fp {'label': 'Housing & Planning'}
+V9.Q062,v2 supplied checklist (governing log unavailable),F.13,S5T003 tp {'label': 'Housing & Planning'} part=None: 0,V9.Q062,PASS,S5T003 tp {'label': 'Housing & Planning'}
+V9.Q063,v2 supplied checklist (governing log unavailable),F.13,"S5T003 fp {'label': 'Poverty, Wealth & Living Standards'} part=None: 4",V9.Q063,PASS,"S5T003 fp {'label': 'Poverty, Wealth & Living Standards'}"
+V9.Q064,v2 supplied checklist (governing log unavailable),F.13,"S5T003 fn {'label': 'Poverty, Wealth & Living Standards'} part=None: 5",V9.Q064,PASS,"S5T003 fn {'label': 'Poverty, Wealth & Living Standards'}"
+V9.Q065,v2 supplied checklist (governing log unavailable),F.14,S5T003 fp {'label': 'Migration & Demographics'} part=None: 2,V9.Q065,PASS,S5T003 fp {'label': 'Migration & Demographics'}
+V9.Q066,v2 supplied checklist (governing log unavailable),F.14,S5T003 fn {'label': 'Migration & Demographics'} part=None: 5,V9.Q066,PASS,S5T003 fn {'label': 'Migration & Demographics'}
+V9.Q067,v2 supplied checklist (governing log unavailable),F.13,"S5T007 precision {'label': 'Labour Market & Employment'} part=None: ['.625', '.492', '.750']",V9.Q067,PASS,S5T007 precision {'label': 'Labour Market & Employment'}
+V9.Q068,v2 supplied checklist (governing log unavailable),F.13,"S5T007 recall {'label': 'Poverty, Wealth & Living Standards'} part=None: ['.545', '.231', '.857']",V9.Q068,PASS,"S5T007 recall {'label': 'Poverty, Wealth & Living Standards'}"
+V9.Q069,v2 supplied checklist (governing log unavailable),F.14,S5T004 fp {'label': 'Outcome Tracking'} part=None: 34,V9.Q069,PASS,S5T004 fp {'label': 'Outcome Tracking'}
+V9.Q070,v2 supplied checklist (governing log unavailable),F.14,S5T004 fn {'label': 'Outcome Tracking'} part=None: 6,V9.Q070,PASS,S5T004 fn {'label': 'Outcome Tracking'}
+V9.Q071,v2 supplied checklist (governing log unavailable),F.14,S5T004 fp {'label': 'Descriptive Monitoring'} part=None: 26,V9.Q071,PASS,S5T004 fp {'label': 'Descriptive Monitoring'}
+V9.Q072,v2 supplied checklist (governing log unavailable),F.14,S5T004 fn {'label': 'Descriptive Monitoring'} part=None: 10,V9.Q072,PASS,S5T004 fn {'label': 'Descriptive Monitoring'}
+V9.Q073,v2 supplied checklist (governing log unavailable),F.14,S5T004 fp {'label': 'Policy Evaluation / Impact Analysis'} part=None: 12,V9.Q073,PASS,S5T004 fp {'label': 'Policy Evaluation / Impact Analysis'}
+V9.Q074,v2 supplied checklist (governing log unavailable),F.14,S5T004 fn {'label': 'Policy Evaluation / Impact Analysis'} part=None: 9,V9.Q074,PASS,S5T004 fn {'label': 'Policy Evaluation / Impact Analysis'}
+V9.Q075,v2 supplied checklist (governing log unavailable),F.14,S5T004 fp {'label': 'Life-Course / Trajectory Analysis'} part=None: 8,V9.Q075,PASS,S5T004 fp {'label': 'Life-Course / Trajectory Analysis'}
+V9.Q076,v2 supplied checklist (governing log unavailable),F.14,S5T004 fn {'label': 'Life-Course / Trajectory Analysis'} part=None: 6,V9.Q076,PASS,S5T004 fn {'label': 'Life-Course / Trajectory Analysis'}
+V9.Q077,v2 supplied checklist (governing log unavailable),F.14,S5T004 fp {'label': 'Methodological / Infrastructure Research'} part=None: 5,V9.Q077,PASS,S5T004 fp {'label': 'Methodological / Infrastructure Research'}
+V9.Q078,v2 supplied checklist (governing log unavailable),F.14,S5T004 fn {'label': 'Methodological / Infrastructure Research'} part=None: 2,V9.Q078,PASS,S5T004 fn {'label': 'Methodological / Infrastructure Research'}
+V9.Q079,v2 supplied checklist (governing log unavailable),F.14,S5T004 fp {'label': 'Service Interaction / Systems Analysis'} part=None: 3,V9.Q079,PASS,S5T004 fp {'label': 'Service Interaction / Systems Analysis'}
+V9.Q080,v2 supplied checklist (governing log unavailable),F.14,S5T004 fn {'label': 'Service Interaction / Systems Analysis'} part=None: 0,V9.Q080,PASS,S5T004 fn {'label': 'Service Interaction / Systems Analysis'}
+V9.Q081,v2 supplied checklist (governing log unavailable),F.14,S5T004 fp {'label': 'Risk Prediction / Early Identification'} part=None: 1,V9.Q081,PASS,S5T004 fp {'label': 'Risk Prediction / Early Identification'}
+V9.Q082,v2 supplied checklist (governing log unavailable),F.14,S5T004 fn {'label': 'Risk Prediction / Early Identification'} part=None: 0,V9.Q082,PASS,S5T004 fn {'label': 'Risk Prediction / Early Identification'}
+V9.Q083,v2 supplied checklist (governing log unavailable),F.15,S5T004 model_positive_n {'label': 'Outcome Tracking'} part=None: 47,V9.Q083,PASS,S5T004 model_positive_n {'label': 'Outcome Tracking'}
+V9.Q084,v2 supplied checklist (governing log unavailable),F.15,"S5T008 precision {'label': 'Outcome Tracking'} part=None: ['.277', '.152', '.417']",V9.Q084,PASS,S5T008 precision {'label': 'Outcome Tracking'}
+V9.Q085,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C01', 'category': 'Sufficient'} part=None: 107",V9.Q085,PASS,"S8T001 count {'coder': 'C01', 'category': 'Sufficient'}"
+V9.Q086,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C01', 'category': 'Partially sufficient'} part=None: 39",V9.Q086,PASS,"S8T001 count {'coder': 'C01', 'category': 'Partially sufficient'}"
+V9.Q087,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C01', 'category': 'Insufficient'} part=None: 4",V9.Q087,PASS,"S8T001 count {'coder': 'C01', 'category': 'Insufficient'}"
+V9.Q088,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C02', 'category': 'Sufficient'} part=None: 96",V9.Q088,PASS,"S8T001 count {'coder': 'C02', 'category': 'Sufficient'}"
+V9.Q089,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C02', 'category': 'Partially sufficient'} part=None: 48",V9.Q089,PASS,"S8T001 count {'coder': 'C02', 'category': 'Partially sufficient'}"
+V9.Q090,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C02', 'category': 'Insufficient'} part=None: 6",V9.Q090,PASS,"S8T001 count {'coder': 'C02', 'category': 'Insufficient'}"
+V9.Q091,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C03', 'category': 'Sufficient'} part=None: 59",V9.Q091,PASS,"S8T001 count {'coder': 'C03', 'category': 'Sufficient'}"
+V9.Q092,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C03', 'category': 'Partially sufficient'} part=None: 89",V9.Q092,PASS,"S8T001 count {'coder': 'C03', 'category': 'Partially sufficient'}"
+V9.Q093,v2 supplied checklist (governing log unavailable),T.6; F.4,"S8T001 count {'coder': 'C03', 'category': 'Insufficient'} part=None: 2",V9.Q093,PASS,"S8T001 count {'coder': 'C03', 'category': 'Insufficient'}"
+V9.Q094,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C01', 'category': 'Fit'} part=None: 103",V9.Q094,PASS,"S9T001 count {'coder': 'C01', 'category': 'Fit'}"
+V9.Q095,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C01', 'category': 'Partial Fit'} part=None: 20",V9.Q095,PASS,"S9T001 count {'coder': 'C01', 'category': 'Partial Fit'}"
+V9.Q096,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C01', 'category': 'No Fit'} part=None: 3",V9.Q096,PASS,"S9T001 count {'coder': 'C01', 'category': 'No Fit'}"
+V9.Q097,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C01', 'category': 'Cannot assess from register entry'} part=None: 24",V9.Q097,PASS,"S9T001 count {'coder': 'C01', 'category': 'Cannot assess from register entry'}"
+V9.Q098,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C02', 'category': 'Fit'} part=None: 133",V9.Q098,PASS,"S9T001 count {'coder': 'C02', 'category': 'Fit'}"
+V9.Q099,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C02', 'category': 'Partial Fit'} part=None: 7",V9.Q099,PASS,"S9T001 count {'coder': 'C02', 'category': 'Partial Fit'}"
+V9.Q100,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C02', 'category': 'No Fit'} part=None: 1",V9.Q100,PASS,"S9T001 count {'coder': 'C02', 'category': 'No Fit'}"
+V9.Q101,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C02', 'category': 'Cannot assess from register entry'} part=None: 9",V9.Q101,PASS,"S9T001 count {'coder': 'C02', 'category': 'Cannot assess from register entry'}"
+V9.Q102,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C03', 'category': 'Fit'} part=None: 92",V9.Q102,PASS,"S9T001 count {'coder': 'C03', 'category': 'Fit'}"
+V9.Q103,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C03', 'category': 'Partial Fit'} part=None: 57",V9.Q103,PASS,"S9T001 count {'coder': 'C03', 'category': 'Partial Fit'}"
+V9.Q104,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C03', 'category': 'No Fit'} part=None: 0",V9.Q104,PASS,"S9T001 count {'coder': 'C03', 'category': 'No Fit'}"
+V9.Q105,v2 supplied checklist (governing log unavailable),T.6; F.4,"S9T001 count {'coder': 'C03', 'category': 'Cannot assess from register entry'} part=None: 1",V9.Q105,PASS,"S9T001 count {'coder': 'C03', 'category': 'Cannot assess from register entry'}"
+V9.Q106,v2 supplied checklist (governing log unavailable),O.4,S8T003 count {'category': 'Sufficient'} part=None: 92,V9.Q106,PASS,S8T003 count {'category': 'Sufficient'}
+V9.Q107,v2 supplied checklist (governing log unavailable),O.4,"S8T003 proportion {'category': 'Sufficient'} part=None: ['.613', '.533', '.688']",V9.Q107,PASS,S8T003 proportion {'category': 'Sufficient'}
+V9.Q108,v2 supplied checklist (governing log unavailable),T.5,S8T005 count {'subset': 'broad_register_usable'} part=None: 148,V9.Q108,PASS,S8T005 count {'subset': 'broad_register_usable'}
+V9.Q109,v2 supplied checklist (governing log unavailable),T.5,S8T005 count {'subset': 'strict_register_sufficient'} part=None: 92,V9.Q109,PASS,S8T005 count {'subset': 'strict_register_sufficient'}
+V9.Q110,v2 supplied checklist (governing log unavailable),T.2,S8T003 count {'category': 'Sufficient'} part=None: 92,V9.Q110,PASS,S8T003 count {'category': 'Sufficient'}
+V9.Q111,v2 supplied checklist (governing log unavailable),T.2,S8T003 count {'category': 'Partially sufficient'} part=None: 55,V9.Q111,PASS,S8T003 count {'category': 'Partially sufficient'}
+V9.Q112,v2 supplied checklist (governing log unavailable),T.2,S8T003 count {'category': 'Insufficient'} part=None: 2,V9.Q112,PASS,S8T003 count {'category': 'Insufficient'}
+V9.Q113,v2 supplied checklist (governing log unavailable),T.2,S8T003 count {'category': 'No majority / split judgement'} part=None: 1,V9.Q113,PASS,S8T003 count {'category': 'No majority / split judgement'}
+V9.Q114,v2 supplied checklist (governing log unavailable),T.2,S8T004 count {'category': 'Sufficient'} part=None: 42,V9.Q114,PASS,S8T004 count {'category': 'Sufficient'}
+V9.Q115,v2 supplied checklist (governing log unavailable),T.2,S8T004 count {'category': 'Partially sufficient'} part=None: 30,V9.Q115,PASS,S8T004 count {'category': 'Partially sufficient'}
+V9.Q116,v2 supplied checklist (governing log unavailable),T.2,S8T004 count {'category': 'Insufficient'} part=None: 0,V9.Q116,PASS,S8T004 count {'category': 'Insufficient'}
+V9.Q117,v2 supplied checklist (governing log unavailable),T.2,S8T004 count {'category': 'No majority / split judgement'} part=None: 3,V9.Q117,PASS,S8T004 count {'category': 'No majority / split judgement'}
+V9.Q118,v2 supplied checklist (governing log unavailable),T.2,S9T003 count {'category': 'Fit'} part=None: 119,V9.Q118,PASS,S9T003 count {'category': 'Fit'}
+V9.Q119,v2 supplied checklist (governing log unavailable),T.2,S9T003 count {'category': 'Partial Fit'} part=None: 12,V9.Q119,PASS,S9T003 count {'category': 'Partial Fit'}
+V9.Q120,v2 supplied checklist (governing log unavailable),T.2,S9T003 count {'category': 'No Fit'} part=None: 0,V9.Q120,PASS,S9T003 count {'category': 'No Fit'}
+V9.Q121,v2 supplied checklist (governing log unavailable),T.2,S9T003 count {'category': 'Cannot assess from register entry'} part=None: 6,V9.Q121,PASS,S9T003 count {'category': 'Cannot assess from register entry'}
+V9.Q122,v2 supplied checklist (governing log unavailable),T.2,S9T003 count {'category': 'No majority / split judgement'} part=None: 13,V9.Q122,PASS,S9T003 count {'category': 'No majority / split judgement'}
+V9.Q123,v2 supplied checklist (governing log unavailable),T.2,S9T004 count {'category': 'Fit'} part=None: 54,V9.Q123,PASS,S9T004 count {'category': 'Fit'}
+V9.Q124,v2 supplied checklist (governing log unavailable),T.2,S9T004 count {'category': 'Partial Fit'} part=None: 11,V9.Q124,PASS,S9T004 count {'category': 'Partial Fit'}
+V9.Q125,v2 supplied checklist (governing log unavailable),T.2,S9T004 count {'category': 'No Fit'} part=None: 0,V9.Q125,PASS,S9T004 count {'category': 'No Fit'}
+V9.Q126,v2 supplied checklist (governing log unavailable),T.2,S9T004 count {'category': 'Cannot assess from register entry'} part=None: 1,V9.Q126,PASS,S9T004 count {'category': 'Cannot assess from register entry'}
+V9.Q127,v2 supplied checklist (governing log unavailable),T.2,S9T004 count {'category': 'No majority / split judgement'} part=None: 9,V9.Q127,PASS,S9T004 count {'category': 'No majority / split judgement'}
+I.V1.context.S2T002.ABC,v2 sections V1-V8,1.6; S1.6; G.6,"V1.context.S2T002.ABC: ['0.9397477187332259', '0.8355110514104286', '1.0']",V1.context.S2T002.ABC,PASS,
+I.V1.context.S2T002.LBC,v2 sections V1-V8,1.6; S1.6; G.6,"V1.context.S2T002.LBC: ['0.9397477187332259', '0.8355110514104286', '1.0']",V1.context.S2T002.LBC,PASS,
+I.V1.context.S2T002.delta_A,v2 sections V1-V8,1.6; S1.6; G.6,"V1.context.S2T002.delta_A: ['0', '0', '0']",V1.context.S2T002.delta_A,PASS,
+I.V1.context.S2T002.delta_min,v2 sections V1-V8,1.6; S1.6; G.6,"V1.context.S2T002.delta_min: ['0', '0', '0']",V1.context.S2T002.delta_min,PASS,
+I.V1.context.S2T008.ABC,v2 sections V1-V8,1.6; S1.6; G.6,V1.context.S2T008.ABC: ['0.8099547511312217'],V1.context.S2T008.ABC,PASS,
+I.V1.context.S2T008.ABL,v2 sections V1-V8,1.6; S1.6; G.6,V1.context.S2T008.ABL: ['0.8099547511312217'],V1.context.S2T008.ABL,PASS,
+I.V1.context.S2T008.delta_C,v2 sections V1-V8,1.6; S1.6; G.6,"V1.context.S2T008.delta_C: ['0', '0', '0']",V1.context.S2T008.delta_C,PASS,
+I.V1.context.S2T008.delta_min,v2 sections V1-V8,1.6; S1.6; G.6,"V1.context.S2T008.delta_min: ['0', '0', '0']",V1.context.S2T008.delta_min,PASS,
+I.V1.context.S2T018.tp,v2 sections V1-V8,S1.6,V1.context.S2T018.tp: 6,V1.context.S2T018.tp,PASS,
+I.V1.context.S2T018.fp,v2 sections V1-V8,S1.6,V1.context.S2T018.fp: 0,V1.context.S2T018.fp,PASS,
+I.V1.context.S2T018.fn,v2 sections V1-V8,S1.6,V1.context.S2T018.fn: 0,V1.context.S2T018.fn,PASS,
+I.V1.context.S2T018.human_majority_positive_n,v2 sections V1-V8,S1.6,V1.context.S2T018.human_majority_positive_n: 6,V1.context.S2T018.human_majority_positive_n,PASS,
+I.V1.context.S2T018.model_positive_n,v2 sections V1-V8,S1.6,V1.context.S2T018.model_positive_n: 6,V1.context.S2T018.model_positive_n,PASS,
+I.V4.2.domains.human_human,v2 sections V1-V8,E.4; T5.2,"V4.2.domains.human_human: {'counts': [105, 11, 104], 'denominator': 220}",V4.2.domains.human_human,PASS,
+I.V4.3.domains.human_human,v2 sections V1-V8,E.4; T5.2,"V4.3.domains.human_human: [48, 5, 47]",V4.3.domains.human_human,PASS,
+I.V4.4.domains.human_human,v2 sections V1-V8,E.4; T5.2,"V4.4.domains.human_human: [0, 0, 0]",V4.4.domains.human_human,PASS,
+I.V4.2.domains.model_human,v2 sections V1-V8,E.4; T5.2,"V4.2.domains.model_human: {'counts': [103, 16, 80], 'denominator': 199}",V4.2.domains.model_human,PASS,
+I.V4.3.domains.model_human,v2 sections V1-V8,E.4; T5.2,"V4.3.domains.model_human: [52, 8, 40]",V4.3.domains.model_human,PASS,
+I.V4.4.domains.model_human,v2 sections V1-V8,E.4; T5.2,"V4.4.domains.model_human: [0, 0, 0]",V4.4.domains.model_human,PASS,
+I.V4.2.purposes.human_human,v2 sections V1-V8,E.4; T5.2,"V4.2.purposes.human_human: {'counts': [38, 1, 233], 'denominator': 272}",V4.2.purposes.human_human,PASS,
+I.V4.3.purposes.human_human,v2 sections V1-V8,E.4; T5.2,"V4.3.purposes.human_human: [14, 0, 86]",V4.3.purposes.human_human,PASS,
+I.V4.4.purposes.human_human,v2 sections V1-V8,E.4; T5.2,"V4.4.purposes.human_human: [0, 0, 0]",V4.4.purposes.human_human,PASS,
+I.V4.2.purposes.model_human,v2 sections V1-V8,E.4; T5.2,"V4.2.purposes.model_human: {'counts': [40, 4, 226], 'denominator': 270}",V4.2.purposes.model_human,PASS,
+I.V4.3.purposes.model_human,v2 sections V1-V8,E.4; T5.2,"V4.3.purposes.model_human: [15, 1, 84]",V4.3.purposes.model_human,PASS,
+I.V4.4.purposes.model_human,v2 sections V1-V8,E.4; T5.2,"V4.4.purposes.model_human: [0, 0, 0]",V4.4.purposes.model_human,PASS,
+I.V4.5,v2 sections V1-V8,findings log,"V4.5: {'human_human': [30, 7], 'model_human': [45, 6]}",V4.5,PASS,
+I.V5.1.prerequisite.baseline.purposes,v2 sections V1-V8,G.12,V5.1.prerequisite.baseline.purposes: 0,V5.1.prerequisite.baseline.purposes,PASS,
+I.V5.1.baseline.purposes,v2 sections V1-V8,G.12,V5.1.baseline.purposes: 97,V5.1.baseline.purposes,PASS,
+I.V5.1.full.baseline.purposes,v2 sections V1-V8,G.12,"V5.1.full.baseline.purposes: [24, 3, 0, 0, 100]",V5.1.full.baseline.purposes,PASS,
+I.V5.2.baseline.purposes,v2 sections V1-V8,G.12,"V5.2.baseline.purposes: [16, 17, 65, 2, 0]",V5.2.baseline.purposes,PASS,
+I.V5.1.prerequisite.baseline.domains,v2 sections V1-V8,G.12,V5.1.prerequisite.baseline.domains: 0,V5.1.prerequisite.baseline.domains,PASS,
+I.V5.1.baseline.domains,v2 sections V1-V8,G.12,V5.1.baseline.domains: 107,V5.1.baseline.domains,PASS,
+I.V5.1.full.baseline.domains,v2 sections V1-V8,G.12,"V5.1.full.baseline.domains: [5, 22, 3, 0, 132]",V5.1.full.baseline.domains,PASS,
+I.V5.2.baseline.domains,v2 sections V1-V8,G.12,"V5.2.baseline.domains: [3, 9, 71, 15, 2]",V5.2.baseline.domains,PASS,
+I.V5.1.prerequisite.hard_case.purposes,v2 sections V1-V8,G.12,V5.1.prerequisite.hard_case.purposes: 0,V5.1.prerequisite.hard_case.purposes,PASS,
+I.V5.1.hard_case.purposes,v2 sections V1-V8,G.12,V5.1.hard_case.purposes: 42,V5.1.hard_case.purposes,PASS,
+I.V5.1.full.hard_case.purposes,v2 sections V1-V8,G.12,"V5.1.full.hard_case.purposes: [9, 4, 0, 0, 46]",V5.1.full.hard_case.purposes,PASS,
+I.V5.2.hard_case.purposes,v2 sections V1-V8,G.12,"V5.2.hard_case.purposes: [12, 27, 56, 5, 0]",V5.2.hard_case.purposes,PASS,
+I.V5.1.prerequisite.hard_case.domains,v2 sections V1-V8,G.12,V5.1.prerequisite.hard_case.domains: 0,V5.1.prerequisite.hard_case.domains,PASS,
+I.V5.1.hard_case.domains,v2 sections V1-V8,G.12,V5.1.hard_case.domains: 45,V5.1.hard_case.domains,PASS,
+I.V5.1.full.hard_case.domains,v2 sections V1-V8,G.12,"V5.1.full.hard_case.domains: [6, 18, 3, 0, 66]",V5.1.full.hard_case.domains,PASS,
+I.V5.2.hard_case.domains,v2 sections V1-V8,G.12,"V5.2.hard_case.domains: [8, 4, 60, 24, 4]",V5.2.hard_case.domains,PASS,
+I.V5.3.S5T001,v2 sections V1-V8,G.12,"V5.3.S5T001: [199, 173]",V5.3.S5T001,PASS,
+I.V5.4.S5T001,v2 sections V1-V8,G.12,"V5.4.S5T001: [198, 160]",V5.4.S5T001,PASS,
+I.V5.3.S5T002,v2 sections V1-V8,G.12,"V5.3.S5T002: [160, 129]",V5.3.S5T002,PASS,
+I.V5.4.S5T002,v2 sections V1-V8,G.12,"V5.4.S5T002: [159, 103]",V5.4.S5T002,PASS,
+I.V8.1.A-B,v2 sections V1-V8,G.14; P.3; P.4,V8.1.A-B: -0.000,V8.1.A-B,DISCREPANCY,
+I.V8.1.L-C,v2 sections V1-V8,G.14; P.3; P.4,V8.1.L-C: -0.000,V8.1.L-C,PASS,
+I.V7.named.S5T002.30,v2 sections V1-V8,P.2; C.2; D.1,V7.named.S5T002.30: 30,V7.named.S5T002.30,PASS,Policy Evaluation / Impact Analysis
+I.V7.named.S5T002.36,v2 sections V1-V8,P.2; C.2; D.1,V7.named.S5T002.36: 36,V7.named.S5T002.36,PASS,Descriptive Monitoring
+I.V7.named.S5T002.19,v2 sections V1-V8,P.2; C.2; D.1,V7.named.S5T002.19: 19,V7.named.S5T002.19,PASS,Outcome Tracking
+I.V7.named.S5T001.13,v2 sections V1-V8,P.2; C.2; D.1,V7.named.S5T001.13: 13,V7.named.S5T001.13,PASS,Unclear from Register Entry
+I.V7.named.S5T002.26,v2 sections V1-V8,P.2; C.2; D.1,V7.named.S5T002.26: 26,V7.named.S5T002.26,PASS,Unclear from Register Entry
+I.V8.2.Outcome.A-C,v2 sections V1-V8,P.3; P.4,V8.2.Outcome.A-C: -0.07,V8.2.Outcome.A-C,PASS,
+I.V8.2.Outcome.B-C,v2 sections V1-V8,P.3; P.4,V8.2.Outcome.B-C: -0.04,V8.2.Outcome.B-C,PASS,
+I.V8.2.Unclear.L-A,v2 sections V1-V8,P.3; P.4,V8.2.Unclear.L-A: 0,V8.2.Unclear.L-A,PASS,
+I.V8.2.Unclear.L-B,v2 sections V1-V8,P.3; P.4,V8.2.Unclear.L-B: 0,V8.2.Unclear.L-B,PASS,
+I.V8.2.Unclear.L-C,v2 sections V1-V8,P.3; P.4,V8.2.Unclear.L-C: 0,V8.2.Unclear.L-C,PASS,
+I.V8.3.S5T007.precision,v2 sections V1-V8,C.4; D.2,"V8.3.S5T007.precision: ['1284', '716', 2000, 1800]",V8.3.S5T007.precision,PASS,
+I.V8.3.S5T007.f1,v2 sections V1-V8,C.4; D.2,"V8.3.S5T007.f1: ['1284', '716', 2000, 1800]",V8.3.S5T007.f1,PASS,
+I.V8.3.S5T007.recall,v2 sections V1-V8,C.4; D.2,"V8.3.S5T007.recall: ['0.077', '0.000', '0.250']",V8.3.S5T007.recall,PASS,
+I.V8.3.S5T008.precision,v2 sections V1-V8,C.4; D.2,"V8.3.S5T008.precision: ['1233', '767', 2000, 1800]",V8.3.S5T008.precision,PASS,
+I.V8.3.S5T008.f1,v2 sections V1-V8,C.4; D.2,"V8.3.S5T008.f1: ['1233', '767', 2000, 1800]",V8.3.S5T008.f1,PASS,
+I.V8.3.S5T008.recall,v2 sections V1-V8,C.4; D.2,"V8.3.S5T008.recall: ['0.038', '0.000', '0.125']",V8.3.S5T008.recall,PASS,
+REMAINDER,missing governing log,all other log items,Additional quantitative claims cannot be enumerated without the governing log.,,NOT CHECKED,Log absent; no attached copy. Not counted as an enumerated quantitative claim.
