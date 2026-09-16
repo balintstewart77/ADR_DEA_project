@@ -21,10 +21,13 @@ from datetime import datetime, timezone
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from analysis.visualisations import extract_scratch_coder_paper as legacy
 
 
-ROOT = Path(__file__).resolve().parents[2]
 RESULTS = ROOT / "analysis/scratch_coder_results/results.md"
 RESULTS_META = ROOT / "analysis/scratch_coder_results/run_metadata.json"
 CONFIDENCE = ROOT / "analysis/confidence_exploratory/results_confidence.md"
