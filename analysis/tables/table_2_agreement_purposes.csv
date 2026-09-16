@@ -1,5 +1,5 @@
 Row group,Label,Applied by coder majority (n),C01–C02,C01–C03,C02–C03,C01,C02,C03
-Applied by coder majority to 30 or more records,Descriptive Monitoring,36,"0.42 [0.27, 0.57]","0.32 [0.15, 0.47]","0.30 [0.13, 0.45]","0.31 [0.15, 0.46]","0.55 [0.40, 0.69]","0.21 [0.05, 0.36]"
-Applied by coder majority to 30 or more records,Policy Evaluation / Impact Analysis,30,"0.57 [0.40, 0.73]","0.63 [0.47, 0.76]","0.38 [0.21, 0.56]","0.53 [0.35, 0.68]","0.62 [0.45, 0.77]","0.52 [0.34, 0.67]"
-"Applied by coder majority to 10–29 records: fewer records, so wider intervals; interpret with caution",Outcome Tracking,19,"0.36 [0.18, 0.52]","0.06 [-0.07, 0.21]","0.08 [-0.04, 0.21]","0.29 [0.12, 0.45]","0.47 [0.31, 0.63]","0.13 [0.02, 0.25]"
-"Unclear from Register Entry — fewer records, so wider intervals; interpret with caution",Unclear from Register Entry,26,"0.40 [0.18, 0.61]","0.27 [0.15, 0.40]","0.24 [0.13, 0.35]","0.07 [0.00, 0.22]","0.11 [0.00, 0.33]","0.02 [0.00, 0.05]"
+30 or more records,Descriptive Monitoring,36,"0.42 [0.27, 0.57]","0.32 [0.15, 0.47]","0.30 [0.13, 0.45]","0.31 [0.15, 0.46]","0.55 [0.40, 0.69]","0.21 [0.05, 0.36]"
+30 or more records,Policy Evaluation / Impact Analysis,30,"0.57 [0.40, 0.73]","0.63 [0.47, 0.76]","0.38 [0.21, 0.56]","0.53 [0.35, 0.68]","0.62 [0.45, 0.77]","0.52 [0.34, 0.67]"
+10–29 records (interpret with caution),Outcome Tracking,19,"0.36 [0.18, 0.52]","0.06 [−0.07, 0.21]","0.08 [−0.04, 0.21]","0.29 [0.12, 0.45]","0.47 [0.31, 0.63]","0.13 [0.02, 0.25]"
+Declined to classify (10–29 records; interpret with caution),Unclear from Register Entry,26,"0.40 [0.18, 0.61]","0.27 [0.15, 0.40]","0.24 [0.13, 0.35]","0.07 [0.00, 0.22]","0.11 [0.00, 0.33]","0.02 [0.00, 0.05]"

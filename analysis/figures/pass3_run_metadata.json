@@ -1,0 +1,159 @@
+{
+  "manifest_generated_utc": "2026-09-16T16:56:21.497737+00:00",
+  "rendered_utc": "2026-09-16T16:56:36.939403+00:00",
+  "logs": {
+    "scratch_coder_figure_revisions_log_pass3.md": {
+      "path": "C:\\Users\\balin\\Desktop\\DEA_working_logs\\scratch_coder_figure_revisions_log_pass3.md",
+      "sha256": "92034d5383037047117856d2fcdd08d9cca9f6b2b03acee6c312ade0f6b0e7f8",
+      "size_bytes": 32395,
+      "last_modified_utc": "2026-09-16T16:21:08.576665+00:00"
+    },
+    "scratch_coder_figure_revisions_log_pass2.md": {
+      "path": "C:\\Users\\balin\\Desktop\\DEA_working_logs\\scratch_coder_figure_revisions_log_pass2.md",
+      "sha256": "9314cc04ec4b32f46730e8a3917f11c6cfddec4ee8c6b962ce70a9c5b6a64a0a",
+      "size_bytes": 67997,
+      "last_modified_utc": "2026-09-16T12:54:45.778222+00:00"
+    },
+    "scratch_coder_interpretive_findings.md": {
+      "path": "C:\\Users\\balin\\Desktop\\DEA_working_logs\\scratch_coder_interpretive_findings.md",
+      "sha256": "5051db037e50417a53a168b62dfda6e466dce333e1706aae453a9e250774610e",
+      "size_bytes": 16322,
+      "last_modified_utc": "2026-09-16T11:45:18.974435+00:00"
+    }
+  },
+  "source_commits": {
+    "pass2_baseline": "64679cf7439f38f9b6cb8cb2c284e52f4478ba5f",
+    "canonical_data_outputs": "6cbf154ac041533f12261d3a92459bd571f9b25c",
+    "exploratory_confidence_outputs": "f36d738560bb7a2e1c5be68777851778c85b04d5",
+    "verification_report": "1287716b38c5d81992c9891038dadf19877fb3b3"
+  },
+  "code_commits": {
+    "extractor": "45b52e89a6c737139fbc39b86bb4f822edea3812",
+    "renderer": "09309088baeab6edb4650a37b7f31a53c191224a",
+    "runner": "08654c9d124ccd1bb73b1de177194c407a88cc96"
+  },
+  "font_family": "DejaVu Sans",
+  "colors": {
+    "population": {
+      "baseline": "#28658C",
+      "baseline_strict_sufficient": "#D98524",
+      "hard_case": "#087F73"
+    },
+    "population_lightness": {
+      "baseline": 0.35294117647058826,
+      "baseline_strict_sufficient": 0.49607843137254903,
+      "hard_case": 0.2647058823529412
+    },
+    "ratings": {
+      "Register-entry information": {
+        "Sufficient": "#246B45",
+        "Partially sufficient": "#78AF82",
+        "Insufficient": "#D6E8D8",
+        "No majority": "#888888"
+      },
+      "Taxonomy fit": {
+        "Fit": "#5A4A86",
+        "Partial Fit": "#9B8CC0",
+        "No Fit": "#DED8EC",
+        "Cannot assess from register entry": "#5F5F5F",
+        "No majority": "#AEAEAE"
+      },
+      "Coder confidence": {
+        "High": "#A63D57",
+        "Medium": "#D77A8B",
+        "Low": "#F3D0D7",
+        "No majority": "#888888"
+      }
+    },
+    "disagreement": {
+      "containment": "#3B6B8C",
+      "overlap": "#C58B36",
+      "disjoint": "#777777"
+    },
+    "strict_hard_case_lightness_difference": 0.23137254901960785
+  },
+  "software": {
+    "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+    "matplotlib": "3.10.3",
+    "font": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf"
+  },
+  "isolation_test": {
+    "status": "PASS",
+    "completed_utc": "2026-09-16T16:56:52.692501+00:00",
+    "renderer_copy": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w\\render_scratch_coder_pass3.py",
+    "working_directory": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w",
+    "analytical_inputs_present": [],
+    "copied_inputs": [
+      "figure_1_panel_agreement_replacement.csv",
+      "figure_1_panel_agreement_replacement_metadata.json",
+      "figure_2_coder_ratings_baseline.csv",
+      "figure_2_coder_ratings_baseline_metadata.json",
+      "figure_3_sufficiency_sensitivity.csv",
+      "figure_3_sufficiency_sensitivity_metadata.json",
+      "figure_4_label_application.csv",
+      "figure_4_label_application_metadata.json",
+      "pass3_deliverable_manifest.json",
+      "pass3_run_metadata.json",
+      "supplementary_figure_s1_baseline_vs_hardcase.csv",
+      "supplementary_figure_s1_baseline_vs_hardcase_metadata.json",
+      "supplementary_figure_s2_hardcase_ratings_confidence.csv",
+      "supplementary_figure_s2_hardcase_ratings_confidence_metadata.json",
+      "supplementary_figure_s3_disagreement_composition.csv",
+      "supplementary_figure_s3_disagreement_composition_metadata.json",
+      "supplementary_table_s1a_register_information.csv",
+      "supplementary_table_s1a_register_information_metadata.json",
+      "supplementary_table_s1b_taxonomy_fit.csv",
+      "supplementary_table_s1b_taxonomy_fit_metadata.json",
+      "supplementary_table_s1c_agreed_labels.csv",
+      "supplementary_table_s1c_agreed_labels_metadata.json",
+      "supplementary_table_s2_disagreement_composition.csv",
+      "supplementary_table_s2_disagreement_composition_metadata.json",
+      "table_1_agreement_domains.csv",
+      "table_1_agreement_domains_metadata.json",
+      "table_2_agreement_purposes.csv",
+      "table_2_agreement_purposes_metadata.json",
+      "table_3_agreement_with_majority_domains.csv",
+      "table_3_agreement_with_majority_domains_metadata.json",
+      "table_4_agreement_with_majority_purposes.csv",
+      "table_4_agreement_with_majority_purposes_metadata.json"
+    ],
+    "forbidden_source_path_literals_in_renderer": [],
+    "expected_outputs": 30,
+    "outputs_created": 30,
+    "missing_outputs": [],
+    "content_identical_to_production": {
+      "figure_1_panel_agreement_replacement.png": true,
+      "figure_1_panel_agreement_replacement.svg": true,
+      "figure_2_coder_ratings_baseline.png": true,
+      "figure_2_coder_ratings_baseline.svg": true,
+      "figure_3_sufficiency_sensitivity.png": true,
+      "figure_3_sufficiency_sensitivity.svg": true,
+      "figure_4_label_application.png": true,
+      "figure_4_label_application.svg": true,
+      "table_1_agreement_domains.csv": true,
+      "table_1_agreement_domains.md": true,
+      "table_2_agreement_purposes.csv": true,
+      "table_2_agreement_purposes.md": true,
+      "table_3_agreement_with_majority_domains.csv": true,
+      "table_3_agreement_with_majority_domains.md": true,
+      "table_4_agreement_with_majority_purposes.csv": true,
+      "table_4_agreement_with_majority_purposes.md": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.png": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.svg": true,
+      "supplementary_figure_s2_hardcase_ratings_confidence.png": true,
+      "supplementary_figure_s2_hardcase_ratings_confidence.svg": true,
+      "supplementary_figure_s3_disagreement_composition.png": true,
+      "supplementary_figure_s3_disagreement_composition.svg": true,
+      "supplementary_table_s1a_register_information.csv": true,
+      "supplementary_table_s1a_register_information.md": true,
+      "supplementary_table_s1b_taxonomy_fit.csv": true,
+      "supplementary_table_s1b_taxonomy_fit.md": true,
+      "supplementary_table_s1c_agreed_labels.csv": true,
+      "supplementary_table_s1c_agreed_labels.md": true,
+      "supplementary_table_s2_disagreement_composition.csv": true,
+      "supplementary_table_s2_disagreement_composition.md": true
+    },
+    "all_content_identical": true,
+    "comparison_rule": "Exact bytes for PNG/CSV/Markdown; SVG after canonicalizing opaque generated id attributes and references by occurrence."
+  }
+}

@@ -1,40 +1,13 @@
 {
-  "deliverable_id": "Table 2",
+  "deliverable": "Table 2",
   "slug": "table_2_agreement_purposes",
-  "data_file": "table_2_agreement_purposes.csv",
-  "source_files": [
-    "analysis/scratch_coder_results/results.md"
-  ],
-  "source_table_ids": [
-    "S5T006",
-    "S5T010"
-  ],
-  "source_hashes": {
-    "analysis/scratch_coder_results/results.md": {
-      "sha256": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017",
-      "last_commit": "9bcf38b089399390b77619189e8a08ca412cb518"
-    },
-    "analysis/scratch_coder_results/run_metadata.json": {
-      "sha256": "17965b684ecd3f3e669f4c40ddfbb17ad46d802caa44729c7199080a468696e7",
-      "last_commit": "9bcf38b089399390b77619189e8a08ca412cb518"
-    },
-    "analysis/confidence_exploratory/results_confidence.md": {
-      "sha256": "e9f4b5bc35e744594883459fb26faf6445515e5003e7b615c26ed262189805c6",
-      "last_commit": "f36d738560bb7a2e1c5be68777851778c85b04d5"
-    },
-    "analysis/verification_pass2/verification_report.md": {
-      "sha256": "637db03b0832a99df5ba04032fcb45dacba18ea59ca1921cc55382f54e1281df",
-      "last_commit": "1287716b38c5d81992c9891038dadf19877fb3b3"
-    },
-    "analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage.csv": {
-      "sha256": "2921e341cf7fdd7b4769fc491fbe158947d9e750ebdcda60c111be20a784f95c",
-      "last_commit": "ac7536806d3c7dcc1f4eb4a933772f8fb25eac42"
-    },
-    "analysis/outputs_disagreement_types_20260909T084916Z/disagreement_type_distribution.csv": {
-      "sha256": "5dec756123059bcb4cf435dca2a6900e409a23b2ab003be963e25e415d1eeb2d",
-      "last_commit": "e9af0ccf14cf279478e6f744bfa4ee96a5e3b428"
-    }
-  },
-  "row_count": 48,
-  "all_numeric_values_traced": true
+  "generated_utc": "2026-09-16T16:56:21.497737+00:00",
+  "numeric_baseline": "pass-2 figure data at 64679cf",
+  "rows": 48,
+  "dimension_names": [
+    "Research Domains",
+    "Analytical Purposes",
+    "Demographic disparities / equity",
+    "COVID-19 & Pandemic"
+  ]
 }

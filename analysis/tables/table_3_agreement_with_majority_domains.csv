@@ -1,13 +1,13 @@
 Row group,Label,Applied by coder majority (n),Both,Fable 5 only,Coder majority only,Neither,Precision [95% interval],Recall [95% interval],F1 [95% interval]
-Applied by coder majority to 30 or more records,Business & Productivity,41,40,5,1,104,"0.89 [0.79, 0.98]","0.98 [0.92, 1.00]","0.93 [0.86, 0.98]"
-Applied by coder majority to 30 or more records,Labour Market & Employment,39,35,21,4,90,"0.63 [0.49, 0.75]","0.90 [0.79, 0.98]","0.74 [0.63, 0.83]"
-"Applied by coder majority to 10–29 records: fewer records, so wider intervals; interpret with caution",Education & Skills,27,26,9,1,114,"0.74 [0.59, 0.88]","0.96 [0.88, 1.00]","0.84 [0.72, 0.92]"
-"Applied by coder majority to 10–29 records: fewer records, so wider intervals; interpret with caution",Health & Social Care,23,22,3,1,124,"0.88 [0.73, 1.00]","0.96 [0.85, 1.00]","0.92 [0.82, 0.98]"
-"Applied by coder majority to 10–29 records: fewer records, so wider intervals; interpret with caution","Poverty, Wealth & Living Standards",11,6,4,5,135,"0.60 [0.25, 0.90]","0.55 [0.23, 0.86]","0.57 [0.27, 0.80]"
-"Unclear from Register Entry — fewer records, so wider intervals; interpret with caution",Unclear from Register Entry,13,1,0,12,137,Not estimable,"0.08 [0.00, 0.25]",Not estimable
-Applied by coder majority to fewer than 10 records: counts only,Migration & Demographics,9,4,2,5,139,,,
-Applied by coder majority to fewer than 10 records: counts only,Crime & Justice,4,4,0,0,146,,,
-Applied by coder majority to fewer than 10 records: counts only,Environment & Agriculture,4,4,6,0,140,,,
-Applied by coder majority to fewer than 10 records: counts only,Public Finance & Taxation,2,2,0,0,148,,,
-Applied by coder majority to fewer than 10 records: counts only,Data Infrastructure & Methodology,0,0,4,0,146,,,
-Applied by coder majority to fewer than 10 records: counts only,Housing & Planning,0,0,1,0,149,,,
+30 or more records,Business & Productivity,41,40,5,1,104,"0.89 [0.79, 0.98]","0.98 [0.92, 1.00]","0.93 [0.86, 0.98]"
+30 or more records,Labour Market & Employment,39,35,21,4,90,"0.63 [0.49, 0.75]","0.90 [0.79, 0.98]","0.74 [0.63, 0.83]"
+10–29 records (interpret with caution),Education & Skills,27,26,9,1,114,"0.74 [0.59, 0.88]","0.96 [0.88, 1.00]","0.84 [0.72, 0.92]"
+10–29 records (interpret with caution),Health & Social Care,23,22,3,1,124,"0.88 [0.73, 1.00]","0.96 [0.85, 1.00]","0.92 [0.82, 0.98]"
+10–29 records (interpret with caution),"Poverty, Wealth & Living Standards",11,6,4,5,135,"0.60 [0.25, 0.90]","0.55 [0.23, 0.86]","0.57 [0.27, 0.80]"
+Declined to classify (10–29 records; interpret with caution),Unclear from Register Entry,13,1,0,12,137,Not estimable,"0.08 [0.00, 0.25]",Not estimable
+Fewer than 10 records (counts only),Migration & Demographics,9,4,2,5,139,–,–,–
+Fewer than 10 records (counts only),Crime & Justice,4,4,0,0,146,–,–,–
+Fewer than 10 records (counts only),Environment & Agriculture,4,4,6,0,140,–,–,–
+Fewer than 10 records (counts only),Public Finance & Taxation,2,2,0,0,148,–,–,–
+Fewer than 10 records (counts only),Data Infrastructure & Methodology,0,0,4,0,146,–,–,–
+Fewer than 10 records (counts only),Housing & Planning,0,0,1,0,149,–,–,–

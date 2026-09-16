@@ -1,0 +1,5 @@
+Dimension,Pair type,Disagreeing pairs (n),Containment n (%),Overlap n (%),Disjoint n (%)
+Research Domains,Between human coders,220,105 (48%),11 (5%),104 (47%)
+Research Domains,Fable 5 with each coder,199,103 (52%),16 (8%),80 (40%)
+Analytical Purposes,Between human coders,272,38 (14%),1 (<1%),233 (86%)
+Analytical Purposes,Fable 5 with each coder,270,40 (15%),4 (1%),226 (84%)

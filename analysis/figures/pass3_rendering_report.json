@@ -1,0 +1,2820 @@
+{
+  "renderer": "render_scratch_coder_pass3.py",
+  "input_boundary": "pass3 manifest plus its listed CSV and JSON files only",
+  "matplotlib_version": "3.10.3",
+  "python_version": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+  "font_family": "DejaVu Sans",
+  "font_resolved": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf",
+  "archived_preexisting_outputs": [],
+  "font_sizes": {
+    "Figure 1": {
+      "target_width_cm": 17,
+      "saved_width_inches": 6.692913385826771,
+      "minimum_effective_pt": 8.0,
+      "minimum_is_subscript": false,
+      "minimum_subscript_effective_pt": 8.399999999999999,
+      "font_status": "PASS"
+    },
+    "Figure 2": {
+      "target_width_cm": 17,
+      "saved_width_inches": 6.692913385826771,
+      "minimum_effective_pt": 8.0,
+      "minimum_is_subscript": false,
+      "minimum_subscript_effective_pt": null,
+      "font_status": "PASS"
+    },
+    "Figure 3": {
+      "target_width_cm": 17,
+      "saved_width_inches": 6.692913385826771,
+      "minimum_effective_pt": 8.0,
+      "minimum_is_subscript": false,
+      "minimum_subscript_effective_pt": 8.399999999999999,
+      "font_status": "PASS"
+    },
+    "Figure 4": {
+      "target_width_cm": 17,
+      "saved_width_inches": 6.692913385826771,
+      "minimum_effective_pt": 8.0,
+      "minimum_is_subscript": false,
+      "minimum_subscript_effective_pt": null,
+      "font_status": "PASS"
+    },
+    "Supplementary Figure S1": {
+      "target_width_cm": 17,
+      "saved_width_inches": 6.692913385826771,
+      "minimum_effective_pt": 8.0,
+      "minimum_is_subscript": false,
+      "minimum_subscript_effective_pt": 8.399999999999999,
+      "font_status": "PASS"
+    },
+    "Supplementary Figure S2": {
+      "target_width_cm": 17,
+      "saved_width_inches": 6.692913385826771,
+      "minimum_effective_pt": 8.0,
+      "minimum_is_subscript": false,
+      "minimum_subscript_effective_pt": null,
+      "font_status": "PASS"
+    },
+    "Supplementary Figure S3": {
+      "target_width_cm": 17,
+      "saved_width_inches": 6.692913385826771,
+      "minimum_effective_pt": 8.0,
+      "minimum_is_subscript": false,
+      "minimum_subscript_effective_pt": null,
+      "font_status": "PASS"
+    }
+  },
+  "edges": {
+    "Figure 1": {
+      "status": "PASS",
+      "failures": []
+    },
+    "Figure 2": {
+      "status": "PASS",
+      "failures": []
+    },
+    "Figure 3": {
+      "status": "PASS",
+      "failures": []
+    },
+    "Figure 4": {
+      "status": "PASS",
+      "failures": []
+    },
+    "Supplementary Figure S1": {
+      "status": "PASS",
+      "failures": []
+    },
+    "Supplementary Figure S2": {
+      "status": "PASS",
+      "failures": []
+    },
+    "Supplementary Figure S3": {
+      "status": "PASS",
+      "failures": []
+    }
+  },
+  "fonts": {
+    "status": "PASS",
+    "family": "DejaVu Sans",
+    "math_family": "DejaVu Sans"
+  },
+  "dimension_names": {
+    "status": "PASS",
+    "names": [
+      "Research Domains",
+      "Analytical Purposes",
+      "Demographic disparities / equity",
+      "COVID-19 & Pandemic"
+    ]
+  },
+  "row_alignment": {
+    "status": "PASS",
+    "failures": [],
+    "mapping": {
+      "alpha ABC": 0,
+      "alpha LBC": 1,
+      "alpha ALC": 2,
+      "alpha ABL": 3,
+      "delta_min": 0,
+      "delta_A": 1,
+      "delta_B": 2,
+      "delta_C": 3
+    }
+  },
+  "colors": {
+    "population": {
+      "baseline": "#28658C",
+      "baseline_strict_sufficient": "#D98524",
+      "hard_case": "#087F73"
+    },
+    "population_lightness": {
+      "baseline": 0.35294117647058826,
+      "baseline_strict_sufficient": 0.49607843137254903,
+      "hard_case": 0.2647058823529412
+    },
+    "ratings": {
+      "Register-entry information": {
+        "Sufficient": "#246B45",
+        "Partially sufficient": "#78AF82",
+        "Insufficient": "#D6E8D8",
+        "No majority": "#888888"
+      },
+      "Taxonomy fit": {
+        "Fit": "#5A4A86",
+        "Partial Fit": "#9B8CC0",
+        "No Fit": "#DED8EC",
+        "Cannot assess from register entry": "#5F5F5F",
+        "No majority": "#AEAEAE"
+      },
+      "Coder confidence": {
+        "High": "#A63D57",
+        "Medium": "#D77A8B",
+        "Low": "#F3D0D7",
+        "No majority": "#888888"
+      }
+    },
+    "disagreement": {
+      "containment": "#3B6B8C",
+      "overlap": "#C58B36",
+      "disjoint": "#777777"
+    },
+    "strict_hard_case_lightness_difference": 0.23137254901960785
+  },
+  "minus_sign": {
+    "status": "PASS",
+    "table_failures": [],
+    "figure_failures": []
+  },
+  "percentages": {
+    "status": "PASS",
+    "displayed_sums": [
+      {
+        "deliverable": "Figure 2",
+        "construct": "Register-entry information",
+        "population": "baseline",
+        "bar": "C01",
+        "displayed_percentages": [
+          "71%",
+          "26%",
+          "3%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Figure 2",
+        "construct": "Register-entry information",
+        "population": "baseline",
+        "bar": "C02",
+        "displayed_percentages": [
+          "64%",
+          "32%",
+          "4%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Figure 2",
+        "construct": "Register-entry information",
+        "population": "baseline",
+        "bar": "C03",
+        "displayed_percentages": [
+          "39%",
+          "59%",
+          "1%"
+        ],
+        "sum": 99
+      },
+      {
+        "deliverable": "Figure 2",
+        "construct": "Register-entry information",
+        "population": "baseline",
+        "bar": "Majority of coders",
+        "displayed_percentages": [
+          "61%",
+          "37%",
+          "1%",
+          "1%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Figure 2",
+        "construct": "Taxonomy fit",
+        "population": "baseline",
+        "bar": "C01",
+        "displayed_percentages": [
+          "69%",
+          "13%",
+          "2%",
+          "16%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Figure 2",
+        "construct": "Taxonomy fit",
+        "population": "baseline",
+        "bar": "C02",
+        "displayed_percentages": [
+          "89%",
+          "5%",
+          "1%",
+          "6%"
+        ],
+        "sum": 101
+      },
+      {
+        "deliverable": "Figure 2",
+        "construct": "Taxonomy fit",
+        "population": "baseline",
+        "bar": "C03",
+        "displayed_percentages": [
+          "61%",
+          "38%",
+          "0%",
+          "1%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Figure 2",
+        "construct": "Taxonomy fit",
+        "population": "baseline",
+        "bar": "Majority of coders",
+        "displayed_percentages": [
+          "79%",
+          "8%",
+          "0%",
+          "4%",
+          "9%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Register-entry information",
+        "population": "hard_case",
+        "bar": "C01",
+        "displayed_percentages": [
+          "72%",
+          "27%",
+          "1%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Register-entry information",
+        "population": "hard_case",
+        "bar": "C02",
+        "displayed_percentages": [
+          "60%",
+          "32%",
+          "8%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Register-entry information",
+        "population": "hard_case",
+        "bar": "C03",
+        "displayed_percentages": [
+          "32%",
+          "65%",
+          "3%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Register-entry information",
+        "population": "hard_case",
+        "bar": "Majority of coders",
+        "displayed_percentages": [
+          "56%",
+          "40%",
+          "0%",
+          "4%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Taxonomy fit",
+        "population": "hard_case",
+        "bar": "C01",
+        "displayed_percentages": [
+          "63%",
+          "17%",
+          "1%",
+          "19%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Taxonomy fit",
+        "population": "hard_case",
+        "bar": "C02",
+        "displayed_percentages": [
+          "87%",
+          "8%",
+          "0%",
+          "5%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Taxonomy fit",
+        "population": "hard_case",
+        "bar": "C03",
+        "displayed_percentages": [
+          "51%",
+          "47%",
+          "1%",
+          "1%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Taxonomy fit",
+        "population": "hard_case",
+        "bar": "Majority of coders",
+        "displayed_percentages": [
+          "72%",
+          "15%",
+          "0%",
+          "1%",
+          "12%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "baseline",
+        "bar": "C01",
+        "displayed_percentages": [
+          "41%",
+          "55%",
+          "5%"
+        ],
+        "sum": 101
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "baseline",
+        "bar": "C02",
+        "displayed_percentages": [
+          "38%",
+          "57%",
+          "5%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "baseline",
+        "bar": "C03",
+        "displayed_percentages": [
+          "50%",
+          "50%",
+          "0%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "baseline",
+        "bar": "Majority of coders",
+        "displayed_percentages": [
+          "43%",
+          "53%",
+          "0%",
+          "5%"
+        ],
+        "sum": 101
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "hard_case",
+        "bar": "C01",
+        "displayed_percentages": [
+          "31%",
+          "63%",
+          "7%"
+        ],
+        "sum": 101
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "hard_case",
+        "bar": "C02",
+        "displayed_percentages": [
+          "32%",
+          "64%",
+          "4%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "hard_case",
+        "bar": "C03",
+        "displayed_percentages": [
+          "41%",
+          "59%",
+          "0%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S2",
+        "construct": "Coder confidence",
+        "population": "hard_case",
+        "bar": "Majority of coders",
+        "displayed_percentages": [
+          "25%",
+          "69%",
+          "1%",
+          "4%"
+        ],
+        "sum": 99
+      },
+      {
+        "deliverable": "Supplementary Figure S3",
+        "dimension": "Research Domains",
+        "pair_family": "human_human",
+        "displayed_percentages": [
+          "48%",
+          "5%",
+          "47%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S3",
+        "dimension": "Research Domains",
+        "pair_family": "model_human",
+        "displayed_percentages": [
+          "52%",
+          "8%",
+          "40%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S3",
+        "dimension": "Analytical Purposes",
+        "pair_family": "human_human",
+        "displayed_percentages": [
+          "14%",
+          "<1%",
+          "86%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Figure S3",
+        "dimension": "Analytical Purposes",
+        "pair_family": "model_human",
+        "displayed_percentages": [
+          "15%",
+          "1%",
+          "84%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1a",
+        "population": "baseline",
+        "displayed_percentage_sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1a",
+        "population": "hard_case",
+        "displayed_percentage_sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1b",
+        "population": "baseline",
+        "displayed_percentage_sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1b",
+        "population": "hard_case",
+        "displayed_percentage_sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1c",
+        "population": "baseline",
+        "dimension": "Research Domains",
+        "displayed_percentages": [
+          3,
+          9,
+          71,
+          15,
+          2
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1c",
+        "population": "baseline",
+        "dimension": "Analytical Purposes",
+        "displayed_percentages": [
+          16,
+          17,
+          65,
+          2,
+          0
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1c",
+        "population": "hard_case",
+        "dimension": "Research Domains",
+        "displayed_percentages": [
+          8,
+          4,
+          60,
+          24,
+          4
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S1c",
+        "population": "hard_case",
+        "dimension": "Analytical Purposes",
+        "displayed_percentages": [
+          12,
+          27,
+          56,
+          5,
+          0
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S2",
+        "dimension": "Research Domains",
+        "pair_family": "human_human",
+        "displayed_percentages": [
+          "48%",
+          "5%",
+          "47%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S2",
+        "dimension": "Research Domains",
+        "pair_family": "model_human",
+        "displayed_percentages": [
+          "52%",
+          "8%",
+          "40%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S2",
+        "dimension": "Analytical Purposes",
+        "pair_family": "human_human",
+        "displayed_percentages": [
+          "14%",
+          "<1%",
+          "86%"
+        ],
+        "sum": 100
+      },
+      {
+        "deliverable": "Supplementary Table S2",
+        "dimension": "Analytical Purposes",
+        "pair_family": "model_human",
+        "displayed_percentages": [
+          "15%",
+          "1%",
+          "84%"
+        ],
+        "sum": 100
+      }
+    ],
+    "whole_number_display": true,
+    "sub_half_percent": "<1%"
+  },
+  "table_rendering": {
+    "Table 1": {
+      "status": "PASS",
+      "rows_shown": 6,
+      "rows_omitted_below_10": 6,
+      "headings": [
+        "30 or more records",
+        "10–29 records (interpret with caution)",
+        "Declined to classify (10–29 records; interpret with caution)"
+      ]
+    },
+    "Table 2": {
+      "status": "PASS",
+      "rows_shown": 4,
+      "rows_omitted_below_10": 4,
+      "headings": [
+        "30 or more records",
+        "10–29 records (interpret with caution)",
+        "Declined to classify (10–29 records; interpret with caution)"
+      ]
+    },
+    "Table 3": {
+      "status": "PASS",
+      "rows_shown": 12,
+      "sparse_rows_counts_only": 6,
+      "headings": [
+        "30 or more records",
+        "10–29 records (interpret with caution)",
+        "Declined to classify (10–29 records; interpret with caution)",
+        "Fewer than 10 records (counts only)"
+      ]
+    },
+    "Table 4": {
+      "status": "PASS",
+      "rows_shown": 8,
+      "sparse_rows_counts_only": 4,
+      "headings": [
+        "30 or more records",
+        "10–29 records (interpret with caution)",
+        "Declined to classify (10–29 records; interpret with caution)",
+        "Fewer than 10 records (counts only)"
+      ]
+    },
+    "Supplementary Table S1a": {
+      "status": "PASS",
+      "rows": 4
+    },
+    "Supplementary Table S1b": {
+      "status": "PASS",
+      "rows": 5
+    },
+    "Supplementary Table S1c": {
+      "status": "PASS",
+      "rows": 4,
+      "row_layout": "single population-and-dimension column"
+    },
+    "Supplementary Table S2": {
+      "status": "PASS",
+      "rows": 4
+    }
+  },
+  "figure_4_labels": {
+    "status": "PASS",
+    "labels_expected": 20,
+    "labels_rendered": 20,
+    "overlaps": [],
+    "placements": [
+      {
+        "dimension": "Research Domains",
+        "label": "Labour Market & Employment",
+        "display": "Labour Market",
+        "number": 2,
+        "method": "direct",
+        "x": 39.0,
+        "y": 56.0,
+        "dx_points": -9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Business & Productivity",
+        "display": "1",
+        "number": 1,
+        "method": "direct",
+        "x": 41.0,
+        "y": 45.0,
+        "dx_points": 9,
+        "dy_points": 7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Education & Skills",
+        "display": "3",
+        "number": 3,
+        "method": "direct",
+        "x": 27.0,
+        "y": 35.0,
+        "dx_points": 9,
+        "dy_points": 7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Health & Social Care",
+        "display": "4",
+        "number": 4,
+        "method": "direct",
+        "x": 23.0,
+        "y": 25.0,
+        "dx_points": 9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Unclear from Register Entry",
+        "display": "5",
+        "number": 5,
+        "method": "direct",
+        "x": 13.0,
+        "y": 1.0,
+        "dx_points": 9,
+        "dy_points": 7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Poverty, Wealth & Living Standards",
+        "display": "6",
+        "number": 6,
+        "method": "direct",
+        "x": 11.0,
+        "y": 10.0,
+        "dx_points": 9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Migration & Demographics",
+        "display": "7",
+        "number": 7,
+        "method": "direct",
+        "x": 9.0,
+        "y": 6.0,
+        "dx_points": -13,
+        "dy_points": 0
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Crime & Justice",
+        "display": "8",
+        "number": 8,
+        "method": "direct",
+        "x": 4.0,
+        "y": 4.0,
+        "dx_points": 9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Environment & Agriculture",
+        "display": "9",
+        "number": 9,
+        "method": "direct",
+        "x": 4.0,
+        "y": 10.0,
+        "dx_points": 9,
+        "dy_points": 7
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Public Finance & Taxation",
+        "display": "10",
+        "number": 10,
+        "method": "leader",
+        "x": 2.0,
+        "y": 2.0,
+        "dx_points": 0,
+        "dy_points": 48
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Data Infrastructure & Methodology",
+        "display": "11",
+        "number": 11,
+        "method": "leader",
+        "x": 0.0,
+        "y": 4.0,
+        "dx_points": 64,
+        "dy_points": 35
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Housing & Planning",
+        "display": "12",
+        "number": 12,
+        "method": "leader",
+        "x": 0.0,
+        "y": 1.0,
+        "dx_points": 64,
+        "dy_points": 35
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Descriptive Monitoring",
+        "display": "Descriptive Monitoring",
+        "number": 1,
+        "method": "direct",
+        "x": 36.0,
+        "y": 52.0,
+        "dx_points": -13,
+        "dy_points": 0
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Policy Evaluation / Impact Analysis",
+        "display": "2",
+        "number": 2,
+        "method": "direct",
+        "x": 30.0,
+        "y": 33.0,
+        "dx_points": 9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Unclear from Register Entry",
+        "display": "3",
+        "number": 3,
+        "method": "direct",
+        "x": 26.0,
+        "y": 1.0,
+        "dx_points": 9,
+        "dy_points": 7
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Outcome Tracking",
+        "display": "4",
+        "number": 4,
+        "method": "direct",
+        "x": 19.0,
+        "y": 47.0,
+        "dx_points": 9,
+        "dy_points": 7
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Life-Course / Trajectory Analysis",
+        "display": "5",
+        "number": 5,
+        "method": "direct",
+        "x": 9.0,
+        "y": 11.0,
+        "dx_points": 9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Methodological / Infrastructure Research",
+        "display": "6",
+        "number": 6,
+        "method": "direct",
+        "x": 7.0,
+        "y": 10.0,
+        "dx_points": 9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Risk Prediction / Early Identification",
+        "display": "7",
+        "number": 7,
+        "method": "direct",
+        "x": 1.0,
+        "y": 2.0,
+        "dx_points": 0,
+        "dy_points": 12
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Service Interaction / Systems Analysis",
+        "display": "8",
+        "number": 8,
+        "method": "direct",
+        "x": 1.0,
+        "y": 4.0,
+        "dx_points": 9,
+        "dy_points": -7
+      }
+    ],
+    "direct_names": [
+      {
+        "dimension": "Research Domains",
+        "label": "Labour Market & Employment",
+        "display": "Labour Market",
+        "number": 2,
+        "method": "direct",
+        "x": 39.0,
+        "y": 56.0,
+        "dx_points": -9,
+        "dy_points": -7
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Descriptive Monitoring",
+        "display": "Descriptive Monitoring",
+        "number": 1,
+        "method": "direct",
+        "x": 36.0,
+        "y": 52.0,
+        "dx_points": -13,
+        "dy_points": 0
+      }
+    ],
+    "key_entries": [
+      "Labels",
+      "Unclear from Register Entry (declined to classify)"
+    ],
+    "encodings_present": [
+      "direct or numbered point labels",
+      "Unclear outline",
+      "10-record threshold",
+      "30-record threshold"
+    ]
+  },
+  "small_segment_labels": {
+    "Figure 2": {
+      "status": "PASS",
+      "panels": [
+        {
+          "status": "PASS",
+          "nonzero_segments": 13,
+          "labels_rendered": 13,
+          "encodings_present": [
+            "Insufficient",
+            "No majority",
+            "Partially sufficient",
+            "Sufficient"
+          ],
+          "key_entries": [
+            "Sufficient",
+            "Partially sufficient",
+            "Insufficient",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 15,
+          "labels_rendered": 15,
+          "encodings_present": [
+            "Cannot assess from register entry",
+            "Fit",
+            "No Fit",
+            "No majority",
+            "Partial Fit"
+          ],
+          "key_entries": [
+            "Fit",
+            "Partial Fit",
+            "No Fit",
+            "Cannot assess from register entry",
+            "No majority"
+          ]
+        }
+      ]
+    },
+    "Supplementary Figure S2": {
+      "status": "PASS",
+      "panels": [
+        {
+          "status": "PASS",
+          "nonzero_segments": 12,
+          "labels_rendered": 12,
+          "encodings_present": [
+            "Insufficient",
+            "No majority",
+            "Partially sufficient",
+            "Sufficient"
+          ],
+          "key_entries": [
+            "Sufficient",
+            "Partially sufficient",
+            "Insufficient",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 15,
+          "labels_rendered": 15,
+          "encodings_present": [
+            "Cannot assess from register entry",
+            "Fit",
+            "No Fit",
+            "No majority",
+            "Partial Fit"
+          ],
+          "key_entries": [
+            "Fit",
+            "Partial Fit",
+            "No Fit",
+            "Cannot assess from register entry",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 11,
+          "labels_rendered": 11,
+          "encodings_present": [
+            "High",
+            "Low",
+            "Medium",
+            "No majority"
+          ],
+          "key_entries": [
+            "High",
+            "Medium",
+            "Low",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 12,
+          "labels_rendered": 12,
+          "encodings_present": [
+            "High",
+            "Low",
+            "Medium",
+            "No majority"
+          ],
+          "key_entries": [
+            "High",
+            "Medium",
+            "Low",
+            "No majority"
+          ]
+        }
+      ]
+    },
+    "Supplementary Figure S3": {
+      "status": "PASS",
+      "nonzero_segments": 12,
+      "labels_rendered": 12,
+      "key_entries": [
+        "Containment",
+        "Overlap",
+        "Disjoint"
+      ],
+      "encodings_present": [
+        "containment",
+        "overlap",
+        "disjoint"
+      ],
+      "icons_equal_aspect": true
+    }
+  },
+  "keys": {
+    "Figure 1": {
+      "status": "PASS",
+      "key_entries": [],
+      "encodings_present": [],
+      "row_positions": [
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        }
+      ],
+      "delta_min_rows": [
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.03470582294311854",
+            "0.038533287558298546"
+          ]
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.09028046253808193",
+            "-0.002141124278556386"
+          ]
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.2020064067359965",
+            "-0.006490658978949588"
+          ]
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "0.0",
+            "0.0"
+          ]
+        }
+      ],
+      "annotation_components": {
+        "Research Domains": "delta_B",
+        "Analytical Purposes": "delta_B",
+        "Demographic disparities / equity": "delta_B",
+        "COVID-19 & Pandemic": "delta_A"
+      }
+    },
+    "Figure 2": {
+      "status": "PASS",
+      "panels": [
+        {
+          "status": "PASS",
+          "nonzero_segments": 13,
+          "labels_rendered": 13,
+          "encodings_present": [
+            "Insufficient",
+            "No majority",
+            "Partially sufficient",
+            "Sufficient"
+          ],
+          "key_entries": [
+            "Sufficient",
+            "Partially sufficient",
+            "Insufficient",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 15,
+          "labels_rendered": 15,
+          "encodings_present": [
+            "Cannot assess from register entry",
+            "Fit",
+            "No Fit",
+            "No majority",
+            "Partial Fit"
+          ],
+          "key_entries": [
+            "Fit",
+            "Partial Fit",
+            "No Fit",
+            "Cannot assess from register entry",
+            "No majority"
+          ]
+        }
+      ]
+    },
+    "Figure 3": {
+      "status": "PASS",
+      "key_entries": [
+        "Baseline (n=150)",
+        "Register entry judged sufficient (n=92)"
+      ],
+      "encodings_present": [
+        "baseline filled",
+        "sufficient-subset hollow"
+      ],
+      "row_positions": [
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        }
+      ],
+      "delta_min_rows": [
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.03470582294311854",
+            "0.038533287558298546"
+          ]
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline_strict_sufficient",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "0.0005992244570877603",
+            "0.07637533196699833"
+          ]
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.09028046253808193",
+            "-0.002141124278556386"
+          ]
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline_strict_sufficient",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.03496156313229823",
+            "0.058959806361075326"
+          ]
+        }
+      ],
+      "annotation_components": {
+        "Research Domains": "delta_B",
+        "Analytical Purposes": "delta_B"
+      }
+    },
+    "Figure 4": {
+      "status": "PASS",
+      "labels_expected": 20,
+      "labels_rendered": 20,
+      "overlaps": [],
+      "placements": [
+        {
+          "dimension": "Research Domains",
+          "label": "Labour Market & Employment",
+          "display": "Labour Market",
+          "number": 2,
+          "method": "direct",
+          "x": 39.0,
+          "y": 56.0,
+          "dx_points": -9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Business & Productivity",
+          "display": "1",
+          "number": 1,
+          "method": "direct",
+          "x": 41.0,
+          "y": 45.0,
+          "dx_points": 9,
+          "dy_points": 7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Education & Skills",
+          "display": "3",
+          "number": 3,
+          "method": "direct",
+          "x": 27.0,
+          "y": 35.0,
+          "dx_points": 9,
+          "dy_points": 7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Health & Social Care",
+          "display": "4",
+          "number": 4,
+          "method": "direct",
+          "x": 23.0,
+          "y": 25.0,
+          "dx_points": 9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Unclear from Register Entry",
+          "display": "5",
+          "number": 5,
+          "method": "direct",
+          "x": 13.0,
+          "y": 1.0,
+          "dx_points": 9,
+          "dy_points": 7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Poverty, Wealth & Living Standards",
+          "display": "6",
+          "number": 6,
+          "method": "direct",
+          "x": 11.0,
+          "y": 10.0,
+          "dx_points": 9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Migration & Demographics",
+          "display": "7",
+          "number": 7,
+          "method": "direct",
+          "x": 9.0,
+          "y": 6.0,
+          "dx_points": -13,
+          "dy_points": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Crime & Justice",
+          "display": "8",
+          "number": 8,
+          "method": "direct",
+          "x": 4.0,
+          "y": 4.0,
+          "dx_points": 9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Environment & Agriculture",
+          "display": "9",
+          "number": 9,
+          "method": "direct",
+          "x": 4.0,
+          "y": 10.0,
+          "dx_points": 9,
+          "dy_points": 7
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Public Finance & Taxation",
+          "display": "10",
+          "number": 10,
+          "method": "leader",
+          "x": 2.0,
+          "y": 2.0,
+          "dx_points": 0,
+          "dy_points": 48
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Data Infrastructure & Methodology",
+          "display": "11",
+          "number": 11,
+          "method": "leader",
+          "x": 0.0,
+          "y": 4.0,
+          "dx_points": 64,
+          "dy_points": 35
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Housing & Planning",
+          "display": "12",
+          "number": 12,
+          "method": "leader",
+          "x": 0.0,
+          "y": 1.0,
+          "dx_points": 64,
+          "dy_points": 35
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Descriptive Monitoring",
+          "display": "Descriptive Monitoring",
+          "number": 1,
+          "method": "direct",
+          "x": 36.0,
+          "y": 52.0,
+          "dx_points": -13,
+          "dy_points": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Policy Evaluation / Impact Analysis",
+          "display": "2",
+          "number": 2,
+          "method": "direct",
+          "x": 30.0,
+          "y": 33.0,
+          "dx_points": 9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Unclear from Register Entry",
+          "display": "3",
+          "number": 3,
+          "method": "direct",
+          "x": 26.0,
+          "y": 1.0,
+          "dx_points": 9,
+          "dy_points": 7
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Outcome Tracking",
+          "display": "4",
+          "number": 4,
+          "method": "direct",
+          "x": 19.0,
+          "y": 47.0,
+          "dx_points": 9,
+          "dy_points": 7
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Life-Course / Trajectory Analysis",
+          "display": "5",
+          "number": 5,
+          "method": "direct",
+          "x": 9.0,
+          "y": 11.0,
+          "dx_points": 9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Methodological / Infrastructure Research",
+          "display": "6",
+          "number": 6,
+          "method": "direct",
+          "x": 7.0,
+          "y": 10.0,
+          "dx_points": 9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Risk Prediction / Early Identification",
+          "display": "7",
+          "number": 7,
+          "method": "direct",
+          "x": 1.0,
+          "y": 2.0,
+          "dx_points": 0,
+          "dy_points": 12
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Service Interaction / Systems Analysis",
+          "display": "8",
+          "number": 8,
+          "method": "direct",
+          "x": 1.0,
+          "y": 4.0,
+          "dx_points": 9,
+          "dy_points": -7
+        }
+      ],
+      "direct_names": [
+        {
+          "dimension": "Research Domains",
+          "label": "Labour Market & Employment",
+          "display": "Labour Market",
+          "number": 2,
+          "method": "direct",
+          "x": 39.0,
+          "y": 56.0,
+          "dx_points": -9,
+          "dy_points": -7
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Descriptive Monitoring",
+          "display": "Descriptive Monitoring",
+          "number": 1,
+          "method": "direct",
+          "x": 36.0,
+          "y": 52.0,
+          "dx_points": -13,
+          "dy_points": 0
+        }
+      ],
+      "key_entries": [
+        "Labels",
+        "Unclear from Register Entry (declined to classify)"
+      ],
+      "encodings_present": [
+        "direct or numbered point labels",
+        "Unclear outline",
+        "10-record threshold",
+        "30-record threshold"
+      ]
+    },
+    "Supplementary Figure S1": {
+      "status": "PASS",
+      "key_entries": [
+        "Baseline (n=150)",
+        "Hard-case (n=75)"
+      ],
+      "encodings_present": [
+        "baseline filled",
+        "hard-case hollow"
+      ],
+      "row_positions": [
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABC",
+          "y": 0
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha LBC",
+          "y": 1
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ALC",
+          "y": 2
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "alpha",
+          "quantity": "alpha ABL",
+          "y": 3
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_min",
+          "y": 0
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_A",
+          "y": 1
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_B",
+          "y": 2
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "series": "delta",
+          "quantity": "delta_C",
+          "y": 3
+        }
+      ],
+      "delta_min_rows": [
+        {
+          "dimension": "Research Domains",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.03470582294311854",
+            "0.038533287558298546"
+          ]
+        },
+        {
+          "dimension": "Research Domains",
+          "population": "hard_case",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.09563393858782052",
+            "0.010487383888573898"
+          ]
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.09028046253808193",
+            "-0.002141124278556386"
+          ]
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "population": "hard_case",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.19061601182254387",
+            "-0.05948533232203007"
+          ]
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.2020064067359965",
+            "-0.006490658978949588"
+          ]
+        },
+        {
+          "dimension": "Demographic disparities / equity",
+          "population": "hard_case",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "-0.33012555322232656",
+            "0.0"
+          ]
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "baseline",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "0.0",
+            "0.0"
+          ]
+        },
+        {
+          "dimension": "COVID-19 & Pandemic",
+          "population": "hard_case",
+          "quantity": "delta_min",
+          "source_row_key": "delta_min",
+          "interval": [
+            "0.0",
+            "0.0"
+          ]
+        }
+      ],
+      "annotation_components": {}
+    },
+    "Supplementary Figure S2": {
+      "status": "PASS",
+      "panels": [
+        {
+          "status": "PASS",
+          "nonzero_segments": 12,
+          "labels_rendered": 12,
+          "encodings_present": [
+            "Insufficient",
+            "No majority",
+            "Partially sufficient",
+            "Sufficient"
+          ],
+          "key_entries": [
+            "Sufficient",
+            "Partially sufficient",
+            "Insufficient",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 15,
+          "labels_rendered": 15,
+          "encodings_present": [
+            "Cannot assess from register entry",
+            "Fit",
+            "No Fit",
+            "No majority",
+            "Partial Fit"
+          ],
+          "key_entries": [
+            "Fit",
+            "Partial Fit",
+            "No Fit",
+            "Cannot assess from register entry",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 11,
+          "labels_rendered": 11,
+          "encodings_present": [
+            "High",
+            "Low",
+            "Medium",
+            "No majority"
+          ],
+          "key_entries": [
+            "High",
+            "Medium",
+            "Low",
+            "No majority"
+          ]
+        },
+        {
+          "status": "PASS",
+          "nonzero_segments": 12,
+          "labels_rendered": 12,
+          "encodings_present": [
+            "High",
+            "Low",
+            "Medium",
+            "No majority"
+          ],
+          "key_entries": [
+            "High",
+            "Medium",
+            "Low",
+            "No majority"
+          ]
+        }
+      ]
+    },
+    "Supplementary Figure S3": {
+      "status": "PASS",
+      "nonzero_segments": 12,
+      "labels_rendered": 12,
+      "key_entries": [
+        "Containment",
+        "Overlap",
+        "Disjoint"
+      ],
+      "encodings_present": [
+        "containment",
+        "overlap",
+        "disjoint"
+      ],
+      "icons_equal_aspect": true
+    }
+  },
+  "delta_min_annotation": {
+    "status": "PASS",
+    "checks": [
+      {
+        "deliverable": "Figure 1",
+        "dimension": "Research Domains",
+        "population": "baseline",
+        "component": "delta_B",
+        "delta_min": "0.0016452128376303055",
+        "component_value": "0.0016452128376303055",
+        "delta_min_interval_drawn": [
+          "-0.03470582294311854",
+          "0.038533287558298546"
+        ],
+        "status": "PASS"
+      },
+      {
+        "deliverable": "Figure 1",
+        "dimension": "Analytical Purposes",
+        "population": "baseline",
+        "component": "delta_B",
+        "delta_min": "-0.04266825138963548",
+        "component_value": "-0.04266825138963548",
+        "delta_min_interval_drawn": [
+          "-0.09028046253808193",
+          "-0.002141124278556386"
+        ],
+        "status": "PASS"
+      },
+      {
+        "deliverable": "Figure 1",
+        "dimension": "Demographic disparities / equity",
+        "population": "baseline",
+        "component": "delta_B",
+        "delta_min": "-0.08137984390492414",
+        "component_value": "-0.08137984390492414",
+        "delta_min_interval_drawn": [
+          "-0.2020064067359965",
+          "-0.006490658978949588"
+        ],
+        "status": "PASS"
+      },
+      {
+        "deliverable": "Figure 1",
+        "dimension": "COVID-19 & Pandemic",
+        "population": "baseline",
+        "component": "delta_A",
+        "delta_min": "0.0",
+        "component_value": "0.0",
+        "delta_min_interval_drawn": [
+          "0.0",
+          "0.0"
+        ],
+        "status": "PASS"
+      },
+      {
+        "deliverable": "Figure 3",
+        "dimension": "Research Domains",
+        "population": "baseline",
+        "component": "delta_B",
+        "delta_min": "0.0016452128376303055",
+        "component_value": "0.0016452128376303055",
+        "delta_min_interval_drawn": [
+          "-0.03470582294311854",
+          "0.038533287558298546"
+        ],
+        "status": "PASS"
+      },
+      {
+        "deliverable": "Figure 3",
+        "dimension": "Research Domains",
+        "population": "baseline_strict_sufficient",
+        "component": "delta_B",
+        "delta_min": "0.04169778425221149",
+        "component_value": "0.04169778425221149",
+        "delta_min_interval_drawn": [
+          "0.0005992244570877603",
+          "0.07637533196699833"
+        ],
+        "status": "PASS"
+      },
+      {
+        "deliverable": "Figure 3",
+        "dimension": "Analytical Purposes",
+        "population": "baseline",
+        "component": "delta_B",
+        "delta_min": "-0.04266825138963548",
+        "component_value": "-0.04266825138963548",
+        "delta_min_interval_drawn": [
+          "-0.09028046253808193",
+          "-0.002141124278556386"
+        ],
+        "status": "PASS"
+      },
+      {
+        "deliverable": "Figure 3",
+        "dimension": "Analytical Purposes",
+        "population": "baseline_strict_sufficient",
+        "component": "delta_B",
+        "delta_min": "0.013589902446007107",
+        "component_value": "0.013589902446007107",
+        "delta_min_interval_drawn": [
+          "-0.03496156313229823",
+          "0.058959806361075326"
+        ],
+        "status": "PASS"
+      }
+    ],
+    "failures": []
+  },
+  "banned_text": {
+    "status": "PASS",
+    "failures": []
+  },
+  "caption_policy": {
+    "status": "PASS",
+    "titles_or_caption_prose_embedded": false,
+    "draft_captions": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\figures\\draft_captions_pass2.md"
+  },
+  "isolation_test": {
+    "status": "PASS",
+    "completed_utc": "2026-09-16T16:56:52.692501+00:00",
+    "renderer_copy": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w\\render_scratch_coder_pass3.py",
+    "working_directory": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w",
+    "analytical_inputs_present": [],
+    "copied_inputs": [
+      "figure_1_panel_agreement_replacement.csv",
+      "figure_1_panel_agreement_replacement_metadata.json",
+      "figure_2_coder_ratings_baseline.csv",
+      "figure_2_coder_ratings_baseline_metadata.json",
+      "figure_3_sufficiency_sensitivity.csv",
+      "figure_3_sufficiency_sensitivity_metadata.json",
+      "figure_4_label_application.csv",
+      "figure_4_label_application_metadata.json",
+      "pass3_deliverable_manifest.json",
+      "pass3_run_metadata.json",
+      "supplementary_figure_s1_baseline_vs_hardcase.csv",
+      "supplementary_figure_s1_baseline_vs_hardcase_metadata.json",
+      "supplementary_figure_s2_hardcase_ratings_confidence.csv",
+      "supplementary_figure_s2_hardcase_ratings_confidence_metadata.json",
+      "supplementary_figure_s3_disagreement_composition.csv",
+      "supplementary_figure_s3_disagreement_composition_metadata.json",
+      "supplementary_table_s1a_register_information.csv",
+      "supplementary_table_s1a_register_information_metadata.json",
+      "supplementary_table_s1b_taxonomy_fit.csv",
+      "supplementary_table_s1b_taxonomy_fit_metadata.json",
+      "supplementary_table_s1c_agreed_labels.csv",
+      "supplementary_table_s1c_agreed_labels_metadata.json",
+      "supplementary_table_s2_disagreement_composition.csv",
+      "supplementary_table_s2_disagreement_composition_metadata.json",
+      "table_1_agreement_domains.csv",
+      "table_1_agreement_domains_metadata.json",
+      "table_2_agreement_purposes.csv",
+      "table_2_agreement_purposes_metadata.json",
+      "table_3_agreement_with_majority_domains.csv",
+      "table_3_agreement_with_majority_domains_metadata.json",
+      "table_4_agreement_with_majority_purposes.csv",
+      "table_4_agreement_with_majority_purposes_metadata.json"
+    ],
+    "forbidden_source_path_literals_in_renderer": [],
+    "expected_outputs": 30,
+    "outputs_created": 30,
+    "missing_outputs": [],
+    "content_identical_to_production": {
+      "figure_1_panel_agreement_replacement.png": true,
+      "figure_1_panel_agreement_replacement.svg": true,
+      "figure_2_coder_ratings_baseline.png": true,
+      "figure_2_coder_ratings_baseline.svg": true,
+      "figure_3_sufficiency_sensitivity.png": true,
+      "figure_3_sufficiency_sensitivity.svg": true,
+      "figure_4_label_application.png": true,
+      "figure_4_label_application.svg": true,
+      "table_1_agreement_domains.csv": true,
+      "table_1_agreement_domains.md": true,
+      "table_2_agreement_purposes.csv": true,
+      "table_2_agreement_purposes.md": true,
+      "table_3_agreement_with_majority_domains.csv": true,
+      "table_3_agreement_with_majority_domains.md": true,
+      "table_4_agreement_with_majority_purposes.csv": true,
+      "table_4_agreement_with_majority_purposes.md": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.png": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.svg": true,
+      "supplementary_figure_s2_hardcase_ratings_confidence.png": true,
+      "supplementary_figure_s2_hardcase_ratings_confidence.svg": true,
+      "supplementary_figure_s3_disagreement_composition.png": true,
+      "supplementary_figure_s3_disagreement_composition.svg": true,
+      "supplementary_table_s1a_register_information.csv": true,
+      "supplementary_table_s1a_register_information.md": true,
+      "supplementary_table_s1b_taxonomy_fit.csv": true,
+      "supplementary_table_s1b_taxonomy_fit.md": true,
+      "supplementary_table_s1c_agreed_labels.csv": true,
+      "supplementary_table_s1c_agreed_labels.md": true,
+      "supplementary_table_s2_disagreement_composition.csv": true,
+      "supplementary_table_s2_disagreement_composition.md": true
+    },
+    "all_content_identical": true,
+    "comparison_rule": "Exact bytes for PNG/CSV/Markdown; SVG after canonicalizing opaque generated id attributes and references by occurrence."
+  },
+  "manual_visual_inspection": {
+    "status": "PASS",
+    "intended_width_cm": 17,
+    "methods": [
+      "Final PNG figures inspected at original resolution corresponding to 17 cm width.",
+      "Final Markdown table HTML and CSV content inspected; 17 cm grid previews were checked for row and column alignment, wrapping, and legibility."
+    ],
+    "deliverables": {
+      "Figure 1": "PASS — intervals, markers, row labels and component annotations are clear; no clipping or overlap.",
+      "Figure 2": "PASS — keys are separated from headings; all non-zero segments are legible inside or beside bars.",
+      "Figure 3": "PASS — population encodings, intervals and annotations are clear; the lower key does not cover data.",
+      "Figure 4": "PASS — all 20 labels are legible; three leader lines are unambiguous; keys and threshold labels are clear.",
+      "Supplementary Figure S1": "PASS — diagnostic header, population encodings and intervals are clear; no clipping or overlap.",
+      "Supplementary Figure S2": "PASS — compact-panel labels and 0/50/100% ticks are separated; keys and diagnostic labels are clear.",
+      "Supplementary Figure S3": "PASS — category icons, keys, percentages and external small-segment labels are clear.",
+      "Table 1": "PASS — spanning headers, row groups and six displayed label rows align; long labels wrap legibly.",
+      "Table 2": "PASS — spanning headers, row groups and four displayed label rows align; minus signs are legible.",
+      "Table 3": "PASS — nine columns, four row groups and all 12 label rows align; counts-only rows are distinct.",
+      "Table 4": "PASS — nine columns, four row groups and all eight label rows align; counts-only rows are distinct.",
+      "Supplementary Table S1a": "PASS — three columns and four response rows align without clipping.",
+      "Supplementary Table S1b": "PASS — three columns and five response rows align without clipping.",
+      "Supplementary Table S1c": "PASS — six columns and four population/dimension rows align; percentages remain legible.",
+      "Supplementary Table S2": "PASS — five columns, two dimension groups and four pair-type rows align."
+    }
+  }
+}

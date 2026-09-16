@@ -1,9 +1,9 @@
 Row group,Label,Applied by coder majority (n),Both,Fable 5 only,Coder majority only,Neither,Precision [95% interval],Recall [95% interval],F1 [95% interval]
-Applied by coder majority to 30 or more records,Descriptive Monitoring,36,26,26,10,88,"0.50 [0.37, 0.64]","0.72 [0.57, 0.86]","0.59 [0.46, 0.70]"
-Applied by coder majority to 30 or more records,Policy Evaluation / Impact Analysis,30,21,12,9,108,"0.64 [0.46, 0.81]","0.70 [0.53, 0.86]","0.67 [0.51, 0.79]"
-"Applied by coder majority to 10–29 records: fewer records, so wider intervals; interpret with caution",Outcome Tracking,19,13,34,6,97,"0.28 [0.15, 0.42]","0.68 [0.46, 0.89]","0.39 [0.23, 0.54]"
-"Unclear from Register Entry — fewer records, so wider intervals; interpret with caution",Unclear from Register Entry,26,1,0,25,124,Not estimable,"0.04 [0.00, 0.13]",Not estimable
-Applied by coder majority to fewer than 10 records: counts only,Life-Course / Trajectory Analysis,9,3,8,6,133,,,
-Applied by coder majority to fewer than 10 records: counts only,Methodological / Infrastructure Research,7,5,5,2,138,,,
-Applied by coder majority to fewer than 10 records: counts only,Risk Prediction / Early Identification,1,1,1,0,148,,,
-Applied by coder majority to fewer than 10 records: counts only,Service Interaction / Systems Analysis,1,1,3,0,146,,,
+30 or more records,Descriptive Monitoring,36,26,26,10,88,"0.50 [0.37, 0.64]","0.72 [0.57, 0.86]","0.59 [0.46, 0.70]"
+30 or more records,Policy Evaluation / Impact Analysis,30,21,12,9,108,"0.64 [0.46, 0.81]","0.70 [0.53, 0.86]","0.67 [0.51, 0.79]"
+10–29 records (interpret with caution),Outcome Tracking,19,13,34,6,97,"0.28 [0.15, 0.42]","0.68 [0.46, 0.89]","0.39 [0.23, 0.54]"
+Declined to classify (10–29 records; interpret with caution),Unclear from Register Entry,26,1,0,25,124,Not estimable,"0.04 [0.00, 0.13]",Not estimable
+Fewer than 10 records (counts only),Life-Course / Trajectory Analysis,9,3,8,6,133,–,–,–
+Fewer than 10 records (counts only),Methodological / Infrastructure Research,7,5,5,2,138,–,–,–
+Fewer than 10 records (counts only),Risk Prediction / Early Identification,1,1,1,0,148,–,–,–
+Fewer than 10 records (counts only),Service Interaction / Systems Analysis,1,1,3,0,146,–,–,–
