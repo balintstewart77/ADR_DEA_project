@@ -349,7 +349,7 @@ def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: 
             left += width
         for offset, value in enumerate(small):
             wrapped = "\n".join(textwrap.wrap(value, width=18, break_long_words=False))
-            ax.text(102.0, y + (offset - (len(small) - 1) / 2) * 0.27, wrapped, ha="left", va="center", fontsize=8.0, linespacing=0.9)
+            ax.text(100.0, y + (offset - (len(small) - 1) / 2) * 0.27, wrapped, ha="left", va="center", fontsize=8.0, linespacing=0.9)
             labelled += 1
         sums.append({"construct": construct, "population": population, "bar": actor, "displayed_percentages": displayed,
                      "sum": sum(int(v.rstrip("%").replace("<1", "0")) for v in displayed)})
