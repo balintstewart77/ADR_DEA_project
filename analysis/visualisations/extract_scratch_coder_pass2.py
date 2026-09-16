@@ -625,6 +625,7 @@ def caption_bullets(datasets: dict[str, list[dict]], derivations: dict) -> dict[
             f"Across all labels, Fable 5 made {totals['Research Domains']['model_total']} domain and {totals['Analytical Purposes']['model_total']} purpose applications; the coder majority made {totals['Research Domains']['coder_majority_total']} and {totals['Analytical Purposes']['coder_majority_total']} (display unchanged) [S5T001/S5T002, summed label-count cells; G.12 derivation 3].",
             "Counts across labels are label applications rather than records; each point is one label [S5T001/S5T002 label-count cells].",
             "Vertical lines at 10 and 30 records show the preregistered count thresholds; labels below 10 remain plotted as counts [S5T001/S5T002 exported band cells].",
+            "The 45° line marks equal application counts; points above it were applied more often by Fable 5 and points below it more often by the coder majority [S5T001/S5T002 label-count cells].",
             "The outlined point is Unclear from Register Entry: domains (13, 1) and purposes (26, 1), displayed as integer counts [S5T001/S5T002 coder-majority-positive and model-positive cells].",
         ],
         "Figure 4": [

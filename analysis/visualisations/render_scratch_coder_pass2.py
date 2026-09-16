@@ -220,10 +220,10 @@ def replacement_axes(fig, axes, rows: list[dict], dimensions: tuple[str, ...], p
             if column == 0:
                 shown_dimension = dimension
                 if dimension == "Demographic disparities / equity":
-                    shown_dimension += "\nApplied by coder majority: " + ("baseline 11; hard-case 8" if s1 else "11 records")
+                    shown_dimension = "Equity tag\nApplied by coder majority:\n" + ("baseline 11; hard-case 8" if s1 else "11 records")
                 elif dimension == "COVID-19 & Pandemic":
-                    shown_dimension += "\nApplied by coder majority: " + ("baseline 12; hard-case 6" if s1 else "12 records")
-                ax.set_ylabel(shown_dimension, fontweight="bold", labelpad=12)
+                    shown_dimension = "COVID-19 tag\nApplied by coder majority:\n" + ("baseline 12; hard-case 6" if s1 else "12 records")
+                ax.set_ylabel(shown_dimension, fontweight="bold", labelpad=12, rotation=0, ha="right", va="center")
     return styles
 
 
@@ -368,7 +368,13 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
         for index, row in enumerate(crowded):
             column = index // split; within = index % split
             label = row["label"] + (" (coder declined to classify)" if row["label"] == "Unclear from Register Entry" else "")
-            key_ax.text(column * 0.50, 0.88 - within * 0.19, f"{row['source_order']}. {label}", transform=key_ax.transAxes,
+            x_text = column * 0.50
+            y_text = 0.88 - within * 0.19
+            if row["label"] == "Unclear from Register Entry":
+                key_ax.scatter(x_text + 0.012, y_text - 0.018, marker="o", s=70, facecolors="none", edgecolors=COLORS["red"],
+                               linewidths=1.6, transform=key_ax.transAxes, clip_on=False)
+                x_text += 0.035
+            key_ax.text(x_text, y_text, f"{row['source_order']}. {label}", transform=key_ax.transAxes,
                         ha="left", va="top", fontsize=7.6, wrap=True)
     fig.canvas.draw()
     fig.set_layout_engine(None)
@@ -394,7 +400,7 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
     render = save_figure(fig, base)
     return render, {"status": "PASS", "labels_expected": 20, "labels_rendered": len(all_positions), "overlaps": all_overlaps,
                     "positions": all_positions, "key_entries": ["Numbered labels", "Unclear from Register Entry (coder declined to classify)"],
-                    "encodings_present": ["numbered crowded-point labels", "direct isolated-point names", "Unclear outline"]}
+                    "encodings_present": ["numbered point labels", "Unclear outline"]}
 
 
 def disagreement_group(rows: list[dict]) -> dict[tuple[str, str], dict[str, dict]]:
