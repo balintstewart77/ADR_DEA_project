@@ -47,6 +47,15 @@ def equal(a, b, places=None):
         return str(a) == str(b)
 
 
+def relation_column(row, column):
+    """The historical figure stores proportions; Table 5 stores counts."""
+    if row.get('deliverable_id') == 'Table 5':
+        return {'count':'source_value_string','proportion_of_nonidentical_nonempty_pairs':'interval_lower_string',
+                'nonidentical_nonempty_pairs':'denominator_string'}.get(column)
+    return {'count':'pair_count_string','proportion_of_nonidentical_nonempty_pairs':'source_value_string',
+            'nonidentical_nonempty_pairs':'eligible_pairs_string','empty_set_involved_pairs':'empty_set_pairs_string'}.get(column)
+
+
 def parse_md(text):
     tables, tid = {}, None
     for line in text.splitlines():
@@ -80,6 +89,12 @@ class Audit:
                 self.figures.append((rel, n, row))
         self.allowed = {p for p in self.meta['source_files'] if '/outputs_validation_' in p and p.endswith('.csv')}
         self.allowed |= {COVERAGE, RELATIONS}
+        # Remaining canonical CSVs are aggregate diagnostics or field definitions.
+        # Bootstrap replicate files are deliberately excluded, without opening them.
+        for directory in ['outputs_validation_scratch_20260824','outputs_validation_scratch_stage_b_20260825','outputs_validation_scratch_hard_case_strata_20260825']:
+            for filename in ['denominator_audit.csv','field_mapping.csv','timing_summary.csv']:
+                p='analysis/'+directory+'/'+filename
+                if (ROOT/p).exists():self.allowed.add(p)
 
     def csv(self, path):
         if path not in self.cache:
@@ -113,7 +128,7 @@ class Audit:
         self.used.add(tid)
         role = ['estimate', 'interval_lower', 'interval_upper'][part]
         lines = [x for x in self.meta['cell_lineage'] if x.get('result_id') == item['result_id']
-                 and x.get('document_cell_role') == role and x.get('lineage_type') == 'summary_csv_cell']
+                 and x.get('document_cell_role') == role and x.get('lineage_type') in ('summary_csv_cell','reused_interval_cell','supplementary_interval_cell')]
         sources = []
         for x in lines:
             sources.append(self.source(x['source_path'], x['row_selection_key'], x['column']))
@@ -132,11 +147,14 @@ class Audit:
         for path, n, row in self.figures:
             if row.get('source_table_id') != tid or row.get('source_row_key') != md[0]:
                 continue
-            # Support count rows use a combined quantity and require separate handling.
-            if row.get('quantity') not in (md[1], md[0]):
-                continue
-            if row.get(fcol, '') != '':
-                sources.append({'path': path, 'cell': f'CSV row {n}, {fcol}', 'precision': 'source string preserved', 'value': row[fcol]})
+            selected=fcol
+            if row.get('quantity')=='human/model positive counts' and part==0:
+                selected={'baseline_human_majority_positive_n':'source_value_string','baseline_model_positive_n':'interval_lower_string'}.get(item['metric'])
+            elif row.get('quantity')=='label_counts' and part==0:
+                selected={'human_majority_positive_n':'human_majority_positive_n_string','model_positive_n':'model_positive_n_string','fp':'fp_string','fn':'fn_string'}.get(item['metric'])
+            elif row.get('quantity') not in (md[1],md[0]):continue
+            if selected and row.get(selected, '') != '':
+                sources.append({'path': path, 'cell': f'CSV row {n}, {selected}', 'precision': 'source string preserved', 'value': row[selected]})
         observed = [s['value'] for s in sources]
         mismatch = any(not equal(observed[0], x) for x in observed[1:])
         record = {'table_id': tid, 'result_id': item['result_id'], 'part': role, 'sources': sources, 'discrepancy': mismatch}
@@ -268,7 +286,7 @@ def main_checks(a):
             for path,n,row in a.figures:
                 if row.get('source_table_id')!='disagreement_type_distribution.csv' or row.get('dimension')!=dim or row.get('population')!='baseline':continue
                 if row.get('source_row_key') not in (f'baseline|{dim}|{fam}|{relation}',f'{fam}:{relation}'):continue
-                fc='source_value_string' if col=='count' else ('interval_lower_string' if col=='proportion_of_nonidentical_nonempty_pairs' and row.get('deliverable_id')=='Table 5' else None)
+                fc=relation_column(row,col)
                 if fc and row.get(fc):sources.append({'path':path,'cell':f'CSV row {n}, {fc}','precision':'source string','value':row[fc]})
             a.evidence.append({'sources':sources,'discrepancy':any(not equal(src['value'],s['value']) for s in sources[1:])})
             return D(src['value'])
@@ -294,7 +312,11 @@ def main_checks(a):
         suffix=pop+'.'+('domains' if dim==DOM else 'purposes')
         def cov(category,quantity,p=pop,d=dim):
             src=a.source(COVERAGE,{'population':p,'dimension':d,'quantity':quantity,'category':category},'count')
-            a.evidence.append({'sources':[src],'discrepancy':False})
+            sources=[src]
+            for path,n,row in a.figures:
+                if row.get('source_table_id')=='majority_coverage.csv' and row.get('source_row_key')==f'{p}|{d}|{quantity}|{category}':
+                    sources.append({'path':path,'cell':f'CSV row {n}, source_value_string','precision':'exact integer','value':row['source_value_string']})
+            a.evidence.append({'sources':sources,'discrepancy':any(not equal(src['value'],s['value']) for s in sources[1:])})
             return D(src['value'])
         a.check('V5.1.prerequisite.'+suffix,lambda c=cov:(c('unclear_present__substantive_present','unclear_composition')==0,c('unclear_present__substantive_present','unclear_composition')),0,log='G.12')
         def deriv(c=cov,s=size,u=unc,r=result):
@@ -346,7 +368,11 @@ def main_checks(a):
                 i=a.item(t,'baseline_human_majority_positive_n',label=l)
                 count=a.value(i)
                 src=a.source(i['source_path'],i['source_key'],'support_band')
-                a.evidence.append({'sources':[src],'discrepancy':False})
+                sources=[src]
+                for path,n,row in a.figures:
+                    if row.get('deliverable_id') in ('Table 1','Table 2','Table 3','Table 4') and row.get('dimension')==i['dimension'] and row.get('label')==l:
+                        sources.append({'path':path,'cell':f'CSV row {n}, support_band','precision':'exact string','value':row.get('support_band')})
+                a.evidence.append({'sources':sources,'discrepancy':any(src['value']!=s['value'] for s in sources[1:])})
                 expected='STANDARD' if count>=30 else 'LOW SUPPORT' if count>=10 else 'RARE'
                 return src['value']==expected,{'label':l,'count':count,'exported_band':src['value'],'expected_band':expected}
             a.check(f'V7.{tid}.{n}',band,'>=30 STANDARD; 10-29 LOW SUPPORT; <10 RARE',label,'P.2; C.2; D.1')
@@ -356,6 +382,8 @@ def main_checks(a):
             typ='negative zero' if val.is_zero() and val.is_signed() else 'zero' if val.is_zero() else 'small negative number' if val<0 and rnd(val,3)==0 else 'negative number' if val<0 else 'positive number'
             return rnd(val,3)==D('-0.000'),{'value':val,'classification':typ,'three_decimal_display':str(rnd(val,3))}
         a.check('V8.1.'+pair,signed,'-0.000',log='G.14; P.3; P.4')
+    for tid,label,count in [('S5T002','Policy Evaluation / Impact Analysis',30),('S5T002','Descriptive Monitoring',36),('S5T002','Outcome Tracking',19),('S5T001',UNCLEAR,13),('S5T002',UNCLEAR,26)]:
+        a.check(f'V7.named.{tid}.{count}',lambda t=tid,l=label,c=count:(a.v(t,'baseline_human_majority_positive_n',label=l)==c,a.v(t,'baseline_human_majority_positive_n',label=l)),count,label,'P.2; C.2; D.1')
     for pair,expected in [('A-C','-0.07'),('B-C','-0.04')]:
         a.check('V8.2.Outcome.'+pair,lambda p=pair,e=expected:(rnd(a.v('S5T006','kappa',part=1,label='Outcome Tracking',pair=p),2)==D(e),a.v('S5T006','kappa',part=1,label='Outcome Tracking',pair=p)),expected,log='P.3; P.4')
     for pair in ['L-A','L-B','L-C']:
@@ -386,6 +414,9 @@ def quoted_checks(a):
         specs.extend((log,tid,c,None,v.split(),3) for c,v in zip(comps,values))
     for log,tid,comp,part,expected,places in specs:
         a.quote(log,tid,None,expected,{'delta' if comp.startswith('delta') else 'panel':comp},part,places)
+    for tid,comp,part,expected in [('S2T007','delta_min',1,'-.330'),('S2T008','delta_B',2,'.381'),('S2T001','delta_min',1,'-.202')]:
+        a.quote('G.6',tid,None,expected,{'delta':comp},part,3)
+    for comp in ['LBC','ALC']:a.quote('G.6','S3T008',None,'.096',{'panel':comp},1,3)
     c=a.check('V9.crosses_zero',lambda:(a.v('S3T008',part=1,delta='delta_C')<0<a.v('S3T008',part=2,delta='delta_C'),a.triple('S3T008',delta='delta_C')), 'lower < 0 < upper',log='S1.8')
     a.claims.append({'claim_id':c['id'],'origin':'v2 supplied checklist','log_item':'S1.8','claim':'S3T008 delta_C crosses zero','mapped_check':c['id'],'status':c['status'],'reason':''})
     for tid,log,values in [('S2T001','1.1',{'support':11}),('S2T002','1.1',{'support':12}),('S2T017','S1.3; O.1',{'human_majority_positive_n':8,'model_positive_n':8,'fp':3,'fn':3}),('S2T018','S1.3',{'human_majority_positive_n':6})]:
@@ -434,9 +465,11 @@ def quoted_checks(a):
     for response,pop,cat,count,*_ in rows:
         tid=('S8T' if response=='Sufficiency' else 'S9T')+('003' if pop=='Baseline' else '004')
         a.quote('T.2',tid,'count',count,{'category':cat})
-    # Map all quantitative assertions checked in V1-V8 as supplied-instruction claims.
+    # Map explicit value assertions, excluding design parameters, identities and
+    # structural tests that are not quoted quantitative claims from the log.
     for c in a.checks:
-        if c['id'].startswith('V9') or c['expected'] is None:continue
+        prefixes=('V1.context.','V4.2.','V4.3.','V4.4.','V4.5','V5.1.','V5.2.','V5.3.','V5.4.','V7.named.','V8.1.','V8.2.','V8.3.')
+        if not c['id'].startswith(prefixes) or c['expected'] is None:continue
         a.claims.append({'claim_id':'I.'+c['id'],'origin':'v2 sections V1-V8','log_item':c['log_items'],
                          'claim':f'{c["id"]}: {c["expected"]}', 'mapped_check':c['id'],'status':c['status'],'reason':c['notes']})
     a.claims.append({'claim_id':'REMAINDER','origin':'missing governing log','log_item':'all other log items',
@@ -457,6 +490,7 @@ def publish(a):
     metadata={'run_start_head':START_HEAD,'initial_git_status_porcelain':'','initial_git_warnings':['Git global ignore and .pytest_cache access denied; no porcelain entries'],
       'script_commit':git('log','-1','--format=%H','--','analysis/verification_pass2/verify_pass2.py')[0],
       'script_commit_history':git('log','--format=%H %s','--','analysis/verification_pass2/verify_pass2.py')[0].splitlines(),
+      'script_fix_reasons':['Fix 1: distinguish legacy figure proportion columns from Table 5 count columns; follow reused Wilson interval lineage; extend aggregate search and combined-count/coverage/band source comparisons. Earlier results discarded and all checks rerun.'],
       'run_timestamp_utc':datetime.now(timezone.utc).isoformat(),'software':{'python':sys.version,'platform':platform.platform(),'git':git('--version')[0]},
       'provenance':[provenance(p) for p in [RESULTS,META,S1,'analysis/tables/scratch_coder_supplementary_table_s1_majority_coverage.csv']],
       'governing_log':[provenance(p) for p in logs] or {'status':'SOURCE MISSING','repository_search':'git ls-files and rg --files --hidden filename search','supplied_copy':'none attached; cannot hash'},
@@ -516,6 +550,10 @@ def self_test():
     assert rnd((D(123)-D(26))/D(150)*100)==65
     tables=parse_md('### S2T001 — synthetic\n\n| Row / comparator | Quantity | Estimate / count / flag | Interval lower | Interval upper |\n| --- | --- | --- | --- | --- |\n| alpha ABC | `point_estimate` | 0.123 | -0.0 | 1.0 |')
     assert tables['S2T001'][0][2:] == ['0.123','-0.0','1.0']
+    assert relation_column({'figure_id':'figure_5'},'count')=='pair_count_string'
+    assert relation_column({'figure_id':'figure_5'},'proportion_of_nonidentical_nonempty_pairs')=='source_value_string'
+    assert relation_column({'deliverable_id':'Table 5'},'count')=='source_value_string'
+    assert relation_column({'deliverable_id':'Table 5'},'proportion_of_nonidentical_nonempty_pairs')=='interval_lower_string'
     # Dependency propagation uses synthetic in-memory checks only.
     a=Audit.__new__(Audit);a.evidence=[];a.checks=[]
     a.check('A',lambda:(_ for _ in ()).throw(Missing('synthetic')))
