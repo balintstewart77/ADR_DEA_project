@@ -1,0 +1,1225 @@
+{
+  "renderer": "render_scratch_coder_pass2.py",
+  "input_boundary": "pass2 manifest plus its listed CSV and JSON files only",
+  "matplotlib_version": "3.10.3",
+  "python_version": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+  "font": "DejaVu Sans",
+  "font_resolved": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf",
+  "archived_preexisting_outputs": [],
+  "axis_ranges": {
+    "Figure 1": {
+      "status": "PASS",
+      "failures": [],
+      "range": [
+        0.0,
+        1.0
+      ],
+      "delta_range": [
+        -0.45,
+        0.45
+      ]
+    },
+    "Figure 2": {
+      "status": "PASS",
+      "failures": [],
+      "range": [
+        0.15,
+        0.75
+      ],
+      "delta_range": [
+        -0.45,
+        0.45
+      ]
+    },
+    "Supplementary Figure S1": {
+      "status": "PASS",
+      "failures": [],
+      "range": [
+        0.0,
+        1.0
+      ],
+      "delta_range": [
+        -0.45,
+        0.45
+      ]
+    }
+  },
+  "keys": {
+    "Figure 1": {
+      "status": "PASS",
+      "encodings_present": [
+        "estimate and interval",
+        "zero-width interval",
+        "δₘᵢₙ"
+      ],
+      "key_entries": [
+        "Estimate and interval",
+        "Zero-width interval",
+        "δₘᵢₙ estimate"
+      ]
+    },
+    "Figure 2": {
+      "status": "PASS",
+      "encodings_present": [
+        "baseline filled",
+        "strict hollow",
+        "δₘᵢₙ star"
+      ],
+      "key_entries": [
+        "Baseline (n=150)",
+        "Strict register-sufficient (n=92)",
+        "δₘᵢₙ estimate"
+      ]
+    },
+    "Figure 3": {
+      "status": "PASS",
+      "labels_expected": 20,
+      "labels_rendered": 20,
+      "overlaps": [],
+      "positions": [
+        {
+          "dimension": "Research Domains",
+          "label": "Poverty, Wealth & Living Standards",
+          "x": 11.0,
+          "y": 10.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Public Finance & Taxation",
+          "x": 2.0,
+          "y": 2.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": -10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Unclear from Register Entry",
+          "x": 13.0,
+          "y": 1.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Business & Productivity",
+          "x": 41.0,
+          "y": 45.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Crime & Justice",
+          "x": 4.0,
+          "y": 4.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Data Infrastructure & Methodology",
+          "x": 0.0,
+          "y": 4.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Education & Skills",
+          "x": 27.0,
+          "y": 35.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Environment & Agriculture",
+          "x": 4.0,
+          "y": 10.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Health & Social Care",
+          "x": 23.0,
+          "y": 25.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Housing & Planning",
+          "x": 0.0,
+          "y": 1.0,
+          "dx_points": -14.744736797201854,
+          "dy_points": 10.324375854318827
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Labour Market & Employment",
+          "x": 39.0,
+          "y": 56.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Research Domains",
+          "label": "Migration & Demographics",
+          "x": 9.0,
+          "y": 6.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Descriptive Monitoring",
+          "x": 36.0,
+          "y": 52.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Life-Course / Trajectory Analysis",
+          "x": 9.0,
+          "y": 11.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Methodological / Infrastructure Research",
+          "x": 7.0,
+          "y": 10.0,
+          "dx_points": -14.744736797201854,
+          "dy_points": 10.324375854318827
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Outcome Tracking",
+          "x": 19.0,
+          "y": 47.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Policy Evaluation / Impact Analysis",
+          "x": 30.0,
+          "y": 33.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Risk Prediction / Early Identification",
+          "x": 1.0,
+          "y": 2.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Service Interaction / Systems Analysis",
+          "x": 1.0,
+          "y": 4.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        },
+        {
+          "dimension": "Analytical Purposes",
+          "label": "Unclear from Register Entry",
+          "x": 26.0,
+          "y": 1.0,
+          "dx_points": 14.744736797201853,
+          "dy_points": 10.324375854318829
+        }
+      ],
+      "key_entries": [
+        "Numbered labels",
+        "Unclear from Register Entry (coder declined to classify)"
+      ],
+      "encodings_present": [
+        "numbered point labels",
+        "Unclear outline"
+      ]
+    },
+    "Supplementary Figure S1": {
+      "status": "PASS",
+      "encodings_present": [
+        "baseline filled",
+        "hard-case hollow",
+        "δₘᵢₙ star"
+      ],
+      "key_entries": [
+        "Baseline (n=150)",
+        "Hard-case (n=75; diagnostic, non-representative)",
+        "δₘᵢₙ estimate"
+      ]
+    },
+    "Figure 4": {
+      "status": "PASS",
+      "encodings_present": [
+        "containment",
+        "overlap",
+        "disjoint"
+      ],
+      "key_entries": [
+        "Containment",
+        "Overlap",
+        "Disjoint"
+      ],
+      "schematic_icons": true
+    },
+    "Supplementary Figure S2": {
+      "status": "PASS",
+      "panels": [
+        {
+          "construct": "Register-entry information",
+          "population": "baseline",
+          "encodings_present": [
+            "Insufficient",
+            "No majority / split judgement",
+            "Partially sufficient",
+            "Sufficient"
+          ],
+          "key_entries": [
+            "Sufficient",
+            "Partially sufficient",
+            "Insufficient",
+            "No majority / split judgement"
+          ],
+          "status": "PASS"
+        },
+        {
+          "construct": "Register-entry information",
+          "population": "hard_case",
+          "encodings_present": [
+            "Insufficient",
+            "No majority / split judgement",
+            "Partially sufficient",
+            "Sufficient"
+          ],
+          "key_entries": [
+            "Sufficient",
+            "Partially sufficient",
+            "Insufficient",
+            "No majority / split judgement"
+          ],
+          "status": "PASS"
+        },
+        {
+          "construct": "Taxonomy fit",
+          "population": "baseline",
+          "encodings_present": [
+            "Cannot assess from register entry",
+            "Fit",
+            "No Fit",
+            "No majority / split judgement",
+            "Partial Fit"
+          ],
+          "key_entries": [
+            "Fit",
+            "Partial Fit",
+            "No Fit",
+            "Cannot assess from register entry",
+            "No majority / split judgement"
+          ],
+          "status": "PASS"
+        },
+        {
+          "construct": "Taxonomy fit",
+          "population": "hard_case",
+          "encodings_present": [
+            "Cannot assess from register entry",
+            "Fit",
+            "No Fit",
+            "No majority / split judgement",
+            "Partial Fit"
+          ],
+          "key_entries": [
+            "Fit",
+            "Partial Fit",
+            "No Fit",
+            "Cannot assess from register entry",
+            "No majority / split judgement"
+          ],
+          "status": "PASS"
+        },
+        {
+          "construct": "Coder confidence",
+          "population": "baseline",
+          "encodings_present": [
+            "High",
+            "Low",
+            "Medium",
+            "No majority"
+          ],
+          "key_entries": [
+            "High",
+            "Medium",
+            "Low",
+            "No majority"
+          ],
+          "status": "PASS"
+        },
+        {
+          "construct": "Coder confidence",
+          "population": "hard_case",
+          "encodings_present": [
+            "High",
+            "Low",
+            "Medium",
+            "No majority"
+          ],
+          "key_entries": [
+            "High",
+            "Medium",
+            "Low",
+            "No majority"
+          ],
+          "status": "PASS"
+        }
+      ]
+    }
+  },
+  "figure_3_labels": {
+    "status": "PASS",
+    "labels_expected": 20,
+    "labels_rendered": 20,
+    "overlaps": [],
+    "positions": [
+      {
+        "dimension": "Research Domains",
+        "label": "Poverty, Wealth & Living Standards",
+        "x": 11.0,
+        "y": 10.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Public Finance & Taxation",
+        "x": 2.0,
+        "y": 2.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": -10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Unclear from Register Entry",
+        "x": 13.0,
+        "y": 1.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Business & Productivity",
+        "x": 41.0,
+        "y": 45.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Crime & Justice",
+        "x": 4.0,
+        "y": 4.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Data Infrastructure & Methodology",
+        "x": 0.0,
+        "y": 4.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Education & Skills",
+        "x": 27.0,
+        "y": 35.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Environment & Agriculture",
+        "x": 4.0,
+        "y": 10.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Health & Social Care",
+        "x": 23.0,
+        "y": 25.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Housing & Planning",
+        "x": 0.0,
+        "y": 1.0,
+        "dx_points": -14.744736797201854,
+        "dy_points": 10.324375854318827
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Labour Market & Employment",
+        "x": 39.0,
+        "y": 56.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Research Domains",
+        "label": "Migration & Demographics",
+        "x": 9.0,
+        "y": 6.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Descriptive Monitoring",
+        "x": 36.0,
+        "y": 52.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Life-Course / Trajectory Analysis",
+        "x": 9.0,
+        "y": 11.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Methodological / Infrastructure Research",
+        "x": 7.0,
+        "y": 10.0,
+        "dx_points": -14.744736797201854,
+        "dy_points": 10.324375854318827
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Outcome Tracking",
+        "x": 19.0,
+        "y": 47.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Policy Evaluation / Impact Analysis",
+        "x": 30.0,
+        "y": 33.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Risk Prediction / Early Identification",
+        "x": 1.0,
+        "y": 2.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Service Interaction / Systems Analysis",
+        "x": 1.0,
+        "y": 4.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      },
+      {
+        "dimension": "Analytical Purposes",
+        "label": "Unclear from Register Entry",
+        "x": 26.0,
+        "y": 1.0,
+        "dx_points": 14.744736797201853,
+        "dy_points": 10.324375854318829
+      }
+    ],
+    "key_entries": [
+      "Numbered labels",
+      "Unclear from Register Entry (coder declined to classify)"
+    ],
+    "encodings_present": [
+      "numbered point labels",
+      "Unclear outline"
+    ]
+  },
+  "displayed_percentage_sums": [
+    {
+      "deliverable": "Figure 4",
+      "dimension": "Research Domains",
+      "pair_family": "human_human",
+      "displayed_percentages": [
+        48,
+        5,
+        47
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Figure 4",
+      "dimension": "Research Domains",
+      "pair_family": "model_human",
+      "displayed_percentages": [
+        52,
+        8,
+        40
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Figure 4",
+      "dimension": "Analytical Purposes",
+      "pair_family": "human_human",
+      "displayed_percentages": [
+        14,
+        0,
+        86
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Figure 4",
+      "dimension": "Analytical Purposes",
+      "pair_family": "model_human",
+      "displayed_percentages": [
+        15,
+        1,
+        84
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "baseline",
+      "bar": "C01",
+      "displayed_percentages": [
+        71,
+        26,
+        3
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "baseline",
+      "bar": "C02",
+      "displayed_percentages": [
+        64,
+        32,
+        4
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "baseline",
+      "bar": "C03",
+      "displayed_percentages": [
+        39,
+        59,
+        1
+      ],
+      "sum": 99
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "baseline",
+      "bar": "Majority of coders",
+      "displayed_percentages": [
+        61,
+        37,
+        1,
+        1
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "hard_case",
+      "bar": "C01",
+      "displayed_percentages": [
+        72,
+        27,
+        1
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "hard_case",
+      "bar": "C02",
+      "displayed_percentages": [
+        60,
+        32,
+        8
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "hard_case",
+      "bar": "C03",
+      "displayed_percentages": [
+        32,
+        65,
+        3
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Register-entry information",
+      "population": "hard_case",
+      "bar": "Majority of coders",
+      "displayed_percentages": [
+        56,
+        40,
+        0,
+        4
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "baseline",
+      "bar": "C01",
+      "displayed_percentages": [
+        69,
+        13,
+        2,
+        16
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "baseline",
+      "bar": "C02",
+      "displayed_percentages": [
+        89,
+        5,
+        1,
+        6
+      ],
+      "sum": 101
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "baseline",
+      "bar": "C03",
+      "displayed_percentages": [
+        61,
+        38,
+        0,
+        1
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "baseline",
+      "bar": "Majority of coders",
+      "displayed_percentages": [
+        79,
+        8,
+        0,
+        4,
+        9
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "hard_case",
+      "bar": "C01",
+      "displayed_percentages": [
+        63,
+        17,
+        1,
+        19
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "hard_case",
+      "bar": "C02",
+      "displayed_percentages": [
+        87,
+        8,
+        0,
+        5
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "hard_case",
+      "bar": "C03",
+      "displayed_percentages": [
+        51,
+        47,
+        1,
+        1
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Taxonomy fit",
+      "population": "hard_case",
+      "bar": "Majority of coders",
+      "displayed_percentages": [
+        72,
+        15,
+        0,
+        1,
+        12
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "baseline",
+      "bar": "C01",
+      "displayed_percentages": [
+        41,
+        55,
+        5
+      ],
+      "sum": 101
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "baseline",
+      "bar": "C02",
+      "displayed_percentages": [
+        38,
+        57,
+        5
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "baseline",
+      "bar": "C03",
+      "displayed_percentages": [
+        50,
+        50,
+        0
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "baseline",
+      "bar": "Majority of coders",
+      "displayed_percentages": [
+        43,
+        53,
+        0,
+        5
+      ],
+      "sum": 101
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "hard_case",
+      "bar": "C01",
+      "displayed_percentages": [
+        31,
+        63,
+        7
+      ],
+      "sum": 101
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "hard_case",
+      "bar": "C02",
+      "displayed_percentages": [
+        32,
+        64,
+        4
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "hard_case",
+      "bar": "C03",
+      "displayed_percentages": [
+        41,
+        59,
+        0
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Figure S2",
+      "construct": "Coder confidence",
+      "population": "hard_case",
+      "bar": "Majority of coders",
+      "displayed_percentages": [
+        25,
+        69,
+        1,
+        4
+      ],
+      "sum": 99
+    },
+    {
+      "deliverable": "Table 5",
+      "dimension": "Research Domains",
+      "pair_family": "human_human",
+      "displayed_percentages": [
+        48,
+        5,
+        47
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Table 5",
+      "dimension": "Research Domains",
+      "pair_family": "model_human",
+      "displayed_percentages": [
+        52,
+        8,
+        40
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Table 5",
+      "dimension": "Analytical Purposes",
+      "pair_family": "human_human",
+      "displayed_percentages": [
+        14,
+        0,
+        86
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Table 5",
+      "dimension": "Analytical Purposes",
+      "pair_family": "model_human",
+      "displayed_percentages": [
+        15,
+        1,
+        84
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Table S1a",
+      "population": "baseline",
+      "displayed_percentage_sum": "100.00"
+    },
+    {
+      "deliverable": "Supplementary Table S1a",
+      "population": "hard_case",
+      "displayed_percentage_sum": "100.00"
+    },
+    {
+      "deliverable": "Supplementary Table S1b",
+      "population": "baseline",
+      "displayed_percentage_sum": "100.00"
+    },
+    {
+      "deliverable": "Supplementary Table S1b",
+      "population": "hard_case",
+      "displayed_percentage_sum": "100.00"
+    },
+    {
+      "deliverable": "Supplementary Table S1c",
+      "population": "baseline",
+      "dimension": "Analytical Purposes",
+      "displayed_percentages": [
+        16,
+        17,
+        65,
+        2,
+        0
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Table S1c",
+      "population": "baseline",
+      "dimension": "Research Domains",
+      "displayed_percentages": [
+        3,
+        9,
+        71,
+        15,
+        2
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Table S1c",
+      "population": "hard_case",
+      "dimension": "Analytical Purposes",
+      "displayed_percentages": [
+        12,
+        27,
+        56,
+        5,
+        0
+      ],
+      "sum": 100
+    },
+    {
+      "deliverable": "Supplementary Table S1c",
+      "population": "hard_case",
+      "dimension": "Research Domains",
+      "displayed_percentages": [
+        8,
+        4,
+        60,
+        24,
+        4
+      ],
+      "sum": 100
+    }
+  ],
+  "table_rendering": {
+    "Table 1": {
+      "rows_shown": 6,
+      "rows_omitted_below_10": 6,
+      "status": "PASS"
+    },
+    "Table 2": {
+      "rows_shown": 4,
+      "rows_omitted_below_10": 4,
+      "status": "PASS"
+    },
+    "Table 3": {
+      "rows_shown": 12,
+      "sparse_rows_counts_only": 6,
+      "status": "PASS"
+    },
+    "Table 4": {
+      "rows_shown": 8,
+      "sparse_rows_counts_only": 4,
+      "status": "PASS"
+    },
+    "Table 5": {
+      "status": "PASS",
+      "rows": 4
+    },
+    "Supplementary Table S1a": {
+      "status": "PASS",
+      "rows": 4
+    },
+    "Supplementary Table S1b": {
+      "status": "PASS",
+      "rows": 5
+    },
+    "Supplementary Table S1c": {
+      "status": "PASS",
+      "rows": 4
+    }
+  },
+  "banned_text": {
+    "status": "PASS",
+    "figure_failures": [],
+    "table_failures": [],
+    "caption_failures": []
+  },
+  "render_clipping_scan": {
+    "Figure 1": {
+      "status": "REVIEW",
+      "candidates": [
+        "0.5",
+        "0.5",
+        "0.5",
+        "0.5"
+      ]
+    },
+    "Figure 2": {
+      "status": "REVIEW",
+      "candidates": [
+        "0.5",
+        "0.5"
+      ]
+    },
+    "Figure 3": {
+      "status": "REVIEW",
+      "candidates": [
+        "−0.06",
+        "−0.04",
+        "−0.02",
+        "0.00",
+        "0.02",
+        "0.04",
+        "0.06"
+      ]
+    },
+    "Supplementary Figure S1": {
+      "status": "REVIEW",
+      "candidates": [
+        "0.5",
+        "0.5",
+        "0.5",
+        "0.5"
+      ]
+    },
+    "Figure 4": {
+      "status": "REVIEW",
+      "candidates": [
+        "120"
+      ]
+    },
+    "Supplementary Figure S2": {
+      "status": "REVIEW",
+      "candidates": [
+        "120",
+        "120",
+        "120"
+      ]
+    }
+  },
+  "caption_policy": {
+    "status": "PASS",
+    "titles_or_caption_prose_embedded": false,
+    "draft_captions": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\figures\\draft_captions_pass2.md"
+  },
+  "isolation_test": {
+    "status": "PASS",
+    "completed_utc": "2026-09-16T12:42:18.638706+00:00",
+    "renderer_copy": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass2_isolation_c340s3l4\\render_scratch_coder_pass2.py",
+    "working_directory": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass2_isolation_c340s3l4",
+    "analytical_inputs_present": [],
+    "copied_inputs": [
+      "figure_1_panel_agreement_replacement.csv",
+      "figure_1_panel_agreement_replacement_metadata.json",
+      "figure_2_sufficiency_sensitivity.csv",
+      "figure_2_sufficiency_sensitivity_metadata.json",
+      "figure_3_label_application.csv",
+      "figure_3_label_application_metadata.json",
+      "figure_4_disagreement_composition.csv",
+      "figure_4_disagreement_composition_metadata.json",
+      "pass2_deliverable_manifest.json",
+      "pass2_run_metadata.json",
+      "supplementary_figure_s1_baseline_vs_hardcase.csv",
+      "supplementary_figure_s1_baseline_vs_hardcase_metadata.json",
+      "supplementary_figure_s2_coder_ratings.csv",
+      "supplementary_figure_s2_coder_ratings_metadata.json",
+      "supplementary_table_s1a_register_information.csv",
+      "supplementary_table_s1a_register_information_metadata.json",
+      "supplementary_table_s1b_taxonomy_fit.csv",
+      "supplementary_table_s1b_taxonomy_fit_metadata.json",
+      "supplementary_table_s1c_agreed_labels.csv",
+      "supplementary_table_s1c_agreed_labels_metadata.json",
+      "table_1_agreement_domains.csv",
+      "table_1_agreement_domains_metadata.json",
+      "table_2_agreement_purposes.csv",
+      "table_2_agreement_purposes_metadata.json",
+      "table_3_agreement_with_majority_domains.csv",
+      "table_3_agreement_with_majority_domains_metadata.json",
+      "table_4_agreement_with_majority_purposes.csv",
+      "table_4_agreement_with_majority_purposes_metadata.json",
+      "table_5_disagreement_composition.csv",
+      "table_5_disagreement_composition_metadata.json"
+    ],
+    "forbidden_source_path_literals_in_renderer": [],
+    "expected_outputs": 28,
+    "outputs_created": 28,
+    "missing_outputs": [],
+    "byte_identical_to_production": {
+      "figure_1_panel_agreement_replacement.svg": true,
+      "figure_1_panel_agreement_replacement.png": true,
+      "figure_2_sufficiency_sensitivity.svg": true,
+      "figure_2_sufficiency_sensitivity.png": true,
+      "figure_3_label_application.svg": true,
+      "figure_3_label_application.png": true,
+      "figure_4_disagreement_composition.svg": true,
+      "figure_4_disagreement_composition.png": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.svg": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.png": true,
+      "supplementary_figure_s2_coder_ratings.svg": true,
+      "supplementary_figure_s2_coder_ratings.png": true,
+      "table_1_agreement_domains.csv": true,
+      "table_1_agreement_domains.md": true,
+      "table_2_agreement_purposes.csv": true,
+      "table_2_agreement_purposes.md": true,
+      "table_3_agreement_with_majority_domains.csv": true,
+      "table_3_agreement_with_majority_domains.md": true,
+      "table_4_agreement_with_majority_purposes.csv": true,
+      "table_4_agreement_with_majority_purposes.md": true,
+      "table_5_disagreement_composition.csv": true,
+      "table_5_disagreement_composition.md": true,
+      "supplementary_table_s1a_register_information.csv": true,
+      "supplementary_table_s1a_register_information.md": true,
+      "supplementary_table_s1b_taxonomy_fit.csv": true,
+      "supplementary_table_s1b_taxonomy_fit.md": true,
+      "supplementary_table_s1c_agreed_labels.csv": true,
+      "supplementary_table_s1c_agreed_labels.md": true
+    },
+    "all_byte_identical": true
+  },
+  "manual_visual_inspection": {
+    "status": "PASS",
+    "criteria": "Rendered review for clipped text or marks, text/mark overlap, illegible text, keys covering data, cut-off panels, and table layout problems.",
+    "deliverables": {
+      "Figure 1": {"status": "PASS", "note": "All four row groups, axes, intervals, zero-width symbols, and key are visible; no overlap or clipping."},
+      "Figure 2": {"status": "PASS", "note": "Both panels and population encodings are legible within the explicit ranges; the key does not cover data."},
+      "Figure 3": {"status": "PASS", "note": "All 20 numbered labels and leader lines are visible; the renderer reports zero label-label and label-marker overlaps; full-name keys and Unclear outline symbols are legible."},
+      "Figure 4": {"status": "PASS", "note": "All four bars, labels, segment colours, and schematic key are visible; narrow overlap segments remain intentionally unlabelled."},
+      "Supplementary Figure S1": {"status": "PASS", "note": "Compact horizontal row labels and the reserved diagnostic header removed the overlaps found in earlier discarded executions; panels and key are fully visible."},
+      "Supplementary Figure S2": {"status": "PASS", "note": "All six panels, category keys, exploratory labels, and hard-case diagnostic labels are visible without covering bars."},
+      "Table 1": {"status": "PASS", "note": "Wide rendered inspection shows all six displayed labels and all six pair columns; group headings and two-decimal cells are complete."},
+      "Table 2": {"status": "PASS", "note": "Wide rendered inspection shows all four displayed labels and all six pair columns; negative and zero bounds are legible."},
+      "Table 3": {"status": "PASS", "note": "Rendered inspection shows all 12 labels, count columns, reportable metrics, blank sparse metrics, and Not estimable cells."},
+      "Table 4": {"status": "PASS", "note": "Rendered inspection shows all eight labels, count columns, reportable metrics, blank sparse metrics, and Not estimable cells."},
+      "Table 5": {"status": "PASS", "note": "All four rows and n (%) cells are legible, including 1 (<1%)."},
+      "Supplementary Table S1a": {"status": "PASS", "note": "All four response rows and both population columns are legible with baseline intervals."},
+      "Supplementary Table S1b": {"status": "PASS", "note": "All five response rows and both population columns are legible with baseline intervals."},
+      "Supplementary Table S1c": {"status": "PASS", "note": "All four population-dimension rows and five count-percentage columns are legible."}
+    }
+  }
+}
