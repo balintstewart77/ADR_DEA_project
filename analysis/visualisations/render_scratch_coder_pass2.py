@@ -308,7 +308,7 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
                                          bbox={"boxstyle": "round,pad=0.16", "fc": "white", "ec": "none", "alpha": 0.90},
                                          arrowprops={"arrowstyle": "-", "color": "#777", "lw": 0.7, "shrinkA": 2, "shrinkB": 5})
                 annotation.set_gid("point-label")
-                fig.canvas.draw(); box = annotation.get_window_extent(renderer)
+                fig.canvas.draw(); box = Text.get_window_extent(annotation, renderer)
                 inside = box.x0 >= figure_box.x0 + 3 and box.y0 >= figure_box.y0 + 3 and box.x1 <= figure_box.x1 - 3 and box.y1 <= figure_box.y1 - 3
                 collision = any(expanded(box, 2).overlaps(other) for other in placed) or any(expanded(box, 2).overlaps(marker) for marker in markers)
                 if inside and not collision:
@@ -327,7 +327,7 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
         px, py = ax.transData.transform((float(row["parsed_value"]), float(row["parsed_interval_lower"])))
         from matplotlib.transforms import Bbox
         markers.append(Bbox.from_extents(px - 6, py - 6, px + 6, py + 6))
-    final_boxes = [annotation.get_window_extent(renderer) for annotation in ax.texts if annotation.get_gid() == "point-label"]
+    final_boxes = [Text.get_window_extent(annotation, renderer) for annotation in ax.texts if annotation.get_gid() == "point-label"]
     overlaps = []
     for i, box in enumerate(final_boxes):
         for j in range(i + 1, len(final_boxes)):
@@ -377,7 +377,7 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
         all_positions.extend(positions); all_overlaps.extend([{"dimension": dimension, "pair": pair} for pair in overlaps])
     fig.canvas.draw(); renderer = fig.canvas.get_renderer()
     annotations = [text for ax in axes for text in ax.texts if text.get_gid() == "point-label"]
-    boxes = [annotation.get_window_extent(renderer) for annotation in annotations]
+    boxes = [Text.get_window_extent(annotation, renderer) for annotation in annotations]
     global_markers = []
     from matplotlib.transforms import Bbox
     for ax, dimension in zip(axes, DIMENSION_ORDER[:2]):
