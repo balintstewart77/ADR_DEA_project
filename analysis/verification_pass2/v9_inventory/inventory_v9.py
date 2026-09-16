@@ -30,7 +30,7 @@ FIND = LOG_DIR / "scratch_coder_interpretive_findings.md"
 CONF = ROOT / "analysis/confidence_exploratory/results_confidence.md"
 EXPECTED_HASHES = {
     REV.name: "0711ff9b7e8808dd202d2302738c343d639d50c3c1fb46f6e43891b5e392924f",
-    FIND.name: "5051db037e50417a53a168b62dfdae6e466dce333e1706aae453a9e250774610e",
+    FIND.name: "5051db037e50417a53a168b62dfda6e466dce333e1706aae453a9e250774610e",
 }
 DOM, PUR, UNCLEAR = "Research Domains", "Analytical Purposes", "Unclear from Register Entry"
 
