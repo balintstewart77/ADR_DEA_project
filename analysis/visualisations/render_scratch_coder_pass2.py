@@ -257,7 +257,7 @@ def render_figure2(rows: list[dict], base: Path) -> tuple[dict, dict]:
 def render_s1(rows: list[dict], base: Path) -> tuple[dict, dict]:
     fig, axes = plt.subplots(4, 2, figsize=(13.5, 12.8), constrained_layout=True)
     styles = replacement_axes(fig, axes, rows, DIMENSION_ORDER, ("baseline", "hard_case"), (0.0, 1.0), (-0.45, 0.45), s1=True)
-    fig.text(0.5, 0.995, "Hard-case sample: diagnostic, non-representative", ha="center", va="top", fontsize=10, fontweight="bold", color=COLORS["red"])
+    fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=10, fontweight="bold", color=COLORS["red"])
     handles = [
         Line2D([0], [0], marker="o", color=styles[p][0], markerfacecolor="none" if styles[p][1] else styles[p][0],
                markeredgecolor=styles[p][0], label=styles[p][2], linewidth=1.2) for p in ("baseline", "hard_case")
