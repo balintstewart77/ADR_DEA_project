@@ -269,8 +269,8 @@ def render_s1(rows: list[dict], base: Path) -> tuple[dict, dict]:
 
 
 DIRECT_LABELS = {
-    "Research Domains": {1, 4},
-    "Analytical Purposes": {1, 4},
+    "Research Domains": set(),
+    "Analytical Purposes": set(),
 }
 
 
