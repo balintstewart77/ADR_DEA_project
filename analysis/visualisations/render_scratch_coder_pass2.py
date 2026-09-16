@@ -343,8 +343,10 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
     axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1])]
     key_axes = [fig.add_subplot(grid[1, 0]), fig.add_subplot(grid[1, 1])]
     all_positions = []; all_overlaps = []
+    selected_by_dimension = {}
     for ax, dimension in zip(axes, DIMENSION_ORDER[:2]):
         selected = sorted([r for r in rows if r["dimension"] == dimension], key=lambda r: int(r["source_order"]))
+        selected_by_dimension[dimension] = selected
         ax.plot([0, 60], [0, 60], color="#555", linestyle="--", linewidth=1.0, zorder=1)
         ax.axvline(10, color="#BBBBBB", linewidth=0.9, zorder=0); ax.axvline(30, color="#BBBBBB", linewidth=0.9, zorder=0)
         ax.text(10, 59, "10", ha="center", va="top", fontsize=8, color="#666")
@@ -357,8 +359,6 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
         ax.set(xlim=(0, 60), ylim=(0, 60), aspect="equal", xlabel="Records labelled by the coder majority", ylabel="Records labelled by Fable 5")
         ax.set_title(dimension, fontweight="bold")
         style_axis(ax, "both")
-        positions, overlaps = place_labels(fig, ax, selected)
-        all_positions.extend(positions); all_overlaps.extend([{"dimension": dimension, "pair": pair} for pair in overlaps])
         key_ax = key_axes[0 if dimension == "Research Domains" else 1]
         key_ax.axis("off")
         crowded = [row for row in selected if int(row["source_order"]) not in DIRECT_LABELS[dimension]]
@@ -370,6 +370,11 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
             label = row["label"] + (" (coder declined to classify)" if row["label"] == "Unclear from Register Entry" else "")
             key_ax.text(column * 0.50, 0.88 - within * 0.19, f"{row['source_order']}. {label}", transform=key_ax.transAxes,
                         ha="left", va="top", fontsize=7.6, wrap=True)
+    fig.canvas.draw()
+    fig.set_layout_engine(None)
+    for ax, dimension in zip(axes, DIMENSION_ORDER[:2]):
+        positions, overlaps = place_labels(fig, ax, selected_by_dimension[dimension])
+        all_positions.extend(positions); all_overlaps.extend([{"dimension": dimension, "pair": pair} for pair in overlaps])
     fig.canvas.draw(); renderer = fig.canvas.get_renderer()
     annotations = [text for ax in axes for text in ax.texts if text.get_gid() == "point-label"]
     boxes = [annotation.get_window_extent(renderer) for annotation in annotations]
