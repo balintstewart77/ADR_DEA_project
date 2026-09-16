@@ -21,7 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
-from analysis.verification_pass2.verify_pass2 import Audit  # noqa: E402
+from analysis.verification_pass2.verify_pass2 import Audit, Missing  # noqa: E402
 
 OUT = Path(__file__).resolve().parent
 LOG_DIR = Path(r"C:\Users\balin\Desktop\DEA_working_logs")
@@ -144,7 +144,7 @@ class Inventory:
             table = "; ".join(dict.fromkeys(x["table"] for x in src))
             cell = "; ".join(x["cell"] for x in src)
             full = json.dumps([x["all_values"] for x in src], ensure_ascii=False)
-        except (KeyError, StopIteration, ValueError) as exc:
+        except (KeyError, StopIteration, ValueError, Missing) as exc:
             status, table, cell, full = "SOURCE MISSING", "", "", ""
             note = f"{note}; {type(exc).__name__}: {exc}".strip("; ")
         self.rows.append({"claim_id": claim_id, "log_file_name": log, "section_number": section,
@@ -168,6 +168,10 @@ class Inventory:
 def triple(inv: Inventory, tid: str, selector: str, name: str):
     key = {selector: name}
     return [inv.item(tid, part=p, **key) for p in range(3)]
+
+
+def metric_triple(inv: Inventory, tid: str, metric: str, **key):
+    return [inv.item(tid, metric, part=p, **key) for p in range(3)]
 
 
 def add_common_revision_claims(inv: Inventory) -> None:
@@ -329,7 +333,7 @@ def add_tables_revision_claims(inv: Inventory) -> None:
         inv.claim(L,section,"Unclear model-positive count","1",lambda t=support_tid:inv.item(t,"baseline_model_positive_n",label=UNCLEAR),"exact")
         item=inv.audit.item(tid,"precision",label=UNCLEAR)
         inv.claim(L,section,"Unclear usable precision replicates",valid,{"value":D(item["valid_replicate_count"]),"table":tid,"cell":item["result_id"]+" valid_replicate_count","all_values":[item["valid_replicate_count"]],"discrepancy":False},"exact")
-        inv.claim(L,section,"Unclear recall",recall,lambda t=tid:triple(inv,t,"recall",UNCLEAR))
+        inv.claim(L,section,"Unclear recall",recall,lambda t=tid:metric_triple(inv,t,"recall",label=UNCLEAR))
     # Totals (each occurrence retained).
     for section,tid,q,label in [("C.7","S5T001",["199","173"],"domain all-label totals"),("C.7","S5T001",["198","160"],"domain substantive totals"),("D.3","S5T002",["160","129"],"purpose all-label totals"),("D.3","S5T002",["159","103"],"purpose substantive totals")]:
         # Reuse already checked G.12 values by locating the matching row's source values.
@@ -351,7 +355,7 @@ def add_tables_revision_claims(inv: Inventory) -> None:
         inv.claim(L,"O.1",f"hard-case {dim} majority Unclear",q,[coverage_source(inv,"hard_case",dim,"unclear_composition","unclear_present__substantive_absent"),{"value":D(75),"table":"majority_coverage.csv","cell":"denominator","all_values":["75"],"discrepancy":False}],"exact")
     for tag,tid,q in [("equity baseline","S2T015",["19","11","13","5"]),("equity hard-case","S2T017",["8","8","3","3"]),("COVID hard-case","S2T018",["6","6","0","0"])]:inv.claim(L,"O.1",tag+" diagnostics",q,lambda t=tid:[inv.item(t,m) for m in ["model_positive_n","human_majority_positive_n","fp","fn"]],"exact")
     inv.not_checked(L,"O.1","post-exclusion accompanying tag-disagreement frame counts",["11","12","37"],"Stated source is a record-level cross-model comparison; opening it is forbidden for this run.")
-    inv.claim(L,"O.4","majority Sufficient proportion",["92","150","0.613","0.533","0.688"],lambda:[inv.item("S8T003","count",category="Sufficient"),{"value":D(150),"table":"S8T003","cell":"denominator","all_values":["150"],"discrepancy":False}]+triple(inv,"S8T003","proportion","Sufficient"))
+    inv.claim(L,"O.4","majority Sufficient proportion",["92","150","0.613","0.533","0.688"],lambda:[inv.item("S8T003","count",category="Sufficient"),{"value":D(150),"table":"S8T003","cell":"denominator","all_values":["150"],"discrepancy":False}]+metric_triple(inv,"S8T003","proportion",category="Sufficient"))
     inv.not_checked(L,"O.5","eligible purpose and domain label counts",["4","6"],"Counts are not exported as source cells and counting eligibility flags is not an approved derivation.")
     for fam,q,label in [("human_human","86","human-pair disjoint percentage"),("model_human","84","model-human disjoint percentage")]:inv.claim(L,"O.6",label,q,inv.direct(relations,{"population":"baseline","dimension":PUR,"pair_family":fam,"relation":"disjoint"},"proportion_of_nonidentical_nonempty_pairs","disagreement_type_distribution.csv"),"percentage")
 
