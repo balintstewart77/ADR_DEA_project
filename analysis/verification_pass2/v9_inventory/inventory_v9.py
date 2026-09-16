@@ -57,13 +57,14 @@ def compare(quoted: list[str], source: list[D], rule: str) -> bool:
     if len(quoted) != len(source):
         return False
     for q, s in zip(quoted, source):
-        qd = D(q.lstrip("+~"))
+        is_less = q.startswith("<")
+        qd = D(q.lstrip("+~<"))
         if rule == "exact":
             ok = s == qd
         elif rule in ("rounded", "approximate"):
             ok = half_up(s, places(q)) == qd
         elif rule == "percentage":
-            ok = half_up(s * 100, places(q)) == qd
+            ok = (D(0) < s * 100 < qd) if is_less else half_up(s * 100, places(q)) == qd
         else:
             raise ValueError(rule)
         if not ok:
@@ -212,7 +213,7 @@ def add_common_revision_claims(inv: Inventory) -> None:
             out = []
             for metric in ["baseline_model_positive_n", "baseline_human_majority_positive_n"]:
                 parts = [inv.item(t, metric, label=x) for x in labels]
-                unclear = next(x for x in parts if "Unclear from Register Entry" in x["cell"])
+                unclear = inv.item(t, metric, label=UNCLEAR)
                 out.append({"value": sum(x["value"] for x in parts)-unclear["value"], "table": t,
                             "cell": "sum all labels minus Unclear; " + "; ".join(x["cell"] for x in parts),
                             "all_values": [str(x["value"]) for x in parts], "discrepancy": any(x["discrepancy"] for x in parts)})
@@ -287,7 +288,9 @@ def add_tables_revision_claims(inv: Inventory) -> None:
            ("hard_case",PUR,"75",["9","20","42","4","0"],["12","27","56","5","0"],"hard-case purposes"),
            ("hard_case",DOM,"75",["6","3","45","18","3"],["8","4","60","24","4"],"hard-case domains")]
     for pop,dim,n,counts,pcts,label in specs:
-        den=coverage_source(inv,pop,dim,"majority_set_size","size_0")
+        den=inv.direct("analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage.csv",
+                       {"population":pop,"dimension":dim,"quantity":"majority_set_size","category":"size_0"},
+                       "denominator","majority_coverage.csv")
         inv.claim(L,"T.3",label+" denominator",n,den,"exact")
         src=[coverage_source(inv,pop,dim,"majority_set_size","size_0"),
              coverage_source(inv,pop,dim,"unclear_composition","unclear_present__substantive_absent")]
@@ -309,7 +312,7 @@ def add_tables_revision_claims(inv: Inventory) -> None:
         for cat,q in zip(["Sufficient","Partially sufficient","Insufficient"],vals[:3]):inv.claim(L,"T.6",f"{coder} sufficiency {cat}",str(q),lambda c=coder,x=cat:inv.item("S8T001","count",coder=c,category=x),"exact")
         for cat,q in zip(["Fit","Partial Fit","No Fit","Cannot assess from register entry"],vals[3:]):inv.claim(L,"T.6",f"{coder} taxonomy fit {cat}",str(q),lambda c=coder,x=cat:inv.item("S9T001","count",coder=c,category=x),"exact")
     # Sparse labels and row groups.
-    sparse_dom={"Migration & Demographics":8,"Crime & Justice":7,"Environment & Agriculture":6,"Public Finance & Taxation":5,"Data Infrastructure & Methodology":4,"Housing & Planning":1}
+    sparse_dom={"Migration & Demographics":9,"Crime & Justice":4,"Environment & Agriculture":4,"Public Finance & Taxation":2,"Data Infrastructure & Methodology":0,"Housing & Planning":0}
     sparse_pur={"Life-Course / Trajectory Analysis":9,"Methodological / Infrastructure Research":7,"Risk Prediction / Early Identification":1,"Service Interaction / Systems Analysis":1}
     for section,tid,items in [("K.2","S5T001",sparse_dom),("P.1","S5T002",sparse_pur)]:
         for label,q in items.items():inv.claim(L,section,label+" majority count",str(q),lambda t=tid,l=label:inv.item(t,"baseline_human_majority_positive_n",label=l),"exact")
@@ -322,22 +325,34 @@ def add_tables_revision_claims(inv: Inventory) -> None:
             return [{"value":min(vals),"table":t,"cell":"minimum of "+", ".join(x["cell"] for x in cells),"all_values":[str(v) for v in vals],"discrepancy":any(x["discrepancy"] for x in cells)},
                     {"value":max(vals),"table":t,"cell":"maximum of same stated set","all_values":[str(v) for v in vals],"discrepancy":any(x["discrepancy"] for x in cells)}]
         inv.claim(L,"K.4",label,q,range_src)
+    inv.claim(L,"K.4","domain Unclear majority-positive count","13",lambda:inv.item("S5T001","baseline_human_majority_positive_n",label=UNCLEAR),"exact")
+    inv.claim(L,"K.4","domain model Unclear count","1",lambda:inv.item("S5T001","baseline_model_positive_n",label=UNCLEAR),"exact")
+    inv.claim(L,"K.4","domain Unclear Fable-C01 interval",["0.000","0.658"],lambda:[inv.item("S5T005","kappa",part=p,label=UNCLEAR,pair="L-A") for p in [1,2]])
+    for tid in ["S5T005","S5T006"]:
+        item=inv.audit.item(tid,"kappa",label=next(i["source_key"]["label"] for i in inv.audit.items if i["table_id"]==tid),pair="A-B")
+        inv.claim(L,"K.3",f"{tid} kappa confidence level","95",{"value":D(item["confidence_level"].rstrip("%")),"table":tid,"cell":item["result_id"]+" confidence_level","all_values":[item["confidence_level"]],"discrepancy":False},"exact")
     inv.claim(L,"K.5","domain Unclear C01-C02 lower","-0.04",lambda:inv.item("S5T005","kappa",part=1,label=UNCLEAR,pair="A-B"))
-    for pair,q,label in [("A-C","-0.068","Outcome Tracking C01-C03 raw lower"),("B-C","-0.038","Outcome Tracking C02-C03 raw lower"),("A-C","-0.07","Outcome Tracking C01-C03 displayed lower"),("B-C","-0.04","Outcome Tracking C02-C03 displayed lower")]:inv.claim(L,"P.3",label,q,lambda p=pair:inv.item("S5T006","kappa",part=1,label="Outcome Tracking",pair=p),"exact" if len(q.split('.')[-1])==3 else "rounded")
+    inv.claim(L,"K.5","domain Unclear Fable-C03 prior display","-0.000",lambda:inv.item("S5T005","kappa",part=1,label=UNCLEAR,pair="L-C"))
+    inv.claim(L,"K.5","domain Unclear Fable-C03 revised display","0.00",lambda:inv.item("S5T005","kappa",part=1,label=UNCLEAR,pair="L-C"))
+    for pair,q,label in [("A-C","-0.068","Outcome Tracking C01-C03 source-rounded lower"),("B-C","-0.038","Outcome Tracking C02-C03 source-rounded lower"),("A-C","-0.07","Outcome Tracking C01-C03 displayed lower"),("B-C","-0.04","Outcome Tracking C02-C03 displayed lower")]:inv.claim(L,"P.3",label,q,lambda p=pair:inv.item("S5T006","kappa",part=1,label="Outcome Tracking",pair=p))
     for pair in ["L-A","L-B","L-C"]:inv.claim(L,"P.4",f"purpose Unclear {pair} lower","0.000",lambda p=pair:inv.item("S5T006","kappa",part=1,label=UNCLEAR,pair=p))
     for tid,q,label in [("S5T002","26","purpose Unclear majority count"),("S5T001","13","domain Unclear majority count")]:inv.claim(L,"P.4",label,q,lambda t=tid:inv.item(t,"baseline_human_majority_positive_n",label=UNCLEAR),"exact")
     # Performance table Unclear entries and totals.
-    for section,tid,support,valid,recall in [("C.4","S5T007","13","1284",["0.08","0.00","0.25"]),("D.2","S5T008","26","1233",["0.04","0.00","0.13"])]:
+    for section,tid,support,recall in [("C.4","S5T007","13",["0.08","0.00","0.25"]),("D.2","S5T008","26",["0.04","0.00","0.13"])]:
         support_tid="S5T001" if tid=="S5T007" else "S5T002"
         inv.claim(L,section,"Unclear majority count",support,lambda t=support_tid:inv.item(t,"baseline_human_majority_positive_n",label=UNCLEAR),"exact")
         inv.claim(L,section,"Unclear model-positive count","1",lambda t=support_tid:inv.item(t,"baseline_model_positive_n",label=UNCLEAR),"exact")
-        item=inv.audit.item(tid,"precision",label=UNCLEAR)
-        inv.claim(L,section,"Unclear usable precision replicates",valid,{"value":D(item["valid_replicate_count"]),"table":tid,"cell":item["result_id"]+" valid_replicate_count","all_values":[item["valid_replicate_count"]],"discrepancy":False},"exact")
+        inv.claim(L,section,"Unclear precision point estimate","1.00",lambda t=tid:inv.item(t,"precision",label=UNCLEAR))
+        inv.claim(L,section,"Unclear F1 point estimate","0.14" if tid=="S5T007" else "0.07",lambda t=tid:inv.item(t,"f1",label=UNCLEAR))
         inv.claim(L,section,"Unclear recall",recall,lambda t=tid:metric_triple(inv,t,"recall",label=UNCLEAR))
+        item=inv.audit.item(tid,"recall",label=UNCLEAR)
+        inv.claim(L,"C.5" if tid=="S5T007" else "D.2",f"{tid} performance confidence level","95",{"value":D(item["confidence_level"].rstrip("%")),"table":tid,"cell":item["result_id"]+" confidence_level","all_values":[item["confidence_level"]],"discrepancy":False},"exact")
     # Totals (each occurrence retained).
     for section,tid,q,label in [("C.7","S5T001",["199","173"],"domain all-label totals"),("C.7","S5T001",["198","160"],"domain substantive totals"),("D.3","S5T002",["160","129"],"purpose all-label totals"),("D.3","S5T002",["159","103"],"purpose substantive totals")]:
         # Reuse already checked G.12 values by locating the matching row's source values.
-        prior=next(r for r in inv.rows if r["section_number"]=="G.12" and r["quantity_label"].startswith(label.split()[0]))
+        wanted={"domain all-label totals":"domain label-application totals","domain substantive totals":"domain substantive-only totals",
+                "purpose all-label totals":"purpose label-application totals","purpose substantive totals":"purpose substantive-only totals"}[label]
+        prior=next(r for r in inv.rows if r["section_number"]=="G.12" and r["quantity_label"]==wanted)
         inv.rows.append({**prior,"claim_id":"R"+f"{inv.counter[L]+1:03d}","section_number":section,"quantity_label":label});inv.counter[L]+=1
     # Table 4 row labels.
     for label,q in {"Descriptive Monitoring":36,"Policy Evaluation / Impact Analysis":30,"Outcome Tracking":19,UNCLEAR:26,"Life-Course / Trajectory Analysis":9,"Methodological / Infrastructure Research":7,"Risk Prediction / Early Identification":1,"Service Interaction / Systems Analysis":1}.items():inv.claim(L,"D.1",label+" majority count",str(q),lambda l=label:inv.item("S5T002","baseline_human_majority_positive_n",label=l),"exact")
@@ -372,6 +387,8 @@ def add_findings_claims(inv: Inventory) -> None:
             x=[inv.item(t,"kappa",label=UNCLEAR,pair=p) for p in ps];v=[z["value"] for z in x]
             return [{"value":min(v),"table":t,"cell":"minimum stated set","all_values":[str(y) for y in v],"discrepancy":any(z["discrepancy"] for z in x)},{"value":max(v),"table":t,"cell":"maximum stated set","all_values":[str(y) for y in v],"discrepancy":any(z["discrepancy"] for z in x)}]
         inv.claim(L,"F.2",label+" Unclear kappa range",q,rsrc)
+    for pair in ["L-A","L-B","L-C"]:
+        inv.claim(L,"F.2",f"purpose Unclear {pair} lower bound","0",lambda p=pair:inv.item("S5T006","kappa",part=1,label=UNCLEAR,pair=p),"exact")
     for pop,n,unc,q,label in [("hard_case",75,20,"27","hard-case purposes Unclear-only share"),("baseline",150,26,"17","baseline purposes Unclear-only share")]:
         s=coverage_source(inv,pop,PUR,"unclear_composition","unclear_present__substantive_absent")
         inv.claim(L,"F.3",label,[str(unc),str(n),q],[s,{"value":D(n),"table":"majority_coverage.csv","cell":"denominator","all_values":[str(n)],"discrepancy":False},{"value":s["value"]/D(n),"table":"majority_coverage.csv","cell":"count / denominator","all_values":[str(unc),str(n)],"discrepancy":False}])
@@ -405,13 +422,15 @@ def add_findings_claims(inv: Inventory) -> None:
     inv.claim(L,"F.11","hard-case equity diagnostics",["8","8","3","3"],lambda:[inv.item("S2T017",m) for m in ["model_positive_n","human_majority_positive_n","fp","fn"]],"exact")
     # F.16/F.17.
     relations="analysis/outputs_disagreement_types_20260909T084916Z/disagreement_type_distribution.csv"
-    for dim,fam,pcts,n,label in [(DOM,"human_human",["48","5","47"],"220","domains human"),(DOM,"model_human",["52","8","40"],"199","domains model-human"),(PUR,"human_human",["14","1","86"],"272","purposes human"),(PUR,"model_human",["15","1","84"],"270","purposes model-human")]:
+    for dim,fam,pcts,n,label in [(DOM,"human_human",["48","5","47"],"220","domains human"),(DOM,"model_human",["52","8","40"],"199","domains model-human"),(PUR,"human_human",["14","<1","86"],"272","purposes human"),(PUR,"model_human",["15","1","84"],"270","purposes model-human")]:
         src=[inv.direct(relations,{"population":"baseline","dimension":dim,"pair_family":fam,"relation":r},"proportion_of_nonidentical_nonempty_pairs","disagreement_type_distribution.csv") for r in ["containment","overlap","disjoint"]]
         inv.claim(L,"F.16",label+" composition",pcts,src,"percentage")
         inv.claim(L,"F.16",label+" eligible pairs",n,inv.direct(relations,{"population":"baseline","dimension":dim,"pair_family":fam,"relation":"containment"},"nonidentical_nonempty_pairs","disagreement_type_distribution.csv"),"exact")
     for fam,q,label in [("human_human",["30","7"],"human tag pairs"),("model_human",["45","6"],"model-human tag pairs")]:inv.claim(L,"F.17",label,q,[inv.direct(relations,{"population":"baseline","dimension":"Joint cross-cutting tag set","pair_family":fam,"relation":"exactly_one_empty"},"count","disagreement_type_distribution.csv"),inv.direct(relations,{"population":"baseline","dimension":"Joint cross-cutting tag set","pair_family":fam,"relation":"containment"},"nonidentical_nonempty_pairs","disagreement_type_distribution.csv")],"exact")
     # Confidence claims.
     for tid,q,label in [("SCF1T003",["0.182","0.079","0.283"],"baseline confidence alpha"),("SCF1T008",["0.107","-0.050","0.250"],"hard-case confidence alpha")]:inv.claim(L,"F.18",label,q,lambda t=tid:[inv.confidence(t,c) for c in ["alpha","ci_lower","ci_upper"]])
+    for tid,label in [("SCF1T003","baseline confidence alpha interval level"),("SCF1T008","hard-case confidence alpha interval level")]:
+        inv.claim(L,"F.18",label,"95",lambda t=tid:{"value":inv.confidence(t,"confidence_level")["value"]*100,"table":t,"cell":"confidence_level","all_values":[str(inv.confidence(t,"confidence_level")["value"])],"discrepancy":False},"exact")
     for tid,count,n,pct,label in [("SCF1T004","55","150","37","baseline unanimous confidence"),("SCF1T009","24","75","32","hard-case unanimous confidence")]:
         s=inv.confidence(tid,"count");inv.claim(L,"F.18",label,[count,n,pct],[s,{"value":D(n),"table":tid,"cell":"denominator","all_values":[n],"discrepancy":False},{"value":s["value"]/D(n),"table":tid,"cell":"count / denominator","all_values":[count,n],"discrepancy":False}]);row=inv.rows[-1];row["comparison_rule_used"]="exact counts; percentage scaling and half-up";row["status"]="PASS" if s["value"]==D(count) and half_up(s["value"]/D(n)*100,0)==D(pct) else "FAIL"
     inv.claim(L,"F.18","baseline Low response count",["15","450"],[{"value":sum(inv.confidence("SCF1T001","count",category="Low",coder=c)["value"] for c in ["C01","C02","C03"]),"table":"SCF1T001","cell":"sum Low count across coders","all_values":[],"discrepancy":False},{"value":D(450),"table":"SCF1T001","cell":"three coders x 150","all_values":["450"],"discrepancy":False}],"exact")
@@ -480,6 +499,7 @@ def self_test() -> None:
     assert compare(["0.63"],[D("0.625")],"rounded")
     assert compare(["-0.04"],[D("-0.03775091928386179")],"rounded")
     assert compare(["48"],[D("0.47727272727272729")],"percentage")
+    assert compare(["<1"],[D("0.0036764705882352941")],"percentage")
     assert compare(["0.17049"],[D("0.17049219725231762")],"approximate")
     assert not compare(["0.171"],[D("0.17049219725231762")],"rounded")
     assert places("-0.050") == 3
