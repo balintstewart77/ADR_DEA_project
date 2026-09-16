@@ -268,18 +268,16 @@ def render_s1(rows: list[dict], base: Path) -> tuple[dict, dict]:
     return render, {"status": "PASS", "encodings_present": ["baseline filled", "hard-case hollow", "δₘᵢₙ star"], "key_entries": [h.get_label() for h in handles]}
 
 
+DIRECT_LABELS = {
+    "Research Domains": {1, 4, 8},
+    "Analytical Purposes": {1, 4, 5},
+}
+
+
 def point_label(row: dict) -> str:
-    replacements = {
-        "Business & Productivity": "Business & Productivity", "Health, Wellbeing & Care": "Health, Wellbeing & Care",
-        "Education & Skills": "Education & Skills", "Labour Market & Employment": "Labour Market & Employment",
-        "Migration & Demographics": "Migration & Demographics", "Crime & Justice": "Crime & Justice",
-        "Environment & Agriculture": "Environment & Agriculture", "Public Finance & Taxation": "Public Finance & Taxation",
-        "Data Infrastructure & Methodology": "Data Infrastructure & Methodology", "Housing & Planning": "Housing & Planning",
-        "Life-Course / Trajectory Analysis": "Life-Course / Trajectory", "Methodological / Infrastructure Research": "Methodological / Infrastructure",
-        "Risk Prediction / Early Identification": "Risk Prediction / Early Identification", "Service Interaction / Systems Analysis": "Service Interaction / Systems",
-        "Policy Evaluation / Impact Analysis": "Policy Evaluation / Impact", "Unclear from Register Entry": "Unclear from Register Entry",
-    }
-    return "\n".join(textwrap.wrap(replacements.get(row["label"], row["label"]), width=24, break_long_words=False))
+    if int(row["source_order"]) not in DIRECT_LABELS[row["dimension"]]:
+        return row["source_order"]
+    return "\n".join(textwrap.wrap(row["label"], width=26, break_long_words=False))
 
 
 def expanded(box, pixels: float):
@@ -309,6 +307,7 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
                                          fontsize=7.0, annotation_clip=False,
                                          bbox={"boxstyle": "round,pad=0.16", "fc": "white", "ec": "none", "alpha": 0.90},
                                          arrowprops={"arrowstyle": "-", "color": "#777", "lw": 0.7, "shrinkA": 2, "shrinkB": 5})
+                annotation.set_gid("point-label")
                 fig.canvas.draw(); box = annotation.get_window_extent(renderer)
                 inside = box.x0 >= figure_box.x0 + 3 and box.y0 >= figure_box.y0 + 3 and box.x1 <= figure_box.x1 - 3 and box.y1 <= figure_box.y1 - 3
                 collision = any(expanded(box, 2).overlaps(other) for other in placed) or any(expanded(box, 2).overlaps(marker) for marker in markers)
@@ -328,7 +327,7 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
         px, py = ax.transData.transform((float(row["parsed_value"]), float(row["parsed_interval_lower"])))
         from matplotlib.transforms import Bbox
         markers.append(Bbox.from_extents(px - 6, py - 6, px + 6, py + 6))
-    final_boxes = [annotation.get_window_extent(renderer) for annotation in ax.texts if annotation.get_text() in {point_label(r) for r in rows}]
+    final_boxes = [annotation.get_window_extent(renderer) for annotation in ax.texts if annotation.get_gid() == "point-label"]
     overlaps = []
     for i, box in enumerate(final_boxes):
         for j in range(i + 1, len(final_boxes)):
@@ -339,7 +338,10 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
 
 
 def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
-    fig, axes = plt.subplots(1, 2, figsize=(21, 9.5), constrained_layout=True)
+    fig = plt.figure(figsize=(18, 10.8), constrained_layout=True)
+    grid = fig.add_gridspec(2, 2, height_ratios=[4.2, 1.25])
+    axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1])]
+    key_axes = [fig.add_subplot(grid[1, 0]), fig.add_subplot(grid[1, 1])]
     all_positions = []; all_overlaps = []
     for ax, dimension in zip(axes, DIMENSION_ORDER[:2]):
         selected = sorted([r for r in rows if r["dimension"] == dimension], key=lambda r: int(r["source_order"]))
@@ -357,9 +359,19 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
         style_axis(ax, "both")
         positions, overlaps = place_labels(fig, ax, selected)
         all_positions.extend(positions); all_overlaps.extend([{"dimension": dimension, "pair": pair} for pair in overlaps])
+        key_ax = key_axes[0 if dimension == "Research Domains" else 1]
+        key_ax.axis("off")
+        crowded = [row for row in selected if int(row["source_order"]) not in DIRECT_LABELS[dimension]]
+        key_ax.set_title("Numbered labels", loc="left", fontsize=9, fontweight="bold")
+        columns = 2
+        split = math.ceil(len(crowded) / columns)
+        for index, row in enumerate(crowded):
+            column = index // split; within = index % split
+            label = row["label"] + (" (coder declined to classify)" if row["label"] == "Unclear from Register Entry" else "")
+            key_ax.text(column * 0.50, 0.88 - within * 0.19, f"{row['source_order']}. {label}", transform=key_ax.transAxes,
+                        ha="left", va="top", fontsize=7.6, wrap=True)
     fig.canvas.draw(); renderer = fig.canvas.get_renderer()
-    label_texts = {point_label(row) for row in rows}
-    annotations = [text for ax in axes for text in ax.texts if text.get_text() in label_texts]
+    annotations = [text for ax in axes for text in ax.texts if text.get_gid() == "point-label"]
     boxes = [annotation.get_window_extent(renderer) for annotation in annotations]
     global_markers = []
     from matplotlib.transforms import Bbox
@@ -374,11 +386,10 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
             if box.overlaps(marker): all_overlaps.append({"global_label_marker": [i, j]})
     if all_overlaps or len(all_positions) != 20:
         raise RuntimeError(f"Figure 3 rendered-label assertion failed: labels={len(all_positions)}, overlaps={all_overlaps}")
-    handle = Line2D([0], [0], marker="o", color="none", markerfacecolor="none", markeredgecolor=COLORS["red"], markeredgewidth=1.8, label="Unclear from Register Entry", markersize=9)
-    fig.legend(handles=[handle], loc="outside lower center", frameon=False)
     render = save_figure(fig, base)
     return render, {"status": "PASS", "labels_expected": 20, "labels_rendered": len(all_positions), "overlaps": all_overlaps,
-                    "positions": all_positions, "key_entries": [handle.get_label()], "encodings_present": ["Unclear outline"]}
+                    "positions": all_positions, "key_entries": ["Numbered labels", "Unclear from Register Entry (coder declined to classify)"],
+                    "encodings_present": ["numbered crowded-point labels", "direct isolated-point names", "Unclear outline"]}
 
 
 def disagreement_group(rows: list[dict]) -> dict[tuple[str, str], dict[str, dict]]:
