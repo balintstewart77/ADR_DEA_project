@@ -296,7 +296,7 @@ def add_tables_revision_claims(inv: Inventory) -> None:
             row=inv.rows[-1]; ok=D(c)==s["value"] and half_up(s["value"]/D(n)*100,0)==D(p)
             row["comparison_rule_used"]="exact count; proportion-to-percentage scaling; half-up whole percent"; row["status"]="PASS" if ok else "FAIL"
     for pop,n,label in [("baseline","150","baseline purpose exceedance"),("hard_case","75","hard-case purpose exceedance")]:
-        source=coverage_source(inv,pop,PUR,"constraint","at_most_two_purposes")
+        source=coverage_source(inv,pop,PUR,"majority_set_exceeds_single_coder_constraint","size_greater_than_2")
         inv.claim(L,"T.4",label,["0",n],[source,{"value":D(n),"table":"majority_coverage.csv","cell":source["cell"]+" denominator","all_values":[n],"discrepancy":False}],"exact")
     for subset,q in [("strict_register_sufficient","92"),("broad_register_usable","148")]:inv.claim(L,"T.5",subset.replace("_"," ")+" count",q,lambda s=subset:inv.item("S8T005","count",subset=s),"exact")
     inv.claim(L,"T.5","Sufficient plus Partially sufficient majority total","147",lambda:{"value":inv.item("S8T003","count",category="Sufficient")["value"]+inv.item("S8T003","count",category="Partially sufficient")["value"],"table":"S8T003","cell":"Sufficient count plus Partially sufficient count","all_values":[],"discrepancy":False},"exact")
