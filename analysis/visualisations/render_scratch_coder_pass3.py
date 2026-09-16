@@ -324,7 +324,8 @@ def render_s1(rows: list[dict], base: Path):
                     "row_positions": positions, "delta_min_rows": delta, "annotation_components": {}}
 
 
-def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: bool, panel_header: str) -> tuple[list[dict], dict]:
+def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: bool, panel_header: str,
+                 compact: bool = False) -> tuple[list[dict], dict]:
     actors = ("C01", "C02", "C03", "Majority of coders")
     ypos = (3.25, 2.35, 1.45, 0.35)
     palette = RATING_PALETTES[construct]
@@ -340,7 +341,7 @@ def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: 
             shown = percent_text(row["parsed_interval_lower"], count); displayed.append(shown)
             if count > 0:
                 nonzero += 1
-                if width >= 5:
+                if width >= (10 if compact else 5):
                     dark = palette[category] in {"#246B45", "#5A4A86", "#5F5F5F", "#888888", "#A63D57"}
                     ax.text(float(left + width / 2), y, shown, ha="center", va="center", fontsize=8.0, color="white" if dark else "#222", zorder=4)
                     labelled += 1
@@ -349,12 +350,13 @@ def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: 
             left += width
         for offset, value in enumerate(small):
             wrapped = "\n".join(textwrap.wrap(value, width=14, break_long_words=False))
-            ax.text(100.0, y + (offset - (len(small) - 1) / 2) * 0.27, wrapped, ha="left", va="center", fontsize=8.0, linespacing=0.9)
+            spacing = 0.52 if compact else 0.27
+            ax.text(100.0, y + (offset - (len(small) - 1) / 2) * spacing, wrapped, ha="left", va="center", fontsize=8.0, linespacing=0.9)
             labelled += 1
         sums.append({"construct": construct, "population": population, "bar": actor, "displayed_percentages": displayed,
                      "sum": sum(int(v.rstrip("%").replace("<1", "0")) for v in displayed)})
     ax.set_xlim(0, 165); ax.set_ylim(-0.08, 3.58); ax.set_yticks(ypos, actors)
-    ax.xaxis.set_major_locator(FixedLocator([0, 20, 40, 60, 80, 100])); ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x)}%" if x <= 100 else ""))
+    ax.xaxis.set_major_locator(FixedLocator([0, 50, 100] if compact else [0, 20, 40, 60, 80, 100])); ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x)}%" if x <= 100 else ""))
     if show_x:
         ax.set_xlabel("Percentage of records")
     else:
@@ -397,7 +399,7 @@ def render_s2(rows: list[dict], base: Path):
     )
     sums = []; checks = []; confidence_handles = None
     for index, (ax, construct, population, show_x, header) in enumerate(specs):
-        panel_sums, check = rating_panel(ax, rows, construct, population, show_x, header)
+        panel_sums, check = rating_panel(ax, rows, construct, population, show_x, header, compact=True)
         sums.extend(panel_sums); checks.append(check)
         handles = check.pop("handles")
         if construct == "Coder confidence":
