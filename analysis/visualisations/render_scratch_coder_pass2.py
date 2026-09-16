@@ -13,6 +13,7 @@ import math
 import re
 import shutil
 import sys
+import textwrap
 from collections import defaultdict
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
@@ -45,7 +46,7 @@ DIMENSION_ORDER = ("Research Domains", "Analytical Purposes", "Demographic dispa
 REPLACEMENT_ORDER = ("alpha ABC", "alpha LBC", "alpha ALC", "alpha ABL")
 DELTA_ORDER = ("delta_A", "delta_B", "delta_C", "delta_min")
 ALPHA_LABELS = {"alpha ABC": "α ABC", "alpha LBC": "α LBC", "alpha ALC": "α ALC", "alpha ABL": "α ABL"}
-DELTA_LABELS = {"delta_A": "δₐ", "delta_B": "δᵦ", "delta_C": "δ꜀", "delta_min": "δₘᵢₙ"}
+DELTA_LABELS = {"delta_A": "δ$_A$", "delta_B": "δ$_B$", "delta_C": "δ$_C$", "delta_min": "δ$_{min}$"}
 COLORS = {"blue": "#2F5D7E", "orange": "#B55A30", "red": "#8C3B4A", "grey": "#6B6B6B"}
 DISAGREE_COLORS = {"containment": "#3B6B8C", "overlap": "#C58B36", "disjoint": "#777777"}
 BANNED = (
@@ -205,7 +206,7 @@ def replacement_axes(fig, axes, rows: list[dict], dimensions: tuple[str, ...], p
                                   marker="*" if quantity == "delta_min" else "o", hollow=hollow)
             labels = [ALPHA_LABELS[q] for q in order] if series == "alpha" else [DELTA_LABELS[q] for q in order]
             if series == "delta" and not s1:
-                component = "δₐ" if dimension == "COVID-19 & Pandemic" and populations == ("baseline",) else "δᵦ"
+                component = "δ$_A$" if dimension == "COVID-19 & Pandemic" and populations == ("baseline",) else "δ$_B$"
                 labels[-1] += f" (= {component} estimate)"
             ax.set_yticks(range(len(order)), labels)
             ax.invert_yaxis()
@@ -278,7 +279,7 @@ def point_label(row: dict) -> str:
         "Risk Prediction / Early Identification": "Risk Prediction / Early Identification", "Service Interaction / Systems Analysis": "Service Interaction / Systems",
         "Policy Evaluation / Impact Analysis": "Policy Evaluation / Impact", "Unclear from Register Entry": "Unclear from Register Entry",
     }
-    return replacements.get(row["label"], row["label"])
+    return "\n".join(textwrap.wrap(replacements.get(row["label"], row["label"]), width=24, break_long_words=False))
 
 
 def expanded(box, pixels: float):
@@ -294,7 +295,7 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
         from matplotlib.transforms import Bbox
         markers.append(Bbox.from_extents(px - 6, py - 6, px + 6, py + 6))
     placed = []; positions = []
-    radii = (18, 28, 40, 55, 72, 90, 115, 140)
+    radii = (18, 28, 40, 55, 72, 90, 115, 140, 170, 200)
     angles = (35, 145, -35, -145, 75, 105, -75, -105, 0, 180, 90, -90)
     figure_box = fig.bbox
     for row in sorted(rows, key=lambda r: (-len(point_label(r)), int(r["source_order"]))):
@@ -322,6 +323,11 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
         placed.append(box)
         positions.append({"dimension": row["dimension"], "label": row["label"], "x": x, "y": y, "dx_points": dx, "dy_points": dy})
     fig.canvas.draw(); renderer = fig.canvas.get_renderer()
+    markers = []
+    for row in rows:
+        px, py = ax.transData.transform((float(row["parsed_value"]), float(row["parsed_interval_lower"])))
+        from matplotlib.transforms import Bbox
+        markers.append(Bbox.from_extents(px - 6, py - 6, px + 6, py + 6))
     final_boxes = [annotation.get_window_extent(renderer) for annotation in ax.texts if annotation.get_text() in {point_label(r) for r in rows}]
     overlaps = []
     for i, box in enumerate(final_boxes):
@@ -333,7 +339,7 @@ def place_labels(fig, ax, rows: list[dict]) -> tuple[list[dict], list[dict]]:
 
 
 def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
-    fig, axes = plt.subplots(1, 2, figsize=(18, 8.7), constrained_layout=True)
+    fig, axes = plt.subplots(1, 2, figsize=(21, 9.5), constrained_layout=True)
     all_positions = []; all_overlaps = []
     for ax, dimension in zip(axes, DIMENSION_ORDER[:2]):
         selected = sorted([r for r in rows if r["dimension"] == dimension], key=lambda r: int(r["source_order"]))
@@ -351,6 +357,21 @@ def render_figure3(rows: list[dict], base: Path) -> tuple[dict, dict]:
         style_axis(ax, "both")
         positions, overlaps = place_labels(fig, ax, selected)
         all_positions.extend(positions); all_overlaps.extend([{"dimension": dimension, "pair": pair} for pair in overlaps])
+    fig.canvas.draw(); renderer = fig.canvas.get_renderer()
+    label_texts = {point_label(row) for row in rows}
+    annotations = [text for ax in axes for text in ax.texts if text.get_text() in label_texts]
+    boxes = [annotation.get_window_extent(renderer) for annotation in annotations]
+    global_markers = []
+    from matplotlib.transforms import Bbox
+    for ax, dimension in zip(axes, DIMENSION_ORDER[:2]):
+        for row in [r for r in rows if r["dimension"] == dimension]:
+            px, py = ax.transData.transform((float(row["parsed_value"]), float(row["parsed_interval_lower"])))
+            global_markers.append(Bbox.from_extents(px - 6, py - 6, px + 6, py + 6))
+    for i, box in enumerate(boxes):
+        for j in range(i + 1, len(boxes)):
+            if box.overlaps(boxes[j]): all_overlaps.append({"global_labels": [i, j]})
+        for j, marker in enumerate(global_markers):
+            if box.overlaps(marker): all_overlaps.append({"global_label_marker": [i, j]})
     if all_overlaps or len(all_positions) != 20:
         raise RuntimeError(f"Figure 3 rendered-label assertion failed: labels={len(all_positions)}, overlaps={all_overlaps}")
     handle = Line2D([0], [0], marker="o", color="none", markerfacecolor="none", markeredgecolor=COLORS["red"], markeredgewidth=1.8, label="Unclear from Register Entry", markersize=9)
