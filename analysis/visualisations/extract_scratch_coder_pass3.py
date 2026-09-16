@@ -353,16 +353,26 @@ def main() -> None:
     parser.add_argument("--archive-existing", action="store_true")
     args = parser.parse_args()
     data_dir = args.data_dir.resolve()
+    pass2_archive = data_dir / "archive" / "pass3_preexisting_64679cf"
     manifest_path = data_dir / "pass2_deliverable_manifest.json"
     metadata_path = data_dir / "pass2_run_metadata.json"
+    if not manifest_path.is_file():
+        manifest_path = pass2_archive / "pass2_deliverable_manifest.json"
+    if not metadata_path.is_file():
+        metadata_path = pass2_archive / "pass2_run_metadata.json"
     pass2_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     pass2_metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-    old_captions = PASS2_CAPTIONS.read_text(encoding="utf-8")
+    archived_captions = ROOT / "analysis/figures/archive/pass3_preexisting_64679cf/draft_captions_pass2.md"
+    caption_source = archived_captions if archived_captions.is_file() else PASS2_CAPTIONS
+    old_captions = caption_source.read_text(encoding="utf-8")
     old: dict[str, list[dict]] = {}
     pass2_names = {manifest_path.name, metadata_path.name}
     for deliverable, entry in pass2_manifest["entries"].items():
         name = entry["inputs"]["data"]
-        old[deliverable] = read_csv(data_dir / name)
+        source = data_dir / name
+        if not source.is_file():
+            source = pass2_archive / name
+        old[deliverable] = read_csv(source)
         pass2_names.update(entry["inputs"].values())
 
     datasets: dict[str, list[dict]] = {

@@ -315,7 +315,7 @@ def render_figure3(rows: list[dict], base: Path):
 
 def render_s1(rows: list[dict], base: Path):
     fig, axes, positions, delta = replacement_figure(rows, DIMENSIONS, ("baseline", "hard_case"), (0.0, 1.0), 6.35, False, s1=True)
-    fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=8.5, fontweight="bold", color=POPULATION["hard_case"]["color"], y=0.997)
+    fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=8.5, fontweight="bold", color=POPULATION["hard_case"]["color"])
     handles = [Line2D([0], [0], marker="o", color=POPULATION[p]["color"], markerfacecolor="none" if POPULATION[p]["hollow"] else POPULATION[p]["color"],
                       markeredgecolor=POPULATION[p]["color"], linewidth=1.2, label=POPULATION[p]["label"]) for p in ("baseline", "hard_case")]
     fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
@@ -368,24 +368,32 @@ def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: 
 
 
 def render_figure2(rows: list[dict], base: Path):
-    fig, axes = plt.subplots(2, 1, figsize=(FIGURE_WIDTH, 6.0), constrained_layout=True)
+    fig = plt.figure(figsize=(FIGURE_WIDTH, 6.35), constrained_layout=True)
+    grid = fig.add_gridspec(4, 1, height_ratios=[0.17, 1.0, 0.20, 1.0])
+    key_axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[2, 0])]
+    axes = [fig.add_subplot(grid[1, 0]), fig.add_subplot(grid[3, 0])]
     sums = []; checks = []
     for i, construct in enumerate(("Register-entry information", "Taxonomy fit")):
         panel_sums, check = rating_panel(axes[i], rows, construct, "baseline", i == 1, construct)
         sums.extend(panel_sums); checks.append(check)
-        axes[i].legend(handles=check.pop("handles"), loc="upper center", bbox_to_anchor=(0.52, 1.18), ncol=3, frameon=False, handlelength=1.4, columnspacing=1.0)
+        key_ax = key_axes[i]; key_ax.set_xticks([]); key_ax.set_yticks([]); key_ax.axis("off")
+        key_ax.legend(handles=check.pop("handles"), loc="center", ncol=4 if i == 0 else 3, frameon=False, handlelength=1.4, columnspacing=1.0)
     render = save_figure(fig, base, "Figure 2")
     status = "PASS" if all(c["status"] == "PASS" for c in checks) else "FAIL"
     return render, {"status": status, "panels": checks}, sums
 
 
 def render_s2(rows: list[dict], base: Path):
-    fig, axes = plt.subplots(2, 2, figsize=(FIGURE_WIDTH, 6.15), constrained_layout=True)
+    fig = plt.figure(figsize=(FIGURE_WIDTH, 7.35), constrained_layout=True)
+    grid = fig.add_gridspec(3, 2, height_ratios=[0.46, 1.0, 1.0])
+    key_axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1])]
+    axes = [[fig.add_subplot(grid[1, 0]), fig.add_subplot(grid[1, 1])],
+            [fig.add_subplot(grid[2, 0]), fig.add_subplot(grid[2, 1])]]
     specs = (
-        (axes[0, 0], "Register-entry information", "hard_case", False, "Register-entry information\nHard-case (n=75)\ndiagnostic, non-representative"),
-        (axes[0, 1], "Taxonomy fit", "hard_case", False, "Taxonomy fit\nHard-case (n=75)\ndiagnostic, non-representative"),
-        (axes[1, 0], "Coder confidence", "baseline", True, "Coder confidence\nBaseline (n=150)"),
-        (axes[1, 1], "Coder confidence", "hard_case", True, "Coder confidence\nHard-case (n=75)\ndiagnostic, non-representative"),
+        (axes[0][0], "Register-entry information", "hard_case", False, "Register-entry information\nHard-case (n=75)\ndiagnostic, non-representative"),
+        (axes[0][1], "Taxonomy fit", "hard_case", False, "Taxonomy fit\nHard-case (n=75)\ndiagnostic, non-representative"),
+        (axes[1][0], "Coder confidence", "baseline", True, "Coder confidence\nBaseline (n=150)"),
+        (axes[1][1], "Coder confidence", "hard_case", True, "Coder confidence\nHard-case (n=75)\ndiagnostic, non-representative"),
     )
     sums = []; checks = []; confidence_handles = None
     for index, (ax, construct, population, show_x, header) in enumerate(specs):
@@ -395,7 +403,10 @@ def render_s2(rows: list[dict], base: Path):
         if construct == "Coder confidence":
             confidence_handles = handles
         else:
-            ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.45, 1.28), ncol=2, frameon=False, handlelength=1.2, columnspacing=0.8)
+            key_ax = key_axes[0 if construct == "Register-entry information" else 1]
+            key_ax.set_xticks([]); key_ax.set_yticks([]); key_ax.axis("off")
+            key_ax.legend(handles=handles, loc="center", ncol=2 if construct == "Register-entry information" else 1,
+                          frameon=False, handlelength=1.2, columnspacing=0.8, labelspacing=0.35)
     fig.legend(handles=confidence_handles, loc="outside lower center", ncol=4, frameon=False, handlelength=1.3, columnspacing=1.0)
     render = save_figure(fig, base, "Supplementary Figure S2")
     status = "PASS" if all(c["status"] == "PASS" for c in checks) else "FAIL"
@@ -492,8 +503,8 @@ def render_figure4(rows: list[dict], base: Path):
         for idx, row in enumerate(selected):
             column, within = idx // split, idx % split
             label = row["label"] + (" (declined to classify)" if row["label"] == "Unclear from Register Entry" else "")
-            wrapped = "\n".join(textwrap.wrap(label, width=24, break_long_words=False))
-            x0 = 0.01 + column * 0.50; y0 = 0.96 - within * (0.88 / max(split, 1))
+            wrapped = "\n".join(textwrap.wrap(label, width=18, break_long_words=False))
+            x0 = 0.01 + column * 0.55; y0 = 0.96 - within * (0.88 / max(split, 1))
             key_ax.text(x0, y0, f"{row['source_order']}. {wrapped}", transform=key_ax.transAxes, ha="left", va="top", fontsize=8.0, linespacing=0.88)
     fig.canvas.draw(); renderer = fig.canvas.get_renderer()
     for ax, dimension in zip(axes, DIMENSIONS[:2]):
