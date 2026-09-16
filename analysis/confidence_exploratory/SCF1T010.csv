@@ -1,0 +1,10 @@
+table_id,population,analysis_note,category,count,denominator,proportion,count_status,estimate_status,interval_status,interval_method,confidence_level,ci_lower,ci_upper,sufficiency
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,High,69,78,0.8846153846153846,reported,reported,not_applicable,none,,,,Sufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,High,6,78,0.07692307692307693,reported,reported,not_applicable,none,,,,Partially sufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,High,3,78,0.038461538461538464,reported,reported,not_applicable,none,,,,Insufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,Medium,53,139,0.381294964028777,reported,reported,not_applicable,none,,,,Sufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,Medium,83,139,0.5971223021582733,reported,reported,not_applicable,none,,,,Partially sufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,Medium,3,139,0.02158273381294964,reported,reported,not_applicable,none,,,,Insufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,Low,1,8,0.125,reported,reported,not_applicable,none,,,,Sufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,Low,4,8,0.5,reported,reported,not_applicable,none,,,,Partially sufficient
+SCF1T010,hard_case,DIAGNOSTIC — non-representative,Low,3,8,0.375,reported,reported,not_applicable,none,,,,Insufficient

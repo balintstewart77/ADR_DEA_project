@@ -1,0 +1,5 @@
+table_id,population,analysis_note,category,count,denominator,proportion,count_status,estimate_status,interval_status,interval_method,confidence_level,ci_lower,ci_upper
+SCF1T007,hard_case,DIAGNOSTIC — non-representative,High,19,75,0.25333333333333335,reported,reported,not_applied_diagnostic_sample,none,,,
+SCF1T007,hard_case,DIAGNOSTIC — non-representative,Medium,52,75,0.6933333333333334,reported,reported,not_applied_diagnostic_sample,none,,,
+SCF1T007,hard_case,DIAGNOSTIC — non-representative,Low,1,75,0.013333333333333334,reported,reported,not_applied_diagnostic_sample,none,,,
+SCF1T007,hard_case,DIAGNOSTIC — non-representative,No majority,3,75,0.04,reported,reported,not_applied_diagnostic_sample,none,,,

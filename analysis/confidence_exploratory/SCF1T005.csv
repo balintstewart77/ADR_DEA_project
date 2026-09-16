@@ -1,0 +1,10 @@
+table_id,population,analysis_note,category,count,denominator,proportion,count_status,estimate_status,interval_status,interval_method,confidence_level,ci_lower,ci_upper,sufficiency
+SCF1T005,baseline,,High,175,193,0.9067357512953368,reported,reported,not_applicable,none,,,,Sufficient
+SCF1T005,baseline,,High,15,193,0.07772020725388601,reported,reported,not_applicable,none,,,,Partially sufficient
+SCF1T005,baseline,,High,3,193,0.015544041450777202,reported,reported,not_applicable,none,,,,Insufficient
+SCF1T005,baseline,,Medium,85,242,0.3512396694214876,reported,reported,not_applicable,none,,,,Sufficient
+SCF1T005,baseline,,Medium,151,242,0.6239669421487604,reported,reported,not_applicable,none,,,,Partially sufficient
+SCF1T005,baseline,,Medium,6,242,0.024793388429752067,reported,reported,not_applicable,none,,,,Insufficient
+SCF1T005,baseline,,Low,2,15,0.13333333333333333,reported,reported,not_applicable,none,,,,Sufficient
+SCF1T005,baseline,,Low,10,15,0.6666666666666666,reported,reported,not_applicable,none,,,,Partially sufficient
+SCF1T005,baseline,,Low,3,15,0.2,reported,reported,not_applicable,none,,,,Insufficient

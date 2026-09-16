@@ -1,0 +1,2 @@
+table_id,population,analysis_note,alpha,estimate_status,undefined_reason,ci_lower,ci_upper,confidence_level,seed,requested_replicates,valid_replicates,invalid_replicates,valid_replicate_threshold,minimum_valid_fraction,interval_status,interval_method,observed_disagreement,expected_disagreement,denominator,rating_count,invalid_reasons
+SCF1T008,hard_case,DIAGNOSTIC — non-representative,0.10720791308938349,reported,,-0.049591586591360405,0.2497475826406676,0.95,20260915,2000,2000,0,1800,0.9,reported,bootstrap_percentile_type7,5466.984444444444,6123.46875,75,225,{}

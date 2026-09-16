@@ -1,0 +1,5 @@
+table_id,population,analysis_note,category,count,denominator,proportion,count_status,estimate_status,interval_status,interval_method,confidence_level,ci_lower,ci_upper
+SCF1T002,baseline,,High,64,150,0.4266666666666667,reported,reported,reported,wilson_score,0.95,0.3503209045656491,0.5066747312750022
+SCF1T002,baseline,,Medium,79,150,0.5266666666666666,reported,reported,reported,wilson_score,0.95,0.44710055355423833,0.6049010334127976
+SCF1T002,baseline,,Low,0,150,0.0,reported,reported,reported,wilson_score,0.95,0.0,0.0249702443680766
+SCF1T002,baseline,,No majority,7,150,0.04666666666666667,reported,reported,reported,wilson_score,0.95,0.022786549161261972,0.09318647239912747

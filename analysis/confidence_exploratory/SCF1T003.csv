@@ -1,0 +1,2 @@
+table_id,population,analysis_note,alpha,estimate_status,undefined_reason,ci_lower,ci_upper,confidence_level,seed,requested_replicates,valid_replicates,invalid_replicates,valid_replicate_threshold,minimum_valid_fraction,interval_status,interval_method,observed_disagreement,expected_disagreement,denominator,rating_count,invalid_reasons
+SCF1T003,baseline,,0.18209041188026154,reported,,0.07872545505759505,0.283043590671762,0.95,20260915,2000,2000,0,1800,0.9,reported,bootstrap_percentile_type7,21179.45,25894.610244988864,150,450,{}

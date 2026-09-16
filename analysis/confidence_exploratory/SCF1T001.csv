@@ -1,0 +1,10 @@
+table_id,population,analysis_note,category,count,denominator,proportion,count_status,estimate_status,interval_status,interval_method,confidence_level,ci_lower,ci_upper,coder
+SCF1T001,baseline,,High,61,150,0.4066666666666667,reported,reported,reported,wilson_score,0.95,0.33134109612869495,0.4866533494866793,C01
+SCF1T001,baseline,,Medium,82,150,0.5466666666666666,reported,reported,reported,wilson_score,0.95,0.4668277632715898,0.6241750139207229,C01
+SCF1T001,baseline,,Low,7,150,0.04666666666666667,reported,reported,reported,wilson_score,0.95,0.022786549161261972,0.09318647239912747,C01
+SCF1T001,baseline,,High,57,150,0.38,reported,reported,reported,wilson_score,0.95,0.3062372724644591,0.45975558618387935,C02
+SCF1T001,baseline,,Medium,85,150,0.5666666666666667,reported,reported,reported,wilson_score,0.95,0.4866798706275503,0.6433240967900394,C02
+SCF1T001,baseline,,Low,8,150,0.05333333333333334,reported,reported,reported,wilson_score,0.95,0.027269539920193826,0.1017038783819546,C02
+SCF1T001,baseline,,High,75,150,0.5,reported,reported,reported,wilson_score,0.95,0.42099012028854144,0.5790098797114586,C03
+SCF1T001,baseline,,Medium,75,150,0.5,reported,reported,reported,wilson_score,0.95,0.42099012028854144,0.5790098797114586,C03
+SCF1T001,baseline,,Low,0,150,0.0,reported,reported,reported,wilson_score,0.95,0.0,0.0249702443680766,C03

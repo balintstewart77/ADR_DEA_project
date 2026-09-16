@@ -1,0 +1,3622 @@
+{
+  "specification_date": "specified, and instruction v5 issued, on or before 16 September 2026 (investigator-attested)",
+  "instruction_issue_date": "specified, and instruction v5 issued, on or before 16 September 2026 (investigator-attested)",
+  "continuation": "v5.1",
+  "addendum_creation_date": "2026-09-16",
+  "run_started_utc": "2026-09-16T07:03:22.091793+00:00",
+  "run_completed_utc": "2026-09-16T07:04:03.200556+00:00",
+  "addendum_commit": "660f7d8624f03629cb39dd2cbe8911e0497d7895",
+  "erratum_commit": "fcc980a764d594ce53cb83da652b264ea186fec1",
+  "analysis_code_commits": [
+    "ab1a0008c314ff53b3ed94b1b975acf62647f353"
+  ],
+  "execution_code_commit": "ab1a0008c314ff53b3ed94b1b975acf62647f353",
+  "data_sources": [
+    {
+      "manifest_id": "POST-028",
+      "path": "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "manifest_path": "preregistration/preregistration_artifact_manifest.csv",
+      "registering_commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6"
+    },
+    {
+      "manifest_id": "POST-009",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "manifest_path": "preregistration/preregistration_artifact_manifest.csv",
+      "registering_commit": "6500c92148d97043a7826b684f5885127fd22814"
+    },
+    {
+      "manifest_id": "POST-011",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "manifest_path": "preregistration/preregistration_artifact_manifest.csv",
+      "registering_commit": "6500c92148d97043a7826b684f5885127fd22814"
+    },
+    {
+      "manifest_id": "POST-019",
+      "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+      "sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "manifest_path": "preregistration/preregistration_artifact_manifest.csv",
+      "registering_commit": "d732b83f56b4f2b3b00f54f7f97266c3f4513d14"
+    }
+  ],
+  "source_checks": [
+    {
+      "check": "1.0 POST-028",
+      "status": "passed",
+      "actual": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "expected": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "source": "preregistration\\preregistration_artifact_manifest.csv"
+    },
+    {
+      "check": "1.2 authority identity Stage A POST-028",
+      "status": "passed",
+      "actual": [
+        "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+        "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+      ],
+      "expected": [
+        "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+        "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.2 authority identity canonical POST-028",
+      "status": "passed",
+      "actual": [
+        "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+        "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+      ],
+      "expected": [
+        "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+        "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.0 POST-009",
+      "status": "passed",
+      "actual": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "expected": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "source": "preregistration\\preregistration_artifact_manifest.csv"
+    },
+    {
+      "check": "1.2 authority identity Stage A POST-009",
+      "status": "passed",
+      "actual": [
+        "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+        "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11"
+      ],
+      "expected": [
+        "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+        "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.2 authority identity canonical POST-009",
+      "status": "passed",
+      "actual": [
+        "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+        "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11"
+      ],
+      "expected": [
+        "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+        "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.0 POST-011",
+      "status": "passed",
+      "actual": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "expected": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "source": "preregistration\\preregistration_artifact_manifest.csv"
+    },
+    {
+      "check": "1.2 authority identity Stage A POST-011",
+      "status": "passed",
+      "actual": [
+        "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+        "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11"
+      ],
+      "expected": [
+        "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+        "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.2 authority identity canonical POST-011",
+      "status": "passed",
+      "actual": [
+        "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+        "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11"
+      ],
+      "expected": [
+        "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+        "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.0 POST-019",
+      "status": "passed",
+      "actual": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "expected": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "source": "preregistration\\preregistration_artifact_manifest.csv"
+    },
+    {
+      "check": "1.2 authority identity Stage A POST-019",
+      "status": "passed",
+      "actual": [
+        "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+        "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666"
+      ],
+      "expected": [
+        "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+        "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.2 authority identity canonical POST-019",
+      "status": "passed",
+      "actual": [
+        "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+        "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666"
+      ],
+      "expected": [
+        "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+        "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666"
+      ],
+      "source": "S8–S10 recorded input authorities"
+    },
+    {
+      "check": "1.1 duplicate coder-record keys",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "shared loader response frame"
+    },
+    {
+      "check": "1.3 populations",
+      "status": "passed",
+      "actual": [
+        "baseline",
+        "hard_case"
+      ],
+      "expected": [
+        "baseline",
+        "hard_case"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "canonical export identity sufficiency_response_distribution.csv",
+      "status": "passed",
+      "actual": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "expected": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+      "source": "canonical source_files"
+    },
+    {
+      "check": "canonical export identity unclear_register_summary.csv",
+      "status": "passed",
+      "actual": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "expected": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a",
+      "source": "canonical source_files"
+    },
+    {
+      "check": "canonical cell S8T001.r1",
+      "status": "passed",
+      "actual": "262",
+      "expected": "262",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r2",
+      "status": "passed",
+      "actual": "0.5822222222222222",
+      "expected": "0.5822222222222222",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r3",
+      "status": "passed",
+      "actual": "176",
+      "expected": "176",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r4",
+      "status": "passed",
+      "actual": "0.39111111111111113",
+      "expected": "0.39111111111111113",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r5",
+      "status": "passed",
+      "actual": "12",
+      "expected": "12",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r6",
+      "status": "passed",
+      "actual": "0.02666666666666667",
+      "expected": "0.02666666666666667",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r7",
+      "status": "passed",
+      "actual": "107",
+      "expected": "107",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r8",
+      "status": "passed",
+      "actual": "0.7133333333333334",
+      "expected": "0.7133333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r9",
+      "status": "passed",
+      "actual": "39",
+      "expected": "39",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r10",
+      "status": "passed",
+      "actual": "0.26",
+      "expected": "0.26",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r11",
+      "status": "passed",
+      "actual": "4",
+      "expected": "4",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r12",
+      "status": "passed",
+      "actual": "0.02666666666666667",
+      "expected": "0.02666666666666667",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r13",
+      "status": "passed",
+      "actual": "96",
+      "expected": "96",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r14",
+      "status": "passed",
+      "actual": "0.64",
+      "expected": "0.64",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r15",
+      "status": "passed",
+      "actual": "48",
+      "expected": "48",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r16",
+      "status": "passed",
+      "actual": "0.32",
+      "expected": "0.32",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r17",
+      "status": "passed",
+      "actual": "6",
+      "expected": "6",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r18",
+      "status": "passed",
+      "actual": "0.04",
+      "expected": "0.04",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r19",
+      "status": "passed",
+      "actual": "59",
+      "expected": "59",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r20",
+      "status": "passed",
+      "actual": "0.3933333333333333",
+      "expected": "0.3933333333333333",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r21",
+      "status": "passed",
+      "actual": "89",
+      "expected": "89",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r22",
+      "status": "passed",
+      "actual": "0.5933333333333334",
+      "expected": "0.5933333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r23",
+      "status": "passed",
+      "actual": "2",
+      "expected": "2",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T001.r24",
+      "status": "passed",
+      "actual": "0.013333333333333334",
+      "expected": "0.013333333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r1",
+      "status": "passed",
+      "actual": "123",
+      "expected": "123",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r2",
+      "status": "passed",
+      "actual": "0.5466666666666666",
+      "expected": "0.5466666666666666",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r3",
+      "status": "passed",
+      "actual": "93",
+      "expected": "93",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r4",
+      "status": "passed",
+      "actual": "0.41333333333333333",
+      "expected": "0.41333333333333333",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r5",
+      "status": "passed",
+      "actual": "9",
+      "expected": "9",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r6",
+      "status": "passed",
+      "actual": "0.04",
+      "expected": "0.04",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r7",
+      "status": "passed",
+      "actual": "54",
+      "expected": "54",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r8",
+      "status": "passed",
+      "actual": "0.72",
+      "expected": "0.72",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r9",
+      "status": "passed",
+      "actual": "20",
+      "expected": "20",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r10",
+      "status": "passed",
+      "actual": "0.26666666666666666",
+      "expected": "0.26666666666666666",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r11",
+      "status": "passed",
+      "actual": "1",
+      "expected": "1",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r12",
+      "status": "passed",
+      "actual": "0.013333333333333334",
+      "expected": "0.013333333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r13",
+      "status": "passed",
+      "actual": "45",
+      "expected": "45",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r14",
+      "status": "passed",
+      "actual": "0.6",
+      "expected": "0.6",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r15",
+      "status": "passed",
+      "actual": "24",
+      "expected": "24",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r16",
+      "status": "passed",
+      "actual": "0.32",
+      "expected": "0.32",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r17",
+      "status": "passed",
+      "actual": "6",
+      "expected": "6",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r18",
+      "status": "passed",
+      "actual": "0.08",
+      "expected": "0.08",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r19",
+      "status": "passed",
+      "actual": "24",
+      "expected": "24",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r20",
+      "status": "passed",
+      "actual": "0.32",
+      "expected": "0.32",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r21",
+      "status": "passed",
+      "actual": "49",
+      "expected": "49",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r22",
+      "status": "passed",
+      "actual": "0.6533333333333333",
+      "expected": "0.6533333333333333",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r23",
+      "status": "passed",
+      "actual": "2",
+      "expected": "2",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S8T002.r24",
+      "status": "passed",
+      "actual": "0.02666666666666667",
+      "expected": "0.02666666666666667",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r1",
+      "status": "passed",
+      "actual": "60",
+      "expected": "60",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r2",
+      "status": "passed",
+      "actual": "0.13333333333333333",
+      "expected": "0.13333333333333333",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r3",
+      "status": "passed",
+      "actual": "31",
+      "expected": "31",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r4",
+      "status": "passed",
+      "actual": "0.20666666666666667",
+      "expected": "0.20666666666666667",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r5",
+      "status": "passed",
+      "actual": "10",
+      "expected": "10",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r6",
+      "status": "passed",
+      "actual": "0.06666666666666667",
+      "expected": "0.06666666666666667",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r7",
+      "status": "passed",
+      "actual": "3",
+      "expected": "3",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r8",
+      "status": "passed",
+      "actual": "0.02",
+      "expected": "0.02",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r9",
+      "status": "passed",
+      "actual": "13",
+      "expected": "13",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r10",
+      "status": "passed",
+      "actual": "0.08666666666666667",
+      "expected": "0.08666666666666667",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r11",
+      "status": "passed",
+      "actual": "2",
+      "expected": "2",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r12",
+      "status": "passed",
+      "actual": "0.007633587786259542",
+      "expected": "0.007633587786259542",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r13",
+      "status": "passed",
+      "actual": "48",
+      "expected": "48",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r14",
+      "status": "passed",
+      "actual": "0.2727272727272727",
+      "expected": "0.2727272727272727",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r15",
+      "status": "passed",
+      "actual": "10",
+      "expected": "10",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r16",
+      "status": "passed",
+      "actual": "0.8333333333333334",
+      "expected": "0.8333333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r17",
+      "status": "passed",
+      "actual": "18",
+      "expected": "18",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r18",
+      "status": "passed",
+      "actual": "0.09326424870466321",
+      "expected": "0.09326424870466321",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r19",
+      "status": "passed",
+      "actual": "39",
+      "expected": "39",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r20",
+      "status": "passed",
+      "actual": "0.16115702479338842",
+      "expected": "0.16115702479338842",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r21",
+      "status": "passed",
+      "actual": "3",
+      "expected": "3",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T001.r22",
+      "status": "passed",
+      "actual": "0.2",
+      "expected": "0.2",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r1",
+      "status": "passed",
+      "actual": "106",
+      "expected": "106",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r2",
+      "status": "passed",
+      "actual": "0.23555555555555555",
+      "expected": "0.23555555555555555",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r3",
+      "status": "passed",
+      "actual": "45",
+      "expected": "45",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r4",
+      "status": "passed",
+      "actual": "0.3",
+      "expected": "0.3",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r5",
+      "status": "passed",
+      "actual": "17",
+      "expected": "17",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r6",
+      "status": "passed",
+      "actual": "0.11333333333333333",
+      "expected": "0.11333333333333333",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r7",
+      "status": "passed",
+      "actual": "9",
+      "expected": "9",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r8",
+      "status": "passed",
+      "actual": "0.06",
+      "expected": "0.06",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r9",
+      "status": "passed",
+      "actual": "26",
+      "expected": "26",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r10",
+      "status": "passed",
+      "actual": "0.17333333333333334",
+      "expected": "0.17333333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r11",
+      "status": "passed",
+      "actual": "2",
+      "expected": "2",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r12",
+      "status": "passed",
+      "actual": "0.007633587786259542",
+      "expected": "0.007633587786259542",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r13",
+      "status": "passed",
+      "actual": "94",
+      "expected": "94",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r14",
+      "status": "passed",
+      "actual": "0.5340909090909091",
+      "expected": "0.5340909090909091",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r15",
+      "status": "passed",
+      "actual": "10",
+      "expected": "10",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r16",
+      "status": "passed",
+      "actual": "0.8333333333333334",
+      "expected": "0.8333333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r17",
+      "status": "passed",
+      "actual": "13",
+      "expected": "13",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r18",
+      "status": "passed",
+      "actual": "0.06735751295336788",
+      "expected": "0.06735751295336788",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r19",
+      "status": "passed",
+      "actual": "87",
+      "expected": "87",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r20",
+      "status": "passed",
+      "actual": "0.359504132231405",
+      "expected": "0.359504132231405",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r21",
+      "status": "passed",
+      "actual": "6",
+      "expected": "6",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T002.r22",
+      "status": "passed",
+      "actual": "0.4",
+      "expected": "0.4",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r1",
+      "status": "passed",
+      "actual": "21",
+      "expected": "21",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r2",
+      "status": "passed",
+      "actual": "0.09333333333333334",
+      "expected": "0.09333333333333334",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r3",
+      "status": "passed",
+      "actual": "15",
+      "expected": "15",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r4",
+      "status": "passed",
+      "actual": "0.2",
+      "expected": "0.2",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r5",
+      "status": "passed",
+      "actual": "3",
+      "expected": "3",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r6",
+      "status": "passed",
+      "actual": "0.04",
+      "expected": "0.04",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r7",
+      "status": "passed",
+      "actual": "0",
+      "expected": "0",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r8",
+      "status": "passed",
+      "actual": "0.0",
+      "expected": "0.0",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r9",
+      "status": "passed",
+      "actual": "3",
+      "expected": "3",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r10",
+      "status": "passed",
+      "actual": "0.04",
+      "expected": "0.04",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r11",
+      "status": "passed",
+      "actual": "2",
+      "expected": "2",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r12",
+      "status": "passed",
+      "actual": "0.016260162601626018",
+      "expected": "0.016260162601626018",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r13",
+      "status": "passed",
+      "actual": "13",
+      "expected": "13",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r14",
+      "status": "passed",
+      "actual": "0.13978494623655913",
+      "expected": "0.13978494623655913",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r15",
+      "status": "passed",
+      "actual": "6",
+      "expected": "6",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r16",
+      "status": "passed",
+      "actual": "0.6666666666666666",
+      "expected": "0.6666666666666666",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r17",
+      "status": "passed",
+      "actual": "9",
+      "expected": "9",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r18",
+      "status": "passed",
+      "actual": "0.11538461538461539",
+      "expected": "0.11538461538461539",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r19",
+      "status": "passed",
+      "actual": "11",
+      "expected": "11",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r20",
+      "status": "passed",
+      "actual": "0.07913669064748201",
+      "expected": "0.07913669064748201",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r21",
+      "status": "passed",
+      "actual": "1",
+      "expected": "1",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T003.r22",
+      "status": "passed",
+      "actual": "0.125",
+      "expected": "0.125",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r1",
+      "status": "passed",
+      "actual": "68",
+      "expected": "68",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r2",
+      "status": "passed",
+      "actual": "0.3022222222222222",
+      "expected": "0.3022222222222222",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r3",
+      "status": "passed",
+      "actual": "22",
+      "expected": "22",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r4",
+      "status": "passed",
+      "actual": "0.29333333333333333",
+      "expected": "0.29333333333333333",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r5",
+      "status": "passed",
+      "actual": "14",
+      "expected": "14",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r6",
+      "status": "passed",
+      "actual": "0.18666666666666668",
+      "expected": "0.18666666666666668",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r7",
+      "status": "passed",
+      "actual": "6",
+      "expected": "6",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r8",
+      "status": "passed",
+      "actual": "0.08",
+      "expected": "0.08",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r9",
+      "status": "passed",
+      "actual": "20",
+      "expected": "20",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r10",
+      "status": "passed",
+      "actual": "0.26666666666666666",
+      "expected": "0.26666666666666666",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r11",
+      "status": "passed",
+      "actual": "3",
+      "expected": "3",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r12",
+      "status": "passed",
+      "actual": "0.024390243902439025",
+      "expected": "0.024390243902439025",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r13",
+      "status": "passed",
+      "actual": "57",
+      "expected": "57",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r14",
+      "status": "passed",
+      "actual": "0.6129032258064516",
+      "expected": "0.6129032258064516",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r15",
+      "status": "passed",
+      "actual": "8",
+      "expected": "8",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r16",
+      "status": "passed",
+      "actual": "0.8888888888888888",
+      "expected": "0.8888888888888888",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r17",
+      "status": "passed",
+      "actual": "10",
+      "expected": "10",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r18",
+      "status": "passed",
+      "actual": "0.1282051282051282",
+      "expected": "0.1282051282051282",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r19",
+      "status": "passed",
+      "actual": "55",
+      "expected": "55",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r20",
+      "status": "passed",
+      "actual": "0.39568345323741005",
+      "expected": "0.39568345323741005",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r21",
+      "status": "passed",
+      "actual": "3",
+      "expected": "3",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "canonical cell S10T004.r22",
+      "status": "passed",
+      "actual": "0.375",
+      "expected": "0.375",
+      "source": "canonical result_items and CSV"
+    },
+    {
+      "check": "1.2 ID-set equality baseline",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "hash-identical sample authority recorded for S8–S10; shared population_ids"
+    },
+    {
+      "check": "1.2 record count baseline",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 coder set baseline",
+      "status": "passed",
+      "actual": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "expected": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 responses baseline C01",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 confidence permitted baseline C01",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source confidence labels"
+    },
+    {
+      "check": "1.3 sufficiency permitted baseline C01",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source sufficiency labels"
+    },
+    {
+      "check": "1.3 responses baseline C02",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 confidence permitted baseline C02",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source confidence labels"
+    },
+    {
+      "check": "1.3 sufficiency permitted baseline C02",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source sufficiency labels"
+    },
+    {
+      "check": "1.3 responses baseline C03",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 confidence permitted baseline C03",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source confidence labels"
+    },
+    {
+      "check": "1.3 sufficiency permitted baseline C03",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source sufficiency labels"
+    },
+    {
+      "check": "1.4 instruction confidence baseline",
+      "status": "passed",
+      "actual": [
+        193,
+        242,
+        15
+      ],
+      "expected": [
+        193,
+        242,
+        15
+      ],
+      "source": "instruction High/Medium/Low"
+    },
+    {
+      "check": "1.4 canonical confidence baseline Research Domains",
+      "status": "passed",
+      "actual": [
+        193,
+        242,
+        15
+      ],
+      "expected": [
+        193,
+        242,
+        15
+      ],
+      "source": "S10T001–S10T004 and unclear_register_summary.csv"
+    },
+    {
+      "check": "1.4 canonical confidence baseline Analytical Purposes",
+      "status": "passed",
+      "actual": [
+        193,
+        242,
+        15
+      ],
+      "expected": [
+        193,
+        242,
+        15
+      ],
+      "source": "S10T001–S10T004 and unclear_register_summary.csv"
+    },
+    {
+      "check": "1.5 canonical sufficiency baseline all",
+      "status": "passed",
+      "actual": [
+        262,
+        176,
+        12
+      ],
+      "expected": [
+        262,
+        176,
+        12
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    },
+    {
+      "check": "1.5 instruction sufficiency all",
+      "status": "passed",
+      "actual": [
+        262,
+        176,
+        12
+      ],
+      "expected": [
+        262,
+        176,
+        12
+      ],
+      "source": "instruction Sufficient/Partially sufficient/Insufficient"
+    },
+    {
+      "check": "1.6 canonical sufficiency baseline C01",
+      "status": "passed",
+      "actual": [
+        107,
+        39,
+        4
+      ],
+      "expected": [
+        107,
+        39,
+        4
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    },
+    {
+      "check": "1.6 instruction sufficiency C01",
+      "status": "passed",
+      "actual": [
+        107,
+        39,
+        4
+      ],
+      "expected": [
+        107,
+        39,
+        4
+      ],
+      "source": "instruction Sufficient/Partially sufficient/Insufficient"
+    },
+    {
+      "check": "1.6 canonical sufficiency baseline C02",
+      "status": "passed",
+      "actual": [
+        96,
+        48,
+        6
+      ],
+      "expected": [
+        96,
+        48,
+        6
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    },
+    {
+      "check": "1.6 instruction sufficiency C02",
+      "status": "passed",
+      "actual": [
+        96,
+        48,
+        6
+      ],
+      "expected": [
+        96,
+        48,
+        6
+      ],
+      "source": "instruction Sufficient/Partially sufficient/Insufficient"
+    },
+    {
+      "check": "1.6 canonical sufficiency baseline C03",
+      "status": "passed",
+      "actual": [
+        59,
+        89,
+        2
+      ],
+      "expected": [
+        59,
+        89,
+        2
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    },
+    {
+      "check": "1.6 instruction sufficiency C03",
+      "status": "passed",
+      "actual": [
+        59,
+        89,
+        2
+      ],
+      "expected": [
+        59,
+        89,
+        2
+      ],
+      "source": "instruction Sufficient/Partially sufficient/Insufficient"
+    },
+    {
+      "check": "1.2 ID-set equality hard_case",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "hash-identical sample authority recorded for S8–S10; shared population_ids"
+    },
+    {
+      "check": "1.2 record count hard_case",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 coder set hard_case",
+      "status": "passed",
+      "actual": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "expected": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 responses hard_case C01",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 confidence permitted hard_case C01",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source confidence labels"
+    },
+    {
+      "check": "1.3 sufficiency permitted hard_case C01",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source sufficiency labels"
+    },
+    {
+      "check": "1.3 responses hard_case C02",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 confidence permitted hard_case C02",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source confidence labels"
+    },
+    {
+      "check": "1.3 sufficiency permitted hard_case C02",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source sufficiency labels"
+    },
+    {
+      "check": "1.3 responses hard_case C03",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "instruction"
+    },
+    {
+      "check": "1.3 confidence permitted hard_case C03",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source confidence labels"
+    },
+    {
+      "check": "1.3 sufficiency permitted hard_case C03",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared source sufficiency labels"
+    },
+    {
+      "check": "1.4 instruction confidence hard_case",
+      "status": "passed",
+      "actual": [
+        78,
+        139,
+        8
+      ],
+      "expected": [
+        78,
+        139,
+        8
+      ],
+      "source": "instruction High/Medium/Low"
+    },
+    {
+      "check": "1.4 canonical confidence hard_case Research Domains",
+      "status": "passed",
+      "actual": [
+        78,
+        139,
+        8
+      ],
+      "expected": [
+        78,
+        139,
+        8
+      ],
+      "source": "S10T001–S10T004 and unclear_register_summary.csv"
+    },
+    {
+      "check": "1.4 canonical confidence hard_case Analytical Purposes",
+      "status": "passed",
+      "actual": [
+        78,
+        139,
+        8
+      ],
+      "expected": [
+        78,
+        139,
+        8
+      ],
+      "source": "S10T001–S10T004 and unclear_register_summary.csv"
+    },
+    {
+      "check": "1.5 canonical sufficiency hard_case all",
+      "status": "passed",
+      "actual": [
+        123,
+        93,
+        9
+      ],
+      "expected": [
+        123,
+        93,
+        9
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    },
+    {
+      "check": "1.6 canonical sufficiency hard_case C01",
+      "status": "passed",
+      "actual": [
+        54,
+        20,
+        1
+      ],
+      "expected": [
+        54,
+        20,
+        1
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    },
+    {
+      "check": "1.6 canonical sufficiency hard_case C02",
+      "status": "passed",
+      "actual": [
+        45,
+        24,
+        6
+      ],
+      "expected": [
+        45,
+        24,
+        6
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    },
+    {
+      "check": "1.6 canonical sufficiency hard_case C03",
+      "status": "passed",
+      "actual": [
+        24,
+        49,
+        2
+      ],
+      "expected": [
+        24,
+        49,
+        2
+      ],
+      "source": "S8T001/S8T002 and sufficiency_response_distribution.csv"
+    }
+  ],
+  "output_checks": [
+    {
+      "check": "2.1 coder sum baseline C01",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 categories baseline C01",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.1 coder sum baseline C02",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 categories baseline C02",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.1 coder sum baseline C03",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 categories baseline C03",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.1 majority sum baseline",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 majority categories baseline",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low",
+        "No majority"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low",
+        "No majority"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.2 nine cells baseline",
+      "status": "passed",
+      "actual": 9,
+      "expected": 9,
+      "source": "instruction"
+    },
+    {
+      "check": "2.2 grand total baseline",
+      "status": "passed",
+      "actual": 450,
+      "expected": 450,
+      "source": "Group 1 response count"
+    },
+    {
+      "check": "2.2 confidence margin baseline High",
+      "status": "passed",
+      "actual": 193,
+      "expected": 193,
+      "source": "Group 1 check 1.4"
+    },
+    {
+      "check": "2.2 confidence margin baseline Medium",
+      "status": "passed",
+      "actual": 242,
+      "expected": 242,
+      "source": "Group 1 check 1.4"
+    },
+    {
+      "check": "2.2 confidence margin baseline Low",
+      "status": "passed",
+      "actual": 15,
+      "expected": 15,
+      "source": "Group 1 check 1.4"
+    },
+    {
+      "check": "2.2 sufficiency margin baseline Sufficient",
+      "status": "passed",
+      "actual": 262,
+      "expected": 262,
+      "source": "Group 1 check 1.5"
+    },
+    {
+      "check": "2.2 sufficiency margin baseline Partially sufficient",
+      "status": "passed",
+      "actual": 176,
+      "expected": 176,
+      "source": "Group 1 check 1.5"
+    },
+    {
+      "check": "2.2 sufficiency margin baseline Insufficient",
+      "status": "passed",
+      "actual": 12,
+      "expected": 12,
+      "source": "Group 1 check 1.5"
+    },
+    {
+      "check": "2.3 denominator baseline 0",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 0",
+      "status": "passed",
+      "actual": 0.4066666666666667,
+      "expected": 0.4066666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 0",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 1",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 1",
+      "status": "passed",
+      "actual": 0.5466666666666666,
+      "expected": 0.5466666666666666,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 1",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 2",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 2",
+      "status": "passed",
+      "actual": 0.04666666666666667,
+      "expected": 0.04666666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 2",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 3",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 3",
+      "status": "passed",
+      "actual": 0.38,
+      "expected": 0.38,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 3",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 4",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 4",
+      "status": "passed",
+      "actual": 0.5666666666666667,
+      "expected": 0.5666666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 4",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 5",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 5",
+      "status": "passed",
+      "actual": 0.05333333333333334,
+      "expected": 0.05333333333333334,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 5",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 6",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 6",
+      "status": "passed",
+      "actual": 0.5,
+      "expected": 0.5,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 6",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 7",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 7",
+      "status": "passed",
+      "actual": 0.5,
+      "expected": 0.5,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 7",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 8",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 8",
+      "status": "passed",
+      "actual": 0.0,
+      "expected": 0.0,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 8",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 9",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 9",
+      "status": "passed",
+      "actual": 0.4266666666666667,
+      "expected": 0.4266666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 9",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 10",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 10",
+      "status": "passed",
+      "actual": 0.5266666666666666,
+      "expected": 0.5266666666666666,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 10",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 11",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 11",
+      "status": "passed",
+      "actual": 0.0,
+      "expected": 0.0,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 11",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 12",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 12",
+      "status": "passed",
+      "actual": 0.04666666666666667,
+      "expected": 0.04666666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 12",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "2.3 denominator baseline 13",
+      "status": "passed",
+      "actual": 193,
+      "expected": 193,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 13",
+      "status": "passed",
+      "actual": 0.9067357512953368,
+      "expected": 0.9067357512953368,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 13",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 13",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 14",
+      "status": "passed",
+      "actual": 193,
+      "expected": 193,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 14",
+      "status": "passed",
+      "actual": 0.07772020725388601,
+      "expected": 0.07772020725388601,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 14",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 14",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 15",
+      "status": "passed",
+      "actual": 193,
+      "expected": 193,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 15",
+      "status": "passed",
+      "actual": 0.015544041450777202,
+      "expected": 0.015544041450777202,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 15",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 15",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 16",
+      "status": "passed",
+      "actual": 242,
+      "expected": 242,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 16",
+      "status": "passed",
+      "actual": 0.3512396694214876,
+      "expected": 0.3512396694214876,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 16",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 16",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 17",
+      "status": "passed",
+      "actual": 242,
+      "expected": 242,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 17",
+      "status": "passed",
+      "actual": 0.6239669421487604,
+      "expected": 0.6239669421487604,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 17",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 17",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 18",
+      "status": "passed",
+      "actual": 242,
+      "expected": 242,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 18",
+      "status": "passed",
+      "actual": 0.024793388429752067,
+      "expected": 0.024793388429752067,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 18",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 18",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 19",
+      "status": "passed",
+      "actual": 15,
+      "expected": 15,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 19",
+      "status": "passed",
+      "actual": 0.13333333333333333,
+      "expected": 0.13333333333333333,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 19",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 19",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 20",
+      "status": "passed",
+      "actual": 15,
+      "expected": 15,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 20",
+      "status": "passed",
+      "actual": 0.6666666666666666,
+      "expected": 0.6666666666666666,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 20",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 20",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator baseline 21",
+      "status": "passed",
+      "actual": 15,
+      "expected": 15,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion baseline 21",
+      "status": "passed",
+      "actual": 0.2,
+      "expected": 0.2,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status baseline 21",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope baseline 21",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.4 attempts baseline",
+      "status": "passed",
+      "actual": 2000,
+      "expected": 2000,
+      "source": "existing bootstrap"
+    },
+    {
+      "check": "2.4 requested baseline",
+      "status": "passed",
+      "actual": 2000,
+      "expected": 2000,
+      "source": "instruction"
+    },
+    {
+      "check": "2.4 status baseline",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "existing 90% rule"
+    },
+    {
+      "check": "2.4 bounds availability baseline",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "existing 90% rule"
+    },
+    {
+      "check": "2.1 coder sum hard_case C01",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 categories hard_case C01",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.1 coder sum hard_case C02",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 categories hard_case C02",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.1 coder sum hard_case C03",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 categories hard_case C03",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.1 majority sum hard_case",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 record count"
+    },
+    {
+      "check": "2.1 majority categories hard_case",
+      "status": "passed",
+      "actual": [
+        "High",
+        "Medium",
+        "Low",
+        "No majority"
+      ],
+      "expected": [
+        "High",
+        "Medium",
+        "Low",
+        "No majority"
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.2 nine cells hard_case",
+      "status": "passed",
+      "actual": 9,
+      "expected": 9,
+      "source": "instruction"
+    },
+    {
+      "check": "2.2 grand total hard_case",
+      "status": "passed",
+      "actual": 225,
+      "expected": 225,
+      "source": "Group 1 response count"
+    },
+    {
+      "check": "2.2 confidence margin hard_case High",
+      "status": "passed",
+      "actual": 78,
+      "expected": 78,
+      "source": "Group 1 check 1.4"
+    },
+    {
+      "check": "2.2 confidence margin hard_case Medium",
+      "status": "passed",
+      "actual": 139,
+      "expected": 139,
+      "source": "Group 1 check 1.4"
+    },
+    {
+      "check": "2.2 confidence margin hard_case Low",
+      "status": "passed",
+      "actual": 8,
+      "expected": 8,
+      "source": "Group 1 check 1.4"
+    },
+    {
+      "check": "2.2 sufficiency margin hard_case Sufficient",
+      "status": "passed",
+      "actual": 123,
+      "expected": 123,
+      "source": "Group 1 check 1.5"
+    },
+    {
+      "check": "2.2 sufficiency margin hard_case Partially sufficient",
+      "status": "passed",
+      "actual": 93,
+      "expected": 93,
+      "source": "Group 1 check 1.5"
+    },
+    {
+      "check": "2.2 sufficiency margin hard_case Insufficient",
+      "status": "passed",
+      "actual": 9,
+      "expected": 9,
+      "source": "Group 1 check 1.5"
+    },
+    {
+      "check": "2.3 denominator hard_case 0",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 0",
+      "status": "passed",
+      "actual": 0.30666666666666664,
+      "expected": 0.30666666666666664,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 0",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 0",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 1",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 1",
+      "status": "passed",
+      "actual": 0.6266666666666667,
+      "expected": 0.6266666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 1",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 1",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 2",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 2",
+      "status": "passed",
+      "actual": 0.06666666666666667,
+      "expected": 0.06666666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 2",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 2",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 3",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 3",
+      "status": "passed",
+      "actual": 0.32,
+      "expected": 0.32,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 3",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 3",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 4",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 4",
+      "status": "passed",
+      "actual": 0.64,
+      "expected": 0.64,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 4",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 4",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 5",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 5",
+      "status": "passed",
+      "actual": 0.04,
+      "expected": 0.04,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 5",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 5",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 6",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 6",
+      "status": "passed",
+      "actual": 0.41333333333333333,
+      "expected": 0.41333333333333333,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 6",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 6",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 7",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 7",
+      "status": "passed",
+      "actual": 0.5866666666666667,
+      "expected": 0.5866666666666667,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 7",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 7",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 8",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 8",
+      "status": "passed",
+      "actual": 0.0,
+      "expected": 0.0,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 8",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 8",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 9",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 9",
+      "status": "passed",
+      "actual": 0.25333333333333335,
+      "expected": 0.25333333333333335,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 9",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 9",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 10",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 10",
+      "status": "passed",
+      "actual": 0.6933333333333334,
+      "expected": 0.6933333333333334,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 10",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 10",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 11",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 11",
+      "status": "passed",
+      "actual": 0.013333333333333334,
+      "expected": 0.013333333333333334,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 11",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 11",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 12",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 12",
+      "status": "passed",
+      "actual": 0.04,
+      "expected": 0.04,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 12",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 12",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 13",
+      "status": "passed",
+      "actual": 78,
+      "expected": 78,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 13",
+      "status": "passed",
+      "actual": 0.8846153846153846,
+      "expected": 0.8846153846153846,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 13",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 13",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 14",
+      "status": "passed",
+      "actual": 78,
+      "expected": 78,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 14",
+      "status": "passed",
+      "actual": 0.07692307692307693,
+      "expected": 0.07692307692307693,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 14",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 14",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 15",
+      "status": "passed",
+      "actual": 78,
+      "expected": 78,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 15",
+      "status": "passed",
+      "actual": 0.038461538461538464,
+      "expected": 0.038461538461538464,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 15",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 15",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 16",
+      "status": "passed",
+      "actual": 139,
+      "expected": 139,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 16",
+      "status": "passed",
+      "actual": 0.381294964028777,
+      "expected": 0.381294964028777,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 16",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 16",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 17",
+      "status": "passed",
+      "actual": 139,
+      "expected": 139,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 17",
+      "status": "passed",
+      "actual": 0.5971223021582733,
+      "expected": 0.5971223021582733,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 17",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 17",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 18",
+      "status": "passed",
+      "actual": 139,
+      "expected": 139,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 18",
+      "status": "passed",
+      "actual": 0.02158273381294964,
+      "expected": 0.02158273381294964,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 18",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 18",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 19",
+      "status": "passed",
+      "actual": 8,
+      "expected": 8,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 19",
+      "status": "passed",
+      "actual": 0.125,
+      "expected": 0.125,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 19",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 19",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 20",
+      "status": "passed",
+      "actual": 8,
+      "expected": 8,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 20",
+      "status": "passed",
+      "actual": 0.5,
+      "expected": 0.5,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 20",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 20",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.3 denominator hard_case 21",
+      "status": "passed",
+      "actual": 8,
+      "expected": 8,
+      "source": "Group 1 count"
+    },
+    {
+      "check": "2.3 proportion hard_case 21",
+      "status": "passed",
+      "actual": 0.375,
+      "expected": 0.375,
+      "source": "count / denominator"
+    },
+    {
+      "check": "2.3 estimate status hard_case 21",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "zero-denominator rule"
+    },
+    {
+      "check": "interval scope hard_case 21",
+      "status": "passed",
+      "actual": [
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null
+      ],
+      "source": "instruction"
+    },
+    {
+      "check": "2.4 attempts hard_case",
+      "status": "passed",
+      "actual": 2000,
+      "expected": 2000,
+      "source": "existing bootstrap"
+    },
+    {
+      "check": "2.4 requested hard_case",
+      "status": "passed",
+      "actual": 2000,
+      "expected": 2000,
+      "source": "instruction"
+    },
+    {
+      "check": "2.4 status hard_case",
+      "status": "passed",
+      "actual": "reported",
+      "expected": "reported",
+      "source": "existing 90% rule"
+    },
+    {
+      "check": "2.4 bounds availability hard_case",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "existing 90% rule"
+    }
+  ],
+  "checked_totals": {
+    "baseline": {
+      "records": 150,
+      "responses": 450,
+      "confidence_counts": [
+        193,
+        242,
+        15
+      ],
+      "sufficiency_counts": {
+        "all": [
+          262,
+          176,
+          12
+        ],
+        "C01": [
+          107,
+          39,
+          4
+        ],
+        "C02": [
+          96,
+          48,
+          6
+        ],
+        "C03": [
+          59,
+          89,
+          2
+        ]
+      }
+    },
+    "hard_case": {
+      "records": 75,
+      "responses": 225,
+      "confidence_counts": [
+        78,
+        139,
+        8
+      ],
+      "sufficiency_counts": {
+        "all": [
+          123,
+          93,
+          9
+        ],
+        "C01": [
+          54,
+          20,
+          1
+        ],
+        "C02": [
+          45,
+          24,
+          6
+        ],
+        "C03": [
+          24,
+          49,
+          2
+        ]
+      }
+    }
+  },
+  "validation": {
+    "1": {
+      "status": "passed",
+      "citation": "Klaus Krippendorff, Computing Krippendorff's Alpha-Reliability",
+      "url": "https://www.asc.upenn.edu/sites/default/files/2021-03/Computing%20Krippendorff%27s%20Alpha-Reliability.pdf",
+      "data_location": "Section C, printed page 4, four observers by twelve units",
+      "expected_location": "printed page 8, ordinal calculation",
+      "published_value": 0.815,
+      "reproduced_value": 0.8153875037548813,
+      "precision": "three decimal places",
+      "pairable_values": 40
+    },
+    "2": {
+      "status": "passed",
+      "implementation": "krippendorff",
+      "version": "0.8.2",
+      "version_source": "importlib.metadata.version",
+      "installation": "python -m pip install --no-deps krippendorff==0.8.2; existing project venv; no dependency-file changes",
+      "module_path": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Lib\\site-packages\\krippendorff\\__init__.py",
+      "url": "https://github.com/pln-fing-udelar/fast-krippendorff",
+      "datasets": 24,
+      "maximum_absolute_difference": 2.220446049250313e-16
+    },
+    "3": {
+      "status": "passed",
+      "reason": "Perfect and constant cases, invalid bootstrap handling, symmetry, diagonal, ordering, unit/rater permutations, singleton exclusion"
+    },
+    "4": {
+      "status": "passed",
+      "reason": "Exact AlphaResult equality through the same wrapper on all 24 synthetic datasets"
+    },
+    "5": {
+      "status": "passed",
+      "reason": "All 25 evaluator calls rebuilt distances matching their own sampled frequencies; distinct matrices observed",
+      "distinct_frequencies": 16,
+      "distinct_matrices": 16
+    }
+  },
+  "shared_code": [
+    {
+      "path": "analysis/scratch_coder_stage_a/load.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "657b01669cd57aac383d452485549c0f0a18b9df946d82b4875a3320c9c7b902"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/panels.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "3a8688b38699f21753179297f18fa2438cc4d91e5e298f59d3b074318f5f794b"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/sufficiency.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "52ce46c546501614d89f1cb66660cd2b570dc892bda2668877ed325c39ac27ab"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/taxonomy.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "1dd444daec9232f3fc1a203aa14cc736e2bdb1ae2491b387df6be241b9f7cd72"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/agreement.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "c20cb10bbd73e94b158cc1993e53c6250ad8cec5ac7789a228c074d5a47900a1"
+    },
+    {
+      "path": "analysis/validation/alpha.py",
+      "commit": "a269e27a254b86204cf9d44413b340f19c79b046",
+      "sha256": "d8159b5a75fc657de10b83850c36bc48662dca1793c993c5d0f66ba3f3bfd869"
+    },
+    {
+      "path": "analysis/validation/metrics.py",
+      "commit": "a269e27a254b86204cf9d44413b340f19c79b046",
+      "sha256": "4466aa05a9f31cf70a90c67071760a19f556927a3b1ecaa548161d7e42ca16c9"
+    },
+    {
+      "path": "analysis/validation/intervals.py",
+      "commit": "a269e27a254b86204cf9d44413b340f19c79b046",
+      "sha256": "7e2e383c5004c1a61e314ac1825e47f5be3335403aeca201a946d8f9c9eca571"
+    },
+    {
+      "path": "analysis/validation/bootstrap.py",
+      "commit": "6337c3e58d3e6d7e410682afa56ffc818e42d86f",
+      "sha256": "78c666a1d73b11afe9eeee29b38f5f00509bb51a328b8667060c724bf06f0cfc"
+    }
+  ],
+  "input_export_sha256": {
+    "analysis\\scratch_coder_results\\run_metadata.json": "17965b684ecd3f3e669f4c40ddfbb17ad46d802caa44729c7199080a468696e7",
+    "analysis\\outputs_validation_scratch_20260824\\run_metadata.json": "399cc53684e40e2d6bf42b6e28d4d02f83cdff07f0f5d50a82fb8901daf54d4d",
+    "analysis\\outputs_validation_scratch_20260824\\sufficiency_response_distribution.csv": "162b9e4d6dfd01187640abfc6814f36dc95f22e0e94cb52d9a5f1eb0441c035d",
+    "analysis\\outputs_validation_scratch_20260824\\unclear_register_summary.csv": "67b07390961152313922b7f6161219ae6a1976548db0eb776ee2aa125f5f594a"
+  },
+  "seed": 20260915,
+  "requested_replicates_per_population": 2000,
+  "valid_replicate_threshold": 1800,
+  "minimum_valid_fraction": 0.9,
+  "confidence_level": 0.95,
+  "percentile_method": "Type-7, 2.5th and 97.5th percentiles of valid replicates",
+  "undefined_replicate_treatment": "Count invalid; no replacement, redraw or top-up; withhold bounds below threshold",
+  "bootstrap_results": {
+    "baseline": {
+      "population": "baseline",
+      "analysis_note": "",
+      "alpha": 0.18209041188026154,
+      "estimate_status": "reported",
+      "undefined_reason": null,
+      "ci_lower": 0.07872545505759505,
+      "ci_upper": 0.283043590671762,
+      "confidence_level": 0.95,
+      "seed": 20260915,
+      "requested_replicates": 2000,
+      "valid_replicates": 2000,
+      "invalid_replicates": 0,
+      "valid_replicate_threshold": 1800,
+      "minimum_valid_fraction": 0.9,
+      "interval_status": "reported",
+      "interval_method": "bootstrap_percentile_type7",
+      "observed_disagreement": 21179.45,
+      "expected_disagreement": 25894.610244988864,
+      "denominator": 150,
+      "rating_count": 450,
+      "invalid_reasons": "{}"
+    },
+    "hard_case": {
+      "population": "hard_case",
+      "analysis_note": "DIAGNOSTIC — non-representative",
+      "alpha": 0.10720791308938349,
+      "estimate_status": "reported",
+      "undefined_reason": null,
+      "ci_lower": -0.049591586591360405,
+      "ci_upper": 0.2497475826406676,
+      "confidence_level": 0.95,
+      "seed": 20260915,
+      "requested_replicates": 2000,
+      "valid_replicates": 2000,
+      "invalid_replicates": 0,
+      "valid_replicate_threshold": 1800,
+      "minimum_valid_fraction": 0.9,
+      "interval_status": "reported",
+      "interval_method": "bootstrap_percentile_type7",
+      "observed_disagreement": 5466.984444444444,
+      "expected_disagreement": 6123.46875,
+      "denominator": 75,
+      "rating_count": 225,
+      "invalid_reasons": "{}"
+    }
+  },
+  "ordinal_category_mapping": {
+    "Low": 1,
+    "Medium": 2,
+    "High": 3
+  },
+  "source_category_mapping": {
+    "1": "High",
+    "2": "Medium",
+    "3": "Low"
+  },
+  "distance_contract": {
+    "path": "analysis/validation/alpha.py",
+    "pairable_lines": "38–41",
+    "within_unit_weight_lines": "49–54",
+    "direct_float_conversion_lines": [
+      50,
+      58
+    ],
+    "expected_disagreement_lines": "57–63",
+    "receives": "category values",
+    "squares_returned_distance": false,
+    "arithmetic": "Fraction distance construction then existing float estimator",
+    "recomputation": "bootstrap evaluator constructs metric from each sampled block"
+  },
+  "software_versions": {
+    "numpy": "2.2.5",
+    "pandas": "2.2.3",
+    "PyYAML": "6.0.2",
+    "krippendorff": "0.8.2"
+  },
+  "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "judgements": [
+    "Continued from Step C under v5.1; only the two expected untracked files were present. Step A was not repeated.",
+    "Used the existing project venv for krippendorff==0.8.2; dependency files unchanged. The prior metadata-access problem is not a numerical validation failure under v5.1.",
+    "Used both external validation routes and 24 deterministic synthetic datasets spanning balanced, absent-category and skewed-frequency cases.",
+    "Exact Fraction arithmetic constructs squared ordinal distances; precomputed float entries feed the unchanged alpha implementation. The distance is rebuilt for each call.",
+    "Decoded source confidence 1=High, 2=Medium, 3=Low using shared labels, then mapped labels to required analytical ranks Low=1, Medium=2, High=3; no response was imputed or changed.",
+    "Displayed shared majority split status as No majority, retaining the shared majority decision itself.",
+    "Used ten tables: per-coder, majority, alpha, unanimous count and crosstab for baseline, then the same five for hard-case. Unanimity has a separate count-only table.",
+    "Used explicit separate estimate and interval status columns consistent with canonical semantics; hard-case proportion status says not_applied_diagnostic_sample.",
+    "Compared record-ID sets to hash-identical population authorities recorded in Stage A and canonical metadata because aggregate S8–S10 exports do not contain record IDs. No restricted IDs are exported.",
+    "Canonical CSV identities permit their recorded LF representation; restricted input integrity always compares exact bytes.",
+    "Retained Fraction-to-float distances without rescaling so observed and expected disagreements refer to the instructed raw squared metric.",
+    "Used the same specified seed independently for each population and sorted record IDs for deterministic record ordering.",
+    "Stored validation evidence with code, and all Group 1/2 checks in output metadata; no real-data result was written before Group 2 passed.",
+    "Recorded actual file creation and execution dates separately from the exact investigator-attested date statement; repository history timestamps are provenance, not inferred specification dates.",
+    "Preserved the prior-result search findings in the addendum, including pilot agreement-pattern results and formal Cannot assess × confidence summaries, without asserting what the investigator inspected.",
+    "Interpreted the Section 3A nominal wiring test as synthetic validation only; no nominal confidence statistic is computed on real data."
+  ],
+  "prior_result_search": "See committed addendum: pilot confidence agreement flags and exact counts, pilot confidence frequencies/majorities, and formal Cannot assess × confidence summaries found. No formal confidence alpha or confidence × sufficiency table found in searched text/history.",
+  "execution_scope": "One complete D–G execution from final committed code; real-data calculations limited to three specified analyses.",
+  "tables": [
+    {
+      "table_id": "SCF1T001",
+      "population": "baseline",
+      "title": "Confidence per coder"
+    },
+    {
+      "table_id": "SCF1T002",
+      "population": "baseline",
+      "title": "Majority confidence"
+    },
+    {
+      "table_id": "SCF1T003",
+      "population": "baseline",
+      "title": "Ordinal confidence alpha"
+    },
+    {
+      "table_id": "SCF1T004",
+      "population": "baseline",
+      "title": "Unanimous confidence count"
+    },
+    {
+      "table_id": "SCF1T005",
+      "population": "baseline",
+      "title": "Confidence × register-entry sufficiency"
+    },
+    {
+      "table_id": "SCF1T006",
+      "population": "hard_case",
+      "title": "Confidence per coder"
+    },
+    {
+      "table_id": "SCF1T007",
+      "population": "hard_case",
+      "title": "Majority confidence"
+    },
+    {
+      "table_id": "SCF1T008",
+      "population": "hard_case",
+      "title": "Ordinal confidence alpha"
+    },
+    {
+      "table_id": "SCF1T009",
+      "population": "hard_case",
+      "title": "Unanimous confidence count"
+    },
+    {
+      "table_id": "SCF1T010",
+      "population": "hard_case",
+      "title": "Confidence × register-entry sufficiency"
+    }
+  ],
+  "output_file_sha256": {
+    "results_confidence.md": "e9f4b5bc35e744594883459fb26faf6445515e5003e7b615c26ed262189805c6",
+    "SCF1T001.csv": "a85588e9e3ff2ec5237b7c9ea4c58650b28527656f45d9321d64c64c1dbfe660",
+    "SCF1T002.csv": "6acae7f449560149fcc24dc2a6ae7392bf02903fe5f8175ec873cf273b391ffa",
+    "SCF1T003.csv": "2a41b5c778937354b874c9c64adc5c8d658a2597c7e88b73605639005eefdf90",
+    "SCF1T004.csv": "050413127427d142323bc2abd694e50be2be1f95a52cb9cafc957c87b326fdfe",
+    "SCF1T005.csv": "73f712a85207e11ef5354156c00f70b2aa48a7e2c49ab2e4029d4efec04fbacd",
+    "SCF1T006.csv": "dae56a7ae367e3cd0ba359fea817275b4824a6f9c38dad65f9167f4d7fd8209c",
+    "SCF1T007.csv": "ed57f12035c66738a9c59bc447e9f57bb0b8670a699425208816a7fa88ae2bb2",
+    "SCF1T008.csv": "66891ffaf8f88648278546f1e72f579f931f23119e60b2e0cb2affc28d57518d",
+    "SCF1T009.csv": "aaeffd8e09027d51e2a531c65f79dce6445bbd63314d23b9d3366bac72003f0b",
+    "SCF1T010.csv": "a9224a46ab3534893f6e2e58ae416b2ad4d15b89ae58e8d15b5cff7f4530e4ef"
+  }
+}
