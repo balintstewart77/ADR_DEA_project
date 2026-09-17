@@ -36,7 +36,7 @@ def theme():
     matplotlib.use("Agg", force=True)
     import matplotlib.pyplot as plt
     return plt.rc_context({
-        "font.family": "sans-serif", "font.sans-serif": ["DejaVu Sans", "Arial", "Liberation Sans"],
+        "font.family": "sans-serif", "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
         "font.size": 8.5, "axes.titlesize": 10, "axes.labelsize": 9, "xtick.labelsize": 7.8,
         "ytick.labelsize": 7.8, "axes.spines.top": False, "axes.spines.right": False,
         "axes.linewidth": 0.7, "figure.facecolor": "white", "axes.facecolor": "white",

@@ -25,7 +25,7 @@ from matplotlib.ticker import MaxNLocator, MultipleLocator
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 
-FONT = "DejaVu Sans"
+FONT = "Arial"
 PAIRS = (
     "C01 versus C02", "C01 versus C03", "C02 versus C03",
     "Fable 5 versus C01", "Fable 5 versus C02", "Fable 5 versus C03",

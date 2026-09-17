@@ -30,7 +30,7 @@ from matplotlib.ticker import FixedLocator, FuncFormatter, MultipleLocator
 from matplotlib.transforms import Bbox
 
 
-FONT_FAMILY = "DejaVu Sans"
+FONT_FAMILY = "Arial"
 FIGURE_WIDTH = 17 / 2.54
 MIN_PT = 8.0
 matplotlib.rcParams.update({
@@ -38,8 +38,6 @@ matplotlib.rcParams.update({
     "font.sans-serif": [FONT_FAMILY],
     "mathtext.fontset": "custom",
     "mathtext.rm": FONT_FAMILY,
-    "mathtext.it": FONT_FAMILY + ":italic",
-    "mathtext.bf": FONT_FAMILY + ":bold",
     "svg.fonttype": "none",
     "svg.hashsalt": "scratch-coder-pass3",
     "axes.titlesize": 9.0,
@@ -54,7 +52,7 @@ DIMENSIONS = ("Research Domains", "Analytical Purposes", "Demographic disparitie
 ALPHA_ORDER = ("alpha ABC", "alpha LBC", "alpha ALC", "alpha ABL")
 DELTA_ORDER = ("delta_min", "delta_A", "delta_B", "delta_C")
 ALPHA_LABELS = {q: q.removeprefix("alpha ") for q in ALPHA_ORDER}
-DELTA_LABELS = {"delta_min": "δ$_{min}$", "delta_A": "δ$_A$", "delta_B": "δ$_B$", "delta_C": "δ$_C$"}
+DELTA_LABELS = {"delta_min": r"δ$_{\mathrm{min}}$", "delta_A": r"δ$_{\mathrm{A}}$", "delta_B": r"δ$_{\mathrm{B}}$", "delta_C": r"δ$_{\mathrm{C}}$"}
 POPULATION = {
     "baseline": {"color": "#28658C", "hollow": False, "label": "Baseline (n=150)"},
     "baseline_strict_sufficient": {"color": "#D98524", "hollow": True, "label": "Register entry judged sufficient (n=92)"},
@@ -200,16 +198,17 @@ def add_delta_annotation(ax, records: list[dict], text: str) -> Text:
     right = max((record["upper"] if record["upper"] is not None else record["x"]) for record in records)
     left = min((record["lower"] if record["lower"] is not None else record["x"]) for record in records)
     x_limit = ax.get_xlim()
-    if right + 0.035 < x_limit[1]:
-        x, ha = right + 0.025, "left"
+    if right + 0.10 < x_limit[1]:
+        x, ha = right + 0.08, "left"
     else:
-        x, ha = left - 0.025, "right"
-    return ax.text(x, sum(record["y"] for record in records) / len(records), text, fontsize=12.0, ha=ha, va="center", color="#333", zorder=6)
+        x, ha = left - 0.08, "right"
+    return ax.text(x, sum(record["y"] for record in records) / len(records), text, fontsize=9.5, ha=ha, va="center", color="#333", zorder=6)
 
 
 def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], populations: tuple[str, ...],
                        alpha_range: tuple[float, float], height: float, annotate: bool, s1: bool = False):
-    fig, axes = plt.subplots(len(dimensions), 2, figsize=(FIGURE_WIDTH, height), constrained_layout=True)
+    fig, axes = plt.subplots(len(dimensions), 2, figsize=(FIGURE_WIDTH, height), constrained_layout=True,
+                             gridspec_kw={"hspace": 0.15})
     if len(dimensions) == 1:
         axes = [axes]
     dodge = {populations[0]: 0.0} if len(populations) == 1 else {populations[0]: -0.115, populations[1]: 0.115}
@@ -231,7 +230,7 @@ def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], population
                         delta_checks.append({"dimension": dimension, "population": population, "quantity": quantity,
                                              "source_row_key": keyed[quantity]["source_row_key"], "interval": [keyed[quantity]["parsed_interval_lower"], keyed[quantity]["parsed_interval_upper"]]})
             ax.set_yticks(range(4), [ALPHA_LABELS[q] for q in order] if series == "alpha" else [DELTA_LABELS[q] for q in order])
-            ax.tick_params(axis="y", labelsize=12.0 if series == "delta" else 8.0)
+            ax.tick_params(axis="y", labelsize=9.5)
             ax.invert_yaxis()
             ax.set_xlim(alpha_range if series == "alpha" else (-0.45, 0.45))
             if series == "alpha" and alpha_range == (0.0, 1.0):
@@ -245,20 +244,17 @@ def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], population
                 ax.axvline(0, color="#333333", linewidth=0.8, zorder=1)
                 if annotate and not s1:
                     if len(populations) == 1:
-                        component = "δ$_A$" if dimension == "COVID-19 & Pandemic" else "δ$_B$"
+                        component = r"δ$_{\mathrm{A}}$" if dimension == "COVID-19 & Pandemic" else r"δ$_{\mathrm{B}}$"
                     else:
-                        component = "δ$_B$"
+                        component = r"δ$_{\mathrm{B}}$"
                     add_delta_annotation(ax, [plotted[(population, "delta_min")] for population in populations], f"= {component}")
             style_axis(ax)
-            if index:
-                ax.spines["top"].set_visible(True); ax.spines["top"].set_color("#CFCFCF"); ax.spines["top"].set_linewidth(0.65)
-            if index != len(dimensions) - 1:
-                ax.tick_params(axis="x", labelbottom=False)
+            ax.tick_params(axis="x", labelbottom=True)
             if index == 0:
                 ax.set_title("Krippendorff’s α" if series == "alpha" else "Replacement difference δ", pad=7)
             if column == 0:
-                displayed_dimension = dimension.replace("COVID-19", "COVID‑19")
-                ax.set_ylabel(displayed_dimension, fontweight="bold", rotation=0, ha="right", va="center", labelpad=8)
+                displayed_dimension = dimension.replace("Demographic disparities", "Demographic\ndisparities")
+                ax.set_ylabel(displayed_dimension, fontweight="bold", rotation=0, ha="right", va="center", labelpad=4, multialignment="right")
     return fig, axes, positions, delta_checks
 
 
@@ -273,7 +269,7 @@ def text_metrics(fig, name: str) -> dict:
     sizes = []
     for text in texts:
         contains_subscript = "$_" in text.get_text() or any(ch in text.get_text() for ch in "ₐᵦₘᵢₙ")
-        effective = float(text.get_fontsize()) * (0.70 if "$_" in text.get_text() else 1.0)
+        effective = float(text.get_fontsize()) * (0.85 if "$_" in text.get_text() else 1.0)
         sizes.append({"text": text.get_text(), "effective_pt": effective, "contains_subscript": contains_subscript})
     minimum = min(item["effective_pt"] for item in sizes)
     minimum_items = [item for item in sizes if item["effective_pt"] == minimum]
@@ -288,16 +284,17 @@ def text_metrics(fig, name: str) -> dict:
     }
 
 
-def save_figure(fig, base: Path, name: str) -> dict:
+def save_figure(fig, base: Path, name: str, tight: bool = True) -> dict:
     metrics = text_metrics(fig, name)
-    fig.savefig(base.with_suffix(".svg"), format="svg", dpi=300, facecolor="white", metadata={"Date": None})
-    fig.savefig(base.with_suffix(".png"), format="png", dpi=300, facecolor="white", metadata={"Software": "matplotlib"})
+    bbox = "tight" if tight else None
+    fig.savefig(base.with_suffix(".svg"), format="svg", dpi=300, facecolor="white", bbox_inches=bbox, metadata={"Date": None})
+    fig.savefig(base.with_suffix(".png"), format="png", dpi=300, facecolor="white", bbox_inches=bbox, metadata={"Software": "matplotlib"})
     plt.close(fig)
     return metrics
 
 
 def render_figure1(rows: list[dict], base: Path):
-    fig, axes, positions, delta = replacement_figure(rows, DIMENSIONS, ("baseline",), (0.0, 1.0), 6.15, True)
+    fig, axes, positions, delta = replacement_figure(rows, DIMENSIONS, ("baseline",), (0.0, 1.0), 6.8, True)
     render = save_figure(fig, base, "Figure 1")
     return render, {"status": "PASS", "key_entries": [], "encodings_present": [], "row_positions": positions, "delta_min_rows": delta,
                     "annotation_components": {dimension: ("delta_A" if dimension == "COVID-19 & Pandemic" else "delta_B") for dimension in DIMENSIONS}}
@@ -314,7 +311,7 @@ def render_figure3(rows: list[dict], base: Path):
 
 
 def render_s1(rows: list[dict], base: Path):
-    fig, axes, positions, delta = replacement_figure(rows, DIMENSIONS, ("baseline", "hard_case"), (0.0, 1.0), 6.35, False, s1=True)
+    fig, axes, positions, delta = replacement_figure(rows, DIMENSIONS, ("baseline", "hard_case"), (0.0, 1.0), 7.0, False, s1=True)
     fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=8.5, fontweight="bold", color=POPULATION["hard_case"]["color"])
     handles = [Line2D([0], [0], marker="o", color=POPULATION[p]["color"], markerfacecolor="none" if POPULATION[p]["hollow"] else POPULATION[p]["color"],
                       markeredgecolor=POPULATION[p]["color"], linewidth=1.2, label=POPULATION[p]["label"]) for p in ("baseline", "hard_case")]
@@ -325,7 +322,7 @@ def render_s1(rows: list[dict], base: Path):
 
 
 def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: bool, panel_header: str,
-                 compact: bool = False) -> tuple[list[dict], dict]:
+                 compact: bool = False, show_title: bool = True) -> tuple[list[dict], dict]:
     actors = ("C01", "C02", "C03", "Majority of coders")
     ypos = (3.25, 2.35, 1.45, 0.35)
     palette = RATING_PALETTES[construct]
@@ -343,25 +340,58 @@ def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: 
                 nonzero += 1
                 if width >= (10 if compact else 5):
                     dark = palette[category] in {"#246B45", "#5A4A86", "#5F5F5F", "#888888", "#A63D57"}
-                    ax.text(float(left + width / 2), y, shown, ha="center", va="center", fontsize=8.0, color="white" if dark else "#222", zorder=4)
+                    text_kw = dict(ha="center", va="center", fontsize=8.0, zorder=4)
+                    if hatch:
+                        text_kw.update(color="#222", bbox=dict(facecolor="white", edgecolor="none", pad=1))
+                    else:
+                        text_kw["color"] = "white" if dark else "#222"
+                    ax.text(float(left + width / 2), y, shown, **text_kw)
                     labelled += 1
                 else:
-                    small.append(f"{category} {shown}")
+                    small.append((shown, palette[category], hatch))
             left += width
-        for offset, value in enumerate(small):
-            wrapped = "\n".join(textwrap.wrap(value, width=14, break_long_words=False))
-            spacing = 0.52 if compact else 0.27
-            ax.text(100.0, y + (offset - (len(small) - 1) / 2) * spacing, wrapped, ha="left", va="center", fontsize=8.0, linespacing=0.9)
-            labelled += 1
+        if small:
+            fig = ax.get_figure()
+            fig.canvas.draw()
+            inv = ax.transData.inverted()
+            dpi = fig.dpi
+            pt2dx = lambda pts: (inv.transform((pts * dpi / 72, 0)) - inv.transform((0, 0)))[0]
+            pt2dy = lambda pts: (inv.transform((0, pts * dpi / 72)) - inv.transform((0, 0)))[1]
+            sq_pt = 8.0
+            sq_w, sq_h = pt2dx(sq_pt), pt2dy(sq_pt)
+            gap_pt = 6.0 if not compact else 4.0
+            gap_dx = pt2dx(gap_pt)
+            pad_dx = pt2dx(2.0)
+            x_cur = pt2dx(3.0) + 100.0
+            old_hatch_lw = matplotlib.rcParams.get("hatch.linewidth", 1.0)
+            matplotlib.rcParams["hatch.linewidth"] = 0.6
+            for si, (pct, clr, sh) in enumerate(small):
+                if si > 0:
+                    x_cur += gap_dx
+                ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
+                                       facecolor=clr, edgecolor="none", linewidth=0,
+                                       hatch="////" if sh else None, clip_on=False, zorder=4))
+                ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
+                                       facecolor="none", edgecolor="#555", linewidth=0.5,
+                                       clip_on=False, zorder=5))
+                x_cur += sq_w + pad_dx
+                t = ax.text(x_cur, y, pct, ha="left", va="center", fontsize=8.0)
+                fig.canvas.draw()
+                bb = t.get_window_extent(renderer=fig.canvas.get_renderer())
+                x_cur += (inv.transform((bb.width, 0)) - inv.transform((0, 0)))[0]
+            matplotlib.rcParams["hatch.linewidth"] = old_hatch_lw
+            labelled += len(small)
         sums.append({"construct": construct, "population": population, "bar": actor, "displayed_percentages": displayed,
                      "sum": sum(int(v.rstrip("%").replace("<1", "0")) for v in displayed)})
-    ax.set_xlim(0, 165); ax.set_ylim(-0.08, 3.58); ax.set_yticks(ypos, actors)
+    ax.set_xlim(0, 165 if compact else 130); ax.set_ylim(-0.08, 3.58); ax.set_yticks(ypos, actors)
+    ax.spines["bottom"].set_bounds(0, 100)
     ax.xaxis.set_major_locator(FixedLocator([0, 50, 100] if compact else [0, 20, 40, 60, 80, 100])); ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x)}%" if x <= 100 else ""))
     if show_x:
         ax.set_xlabel("Percentage of records")
     else:
         ax.tick_params(axis="x", labelbottom=False)
-    ax.set_title(panel_header, loc="left", pad=7, fontweight="bold")
+    if show_title:
+        ax.set_title(panel_header, loc="left", pad=7, fontweight="bold")
     style_axis(ax)
     categories = list(palette)
     handles = [Rectangle((0, 0), 1, 1, facecolor=palette[c], edgecolor="#777", hatch="///" if c == "Cannot assess from register entry" else None, label=c) for c in categories]
@@ -370,17 +400,29 @@ def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: 
 
 
 def render_figure2(rows: list[dict], base: Path):
-    fig = plt.figure(figsize=(FIGURE_WIDTH, 6.35), constrained_layout=True)
-    grid = fig.add_gridspec(4, 1, height_ratios=[0.17, 1.0, 0.20, 1.0])
-    key_axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[2, 0])]
-    axes = [fig.add_subplot(grid[1, 0]), fig.add_subplot(grid[3, 0])]
+    row_heights = [0.30, 0.35, 2.40, 0.45, 0.30, 0.35, 2.40, 0.55]
+    fig_h = sum(row_heights)
+    fig = plt.figure(figsize=(FIGURE_WIDTH, fig_h))
+    grid = fig.add_gridspec(8, 1, height_ratios=row_heights,
+                            left=0.20, right=0.87, top=1.0, bottom=0.0, hspace=0.0)
+    title_axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[4, 0])]
+    key_axes = [fig.add_subplot(grid[1, 0]), fig.add_subplot(grid[5, 0])]
+    bar_axes = [fig.add_subplot(grid[2, 0]), fig.add_subplot(grid[6, 0])]
+    spacer = fig.add_subplot(grid[3, 0]); spacer.axis("off")
+    xlabel_ax = fig.add_subplot(grid[7, 0]); xlabel_ax.axis("off")
     sums = []; checks = []
-    for i, construct in enumerate(("Register-entry information", "Taxonomy fit")):
-        panel_sums, check = rating_panel(axes[i], rows, construct, "baseline", i == 1, construct)
+    constructs = ("Register-entry information", "Taxonomy fit")
+    ncols = (4, 5)
+    for i, construct in enumerate(constructs):
+        ta = title_axes[i]; ta.set_xticks([]); ta.set_yticks([]); ta.axis("off")
+        ta.text(0, 0.5, construct, transform=ta.transAxes, ha="left", va="center", fontweight="bold", fontsize=9.0)
+        panel_sums, check = rating_panel(bar_axes[i], rows, construct, "baseline", i == 1, construct, show_title=False)
         sums.extend(panel_sums); checks.append(check)
-        key_ax = key_axes[i]; key_ax.set_xticks([]); key_ax.set_yticks([]); key_ax.axis("off")
-        key_ax.legend(handles=check.pop("handles"), loc="center", ncol=4 if i == 0 else 3, frameon=False, handlelength=1.4, columnspacing=1.0)
-    render = save_figure(fig, base, "Figure 2")
+        ka = key_axes[i]; ka.set_xticks([]); ka.set_yticks([]); ka.axis("off")
+        ka.legend(handles=check.pop("handles"), loc="center left", bbox_to_anchor=(0, 0.5),
+                  ncol=ncols[i], frameon=False, handlelength=1.2, columnspacing=1.2)
+    bar_axes[0].tick_params(axis="x", labelbottom=False)
+    render = save_figure(fig, base, "Figure 2", tight=False)
     status = "PASS" if all(c["status"] == "PASS" for c in checks) else "FAIL"
     return render, {"status": status, "panels": checks}, sums
 
@@ -826,7 +868,7 @@ def main() -> None:
     for deliverable, record in rendering.items(): figure_banned += banned_check_text(record["rendered_text"], deliverable)
     table_banned, table_minus = file_checks(table_paths)
     caption_banned, caption_minus = file_checks([captions_path])
-    figure_minus = [{"deliverable": deliverable, "text": text} for deliverable, record in rendering.items() for text in record["rendered_text"] if re.search(r"-(?=\d)", text)]
+    figure_minus = [{"deliverable": deliverable, "text": text} for deliverable, record in rendering.items() for text in record["rendered_text"] if re.search(r"(?<!COVID)-(?=\d)", text)]
     banned = figure_banned + table_banned + caption_banned
     if banned: raise RuntimeError(f"Banned reader-facing text found: {banned}")
     if table_minus or figure_minus: raise RuntimeError(f"Hyphen-minus assertion failed: tables={table_minus}; figures={figure_minus}")

@@ -30,7 +30,7 @@ from matplotlib.ticker import MultipleLocator
 
 
 matplotlib.rcParams.update({
-    "font.family": "DejaVu Sans", "svg.fonttype": "none", "svg.hashsalt": "scratch-coder-pass2",
+    "font.family": "Arial", "font.sans-serif": ["Arial"], "svg.fonttype": "none", "svg.hashsalt": "scratch-coder-pass2",
     "axes.titlesize": 10.5, "axes.labelsize": 9.5, "xtick.labelsize": 8.5, "ytick.labelsize": 8.5,
 })
 
@@ -758,7 +758,7 @@ def main() -> None:
     report = {
         "renderer": Path(__file__).name, "input_boundary": "pass2 manifest plus its listed CSV and JSON files only",
         "matplotlib_version": matplotlib.__version__, "python_version": sys.version,
-        "font": "DejaVu Sans", "font_resolved": font_manager.findfont("DejaVu Sans"),
+        "font": "Arial", "font_resolved": font_manager.findfont("Arial"),
         "archived_preexisting_outputs": archived, "axis_ranges": axis, "keys": keys,
         "figure_3_labels": keys["Figure 3"], "displayed_percentage_sums": displayed_sums,
         "table_rendering": table_reports, "banned_text": {"status": "PASS", "figure_failures": [], "table_failures": [], "caption_failures": []},
@@ -771,7 +771,7 @@ def main() -> None:
         "manifest_generated_utc": manifest["generated_utc"], "rendered_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
         "logs": manifest["provenance"]["logs"], "source_commits": manifest["provenance"]["source_commits"],
         "code_commits": json.loads((data_dir / "pass2_run_metadata.json").read_text(encoding="utf-8"))["code_commits"],
-        "software": {"python": sys.version, "matplotlib": matplotlib.__version__, "font": font_manager.findfont("DejaVu Sans")},
+        "software": {"python": sys.version, "matplotlib": matplotlib.__version__, "font": font_manager.findfont("Arial")},
     }
     (figure_dir / "pass2_run_metadata.json").write_text(json.dumps(run_metadata, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 

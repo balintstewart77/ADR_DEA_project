@@ -1,6 +1,6 @@
 {
   "manifest_generated_utc": "2026-09-16T16:56:21.497737+00:00",
-  "rendered_utc": "2026-09-16T16:56:36.939403+00:00",
+  "rendered_utc": "2026-09-17T09:41:04.635907+00:00",
   "logs": {
     "scratch_coder_figure_revisions_log_pass3.md": {
       "path": "C:\\Users\\balin\\Desktop\\DEA_working_logs\\scratch_coder_figure_revisions_log_pass3.md",
@@ -32,7 +32,7 @@
     "renderer": "09309088baeab6edb4650a37b7f31a53c191224a",
     "runner": "08654c9d124ccd1bb73b1de177194c407a88cc96"
   },
-  "font_family": "DejaVu Sans",
+  "font_family": "Arial",
   "colors": {
     "population": {
       "baseline": "#28658C",
@@ -75,85 +75,6 @@
   "software": {
     "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
     "matplotlib": "3.10.3",
-    "font": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf"
-  },
-  "isolation_test": {
-    "status": "PASS",
-    "completed_utc": "2026-09-16T16:56:52.692501+00:00",
-    "renderer_copy": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w\\render_scratch_coder_pass3.py",
-    "working_directory": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w",
-    "analytical_inputs_present": [],
-    "copied_inputs": [
-      "figure_1_panel_agreement_replacement.csv",
-      "figure_1_panel_agreement_replacement_metadata.json",
-      "figure_2_coder_ratings_baseline.csv",
-      "figure_2_coder_ratings_baseline_metadata.json",
-      "figure_3_sufficiency_sensitivity.csv",
-      "figure_3_sufficiency_sensitivity_metadata.json",
-      "figure_4_label_application.csv",
-      "figure_4_label_application_metadata.json",
-      "pass3_deliverable_manifest.json",
-      "pass3_run_metadata.json",
-      "supplementary_figure_s1_baseline_vs_hardcase.csv",
-      "supplementary_figure_s1_baseline_vs_hardcase_metadata.json",
-      "supplementary_figure_s2_hardcase_ratings_confidence.csv",
-      "supplementary_figure_s2_hardcase_ratings_confidence_metadata.json",
-      "supplementary_figure_s3_disagreement_composition.csv",
-      "supplementary_figure_s3_disagreement_composition_metadata.json",
-      "supplementary_table_s1a_register_information.csv",
-      "supplementary_table_s1a_register_information_metadata.json",
-      "supplementary_table_s1b_taxonomy_fit.csv",
-      "supplementary_table_s1b_taxonomy_fit_metadata.json",
-      "supplementary_table_s1c_agreed_labels.csv",
-      "supplementary_table_s1c_agreed_labels_metadata.json",
-      "supplementary_table_s2_disagreement_composition.csv",
-      "supplementary_table_s2_disagreement_composition_metadata.json",
-      "table_1_agreement_domains.csv",
-      "table_1_agreement_domains_metadata.json",
-      "table_2_agreement_purposes.csv",
-      "table_2_agreement_purposes_metadata.json",
-      "table_3_agreement_with_majority_domains.csv",
-      "table_3_agreement_with_majority_domains_metadata.json",
-      "table_4_agreement_with_majority_purposes.csv",
-      "table_4_agreement_with_majority_purposes_metadata.json"
-    ],
-    "forbidden_source_path_literals_in_renderer": [],
-    "expected_outputs": 30,
-    "outputs_created": 30,
-    "missing_outputs": [],
-    "content_identical_to_production": {
-      "figure_1_panel_agreement_replacement.png": true,
-      "figure_1_panel_agreement_replacement.svg": true,
-      "figure_2_coder_ratings_baseline.png": true,
-      "figure_2_coder_ratings_baseline.svg": true,
-      "figure_3_sufficiency_sensitivity.png": true,
-      "figure_3_sufficiency_sensitivity.svg": true,
-      "figure_4_label_application.png": true,
-      "figure_4_label_application.svg": true,
-      "table_1_agreement_domains.csv": true,
-      "table_1_agreement_domains.md": true,
-      "table_2_agreement_purposes.csv": true,
-      "table_2_agreement_purposes.md": true,
-      "table_3_agreement_with_majority_domains.csv": true,
-      "table_3_agreement_with_majority_domains.md": true,
-      "table_4_agreement_with_majority_purposes.csv": true,
-      "table_4_agreement_with_majority_purposes.md": true,
-      "supplementary_figure_s1_baseline_vs_hardcase.png": true,
-      "supplementary_figure_s1_baseline_vs_hardcase.svg": true,
-      "supplementary_figure_s2_hardcase_ratings_confidence.png": true,
-      "supplementary_figure_s2_hardcase_ratings_confidence.svg": true,
-      "supplementary_figure_s3_disagreement_composition.png": true,
-      "supplementary_figure_s3_disagreement_composition.svg": true,
-      "supplementary_table_s1a_register_information.csv": true,
-      "supplementary_table_s1a_register_information.md": true,
-      "supplementary_table_s1b_taxonomy_fit.csv": true,
-      "supplementary_table_s1b_taxonomy_fit.md": true,
-      "supplementary_table_s1c_agreed_labels.csv": true,
-      "supplementary_table_s1c_agreed_labels.md": true,
-      "supplementary_table_s2_disagreement_composition.csv": true,
-      "supplementary_table_s2_disagreement_composition.md": true
-    },
-    "all_content_identical": true,
-    "comparison_rule": "Exact bytes for PNG/CSV/Markdown; SVG after canonicalizing opaque generated id attributes and references by occurrence."
+    "font": "C:\\Windows\\Fonts\\arial.ttf"
   }
 }

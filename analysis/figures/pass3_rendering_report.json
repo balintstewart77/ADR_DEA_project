@@ -3,8 +3,8 @@
   "input_boundary": "pass3 manifest plus its listed CSV and JSON files only",
   "matplotlib_version": "3.10.3",
   "python_version": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
-  "font_family": "DejaVu Sans",
-  "font_resolved": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\venv\\Lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf",
+  "font_family": "Arial",
+  "font_resolved": "C:\\Windows\\Fonts\\arial.ttf",
   "archived_preexisting_outputs": [],
   "font_sizes": {
     "Figure 1": {
@@ -12,7 +12,7 @@
       "saved_width_inches": 6.692913385826771,
       "minimum_effective_pt": 8.0,
       "minimum_is_subscript": false,
-      "minimum_subscript_effective_pt": 8.399999999999999,
+      "minimum_subscript_effective_pt": 8.075,
       "font_status": "PASS"
     },
     "Figure 2": {
@@ -28,7 +28,7 @@
       "saved_width_inches": 6.692913385826771,
       "minimum_effective_pt": 8.0,
       "minimum_is_subscript": false,
-      "minimum_subscript_effective_pt": 8.399999999999999,
+      "minimum_subscript_effective_pt": 8.075,
       "font_status": "PASS"
     },
     "Figure 4": {
@@ -44,7 +44,7 @@
       "saved_width_inches": 6.692913385826771,
       "minimum_effective_pt": 8.0,
       "minimum_is_subscript": false,
-      "minimum_subscript_effective_pt": 8.399999999999999,
+      "minimum_subscript_effective_pt": 8.075,
       "font_status": "PASS"
     },
     "Supplementary Figure S2": {
@@ -96,8 +96,8 @@
   },
   "fonts": {
     "status": "PASS",
-    "family": "DejaVu Sans",
-    "math_family": "DejaVu Sans"
+    "family": "Arial",
+    "math_family": "Arial"
   },
   "dimension_names": {
     "status": "PASS",
@@ -817,11 +817,11 @@
         "label": "Data Infrastructure & Methodology",
         "display": "11",
         "number": 11,
-        "method": "leader",
+        "method": "direct",
         "x": 0.0,
         "y": 4.0,
-        "dx_points": 64,
-        "dy_points": 35
+        "dx_points": 0,
+        "dy_points": 12
       },
       {
         "dimension": "Research Domains",
@@ -854,7 +854,7 @@
         "x": 30.0,
         "y": 33.0,
         "dx_points": 9,
-        "dy_points": -7
+        "dy_points": 7
       },
       {
         "dimension": "Analytical Purposes",
@@ -920,7 +920,7 @@
         "x": 1.0,
         "y": 4.0,
         "dx_points": 9,
-        "dy_points": -7
+        "dy_points": 7
       }
     ],
     "direct_names": [
@@ -1817,11 +1817,11 @@
           "label": "Data Infrastructure & Methodology",
           "display": "11",
           "number": 11,
-          "method": "leader",
+          "method": "direct",
           "x": 0.0,
           "y": 4.0,
-          "dx_points": 64,
-          "dy_points": 35
+          "dx_points": 0,
+          "dy_points": 12
         },
         {
           "dimension": "Research Domains",
@@ -1854,7 +1854,7 @@
           "x": 30.0,
           "y": 33.0,
           "dx_points": 9,
-          "dy_points": -7
+          "dy_points": 7
         },
         {
           "dimension": "Analytical Purposes",
@@ -1920,7 +1920,7 @@
           "x": 1.0,
           "y": 4.0,
           "dx_points": 9,
-          "dy_points": -7
+          "dy_points": 7
         }
       ],
       "direct_names": [
@@ -2714,107 +2714,9 @@
     "draft_captions": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\figures\\draft_captions_pass2.md"
   },
   "isolation_test": {
-    "status": "PASS",
-    "completed_utc": "2026-09-16T16:56:52.692501+00:00",
-    "renderer_copy": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w\\render_scratch_coder_pass3.py",
-    "working_directory": "C:\\Users\\balin\\AppData\\Local\\Temp\\scratch_coder_pass3_isolation_1ybo2y9w",
-    "analytical_inputs_present": [],
-    "copied_inputs": [
-      "figure_1_panel_agreement_replacement.csv",
-      "figure_1_panel_agreement_replacement_metadata.json",
-      "figure_2_coder_ratings_baseline.csv",
-      "figure_2_coder_ratings_baseline_metadata.json",
-      "figure_3_sufficiency_sensitivity.csv",
-      "figure_3_sufficiency_sensitivity_metadata.json",
-      "figure_4_label_application.csv",
-      "figure_4_label_application_metadata.json",
-      "pass3_deliverable_manifest.json",
-      "pass3_run_metadata.json",
-      "supplementary_figure_s1_baseline_vs_hardcase.csv",
-      "supplementary_figure_s1_baseline_vs_hardcase_metadata.json",
-      "supplementary_figure_s2_hardcase_ratings_confidence.csv",
-      "supplementary_figure_s2_hardcase_ratings_confidence_metadata.json",
-      "supplementary_figure_s3_disagreement_composition.csv",
-      "supplementary_figure_s3_disagreement_composition_metadata.json",
-      "supplementary_table_s1a_register_information.csv",
-      "supplementary_table_s1a_register_information_metadata.json",
-      "supplementary_table_s1b_taxonomy_fit.csv",
-      "supplementary_table_s1b_taxonomy_fit_metadata.json",
-      "supplementary_table_s1c_agreed_labels.csv",
-      "supplementary_table_s1c_agreed_labels_metadata.json",
-      "supplementary_table_s2_disagreement_composition.csv",
-      "supplementary_table_s2_disagreement_composition_metadata.json",
-      "table_1_agreement_domains.csv",
-      "table_1_agreement_domains_metadata.json",
-      "table_2_agreement_purposes.csv",
-      "table_2_agreement_purposes_metadata.json",
-      "table_3_agreement_with_majority_domains.csv",
-      "table_3_agreement_with_majority_domains_metadata.json",
-      "table_4_agreement_with_majority_purposes.csv",
-      "table_4_agreement_with_majority_purposes_metadata.json"
-    ],
-    "forbidden_source_path_literals_in_renderer": [],
-    "expected_outputs": 30,
-    "outputs_created": 30,
-    "missing_outputs": [],
-    "content_identical_to_production": {
-      "figure_1_panel_agreement_replacement.png": true,
-      "figure_1_panel_agreement_replacement.svg": true,
-      "figure_2_coder_ratings_baseline.png": true,
-      "figure_2_coder_ratings_baseline.svg": true,
-      "figure_3_sufficiency_sensitivity.png": true,
-      "figure_3_sufficiency_sensitivity.svg": true,
-      "figure_4_label_application.png": true,
-      "figure_4_label_application.svg": true,
-      "table_1_agreement_domains.csv": true,
-      "table_1_agreement_domains.md": true,
-      "table_2_agreement_purposes.csv": true,
-      "table_2_agreement_purposes.md": true,
-      "table_3_agreement_with_majority_domains.csv": true,
-      "table_3_agreement_with_majority_domains.md": true,
-      "table_4_agreement_with_majority_purposes.csv": true,
-      "table_4_agreement_with_majority_purposes.md": true,
-      "supplementary_figure_s1_baseline_vs_hardcase.png": true,
-      "supplementary_figure_s1_baseline_vs_hardcase.svg": true,
-      "supplementary_figure_s2_hardcase_ratings_confidence.png": true,
-      "supplementary_figure_s2_hardcase_ratings_confidence.svg": true,
-      "supplementary_figure_s3_disagreement_composition.png": true,
-      "supplementary_figure_s3_disagreement_composition.svg": true,
-      "supplementary_table_s1a_register_information.csv": true,
-      "supplementary_table_s1a_register_information.md": true,
-      "supplementary_table_s1b_taxonomy_fit.csv": true,
-      "supplementary_table_s1b_taxonomy_fit.md": true,
-      "supplementary_table_s1c_agreed_labels.csv": true,
-      "supplementary_table_s1c_agreed_labels.md": true,
-      "supplementary_table_s2_disagreement_composition.csv": true,
-      "supplementary_table_s2_disagreement_composition.md": true
-    },
-    "all_content_identical": true,
-    "comparison_rule": "Exact bytes for PNG/CSV/Markdown; SVG after canonicalizing opaque generated id attributes and references by occurrence."
+    "status": "PENDING RUNNER"
   },
   "manual_visual_inspection": {
-    "status": "PASS",
-    "intended_width_cm": 17,
-    "methods": [
-      "Final PNG figures inspected at original resolution corresponding to 17 cm width.",
-      "Final Markdown table HTML and CSV content inspected; 17 cm grid previews were checked for row and column alignment, wrapping, and legibility."
-    ],
-    "deliverables": {
-      "Figure 1": "PASS — intervals, markers, row labels and component annotations are clear; no clipping or overlap.",
-      "Figure 2": "PASS — keys are separated from headings; all non-zero segments are legible inside or beside bars.",
-      "Figure 3": "PASS — population encodings, intervals and annotations are clear; the lower key does not cover data.",
-      "Figure 4": "PASS — all 20 labels are legible; three leader lines are unambiguous; keys and threshold labels are clear.",
-      "Supplementary Figure S1": "PASS — diagnostic header, population encodings and intervals are clear; no clipping or overlap.",
-      "Supplementary Figure S2": "PASS — compact-panel labels and 0/50/100% ticks are separated; keys and diagnostic labels are clear.",
-      "Supplementary Figure S3": "PASS — category icons, keys, percentages and external small-segment labels are clear.",
-      "Table 1": "PASS — spanning headers, row groups and six displayed label rows align; long labels wrap legibly.",
-      "Table 2": "PASS — spanning headers, row groups and four displayed label rows align; minus signs are legible.",
-      "Table 3": "PASS — nine columns, four row groups and all 12 label rows align; counts-only rows are distinct.",
-      "Table 4": "PASS — nine columns, four row groups and all eight label rows align; counts-only rows are distinct.",
-      "Supplementary Table S1a": "PASS — three columns and four response rows align without clipping.",
-      "Supplementary Table S1b": "PASS — three columns and five response rows align without clipping.",
-      "Supplementary Table S1c": "PASS — six columns and four population/dimension rows align; percentages remain legible.",
-      "Supplementary Table S2": "PASS — five columns, two dimension groups and four pair-type rows align."
-    }
+    "status": "PENDING"
   }
 }

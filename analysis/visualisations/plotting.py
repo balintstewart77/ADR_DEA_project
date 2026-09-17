@@ -33,7 +33,7 @@ def plot_owner_sampling_coverage(
     with plt.rc_context(
         {
             "font.family": "sans-serif",
-            "font.sans-serif": ["DejaVu Sans", "Arial", "Liberation Sans"],
+            "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
             "font.size": 10.5,
             "axes.titlesize": 12.5,
             "axes.labelsize": 11,
@@ -150,7 +150,7 @@ def plot_owner_sampling_portfolio_vs_marginal(
     with plt.rc_context(
         {
             "font.family": "sans-serif",
-            "font.sans-serif": ["DejaVu Sans", "Arial", "Liberation Sans"],
+            "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
             "font.size": 10.5,
             "axes.titlesize": 12.5,
             "axes.labelsize": 11,
