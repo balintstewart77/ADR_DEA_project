@@ -24,6 +24,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from matplotlib.lines import Line2D
+from matplotlib.offsetbox import AnnotationBbox, DrawingArea
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.text import Text
 from matplotlib.ticker import FixedLocator, FuncFormatter, MultipleLocator
@@ -33,6 +34,11 @@ from matplotlib.transforms import Bbox
 FONT_FAMILY = "Arial"
 FIGURE_WIDTH = 17 / 2.54
 MIN_PT = 8.0
+# Scatter accepts marker area (points squared), so retain the existing circle
+# area and express the star size as a visual diameter in points.
+CIRCLE_AREA = 38
+STAR_SIZE = 1.3 * math.sqrt(CIRCLE_AREA)
+SQ = 7
 matplotlib.rcParams.update({
     "font.family": FONT_FAMILY,
     "font.sans-serif": [FONT_FAMILY],
@@ -185,16 +191,24 @@ def draw_interval(ax, y: float, row: dict, color: str, marker: str = "o", hollow
         return {}
     interval_artists = []
     if lower is not None and upper is not None and row["interval_status"] == "R":
-        interval_artists.append(ax.hlines(y, lower, upper, color=color, linewidth=1.45, zorder=2))
-        interval_artists.append(ax.vlines([lower, upper], y - 0.075, y + 0.075, color=color, linewidth=1.0, zorder=2))
-    marker_size = size if size is not None else (100 if marker == "*" else 38)
-    point = ax.scatter(estimate, y, marker=marker, s=marker_size,
+        interval_artists.append(ax.hlines(y, lower, upper, color=color, linewidth=1.45, zorder=5))
+        interval_artists.append(ax.vlines([lower, upper], y - 0.075, y + 0.075, color=color, linewidth=1.0, zorder=5))
+    marker_size = size if size is not None else (STAR_SIZE if marker == "*" else CIRCLE_AREA)
+    marker_area = marker_size ** 2 if marker == "*" else marker_size
+    point = ax.scatter(estimate, y, marker=marker, s=marker_area,
                        facecolors="none" if hollow else color, edgecolors=color if hollow else "black",
                        linewidths=1.35 if hollow else 0.65, zorder=4)
     return {"row": row, "point": point, "interval": interval_artists, "x": estimate, "lower": lower, "upper": upper, "y": y}
 
 
 def add_delta_annotation(ax, records: list[dict], text: str) -> Text:
+    upper_bound = max((record["upper"] if record["upper"] is not None else record["x"]) for record in records)
+    y = sum(record["y"] for record in records) / len(records)
+    return ax.annotate(text, xy=(upper_bound, y), xytext=(6, 0), textcoords="offset points",
+                       fontsize=9.5, ha="left", va="center", color="#333", zorder=6)
+
+
+def add_single_population_delta_annotation(ax, records: list[dict], text: str) -> Text:
     right = max((record["upper"] if record["upper"] is not None else record["x"]) for record in records)
     left = min((record["lower"] if record["lower"] is not None else record["x"]) for record in records)
     x_limit = ax.get_xlim()
@@ -203,6 +217,20 @@ def add_delta_annotation(ax, records: list[dict], text: str) -> Text:
     else:
         x, ha = left - 0.08, "right"
     return ax.text(x, sum(record["y"] for record in records) / len(records), text, fontsize=9.5, ha=ha, va="center", color="#333", zorder=6)
+
+
+def key_square(face: str, hatched: bool = False) -> DrawingArea:
+    """Return a fixed-size outside-label square in point coordinates."""
+    da = DrawingArea(SQ, SQ, 0, 0)
+    square = Rectangle((0, 0), SQ, SQ, facecolor=face, edgecolor="#555555", linewidth=0.6)
+    da.add_artist(square)
+    if hatched:
+        for x0 in (-SQ * 0.35, SQ * 0.35):
+            line = Line2D([x0, x0 + SQ], [0, SQ], color="white", linewidth=1.0,
+                          solid_capstyle="butt", clip_on=True)
+            line.set_clip_path(square)
+            da.add_artist(line)
+    return da
 
 
 def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], populations: tuple[str, ...],
@@ -223,7 +251,7 @@ def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], population
                 for y, quantity in enumerate(order):
                     marker = "*" if quantity == "delta_min" else "o"
                     record = draw_interval(ax, y + dodge[population], keyed[quantity], POPULATION[population]["color"], marker,
-                                           POPULATION[population]["hollow"], 145 if marker == "*" and len(populations) == 2 else None)
+                                           POPULATION[population]["hollow"], STAR_SIZE if marker == "*" else None)
                     plotted[(population, quantity)] = record
                     positions.append({"dimension": dimension, "population": population, "series": series, "quantity": quantity, "y": y})
                     if series == "delta" and quantity == "delta_min":
@@ -247,7 +275,11 @@ def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], population
                         component = r"δ$_{\mathrm{A}}$" if dimension == "COVID-19 & Pandemic" else r"δ$_{\mathrm{B}}$"
                     else:
                         component = r"δ$_{\mathrm{B}}$"
-                    add_delta_annotation(ax, [plotted[(population, "delta_min")] for population in populations], f"= {component}")
+                    records = [plotted[(population, "delta_min")] for population in populations]
+                    if len(populations) == 2:
+                        add_delta_annotation(ax, records, f"= {component}")
+                    else:
+                        add_single_population_delta_annotation(ax, records, f"= {component}")
             style_axis(ax)
             ax.tick_params(axis="x", labelbottom=True)
             if index == 0:
@@ -322,7 +354,8 @@ def render_s1(rows: list[dict], base: Path):
 
 
 def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: bool, panel_header: str,
-                 compact: bool = False, show_title: bool = True) -> tuple[list[dict], dict]:
+                 compact: bool = False, show_title: bool = True,
+                 fixed_outside_squares: bool = False) -> tuple[list[dict], dict]:
     actors = ("C01", "C02", "C03", "Majority of coders")
     ypos = (3.25, 2.35, 1.45, 0.35)
     palette = RATING_PALETTES[construct]
@@ -357,29 +390,44 @@ def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: 
             dpi = fig.dpi
             pt2dx = lambda pts: (inv.transform((pts * dpi / 72, 0)) - inv.transform((0, 0)))[0]
             pt2dy = lambda pts: (inv.transform((0, pts * dpi / 72)) - inv.transform((0, 0)))[1]
-            sq_pt = 8.0
-            sq_w, sq_h = pt2dx(sq_pt), pt2dy(sq_pt)
-            gap_pt = 6.0 if not compact else 4.0
-            gap_dx = pt2dx(gap_pt)
-            pad_dx = pt2dx(2.0)
-            x_cur = pt2dx(3.0) + 100.0
-            old_hatch_lw = matplotlib.rcParams.get("hatch.linewidth", 1.0)
-            matplotlib.rcParams["hatch.linewidth"] = 0.6
-            for si, (pct, clr, sh) in enumerate(small):
-                if si > 0:
-                    x_cur += gap_dx
-                ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
-                                       facecolor=clr, edgecolor="none", linewidth=0,
-                                       hatch="////" if sh else None, clip_on=False, zorder=4))
-                ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
-                                       facecolor="none", edgecolor="#555", linewidth=0.5,
-                                       clip_on=False, zorder=5))
-                x_cur += sq_w + pad_dx
-                t = ax.text(x_cur, y, pct, ha="left", va="center", fontsize=8.0)
-                fig.canvas.draw()
-                bb = t.get_window_extent(renderer=fig.canvas.get_renderer())
-                x_cur += (inv.transform((bb.width, 0)) - inv.transform((0, 0)))[0]
-            matplotlib.rcParams["hatch.linewidth"] = old_hatch_lw
+            if fixed_outside_squares:
+                x_text_end = None
+                for si, (pct, clr, sh) in enumerate(small):
+                    x_data, offset_pts = (100.0, 3.0) if si == 0 else (x_text_end, 6.0)
+                    ab = AnnotationBbox(key_square(clr, bool(sh)), (x_data, y), xybox=(offset_pts, 0),
+                                        boxcoords="offset points", frameon=False, box_alignment=(0, 0.5),
+                                        annotation_clip=False)
+                    ab.set_zorder(5)
+                    ax.add_artist(ab)
+                    x_text = x_data + pt2dx(offset_pts + SQ + 3.0)
+                    text = ax.text(x_text, y, pct, ha="left", va="center", fontsize=8.0)
+                    fig.canvas.draw()
+                    bb = text.get_window_extent(renderer=fig.canvas.get_renderer())
+                    x_text_end = x_text + (inv.transform((bb.width, 0)) - inv.transform((0, 0)))[0]
+            else:
+                sq_pt = 8.0
+                sq_w, sq_h = pt2dx(sq_pt), pt2dy(sq_pt)
+                gap_pt = 6.0 if not compact else 4.0
+                gap_dx = pt2dx(gap_pt)
+                pad_dx = pt2dx(2.0)
+                x_cur = pt2dx(3.0) + 100.0
+                old_hatch_lw = matplotlib.rcParams.get("hatch.linewidth", 1.0)
+                matplotlib.rcParams["hatch.linewidth"] = 0.6
+                for si, (pct, clr, sh) in enumerate(small):
+                    if si > 0:
+                        x_cur += gap_dx
+                    ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
+                                           facecolor=clr, edgecolor="none", linewidth=0,
+                                           hatch="////" if sh else None, clip_on=False, zorder=4))
+                    ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
+                                           facecolor="none", edgecolor="#555", linewidth=0.5,
+                                           clip_on=False, zorder=5))
+                    x_cur += sq_w + pad_dx
+                    t = ax.text(x_cur, y, pct, ha="left", va="center", fontsize=8.0)
+                    fig.canvas.draw()
+                    bb = t.get_window_extent(renderer=fig.canvas.get_renderer())
+                    x_cur += (inv.transform((bb.width, 0)) - inv.transform((0, 0)))[0]
+                matplotlib.rcParams["hatch.linewidth"] = old_hatch_lw
             labelled += len(small)
         sums.append({"construct": construct, "population": population, "bar": actor, "displayed_percentages": displayed,
                      "sum": sum(int(v.rstrip("%").replace("<1", "0")) for v in displayed)})
@@ -416,7 +464,8 @@ def render_figure2(rows: list[dict], base: Path):
     for i, construct in enumerate(constructs):
         ta = title_axes[i]; ta.set_xticks([]); ta.set_yticks([]); ta.axis("off")
         ta.text(0, 0.5, construct, transform=ta.transAxes, ha="left", va="center", fontweight="bold", fontsize=9.0)
-        panel_sums, check = rating_panel(bar_axes[i], rows, construct, "baseline", i == 1, construct, show_title=False)
+        panel_sums, check = rating_panel(bar_axes[i], rows, construct, "baseline", i == 1, construct,
+                                         show_title=False, fixed_outside_squares=True)
         sums.extend(panel_sums); checks.append(check)
         ka = key_axes[i]; ka.set_xticks([]); ka.set_yticks([]); ka.axis("off")
         ka.legend(handles=check.pop("handles"), loc="center left", bbox_to_anchor=(0, 0.5),
