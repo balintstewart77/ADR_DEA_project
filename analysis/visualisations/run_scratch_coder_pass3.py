@@ -72,6 +72,8 @@ def main() -> None:
             shutil.copy2(data_dir / name, isolated_data / name)
         isolated_renderer = isolated / RENDERER.name
         shutil.copy2(RENDERER, isolated_renderer)
+        shutil.copy2(RENDERER.parent / "figure_style.py", isolated / "figure_style.py")
+        shutil.copy2(RENDERER.parent / "rating_bars.py", isolated / "rating_bars.py")
         renderer_text = isolated_renderer.read_text(encoding="utf-8")
         forbidden_literals = ["scratch_coder_results", "confidence_exploratory", "results.md", "outputs_disagreement", "outputs_majority"]
         found_literals = [value for value in forbidden_literals if value in renderer_text]

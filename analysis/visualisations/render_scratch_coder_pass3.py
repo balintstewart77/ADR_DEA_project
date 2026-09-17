@@ -24,11 +24,16 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from matplotlib.lines import Line2D
-from matplotlib.offsetbox import AnnotationBbox, DrawingArea
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.text import Text
 from matplotlib.ticker import FixedLocator, FuncFormatter, MultipleLocator
 from matplotlib.transforms import Bbox
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import figure_style  # noqa: E402
+from figure_style import COLOURS  # noqa: E402
+import rating_bars  # noqa: E402
+from matplotlib.offsetbox import AnnotationBbox  # noqa: E402
 
 
 FONT_FAMILY = "Arial"
@@ -38,7 +43,12 @@ MIN_PT = 8.0
 # area and express the star size as a visual diameter in points.
 CIRCLE_AREA = 38
 STAR_SIZE = 1.3 * math.sqrt(CIRCLE_AREA)
-SQ = 7
+S1_EXTRA_TOP_PT = 6.0
+# Supplementary Figure S1 row geometry: rows 1.4x Figure 1's row pitch (25.95 pt -> 36.3 pt), the
+# baseline/hard-case pair offset kept at Figure 3's 7.71 pt, and gaps between dimensions kept at 32.6 pt.
+S1_HEIGHT = 9.74
+S1_DODGE = 0.106
+S1_HSPACE = 0.108
 matplotlib.rcParams.update({
     "font.family": FONT_FAMILY,
     "font.sans-serif": [FONT_FAMILY],
@@ -60,9 +70,9 @@ DELTA_ORDER = ("delta_min", "delta_A", "delta_B", "delta_C")
 ALPHA_LABELS = {q: q.removeprefix("alpha ") for q in ALPHA_ORDER}
 DELTA_LABELS = {"delta_min": r"δ$_{\mathrm{min}}$", "delta_A": r"δ$_{\mathrm{A}}$", "delta_B": r"δ$_{\mathrm{B}}$", "delta_C": r"δ$_{\mathrm{C}}$"}
 POPULATION = {
-    "baseline": {"color": "#28658C", "hollow": False, "label": "Baseline (n=150)"},
-    "baseline_strict_sufficient": {"color": "#D98524", "hollow": True, "label": "Register entry judged sufficient (n=92)"},
-    "hard_case": {"color": "#087F73", "hollow": True, "label": "Hard-case (n=75)"},
+    "baseline": {"color": COLOURS["baseline"], "hollow": False, "label": "Baseline (n=150)"},
+    "baseline_strict_sufficient": {"color": COLOURS["strict"], "hollow": True, "label": "Register entry judged sufficient (n=92)"},
+    "hard_case": {"color": COLOURS["hardcase"], "hollow": True, "label": "Hard-case (n=75)"},
 }
 RATING_PALETTES = {
     "Register-entry information": {
@@ -185,7 +195,8 @@ def style_axis(ax, grid: str = "x") -> None:
     ax.tick_params(length=3)
 
 
-def draw_interval(ax, y: float, row: dict, color: str, marker: str = "o", hollow: bool = False, size: float | None = None) -> dict:
+def draw_interval(ax, y: float, row: dict, color: str, marker: str = "o", hollow: bool = False, size: float | None = None,
+                  shared_star: bool = False) -> dict:
     estimate, lower, upper = f(row["parsed_value"]), f(row["parsed_interval_lower"]), f(row["parsed_interval_upper"])
     if estimate is None:
         return {}
@@ -195,6 +206,14 @@ def draw_interval(ax, y: float, row: dict, color: str, marker: str = "o", hollow
         interval_artists.append(ax.vlines([lower, upper], y - 0.075, y + 0.075, color=color, linewidth=1.0, zorder=5))
     marker_size = size if size is not None else (STAR_SIZE if marker == "*" else CIRCLE_AREA)
     marker_area = marker_size ** 2 if marker == "*" else marker_size
+    if shared_star and marker == "*":
+        point = ax.scatter(estimate, y, marker=marker, s=marker_area,
+                           facecolors=figure_style.STAR_HOLLOW_FACE if hollow else color, edgecolors=color if hollow else "black",
+                           linewidths=figure_style.STAR_HOLLOW_EDGE_PT if hollow else figure_style.STAR_FILLED_EDGE_PT,
+                           zorder=figure_style.MARKER_ZORDER)
+        for artist in interval_artists:
+            artist.set_zorder(figure_style.INTERVAL_ZORDER)
+        return {"row": row, "point": point, "interval": interval_artists, "x": estimate, "lower": lower, "upper": upper, "y": y}
     point = ax.scatter(estimate, y, marker=marker, s=marker_area,
                        facecolors="none" if hollow else color, edgecolors=color if hollow else "black",
                        linewidths=1.35 if hollow else 0.65, zorder=4)
@@ -219,27 +238,14 @@ def add_single_population_delta_annotation(ax, records: list[dict], text: str) -
     return ax.text(x, sum(record["y"] for record in records) / len(records), text, fontsize=9.5, ha=ha, va="center", color="#333", zorder=6)
 
 
-def key_square(face: str, hatched: bool = False) -> DrawingArea:
-    """Return a fixed-size outside-label square in point coordinates."""
-    da = DrawingArea(SQ, SQ, 0, 0)
-    square = Rectangle((0, 0), SQ, SQ, facecolor=face, edgecolor="#555555", linewidth=0.6)
-    da.add_artist(square)
-    if hatched:
-        for x0 in (-SQ * 0.35, SQ * 0.35):
-            line = Line2D([x0, x0 + SQ], [0, SQ], color="white", linewidth=1.0,
-                          solid_capstyle="butt", clip_on=True)
-            line.set_clip_path(square)
-            da.add_artist(line)
-    return da
-
-
 def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], populations: tuple[str, ...],
-                       alpha_range: tuple[float, float], height: float, annotate: bool, s1: bool = False):
+                       alpha_range: tuple[float, float], height: float, annotate: bool, s1: bool = False, dodge_step: float = 0.115,
+                       hspace: float = 0.15):
     fig, axes = plt.subplots(len(dimensions), 2, figsize=(FIGURE_WIDTH, height), constrained_layout=True,
-                             gridspec_kw={"hspace": 0.15})
+                             gridspec_kw={"hspace": hspace})
     if len(dimensions) == 1:
         axes = [axes]
-    dodge = {populations[0]: 0.0} if len(populations) == 1 else {populations[0]: -0.115, populations[1]: 0.115}
+    dodge = {populations[0]: 0.0} if len(populations) == 1 else {populations[0]: -dodge_step, populations[1]: dodge_step}
     positions = []; delta_checks = []
     for index, dimension in enumerate(dimensions):
         for column, series in enumerate(("alpha", "delta")):
@@ -250,8 +256,9 @@ def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], population
                 keyed = {r["quantity"]: r for r in rows if r["dimension"] == dimension and r["population"] == population and r["series"] == series and r["role"] == "plotted"}
                 for y, quantity in enumerate(order):
                     marker = "*" if quantity == "delta_min" else "o"
+                    star_size = figure_style.STAR_DIAMETER_RATIO * math.sqrt(CIRCLE_AREA) if s1 else STAR_SIZE
                     record = draw_interval(ax, y + dodge[population], keyed[quantity], POPULATION[population]["color"], marker,
-                                           POPULATION[population]["hollow"], STAR_SIZE if marker == "*" else None)
+                                           POPULATION[population]["hollow"], star_size if marker == "*" else None, shared_star=s1)
                     plotted[(population, quantity)] = record
                     positions.append({"dimension": dimension, "population": population, "series": series, "quantity": quantity, "y": y})
                     if series == "delta" and quantity == "delta_min":
@@ -261,7 +268,7 @@ def replacement_figure(rows: list[dict], dimensions: tuple[str, ...], population
             ax.tick_params(axis="y", labelsize=9.5)
             ax.invert_yaxis()
             ax.set_xlim(alpha_range if series == "alpha" else (-0.45, 0.45))
-            if series == "alpha" and alpha_range == (0.0, 1.0):
+            if series == "alpha" and alpha_range in ((0.0, 1.0), (0.0, 1.02)):
                 ax.xaxis.set_major_locator(FixedLocator([0, 0.2, 0.4, 0.6, 0.8, 1.0]))
             elif series == "alpha":
                 ax.xaxis.set_major_locator(FixedLocator([0.2, 0.3, 0.4, 0.5, 0.6, 0.7]))
@@ -316,9 +323,13 @@ def text_metrics(fig, name: str) -> dict:
     }
 
 
-def save_figure(fig, base: Path, name: str, tight: bool = True) -> dict:
+def save_figure(fig, base: Path, name: str, tight: bool = True, extra_top_pt: float = 0.0) -> dict:
     metrics = text_metrics(fig, name)
     bbox = "tight" if tight else None
+    if tight and extra_top_pt:
+        pad = matplotlib.rcParams["savefig.pad_inches"]
+        box = fig.get_tightbbox(fig.canvas.get_renderer())
+        bbox = Bbox.from_extents(box.x0 - pad, box.y0 - pad, box.x1 + pad, box.y1 + pad + extra_top_pt / 72)
     fig.savefig(base.with_suffix(".svg"), format="svg", dpi=300, facecolor="white", bbox_inches=bbox, metadata={"Date": None})
     fig.savefig(base.with_suffix(".png"), format="png", dpi=300, facecolor="white", bbox_inches=bbox, metadata={"Software": "matplotlib"})
     plt.close(fig)
@@ -343,108 +354,47 @@ def render_figure3(rows: list[dict], base: Path):
 
 
 def render_s1(rows: list[dict], base: Path):
-    fig, axes, positions, delta = replacement_figure(rows, DIMENSIONS, ("baseline", "hard_case"), (0.0, 1.0), 7.0, False, s1=True)
-    fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=8.5, fontweight="bold", color=POPULATION["hard_case"]["color"])
+    fig, axes, positions, delta = replacement_figure(rows, DIMENSIONS, ("baseline", "hard_case"), (0.0, 1.02), S1_HEIGHT, False, s1=True,
+                                                     dodge_step=S1_DODGE, hspace=S1_HSPACE)
+    fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=8.5, fontweight="bold", color="0.15")
     handles = [Line2D([0], [0], marker="o", color=POPULATION[p]["color"], markerfacecolor="none" if POPULATION[p]["hollow"] else POPULATION[p]["color"],
                       markeredgecolor=POPULATION[p]["color"], linewidth=1.2, label=POPULATION[p]["label"]) for p in ("baseline", "hard_case")]
     fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
-    render = save_figure(fig, base, "Supplementary Figure S1")
+    render = save_figure(fig, base, "Supplementary Figure S1", extra_top_pt=S1_EXTRA_TOP_PT)
     return render, {"status": "PASS", "key_entries": [h.get_label() for h in handles], "encodings_present": ["baseline filled", "hard-case hollow"],
                     "row_positions": positions, "delta_min_rows": delta, "annotation_components": {}}
 
 
-def rating_panel(ax, rows: list[dict], construct: str, population: str, show_x: bool, panel_header: str,
-                 compact: bool = False, show_title: bool = True,
-                 fixed_outside_squares: bool = False) -> tuple[list[dict], dict]:
-    actors = ("C01", "C02", "C03", "Majority of coders")
-    ypos = (3.25, 2.35, 1.45, 0.35)
-    palette = RATING_PALETTES[construct]
-    sums = []; nonzero = 0; labelled = 0; present = []
-    for actor, y in zip(actors, ypos):
+HATCHED_CATEGORIES = {"Cannot assess from register entry"}
+S3_OUTSIDE_GAP_PT = 3.0  # bar end to square, and square to label text
+S2_HEADER = "Hard-case panels: diagnostic, non-representative"
+S2_ROWS = (  # (content, height in inches)
+    ("header", 0.24),
+    ("title", 0.26), ("key", 0.30), ("bars", 1.45), ("spacer", 0.30),
+    ("title", 0.26), ("key", 0.30), ("bars", 1.45), ("spacer", 0.30),
+    ("title", 0.26), ("key", 0.30), ("bars", 1.45), ("spacer", 0.30),
+    ("title", 0.26), ("bars", 1.45),
+    ("xlabels", 0.50),
+)
+
+
+def rating_data(rows: list[dict], construct: str, population: str) -> tuple[dict[str, list[dict]], list[dict]]:
+    data = {}; sums = []
+    for actor in rating_bars.ACTORS:
         selected = sorted([r for r in rows if r["dimension"] == construct and r["population"] == population and r["pair"] == actor and r["role"] == "plotted"], key=lambda r: int(r["source_order"]))
-        left = Decimal(0); displayed = []; small = []
-        for row in selected:
-            category = display_category(row["label"]); present.append(category)
-            prop = d(row["parsed_interval_lower"]); width = prop * 100; count = int(row["parsed_value"])
-            hatch = "///" if category == "Cannot assess from register entry" else None
-            ax.barh(y, float(width), left=float(left), height=0.57, color=palette[category], edgecolor="white", linewidth=0.65, hatch=hatch, zorder=2)
-            shown = percent_text(row["parsed_interval_lower"], count); displayed.append(shown)
-            if count > 0:
-                nonzero += 1
-                if width >= (10 if compact else 5):
-                    dark = palette[category] in {"#246B45", "#5A4A86", "#5F5F5F", "#888888", "#A63D57"}
-                    text_kw = dict(ha="center", va="center", fontsize=8.0, zorder=4)
-                    if hatch:
-                        text_kw.update(color="#222", bbox=dict(facecolor="white", edgecolor="none", pad=1))
-                    else:
-                        text_kw["color"] = "white" if dark else "#222"
-                    ax.text(float(left + width / 2), y, shown, **text_kw)
-                    labelled += 1
-                else:
-                    small.append((shown, palette[category], hatch))
-            left += width
-        if small:
-            fig = ax.get_figure()
-            fig.canvas.draw()
-            inv = ax.transData.inverted()
-            dpi = fig.dpi
-            pt2dx = lambda pts: (inv.transform((pts * dpi / 72, 0)) - inv.transform((0, 0)))[0]
-            pt2dy = lambda pts: (inv.transform((0, pts * dpi / 72)) - inv.transform((0, 0)))[1]
-            if fixed_outside_squares:
-                x_text_end = None
-                for si, (pct, clr, sh) in enumerate(small):
-                    x_data, offset_pts = (100.0, 3.0) if si == 0 else (x_text_end, 6.0)
-                    ab = AnnotationBbox(key_square(clr, bool(sh)), (x_data, y), xybox=(offset_pts, 0),
-                                        boxcoords="offset points", frameon=False, box_alignment=(0, 0.5),
-                                        annotation_clip=False)
-                    ab.set_zorder(5)
-                    ax.add_artist(ab)
-                    x_text = x_data + pt2dx(offset_pts + SQ + 3.0)
-                    text = ax.text(x_text, y, pct, ha="left", va="center", fontsize=8.0)
-                    fig.canvas.draw()
-                    bb = text.get_window_extent(renderer=fig.canvas.get_renderer())
-                    x_text_end = x_text + (inv.transform((bb.width, 0)) - inv.transform((0, 0)))[0]
-            else:
-                sq_pt = 8.0
-                sq_w, sq_h = pt2dx(sq_pt), pt2dy(sq_pt)
-                gap_pt = 6.0 if not compact else 4.0
-                gap_dx = pt2dx(gap_pt)
-                pad_dx = pt2dx(2.0)
-                x_cur = pt2dx(3.0) + 100.0
-                old_hatch_lw = matplotlib.rcParams.get("hatch.linewidth", 1.0)
-                matplotlib.rcParams["hatch.linewidth"] = 0.6
-                for si, (pct, clr, sh) in enumerate(small):
-                    if si > 0:
-                        x_cur += gap_dx
-                    ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
-                                           facecolor=clr, edgecolor="none", linewidth=0,
-                                           hatch="////" if sh else None, clip_on=False, zorder=4))
-                    ax.add_patch(Rectangle((x_cur, y - sq_h / 2), sq_w, sq_h,
-                                           facecolor="none", edgecolor="#555", linewidth=0.5,
-                                           clip_on=False, zorder=5))
-                    x_cur += sq_w + pad_dx
-                    t = ax.text(x_cur, y, pct, ha="left", va="center", fontsize=8.0)
-                    fig.canvas.draw()
-                    bb = t.get_window_extent(renderer=fig.canvas.get_renderer())
-                    x_cur += (inv.transform((bb.width, 0)) - inv.transform((0, 0)))[0]
-                matplotlib.rcParams["hatch.linewidth"] = old_hatch_lw
-            labelled += len(small)
+        data[actor] = [{"category": display_category(r["label"]), "width": d(r["parsed_interval_lower"]) * 100,
+                        "label": percent_text(r["parsed_interval_lower"], int(r["parsed_value"])), "count": int(r["parsed_value"])} for r in selected]
+        displayed = [segment["label"] for segment in data[actor]]
         sums.append({"construct": construct, "population": population, "bar": actor, "displayed_percentages": displayed,
                      "sum": sum(int(v.rstrip("%").replace("<1", "0")) for v in displayed)})
-    ax.set_xlim(0, 165 if compact else 130); ax.set_ylim(-0.08, 3.58); ax.set_yticks(ypos, actors)
-    ax.spines["bottom"].set_bounds(0, 100)
-    ax.xaxis.set_major_locator(FixedLocator([0, 50, 100] if compact else [0, 20, 40, 60, 80, 100])); ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x)}%" if x <= 100 else ""))
-    if show_x:
-        ax.set_xlabel("Percentage of records")
-    else:
-        ax.tick_params(axis="x", labelbottom=False)
-    if show_title:
-        ax.set_title(panel_header, loc="left", pad=7, fontweight="bold")
-    style_axis(ax)
-    categories = list(palette)
-    handles = [Rectangle((0, 0), 1, 1, facecolor=palette[c], edgecolor="#777", hatch="///" if c == "Cannot assess from register entry" else None, label=c) for c in categories]
-    return sums, {"status": "PASS" if nonzero == labelled and set(present) == set(categories) else "FAIL", "nonzero_segments": nonzero,
-                  "labels_rendered": labelled, "encodings_present": sorted(set(present)), "key_entries": categories, "handles": handles}
+    return data, sums
+
+
+def rating_check(construct: str, result: dict) -> dict:
+    categories = list(RATING_PALETTES[construct])
+    return {"status": "PASS" if result["nonzero_segments"] == result["labels_rendered"] and set(result["encodings_present"]) == set(categories) else "FAIL",
+            "nonzero_segments": result["nonzero_segments"], "labels_rendered": result["labels_rendered"],
+            "encodings_present": result["encodings_present"], "key_entries": categories}
 
 
 def render_figure2(rows: list[dict], base: Path):
@@ -459,49 +409,48 @@ def render_figure2(rows: list[dict], base: Path):
     spacer = fig.add_subplot(grid[3, 0]); spacer.axis("off")
     xlabel_ax = fig.add_subplot(grid[7, 0]); xlabel_ax.axis("off")
     sums = []; checks = []
-    constructs = ("Register-entry information", "Taxonomy fit")
-    ncols = (4, 5)
-    for i, construct in enumerate(constructs):
-        ta = title_axes[i]; ta.set_xticks([]); ta.set_yticks([]); ta.axis("off")
-        ta.text(0, 0.5, construct, transform=ta.transAxes, ha="left", va="center", fontweight="bold", fontsize=9.0)
-        panel_sums, check = rating_panel(bar_axes[i], rows, construct, "baseline", i == 1, construct,
-                                         show_title=False, fixed_outside_squares=True)
-        sums.extend(panel_sums); checks.append(check)
-        ka = key_axes[i]; ka.set_xticks([]); ka.set_yticks([]); ka.axis("off")
-        ka.legend(handles=check.pop("handles"), loc="center left", bbox_to_anchor=(0, 0.5),
-                  ncol=ncols[i], frameon=False, handlelength=1.2, columnspacing=1.2)
-    bar_axes[0].tick_params(axis="x", labelbottom=False)
+    for i, construct in enumerate(("Register-entry information", "Taxonomy fit")):
+        data, panel_sums = rating_data(rows, construct, "baseline")
+        result = rating_bars.draw_rating_panel(title_axes[i], key_axes[i], bar_axes[i], data, RATING_PALETTES[construct],
+                                               HATCHED_CATEGORIES, construct, show_key=True, show_xlabels=i == 1)
+        sums.extend(panel_sums); checks.append(rating_check(construct, result))
     render = save_figure(fig, base, "Figure 2", tight=False)
     status = "PASS" if all(c["status"] == "PASS" for c in checks) else "FAIL"
     return render, {"status": status, "panels": checks}, sums
 
 
-def render_s2(rows: list[dict], base: Path):
-    fig = plt.figure(figsize=(FIGURE_WIDTH, 7.35), constrained_layout=True)
-    grid = fig.add_gridspec(3, 2, height_ratios=[0.46, 1.0, 1.0])
-    key_axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1])]
-    axes = [[fig.add_subplot(grid[1, 0]), fig.add_subplot(grid[1, 1])],
-            [fig.add_subplot(grid[2, 0]), fig.add_subplot(grid[2, 1])]]
+def build_s2(rows: list[dict]):
+    heights = [h for _, h in S2_ROWS]
+    fig = plt.figure(figsize=(FIGURE_WIDTH, sum(heights)))
+    grid = fig.add_gridspec(len(heights), 1, height_ratios=heights, left=0.20, right=0.87, top=1.0, bottom=0.0, hspace=0.0)
+    row_axes = {kind: [] for kind, _ in S2_ROWS}
+    for index, (kind, _) in enumerate(S2_ROWS):
+        ax = fig.add_subplot(grid[index, 0])
+        if kind in ("header", "spacer", "xlabels"):
+            ax.axis("off")
+        row_axes[kind].append(ax)
+    header = row_axes["header"][0]
+    header.text(0, 0.5, S2_HEADER, transform=header.transAxes, ha="left", va="center", fontsize=8.5, fontweight="bold", color="0.15")
     specs = (
-        (axes[0][0], "Register-entry information", "hard_case", False, "Register-entry information\nHard-case (n=75)\ndiagnostic, non-representative"),
-        (axes[0][1], "Taxonomy fit", "hard_case", False, "Taxonomy fit\nHard-case (n=75)\ndiagnostic, non-representative"),
-        (axes[1][0], "Coder confidence", "baseline", True, "Coder confidence\nBaseline (n=150)"),
-        (axes[1][1], "Coder confidence", "hard_case", True, "Coder confidence\nHard-case (n=75)\ndiagnostic, non-representative"),
+        ("Register-entry information", "hard_case", "Register-entry information: hard-case (n=75)", True),
+        ("Taxonomy fit", "hard_case", "Taxonomy fit: hard-case (n=75)", True),
+        ("Coder confidence", "baseline", "Coder confidence: baseline (n=150)", True),
+        ("Coder confidence", "hard_case", "Coder confidence: hard-case (n=75)", False),  # same categories as the key above
     )
-    sums = []; checks = []; confidence_handles = None
-    for index, (ax, construct, population, show_x, header) in enumerate(specs):
-        panel_sums, check = rating_panel(ax, rows, construct, population, show_x, header, compact=True)
-        sums.extend(panel_sums); checks.append(check)
-        handles = check.pop("handles")
-        if construct == "Coder confidence":
-            confidence_handles = handles
-        else:
-            key_ax = key_axes[0 if construct == "Register-entry information" else 1]
-            key_ax.set_xticks([]); key_ax.set_yticks([]); key_ax.axis("off")
-            key_ax.legend(handles=handles, loc="center", ncol=2 if construct == "Register-entry information" else 1,
-                          frameon=False, handlelength=1.2, columnspacing=0.8, labelspacing=0.35)
-    fig.legend(handles=confidence_handles, loc="outside lower center", ncol=4, frameon=False, handlelength=1.3, columnspacing=1.0)
-    render = save_figure(fig, base, "Supplementary Figure S2")
+    sums = []; checks = []; panels = []; key_axes = iter(row_axes["key"])
+    for index, (construct, population, title, show_key) in enumerate(specs):
+        data, panel_sums = rating_data(rows, construct, population)
+        result = rating_bars.draw_rating_panel(row_axes["title"][index], next(key_axes) if show_key else None, row_axes["bars"][index],
+                                               data, RATING_PALETTES[construct], HATCHED_CATEGORIES, title,
+                                               show_key=show_key, show_xlabels=index == len(specs) - 1)
+        sums.extend(panel_sums); checks.append(rating_check(construct, result))
+        panels.append({"construct": construct, "population": population, "title": title, "data": data, "result": result})
+    return fig, panels, sums, checks
+
+
+def render_s2(rows: list[dict], base: Path):
+    fig, _, sums, checks = build_s2(rows)
+    render = save_figure(fig, base, "Supplementary Figure S2", tight=False)
     status = "PASS" if all(c["status"] == "PASS" for c in checks) else "FAIL"
     return render, {"status": status, "panels": checks}, sums
 
@@ -654,13 +603,19 @@ def render_s3(rows: list[dict], base: Path):
             shown = percent_text(row["interval_lower_string"], count); displayed.append(shown)
             if count:
                 nonzero += 1
-                if width >= 8:
-                    ax.text(float(left + width / 2), y, shown, ha="center", va="center", color="white", fontsize=8.0, fontweight="bold", zorder=4); labelled += 1
+                # overlap is always labelled outside the bar, identified by its colour square
+                if width >= 8 and relation != "overlap":
+                    ax.text(float(left + width / 2), y, shown, ha="center", va="center", color="white", fontsize=8.0, zorder=4); labelled += 1
                 else:
-                    small.append(f"{relation.capitalize()} {count} ({shown})")
+                    small.append((relation, f"{count} ({shown})"))
             left += width
-        for offset, value in enumerate(small):
-            ax.text(102, y + (offset - (len(small) - 1) / 2) * 0.20, value, ha="left", va="center", fontsize=8.0); labelled += 1
+        for offset, (relation, value) in enumerate(small):
+            y_label = y + (offset - (len(small) - 1) / 2) * 0.20
+            square = AnnotationBbox(rating_bars.key_square(DISAGREE_COLORS[relation]), (100, y_label), xybox=(S3_OUTSIDE_GAP_PT, 0),
+                                    boxcoords="offset points", frameon=False, box_alignment=(0, 0.5), annotation_clip=False)
+            square.set_zorder(5); ax.add_artist(square)
+            ax.annotate(value, xy=(100, y_label), xytext=(S3_OUTSIDE_GAP_PT + rating_bars.SQ + S3_OUTSIDE_GAP_PT, 0), textcoords="offset points",
+                        ha="left", va="center", fontsize=8.0, annotation_clip=False); labelled += 1
         ax.text(-2.2, y, f"{label} (n={denom})", ha="right", va="center", fontsize=8.0)
         numeric = [0 if value == "<1%" else int(value.rstrip("%")) for value in displayed]
         sums.append({"dimension": key[0], "pair_family": key[1], "displayed_percentages": displayed, "sum": sum(numeric)})
@@ -669,6 +624,7 @@ def render_s3(rows: list[dict], base: Path):
     ax.set_xlim(0, 132); ax.set_ylim(-0.12, 3.95); ax.set_yticks([]); ax.set_xlabel("Percentage of disagreeing pairs")
     ax.xaxis.set_major_locator(FixedLocator([0, 20, 40, 60, 80, 100])); ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x)}%"))
     style_axis(ax); ax.grid(axis="x", zorder=0)
+    ax.spines["bottom"].set_bounds(0, 100)
     render = save_figure(fig, base, "Supplementary Figure S3")
     return render, {"status": "PASS" if nonzero == labelled else "FAIL", "nonzero_segments": nonzero, "labels_rendered": labelled,
                     "key_entries": ["Containment", "Overlap", "Disjoint"], "encodings_present": ["containment", "overlap", "disjoint"], "icons_equal_aspect": True}, sums
