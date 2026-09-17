@@ -1,0 +1,4371 @@
+{
+  "specification_and_instruction_date": "specified, and instruction issued, on or before 17 September 2026 (investigator-attested)",
+  "addendum_creation_date": "2026-09-17",
+  "run_started_utc": "2026-09-17T14:23:26.197909+00:00",
+  "run_completed_utc": "2026-09-17T14:37:25.158734+00:00",
+  "status": "exploratory, not preregistered",
+  "addendum_commit": "a049c79ff0cab8706f6dcd8febfa560b4c60f6ae",
+  "execution_code_commit": "3320432fce07c3967705cf2bd5708333b8cdd7cd",
+  "analysis_code_commits_since_addendum": [
+    "3320432fce07c3967705cf2bd5708333b8cdd7cd Add exploratory pairwise alpha analysis code (synthetic-tested)"
+  ],
+  "coder_mapping": {
+    "A": "C01",
+    "B": "C02",
+    "C": "C03",
+    "L": "Fable 5 (MOD-006)",
+    "delta_A": "alpha_LBC - alpha_ABC (replaces C01)",
+    "delta_B": "alpha_ALC - alpha_ABC (replaces C02)",
+    "delta_C": "alpha_ABL - alpha_ABC (replaces C03)",
+    "code_references": [
+      "analysis/scratch_coder_stage_a/config.py:13",
+      "analysis/scratch_coder_stage_a/panels.py:243-247",
+      "analysis/validation/replacement.py:71-84"
+    ]
+  },
+  "metrics": {
+    "Research Domains": {
+      "metric": "MASI",
+      "function": "masi_distance"
+    },
+    "Analytical Purposes": {
+      "metric": "MASI",
+      "function": "masi_distance"
+    },
+    "Demographic disparities / equity": {
+      "metric": "nominal",
+      "function": "nominal_distance"
+    },
+    "COVID-19 & Pandemic": {
+      "metric": "nominal",
+      "function": "nominal_distance"
+    }
+  },
+  "metric_code_references": [
+    "analysis/scratch_coder_stage_a/panels.py:252-253",
+    "analysis/scratch_coder_stage_a/agreement.py:171",
+    "analysis/validation/metrics.py"
+  ],
+  "estimator": "analysis/validation/alpha.py krippendorff_alpha (distance memoised per process with functools.lru_cache; identical returned objects)",
+  "bootstrap": {
+    "function": "analysis/validation/bootstrap.py bootstrap_joint",
+    "seed": 20260917,
+    "requested_replicates": 2000,
+    "minimum_valid_fraction": 0.9,
+    "minimum_valid_replicates": 1800,
+    "confidence_level": 0.95,
+    "percentile": "Hyndman-Fan Type 7",
+    "resampling_unit": "record (A, B, C, L labels kept together)",
+    "undefined_rule": "excluded per statistic; no top-up or replacement",
+    "parallelism": "one process per population x dimension; each job seeded identically and independently"
+  },
+  "populations": {
+    "baseline": 150,
+    "hard_case": 75,
+    "pooled": false,
+    "hard_case_label": "DIAGNOSTIC — non-representative"
+  },
+  "data_sources": [
+    {
+      "manifest_id": "POST-028",
+      "path": "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "manifest_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "on_disk_raw_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "on_disk_bytes": 439039,
+      "match_method": "raw_bytes",
+      "git_blob_commit": null
+    },
+    {
+      "manifest_id": "POST-009",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "manifest_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "on_disk_raw_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "on_disk_bytes": 18022,
+      "match_method": "raw_bytes",
+      "git_blob_commit": null
+    },
+    {
+      "manifest_id": "POST-011",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "manifest_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "on_disk_raw_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "on_disk_bytes": 9284,
+      "match_method": "raw_bytes",
+      "git_blob_commit": null
+    },
+    {
+      "manifest_id": "POST-019",
+      "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+      "manifest_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "on_disk_raw_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "on_disk_bytes": 80272,
+      "match_method": "raw_bytes",
+      "git_blob_commit": null
+    },
+    {
+      "manifest_id": "MOD-006",
+      "path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+      "manifest_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "on_disk_raw_sha256": "9827fc9f01b9e1f3e9b58fe8f41b59eb5a569c77aacb77d5140628ec04f5eeab",
+      "on_disk_bytes": 1251162,
+      "match_method": "csv_row_terminator_crlf_reconstruction",
+      "git_blob_commit": "696c6643e1344dfa0683339499f8726a1d4334c2"
+    },
+    {
+      "manifest_id": "MOD-001",
+      "path": "taxonomy_data_dictionary.yaml",
+      "manifest_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "on_disk_raw_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "on_disk_bytes": 62863,
+      "match_method": "raw_bytes",
+      "git_blob_commit": "dd2a91cfbb3b9cfbda659aa4c1c76e4e36216a06"
+    },
+    {
+      "manifest_id": "RED-036",
+      "path": "preregistration/package/06_redcap/redcap_data_dictionary_frozen_0.7_2026-07-22.csv",
+      "manifest_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "on_disk_raw_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "on_disk_bytes": 33250,
+      "match_method": "raw_bytes",
+      "git_blob_commit": "5e608493ac1cc8a8e1e744e50dc970cd851c5afa"
+    },
+    {
+      "manifest_id": "RED-017",
+      "path": "preregistration/package/06_redcap/redcap_label_variable_mapping.csv",
+      "manifest_sha256": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "on_disk_raw_sha256": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "on_disk_bytes": 2071,
+      "match_method": "raw_bytes",
+      "git_blob_commit": "9cdaf3f7a90d261898fa84e91fb10c82d3ee26f1"
+    },
+    {
+      "manifest_id": "RED-013",
+      "path": "scripts/validate_redcap_candidate.py",
+      "manifest_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "on_disk_raw_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "on_disk_bytes": 33635,
+      "match_method": "raw_bytes",
+      "git_blob_commit": "c30b19eeb472cfd140c22521c2b9073ff3da9e63"
+    }
+  ],
+  "absent_manifest_authority_not_used": {
+    "manifest_id": "POST-022",
+    "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_metadata.json",
+    "note": "formal assignment metadata (coder seeds); absent on this machine; hashed by verify_authorities but not read by build_stage_a_data or any alpha computation; not verified"
+  },
+  "canonical_exports": [
+    {
+      "path": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv",
+      "sha256": "d9a3201b4965e678c29e375775c410c2b770d65c1421be85835f00bcd5fe1f82",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6"
+    },
+    {
+      "path": "analysis/outputs_validation_scratch_20260824/replacement_delta_results.csv",
+      "sha256": "135593dc3e05ed541c141da38a915f250f90728c05457fc7bd104ac129c517ac",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6"
+    },
+    {
+      "path": "analysis/outputs_validation_scratch_stage_b_20260825/tag_diagnostics.csv",
+      "sha256": "fd8471dfdc2d853d830def91e70be847202264820e8022ef3a952bf0738953d9",
+      "commit": "3abe8248cc88e11595b9d6d466fdcc501908e631"
+    }
+  ],
+  "shared_code": [
+    {
+      "path": "analysis/validation/alpha.py",
+      "commit": "a269e27a254b86204cf9d44413b340f19c79b046",
+      "sha256": "d8159b5a75fc657de10b83850c36bc48662dca1793c993c5d0f66ba3f3bfd869"
+    },
+    {
+      "path": "analysis/validation/metrics.py",
+      "commit": "a269e27a254b86204cf9d44413b340f19c79b046",
+      "sha256": "4466aa05a9f31cf70a90c67071760a19f556927a3b1ecaa548161d7e42ca16c9"
+    },
+    {
+      "path": "analysis/validation/bootstrap.py",
+      "commit": "6337c3e58d3e6d7e410682afa56ffc818e42d86f",
+      "sha256": "78c666a1d73b11afe9eeee29b38f5f00509bb51a328b8667060c724bf06f0cfc"
+    },
+    {
+      "path": "analysis/validation/replacement.py",
+      "commit": "a269e27a254b86204cf9d44413b340f19c79b046",
+      "sha256": "e928034146022acaa3de8b05a4311c24dcd838163b1dfec7e72387f5778772f7"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/panels.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "3a8688b38699f21753179297f18fa2438cc4d91e5e298f59d3b074318f5f794b"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/load.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "657b01669cd57aac383d452485549c0f0a18b9df946d82b4875a3320c9c7b902"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/config.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "785d5dc69adcb6fd8562396cfbe3621438043b702e4f8b2d1587a023ad12b807"
+    },
+    {
+      "path": "analysis/scratch_coder_stage_a/mappings.py",
+      "commit": "6ce5269bf0474218e43e4a568b1fd601361eb4a6",
+      "sha256": "f6192b0b37a5c1c57150b094302c9b1bb9ac39110f94e989e9f22b5c8352d1c6"
+    }
+  ],
+  "protocol_search": {
+    "file": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx (PRO-018)",
+    "file_sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+    "pairwise_krippendorff_alpha_among_coders": "not found",
+    "pairwise_krippendorff_alpha_model_vs_each_coder": "not found",
+    "related_specified_analyses_not_pairwise_alpha": [
+      "Section 8.4 exact-set agreement model vs each coder",
+      "Section 8.4 Jaccard model vs each coder",
+      "Section 8.4 per-label Cohen's kappa, 3 human-human and 3 model-human pairs",
+      "Section 8.4 per-tag Cohen's kappa and Gwet's AC1"
+    ],
+    "labelled_preregistered": false
+  },
+  "prior_result_search": {
+    "locations": [
+      "repository working tree excluding venv/ and .git/",
+      "git history, all refs (messages, -S, -G)"
+    ],
+    "pairwise_krippendorff_alpha": "not found",
+    "other_pairwise_results_found": [
+      "analysis/outputs_validation_scratch_stage_b_20260825/per_label_pairwise_kappa.csv (S5T005/S5T006)",
+      "preregistration/package/05_training_and_pilot/pilot_analysis/pilot_pairwise_agreement.csv (pilot exact-set/Jaccard)",
+      "commits ad34cb6, 6e067f4: LLM multi-trial / method-benchmark pairwise agreement"
+    ]
+  },
+  "software": {
+    "python": "3.12.5 (main, Aug  6 2024, 19:08:49) [Clang 15.0.0 (clang-1500.3.9.4)]",
+    "platform": "macOS-26.6.2-x86_64-i386-64bit",
+    "packages": {
+      "numpy": "2.2.6",
+      "pandas": "2.2.3",
+      "PyYAML": "6.0.3"
+    }
+  },
+  "check_w": [
+    {
+      "role": "check_W",
+      "population": "baseline",
+      "dimension": "Research Domains",
+      "panel": "ABC",
+      "computed": 0.5263372741925532,
+      "canonical_exported": 0.5263372741925532,
+      "exact_equal": true,
+      "computed_repr": "0.5263372741925532",
+      "canonical_repr": "0.5263372741925532"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Research Domains",
+      "panel": "LBC",
+      "computed": 0.5833854979981307,
+      "canonical_exported": 0.5833854979981307,
+      "exact_equal": true,
+      "computed_repr": "0.5833854979981307",
+      "canonical_repr": "0.5833854979981307"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Research Domains",
+      "panel": "ALC",
+      "computed": 0.5279824870301835,
+      "canonical_exported": 0.5279824870301835,
+      "exact_equal": true,
+      "computed_repr": "0.5279824870301835",
+      "canonical_repr": "0.5279824870301835"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Research Domains",
+      "panel": "ABL",
+      "computed": 0.5735239672738957,
+      "canonical_exported": 0.5735239672738957,
+      "exact_equal": true,
+      "computed_repr": "0.5735239672738957",
+      "canonical_repr": "0.5735239672738957"
+    },
+    {
+      "role": "check_W",
+      "population": "baseline",
+      "dimension": "Analytical Purposes",
+      "panel": "ABC",
+      "computed": 0.2921101465494055,
+      "canonical_exported": 0.2921101465494055,
+      "exact_equal": true,
+      "computed_repr": "0.2921101465494055",
+      "canonical_repr": "0.2921101465494055"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Analytical Purposes",
+      "panel": "LBC",
+      "computed": 0.27561685370002553,
+      "canonical_exported": 0.27561685370002553,
+      "exact_equal": true,
+      "computed_repr": "0.27561685370002553",
+      "canonical_repr": "0.27561685370002553"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Analytical Purposes",
+      "panel": "ALC",
+      "computed": 0.24944189515977,
+      "canonical_exported": 0.24944189515977,
+      "exact_equal": true,
+      "computed_repr": "0.24944189515977",
+      "canonical_repr": "0.24944189515977"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Analytical Purposes",
+      "panel": "ABL",
+      "computed": 0.35754042811994313,
+      "canonical_exported": 0.35754042811994313,
+      "exact_equal": true,
+      "computed_repr": "0.35754042811994313",
+      "canonical_repr": "0.35754042811994313"
+    },
+    {
+      "role": "check_W",
+      "population": "baseline",
+      "dimension": "Demographic disparities / equity",
+      "panel": "ABC",
+      "computed": 0.5124552887072049,
+      "canonical_exported": 0.5124552887072049,
+      "exact_equal": true,
+      "computed_repr": "0.5124552887072049",
+      "canonical_repr": "0.5124552887072049"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Demographic disparities / equity",
+      "panel": "LBC",
+      "computed": 0.46846749892380535,
+      "canonical_exported": 0.46846749892380535,
+      "exact_equal": true,
+      "computed_repr": "0.46846749892380535",
+      "canonical_repr": "0.46846749892380535"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Demographic disparities / equity",
+      "panel": "ALC",
+      "computed": 0.43107544480228077,
+      "canonical_exported": 0.43107544480228077,
+      "exact_equal": true,
+      "computed_repr": "0.43107544480228077",
+      "canonical_repr": "0.43107544480228077"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "Demographic disparities / equity",
+      "panel": "ABL",
+      "computed": 0.45243902439024386,
+      "canonical_exported": 0.45243902439024386,
+      "exact_equal": true,
+      "computed_repr": "0.45243902439024386",
+      "canonical_repr": "0.45243902439024386"
+    },
+    {
+      "role": "check_W",
+      "population": "baseline",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "ABC",
+      "computed": 0.9397477187332259,
+      "canonical_exported": 0.9397477187332259,
+      "exact_equal": true,
+      "computed_repr": "0.9397477187332259",
+      "canonical_repr": "0.9397477187332259"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "LBC",
+      "computed": 0.9397477187332259,
+      "canonical_exported": 0.9397477187332259,
+      "exact_equal": true,
+      "computed_repr": "0.9397477187332259",
+      "canonical_repr": "0.9397477187332259"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "ALC",
+      "computed": 0.9412342124206531,
+      "canonical_exported": 0.9412342124206531,
+      "exact_equal": true,
+      "computed_repr": "0.9412342124206531",
+      "canonical_repr": "0.9412342124206531"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "baseline",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "ABL",
+      "computed": 0.971320899335718,
+      "canonical_exported": 0.971320899335718,
+      "exact_equal": true,
+      "computed_repr": "0.971320899335718",
+      "canonical_repr": "0.971320899335718"
+    },
+    {
+      "role": "check_W",
+      "population": "hard_case",
+      "dimension": "Research Domains",
+      "panel": "ABC",
+      "computed": 0.46228781652079254,
+      "canonical_exported": 0.46228781652079254,
+      "exact_equal": true,
+      "computed_repr": "0.46228781652079254",
+      "canonical_repr": "0.46228781652079254"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Research Domains",
+      "panel": "LBC",
+      "computed": 0.4386641380008872,
+      "canonical_exported": 0.4386641380008872,
+      "exact_equal": true,
+      "computed_repr": "0.4386641380008872",
+      "canonical_repr": "0.4386641380008872"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Research Domains",
+      "panel": "ALC",
+      "computed": 0.4429465414674122,
+      "canonical_exported": 0.4429465414674122,
+      "exact_equal": true,
+      "computed_repr": "0.4429465414674122",
+      "canonical_repr": "0.4429465414674122"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Research Domains",
+      "panel": "ABL",
+      "computed": 0.4348981730590701,
+      "canonical_exported": 0.4348981730590701,
+      "exact_equal": true,
+      "computed_repr": "0.4348981730590701",
+      "canonical_repr": "0.4348981730590701"
+    },
+    {
+      "role": "check_W",
+      "population": "hard_case",
+      "dimension": "Analytical Purposes",
+      "panel": "ABC",
+      "computed": 0.29174237392340174,
+      "canonical_exported": 0.29174237392340174,
+      "exact_equal": true,
+      "computed_repr": "0.29174237392340174",
+      "canonical_repr": "0.29174237392340174"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Analytical Purposes",
+      "panel": "LBC",
+      "computed": 0.18259925261107035,
+      "canonical_exported": 0.18259925261107035,
+      "exact_equal": true,
+      "computed_repr": "0.18259925261107035",
+      "canonical_repr": "0.18259925261107035"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Analytical Purposes",
+      "panel": "ALC",
+      "computed": 0.17791957263688996,
+      "canonical_exported": 0.17791957263688996,
+      "exact_equal": true,
+      "computed_repr": "0.17791957263688996",
+      "canonical_repr": "0.17791957263688996"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Analytical Purposes",
+      "panel": "ABL",
+      "computed": 0.2556179923215066,
+      "canonical_exported": 0.2556179923215066,
+      "exact_equal": true,
+      "computed_repr": "0.2556179923215066",
+      "canonical_repr": "0.2556179923215066"
+    },
+    {
+      "role": "check_W",
+      "population": "hard_case",
+      "dimension": "Demographic disparities / equity",
+      "panel": "ABC",
+      "computed": 0.653652879783533,
+      "canonical_exported": 0.653652879783533,
+      "exact_equal": true,
+      "computed_repr": "0.653652879783533",
+      "canonical_repr": "0.653652879783533"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Demographic disparities / equity",
+      "panel": "LBC",
+      "computed": 0.5390946502057612,
+      "canonical_exported": 0.5390946502057612,
+      "exact_equal": true,
+      "computed_repr": "0.5390946502057612",
+      "canonical_repr": "0.5390946502057612"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Demographic disparities / equity",
+      "panel": "ALC",
+      "computed": 0.5670660997294164,
+      "canonical_exported": 0.5670660997294164,
+      "exact_equal": true,
+      "computed_repr": "0.5670660997294164",
+      "canonical_repr": "0.5670660997294164"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "Demographic disparities / equity",
+      "panel": "ABL",
+      "computed": 0.5660783469651314,
+      "canonical_exported": 0.5660783469651314,
+      "exact_equal": true,
+      "computed_repr": "0.5660783469651314",
+      "canonical_repr": "0.5660783469651314"
+    },
+    {
+      "role": "check_W",
+      "population": "hard_case",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "ABC",
+      "computed": 0.8099547511312217,
+      "canonical_exported": 0.8099547511312217,
+      "exact_equal": true,
+      "computed_repr": "0.8099547511312217",
+      "canonical_repr": "0.8099547511312217"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "LBC",
+      "computed": 0.8660287081339713,
+      "canonical_exported": 0.8660287081339713,
+      "exact_equal": true,
+      "computed_repr": "0.8660287081339713",
+      "canonical_repr": "0.8660287081339713"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "ALC",
+      "computed": 0.942769545222279,
+      "canonical_exported": 0.942769545222279,
+      "exact_equal": true,
+      "computed_repr": "0.942769545222279",
+      "canonical_repr": "0.942769545222279"
+    },
+    {
+      "role": "supplementary_model_data_integrity",
+      "population": "hard_case",
+      "dimension": "COVID-19 & Pandemic",
+      "panel": "ABL",
+      "computed": 0.8099547511312217,
+      "canonical_exported": 0.8099547511312217,
+      "exact_equal": true,
+      "computed_repr": "0.8099547511312217",
+      "canonical_repr": "0.8099547511312217"
+    }
+  ],
+  "checks": [
+    {
+      "check": "addendum commit is ancestor of code",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "git"
+    },
+    {
+      "check": "hash POST-028",
+      "status": "passed",
+      "actual": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "expected": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "hash POST-009",
+      "status": "passed",
+      "actual": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "expected": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "hash POST-011",
+      "status": "passed",
+      "actual": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "expected": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "hash POST-019",
+      "status": "passed",
+      "actual": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "expected": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "hash MOD-006",
+      "status": "passed",
+      "actual": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "expected": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "source": "preregistration/preregistration_artifact_manifest.csv (csv_row_terminator_crlf_reconstruction)"
+    },
+    {
+      "check": "hash MOD-001",
+      "status": "passed",
+      "actual": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "expected": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "hash RED-036",
+      "status": "passed",
+      "actual": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "expected": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "hash RED-017",
+      "status": "passed",
+      "actual": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "expected": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "hash RED-013",
+      "status": "passed",
+      "actual": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "expected": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "source": "preregistration/preregistration_artifact_manifest.csv (raw_bytes)"
+    },
+    {
+      "check": "coder pseudonyms",
+      "status": "passed",
+      "actual": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "expected": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "source": "shared loader"
+    },
+    {
+      "check": "duplicate coder-record responses",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "shared loader"
+    },
+    {
+      "check": "baseline authority size",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "POST-009/POST-011"
+    },
+    {
+      "check": "baseline shared membership equals authority",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "POST-009/POST-011"
+    },
+    {
+      "check": "baseline one response per coder per record",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared loader"
+    },
+    {
+      "check": "baseline / Research Domains record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "baseline / Research Domains record-ID uniqueness",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / Research Domains n equals canonical export",
+      "status": "passed",
+      "actual": [
+        150
+      ],
+      "expected": [
+        150
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "baseline / Research Domains one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / Research Domains permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "baseline / Analytical Purposes record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "baseline / Analytical Purposes record-ID uniqueness",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / Analytical Purposes n equals canonical export",
+      "status": "passed",
+      "actual": [
+        150
+      ],
+      "expected": [
+        150
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "baseline / Analytical Purposes one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / Analytical Purposes permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity record-ID uniqueness",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity n equals canonical export",
+      "status": "passed",
+      "actual": [
+        150
+      ],
+      "expected": [
+        150
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity canonical tag majority count present",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "tag_diagnostics.csv"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic record-ID uniqueness",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic n equals canonical export",
+      "status": "passed",
+      "actual": [
+        150
+      ],
+      "expected": [
+        150
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic canonical tag majority count present",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "tag_diagnostics.csv"
+    },
+    {
+      "check": "hard_case authority size",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "POST-009/POST-011"
+    },
+    {
+      "check": "hard_case shared membership equals authority",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "POST-009/POST-011"
+    },
+    {
+      "check": "hard_case one response per coder per record",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "shared loader"
+    },
+    {
+      "check": "hard_case / Research Domains record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "hard_case / Research Domains record-ID uniqueness",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / Research Domains n equals canonical export",
+      "status": "passed",
+      "actual": [
+        75
+      ],
+      "expected": [
+        75
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "hard_case / Research Domains one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / Research Domains permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "hard_case / Analytical Purposes record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "hard_case / Analytical Purposes record-ID uniqueness",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / Analytical Purposes n equals canonical export",
+      "status": "passed",
+      "actual": [
+        75
+      ],
+      "expected": [
+        75
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "hard_case / Analytical Purposes one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / Analytical Purposes permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity record-ID uniqueness",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity n equals canonical export",
+      "status": "passed",
+      "actual": [
+        75
+      ],
+      "expected": [
+        75
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity canonical tag majority count present",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "tag_diagnostics.csv"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic record-ID set equals canonical set",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "canonical population set"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic record-ID uniqueness",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic n equals canonical export",
+      "status": "passed",
+      "actual": [
+        75
+      ],
+      "expected": [
+        75
+      ],
+      "source": "replacement_panel_results.csv"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic one label set per rater per record (no missing)",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "panels"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic permitted labels only",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "MOD-001 taxonomy / RED-036 choices"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic canonical tag majority count present",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "tag_diagnostics.csv"
+    },
+    {
+      "check": "metric Research Domains",
+      "status": "passed",
+      "actual": "masi_distance",
+      "expected": "masi_distance",
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "metric Research Domains same function object",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "metric Analytical Purposes",
+      "status": "passed",
+      "actual": "masi_distance",
+      "expected": "masi_distance",
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "metric Analytical Purposes same function object",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "metric Demographic disparities / equity",
+      "status": "passed",
+      "actual": "nominal_distance",
+      "expected": "nominal_distance",
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "metric Demographic disparities / equity same function object",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "metric COVID-19 & Pandemic",
+      "status": "passed",
+      "actual": "nominal_distance",
+      "expected": "nominal_distance",
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "metric COVID-19 & Pandemic same function object",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "panels.py:252-253"
+    },
+    {
+      "check": "check_W baseline / Research Domains alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Research Domains alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Research Domains alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Research Domains alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "check_W baseline / Analytical Purposes alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Analytical Purposes alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Analytical Purposes alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Analytical Purposes alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "check_W baseline / Demographic disparities / equity alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Demographic disparities / equity alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Demographic disparities / equity alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / Demographic disparities / equity alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "check_W baseline / COVID-19 & Pandemic alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / COVID-19 & Pandemic alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / COVID-19 & Pandemic alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity baseline / COVID-19 & Pandemic alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "check_W hard_case / Research Domains alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Research Domains alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Research Domains alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Research Domains alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "check_W hard_case / Analytical Purposes alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Analytical Purposes alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Analytical Purposes alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Analytical Purposes alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "check_W hard_case / Demographic disparities / equity alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Demographic disparities / equity alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Demographic disparities / equity alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / Demographic disparities / equity alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "check_W hard_case / COVID-19 & Pandemic alpha_ABC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / COVID-19 & Pandemic alpha_LBC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / COVID-19 & Pandemic alpha_ALC exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "supplementary_model_data_integrity hard_case / COVID-19 & Pandemic alpha_ABL exact",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
+    },
+    {
+      "check": "baseline / Research Domains alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Research Domains alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Research Domains alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Research Domains alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Research Domains alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Research Domains alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Research Domains diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": -0.08244012503482012,
+      "expected": -0.08244012503482012,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Research Domains diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": -0.17966870945425306,
+      "expected": -0.17966870945425306,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Research Domains diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": -0.09722858441943294,
+      "expected": -0.09722858441943294,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Research Domains H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.47969506154431085,
+      "expected": 0.47969506154431085,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Research Domains M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.5641911652248686,
+      "expected": 0.5641911652248686,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Research Domains D_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.08449610368055771,
+      "expected": 0.08449610368055771,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Research Domains H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.5695294162714374,
+      "expected": 0.5695294162714374,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Research Domains M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.5706274183251829,
+      "expected": 0.5706274183251829,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Research Domains D_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.0010980020537455504,
+      "expected": 0.0010980020537455504,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Research Domains H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.5283093537540273,
+      "expected": 0.5283093537540273,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Research Domains M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.5998438025572189,
+      "expected": 0.5998438025572189,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Research Domains D_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.0715344488031916,
+      "expected": 0.0715344488031916,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Research Domains bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "baseline / Research Domains alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Research Domains D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Analytical Purposes diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": -0.0369115505149602,
+      "expected": -0.0369115505149602,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.09832140295441805,
+      "expected": 0.09832140295441805,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.13523295346937825,
+      "expected": 0.13523295346937825,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.32184331544666045,
+      "expected": 0.32184331544666045,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.2944199928229112,
+      "expected": 0.2944199928229112,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes D_A arithmetic exact",
+      "status": "passed",
+      "actual": -0.027423322623749247,
+      "expected": -0.027423322623749247,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.2726826139694514,
+      "expected": 0.2726826139694514,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.20497974578722522,
+      "expected": 0.20497974578722522,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes D_B arithmetic exact",
+      "status": "passed",
+      "actual": -0.0677028681822262,
+      "expected": -0.0677028681822262,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.2542268387119713,
+      "expected": 0.2542268387119713,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.365132122956196,
+      "expected": 0.365132122956196,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes D_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.11090528424422469,
+      "expected": 0.11090528424422469,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Analytical Purposes bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Analytical Purposes D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": 0.24728296336455735,
+      "expected": 0.24728296336455735,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.29438997821350765,
+      "expected": 0.29438997821350765,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.0471070148489503,
+      "expected": 0.0471070148489503,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.5622828880656205,
+      "expected": 0.5622828880656205,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.5141906349836749,
+      "expected": 0.5141906349836749,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity D_A arithmetic exact",
+      "status": "passed",
+      "actual": -0.048092253081945646,
+      "expected": -0.048092253081945646,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.41508789895886666,
+      "expected": 0.41508789895886666,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.3162598204264871,
+      "expected": 0.3162598204264871,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity D_B arithmetic exact",
+      "status": "passed",
+      "actual": -0.09882807853237957,
+      "expected": -0.09882807853237957,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.5387293806411453,
+      "expected": 0.5387293806411453,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.45965920961891615,
+      "expected": 0.45965920961891615,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity D_C arithmetic exact",
+      "status": "passed",
+      "actual": -0.07907017102222913,
+      "expected": -0.07907017102222913,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / Demographic disparities / equity D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": -0.046786868686868655,
+      "expected": -0.046786868686868655,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": -0.04334636983553952,
+      "expected": -0.04334636983553952,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.0034404988513291324,
+      "expected": 0.0034404988513291324,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.9331156565656565,
+      "expected": 0.9331156565656565,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.9331156565656565,
+      "expected": 0.9331156565656565,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic D_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.0,
+      "expected": 0.0,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.9547888414834262,
+      "expected": 0.9547888414834262,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.9548611111111112,
+      "expected": 0.9548611111111112,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic D_B arithmetic exact",
+      "status": "passed",
+      "actual": 7.226962768491774e-05,
+      "expected": 7.226962768491774e-05,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.9313954071399919,
+      "expected": 0.9313954071399919,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.9782545454545455,
+      "expected": 0.9782545454545455,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic D_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.04685913831455357,
+      "expected": 0.04685913831455357,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "baseline / COVID-19 & Pandemic D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Research Domains diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": 0.04488148619407617,
+      "expected": 0.04488148619407617,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Research Domains diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.03816093121477837,
+      "expected": 0.03816093121477837,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Research Domains diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": -0.006720554979297799,
+      "expected": -0.006720554979297799,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Research Domains H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.4666596582596229,
+      "expected": 0.4666596582596229,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Research Domains M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.43080681961877626,
+      "expected": 0.43080681961877626,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Research Domains D_A arithmetic exact",
+      "status": "passed",
+      "actual": -0.03585283864084665,
+      "expected": -0.03585283864084665,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Research Domains H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.4475791926522337,
+      "expected": 0.4475791926522337,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Research Domains M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.4176168357729276,
+      "expected": 0.4176168357729276,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Research Domains D_B arithmetic exact",
+      "status": "passed",
+      "actual": -0.02996235687930615,
+      "expected": -0.02996235687930615,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Research Domains H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.4700199357492718,
+      "expected": 0.4700199357492718,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Research Domains M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.4303514466303623,
+      "expected": 0.4303514466303623,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Research Domains D_C arithmetic exact",
+      "status": "passed",
+      "actual": -0.03966848911890952,
+      "expected": -0.03966848911890952,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Research Domains bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Research Domains D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Analytical Purposes diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": -0.09445776767471781,
+      "expected": -0.09445776767471781,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.07105547763758724,
+      "expected": 0.07105547763758724,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.16551324531230505,
+      "expected": 0.16551324531230505,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.3242226941738422,
+      "expected": 0.3242226941738422,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.14981119083490446,
+      "expected": 0.14981119083490446,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes D_A arithmetic exact",
+      "status": "passed",
+      "actual": -0.17441150333893773,
+      "expected": -0.17441150333893773,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.2886949553550486,
+      "expected": 0.2886949553550486,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.10940240202966228,
+      "expected": 0.10940240202966228,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes D_B arithmetic exact",
+      "status": "passed",
+      "actual": -0.1792925533253863,
+      "expected": -0.1792925533253863,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.24146607151768967,
+      "expected": 0.24146607151768967,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.19250852788742562,
+      "expected": 0.19250852788742562,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes D_C arithmetic exact",
+      "status": "passed",
+      "actual": -0.048957543630264055,
+      "expected": -0.048957543630264055,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Analytical Purposes bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Analytical Purposes D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": 0.11705948372615038,
+      "expected": 0.11705948372615038,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.16820204184607557,
+      "expected": 0.16820204184607557,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.051142558119925186,
+      "expected": 0.051142558119925186,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.6906285072951739,
+      "expected": 0.6906285072951739,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.5221258987305337,
+      "expected": 0.5221258987305337,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity D_A arithmetic exact",
+      "status": "passed",
+      "actual": -0.16850260856464017,
+      "expected": -0.16850260856464017,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.6065274863721362,
+      "expected": 0.6065274863721362,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.4730838405031521,
+      "expected": 0.4730838405031521,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity D_B arithmetic exact",
+      "status": "passed",
+      "actual": -0.13344364586898405,
+      "expected": -0.13344364586898405,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.6650572282352114,
+      "expected": 0.6650572282352114,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.5339803298323198,
+      "expected": 0.5339803298323198,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity D_C arithmetic exact",
+      "status": "passed",
+      "actual": -0.1310768984028916,
+      "expected": -0.1310768984028916,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / Demographic disparities / equity D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_AB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_AC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_BC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_LA in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_LB in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_LC in [-1, 1] or undefined with reason",
+      "status": "passed",
+      "actual": true,
+      "expected": true,
+      "source": "estimator range"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic diff_AC_minus_AB arithmetic exact",
+      "status": "passed",
+      "actual": 0.20868707514719176,
+      "expected": 0.20868707514719176,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic diff_AC_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": 0.1291962781743804,
+      "expected": 0.1291962781743804,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic diff_AB_minus_BC arithmetic exact",
+      "status": "passed",
+      "actual": -0.07949079697281136,
+      "expected": -0.07949079697281136,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic H_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.8119955977436417,
+      "expected": 0.8119955977436417,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic M_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.8935714285714286,
+      "expected": 0.8935714285714286,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic D_A arithmetic exact",
+      "status": "passed",
+      "actual": 0.08157583082778685,
+      "expected": 0.08157583082778685,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic H_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.7473974586564515,
+      "expected": 0.7473974586564515,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic M_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.9581695676586188,
+      "expected": 0.9581695676586188,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic D_B arithmetic exact",
+      "status": "passed",
+      "actual": 0.21077210900216736,
+      "expected": 0.21077210900216736,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic H_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.8517409962300473,
+      "expected": 0.8517409962300473,
+      "source": "Analysis 1 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic M_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.8517409962300473,
+      "expected": 0.8517409962300473,
+      "source": "Analysis 2 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic D_C arithmetic exact",
+      "status": "passed",
+      "actual": 0.0,
+      "expected": 0.0,
+      "source": "Analysis 1-2 points"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic bootstrap seed",
+      "status": "passed",
+      "actual": 20260917,
+      "expected": 20260917,
+      "source": "instruction"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_AC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_LA valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_LB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic alpha_LC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic diff_AC_minus_AB valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic diff_AC_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic diff_AB_minus_BC valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic H_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic M_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic D_A valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic H_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic M_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic D_B valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic H_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic M_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "hard_case / COVID-19 & Pandemic D_C valid+invalid = requested",
+      "status": "passed",
+      "actual": [
+        2000,
+        2000
+      ],
+      "expected": [
+        2000,
+        2000
+      ],
+      "source": "bootstrap"
+    },
+    {
+      "check": "no formal record ID in any output",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0,
+      "source": "restricted-identifier guard"
+    }
+  ],
+  "output_tables": [
+    "PWA1T001",
+    "PWA1T002",
+    "PWA1T003",
+    "PWA1T004",
+    "PWA1T005",
+    "PWA1T006",
+    "PWA1T007",
+    "PWA1T008",
+    "PWA1T009",
+    "PWA1T010",
+    "PWA1T011",
+    "PWA1T012",
+    "PWA1T013",
+    "PWA1T014",
+    "PWA1T015",
+    "PWA1T016",
+    "PWA1T017",
+    "PWA1T018",
+    "PWA1T019",
+    "PWA1T020",
+    "PWA1T021",
+    "PWA1T022",
+    "PWA1T023",
+    "PWA1T024",
+    "PWA1T025",
+    "PWA1T026",
+    "PWA1T027",
+    "PWA1T028",
+    "PWA1T029",
+    "PWA1T030",
+    "PWA1T031",
+    "PWA1T032"
+  ],
+  "output_file_sha256": {
+    "PWA1T001.csv": "0ce74b75561de01ab0268340a941cc94bef16ffd889cd2642d2b089abba4b068",
+    "PWA1T002.csv": "611037907c499e1115baee789883e4f64bbe254cf72a014d682831b0219b1ea8",
+    "PWA1T003.csv": "95948f766bd66a4105a1632fce89d77081c02a16691d0cc06451f262f172e1af",
+    "PWA1T004.csv": "831132688339f58b3a1ad0a06f7bfc6e226b6d9791e912efc392210a38444bb8",
+    "PWA1T005.csv": "7ddde2f444cfb07c64a9cecaff47c51d431503f2dd59fd36f90ebfe19f5161dc",
+    "PWA1T006.csv": "c194e6c17330c4fa7f4314ff22453413193a0e241c437e653b226891b75bedda",
+    "PWA1T007.csv": "3067e8b3e0d88cb1478898d60ef535c0b97b8434685aa49cb76e15b41dcfdd0c",
+    "PWA1T008.csv": "cb91cc34c3c054b11dee10efd5ed4055ef68bc174ff16019f08062d8fffe7cfc",
+    "PWA1T009.csv": "f23f882efecbbb96a35984ceef91b23791ef5d5848e9ac64ec109148d855bfac",
+    "PWA1T010.csv": "2019154d73fc9e37a365c363e30e00abb886504ac1c590ff3eb4a24dc195fe71",
+    "PWA1T011.csv": "1801fa056ebd4922f55f4a6dd86d1237cf922737b44f176d108b2986302e1528",
+    "PWA1T012.csv": "c4be2f5cd0c88e0970e2542c0b493fead8c21c4e7b9bce9d815a8d07d5978f89",
+    "PWA1T013.csv": "ed696e80e64a35675aa5000cfc21b6a0dfd7600db0362dc49c1c2bca226d8257",
+    "PWA1T014.csv": "5319c0b4a8ef381976bd344c75ef3014b7b5bbf7365f4007c34f26fb66478440",
+    "PWA1T015.csv": "0b696062708f45a799c7e5873de3c74500541958f1383116fdc4b3b44c9fdacf",
+    "PWA1T016.csv": "51d4fd9f260d2d5bce4555a17f4cf51fa41e57fb58ca2ff0206d20db5e060f46",
+    "PWA1T017.csv": "f6de180020f48fc891df01f2d1659c4535394e72ab4d5af859d1c3e9c555d556",
+    "PWA1T018.csv": "844a615a200ef2f756f3273940fceade09752c8b8a72d017e4de136113c41c1c",
+    "PWA1T019.csv": "0cc0a175272e85cc5d137140cb792ef88695547e5c546042c2f9d5458d2f2177",
+    "PWA1T020.csv": "5d12f2b02267be37dfbbc06d60adb55dd8151267585af66420c8a15c08c40f91",
+    "PWA1T021.csv": "f4085977196ae6cb6562ff5335770919bfd52013b81b1677134d8f9f6f7ee243",
+    "PWA1T022.csv": "c08ab855e5441929f023f58fe728f53675ddeec66a161e848259f52a6060349e",
+    "PWA1T023.csv": "166d090f32c8390ef5ac8c57937cb70a288beb0ab6cc67bda66ff0ec5cf2a7ce",
+    "PWA1T024.csv": "6f1fe2390a0480e5a53d640a3c70b9c366bf6c176e739bc1825ccfe0689ca33e",
+    "PWA1T025.csv": "265a3686335ffc838e29dc4a1ba9c3228d6d062a9487d0ea05376d33b2455bb1",
+    "PWA1T026.csv": "b1b222d655eaddba3b72015b177f242a5fbd8cbcb0594464778a681739dcee45",
+    "PWA1T027.csv": "5c5e43db7de149c09d2c50c62e9f73bb02dbaf018cc4d27f0118beb529122ed8",
+    "PWA1T028.csv": "b755f21b3777712e96bc1bacfa7304d20b4074b9a528c30a7a830bda3030954a",
+    "PWA1T029.csv": "5d01cf943f1c5e49a88bb2ceaa1e4f4df3cbff252e303ab812a6a8577c03441a",
+    "PWA1T030.csv": "6b25bbeae646e50cbec28677e5a5abb3deb54ab6d9a4f1d18fe612beaac0dd00",
+    "PWA1T031.csv": "386dbb3c5c011d74cc1951b2d1c1246909033958a72a15ab55aea58051071531",
+    "PWA1T032.csv": "1f426c5863f27442c0c9681be03ae6c79e6f90819a00805b05bb87fed18b76c9",
+    "results_pairwise_alpha.md": "e2045f14e41441b1a633674634a40d1893fc10dabc94eec49119e4c95f19fc5a"
+  }
+}
