@@ -1,0 +1,5 @@
+dimension,indicator,group,n,count,rate,ci_lower,ci_upper
+Research Domains,unclear_only_S3,exposed,31,6,0.1935483870967742,0.06451612903225806,0.3448275862068966
+Research Domains,unclear_only_S3,unexposed,119,7,0.058823529411764705,0.01694915254237288,0.10434782608695652
+Research Domains,no_agreed_label_S4,exposed,31,1,0.03225806451612903,0.0,0.10714285714285714
+Research Domains,no_agreed_label_S4,unexposed,119,4,0.03361344537815126,0.008130081300813009,0.06896551724137931

@@ -1,0 +1,3 @@
+dimension,group,n,mean_pairwise_jaccard,ci_lower,ci_upper
+Research Domains,exposed,31,0.5057347670250896,0.411998353909465,0.6029960317460317
+Research Domains,unexposed,119,0.6666666666666666,0.6091091091091091,0.7235578347578348

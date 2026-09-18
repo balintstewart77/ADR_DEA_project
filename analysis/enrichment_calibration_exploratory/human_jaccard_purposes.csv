@@ -1,0 +1,3 @@
+dimension,group,n,mean_pairwise_jaccard,ci_lower,ci_upper
+Analytical Purposes,exposed,31,0.4336917562724014,0.31623563218390804,0.5579857030943987
+Analytical Purposes,unexposed,119,0.4397759103641456,0.3794014578076815,0.5055207103502557

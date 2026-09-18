@@ -1,0 +1,3 @@
+dimension,group,n,mean_model_coder_jaccard,ci_lower,ci_upper
+Research Domains,exposed,31,0.478494623655914,0.37536599099099105,0.5800114942528735
+Research Domains,unexposed,119,0.7394957983193278,0.6887048205230023,0.7861342522974102

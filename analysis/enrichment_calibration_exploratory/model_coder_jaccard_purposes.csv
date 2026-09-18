@@ -1,0 +1,3 @@
+dimension,group,n,mean_model_coder_jaccard,ci_lower,ci_upper
+Analytical Purposes,exposed,31,0.27060931899641577,0.16666666666666666,0.3831646676661668
+Analytical Purposes,unexposed,119,0.49346405228758167,0.4365010351966873,0.5497323476702509
