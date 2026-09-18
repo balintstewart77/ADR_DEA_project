@@ -1,0 +1,6 @@
+state,definition,count,proportion
+S1,Unanimous substantive,50,0.3333
+S2,Majority with dissent,82,0.5467
+S3,Majority Unclear only,13,0.0867
+S4,No agreed label,5,0.0333
+Total,,150,1.0000

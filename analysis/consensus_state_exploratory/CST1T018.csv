@@ -1,0 +1,15 @@
+quantity,state_n,estimate,lower,upper,valid_replicates,invalid_replicates,requested_replicates,interval_status
+exact_match_proportion,35,0.257143,0.114286,0.400000,2000,0,2000,R
+mean_jaccard,35,0.457143,0.328571,0.585714,2000,0,2000,R
+set_rel_exact,35,9; 0.257143,0.114286,0.400000,2000,0,2000,R
+set_rel_strict_superset,35,11; 0.314286,0.171429,0.457143,2000,0,2000,R
+set_rel_strict_subset,35,3; 0.085714,0.000000,0.200000,2000,0,2000,R
+set_rel_partial_overlap,35,0; 0.000000,0.000000,0.000000,2000,0,2000,R
+set_rel_disjoint,35,12; 0.342857,0.200000,0.514286,2000,0,2000,R
+mean_model_cardinality,35,1.371429,1.228571,1.542857,2000,0,2000,R
+mean_majority_cardinality,35,1.114286,1.028571,1.228571,2000,0,2000,R
+majority_gt2_proportion,35,0; 0.000000,0.000000,0.000000,2000,0,2000,R
+support_0_of_3,35,15; 0.312500,0.204082,0.428571,2000,0,2000,R
+support_1_of_3,35,9; 0.187500,0.086957,0.295455,2000,0,2000,R
+support_2_of_3,35,24; 0.500000,0.384574,0.608696,2000,0,2000,R
+support_3_of_3,35,0; 0.000000,0.000000,0.000000,2000,0,2000,R

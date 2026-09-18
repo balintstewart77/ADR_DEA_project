@@ -1,0 +1,474 @@
+{
+  "specification_and_instruction_date": "specified, and instruction issued, on or before 18 September 2026 (investigator-attested)",
+  "addendum_creation_date": "2026-09-18",
+  "run_started_utc": "2026-09-18T12:04:51.430766+00:00",
+  "run_completed_utc": "2026-09-18T12:04:53.089979+00:00",
+  "status": "exploratory, not preregistered",
+  "addendum_commit": "8bab6a5",
+  "state_definitions": {
+    "S1": "Unanimous: all three coders gave identical label sets, and that set is substantive",
+    "S2": "Majority with dissent: majority set is substantive and non-empty, but coders' sets are not identical",
+    "S3": "Majority Unclear: majority set consists of Unclear from Register Entry only",
+    "S4": "No agreed label: no label reached two of three coders; majority set is empty"
+  },
+  "state_counts": {
+    "baseline/Research Domains": {
+      "S1": 50,
+      "S2": 82,
+      "S3": 13,
+      "S4": 5
+    },
+    "baseline/Analytical Purposes": {
+      "S1": 27,
+      "S2": 73,
+      "S3": 26,
+      "S4": 24
+    },
+    "hard_case/Research Domains": {
+      "S1": 20,
+      "S2": 46,
+      "S3": 3,
+      "S4": 6
+    },
+    "hard_case/Analytical Purposes": {
+      "S1": 11,
+      "S2": 35,
+      "S3": 20,
+      "S4": 9
+    }
+  },
+  "bootstrap": {
+    "seed": 20260918,
+    "requested_replicates": 2000,
+    "minimum_valid_replicates": 1800,
+    "minimum_valid_fraction": 0.9,
+    "confidence_level": 0.95,
+    "percentile": "Hyndman-Fan Type 7",
+    "resampling_unit": "record (coder sets and model set kept together)"
+  },
+  "populations": {
+    "baseline": 150,
+    "hard_case": 75,
+    "pooled": false,
+    "hard_case_label": "DIAGNOSTIC -- non-representative"
+  },
+  "dimensions": [
+    "Research Domains",
+    "Analytical Purposes"
+  ],
+  "data_sources": [
+    {
+      "manifest_id": "POST-028",
+      "path": "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "manifest_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "on_disk_raw_sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "on_disk_bytes": 439039,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "POST-009",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "manifest_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "on_disk_raw_sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "on_disk_bytes": 18022,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "POST-011",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "manifest_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "on_disk_raw_sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "on_disk_bytes": 9284,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "POST-019",
+      "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+      "manifest_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "on_disk_raw_sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "on_disk_bytes": 80272,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "MOD-006",
+      "path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+      "manifest_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "on_disk_raw_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "on_disk_bytes": 1252471,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "MOD-001",
+      "path": "taxonomy_data_dictionary.yaml",
+      "manifest_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "on_disk_raw_sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "on_disk_bytes": 62863,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "RED-036",
+      "path": "preregistration/package/06_redcap/redcap_data_dictionary_frozen_0.7_2026-07-22.csv",
+      "manifest_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "on_disk_raw_sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "on_disk_bytes": 33250,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "RED-017",
+      "path": "preregistration/package/06_redcap/redcap_label_variable_mapping.csv",
+      "manifest_sha256": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "on_disk_raw_sha256": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "on_disk_bytes": 2071,
+      "match_method": "raw_bytes"
+    },
+    {
+      "manifest_id": "RED-013",
+      "path": "scripts/validate_redcap_candidate.py",
+      "manifest_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "on_disk_raw_sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "on_disk_bytes": 33635,
+      "match_method": "raw_bytes"
+    }
+  ],
+  "reconciliation_authority": "analysis/outputs_majority_coverage_20260914T170315Z/majority_coverage.csv",
+  "checks": [
+    {
+      "check": "hash POST-028",
+      "status": "passed",
+      "actual": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "expected": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+    },
+    {
+      "check": "hash PRO-018",
+      "status": "passed",
+      "actual": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "expected": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77"
+    },
+    {
+      "check": "hash RED-036",
+      "status": "passed",
+      "actual": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "expected": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc"
+    },
+    {
+      "check": "hash RED-013",
+      "status": "passed",
+      "actual": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "expected": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190"
+    },
+    {
+      "check": "hash RED-005",
+      "status": "passed",
+      "actual": "bb7f55be07352f87e4704bdbfdccc37436c23d5da2db68ec2ae52b5564376e52",
+      "expected": "bb7f55be07352f87e4704bdbfdccc37436c23d5da2db68ec2ae52b5564376e52"
+    },
+    {
+      "check": "hash RED-006",
+      "status": "passed",
+      "actual": "2dbc2005f832dfa6887fda9994d917598b4f12d63ed060bba8a7ea0e27f11f9c",
+      "expected": "2dbc2005f832dfa6887fda9994d917598b4f12d63ed060bba8a7ea0e27f11f9c"
+    },
+    {
+      "check": "hash RED-007",
+      "status": "passed",
+      "actual": "414e25368757568f9c5db9cadf830e94089123333f7e0264d835863c236e0aca",
+      "expected": "414e25368757568f9c5db9cadf830e94089123333f7e0264d835863c236e0aca"
+    },
+    {
+      "check": "hash RED-003",
+      "status": "passed",
+      "actual": "e0dc33b0bcccd6983fa273b3f05bf3903bf8afd68be9242c89c0436b19525760",
+      "expected": "e0dc33b0bcccd6983fa273b3f05bf3903bf8afd68be9242c89c0436b19525760"
+    },
+    {
+      "check": "hash RED-017",
+      "status": "passed",
+      "actual": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "expected": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8"
+    },
+    {
+      "check": "hash POST-019",
+      "status": "passed",
+      "actual": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "expected": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666"
+    },
+    {
+      "check": "hash POST-022",
+      "status": "passed",
+      "actual": "327107366d9c741c87cd561475befcf5921e36b3202058dac83f9c42241c09e0",
+      "expected": "327107366d9c741c87cd561475befcf5921e36b3202058dac83f9c42241c09e0"
+    },
+    {
+      "check": "hash POST-009",
+      "status": "passed",
+      "actual": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "expected": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11"
+    },
+    {
+      "check": "hash POST-011",
+      "status": "passed",
+      "actual": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "expected": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11"
+    },
+    {
+      "check": "hash MOD-001",
+      "status": "passed",
+      "actual": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "expected": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
+    },
+    {
+      "check": "hash MOD-006",
+      "status": "passed",
+      "actual": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "expected": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299"
+    },
+    {
+      "check": "baseline record count",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "baseline/Research Domains 3a/3b non-empty sets, Unclear exclusive",
+      "status": "passed"
+    },
+    {
+      "check": "baseline/Analytical Purposes 3a/3b non-empty sets, Unclear exclusive",
+      "status": "passed"
+    },
+    {
+      "check": "baseline 3c model purpose set <= 2",
+      "status": "passed"
+    },
+    {
+      "check": "hard_case record count",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75
+    },
+    {
+      "check": "hard_case/Research Domains 3a/3b non-empty sets, Unclear exclusive",
+      "status": "passed"
+    },
+    {
+      "check": "hard_case/Analytical Purposes 3a/3b non-empty sets, Unclear exclusive",
+      "status": "passed"
+    },
+    {
+      "check": "hard_case 3c model purpose set <= 2",
+      "status": "passed"
+    },
+    {
+      "check": "baseline/Research Domains S1+S2+S3+S4 = 150",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "baseline/Research Domains S3 = Unclear-only majority count",
+      "status": "passed",
+      "actual": 13,
+      "expected": 13
+    },
+    {
+      "check": "baseline/Research Domains S4 = no-majority count",
+      "status": "passed",
+      "actual": 5,
+      "expected": 5
+    },
+    {
+      "check": "baseline/Research Domains majority set size size_0",
+      "status": "passed",
+      "actual": 5,
+      "expected": 5
+    },
+    {
+      "check": "baseline/Research Domains majority set size size_1",
+      "status": "passed",
+      "actual": 120,
+      "expected": 120
+    },
+    {
+      "check": "baseline/Research Domains majority set size size_2",
+      "status": "passed",
+      "actual": 22,
+      "expected": 22
+    },
+    {
+      "check": "baseline/Research Domains majority set size size_3",
+      "status": "passed",
+      "actual": 3,
+      "expected": 3
+    },
+    {
+      "check": "baseline/Research Domains majority set size size_4_plus",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "baseline/Analytical Purposes S1+S2+S3+S4 = 150",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "baseline/Analytical Purposes S3 = Unclear-only majority count",
+      "status": "passed",
+      "actual": 26,
+      "expected": 26
+    },
+    {
+      "check": "baseline/Analytical Purposes S4 = no-majority count",
+      "status": "passed",
+      "actual": 24,
+      "expected": 24
+    },
+    {
+      "check": "baseline/Analytical Purposes majority purpose sets > 2",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "baseline/Analytical Purposes majority set size size_0",
+      "status": "passed",
+      "actual": 24,
+      "expected": 24
+    },
+    {
+      "check": "baseline/Analytical Purposes majority set size size_1",
+      "status": "passed",
+      "actual": 123,
+      "expected": 123
+    },
+    {
+      "check": "baseline/Analytical Purposes majority set size size_2",
+      "status": "passed",
+      "actual": 3,
+      "expected": 3
+    },
+    {
+      "check": "baseline/Analytical Purposes majority set size size_3",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "baseline/Analytical Purposes majority set size size_4_plus",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "hard_case/Research Domains S1+S2+S3+S4 = 75",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75
+    },
+    {
+      "check": "hard_case/Research Domains S3 = Unclear-only majority count",
+      "status": "passed",
+      "actual": 3,
+      "expected": 3
+    },
+    {
+      "check": "hard_case/Research Domains S4 = no-majority count",
+      "status": "passed",
+      "actual": 6,
+      "expected": 6
+    },
+    {
+      "check": "hard_case/Research Domains majority set size size_0",
+      "status": "passed",
+      "actual": 6,
+      "expected": 6
+    },
+    {
+      "check": "hard_case/Research Domains majority set size size_1",
+      "status": "passed",
+      "actual": 48,
+      "expected": 48
+    },
+    {
+      "check": "hard_case/Research Domains majority set size size_2",
+      "status": "passed",
+      "actual": 18,
+      "expected": 18
+    },
+    {
+      "check": "hard_case/Research Domains majority set size size_3",
+      "status": "passed",
+      "actual": 3,
+      "expected": 3
+    },
+    {
+      "check": "hard_case/Research Domains majority set size size_4_plus",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "hard_case/Analytical Purposes S1+S2+S3+S4 = 75",
+      "status": "passed",
+      "actual": 75,
+      "expected": 75
+    },
+    {
+      "check": "hard_case/Analytical Purposes S3 = Unclear-only majority count",
+      "status": "passed",
+      "actual": 20,
+      "expected": 20
+    },
+    {
+      "check": "hard_case/Analytical Purposes S4 = no-majority count",
+      "status": "passed",
+      "actual": 9,
+      "expected": 9
+    },
+    {
+      "check": "hard_case/Analytical Purposes majority purpose sets > 2",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "hard_case/Analytical Purposes majority set size size_0",
+      "status": "passed",
+      "actual": 9,
+      "expected": 9
+    },
+    {
+      "check": "hard_case/Analytical Purposes majority set size size_1",
+      "status": "passed",
+      "actual": 62,
+      "expected": 62
+    },
+    {
+      "check": "hard_case/Analytical Purposes majority set size size_2",
+      "status": "passed",
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "check": "hard_case/Analytical Purposes majority set size size_3",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "hard_case/Analytical Purposes majority set size size_4_plus",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    }
+  ],
+  "software": {
+    "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.2.5",
+      "pandas": "2.2.3"
+    }
+  }
+}

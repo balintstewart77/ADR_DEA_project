@@ -1,0 +1,8 @@
+quantity,state_n,estimate,lower,upper,valid_replicates,invalid_replicates,requested_replicates,interval_status
+model_unclear_proportion,13,1; 0.076923,0.000000,0.230769,2000,0,2000,R
+model_substantive_proportion,13,12; 0.923077,0.769231,1.000000,2000,0,2000,R
+mean_substantive_labels,12,1.500000,1.221667,1.769231,2000,0,2000,R
+support_0_of_3,13,9; 0.473684,0.263158,0.666667,2000,0,2000,R
+support_1_of_3,13,9; 0.473684,0.266667,0.666667,2000,0,2000,R
+support_2_of_3,13,0; 0.000000,0.000000,0.000000,2000,0,2000,R
+support_3_of_3,13,1; 0.052632,0.000000,0.176471,2000,0,2000,R
