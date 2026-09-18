@@ -1,0 +1,109 @@
+coder,shared_rating,direction,count,population,question
+C01,Sufficient,same,45,baseline,Register-entry information
+C01,Sufficient,higher,0,baseline,Register-entry information
+C01,Sufficient,lower,5,baseline,Register-entry information
+C01,Partially sufficient,same,16,baseline,Register-entry information
+C01,Partially sufficient,higher,19,baseline,Register-entry information
+C01,Partially sufficient,lower,3,baseline,Register-entry information
+C01,Insufficient,same,0,baseline,Register-entry information
+C01,Insufficient,higher,1,baseline,Register-entry information
+C01,Insufficient,lower,0,baseline,Register-entry information
+C02,Sufficient,same,45,baseline,Register-entry information
+C02,Sufficient,higher,0,baseline,Register-entry information
+C02,Sufficient,lower,7,baseline,Register-entry information
+C02,Partially sufficient,same,16,baseline,Register-entry information
+C02,Partially sufficient,higher,11,baseline,Register-entry information
+C02,Partially sufficient,lower,4,baseline,Register-entry information
+C02,Insufficient,same,0,baseline,Register-entry information
+C02,Insufficient,higher,1,baseline,Register-entry information
+C02,Insufficient,lower,0,baseline,Register-entry information
+C03,Sufficient,same,45,baseline,Register-entry information
+C03,Sufficient,higher,0,baseline,Register-entry information
+C03,Sufficient,lower,35,baseline,Register-entry information
+C03,Partially sufficient,same,16,baseline,Register-entry information
+C03,Partially sufficient,higher,2,baseline,Register-entry information
+C03,Partially sufficient,lower,0,baseline,Register-entry information
+C03,Insufficient,same,0,baseline,Register-entry information
+C03,Insufficient,higher,0,baseline,Register-entry information
+C03,Insufficient,lower,0,baseline,Register-entry information
+C01,Fit,same,67,baseline,Taxonomy fit
+C01,Fit,higher,0,baseline,Taxonomy fit
+C01,Fit,lower,10,baseline,Taxonomy fit
+C01,Partial Fit,same,0,baseline,Taxonomy fit
+C01,Partial Fit,higher,0,baseline,Taxonomy fit
+C01,Partial Fit,lower,1,baseline,Taxonomy fit
+C01,No Fit,same,0,baseline,Taxonomy fit
+C01,No Fit,higher,0,baseline,Taxonomy fit
+C01,No Fit,lower,0,baseline,Taxonomy fit
+C02,Fit,same,67,baseline,Taxonomy fit
+C02,Fit,higher,0,baseline,Taxonomy fit
+C02,Fit,lower,1,baseline,Taxonomy fit
+C02,Partial Fit,same,0,baseline,Taxonomy fit
+C02,Partial Fit,higher,3,baseline,Taxonomy fit
+C02,Partial Fit,lower,1,baseline,Taxonomy fit
+C02,No Fit,same,0,baseline,Taxonomy fit
+C02,No Fit,higher,0,baseline,Taxonomy fit
+C02,No Fit,lower,0,baseline,Taxonomy fit
+C03,Fit,same,67,baseline,Taxonomy fit
+C03,Fit,higher,0,baseline,Taxonomy fit
+C03,Fit,lower,34,baseline,Taxonomy fit
+C03,Partial Fit,same,0,baseline,Taxonomy fit
+C03,Partial Fit,higher,4,baseline,Taxonomy fit
+C03,Partial Fit,lower,0,baseline,Taxonomy fit
+C03,No Fit,same,0,baseline,Taxonomy fit
+C03,No Fit,higher,0,baseline,Taxonomy fit
+C03,No Fit,lower,0,baseline,Taxonomy fit
+C01,Sufficient,same,20,hard_case,Register-entry information
+C01,Sufficient,higher,0,hard_case,Register-entry information
+C01,Sufficient,lower,0,hard_case,Register-entry information
+C01,Partially sufficient,same,8,hard_case,Register-entry information
+C01,Partially sufficient,higher,9,hard_case,Register-entry information
+C01,Partially sufficient,lower,1,hard_case,Register-entry information
+C01,Insufficient,same,0,hard_case,Register-entry information
+C01,Insufficient,higher,0,hard_case,Register-entry information
+C01,Insufficient,lower,0,hard_case,Register-entry information
+C02,Sufficient,same,20,hard_case,Register-entry information
+C02,Sufficient,higher,0,hard_case,Register-entry information
+C02,Sufficient,lower,3,hard_case,Register-entry information
+C02,Partially sufficient,same,8,hard_case,Register-entry information
+C02,Partially sufficient,higher,6,hard_case,Register-entry information
+C02,Partially sufficient,lower,4,hard_case,Register-entry information
+C02,Insufficient,same,0,hard_case,Register-entry information
+C02,Insufficient,higher,0,hard_case,Register-entry information
+C02,Insufficient,lower,0,hard_case,Register-entry information
+C03,Sufficient,same,20,hard_case,Register-entry information
+C03,Sufficient,higher,0,hard_case,Register-entry information
+C03,Sufficient,lower,19,hard_case,Register-entry information
+C03,Partially sufficient,same,8,hard_case,Register-entry information
+C03,Partially sufficient,higher,1,hard_case,Register-entry information
+C03,Partially sufficient,lower,1,hard_case,Register-entry information
+C03,Insufficient,same,0,hard_case,Register-entry information
+C03,Insufficient,higher,0,hard_case,Register-entry information
+C03,Insufficient,lower,0,hard_case,Register-entry information
+C01,Fit,same,27,hard_case,Taxonomy fit
+C01,Fit,higher,0,hard_case,Taxonomy fit
+C01,Fit,lower,5,hard_case,Taxonomy fit
+C01,Partial Fit,same,2,hard_case,Taxonomy fit
+C01,Partial Fit,higher,1,hard_case,Taxonomy fit
+C01,Partial Fit,lower,1,hard_case,Taxonomy fit
+C01,No Fit,same,0,hard_case,Taxonomy fit
+C01,No Fit,higher,0,hard_case,Taxonomy fit
+C01,No Fit,lower,0,hard_case,Taxonomy fit
+C02,Fit,same,27,hard_case,Taxonomy fit
+C02,Fit,higher,0,hard_case,Taxonomy fit
+C02,Fit,lower,0,hard_case,Taxonomy fit
+C02,Partial Fit,same,2,hard_case,Taxonomy fit
+C02,Partial Fit,higher,4,hard_case,Taxonomy fit
+C02,Partial Fit,lower,0,hard_case,Taxonomy fit
+C02,No Fit,same,0,hard_case,Taxonomy fit
+C02,No Fit,higher,0,hard_case,Taxonomy fit
+C02,No Fit,lower,0,hard_case,Taxonomy fit
+C03,Fit,same,27,hard_case,Taxonomy fit
+C03,Fit,higher,0,hard_case,Taxonomy fit
+C03,Fit,lower,16,hard_case,Taxonomy fit
+C03,Partial Fit,same,2,hard_case,Taxonomy fit
+C03,Partial Fit,higher,1,hard_case,Taxonomy fit
+C03,Partial Fit,lower,0,hard_case,Taxonomy fit
+C03,No Fit,same,0,hard_case,Taxonomy fit
+C03,No Fit,higher,0,hard_case,Taxonomy fit
+C03,No Fit,lower,0,hard_case,Taxonomy fit

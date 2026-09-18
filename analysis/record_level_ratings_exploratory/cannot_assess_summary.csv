@@ -1,0 +1,7 @@
+coder_row,coder_col,only_row_coder,only_col_coder,both_cannot_assess,neither,population,question
+C01,C02,19,4,5,122,baseline,Taxonomy fit
+C01,C03,23,0,1,126,baseline,Taxonomy fit
+C02,C03,9,1,0,140,baseline,Taxonomy fit
+C01,C02,13,3,1,58,hard_case,Taxonomy fit
+C01,C03,14,1,0,60,hard_case,Taxonomy fit
+C02,C03,4,1,0,70,hard_case,Taxonomy fit

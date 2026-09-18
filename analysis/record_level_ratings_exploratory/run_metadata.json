@@ -1,0 +1,1162 @@
+{
+  "run_timestamp": "2026-09-18T07:22:26.809003+00:00",
+  "analysis": "record_level_ratings_exploratory",
+  "addendum_commit": "ee31f65",
+  "data_paths": {
+    "raw_export": {
+      "artifact_id": "POST-028",
+      "path": "preregistration/post_registration/redcap_exports/scratch_coder_export_frozen_2026-08-24.csv",
+      "sha256": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+    },
+    "protocol": {
+      "artifact_id": "PRO-018",
+      "path": "preregistration/package/00_protocol/Validation_Protocol_PreReg_v1.1.docx",
+      "sha256": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77"
+    },
+    "instrument": {
+      "artifact_id": "RED-036",
+      "path": "preregistration/package/06_redcap/redcap_data_dictionary_frozen_0.7_2026-07-22.csv",
+      "sha256": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc"
+    },
+    "validator": {
+      "artifact_id": "RED-013",
+      "path": "scripts/validate_redcap_candidate.py",
+      "sha256": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190"
+    },
+    "field_specification": {
+      "artifact_id": "RED-005",
+      "path": "preregistration/package/06_redcap/redcap_field_response_specification.csv",
+      "sha256": "bb7f55be07352f87e4704bdbfdccc37436c23d5da2db68ec2ae52b5564376e52"
+    },
+    "branching_specification": {
+      "artifact_id": "RED-006",
+      "path": "preregistration/package/06_redcap/redcap_branching_validation_specification.yaml",
+      "sha256": "2dbc2005f832dfa6887fda9994d917598b4f12d63ed060bba8a7ea0e27f11f9c"
+    },
+    "export_specification": {
+      "artifact_id": "RED-007",
+      "path": "preregistration/package/06_redcap/redcap_expected_export_schema.csv",
+      "sha256": "414e25368757568f9c5db9cadf830e94089123333f7e0264d835863c236e0aca"
+    },
+    "codebook": {
+      "artifact_id": "RED-003",
+      "path": "preregistration/package/06_redcap/redcap_instrument_codebook.md",
+      "sha256": "e0dc33b0bcccd6983fa273b3f05bf3903bf8afd68be9242c89c0436b19525760"
+    },
+    "label_mapping": {
+      "artifact_id": "RED-017",
+      "path": "preregistration/package/06_redcap/redcap_label_variable_mapping.csv",
+      "sha256": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8"
+    },
+    "formal_assignment_crosswalk": {
+      "artifact_id": "POST-019",
+      "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_crosswalk.csv",
+      "sha256": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666"
+    },
+    "formal_assignment_metadata": {
+      "artifact_id": "POST-022",
+      "path": "preregistration_restricted/assignments/formal_validation_20260724/formal_assignment_metadata.json",
+      "sha256": "327107366d9c741c87cd561475befcf5921e36b3202058dac83f9c42241c09e0"
+    },
+    "baseline_sample": {
+      "artifact_id": "POST-009",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/baseline_active.csv",
+      "sha256": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11"
+    },
+    "hard_case_sample": {
+      "artifact_id": "POST-011",
+      "path": "preregistration_restricted/sampling/official_draw_20260724/hard_active.csv",
+      "sha256": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11"
+    },
+    "taxonomy_rc2": {
+      "artifact_id": "MOD-001",
+      "path": "taxonomy_data_dictionary.yaml",
+      "sha256": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
+    },
+    "production_model": {
+      "artifact_id": "MOD-006",
+      "path": "analysis/outputs_classified_20260702_fable5/layer_classifications.csv",
+      "sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299"
+    }
+  },
+  "populations": {
+    "baseline": 150,
+    "hard_case": 75
+  },
+  "sort_rule": "block (unanimous, two_agree, all_different); within block, majority category in scale order (Cannot assess and No majority last); within that, exact pattern; within that, record ID",
+  "colors": {
+    "register_entry_information": {
+      "Sufficient": "#246B45",
+      "Partially sufficient": "#78AF82",
+      "Insufficient": "#D6E8D8",
+      "No majority": "#888888"
+    },
+    "taxonomy_fit": {
+      "Fit": "#5A4A86",
+      "Partial Fit": "#9B8CC0",
+      "No Fit": "#DED8EC",
+      "Cannot assess from register entry": "#5F5F5F",
+      "No majority": "#AEAEAE"
+    }
+  },
+  "software": {
+    "python": "3.13.2",
+    "matplotlib": "3.10.3",
+    "pandas": "2.2.3",
+    "numpy": "2.2.5"
+  },
+  "reconciliation_checks": [
+    {
+      "check": "sufficiency_per_coder_baseline_C01_Sufficient",
+      "computed": 107,
+      "canonical": 107,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C01_Partially sufficient",
+      "computed": 39,
+      "canonical": 39,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C01_Insufficient",
+      "computed": 4,
+      "canonical": 4,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C01_Fit",
+      "computed": 103,
+      "canonical": 103,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C01_Partial Fit",
+      "computed": 20,
+      "canonical": 20,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C01_No Fit",
+      "computed": 3,
+      "canonical": 3,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C01_Cannot assess from register entry",
+      "computed": 24,
+      "canonical": 24,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C02_Sufficient",
+      "computed": 96,
+      "canonical": 96,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C02_Partially sufficient",
+      "computed": 48,
+      "canonical": 48,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C02_Insufficient",
+      "computed": 6,
+      "canonical": 6,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C02_Fit",
+      "computed": 133,
+      "canonical": 133,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C02_Partial Fit",
+      "computed": 7,
+      "canonical": 7,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C02_No Fit",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C02_Cannot assess from register entry",
+      "computed": 9,
+      "canonical": 9,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C03_Sufficient",
+      "computed": 59,
+      "canonical": 59,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C03_Partially sufficient",
+      "computed": 89,
+      "canonical": 89,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_baseline_C03_Insufficient",
+      "computed": 2,
+      "canonical": 2,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C03_Fit",
+      "computed": 92,
+      "canonical": 92,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C03_Partial Fit",
+      "computed": 57,
+      "canonical": 57,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C03_No Fit",
+      "computed": 0,
+      "canonical": 0,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_baseline_C03_Cannot assess from register entry",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_baseline_Sufficient",
+      "computed": 92,
+      "canonical": 92,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_baseline_Partially sufficient",
+      "computed": 55,
+      "canonical": 55,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_baseline_Insufficient",
+      "computed": 2,
+      "canonical": 2,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_baseline_No majority / split judgement",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_baseline_Fit",
+      "computed": 119,
+      "canonical": 119,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_baseline_Partial Fit",
+      "computed": 12,
+      "canonical": 12,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_baseline_No Fit",
+      "computed": 0,
+      "canonical": 0,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_baseline_Cannot assess from register entry",
+      "computed": 6,
+      "canonical": 6,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_baseline_No majority / split judgement",
+      "computed": 13,
+      "canonical": 13,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C01_Sufficient",
+      "computed": 54,
+      "canonical": 54,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C01_Partially sufficient",
+      "computed": 20,
+      "canonical": 20,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C01_Insufficient",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C01_Fit",
+      "computed": 47,
+      "canonical": 47,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C01_Partial Fit",
+      "computed": 13,
+      "canonical": 13,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C01_No Fit",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C01_Cannot assess from register entry",
+      "computed": 14,
+      "canonical": 14,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C02_Sufficient",
+      "computed": 45,
+      "canonical": 45,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C02_Partially sufficient",
+      "computed": 24,
+      "canonical": 24,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C02_Insufficient",
+      "computed": 6,
+      "canonical": 6,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C02_Fit",
+      "computed": 65,
+      "canonical": 65,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C02_Partial Fit",
+      "computed": 6,
+      "canonical": 6,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C02_No Fit",
+      "computed": 0,
+      "canonical": 0,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C02_Cannot assess from register entry",
+      "computed": 4,
+      "canonical": 4,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C03_Sufficient",
+      "computed": 24,
+      "canonical": 24,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C03_Partially sufficient",
+      "computed": 49,
+      "canonical": 49,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_per_coder_hard_case_C03_Insufficient",
+      "computed": 2,
+      "canonical": 2,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C03_Fit",
+      "computed": 38,
+      "canonical": 38,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C03_Partial Fit",
+      "computed": 35,
+      "canonical": 35,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C03_No Fit",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_per_coder_hard_case_C03_Cannot assess from register entry",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_hard_case_Sufficient",
+      "computed": 42,
+      "canonical": 42,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_hard_case_Partially sufficient",
+      "computed": 30,
+      "canonical": 30,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_hard_case_Insufficient",
+      "computed": 0,
+      "canonical": 0,
+      "status": "passed"
+    },
+    {
+      "check": "sufficiency_majority_hard_case_No majority / split judgement",
+      "computed": 3,
+      "canonical": 3,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_hard_case_Fit",
+      "computed": 54,
+      "canonical": 54,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_hard_case_Partial Fit",
+      "computed": 11,
+      "canonical": 11,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_hard_case_No Fit",
+      "computed": 0,
+      "canonical": 0,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_hard_case_Cannot assess from register entry",
+      "computed": 1,
+      "canonical": 1,
+      "status": "passed"
+    },
+    {
+      "check": "taxonomy_majority_hard_case_No majority / split judgement",
+      "computed": 9,
+      "canonical": 9,
+      "status": "passed"
+    },
+    {
+      "check": "pattern_count_sum_baseline_register_entry_information",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "block_count_sum_baseline_register_entry_information",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C01_C02_Sufficient",
+      "row_sum": 107,
+      "expected": 107,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C01_C02_Sufficient",
+      "col_sum": 96,
+      "expected": 96,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C01_C02_Partially sufficient",
+      "row_sum": 39,
+      "expected": 39,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C01_C02_Partially sufficient",
+      "col_sum": 48,
+      "expected": 48,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C01_C02_Insufficient",
+      "row_sum": 4,
+      "expected": 4,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C01_C02_Insufficient",
+      "col_sum": 6,
+      "expected": 6,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C01_C03_Sufficient",
+      "row_sum": 107,
+      "expected": 107,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C01_C03_Sufficient",
+      "col_sum": 59,
+      "expected": 59,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C01_C03_Partially sufficient",
+      "row_sum": 39,
+      "expected": 39,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C01_C03_Partially sufficient",
+      "col_sum": 89,
+      "expected": 89,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C01_C03_Insufficient",
+      "row_sum": 4,
+      "expected": 4,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C01_C03_Insufficient",
+      "col_sum": 2,
+      "expected": 2,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C02_C03_Sufficient",
+      "row_sum": 96,
+      "expected": 96,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C02_C03_Sufficient",
+      "col_sum": 59,
+      "expected": 59,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C02_C03_Partially sufficient",
+      "row_sum": 48,
+      "expected": 48,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C02_C03_Partially sufficient",
+      "col_sum": 89,
+      "expected": 89,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_register_entry_information_C02_C03_Insufficient",
+      "row_sum": 6,
+      "expected": 6,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_register_entry_information_C02_C03_Insufficient",
+      "col_sum": 2,
+      "expected": 2,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_baseline_record_count",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_baseline_unique_records",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_baseline_sort_order",
+      "status": "passed"
+    },
+    {
+      "check": "pattern_count_sum_baseline_taxonomy_fit",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "block_count_sum_baseline_taxonomy_fit",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C02_Fit",
+      "row_sum": 103,
+      "expected": 103,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C02_Fit",
+      "col_sum": 133,
+      "expected": 133,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C02_Partial Fit",
+      "row_sum": 20,
+      "expected": 20,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C02_Partial Fit",
+      "col_sum": 7,
+      "expected": 7,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C02_No Fit",
+      "row_sum": 3,
+      "expected": 3,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C02_No Fit",
+      "col_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C02_Cannot assess from register entry",
+      "row_sum": 24,
+      "expected": 24,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C02_Cannot assess from register entry",
+      "col_sum": 9,
+      "expected": 9,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C03_Fit",
+      "row_sum": 103,
+      "expected": 103,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C03_Fit",
+      "col_sum": 92,
+      "expected": 92,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C03_Partial Fit",
+      "row_sum": 20,
+      "expected": 20,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C03_Partial Fit",
+      "col_sum": 57,
+      "expected": 57,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C03_No Fit",
+      "row_sum": 3,
+      "expected": 3,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C03_No Fit",
+      "col_sum": 0,
+      "expected": 0,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C01_C03_Cannot assess from register entry",
+      "row_sum": 24,
+      "expected": 24,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C01_C03_Cannot assess from register entry",
+      "col_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C02_C03_Fit",
+      "row_sum": 133,
+      "expected": 133,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C02_C03_Fit",
+      "col_sum": 92,
+      "expected": 92,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C02_C03_Partial Fit",
+      "row_sum": 7,
+      "expected": 7,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C02_C03_Partial Fit",
+      "col_sum": 57,
+      "expected": 57,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C02_C03_No Fit",
+      "row_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C02_C03_No Fit",
+      "col_sum": 0,
+      "expected": 0,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_baseline_taxonomy_fit_C02_C03_Cannot assess from register entry",
+      "row_sum": 9,
+      "expected": 9,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_baseline_taxonomy_fit_C02_C03_Cannot assess from register entry",
+      "col_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_baseline_record_count",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_baseline_unique_records",
+      "expected": 150,
+      "observed": 150,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_baseline_sort_order",
+      "status": "passed"
+    },
+    {
+      "check": "pattern_count_sum_hard_case_register_entry_information",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "block_count_sum_hard_case_register_entry_information",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C01_C02_Sufficient",
+      "row_sum": 54,
+      "expected": 54,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C01_C02_Sufficient",
+      "col_sum": 45,
+      "expected": 45,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C01_C02_Partially sufficient",
+      "row_sum": 20,
+      "expected": 20,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C01_C02_Partially sufficient",
+      "col_sum": 24,
+      "expected": 24,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C01_C02_Insufficient",
+      "row_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C01_C02_Insufficient",
+      "col_sum": 6,
+      "expected": 6,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C01_C03_Sufficient",
+      "row_sum": 54,
+      "expected": 54,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C01_C03_Sufficient",
+      "col_sum": 24,
+      "expected": 24,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C01_C03_Partially sufficient",
+      "row_sum": 20,
+      "expected": 20,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C01_C03_Partially sufficient",
+      "col_sum": 49,
+      "expected": 49,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C01_C03_Insufficient",
+      "row_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C01_C03_Insufficient",
+      "col_sum": 2,
+      "expected": 2,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C02_C03_Sufficient",
+      "row_sum": 45,
+      "expected": 45,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C02_C03_Sufficient",
+      "col_sum": 24,
+      "expected": 24,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C02_C03_Partially sufficient",
+      "row_sum": 24,
+      "expected": 24,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C02_C03_Partially sufficient",
+      "col_sum": 49,
+      "expected": 49,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_register_entry_information_C02_C03_Insufficient",
+      "row_sum": 6,
+      "expected": 6,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_register_entry_information_C02_C03_Insufficient",
+      "col_sum": 2,
+      "expected": 2,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_hard_case_record_count",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_hard_case_unique_records",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_hard_case_sort_order",
+      "status": "passed"
+    },
+    {
+      "check": "pattern_count_sum_hard_case_taxonomy_fit",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "block_count_sum_hard_case_taxonomy_fit",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C02_Fit",
+      "row_sum": 47,
+      "expected": 47,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C02_Fit",
+      "col_sum": 65,
+      "expected": 65,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C02_Partial Fit",
+      "row_sum": 13,
+      "expected": 13,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C02_Partial Fit",
+      "col_sum": 6,
+      "expected": 6,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C02_No Fit",
+      "row_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C02_No Fit",
+      "col_sum": 0,
+      "expected": 0,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C02_Cannot assess from register entry",
+      "row_sum": 14,
+      "expected": 14,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C02_Cannot assess from register entry",
+      "col_sum": 4,
+      "expected": 4,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C03_Fit",
+      "row_sum": 47,
+      "expected": 47,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C03_Fit",
+      "col_sum": 38,
+      "expected": 38,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C03_Partial Fit",
+      "row_sum": 13,
+      "expected": 13,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C03_Partial Fit",
+      "col_sum": 35,
+      "expected": 35,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C03_No Fit",
+      "row_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C03_No Fit",
+      "col_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C01_C03_Cannot assess from register entry",
+      "row_sum": 14,
+      "expected": 14,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C01_C03_Cannot assess from register entry",
+      "col_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C02_C03_Fit",
+      "row_sum": 65,
+      "expected": 65,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C02_C03_Fit",
+      "col_sum": 38,
+      "expected": 38,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C02_C03_Partial Fit",
+      "row_sum": 6,
+      "expected": 6,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C02_C03_Partial Fit",
+      "col_sum": 35,
+      "expected": 35,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C02_C03_No Fit",
+      "row_sum": 0,
+      "expected": 0,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C02_C03_No Fit",
+      "col_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_row_margin_hard_case_taxonomy_fit_C02_C03_Cannot assess from register entry",
+      "row_sum": 4,
+      "expected": 4,
+      "status": "passed"
+    },
+    {
+      "check": "crosstab_col_margin_hard_case_taxonomy_fit_C02_C03_Cannot assess from register entry",
+      "col_sum": 1,
+      "expected": 1,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_hard_case_record_count",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_hard_case_unique_records",
+      "expected": 75,
+      "observed": 75,
+      "status": "passed"
+    },
+    {
+      "check": "heatmap_hard_case_sort_order",
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_register_entry_information_baseline.png",
+      "ids_found": 0,
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_register_entry_information_baseline.svg",
+      "ids_found": 0,
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_register_entry_information_hard_case.png",
+      "ids_found": 0,
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_register_entry_information_hard_case.svg",
+      "ids_found": 0,
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_taxonomy_fit_baseline.png",
+      "ids_found": 0,
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_taxonomy_fit_baseline.svg",
+      "ids_found": 0,
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_taxonomy_fit_hard_case.png",
+      "ids_found": 0,
+      "status": "passed"
+    },
+    {
+      "check": "no_record_ids_heatmap_taxonomy_fit_hard_case.svg",
+      "ids_found": 0,
+      "status": "passed"
+    }
+  ],
+  "restricted_outputs": {
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_aligned_baseline_internal.png": "0b65b790075bd468dd755a822a71789f156022f185cdecf8c6959069384ffe58",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_aligned_baseline_internal.svg": "70c0a3adb40c12c0436392606ea07c7bc5f989515b42d7ef23e045c82926cbbe",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_aligned_hard_case_internal.png": "c75f0ccd8550241e437e129d8007fa3ea61c06213ac37f53d111c3f9993671a0",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_aligned_hard_case_internal.svg": "6fc4ad170ed2d2811fc3e94e044e07dd5e701c74ee7d532a28652d5785fc094a",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_register_entry_information_baseline_internal.png": "49a1a2fc2ba68037624f8ba799d30fdd777b37a6212ba453905bb035cf2b5dc3",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_register_entry_information_baseline_internal.svg": "60334a11b2e4d27073d02304f6f11a0b74673c06dff7490fd3796e82d655429d",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_register_entry_information_hard_case_internal.png": "63ffbabf39dec9d93b07fea1ec221d14563c2ad2ba0ef0e9707d17e085e43ce6",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_register_entry_information_hard_case_internal.svg": "8ca259f04f2cee3af60b6f45d73620ece52e5dfebb6b8f715b2593e3d4f393d5",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_taxonomy_fit_baseline_internal.png": "87b727ea6fcaa3c46f935929d941645473fe332e4bf1c7918f29cd09028c685a",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_taxonomy_fit_baseline_internal.svg": "903e1b05c179df9e66dd97bfd88939faa3faf42b2b6a706f911985f7877ad676",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_taxonomy_fit_hard_case_internal.png": "9638f8241dcc4619b09f4921868cda4e317314bc4f56769c0e49ba6f0de2494c",
+    "preregistration_restricted\\record_level_ratings_exploratory\\heatmap_taxonomy_fit_hard_case_internal.svg": "b8a1af8171a5c8b92df07f80747840cce092cee6adaf0f3f285e3dadcc98b4b1",
+    "preregistration_restricted\\record_level_ratings_exploratory\\record_level_ratings.csv": "d96a845781fb34e59848241884045e4c0b1a0d7bdef0f8111485752eff8b450d"
+  },
+  "committed_outputs": {
+    "analysis\\record_level_ratings_exploratory\\ADDENDUM_record_level_ratings.md": "33476397f6614efec497651b82a288c830397eeadbb6bffb7faea51d1f664a68",
+    "analysis\\record_level_ratings_exploratory\\block_summary.csv": "81c54544c5841a2fed2e53973c8feb16263a7eb6af1921f1269da46e37f24810",
+    "analysis\\record_level_ratings_exploratory\\cannot_assess_summary.csv": "ac5cd9c384c6e73acecbaa6ac78a27e463b2de3d563427a721ec2d22a44efc00",
+    "analysis\\record_level_ratings_exploratory\\direction_summary.csv": "db529bc34463f23007000237cedce5cda8ec14648ad4b2b3265ae1bdeab31a50",
+    "analysis\\record_level_ratings_exploratory\\downgrade_detail.csv": "b5794f79d1be7c57750948a939be08ec278c26a2de5403250d11828db9462877",
+    "analysis\\record_level_ratings_exploratory\\downgrade_overview.csv": "bb74cd4892ba948ba6d1c7b71f42f0f41053091d2377c683fc830660de02300d",
+    "analysis\\record_level_ratings_exploratory\\pairwise_crosstab.csv": "6573d5dbf4feee4778f5fbde7870c0627a8ae3c33b3c543b77992f2633b77574",
+    "analysis\\record_level_ratings_exploratory\\pattern_counts.csv": "247cb86be08fb4137364945386bdebd454e1b9a9bd382db05166eb07d02a6411",
+    "analysis\\record_level_ratings_exploratory\\results_record_level_ratings.md": "ff48a33390e4c7b25ab46dc0861398a0f2510d3857a82b5cdb41c719d8bc4712",
+    "analysis\\record_level_ratings_exploratory\\run.py": "804542a5f39b647cc196150b08d658249400528ddbe8f91dbf52ac30f68448de",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_register_entry_information_baseline.png": "b0492ae60ef83f6ca02b4c98bbd7bbee8383a2da7aa8454a8ab966facc7125a2",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_register_entry_information_baseline.svg": "9121bc63b72f3b260c3714be73d4e2f4e83be977512bb18e470a9ec711887817",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_register_entry_information_hard_case.png": "c3d8b7e9b851dd887d8486ff2926cd4e6ab840e1dc726389e80b3ec03ad573f6",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_register_entry_information_hard_case.svg": "8e7b9d8b25e9f1f32547ab3da252ac4990bd421a234b6de23c632fc60985bf83",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_taxonomy_fit_baseline.png": "06ccb1108bcf2ea06e7f43af692867b19dd55bc65e754c5f519d690443e72bc0",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_taxonomy_fit_baseline.svg": "6541d5b6f510d71848d53d7658c1f5ebbac09494d9580f578d79f651ad8fb228",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_taxonomy_fit_hard_case.png": "42e205476c7ebb1ad1013b17fd756300fe977b34c1ac769a37f3614b716a1b9d",
+    "analysis\\record_level_ratings_exploratory\\figures\\heatmap_taxonomy_fit_hard_case.svg": "df5f649b1fc0c6224c00aff44029b8fe8aed4741a00be605ff791980d7e8c1a6",
+    "analysis\\record_level_ratings_exploratory\\__pycache__\\run.cpython-313.pyc": "078d874ac520eaa8e5c97164bf5eb4363cc5b360f3b7534969ae0b487f6cffd5"
+  }
+}

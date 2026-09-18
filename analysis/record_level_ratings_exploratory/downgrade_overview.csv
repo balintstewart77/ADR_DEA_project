@@ -1,0 +1,13 @@
+coder,records_others_agree_ordered,same,higher,lower,pct_same,pct_higher,pct_lower,population,question
+C01,89,61,20,8,68.5,22.5,9.0,baseline,Register-entry information
+C02,84,61,12,11,72.6,14.3,13.1,baseline,Register-entry information
+C03,98,61,2,35,62.2,2.0,35.7,baseline,Register-entry information
+C01,78,67,0,11,85.9,0.0,14.1,baseline,Taxonomy fit
+C02,72,67,3,2,93.1,4.2,2.8,baseline,Taxonomy fit
+C03,105,67,4,34,63.8,3.8,32.4,baseline,Taxonomy fit
+C01,38,28,9,1,73.7,23.7,2.6,hard_case,Register-entry information
+C02,41,28,6,7,68.3,14.6,17.1,hard_case,Register-entry information
+C03,49,28,1,20,57.1,2.0,40.8,hard_case,Register-entry information
+C01,36,29,1,6,80.6,2.8,16.7,hard_case,Taxonomy fit
+C02,33,29,4,0,87.9,12.1,0.0,hard_case,Taxonomy fit
+C03,46,29,1,16,63.0,2.2,34.8,hard_case,Taxonomy fit

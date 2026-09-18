@@ -1,0 +1,13 @@
+block,count,percentage,population,question
+unanimous,61,40.67,baseline,Register-entry information
+two_agree,88,58.67,baseline,Register-entry information
+all_different,1,0.67,baseline,Register-entry information
+unanimous,67,44.67,baseline,Taxonomy fit
+two_agree,70,46.67,baseline,Taxonomy fit
+all_different,13,8.67,baseline,Taxonomy fit
+unanimous,28,37.33,hard_case,Register-entry information
+two_agree,44,58.67,hard_case,Register-entry information
+all_different,3,4.0,hard_case,Register-entry information
+unanimous,29,38.67,hard_case,Taxonomy fit
+two_agree,37,49.33,hard_case,Taxonomy fit
+all_different,9,12.0,hard_case,Taxonomy fit

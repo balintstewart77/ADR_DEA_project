@@ -1,0 +1,61 @@
+C01,C02,C03,count,percentage,majority_category,block,population,question
+Sufficient,Sufficient,Sufficient,45,30.0,Sufficient,unanimous,baseline,Register-entry information
+Sufficient,Sufficient,Partially sufficient,35,23.33,Sufficient,two_agree,baseline,Register-entry information
+Sufficient,Partially sufficient,Partially sufficient,19,12.67,Partially sufficient,two_agree,baseline,Register-entry information
+Partially sufficient,Partially sufficient,Partially sufficient,16,10.67,Partially sufficient,unanimous,baseline,Register-entry information
+Partially sufficient,Sufficient,Partially sufficient,11,7.33,Partially sufficient,two_agree,baseline,Register-entry information
+Sufficient,Partially sufficient,Sufficient,7,4.67,Sufficient,two_agree,baseline,Register-entry information
+Partially sufficient,Sufficient,Sufficient,5,3.33,Sufficient,two_agree,baseline,Register-entry information
+Partially sufficient,Insufficient,Partially sufficient,4,2.67,Partially sufficient,two_agree,baseline,Register-entry information
+Insufficient,Partially sufficient,Partially sufficient,3,2.0,Partially sufficient,two_agree,baseline,Register-entry information
+Partially sufficient,Partially sufficient,Sufficient,2,1.33,Partially sufficient,two_agree,baseline,Register-entry information
+Insufficient,Partially sufficient,Insufficient,1,0.67,Insufficient,two_agree,baseline,Register-entry information
+Partially sufficient,Insufficient,Insufficient,1,0.67,Insufficient,two_agree,baseline,Register-entry information
+Sufficient,Insufficient,Partially sufficient,1,0.67,No majority / split judgement,all_different,baseline,Register-entry information
+Fit,Fit,Fit,67,44.67,Fit,unanimous,baseline,Taxonomy fit
+Fit,Fit,Partial Fit,34,22.67,Fit,two_agree,baseline,Taxonomy fit
+Cannot assess from register entry,Fit,Partial Fit,10,6.67,No majority / split judgement,all_different,baseline,Taxonomy fit
+Partial Fit,Fit,Fit,9,6.0,Fit,two_agree,baseline,Taxonomy fit
+Cannot assess from register entry,Fit,Fit,7,4.67,Fit,two_agree,baseline,Taxonomy fit
+Partial Fit,Partial Fit,Fit,4,2.67,Partial Fit,two_agree,baseline,Taxonomy fit
+Cannot assess from register entry,Cannot assess from register entry,Partial Fit,3,2.0,Cannot assess from register entry,two_agree,baseline,Taxonomy fit
+Partial Fit,Cannot assess from register entry,Partial Fit,3,2.0,Partial Fit,two_agree,baseline,Taxonomy fit
+Partial Fit,Fit,Partial Fit,3,2.0,Partial Fit,two_agree,baseline,Taxonomy fit
+Cannot assess from register entry,Cannot assess from register entry,Fit,2,1.33,Cannot assess from register entry,two_agree,baseline,Taxonomy fit
+Cannot assess from register entry,Fit,Cannot assess from register entry,1,0.67,Cannot assess from register entry,two_agree,baseline,Taxonomy fit
+Cannot assess from register entry,Partial Fit,Fit,1,0.67,No majority / split judgement,all_different,baseline,Taxonomy fit
+Fit,Cannot assess from register entry,Partial Fit,1,0.67,No majority / split judgement,all_different,baseline,Taxonomy fit
+Fit,Partial Fit,Fit,1,0.67,Fit,two_agree,baseline,Taxonomy fit
+No Fit,Fit,Fit,1,0.67,Fit,two_agree,baseline,Taxonomy fit
+No Fit,Fit,Partial Fit,1,0.67,No majority / split judgement,all_different,baseline,Taxonomy fit
+No Fit,Partial Fit,Partial Fit,1,0.67,Partial Fit,two_agree,baseline,Taxonomy fit
+Partial Fit,No Fit,Partial Fit,1,0.67,Partial Fit,two_agree,baseline,Taxonomy fit
+Sufficient,Sufficient,Sufficient,20,26.67,Sufficient,unanimous,hard_case,Register-entry information
+Sufficient,Sufficient,Partially sufficient,19,25.33,Sufficient,two_agree,hard_case,Register-entry information
+Sufficient,Partially sufficient,Partially sufficient,9,12.0,Partially sufficient,two_agree,hard_case,Register-entry information
+Partially sufficient,Partially sufficient,Partially sufficient,8,10.67,Partially sufficient,unanimous,hard_case,Register-entry information
+Partially sufficient,Sufficient,Partially sufficient,6,8.0,Partially sufficient,two_agree,hard_case,Register-entry information
+Partially sufficient,Insufficient,Partially sufficient,4,5.33,Partially sufficient,two_agree,hard_case,Register-entry information
+Sufficient,Partially sufficient,Sufficient,3,4.0,Sufficient,two_agree,hard_case,Register-entry information
+Sufficient,Insufficient,Partially sufficient,2,2.67,No majority / split judgement,all_different,hard_case,Register-entry information
+Insufficient,Partially sufficient,Partially sufficient,1,1.33,Partially sufficient,two_agree,hard_case,Register-entry information
+Partially sufficient,Partially sufficient,Insufficient,1,1.33,Partially sufficient,two_agree,hard_case,Register-entry information
+Partially sufficient,Partially sufficient,Sufficient,1,1.33,Partially sufficient,two_agree,hard_case,Register-entry information
+Sufficient,Partially sufficient,Insufficient,1,1.33,No majority / split judgement,all_different,hard_case,Register-entry information
+Fit,Fit,Fit,27,36.0,Fit,unanimous,hard_case,Taxonomy fit
+Fit,Fit,Partial Fit,16,21.33,Fit,two_agree,hard_case,Taxonomy fit
+Cannot assess from register entry,Fit,Partial Fit,7,9.33,No majority / split judgement,all_different,hard_case,Taxonomy fit
+Partial Fit,Fit,Fit,5,6.67,Fit,two_agree,hard_case,Taxonomy fit
+Cannot assess from register entry,Fit,Fit,4,5.33,Fit,two_agree,hard_case,Taxonomy fit
+Partial Fit,Fit,Partial Fit,4,5.33,Partial Fit,two_agree,hard_case,Taxonomy fit
+Partial Fit,Partial Fit,Partial Fit,2,2.67,Partial Fit,unanimous,hard_case,Taxonomy fit
+Cannot assess from register entry,Cannot assess from register entry,Partial Fit,1,1.33,Cannot assess from register entry,two_agree,hard_case,Taxonomy fit
+Cannot assess from register entry,Fit,No Fit,1,1.33,No majority / split judgement,all_different,hard_case,Taxonomy fit
+Cannot assess from register entry,Partial Fit,Partial Fit,1,1.33,Partial Fit,two_agree,hard_case,Taxonomy fit
+Fit,Cannot assess from register entry,Fit,1,1.33,Fit,two_agree,hard_case,Taxonomy fit
+Fit,Cannot assess from register entry,Partial Fit,1,1.33,No majority / split judgement,all_different,hard_case,Taxonomy fit
+Fit,Fit,Cannot assess from register entry,1,1.33,Fit,two_agree,hard_case,Taxonomy fit
+Fit,Partial Fit,Partial Fit,1,1.33,Partial Fit,two_agree,hard_case,Taxonomy fit
+No Fit,Partial Fit,Partial Fit,1,1.33,Partial Fit,two_agree,hard_case,Taxonomy fit
+Partial Fit,Cannot assess from register entry,Partial Fit,1,1.33,Partial Fit,two_agree,hard_case,Taxonomy fit
+Partial Fit,Partial Fit,Fit,1,1.33,Partial Fit,two_agree,hard_case,Taxonomy fit

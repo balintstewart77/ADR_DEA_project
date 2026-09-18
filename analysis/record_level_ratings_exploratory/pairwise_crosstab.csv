@@ -1,0 +1,151 @@
+coder_row,coder_col,row_category,col_category,count,population,question
+C01,C02,Sufficient,Sufficient,80,baseline,Register-entry information
+C01,C02,Sufficient,Partially sufficient,26,baseline,Register-entry information
+C01,C02,Sufficient,Insufficient,1,baseline,Register-entry information
+C01,C02,Partially sufficient,Sufficient,16,baseline,Register-entry information
+C01,C02,Partially sufficient,Partially sufficient,18,baseline,Register-entry information
+C01,C02,Partially sufficient,Insufficient,5,baseline,Register-entry information
+C01,C02,Insufficient,Sufficient,0,baseline,Register-entry information
+C01,C02,Insufficient,Partially sufficient,4,baseline,Register-entry information
+C01,C02,Insufficient,Insufficient,0,baseline,Register-entry information
+C01,C03,Sufficient,Sufficient,52,baseline,Register-entry information
+C01,C03,Sufficient,Partially sufficient,55,baseline,Register-entry information
+C01,C03,Sufficient,Insufficient,0,baseline,Register-entry information
+C01,C03,Partially sufficient,Sufficient,7,baseline,Register-entry information
+C01,C03,Partially sufficient,Partially sufficient,31,baseline,Register-entry information
+C01,C03,Partially sufficient,Insufficient,1,baseline,Register-entry information
+C01,C03,Insufficient,Sufficient,0,baseline,Register-entry information
+C01,C03,Insufficient,Partially sufficient,3,baseline,Register-entry information
+C01,C03,Insufficient,Insufficient,1,baseline,Register-entry information
+C02,C03,Sufficient,Sufficient,50,baseline,Register-entry information
+C02,C03,Sufficient,Partially sufficient,46,baseline,Register-entry information
+C02,C03,Sufficient,Insufficient,0,baseline,Register-entry information
+C02,C03,Partially sufficient,Sufficient,9,baseline,Register-entry information
+C02,C03,Partially sufficient,Partially sufficient,38,baseline,Register-entry information
+C02,C03,Partially sufficient,Insufficient,1,baseline,Register-entry information
+C02,C03,Insufficient,Sufficient,0,baseline,Register-entry information
+C02,C03,Insufficient,Partially sufficient,5,baseline,Register-entry information
+C02,C03,Insufficient,Insufficient,1,baseline,Register-entry information
+C01,C02,Fit,Fit,101,baseline,Taxonomy fit
+C01,C02,Fit,Partial Fit,1,baseline,Taxonomy fit
+C01,C02,Fit,No Fit,0,baseline,Taxonomy fit
+C01,C02,Fit,Cannot assess from register entry,1,baseline,Taxonomy fit
+C01,C02,Partial Fit,Fit,12,baseline,Taxonomy fit
+C01,C02,Partial Fit,Partial Fit,4,baseline,Taxonomy fit
+C01,C02,Partial Fit,No Fit,1,baseline,Taxonomy fit
+C01,C02,Partial Fit,Cannot assess from register entry,3,baseline,Taxonomy fit
+C01,C02,No Fit,Fit,2,baseline,Taxonomy fit
+C01,C02,No Fit,Partial Fit,1,baseline,Taxonomy fit
+C01,C02,No Fit,No Fit,0,baseline,Taxonomy fit
+C01,C02,No Fit,Cannot assess from register entry,0,baseline,Taxonomy fit
+C01,C02,Cannot assess from register entry,Fit,18,baseline,Taxonomy fit
+C01,C02,Cannot assess from register entry,Partial Fit,1,baseline,Taxonomy fit
+C01,C02,Cannot assess from register entry,No Fit,0,baseline,Taxonomy fit
+C01,C02,Cannot assess from register entry,Cannot assess from register entry,5,baseline,Taxonomy fit
+C01,C03,Fit,Fit,68,baseline,Taxonomy fit
+C01,C03,Fit,Partial Fit,35,baseline,Taxonomy fit
+C01,C03,Fit,No Fit,0,baseline,Taxonomy fit
+C01,C03,Fit,Cannot assess from register entry,0,baseline,Taxonomy fit
+C01,C03,Partial Fit,Fit,13,baseline,Taxonomy fit
+C01,C03,Partial Fit,Partial Fit,7,baseline,Taxonomy fit
+C01,C03,Partial Fit,No Fit,0,baseline,Taxonomy fit
+C01,C03,Partial Fit,Cannot assess from register entry,0,baseline,Taxonomy fit
+C01,C03,No Fit,Fit,1,baseline,Taxonomy fit
+C01,C03,No Fit,Partial Fit,2,baseline,Taxonomy fit
+C01,C03,No Fit,No Fit,0,baseline,Taxonomy fit
+C01,C03,No Fit,Cannot assess from register entry,0,baseline,Taxonomy fit
+C01,C03,Cannot assess from register entry,Fit,10,baseline,Taxonomy fit
+C01,C03,Cannot assess from register entry,Partial Fit,13,baseline,Taxonomy fit
+C01,C03,Cannot assess from register entry,No Fit,0,baseline,Taxonomy fit
+C01,C03,Cannot assess from register entry,Cannot assess from register entry,1,baseline,Taxonomy fit
+C02,C03,Fit,Fit,84,baseline,Taxonomy fit
+C02,C03,Fit,Partial Fit,48,baseline,Taxonomy fit
+C02,C03,Fit,No Fit,0,baseline,Taxonomy fit
+C02,C03,Fit,Cannot assess from register entry,1,baseline,Taxonomy fit
+C02,C03,Partial Fit,Fit,6,baseline,Taxonomy fit
+C02,C03,Partial Fit,Partial Fit,1,baseline,Taxonomy fit
+C02,C03,Partial Fit,No Fit,0,baseline,Taxonomy fit
+C02,C03,Partial Fit,Cannot assess from register entry,0,baseline,Taxonomy fit
+C02,C03,No Fit,Fit,0,baseline,Taxonomy fit
+C02,C03,No Fit,Partial Fit,1,baseline,Taxonomy fit
+C02,C03,No Fit,No Fit,0,baseline,Taxonomy fit
+C02,C03,No Fit,Cannot assess from register entry,0,baseline,Taxonomy fit
+C02,C03,Cannot assess from register entry,Fit,2,baseline,Taxonomy fit
+C02,C03,Cannot assess from register entry,Partial Fit,7,baseline,Taxonomy fit
+C02,C03,Cannot assess from register entry,No Fit,0,baseline,Taxonomy fit
+C02,C03,Cannot assess from register entry,Cannot assess from register entry,0,baseline,Taxonomy fit
+C01,C02,Sufficient,Sufficient,39,hard_case,Register-entry information
+C01,C02,Sufficient,Partially sufficient,13,hard_case,Register-entry information
+C01,C02,Sufficient,Insufficient,2,hard_case,Register-entry information
+C01,C02,Partially sufficient,Sufficient,6,hard_case,Register-entry information
+C01,C02,Partially sufficient,Partially sufficient,10,hard_case,Register-entry information
+C01,C02,Partially sufficient,Insufficient,4,hard_case,Register-entry information
+C01,C02,Insufficient,Sufficient,0,hard_case,Register-entry information
+C01,C02,Insufficient,Partially sufficient,1,hard_case,Register-entry information
+C01,C02,Insufficient,Insufficient,0,hard_case,Register-entry information
+C01,C03,Sufficient,Sufficient,23,hard_case,Register-entry information
+C01,C03,Sufficient,Partially sufficient,30,hard_case,Register-entry information
+C01,C03,Sufficient,Insufficient,1,hard_case,Register-entry information
+C01,C03,Partially sufficient,Sufficient,1,hard_case,Register-entry information
+C01,C03,Partially sufficient,Partially sufficient,18,hard_case,Register-entry information
+C01,C03,Partially sufficient,Insufficient,1,hard_case,Register-entry information
+C01,C03,Insufficient,Sufficient,0,hard_case,Register-entry information
+C01,C03,Insufficient,Partially sufficient,1,hard_case,Register-entry information
+C01,C03,Insufficient,Insufficient,0,hard_case,Register-entry information
+C02,C03,Sufficient,Sufficient,20,hard_case,Register-entry information
+C02,C03,Sufficient,Partially sufficient,25,hard_case,Register-entry information
+C02,C03,Sufficient,Insufficient,0,hard_case,Register-entry information
+C02,C03,Partially sufficient,Sufficient,4,hard_case,Register-entry information
+C02,C03,Partially sufficient,Partially sufficient,18,hard_case,Register-entry information
+C02,C03,Partially sufficient,Insufficient,2,hard_case,Register-entry information
+C02,C03,Insufficient,Sufficient,0,hard_case,Register-entry information
+C02,C03,Insufficient,Partially sufficient,6,hard_case,Register-entry information
+C02,C03,Insufficient,Insufficient,0,hard_case,Register-entry information
+C01,C02,Fit,Fit,44,hard_case,Taxonomy fit
+C01,C02,Fit,Partial Fit,1,hard_case,Taxonomy fit
+C01,C02,Fit,No Fit,0,hard_case,Taxonomy fit
+C01,C02,Fit,Cannot assess from register entry,2,hard_case,Taxonomy fit
+C01,C02,Partial Fit,Fit,9,hard_case,Taxonomy fit
+C01,C02,Partial Fit,Partial Fit,3,hard_case,Taxonomy fit
+C01,C02,Partial Fit,No Fit,0,hard_case,Taxonomy fit
+C01,C02,Partial Fit,Cannot assess from register entry,1,hard_case,Taxonomy fit
+C01,C02,No Fit,Fit,0,hard_case,Taxonomy fit
+C01,C02,No Fit,Partial Fit,1,hard_case,Taxonomy fit
+C01,C02,No Fit,No Fit,0,hard_case,Taxonomy fit
+C01,C02,No Fit,Cannot assess from register entry,0,hard_case,Taxonomy fit
+C01,C02,Cannot assess from register entry,Fit,12,hard_case,Taxonomy fit
+C01,C02,Cannot assess from register entry,Partial Fit,1,hard_case,Taxonomy fit
+C01,C02,Cannot assess from register entry,No Fit,0,hard_case,Taxonomy fit
+C01,C02,Cannot assess from register entry,Cannot assess from register entry,1,hard_case,Taxonomy fit
+C01,C03,Fit,Fit,28,hard_case,Taxonomy fit
+C01,C03,Fit,Partial Fit,18,hard_case,Taxonomy fit
+C01,C03,Fit,No Fit,0,hard_case,Taxonomy fit
+C01,C03,Fit,Cannot assess from register entry,1,hard_case,Taxonomy fit
+C01,C03,Partial Fit,Fit,6,hard_case,Taxonomy fit
+C01,C03,Partial Fit,Partial Fit,7,hard_case,Taxonomy fit
+C01,C03,Partial Fit,No Fit,0,hard_case,Taxonomy fit
+C01,C03,Partial Fit,Cannot assess from register entry,0,hard_case,Taxonomy fit
+C01,C03,No Fit,Fit,0,hard_case,Taxonomy fit
+C01,C03,No Fit,Partial Fit,1,hard_case,Taxonomy fit
+C01,C03,No Fit,No Fit,0,hard_case,Taxonomy fit
+C01,C03,No Fit,Cannot assess from register entry,0,hard_case,Taxonomy fit
+C01,C03,Cannot assess from register entry,Fit,4,hard_case,Taxonomy fit
+C01,C03,Cannot assess from register entry,Partial Fit,9,hard_case,Taxonomy fit
+C01,C03,Cannot assess from register entry,No Fit,1,hard_case,Taxonomy fit
+C01,C03,Cannot assess from register entry,Cannot assess from register entry,0,hard_case,Taxonomy fit
+C02,C03,Fit,Fit,36,hard_case,Taxonomy fit
+C02,C03,Fit,Partial Fit,27,hard_case,Taxonomy fit
+C02,C03,Fit,No Fit,1,hard_case,Taxonomy fit
+C02,C03,Fit,Cannot assess from register entry,1,hard_case,Taxonomy fit
+C02,C03,Partial Fit,Fit,1,hard_case,Taxonomy fit
+C02,C03,Partial Fit,Partial Fit,5,hard_case,Taxonomy fit
+C02,C03,Partial Fit,No Fit,0,hard_case,Taxonomy fit
+C02,C03,Partial Fit,Cannot assess from register entry,0,hard_case,Taxonomy fit
+C02,C03,No Fit,Fit,0,hard_case,Taxonomy fit
+C02,C03,No Fit,Partial Fit,0,hard_case,Taxonomy fit
+C02,C03,No Fit,No Fit,0,hard_case,Taxonomy fit
+C02,C03,No Fit,Cannot assess from register entry,0,hard_case,Taxonomy fit
+C02,C03,Cannot assess from register entry,Fit,1,hard_case,Taxonomy fit
+C02,C03,Cannot assess from register entry,Partial Fit,3,hard_case,Taxonomy fit
+C02,C03,Cannot assess from register entry,No Fit,0,hard_case,Taxonomy fit
+C02,C03,Cannot assess from register entry,Cannot assess from register entry,0,hard_case,Taxonomy fit

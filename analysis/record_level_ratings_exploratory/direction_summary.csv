@@ -1,0 +1,13 @@
+coder_row,coder_col,row_higher,same,row_lower,note,population,question
+C01,C02,32,98,20,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,baseline,Register-entry information
+C01,C03,56,84,10,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,baseline,Register-entry information
+C02,C03,47,89,14,Among records where both coders used an ordered category. Higher means C02 rated higher (better) on the scale.,baseline,Register-entry information
+C01,C02,2,105,15,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,baseline,Taxonomy fit
+C01,C03,35,75,16,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,baseline,Taxonomy fit
+C02,C03,48,85,7,Among records where both coders used an ordered category. Higher means C02 rated higher (better) on the scale.,baseline,Taxonomy fit
+C01,C02,19,49,7,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,hard_case,Register-entry information
+C01,C03,32,41,2,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,hard_case,Register-entry information
+C02,C03,27,38,10,Among records where both coders used an ordered category. Higher means C02 rated higher (better) on the scale.,hard_case,Register-entry information
+C01,C02,1,47,10,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,hard_case,Taxonomy fit
+C01,C03,18,35,7,Among records where both coders used an ordered category. Higher means C01 rated higher (better) on the scale.,hard_case,Taxonomy fit
+C02,C03,28,41,1,Among records where both coders used an ordered category. Higher means C02 rated higher (better) on the scale.,hard_case,Taxonomy fit
