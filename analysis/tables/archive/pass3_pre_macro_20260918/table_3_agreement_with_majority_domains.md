@@ -19,7 +19,5 @@
     <tr><td>Public Finance & Taxation</td><td>2</td><td>2</td><td>0</td><td>0</td><td>148</td><td>–</td><td>–</td><td>–</td></tr>
     <tr><td>Data Infrastructure & Methodology</td><td>0</td><td>0</td><td>4</td><td>0</td><td>146</td><td>–</td><td>–</td><td>–</td></tr>
     <tr><td>Housing & Planning</td><td>0</td><td>0</td><td>1</td><td>0</td><td>149</td><td>–</td><td>–</td><td>–</td></tr>
-    <tr><th colspan="9">Macro average (labels with 10 or more records)</th></tr>
-    <tr><td>Macro average (labels with 10 or more records)</td><td>6</td><td></td><td></td><td></td><td></td><td>0.79 (interval not estimable)</td><td>0.74 [0.68, 0.80]</td><td>0.69 (interval not estimable)</td></tr>
   </tbody>
 </table>

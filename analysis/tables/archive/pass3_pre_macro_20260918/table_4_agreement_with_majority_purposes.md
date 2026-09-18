@@ -15,7 +15,5 @@
     <tr><td>Methodological / Infrastructure Research</td><td>7</td><td>5</td><td>5</td><td>2</td><td>138</td><td>–</td><td>–</td><td>–</td></tr>
     <tr><td>Risk Prediction / Early Identification</td><td>1</td><td>1</td><td>1</td><td>0</td><td>148</td><td>–</td><td>–</td><td>–</td></tr>
     <tr><td>Service Interaction / Systems Analysis</td><td>1</td><td>1</td><td>3</td><td>0</td><td>146</td><td>–</td><td>–</td><td>–</td></tr>
-    <tr><th colspan="9">Macro average (labels with 10 or more records)</th></tr>
-    <tr><td>Macro average (labels with 10 or more records)</td><td>4</td><td></td><td></td><td></td><td></td><td>0.60 (interval not estimable)</td><td>0.54 [0.45, 0.61]</td><td>0.43 (interval not estimable)</td></tr>
   </tbody>
 </table>

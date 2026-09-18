@@ -682,8 +682,10 @@ def render_kappa(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
 
 
 def render_performance(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
+    per_label = [row for row in rows if row["series"] != "macro"]
+    macro_rows = [row for row in rows if row["series"] == "macro"]
     grouped: dict[str, dict[str, dict]] = defaultdict(dict)
-    for row in rows: grouped[row["label"]][row["quantity"]] = row
+    for row in per_label: grouped[row["label"]][row["quantity"]] = row
     ordered = []
     for label, values in grouped.items():
         base = values["tp"]
@@ -703,9 +705,24 @@ def render_performance(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
             metrics.append(shown)
         shown = [label, base["support_string"]] + [values[q]["source_value_string"] for q in ("tp", "fp", "fn", "tn")] + metrics
         body.append(shown); flat.append([group] + shown)
+    macro_report = {}
+    if macro_rows:
+        macro_by_q = {row["quantity"]: row for row in macro_rows}
+        eligible = macro_by_q["eligible_label_n"]["source_value_string"]
+        macro_label = macro_by_q["precision"]["label"]
+        macro_metrics = []
+        for quantity in ("precision", "recall", "f1"):
+            row = macro_by_q[quantity]
+            shown = metric(row) if row["interval_status"] == "R" else half_up(row["source_value_string"], 2) + " (interval not estimable)"
+            macro_metrics.append(shown)
+        macro_shown = [macro_label, eligible, "", "", "", ""] + macro_metrics
+        body.append([macro_label]); body.append(macro_shown)
+        flat.append([macro_label] + macro_shown)
+        macro_report = {"macro_row_label": macro_label, "eligible_labels": int(eligible),
+                        "source_table_id": macro_by_q["precision"]["source_table_id"]}
     md_path.write_text(html_table(headers, body), encoding="utf-8"); write_csv(csv_path, ["Row group"] + headers, flat)
     return {"status": "PASS", "rows_shown": len(ordered), "sparse_rows_counts_only": sum(1 for _, label in ordered if grouped[label]["tp"]["support_band"] == "RARE"),
-            "headings": [row[0] for row in body if len(row) == 1]}
+            "headings": [row[0] for row in body if len(row) == 1], "macro": macro_report}
 
 
 def render_supplementary_table_s2(rows: list[dict], csv_path: Path, md_path: Path):

@@ -317,7 +317,9 @@ def captions(old_text: str, datasets: dict[str, list[dict]]) -> dict[str, list[s
         if table in {"Table 3", "Table 4"}:
             extra += "; labels below 10 show counts only"
         bullets[table].append(extra + " [S5T001/S5T002 exported band and count cells].")
+    bullets["Table 3"].append("The macro average includes 6 labels the coder majority applied to at least 10 baseline records: Business & Productivity; Education & Skills; Health & Social Care; Labour Market & Employment; Poverty, Wealth & Living Standards; Unclear from Register Entry. Precision and F1 intervals are suppressed under the valid-replicate rule (1,284/2,000 and 1,280/2,000 valid replicates respectively) [S6T001 eligible-membership, estimate and interval-status cells].")
     bullets["Table 3"].append("Production note: set this nine-column table in landscape or at a reduced manuscript font size.")
+    bullets["Table 4"].append("The macro average includes 4 labels the coder majority applied to at least 10 baseline records: Descriptive Monitoring; Outcome Tracking; Policy Evaluation / Impact Analysis; Unclear from Register Entry. Precision and F1 intervals are suppressed under the valid-replicate rule (1,233/2,000 and 1,233/2,000 valid replicates respectively) [S6T002 eligible-membership, estimate and interval-status cells].")
     bullets["Table 4"].append("Production note: set this nine-column table in landscape or at a reduced manuscript font size.")
     bullets["Supplementary Figure S1"] = [
         old["Supplementary Figure S1"][0],

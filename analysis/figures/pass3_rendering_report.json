@@ -664,8 +664,14 @@
         "30 or more records",
         "10–29 records (interpret with caution)",
         "Declined to classify (10–29 records; interpret with caution)",
-        "Fewer than 10 records (counts only)"
-      ]
+        "Fewer than 10 records (counts only)",
+        "Macro average (labels with 10 or more records)"
+      ],
+      "macro": {
+        "macro_row_label": "Macro average (labels with 10 or more records)",
+        "eligible_labels": 6,
+        "source_table_id": "S6T001"
+      }
     },
     "Table 4": {
       "status": "PASS",
@@ -675,8 +681,14 @@
         "30 or more records",
         "10–29 records (interpret with caution)",
         "Declined to classify (10–29 records; interpret with caution)",
-        "Fewer than 10 records (counts only)"
-      ]
+        "Fewer than 10 records (counts only)",
+        "Macro average (labels with 10 or more records)"
+      ],
+      "macro": {
+        "macro_row_label": "Macro average (labels with 10 or more records)",
+        "eligible_labels": 4,
+        "source_table_id": "S6T002"
+      }
     },
     "Supplementary Table S1a": {
       "status": "PASS",

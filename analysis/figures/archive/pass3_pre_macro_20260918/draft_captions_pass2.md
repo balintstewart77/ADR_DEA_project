@@ -44,12 +44,13 @@ Legend content checklist:
 
 Legend content checklist:
 
+- One row per label; the hollow circle is the number of the 150 baseline records to which the coder majority applied the label, and the filled circle is the number to which Fable 5 applied it [S5T001/S5T002 coder-majority-positive and model-positive cells].
+- Rows are sorted by coder-majority count, largest first, with alphabetical tie-breaking; Unclear from Register Entry is shown last in each panel [S5T001/S5T002 coder-majority-positive cells].
+- A line running to the right of the hollow circle means Fable 5 applied the label more often than the coder majority [S5T001/S5T002 label-count cells].
+- Where the two counts are equal, only the filled marker is visible (Crime & Justice 4 and 4; Public Finance & Taxation 2 and 2) [S5T001 label-count cells].
+- Counts across labels are label applications rather than records [S5T001/S5T002 label-count cells].
 - Across all labels, Fable 5 made 199 Research Domains and 160 Analytical Purposes applications; the coder majority made 173 and 129 (display unchanged) [S5T001/S5T002, summed label-count cells; G.12 derivation 3].
-- Counts across labels are label applications rather than records; each point is one label [S5T001/S5T002 label-count cells].
-- Vertical lines at 10 and 30 records show the preregistered count thresholds; labels below 10 remain plotted as counts [S5T001/S5T002 exported band cells].
-- The 45° line marks equal application counts; points above it were applied more often by Fable 5 and points below it more often by the coder majority [S5T001/S5T002 label-count cells].
-- The outlined point is Unclear from Register Entry: domains (13, 1) and purposes (26, 1), displayed as integer counts [S5T001/S5T002 coder-majority-positive and model-positive cells].
-- Point numbers run in descending coder-majority count within each panel, with alphabetical tie-breaking; full label names are listed below each panel [S5T001/S5T002 coder-majority-positive cells].
+- Excluding Unclear from Register Entry, Fable 5 made 198 Research Domains and 159 Analytical Purposes applications; the coder majority made 160 and 103 (display unchanged) [S5T001/S5T002 summed cells; G.12 derivations 3–4].
 
 ## Table 1
 
@@ -86,7 +87,6 @@ Legend content checklist:
 - For Unclear, Fable 5 applied the label to 1 of 13 coder-majority-positive records; precision and F1 are not estimable with an interval, while recall is 0.07692307692307693 [0.0, 0.25] (display 0.08 [0.00, 0.25]) [S5T003/S5T007/S5T009 cells].
 - Total applications are Fable 5 199 and coder majority 173; substantive-only totals are 198 and 160 (display unchanged) [S5T001 summed cells; G.12 derivations 3–4].
 - Groups are defined by the number of records to which the coder majority applied the label; labels in the 10–29 group have fewer records and may have wider intervals; labels below 10 show counts only [S5T001/S5T002 exported band and count cells].
-- The macro average includes 6 labels the coder majority applied to at least 10 baseline records: Business & Productivity; Education & Skills; Health & Social Care; Labour Market & Employment; Poverty, Wealth & Living Standards; Unclear from Register Entry. Precision and F1 intervals are suppressed under the valid-replicate rule (1,284/2,000 and 1,280/2,000 valid replicates respectively) [S6T001 eligible-membership, estimate and interval-status cells].
 - Production note: set this nine-column table in landscape or at a reduced manuscript font size.
 
 ## Table 4
@@ -100,7 +100,6 @@ Legend content checklist:
 - For Unclear, Fable 5 applied the label to 1 of 26 coder-majority-positive records; precision and F1 are not estimable with an interval, while recall is 0.038461538461538464 [0.0, 0.125] (display 0.04 [0.00, 0.13]) [S5T004/S5T008/S5T010 cells].
 - Total applications are Fable 5 160 and coder majority 129; substantive-only totals are 159 and 103 (display unchanged) [S5T002 summed cells; G.12 derivations 3–4].
 - Groups are defined by the number of records to which the coder majority applied the label; labels in the 10–29 group have fewer records and may have wider intervals; labels below 10 show counts only [S5T001/S5T002 exported band and count cells].
-- The macro average includes 4 labels the coder majority applied to at least 10 baseline records: Descriptive Monitoring; Outcome Tracking; Policy Evaluation / Impact Analysis; Unclear from Register Entry. Precision and F1 intervals are suppressed under the valid-replicate rule (1,233/2,000 and 1,233/2,000 valid replicates respectively) [S6T002 eligible-membership, estimate and interval-status cells].
 - Production note: set this nine-column table in landscape or at a reduced manuscript font size.
 
 ## Supplementary Figure S1
