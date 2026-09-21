@@ -1,0 +1,267 @@
+[
+  {
+    "assignment_id": "SYN_ASSIGN_001",
+    "package_id": "PKG_91230088a992",
+    "adj_diff_check": 1,
+    "adj_concern_scope": [
+      0
+    ],
+    "adj_prior_exposure": 0,
+    "adj_masking_failure": 0,
+    "adj_stage1_case_status": [
+      0
+    ],
+    "boundary": {
+      "dom": {
+        "states": [
+          0
+        ]
+      },
+      "purp": {
+        "states": [
+          0
+        ]
+      },
+      "covid": {
+        "states": [
+          0
+        ]
+      },
+      "equity": {
+        "states": [
+          0
+        ]
+      }
+    },
+    "label_assessments": {
+      "dom": {
+        "Poverty, Wealth & Living Standards": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        }
+      },
+      "purp": {
+        "Outcome Tracking": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        }
+      }
+    },
+    "tag_assessments": {
+      "covid": {
+        "support": 1,
+        "rule_conflict": 0,
+        "supported_status": 0
+      },
+      "equity": {
+        "support": 1,
+        "rule_conflict": 0,
+        "supported_status": 0
+      }
+    },
+    "adj_stage1_complete": 1,
+    "adj_dom_public_evidence": 1,
+    "adj_dom_comparative_outcome": 1,
+    "adj_dom_best_interpretations": [
+      "DOM_1"
+    ],
+    "adj_dom_adequacy": 1,
+    "adj_dom_defensible_state": 1,
+    "adj_dom_defensible_interpretations": [
+      "DOM_1"
+    ],
+    "adj_dom_weaker": 0,
+    "adj_dom_weaker_interpretations": [],
+    "adj_dom_support_note": "Synthetic comparative basis.",
+    "adj_dom_shared_label_state": 0,
+    "adj_dom_shared_label_ids": [],
+    "adj_dom_additional_label_state": 0,
+    "adj_dom_additional_label_ids": [],
+    "adj_purp_additional_label_state": 0,
+    "adj_purp_additional_label_ids": []
+  },
+  {
+    "assignment_id": "SYN_ASSIGN_002",
+    "package_id": "PKG_0049cd6f42e3",
+    "adj_diff_check": 1,
+    "adj_concern_scope": [
+      0
+    ],
+    "adj_prior_exposure": 0,
+    "adj_masking_failure": 0,
+    "adj_stage1_case_status": [
+      0
+    ],
+    "boundary": {
+      "dom": {
+        "states": [
+          0
+        ]
+      },
+      "purp": {
+        "states": [
+          0
+        ]
+      },
+      "covid": {
+        "states": [
+          0
+        ]
+      },
+      "equity": {
+        "states": [
+          0
+        ]
+      }
+    },
+    "label_assessments": {
+      "dom": {
+        "Education & Skills": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        }
+      },
+      "purp": {
+        "Policy Evaluation / Impact Analysis": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        },
+        "Outcome Tracking": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        },
+        "Descriptive Monitoring": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        }
+      }
+    },
+    "tag_assessments": {
+      "covid": {
+        "support": 1,
+        "rule_conflict": 0,
+        "supported_status": 0
+      },
+      "equity": {
+        "support": 1,
+        "rule_conflict": 0,
+        "supported_status": 0
+      }
+    },
+    "adj_stage1_complete": 1,
+    "adj_purp_public_evidence": 1,
+    "adj_purp_comparative_outcome": 1,
+    "adj_purp_best_interpretations": [
+      "PURP_1"
+    ],
+    "adj_purp_adequacy": 1,
+    "adj_purp_defensible_state": 1,
+    "adj_purp_defensible_interpretations": [
+      "PURP_1"
+    ],
+    "adj_purp_weaker": 0,
+    "adj_purp_weaker_interpretations": [],
+    "adj_purp_support_note": "Synthetic comparative basis.",
+    "adj_equity_public_evidence": 1,
+    "adj_equity_comparative_outcome": 1,
+    "adj_equity_best_interpretations": [
+      "EQUITY_1"
+    ],
+    "adj_equity_adequacy": 1,
+    "adj_equity_defensible_state": 1,
+    "adj_equity_defensible_interpretations": [
+      "EQUITY_1"
+    ],
+    "adj_equity_weaker": 0,
+    "adj_equity_weaker_interpretations": [],
+    "adj_equity_support_note": "Synthetic comparative basis.",
+    "adj_dom_additional_label_state": 0,
+    "adj_dom_additional_label_ids": [],
+    "adj_purp_shared_label_state": 0,
+    "adj_purp_shared_label_ids": [],
+    "adj_purp_additional_label_state": 0,
+    "adj_purp_additional_label_ids": []
+  },
+  {
+    "assignment_id": "SYN_ASSIGN_003",
+    "package_id": "PKG_2ba347b811ce",
+    "adj_diff_check": 1,
+    "adj_concern_scope": [
+      0
+    ],
+    "adj_prior_exposure": 0,
+    "adj_masking_failure": 0,
+    "adj_stage1_case_status": [
+      0
+    ],
+    "boundary": {
+      "dom": {
+        "states": [
+          0
+        ]
+      },
+      "purp": {
+        "states": [
+          0
+        ]
+      },
+      "covid": {
+        "states": [
+          0
+        ]
+      },
+      "equity": {
+        "states": [
+          0
+        ]
+      }
+    },
+    "label_assessments": {
+      "dom": {
+        "Housing & Planning": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        }
+      },
+      "purp": {
+        "Service Interaction / Systems Analysis": {
+          "support": 1,
+          "rule_conflict": 0,
+          "omission": 0,
+          "omission_ids": []
+        }
+      }
+    },
+    "tag_assessments": {
+      "covid": {
+        "support": 1,
+        "rule_conflict": 0,
+        "supported_status": 0
+      },
+      "equity": {
+        "support": 1,
+        "rule_conflict": 0,
+        "supported_status": 0
+      }
+    },
+    "adj_stage1_complete": 1,
+    "adj_dom_additional_label_state": 0,
+    "adj_dom_additional_label_ids": [],
+    "adj_purp_additional_label_state": 0,
+    "adj_purp_additional_label_ids": []
+  }
+]

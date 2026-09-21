@@ -1,0 +1,9 @@
+{
+  "findings": [
+    {"record_id":"SYN_ADJ_001","mechanism_versioned":"M_A_v1","stream":"scratch","signal_ref":"SIG_1","pre_reveal":1},
+    {"record_id":"SYN_ADJ_001","mechanism_versioned":"M_A_v1","stream":"scratch","signal_ref":"SIG_1","pre_reveal":1},
+    {"record_id":"SYN_ADJ_002","mechanism_versioned":"M_A_v1","stream":"owner","signal_ref":"SIG_2","pre_reveal":1},
+    {"record_id":"SYN_ADJ_003","mechanism_versioned":"M_B_v1","stream":"primary","signal_ref":"SIG_3","pre_reveal":0}
+  ],
+  "harmonised_mapping": {"M_A_v1":"M_AB_v2", "M_B_v1":"M_AB_v2"}
+}

@@ -1,0 +1,5 @@
+{
+  "SYN_ASSIGN_001": {"source_map":"Synthetic-only: C_... maps to Fable/SC_A/SC_B", "stage2_minimum":"synthetic reveal payload only"},
+  "SYN_ASSIGN_002": {"source_map":"Synthetic-only mapping", "stage2_minimum":"synthetic reveal payload only"},
+  "SYN_ASSIGN_003": {"source_map":"Synthetic-only single Fable mapping", "stage2_minimum":"synthetic reveal payload only"}
+}

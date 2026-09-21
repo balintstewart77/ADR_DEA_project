@@ -1,0 +1,265 @@
+[
+  {
+    "assignment_id": "SYN_ASSIGN_001",
+    "record_id": "SYN_ADJ_001",
+    "package_id": "PKG_91230088a992",
+    "seed": 20260921,
+    "candidates": [
+      {
+        "candidate_id": "C_886d3fc34ba2",
+        "domains": [
+          "Health & Social Care",
+          "Poverty, Wealth & Living Standards"
+        ],
+        "purposes": [
+          "Outcome Tracking"
+        ],
+        "covid": "Not applied",
+        "equity": "Applied"
+      },
+      {
+        "candidate_id": "C_c50ff223df7e",
+        "domains": [
+          "Health & Social Care"
+        ],
+        "purposes": [
+          "Outcome Tracking"
+        ],
+        "covid": "Not applied",
+        "equity": "Applied"
+      }
+    ],
+    "interpretations": {
+      "dom": [
+        {
+          "interpretation_id": "DOM_1",
+          "value": [
+            "Health & Social Care",
+            "Poverty, Wealth & Living Standards"
+          ],
+          "candidate_ids": [
+            "C_886d3fc34ba2"
+          ]
+        },
+        {
+          "interpretation_id": "DOM_2",
+          "value": [
+            "Health & Social Care"
+          ],
+          "candidate_ids": [
+            "C_c50ff223df7e"
+          ]
+        }
+      ],
+      "purp": [
+        {
+          "interpretation_id": "PURP_1",
+          "value": [
+            "Outcome Tracking"
+          ],
+          "candidate_ids": [
+            "C_886d3fc34ba2",
+            "C_c50ff223df7e"
+          ]
+        }
+      ],
+      "covid": [
+        {
+          "interpretation_id": "COVID_1",
+          "value": "Not applied",
+          "candidate_ids": [
+            "C_886d3fc34ba2",
+            "C_c50ff223df7e"
+          ]
+        }
+      ],
+      "equity": [
+        {
+          "interpretation_id": "EQUITY_1",
+          "value": "Applied",
+          "candidate_ids": [
+            "C_886d3fc34ba2",
+            "C_c50ff223df7e"
+          ]
+        }
+      ]
+    },
+    "qa_flags": []
+  },
+  {
+    "assignment_id": "SYN_ASSIGN_002",
+    "record_id": "SYN_ADJ_002",
+    "package_id": "PKG_0049cd6f42e3",
+    "seed": 20260921,
+    "candidates": [
+      {
+        "candidate_id": "C_13187514c9f8",
+        "domains": [
+          "Education & Skills"
+        ],
+        "purposes": [
+          "Policy Evaluation / Impact Analysis"
+        ],
+        "covid": "Not applied",
+        "equity": "Applied"
+      },
+      {
+        "candidate_id": "C_0c1efec8aaa2",
+        "domains": [
+          "Education & Skills"
+        ],
+        "purposes": [
+          "Outcome Tracking"
+        ],
+        "covid": "Not applied",
+        "equity": "Not applied"
+      },
+      {
+        "candidate_id": "C_575c38afcc5e",
+        "domains": [
+          "Education & Skills"
+        ],
+        "purposes": [
+          "Descriptive Monitoring"
+        ],
+        "covid": "Not applied",
+        "equity": "Not applied"
+      }
+    ],
+    "interpretations": {
+      "dom": [
+        {
+          "interpretation_id": "DOM_1",
+          "value": [
+            "Education & Skills"
+          ],
+          "candidate_ids": [
+            "C_13187514c9f8",
+            "C_0c1efec8aaa2",
+            "C_575c38afcc5e"
+          ]
+        }
+      ],
+      "purp": [
+        {
+          "interpretation_id": "PURP_1",
+          "value": [
+            "Policy Evaluation / Impact Analysis"
+          ],
+          "candidate_ids": [
+            "C_13187514c9f8"
+          ]
+        },
+        {
+          "interpretation_id": "PURP_2",
+          "value": [
+            "Outcome Tracking"
+          ],
+          "candidate_ids": [
+            "C_0c1efec8aaa2"
+          ]
+        },
+        {
+          "interpretation_id": "PURP_3",
+          "value": [
+            "Descriptive Monitoring"
+          ],
+          "candidate_ids": [
+            "C_575c38afcc5e"
+          ]
+        }
+      ],
+      "covid": [
+        {
+          "interpretation_id": "COVID_1",
+          "value": "Not applied",
+          "candidate_ids": [
+            "C_13187514c9f8",
+            "C_0c1efec8aaa2",
+            "C_575c38afcc5e"
+          ]
+        }
+      ],
+      "equity": [
+        {
+          "interpretation_id": "EQUITY_1",
+          "value": "Applied",
+          "candidate_ids": [
+            "C_13187514c9f8"
+          ]
+        },
+        {
+          "interpretation_id": "EQUITY_2",
+          "value": "Not applied",
+          "candidate_ids": [
+            "C_0c1efec8aaa2",
+            "C_575c38afcc5e"
+          ]
+        }
+      ]
+    },
+    "qa_flags": []
+  },
+  {
+    "assignment_id": "SYN_ASSIGN_003",
+    "record_id": "SYN_ADJ_003",
+    "package_id": "PKG_2ba347b811ce",
+    "seed": 20260921,
+    "candidates": [
+      {
+        "candidate_id": "C_a58f7d93c6eb",
+        "domains": [
+          "Housing & Planning"
+        ],
+        "purposes": [
+          "Service Interaction / Systems Analysis"
+        ],
+        "covid": "Not applied",
+        "equity": "Not applied"
+      }
+    ],
+    "interpretations": {
+      "dom": [
+        {
+          "interpretation_id": "DOM_1",
+          "value": [
+            "Housing & Planning"
+          ],
+          "candidate_ids": [
+            "C_a58f7d93c6eb"
+          ]
+        }
+      ],
+      "purp": [
+        {
+          "interpretation_id": "PURP_1",
+          "value": [
+            "Service Interaction / Systems Analysis"
+          ],
+          "candidate_ids": [
+            "C_a58f7d93c6eb"
+          ]
+        }
+      ],
+      "covid": [
+        {
+          "interpretation_id": "COVID_1",
+          "value": "Not applied",
+          "candidate_ids": [
+            "C_a58f7d93c6eb"
+          ]
+        }
+      ],
+      "equity": [
+        {
+          "interpretation_id": "EQUITY_1",
+          "value": "Not applied",
+          "candidate_ids": [
+            "C_a58f7d93c6eb"
+          ]
+        }
+      ]
+    },
+    "qa_flags": []
+  }
+]
