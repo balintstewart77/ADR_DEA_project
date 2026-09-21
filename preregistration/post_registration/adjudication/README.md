@@ -41,6 +41,9 @@ An agreed implementation decision does not amend the preregistration.
    non-production REDCap environment. This requires authorised test access,
    synthetic material, and capability checks for DAGs, locking, export/import
    logging and protected test storage; it does not require formal responses.
+   Where the test project is intended to become the formal project, it remains
+   in REDCap Development status throughout, and every synthetic record is
+   erased and the erasure evidenced before any formal record is created.
 4. Before formal coded-case primary adjudication, resolve its formal-use gates:
    build acceptance, appointed/conflict-declared roles, authorised eligibility
    inputs, and reconciled formal-response operational status.

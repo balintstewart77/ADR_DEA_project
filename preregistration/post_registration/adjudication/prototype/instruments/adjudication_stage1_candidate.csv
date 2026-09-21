@@ -275,7 +275,7 @@ adj_equity_rule_ref,adj_stage1,,text,equity: rule citation,,Candidate offline di
 adj_equity_rule_note,adj_stage1,,notes,equity: rule-conflict explanation,,Candidate offline dictionary; not REDCap-import-tested.,,,,,[adj_equity_rule_conflict] = '1' or [adj_equity_rule_conflict] = '2',,,,,,
 adj_equity_supported_status,adj_stage1,,radio,equity: support for opposite status,"0, No alternative supported | 1, Opposite status supported | 2, Cannot determine",Candidate offline dictionary; not REDCap-import-tested.,,,,,,,,,,,
 adj_equity_supported_status_note,adj_stage1,,notes,equity: opposite-status explanation,,Candidate offline dictionary; not REDCap-import-tested.,,,,,[adj_equity_supported_status] = '1' or [adj_equity_supported_status] = '2',,,,,,
-adj_stage1_complete,adj_stage1,,yesno,Complete preserved Stage 1 assessment?,,Candidate offline dictionary; not REDCap-import-tested.,,,,,,y,,,,,
+adj_stage1_affirmed,adj_stage1,,yesno,Complete preserved Stage 1 assessment?,,Candidate offline dictionary; not REDCap-import-tested.,,,,,,y,,,,,
 adj_reveal_state,adj_stage2,,radio,Stage 2 reveal state,"0, Not revealed | 1, Revealed | 2, Partial-failure exposure",Candidate offline dictionary; not REDCap-import-tested.,,,,,,,,,,,
 adj_stage2_closure,adj_stage2,,radio,Stage 2 closure,"1, Completed with findings | 2, Completed no assignable issue | 3, Incomplete | 4, Administrative closure",Candidate offline dictionary; not REDCap-import-tested.,,,,,,,,,,,
 adj_no_issue_rationale,adj_stage2,,notes,Short rationale for no assignable issue,,Candidate offline dictionary; not REDCap-import-tested.,,,,,[adj_stage2_closure] = '2',,,,,,

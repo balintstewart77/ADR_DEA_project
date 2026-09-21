@@ -216,7 +216,7 @@ class PrototypeTests(unittest.TestCase):
                 if row[3]=="checkbox": self.assertEqual(len(codes),len(set(codes)))
             for token in row[11].split("[")[1:]:
                 ref=token.split("]")[0].split("(")[0]; self.assertIn(ref,by); self.assertLessEqual(form_order[by[ref][1]],form_order[row[1]])
-        required={"adj_diff_check","adj_diff_dimensions","adj_diff_labels","adj_diff_tag_statuses","adj_concern_scope","adj_concern_other_note","adj_prior_exposure","adj_prior_exposure_source","adj_prior_exposure_timing","adj_masking_failure","adj_masking_note","adj_stage1_case_status","adj_stage1_case_status_note","adj_stage1_complete","adj_source_record_id","adj_reviewer_role"}
+        required={"adj_diff_check","adj_diff_dimensions","adj_diff_labels","adj_diff_tag_statuses","adj_concern_scope","adj_concern_other_note","adj_prior_exposure","adj_prior_exposure_source","adj_prior_exposure_timing","adj_masking_failure","adj_masking_note","adj_stage1_case_status","adj_stage1_case_status_note","adj_stage1_affirmed","adj_source_record_id","adj_reviewer_role"}
         for comp in COMPONENTS: required|={f"adj_{comp}_{x}" for x in ("interpretation_map","public_evidence","comparative_outcome","best_interpretations","adequacy","defensible_state","defensible_interpretations","defensible_note","multiple_defensible","weaker","weaker_interpretations","weaker_note","support_note","boundary_state","boundary_scope","recognised_boundary_rule_ref","recognised_boundary_note","plausible_boundary_note")}
         for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES)):
             required|={f"adj_{comp}_{x}" for x in ("shared_label_state","shared_label_ids","shared_label_note","additional_label_state","additional_label_ids","additional_label_note")}
@@ -227,6 +227,13 @@ class PrototypeTests(unittest.TestCase):
         preview=(ROOT/"preview"/"index.html").read_text(encoding="utf-8").lower()
         for forbidden in ("source_id","gpt55","rationale","eligibility","reveal_payload","source_map"): self.assertNotIn(forbidden,preview)
         with (ROOT/"instruments"/"adjudication_stage1_candidate.csv").open(encoding="utf-8",newline="") as f:self.assertEqual(next(csv.reader(f)),HEADER)
+    def test_no_field_clashes_with_a_redcap_form_completion_name(self):
+        rows=field_rows(); names={x[0] for x in rows}; forms={x[1] for x in rows}
+        # REDCap generates [form_name]_complete itself and rejects a dictionary
+        # that declares one. Rejected on real import as adj_stage1_complete.
+        clashes=sorted(n for n in names if n in {f"{form}_complete" for form in forms})
+        self.assertEqual(clashes,[])
+        self.assertIn("adj_stage1_affirmed",names)
     def test_record_key_is_the_opaque_assignment_id(self):
         rows=field_rows(); self.assertEqual(rows[0][0],"adj_assignment_id")
         # REDCap takes the first field as the record identifier, which appears in

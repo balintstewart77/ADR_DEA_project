@@ -63,7 +63,7 @@
         "supported_status": 0
       }
     },
-    "adj_stage1_complete": 1,
+    "adj_stage1_affirmed": 1,
     "adj_dom_public_evidence": 1,
     "adj_dom_comparative_outcome": 1,
     "adj_dom_best_interpretations": [
@@ -160,7 +160,7 @@
         "supported_status": 0
       }
     },
-    "adj_stage1_complete": 1,
+    "adj_stage1_affirmed": 1,
     "adj_purp_public_evidence": 1,
     "adj_purp_comparative_outcome": 1,
     "adj_purp_best_interpretations": [
@@ -258,7 +258,7 @@
         "supported_status": 0
       }
     },
-    "adj_stage1_complete": 1,
+    "adj_stage1_affirmed": 1,
     "adj_dom_additional_label_state": 0,
     "adj_dom_additional_label_ids": [],
     "adj_purp_additional_label_state": 0,
