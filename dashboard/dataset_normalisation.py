@@ -90,6 +90,8 @@ PROVIDER_ALIASES = {
     "Office for national Statistics": "Office for National Statistics",
     "Office of National Statistics": "Office for National Statistics",
     "Offcie for National Statistics": "Office for National Statistics",
+    "Office for National Statistcs": "Office for National Statistics",
+    "Office for the National Statistics": "Office for National Statistics",
     "Department for Business and Trade": "Department for Business and Trade (DBT)",
     "Department for Business, Energy & Industrial Strategy": "Department for Business, Energy and Industrial Strategy",
     "Department for Environment, Food & Rural Affairs": "Department for Environment, Food & Rural Affairs (DEFRA)",
@@ -738,6 +740,14 @@ def _clean_datasets_text(raw: str) -> str:
         "Understanding Society",
         text,
     )
+    # In 2023/234 the ONS datasets after the Innovation Panel continue the
+    # opening ONS header; restore that header so they are not attributed to
+    # Understanding Society's owner.
+    text = re.sub(
+        r"(?i)\bUnderstanding Society:\s*Innovation Panel,\s*(?=Annual Survey of Hours and Earnings\b)",
+        "Understanding Society: Innovation Panel\nOffice for National Statistics: ",
+        text,
+    )
     text = text.replace("\r", "\n")
     text = re.sub(r"\s{2,}", " ", text)
     text = re.sub(r"\s*\n\s*", "\n", text)
@@ -1105,6 +1115,18 @@ def _yield_dataset_parts(line: str, provider: str, rest: str):
             yield line, provider, part
 
 
+# Dataset titles that themselves contain a colon ("Annual Population Survey:
+# Well-Being"). When one starts a wrapped line under an existing provider header
+# it is a dataset, not a new provider (2026/064).
+DATASET_TITLE_WITH_COLON_RE = re.compile(r"(?i)^annual population survey\s*:")
+
+# "Understanding Society: <component>" lines name an Understanding Society
+# dataset, not a provider. The full title is kept as the dataset and the
+# provider is ISER, which owns the study, whichever header precedes the line.
+UNDERSTANDING_SOCIETY_TITLE_RE = re.compile(r"(?i)^understanding society\s*:")
+UNDERSTANDING_SOCIETY_PROVIDER = "Institute for Social and Economic Research"
+
+
 def iter_dataset_entries(raw: str):
     if not isinstance(raw, str) or not raw.strip():
         return
@@ -1128,7 +1150,14 @@ def iter_dataset_entries(raw: str):
         line = line.strip()
         if not line:
             continue
-        if ":" in line:
+        if UNDERSTANDING_SOCIETY_TITLE_RE.match(line):
+            yield from flush_current()
+            current_provider = UNDERSTANDING_SOCIETY_PROVIDER
+            current_rest_parts = [line]
+            current_line_parts = [line]
+        elif ":" in line and not (
+            current_provider and DATASET_TITLE_WITH_COLON_RE.match(line)
+        ):
             yield from flush_current()
             provider, rest = line.split(":", 1)
             current_provider = provider.strip()

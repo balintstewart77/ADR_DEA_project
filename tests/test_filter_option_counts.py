@@ -189,7 +189,7 @@ def test_search_year_and_portfolio_restrictions_are_included_without_cross_tab_s
 def test_zero_count_options_remain_present_enabled_and_filter_to_an_empty_result():
     state = {"dataset": "Annual Business Survey (ABS)"}
     options = _browse_options(**state)
-    zero_provider = "Annual Population Survey"
+    zero_provider = "Ministry of Justice (MoJ)"
     option = next(option for option in options["provider"] if option["value"] == zero_provider)
     assert _label_count(option) == 0
     assert "disabled" not in option

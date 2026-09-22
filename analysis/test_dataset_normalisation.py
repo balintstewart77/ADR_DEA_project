@@ -225,6 +225,68 @@ class DatasetNormalisationTest(unittest.TestCase):
             ],
         )
 
+    def test_wrapped_dataset_title_with_colon_keeps_current_provider(self):
+        # 2026/064: the second line is the APS Well-Being dataset, not an
+        # "Annual Population Survey" provider header.
+        raw = (
+            "Office for National Statistics: Annual Population Survey,\n"
+            "Annual Population Survey: Well-Being"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Annual Population Survey"),
+                ("Office for National Statistics", "Annual Population Survey: Well-Being"),
+            ],
+        )
+
+    def test_understanding_society_component_lines_are_iser_datasets(self):
+        # 2023/170, 2022/032, 2025/085: "Understanding Society: X" names a
+        # dataset owned by ISER, whatever header precedes it.
+        raw = (
+            "Office for National Statistics: Labour Force Survey,\n"
+            "Understanding Society: COVID-19 Study,\n"
+            "Understanding Society: Innovation Panel\n"
+            "Institute for Economic and Social Research:\n"
+            "Understanding Society: Waves 1-14"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        iser = "Institute for Social and Economic Research"
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Labour Force Survey"),
+                (iser, "Understanding Society: COVID-19 Study"),
+                (iser, "Understanding Society: Innovation Panel"),
+                (iser, "Understanding Society: Waves 1-14"),
+            ],
+        )
+
+    def test_ons_datasets_after_innovation_panel_keep_ons_provider(self):
+        # 2023/234: the datasets after the Innovation Panel continue the ONS list.
+        raw = (
+            "Office for National Statistics: British Household Panel Survey,\n"
+            "Understanding Society: Innovation Panel, Annual Survey of Hours and Earnings, "
+            "Workplace Employment Relations Survey"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "British Household Panel Survey"),
+                ("Institute for Social and Economic Research", "Understanding Society: Innovation Panel"),
+                ("Office for National Statistics", "Annual Survey of Hours and Earnings"),
+                ("Office for National Statistics", "Workplace Employment Relations Survey"),
+            ],
+        )
+
+    def test_ons_misspellings_normalise_to_ons(self):
+        for raw in ("Office for National Statistcs", "Office for the National Statistics"):
+            self.assertEqual(
+                normalise_provider_name(raw), "Office for National Statistics (ONS)"
+            )
+
     def test_semicolon_compound_is_split(self):
         raw = (
             "MoJ Data First: "
