@@ -84,14 +84,21 @@ def _enriched_detail_control(record_id: str, label: str) -> str:
     )
 
 
+def _escape_with_line_breaks(text: str) -> str:
+    """Escape text for the markdown cell, keeping source line breaks (e.g. one
+    researcher per line) as <br> instead of letting HTML collapse them."""
+    lines = (line.strip() for line in text.splitlines())
+    return "<br>".join(escape(line, quote=True) for line in lines if line)
+
+
 def _generic_preview_display(value, record_id: str) -> str:
     """Render a character preview for fields without a reliable entry parser."""
     text = _enriched_text(value)
     if not text:
         return "—"
     if len(text) <= _PREVIEW_CHARACTER_LIMIT:
-        return escape(text, quote=True)
-    preview = escape(text[:_PREVIEW_CHARACTER_LIMIT].rstrip() + "…", quote=True)
+        return _escape_with_line_breaks(text)
+    preview = _escape_with_line_breaks(text[:_PREVIEW_CHARACTER_LIMIT].rstrip() + "…")
     return (
         '<div class="enriched-preview">'
         f'<span class="enriched-preview-text">{preview}</span> '

@@ -95,9 +95,11 @@ def register(app):
         )
         table_data = display.to_dict("records")
 
+        # Markdown collapses single newlines; a trailing double space keeps
+        # each source line (e.g. one researcher per line) on its own line.
         tooltip_data = [
             {
-                col: {"value": str(row.get(col, "")), "type": "markdown"}
+                col: {"value": str(row.get(col, "")).replace("\n", "  \n"), "type": "markdown"}
                 for col in _BROWSE_DISPLAY_COLUMNS
             }
             for row in table_data

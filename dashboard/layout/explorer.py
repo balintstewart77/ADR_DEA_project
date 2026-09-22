@@ -144,6 +144,12 @@ def build_explorer_tab():
                 tooltip_data=[],
                 tooltip_delay=0,
                 tooltip_duration=None,
+                # The register separates researchers (and datasets) with line
+                # breaks; pre-line shows them instead of collapsing them.
+                style_cell_conditional=[
+                    {"if": {"column_id": column}, "whiteSpace": "pre-line"}
+                    for column in ("Researchers", "Datasets Used")
+                ],
                 **BROWSE_TABLE_STYLES,
             ),
             className="dea-table",
