@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG, CHART_HEIGHT
 from dashboard.components.chart_tips import chart_wrapper
+from dashboard.components.filter_controls import all_option_label
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
 from dashboard import taxonomy
@@ -574,10 +575,10 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-dataset-filter",
                                 options=_ALL_DATASET_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_DATASET_OPTIONS),
                                 searchable=True,
-                                placeholder="All datasets",
                             ),
                         ], md=4, lg=4),
                         dbc.Col([
@@ -585,10 +586,10 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-provider-filter",
                                 options=_ALL_PROVIDER_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_PROVIDER_OPTIONS),
                                 searchable=True,
-                                placeholder="All dataset source organisations",
                             ),
                         ], md=4, lg=2),
                         dbc.Col([
@@ -596,8 +597,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-domain-count-filter",
                                 options=_THEMATIC_DOMAIN_COUNT_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_DOMAIN_COUNT_OPTIONS),
                                 searchable=False,
                             ),
                         ], md=4, lg=2),
@@ -608,10 +610,10 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-institution-filter",
                                 options=_ALL_INSTITUTION_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_INSTITUTION_OPTIONS),
                                 searchable=True,
-                                placeholder="All institutions",
                             ),
                         ], md=4, lg=2),
                         dbc.Col([
@@ -619,10 +621,10 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-tre-filter",
                                 options=_ALL_TRE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_TRE_OPTIONS),
                                 searchable=True,
-                                placeholder="All processing environments",
                             ),
                         ], md=4, lg=2),
                         dbc.Col([
@@ -630,8 +632,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-domain-filter",
                                 options=_THEMATIC_DOMAIN_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_DOMAIN_OPTIONS),
                                 searchable=True,
                             ),
                         ], md=4, lg=2),
@@ -640,8 +643,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-purpose-filter",
                                 options=_THEMATIC_PURPOSE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_PURPOSE_OPTIONS),
                                 searchable=True,
                             ),
                         ], md=4, lg=2),
@@ -650,8 +654,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-tag-filter",
                                 options=_THEMATIC_TAG_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_TAG_OPTIONS),
                                 searchable=False,
                             ),
                         ], md=4, lg=2),
@@ -672,8 +677,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-record-linkage-filter",
                                 options=_DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_RECORD_LINKAGE_OPTIONS),
                                 searchable=False,
                             ),
                         ], md=4, lg=2),
@@ -682,8 +688,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-collection-method-filter",
                                 options=_DETERMINISTIC_COLLECTION_METHOD_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_COLLECTION_METHOD_OPTIONS),
                                 searchable=True,
                             ),
                         ], md=4, lg=4),
@@ -692,8 +699,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-temporal-structure-filter",
                                 options=_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS),
                                 searchable=True,
                             ),
                         ], md=4, lg=2),
@@ -702,8 +710,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-unit-filter",
                                 options=_DETERMINISTIC_UNIT_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_UNIT_OPTIONS),
                                 searchable=True,
                             ),
                         ], md=4, lg=2),
@@ -712,8 +721,9 @@ def _analyses_accordion():
                             dcc.Dropdown(
                                 id="enriched-researcher-sector-filter",
                                 options=_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS),
                                 searchable=True,
                             ),
                         ], md=4, lg=2),
@@ -726,6 +736,11 @@ def _analyses_accordion():
                             ),
                             html.Div([
                                 html.Button(
+                                    "Clear filters",
+                                    id="enriched-clear-filters-btn",
+                                    className="btn btn-outline-secondary btn-sm",
+                                ),
+                                html.Button(
                                     "Download CSV",
                                     id="enriched-download-btn",
                                     className="btn btn-outline-primary btn-sm",
@@ -735,7 +750,7 @@ def _analyses_accordion():
                                     target="enriched-download-btn",
                                     placement="top",
                                 ),
-                            ]),
+                            ], className="d-flex gap-2"),
                         ],
                             md=12,
                             className=(

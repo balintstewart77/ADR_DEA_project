@@ -7,6 +7,7 @@ from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS, _ALL_INSTITUTION_OPTIONS, _ALL_TRE_OPTIONS,
     df_all,
 )
+from dashboard.components.filter_controls import all_option_label
 from dashboard.components.table_styles import BROWSE_TABLE_STYLES
 from dashboard.data.year_filter import year_slider_kwargs
 
@@ -38,10 +39,10 @@ def build_explorer_tab():
                 dcc.Dropdown(
                     id="browse-dataset-filter",
                     options=_ALL_DATASET_OPTIONS,
-                    value="ALL",
-                    clearable=False,
+                    value=None,
+                    clearable=True,
+                    placeholder=all_option_label(_ALL_DATASET_OPTIONS),
                     searchable=True,
-                    placeholder="All datasets",
                 ),
             ], md=3),
             dbc.Col([
@@ -49,10 +50,10 @@ def build_explorer_tab():
                 dcc.Dropdown(
                     id="browse-provider-filter",
                     options=_ALL_PROVIDER_OPTIONS,
-                    value="ALL",
-                    clearable=False,
+                    value=None,
+                    clearable=True,
+                    placeholder=all_option_label(_ALL_PROVIDER_OPTIONS),
                     searchable=True,
-                    placeholder="All dataset source organisations",
                 ),
             ], md=3),
         ], className="mb-2 g-2"),
@@ -63,10 +64,10 @@ def build_explorer_tab():
                 dcc.Dropdown(
                     id="browse-institution-filter",
                     options=_ALL_INSTITUTION_OPTIONS,
-                    value="ALL",
-                    clearable=False,
+                    value=None,
+                    clearable=True,
+                    placeholder=all_option_label(_ALL_INSTITUTION_OPTIONS),
                     searchable=True,
-                    placeholder="All institutions",
                 ),
             ], md=3),
             dbc.Col([
@@ -74,10 +75,10 @@ def build_explorer_tab():
                 dcc.Dropdown(
                     id="browse-tre-filter",
                     options=_ALL_TRE_OPTIONS,
-                    value="ALL",
-                    clearable=False,
+                    value=None,
+                    clearable=True,
+                    placeholder=all_option_label(_ALL_TRE_OPTIONS),
                     searchable=True,
-                    placeholder="All processing environments",
                 ),
             ], md=3),
             dbc.Col([
@@ -91,31 +92,40 @@ def build_explorer_tab():
                 ),
             ], md=2),
             dbc.Col([
-                html.Div(id="browse-count", className="text-muted small",
-                         style={"paddingTop": "1.8rem"}),
-            ], md=2),
-            dbc.Col([
-                html.Label(" ", className="filter-label"),
-                html.Button(
-                    "Download CSV",
-                    id="browse-download-btn",
-                    className="btn btn-outline-primary btn-sm w-100",
-                ),
-                dbc.Tooltip(
-                    "Downloads all projects matching the current filters.",
-                    target="browse-download-btn",
-                    placement="top",
-                ),
-            ], md=2),
-        ], className="mb-3 g-2"),
-        dbc.Row([
-            dbc.Col([
                 html.Label("Accreditation year", className="filter-label"),
                 dcc.RangeSlider(
                     id="browse-accreditation-year-filter",
                     **year_slider_kwargs(df_all),
                 ),
-            ], md=6),
+            ], md=4),
+        ], className="mb-2 g-2"),
+        dbc.Row([
+            dbc.Col([
+                html.Div(id="browse-count", className="text-muted small"),
+                html.Div([
+                    html.Button(
+                        "Clear filters",
+                        id="browse-clear-filters-btn",
+                        className="btn btn-outline-secondary btn-sm",
+                    ),
+                    html.Button(
+                        "Download CSV",
+                        id="browse-download-btn",
+                        className="btn btn-outline-primary btn-sm",
+                    ),
+                    dbc.Tooltip(
+                        "Downloads all projects matching the current filters.",
+                        target="browse-download-btn",
+                        placement="top",
+                    ),
+                ], className="d-flex gap-2"),
+            ],
+                md=12,
+                className=(
+                    "d-flex flex-wrap align-items-center "
+                    "justify-content-between gap-2"
+                ),
+            ),
         ], className="mb-3 g-2"),
         html.Div(
             dash_table.DataTable(

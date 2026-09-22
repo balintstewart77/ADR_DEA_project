@@ -291,9 +291,40 @@ def _sort_enriched_table_records(records: list[dict], sort_by) -> list[dict]:
     return sorted(records, key=cmp_to_key(compare))
 
 
+ENRICHED_FILTER_DROPDOWN_IDS = (
+    "enriched-dataset-filter",
+    "enriched-provider-filter",
+    "enriched-institution-filter",
+    "enriched-tre-filter",
+    "enriched-domain-filter",
+    "enriched-domain-count-filter",
+    "enriched-purpose-filter",
+    "enriched-tag-filter",
+    "enriched-record-linkage-filter",
+    "enriched-collection-method-filter",
+    "enriched-temporal-structure-filter",
+    "enriched-unit-filter",
+    "enriched-researcher-sector-filter",
+)
+
+
 def register(app):
     if not THEMATIC_DATA_AVAILABLE:
         return
+
+    @app.callback(
+        Output("enriched-search", "value"),
+        *[Output(dropdown_id, "value") for dropdown_id in ENRICHED_FILTER_DROPDOWN_IDS],
+        Output("enriched-accreditation-year-filter", "value"),
+        Output("enriched-register-table", "page_current"),
+        Input("enriched-clear-filters-btn", "n_clicks"),
+        State("enriched-accreditation-year-filter", "min"),
+        State("enriched-accreditation-year-filter", "max"),
+        prevent_initial_call=True,
+    )
+    def clear_enriched_filters(_n_clicks, year_min, year_max):
+        # An empty dropdown means "ALL" to the filters and shows its "All …" placeholder.
+        return ("", *[None] * len(ENRICHED_FILTER_DROPDOWN_IDS), [year_min, year_max], 0)
 
     app.clientside_callback(
         ClientsideFunction(namespace="enrichedRationale", function_name="update"),
