@@ -1,18 +1,18 @@
 {
-  "snapshot_hash": "e8a2768a89e563e39b8aea70265d884b9d4b8a52b3120e25825d24893ec1b45d",
+  "snapshot_hash": "36f3beebd100a1acba4821aaa75638ee2fb86df5c235888b8b5fd315601fb0db",
   "snapshot_integrity_verified": true,
   "snapshot_unchanged_by_caller_mutation": true,
   "tampered_snapshot_detected": true,
   "snapshot_unchanged_after_correction": true,
   "derived": {
-    "adj_dom_multiple_defensible": 0
+    "adj_dom_best_skipped": 0
   },
   "adj_correction": [
     {
-      "snapshot_hash": "e8a2768a89e563e39b8aea70265d884b9d4b8a52b3120e25825d24893ec1b45d",
-      "field": "adj_dom_support_note",
-      "original_value": "Synthetic comparative basis.",
-      "corrected_value": "Synthetic comparative basis (transcription corrected).",
+      "snapshot_hash": "36f3beebd100a1acba4821aaa75638ee2fb86df5c235888b8b5fd315601fb0db",
+      "field": "adj_stage1_note",
+      "original_value": "Synthetic reviewer note.",
+      "corrected_value": "Synthetic reviewer note (transcription corrected).",
       "reason": "Clerical transcription slip in the synthetic support note.",
       "author": "SYN_ADJ_R1",
       "date": "2026-09-21"
@@ -21,25 +21,25 @@
   "events": [
     {
       "event": "preserved",
-      "hash": "e8a2768a89e563e39b8aea70265d884b9d4b8a52b3120e25825d24893ec1b45d",
-      "at": "2026-09-21T16:54:07.092285+00:00"
+      "hash": "36f3beebd100a1acba4821aaa75638ee2fb86df5c235888b8b5fd315601fb0db",
+      "at": "2026-09-22T10:24:50.965179+00:00"
     },
     {
       "event": "preserve_rejected_existing_snapshot",
-      "at": "2026-09-21T16:54:07.092308+00:00"
+      "at": "2026-09-22T10:24:50.965193+00:00"
     },
     {
       "event": "correction_recorded",
-      "field": "adj_dom_support_note",
-      "at": "2026-09-21T16:54:07.092390+00:00"
+      "field": "adj_stage1_note",
+      "at": "2026-09-22T10:24:50.965258+00:00"
     },
     {
       "event": "reveal_failed_partial",
-      "at": "2026-09-21T16:54:07.092630+00:00"
+      "at": "2026-09-22T10:24:50.965493+00:00"
     },
     {
       "event": "reveal_recovered",
-      "at": "2026-09-21T16:54:07.092652+00:00"
+      "at": "2026-09-22T10:24:50.965510+00:00"
     }
   ],
   "exposure_history": [
@@ -49,7 +49,7 @@
       "accessibility": "potential",
       "viewing": "unknown",
       "extent": "unknown",
-      "at": "2026-09-21T16:54:07.092626+00:00"
+      "at": "2026-09-22T10:24:50.965490+00:00"
     }
   ],
   "reveal_assignment": "SYN_ASSIGN_001"

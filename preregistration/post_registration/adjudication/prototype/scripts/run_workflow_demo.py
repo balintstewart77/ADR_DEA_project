@@ -13,8 +13,8 @@ def main():
     preserved_adequacy = store["snapshot"]["response"]["adj_dom_adequacy"]
     integrity_ok = verify_snapshot(store) == snapshot_hash
     # One clerical/transcription correction. It is appended; Stage 1 is never overwritten.
-    preserved_note = store["snapshot"]["response"]["adj_dom_support_note"]
-    record_correction(store, snapshot_hash, {"field": "adj_dom_support_note", "original_value": preserved_note, "corrected_value": preserved_note.replace(".", " (transcription corrected)."), "reason": "Clerical transcription slip in the synthetic support note.", "author": "SYN_ADJ_R1", "date": "2026-09-21"})
+    preserved_note = store["snapshot"]["response"]["adj_stage1_note"]
+    record_correction(store, snapshot_hash, {"field": "adj_stage1_note", "original_value": preserved_note, "corrected_value": preserved_note.replace(".", " (transcription corrected)."), "reason": "Clerical transcription slip in the synthetic support note.", "author": "SYN_ADJ_R1", "date": "2026-09-21"})
     unchanged_after_correction = verify_snapshot(store) == snapshot_hash
     tampered = json.loads(json.dumps(store["snapshot"])); tampered["response"]["adj_dom_adequacy"] = 3
     try:

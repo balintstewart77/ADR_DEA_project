@@ -32,8 +32,10 @@ all, split between the `primary` and `secondary` reviewer groups. Import it
 exist. It carries the generator's read-only evidence: the frozen title and
 datasets-used entry, neutral slot maps, label and tag-status membership, and
 observed differences derived from displayed candidates alone. It also carries
-the hidden comparative and applicable flags that gate the form, so a reviewer
-is asked only the questions the package raises. It contains no source identity, route, count or reveal
+the hidden flags that gate the lean Stage 1 form, so a comparative record is
+asked §9.2's judgements once, plus a blind best-supported choice and adequacy
+for each component that differs, and an owner-only single set gets its
+per-label checks instead. It contains no source identity, route, count or reveal
 material, and generation fails rather than truncating if a package needs a
 fifth slot or carries an input QA flag.
 

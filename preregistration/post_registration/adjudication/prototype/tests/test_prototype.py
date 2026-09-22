@@ -2,7 +2,7 @@ import copy, csv, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,DOMAINS,HEADER,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,DOMAINS,HEADER,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -10,6 +10,19 @@ def frozen_owner_rows():
     with FROZEN_OWNER.open(encoding="utf-8-sig",newline="") as f: return {x["Variable / Field Name"]:x for x in csv.DictReader(f)}
 def choice_codes(row): return {int(entry.split(",",1)[0].strip()) for entry in row["Choices, Calculations, OR Slider Labels"].split(" | ")}
 
+def redcap_shows(branch,context):
+    """Evaluate the REDCap branching subset used in the candidate dictionary.
+
+    Supports [field] and [field(code)] references, = and <>, and/or, and
+    parentheses.  Unanswered fields read as blank; unticked options as '0'.
+    """
+    if not branch.strip(): return True
+    def value(match):
+        name,code=match.group(1),match.group(2)
+        if code is not None: return repr("1" if int(code) in context.get(name,[]) else "0")
+        return repr(str(context.get(name,"")))
+    expression=re.sub(r"\[([a-z0-9_]+)(?:\((\d+)\))?\]",value,branch).replace("<>","!=").replace(" = "," == ")
+    return bool(eval(expression,{"__builtins__":{}},{}))
 class PrototypeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -34,42 +47,62 @@ class PrototypeTests(unittest.TestCase):
             with self.assertRaises(ValueError): preserve(default_valid_submission(p),p,{})
     def test_required_status_and_single_set_failures(self):
         p=self.packages[2]; empty={"assignment_id":p["assignment_id"],"package_id":p["package_id"]}; issues=validate_submission(empty,p)
-        self.assertTrue(any("generated-difference" in x for x in issues)); self.assertTrue(any("displayed/differing label" in x for x in issues)); self.assertTrue(any("tag assessment" in x for x in issues))
-        bad=copy.deepcopy(self.submissions[2]); del bad["boundary"]["dom"]; self.assertIn("dom: boundary response required",validate_submission(bad,p))
-    def test_comparative_notes_and_ids_are_enforced(self):
-        p=self.packages[0]; base=copy.deepcopy(self.submissions[0])
-        bad=copy.deepcopy(base); bad["adj_dom_weaker"]=1; bad["adj_dom_weaker_interpretations"]=[]; self.assertTrue(any("weaker support" in x for x in validate_submission(bad,p)))
-        bad=copy.deepcopy(base); bad["adj_dom_defensible_state"]=2; bad["adj_dom_defensible_interpretations"]=[]; bad.pop("adj_dom_defensible_note",None); self.assertTrue(any("cannot-judge defensibility" in x for x in validate_submission(bad,p)))
-        bad=copy.deepcopy(base); bad["tag_assessments"]["covid"]={"support":1,"rule_conflict":2,"supported_status":0}; self.assertTrue(any("tag cannot-assess" in x for x in validate_submission(bad,p)))
-    def test_beyond_disagreement_routes_are_gated_by_recorded_concern(self):
-        # §9.2 bounds comparative Stage 1 to the observed disagreement, so these
-        # routes open only on the single-set path or on a recorded concern.
-        comparative=self.packages[0]; base=copy.deepcopy(self.submissions[0])
-        self.assertEqual(base.get("adj_concern_scope"),[0])
-        for field in ("adj_dom_shared_label_state","adj_dom_additional_label_state"): self.assertNotIn(field,base)
-        self.assertEqual(validate_submission(base,comparative),[])
-        for field,phrase in (("adj_dom_shared_label_state","shared-label route"),("adj_dom_additional_label_state","additional-label route")):
-            bad=copy.deepcopy(base); bad[field]=0
-            self.assertTrue(any(phrase in x for x in validate_submission(bad,comparative)),field)
-        opened=copy.deepcopy(base); opened["adj_concern_scope"]=[1]
-        issues=validate_submission(opened,comparative)
-        self.assertTrue(any("shared-label state required" in x for x in issues)); self.assertTrue(any("additional-label state required" in x for x in issues))
-        opened.update({"adj_dom_shared_label_state":1,"adj_dom_shared_label_ids":["not-a-label"],"adj_dom_shared_label_note":"Synthetic"})
-        self.assertTrue(any("shared labels need permitted IDs" in x for x in validate_submission(opened,comparative)))
-        opened.update({"adj_dom_shared_label_state":0,"adj_dom_shared_label_ids":[],"adj_dom_additional_label_state":1,"adj_dom_additional_label_ids":[DOMAINS[2]],"adj_dom_additional_label_note":"Synthetic"})
-        self.assertTrue(any("additional labels need permitted IDs" in x for x in validate_submission(opened,comparative)))
-        single=self.packages[2]; single_response=copy.deepcopy(self.submissions[2])
-        self.assertIn("adj_dom_additional_label_state",single_response)
-        self.assertEqual(validate_submission(single_response,single),[])
+        self.assertTrue(any("generated-difference" in x for x in issues)); self.assertTrue(any("displayed label" in x for x in issues)); self.assertTrue(any("tag assessment" in x for x in issues))
+        self.assertIn("boundary state required",issues); self.assertTrue(any("masking failure required" in x for x in issues))
+        bad=copy.deepcopy(self.submissions[2]); del bad["adj_boundary"]; self.assertIn("boundary state required",validate_submission(bad,p))
+    def test_lean_comparative_judgements_are_enforced(self):
+        # §9.2's judgements for a comparative record, plus ADJ-037's blind choice.
+        p=self.packages[0]; base=copy.deepcopy(self.submissions[0]); self.assertEqual(validate_submission(base,p),[])
+        self.assertEqual(comparative_components(p),["dom"])
+        for key in ("adj_evidence","adj_defensible","adj_rule_conflict","adj_dom_best","adj_dom_adequacy"):
+            bad=copy.deepcopy(base); del bad[key]; self.assertTrue(validate_submission(bad,p),key)
+        bad=copy.deepcopy(base); bad["adj_dom_best"]=3; self.assertTrue(any("slot that is not displayed" in x for x in validate_submission(bad,p)))
+        for code in (5,6):
+            ok=copy.deepcopy(base); ok["adj_dom_best"]=code; self.assertEqual(validate_submission(ok,p),[],code)
+        bad=copy.deepcopy(base); bad["adj_evidence"]=2; self.assertTrue(any("differing-component scope" in x for x in validate_submission(bad,p)))
+        bad["adj_evidence_scope"]=[2]; self.assertTrue(any("differing-component scope" in x for x in validate_submission(bad,p)),"purposes do not differ here")
+        bad=copy.deepcopy(base); bad["adj_evidence_scope"]=[1]; self.assertTrue(any("evidence scope is only recorded" in x for x in validate_submission(bad,p)))
+        bad=copy.deepcopy(base); bad["adj_defensible"]=1; self.assertTrue(any("defensible interpretation needs" in x for x in validate_submission(bad,p)))
+        bad["adj_defensible_scope"]=[1]; self.assertEqual(validate_submission(bad,p),[])
+        bad=copy.deepcopy(base); bad["adj_defensible"]=2; self.assertTrue(any("cannot-judge defensibility" in x for x in validate_submission(bad,p)))
+        bad=copy.deepcopy(base); bad["adj_rule_conflict"]=1; issues=validate_submission(bad,p)
+        self.assertTrue(any("rule conflict needs its component scope" in x for x in issues)); self.assertTrue(any("citation and explanation" in x for x in issues))
+        bad.update({"adj_rule_conflict_scope":[1],"adj_rule_conflict_ref":"SYN-RULE-1","adj_rule_conflict_note":"Synthetic"})
+        self.assertTrue(any("conflicting displayed slot" in x for x in validate_submission(bad,p)))
+        bad["adj_dom_conflict_slots"]=[2]; self.assertEqual(validate_submission(bad,p),[])
+        bad["adj_dom_conflict_slots"]=[3]; self.assertTrue(any("conflicting displayed slot" in x for x in validate_submission(bad,p)))
+        bad=copy.deepcopy(base); bad["adj_rule_conflict"]=2; self.assertTrue(any("cannot-assess rule conflict" in x for x in validate_submission(bad,p)))
+        bad=copy.deepcopy(base); bad["adj_purp_best"]=1; self.assertTrue(any("does not differ" in x for x in validate_submission(bad,p)))
+    def test_single_set_and_comparative_paths_do_not_mix(self):
+        # Comparative records get the record-level judgements; the owner-only
+        # single set gets §9.2's per-label checks and additional-label question.
+        comparative=self.packages[0]; single=self.packages[2]
+        base=copy.deepcopy(self.submissions[0]); single_response=copy.deepcopy(self.submissions[2])
+        for field in ("label_assessments","tag_assessments","adj_dom_additional_label_state"): self.assertNotIn(field,base)
+        for field in ("adj_dom_additional_label_state","adj_dom_additional_label_ids"):
+            bad=copy.deepcopy(base); bad[field]=0 if field.endswith("state") else []
+            self.assertTrue(any("single-set questions do not apply" in x for x in validate_submission(bad,comparative)),field)
+        self.assertIn("adj_dom_additional_label_state",single_response); self.assertEqual(validate_submission(single_response,single),[])
         missing=copy.deepcopy(single_response); del missing["adj_dom_additional_label_state"]
         self.assertTrue(any("additional-label state required" in x for x in validate_submission(missing,single)))
-        for comp in COMPONENTS:
-            bad=copy.deepcopy(base); bad["boundary"].pop(comp); self.assertIn(f"{comp}: boundary response required",validate_submission(bad,comparative))
+        for field,value in (("adj_evidence",1),("adj_dom_best",1),("adj_rule_conflict",0)):
+            bad=copy.deepcopy(single_response); bad[field]=value
+            self.assertTrue(any("comparative questions do not apply" in x for x in validate_submission(bad,single)),field)
+        opened=copy.deepcopy(single_response); opened.update({"adj_dom_additional_label_state":1,"adj_dom_additional_label_ids":[DOMAINS[0]],"adj_dom_additional_label_note":"Synthetic"})
+        self.assertTrue(any("selected additional label" in x for x in validate_submission(opened,single)))
+        opened["label_assessments"]["dom"][DOMAINS[0]]={"support":1,"rule_conflict":0}; self.assertEqual(validate_submission(opened,single),[])
     def test_diff_and_record_status_controls(self):
-        p=self.packages[0]; bad=copy.deepcopy(self.submissions[0]); bad["adj_diff_check"]=2; self.assertIn("generation error blocks Stage 1 completion",validate_submission(bad,p))
-        bad=copy.deepcopy(self.submissions[0]); bad["adj_concern_scope"]=[0,1]; self.assertIn("no-concern scope is exclusive",validate_submission(bad,p))
-        bad=copy.deepcopy(self.submissions[0]); bad["adj_prior_exposure"]=2; self.assertTrue(any("known prior exposure" in x for x in validate_submission(bad,p)))
-        bad=copy.deepcopy(self.submissions[0]); bad["adj_stage1_case_status"]=[1]; self.assertTrue(any("case status needs note" in x for x in validate_submission(bad,p)))
+        p=self.packages[0]; base=self.submissions[0]
+        bad=copy.deepcopy(base); bad["adj_diff_check"]=2; self.assertIn("generation error blocks Stage 1 completion",validate_submission(bad,p))
+        for field,label in (("adj_masking_failure","masking failure"),("adj_other_concern","other concern"),("adj_stage1_unresolved","unresolved at Stage 1")):
+            bad=copy.deepcopy(base); bad[field]=1; self.assertIn(f"{label} needs explanation",validate_submission(bad,p),field)
+            bad=copy.deepcopy(base); del bad[field]; self.assertIn(f"{label} required",validate_submission(bad,p),field)
+        bad=copy.deepcopy(base); bad["adj_boundary"]=[0,1]; self.assertIn("no/cannot boundary state is exclusive",validate_submission(bad,p))
+        bad=copy.deepcopy(base); bad["adj_boundary"]=[1]; issues=validate_submission(bad,p)
+        for phrase in ("component scope","needs explanation","frozen rule citation"): self.assertTrue(any(phrase in x for x in issues),phrase)
+        bad.update({"adj_boundary_scope":[2],"adj_boundary_rule_ref":"SYN-RULE-2","adj_boundary_note":"Synthetic"}); self.assertEqual(validate_submission(bad,p),[])
+        bad=copy.deepcopy(base); bad["adj_boundary"]=[2]; bad["adj_boundary_scope"]=[1]; bad["adj_boundary_note"]="Synthetic"; self.assertEqual(validate_submission(bad,p),[])
+        bad=copy.deepcopy(base); bad["adj_boundary_scope"]=[1]; self.assertTrue(any("boundary scope is only recorded" in x for x in validate_submission(bad,p)))
     def test_append_only_preservation_and_partial_reveal_recovery(self):
         p=self.packages[0]; response=self.submissions[0]; store={}; h=preserve(response,p,store); original=store["snapshot_hash"]
         with self.assertRaises(RuntimeError): preserve(response,p,store)
@@ -146,9 +179,9 @@ class PrototypeTests(unittest.TestCase):
     def test_preserved_snapshot_is_copied_and_integrity_checked(self):
         package=self.packages[0]; response=copy.deepcopy(self.submissions[0]); store={}
         h=preserve(response,package,store); self.assertEqual(verify_snapshot(store),h)
-        response["adj_dom_adequacy"]=3; response["adj_dom_best_interpretations"].append("DOM_2"); package["qa_flags"].append("synthetic_late_flag")
+        response["adj_dom_adequacy"]=3; response["adj_boundary"].append(9); package["qa_flags"].append("synthetic_late_flag")
         self.assertEqual(store["snapshot"]["response"]["adj_dom_adequacy"],1)
-        self.assertEqual(store["snapshot"]["response"]["adj_dom_best_interpretations"],self.submissions[0]["adj_dom_best_interpretations"])
+        self.assertEqual(store["snapshot"]["response"]["adj_boundary"],self.submissions[0]["adj_boundary"])
         self.assertEqual(store["snapshot"]["presented"]["qa_flags"],[])
         self.assertEqual(store["snapshot_hash"],h); self.assertEqual(verify_snapshot(store),h)
         package["qa_flags"].pop()
@@ -156,28 +189,26 @@ class PrototypeTests(unittest.TestCase):
         with self.assertRaises(PermissionError): verify_snapshot(tampered)
         with self.assertRaises(PermissionError): reveal(package["assignment_id"],package["package_id"],h,load_json("reveal_payloads.json"),tampered)
         with self.assertRaises(PermissionError): verify_snapshot({})
-    def test_derived_multiple_defensible_indicator(self):
-        package=self.packages[0]; ids=[x["interpretation_id"] for x in package["interpretations"]["dom"]]; self.assertEqual(len(ids),2)
-        base=copy.deepcopy(self.submissions[0])
-        two=copy.deepcopy(base); two["adj_dom_defensible_interpretations"]=ids
-        self.assertEqual(derive_stage1(two,package)["adj_dom_multiple_defensible"],1)
-        one=copy.deepcopy(base); one["adj_dom_defensible_interpretations"]=[ids[0]]
-        self.assertEqual(derive_stage1(one,package)["adj_dom_multiple_defensible"],0)
-        for state in (0,2):
-            none=copy.deepcopy(base); none["adj_dom_defensible_state"]=state; none["adj_dom_defensible_interpretations"]=[]
-            self.assertEqual(derive_stage1(none,package)["adj_dom_multiple_defensible"],0)
-        for comp in ("purp","covid","equity"):
-            self.assertEqual(len(package["interpretations"][comp]),1,comp)
-            self.assertNotIn(f"adj_{comp}_multiple_defensible",derive_stage1(base,package))
-        store={}; preserve(two,package,store)
-        self.assertEqual(store["snapshot"]["derived"],{"adj_dom_multiple_defensible":1})
-        self.assertNotIn("adj_dom_multiple_defensible",store["snapshot"]["response"])
-        supplied=copy.deepcopy(base); supplied["adj_dom_multiple_defensible"]=1
-        self.assertTrue(any("multiple-defensible is derived" in x for x in validate_submission(supplied,package)))
+    def test_derived_best_skipped_indicator(self):
+        # Separates "not asked because evidence cannot distinguish" from a
+        # missing answer in the export.  Derived, never reviewer-entered.
+        package=self.packages[0]; base=copy.deepcopy(self.submissions[0])
+        self.assertEqual(derive_stage1(base,package),{"adj_dom_best_skipped":0})
+        skipped=copy.deepcopy(base); skipped.update({"adj_evidence":3,"adj_evidence_scope":[1]}); del skipped["adj_dom_best"]
+        self.assertEqual(validate_submission(skipped,package),[]); self.assertEqual(derive_stage1(skipped,package),{"adj_dom_best_skipped":1})
+        asked_anyway=copy.deepcopy(skipped); asked_anyway["adj_dom_best"]=1
+        self.assertTrue(any("not asked when evidence cannot distinguish" in x for x in validate_submission(asked_anyway,package)))
+        partial=copy.deepcopy(base); partial.update({"adj_evidence":2,"adj_evidence_scope":[1]})
+        self.assertEqual(validate_submission(partial,package),[]); self.assertEqual(derive_stage1(partial,package),{"adj_dom_best_skipped":0})
+        self.assertEqual(derive_stage1(self.submissions[2],self.packages[2]),{})
+        store={}; preserve(skipped,package,store)
+        self.assertEqual(store["snapshot"]["derived"],{"adj_dom_best_skipped":1}); self.assertNotIn("adj_dom_best_skipped",store["snapshot"]["response"])
+        supplied=copy.deepcopy(base); supplied["adj_dom_best_skipped"]=0
+        self.assertTrue(any("derived and cannot be supplied" in x for x in validate_submission(supplied,package)))
     def test_corrections_and_reflections_require_complete_entries(self):
         package=self.packages[0]; store={}; h=preserve(copy.deepcopy(self.submissions[0]),package,store)
-        preserved=store["snapshot"]["response"]["adj_dom_support_note"]
-        valid={"field":"adj_dom_support_note","original_value":preserved,"corrected_value":preserved.replace(".", " (transcription corrected)."),"reason":"Transcription slip.","author":"SYN_ADJ_R1","date":"2026-09-21"}
+        preserved=store["snapshot"]["response"]["adj_stage1_note"]
+        valid={"field":"adj_stage1_note","original_value":preserved,"corrected_value":preserved.replace(".", " (transcription corrected)."),"reason":"Transcription slip.","author":"SYN_ADJ_R1","date":"2026-09-21"}
         for key in valid:
             partial={k:v for k,v in valid.items() if k!=key}
             with self.assertRaises(ValueError,msg=key): record_correction(store,h,partial)
@@ -201,7 +232,7 @@ class PrototypeTests(unittest.TestCase):
         with self.assertRaises(ValueError): record_reflection(store,h,{"anything":1})
         with self.assertRaises(ValueError): record_reflection(store,h,{**reflection,"scope":"not_a_scope"})
         with self.assertRaises(PermissionError): record_reflection(store,"0"*64,reflection)
-        record_reflection(store,h,reflection); record_reflection(store,h,{**reflection,"scope":"adj_dom_support_note"})
+        record_reflection(store,h,reflection); record_reflection(store,h,{**reflection,"scope":"adj_stage1_note"})
         self.assertEqual(len(store["adj_reflection"]),2); self.assertEqual(store["snapshot_hash"],h); self.assertEqual(store["snapshot"],before)
         self.assertEqual(verify_snapshot(store),h)
     def test_noneoftheabove_annotations_are_quoted_and_valid(self):
@@ -224,23 +255,28 @@ class PrototypeTests(unittest.TestCase):
         rows=field_rows(); names=[x[0] for x in rows]; self.assertEqual(len(names),len(set(names))); self.assertEqual(HEADER.__len__(),18)
         form_order={"adj_admin":0,"adj_stage1":1,"adj_stage2":2}; by={x[0]:x for x in rows}
         for row in rows:
-            if row[3]=="calc":
-                self.assertFalse(row[17],row[0])
-                for token in row[5].split("[")[1:]: self.assertIn(token.split("]")[0].split("(")[0],by,row[0])
-            elif row[3]!="yesno" and row[5]:
+            self.assertNotEqual(row[3],"calc",row[0])
+            if row[3]!="yesno" and row[5]:
                 codes=[]
                 for entry in row[5].split(" | "):
                     self.assertRegex(entry,r"^[^,]+, .+"); codes.append(entry.split(",",1)[0])
-                if row[3]=="checkbox": self.assertEqual(len(codes),len(set(codes)))
+                if row[3] in ("checkbox","radio"): self.assertEqual(len(codes),len(set(codes)),row[0])
             for token in row[11].split("[")[1:]:
                 ref=token.split("]")[0].split("(")[0]; self.assertIn(ref,by); self.assertLessEqual(form_order[by[ref][1]],form_order[row[1]])
-        required={"adj_diff_check","adj_diff_dimensions","adj_diff_labels","adj_diff_tag_statuses","adj_concern_scope","adj_concern_other_note","adj_prior_exposure","adj_prior_exposure_source","adj_prior_exposure_timing","adj_masking_failure","adj_masking_note","adj_stage1_case_status","adj_stage1_case_status_note","adj_stage1_affirmed","adj_source_record_id","adj_reviewer_role"}
-        for comp in COMPONENTS: required|={f"adj_{comp}_{x}" for x in ("interpretation_map","public_evidence","comparative_outcome","best_interpretations","adequacy","defensible_state","defensible_interpretations","defensible_note","multiple_defensible","weaker","weaker_interpretations","weaker_note","support_note","boundary_state","boundary_scope","recognised_boundary_rule_ref","recognised_boundary_note","plausible_boundary_note")}
+        record={"adj_diff_check","adj_diff_error_note","adj_diff_dimensions","adj_diff_labels","adj_diff_tag_statuses","adj_case_title","adj_case_datasets",
+                "adj_evidence","adj_evidence_scope","adj_defensible","adj_defensible_scope","adj_defensible_note","adj_rule_conflict","adj_rule_conflict_scope","adj_rule_conflict_ref","adj_rule_conflict_note",
+                "adj_boundary","adj_boundary_scope","adj_boundary_rule_ref","adj_boundary_note","adj_masking_failure","adj_masking_note","adj_other_concern","adj_other_concern_note",
+                "adj_stage1_unresolved","adj_stage1_unresolved_note","adj_stage1_note","adj_stage1_affirmed","adj_source_record_id","adj_reviewer_role","adj_pkg_comparative"}
+        for comp in COMPONENTS: record|={f"adj_{comp}_{x}" for x in ("comparative","interpretation_map","best","adequacy","conflict_slots")}
         for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES)):
-            required|={f"adj_{comp}_{x}" for x in ("shared_label_state","shared_label_ids","shared_label_note","additional_label_state","additional_label_ids","additional_label_note")}
-            for n in range(1,len(vocab)+1): required|={f"adj_{comp}_l{n:02d}_{x}" for x in ("membership","support","rule_conflict","rule_ref","rule_note","omission","omission_interpretations","omission_note")}
-        for tag in ("covid","equity"): required|={f"adj_{tag}_{x}" for x in ("status_membership","status_support","rule_conflict","rule_ref","rule_note","supported_status","supported_status_note")}
-        self.assertTrue(required<=set(names)); self.assertTrue(all(x[1]!="adj_stage1" for x in rows if x[0] in {"adj_reveal_state","adj_stage2_closure","adj_no_issue_rationale"}))
+            record|={f"adj_{comp}_{x}" for x in ("additional_label_state","additional_label_ids","additional_label_note")}
+            for n in range(1,len(vocab)+1): record|={f"adj_{comp}_l{n:02d}_{x}" for x in ("applicable","membership","support","rule_conflict","rule_ref","rule_note")}
+        for tag in ("covid","equity"): record|={f"adj_{tag}_{x}" for x in ("status_membership","status_support","rule_conflict","rule_ref","rule_note","supported_status","supported_status_note")}
+        self.assertEqual(set(names)-{"adj_assignment_id","adj_stage1_package_id","adj_reveal_state","adj_stage2_closure","adj_no_issue_rationale"},record)
+        retired=("comparative_outcome","best_interpretations","public_evidence","defensible_state","weaker","multiple_defensible","omission","shared_label","support_note","concern_scope","prior_exposure","case_status")
+        for name in names: self.assertFalse(any(x in name for x in retired),name)
+        self.assertTrue(all(x[1]!="adj_stage1" for x in rows if x[0] in {"adj_reveal_state","adj_stage2_closure","adj_no_issue_rationale"}))
+        for name in ("adj_other_concern","adj_stage1_unresolved"): self.assertIn("@DEFAULT='0'",by[name][17])
     def test_generated_outputs_are_masked_and_reproducible(self):
         preview=(ROOT/"preview"/"index.html").read_text(encoding="utf-8").lower()
         for forbidden in ("source_id","gpt55","rationale","eligibility","reveal_payload","source_map"): self.assertNotIn(forbidden,preview)
@@ -249,34 +285,43 @@ class PrototypeTests(unittest.TestCase):
         rows=field_rows(); by={x[0]:x for x in rows}
         flag=lambda ref: ref.endswith("_applicable") or ref.endswith("_comparative")
         refs=lambda b: [t.split("]")[0].split("(")[0] for t in b.split("[")[1:]]
+        for name in ("adj_pkg_comparative",)+tuple(f"adj_{c}_comparative" for c in COMPONENTS): self.assertIn("@HIDDEN",by[name][17],name)
+        for name in ("adj_evidence","adj_defensible","adj_rule_conflict"): self.assertIn("[adj_pkg_comparative] = '1'",by[name][11],name)
         for comp in COMPONENTS:
-            self.assertIn("@HIDDEN",by[f"adj_{comp}_comparative"][17])
-            for name in ("public_evidence","comparative_outcome","adequacy","defensible_state","weaker","support_note","multiple_defensible"):
-                self.assertIn(f"[adj_{comp}_comparative] = '1'",by[f"adj_{comp}_{name}"][11],name)
-            self.assertFalse(by[f"adj_{comp}_boundary_state"][11],"boundary is required for every component")
+            self.assertIn(f"[adj_{comp}_comparative] = '1'",by[f"adj_{comp}_best"][11]); self.assertIn(f"[adj_{comp}_comparative] = '1'",by[f"adj_{comp}_adequacy"][11])
+            self.assertIn(f"[adj_evidence] <> '3'",by[f"adj_{comp}_best"][11],"best is skipped when evidence cannot distinguish")
         for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES)):
             for n in range(1,len(vocab)+1):
-                self.assertIn("@HIDDEN",by[f"adj_{comp}_l{n:02d}_applicable"][17])
-                self.assertIn(f"[adj_{comp}_l{n:02d}_applicable] = '1'",by[f"adj_{comp}_l{n:02d}_support"][11])
-                self.assertIn(f"[adj_{comp}_comparative] = '1'",by[f"adj_{comp}_l{n:02d}_omission"][11])
-            code={"dom":1,"purp":2}[comp]
-            # Beyond-disagreement routes: comparative packages open them only on
-            # a recorded concern; the single-set path always asks the additional
-            # label question, as §9.2 requires.
-            self.assertEqual(by[f"adj_{comp}_shared_label_state"][11],f"[adj_{comp}_comparative] = '1' and [adj_concern_scope({code})] = '1'")
-            self.assertEqual(by[f"adj_{comp}_additional_label_state"][11],f"([adj_{comp}_comparative] = '0' or [adj_concern_scope({code})] = '1')")
+                self.assertIn("@HIDDEN",by[f"adj_{comp}_l{n:02d}_applicable"][17]); self.assertIn(f"[adj_{comp}_l{n:02d}_applicable] = '1'",by[f"adj_{comp}_l{n:02d}_support"][11])
+            self.assertEqual(by[f"adj_{comp}_additional_label_state"][11],"[adj_pkg_comparative] = '0'")
+        self.assertFalse(by["adj_boundary"][11],"boundary is asked for every record")
+        answerable={"radio","checkbox","yesno","text","notes"}
         for case,package in zip(self.cases,self.packages):
             evidence=generated_evidence(package)
-            comparative={c:evidence[f"adj_{c}_comparative"] for c in COMPONENTS}
-            for comp in COMPONENTS: self.assertEqual(comparative[comp],int(len(package["interpretations"][comp])>1))
-            shown=0
-            for row in rows:
-                if row[1]!="adj_stage1" or "@HIDDEN" in row[17]: continue
-                needed=refs(row[11])
-                if any(not flag(x) for x in needed): continue
-                if all(str(evidence.get(x))=="1" for x in needed): shown+=1
-            unflagged=sum(1 for r in rows if r[1]=="adj_stage1" and "@HIDDEN" not in r[17])
-            self.assertLess(shown,unflagged/2,f"{case['record_id']} still opens with most of the form")
+            self.assertEqual(evidence["adj_pkg_comparative"],int(len(package["candidates"])>1))
+            for comp in COMPONENTS: self.assertEqual(evidence[f"adj_{comp}_comparative"],int(len(package["interpretations"][comp])>1))
+            for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES)):
+                for n,label in enumerate(vocab,1):
+                    shown=label in component_labels(package,comp)[1] and len(package["candidates"])==1
+                    self.assertEqual(evidence[f"adj_{comp}_l{n:02d}_applicable"],int(shown))
+            # Count what a reviewer is asked when the form opens, before any
+            # answer: generated flags set, every reviewer field still blank.
+            asked=[row[0] for row in rows if row[1]=="adj_stage1" and row[3] in answerable and row[0]!="adj_stage1_note"
+                   and not any(a in row[17] for a in ("@HIDDEN","@READONLY","@DEFAULT")) and redcap_shows(row[11],evidence)]
+            if len(package["candidates"])>1:
+                # Differences, evidence, boundary, defensibility, rule conflict,
+                # masking and affirmation, plus best-supported and adequacy for
+                # each component that differs.
+                self.assertEqual(len(asked),7+2*len(comparative_components(package)),(case["record_id"],asked))
+                self.assertFalse([x for x in asked if "_l0" in x or "_l1" in x or "additional_label" in x or "status_" in x],case["record_id"])
+            else:
+                labels=sum(len(component_labels(package,c)[1]) for c in ("dom","purp"))
+                # Differences, boundary, masking and affirmation, then §9.2's
+                # single-set checks: support and rule conflict per displayed
+                # label, the additional-label question per component, and
+                # support, conflict and alternative status per tag.
+                self.assertEqual(len(asked),4+2*labels+2+3*2,(case["record_id"],asked))
+                self.assertFalse([x for x in asked if x in ("adj_evidence","adj_defensible","adj_rule_conflict") or x.endswith("_best")],case["record_id"])
     def test_frozen_public_entry_is_presented(self):
         by={x[0]:x for x in field_rows()}
         for name in ("adj_case_title","adj_case_datasets"):
