@@ -1,4 +1,4 @@
-import copy, csv, json, re, sys, unittest
+import copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
@@ -604,4 +604,19 @@ class PrototypeTests(unittest.TestCase):
         data={"adj_stage2_closure":1,"adj_f1_family":7,"adj_f1_components":[1],"adj_f1_mech_data":101,"adj_f1_release":4,"adj_f1_another":0,"adj_stage2_affirmed":1}
         self.assertEqual(validate_stage2(data),[])
         stray=copy.deepcopy(data); stray["adj_f1_mech"]=13; self.assertTrue(any("does not apply to this family" in x for x in validate_stage2(stray)))
+    def test_rule_reference_matches_the_frozen_taxonomy(self):
+        import yaml
+        taxonomy=ROOT.parents[3]/"taxonomy_data_dictionary.yaml"
+        digest=hashlib.sha256(taxonomy.read_bytes()).hexdigest()
+        text=(ROOT.parent/"reference"/"taxonomy_rule_reference.md").read_text(encoding="utf-8")
+        self.assertIn(digest,text,"the reference records the frozen source hash")
+        data=yaml.safe_load(taxonomy.read_text(encoding="utf-8"))
+        live=[c for c in data["categories"] if isinstance(c,dict) and not str(c.get("status","")).startswith("removed")]
+        for c in live:
+            self.assertIn(f"### {c['label']}",text,c["label"])
+            for field in ("definition","inclusion_rules","exclusion_rules"):
+                if c.get(field): self.assertIn(" ".join(str(c[field]).split())[:80],text,(c["label"],field))
+        self.assertIn("Retired categories, not assignable",text)
+        for phrase in ("keyed training examples","Do not edit it","Read Layer A as Research Domains"): self.assertIn(phrase,text)
+        for heading in ("## Research Domains","## Analytical Purposes","## Cross-cutting tags"): self.assertIn(heading,text,"headings use the current names")
 if __name__=="__main__": unittest.main()
