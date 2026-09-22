@@ -9,6 +9,7 @@ from dashboard.data.filtering import (
     _csv_date_stamp,
 )
 from dashboard.data.year_filter import YearRange, filter_records_by_year, parse_accreditation_dates
+from dashboard.display_text import datasets_display_text, researcher_display_text
 
 
 def _filter_accreditation_year_range(
@@ -95,8 +96,8 @@ def register(app):
         )
         table_data = display.to_dict("records")
 
-        # Markdown collapses single newlines; a trailing double space keeps
-        # each source line (e.g. one researcher per line) on its own line.
+        # Tooltips keep the register text as written. Markdown collapses single
+        # newlines; a trailing double space keeps each source line on its own.
         tooltip_data = [
             {
                 col: {"value": str(row.get(col, "")).replace("\n", "  \n"), "type": "markdown"}
@@ -104,6 +105,11 @@ def register(app):
             }
             for row in table_data
         ]
+        # The cells show tidied text: one researcher per line, and datasets
+        # listed under their source organisation.
+        for row in table_data:
+            row["Researchers"] = researcher_display_text(row.get("Researchers"))
+            row["Datasets Used"] = datasets_display_text(row.get("Datasets Used"))
 
         count_text = (
             f"Showing {len(table_data):,} accreditation "

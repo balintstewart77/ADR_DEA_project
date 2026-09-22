@@ -15,6 +15,7 @@ from dashboard.data.thematic import (
     df_thematic_projects,
 )
 from dashboard.dataset_normalisation import iter_dataset_entries
+from dashboard.display_text import researcher_display_text
 from dashboard.data.registry import PARTIAL_YEAR_INFO, df_all
 from dashboard.data.filtering import (
     _get_enriched_register_display_df,
@@ -139,7 +140,7 @@ def _enriched_detail_display_fields(record: dict) -> list:
         ("Project ID", record.get("Project ID")),
         ("Record ID", record.get("id")),
         ("Title", record.get("Title")),
-        ("Researchers", record.get("Researchers")),
+        ("Researchers", researcher_display_text(record.get("Researchers"))),
         ("Datasets Used", record.get("Datasets Used")),
         ("Processing environment", record.get("Secure Research Service")),
         ("Accreditation Date", record.get("Accreditation Date")),
@@ -226,7 +227,7 @@ def _enriched_table_records(display) -> list[dict]:
         row["id"] = record_id
         row["Title_display"] = _generic_preview_display(row.get("Title"), record_id)
         row["Researchers_display"] = _generic_preview_display(
-            row.get("Researchers"), record_id,
+            researcher_display_text(row.get("Researchers")), record_id,
         )
         row["Datasets Used_display"] = _dataset_preview_display(
             row.get("Datasets Used"), record_id,
