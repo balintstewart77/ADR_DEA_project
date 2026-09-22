@@ -27,7 +27,7 @@ from dashboard.data.year_filter import filter_records_by_year, selected_record_i
 
 
 BASELINE = json.loads(
-    (Path(__file__).parent / "fixtures" / "filter_option_count_baseline.json").read_text()
+    (Path(__file__).parent / "fixtures" / "filter_option_count_baseline.json").read_text(encoding="utf-8")
 )
 YEAR_RANGE = year_range(df_all)
 COUNT_RE = re.compile(r"  \((\d+) projects?\)$")
@@ -99,7 +99,8 @@ def _record_ids(frame):
 
 
 def _sha256_csv(frame):
-    return hashlib.sha256(frame.to_csv(index=False).encode()).hexdigest()
+    # Fixed line endings: to_csv defaults to os.linesep, which is \r\n on Windows.
+    return hashlib.sha256(frame.to_csv(index=False, lineterminator="\n").encode()).hexdigest()
 
 
 def test_reset_counts_match_independent_predicates_and_recorded_static_baseline():

@@ -9,6 +9,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
 
 from dataset_normalisation import (  # noqa: E402
+    _clean_datasets_text,
     dataset_family_for,
     describe_dataset_normalisation,
     iter_dataset_entries,
@@ -280,6 +281,35 @@ class DatasetNormalisationTest(unittest.TestCase):
                 ("Office for National Statistics", "Workplace Employment Relations Survey"),
             ],
         )
+
+    def test_understanding_society_line_continues_header_but_keeps_study_datasets(self):
+        # Wrapped lines after an Understanding Society line return to the
+        # header; a later Understanding Society dataset on the line stays ISER.
+        raw = (
+            "Office for National Statistics: Labour Force Survey,\n"
+            "Understanding Society: COVID-19 Study, Understanding Society,\n"
+            "Business Structure Database"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        iser = "Institute for Social and Economic Research"
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Labour Force Survey"),
+                (iser, "Understanding Society: COVID-19 Study"),
+                (iser, "Understanding Society"),
+                ("Office for National Statistics", "Business Structure Database"),
+            ],
+        )
+
+    def test_cleaning_does_not_rewrite_understanding_society_register_text(self):
+        # The parser rules must not change the register text that cleaning
+        # passes through to the dashboard's Datasets Used column.
+        raw = (
+            "Office for National Statistics: British Household Panel Survey,\n"
+            "Understanding Society: Innovation Panel, Annual Survey of Hours and Earnings"
+        )
+        self.assertEqual(_clean_datasets_text(raw), raw)
 
     def test_ons_misspellings_normalise_to_ons(self):
         for raw in ("Office for National Statistcs", "Office for the National Statistics"):

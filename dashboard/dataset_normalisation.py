@@ -740,14 +740,6 @@ def _clean_datasets_text(raw: str) -> str:
         "Understanding Society",
         text,
     )
-    # In 2023/234 the ONS datasets after the Innovation Panel continue the
-    # opening ONS header; restore that header so they are not attributed to
-    # Understanding Society's owner.
-    text = re.sub(
-        r"(?i)\bUnderstanding Society:\s*Innovation Panel,\s*(?=Annual Survey of Hours and Earnings\b)",
-        "Understanding Society: Innovation Panel\nOffice for National Statistics: ",
-        text,
-    )
     text = text.replace("\r", "\n")
     text = re.sub(r"\s{2,}", " ", text)
     text = re.sub(r"\s*\n\s*", "\n", text)
@@ -1123,8 +1115,21 @@ DATASET_TITLE_WITH_COLON_RE = re.compile(r"(?i)^annual population survey\s*:")
 # "Understanding Society: <component>" lines name an Understanding Society
 # dataset, not a provider. The full title is kept as the dataset and the
 # provider is ISER, which owns the study, whichever header precedes the line.
+# Datasets after it on the line, and on the lines that follow, continue the
+# preceding header unless they are Understanding Society datasets themselves
+# (2023/234 lists ONS surveys after the Innovation Panel).
 UNDERSTANDING_SOCIETY_TITLE_RE = re.compile(r"(?i)^understanding society\s*:")
 UNDERSTANDING_SOCIETY_PROVIDER = "Institute for Social and Economic Research"
+
+
+def _understanding_society_line_entries(line: str, header_provider: str):
+    parts = [part for part in _split_dataset_parts(line) if _is_valid_dataset_fragment(part)]
+    for index, part in enumerate(parts):
+        is_study_dataset = index == 0 or (
+            dataset_family_for(normalise_dataset_name(part)) == "Understanding Society"
+        )
+        provider = UNDERSTANDING_SOCIETY_PROVIDER if is_study_dataset else header_provider
+        yield line, provider, part
 
 
 def iter_dataset_entries(raw: str):
@@ -1151,10 +1156,9 @@ def iter_dataset_entries(raw: str):
         if not line:
             continue
         if UNDERSTANDING_SOCIETY_TITLE_RE.match(line):
+            # current_provider stays the preceding header for what follows.
             yield from flush_current()
-            current_provider = UNDERSTANDING_SOCIETY_PROVIDER
-            current_rest_parts = [line]
-            current_line_parts = [line]
+            yield from _understanding_society_line_entries(line, current_provider)
         elif ":" in line and not (
             current_provider and DATASET_TITLE_WITH_COLON_RE.match(line)
         ):

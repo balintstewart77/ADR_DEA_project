@@ -7,7 +7,7 @@
     "dropped_non_dea": 106,
     "dropped_same_id_same_title": 35,
     "dropped_special_duplicate_rows": 0,
-    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
+    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-aps-fix\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
     "duplicate_ruling_groups_applied": 5,
     "duplicate_ruling_merged_source_rows": 2,
     "duplicate_ruling_retained_project_ids": [
@@ -17,8 +17,8 @@
       "2024/095"
     ],
     "duplicate_ruling_rows_removed": 1,
-    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
-    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\analysis\\register_duplicate_rulings.yaml",
+    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-aps-fix\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
+    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-aps-fix\\analysis\\register_duplicate_rulings.yaml",
     "duplicate_tier1_rows_removed": 23,
     "duplicate_tier2_input_rows": 24,
     "duplicate_tier2_merge_groups": 12,
@@ -31,11 +31,11 @@
     "rows_after_duplicate_rulings": 1343,
     "rows_after_required_fields": 1485
   },
-  "created_at_utc": "2026-09-04T12:16:04.118799+00:00",
+  "created_at_utc": "2026-09-22T08:44:36.755278+00:00",
   "git": {
-    "commit": "96913a98f8a0bbe316110cdb8b1aa89b7959570e",
+    "commit": "acc05ba98ddf3eea16df999559aab8a8b1492b51",
     "dirty": true,
-    "status_porcelain": "M analysis/outputs_deterministic_rc2/manifest.json\n M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/outputs_refresh/20260813-dc97c680115f/derive_report.md\n M analysis/outputs_refresh/20260813-dc97c680115f/ingest_revision_diff.md\n M analysis/outputs_refresh/20260813-dc97c680115f/manifest.json\n M analysis/outputs_refresh/20260813-dc97c680115f/nominal_release_diff.md\n M analysis/outputs_refresh/20260813-dc97c680115f/refresh_summary.md\n M analysis/outputs_refresh/20260813-dc97c680115f/review_required.md\n M analysis/outputs_refresh/latest_summary.md\n M analysis/register_reference.yaml\n M analysis/test_dataset_normalisation.py\n M analysis/test_derive_register_properties.py\n M analysis/test_institution_normalisation.py\n M dashboard/dataset_normalisation.py\n M dashboard/institution_normalisation.py\n M data/register_provenance_manifest.json"
+    "status_porcelain": "M analysis/outputs_deterministic_rc2/manifest.json\n M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/test_refresh_pipeline.py\n M dashboard/dataset_normalisation.py\n M tests/fixtures/filter_option_count_baseline.json\n M tests/test_filter_option_counts.py"
   },
   "model": null,
   "output_files": [
