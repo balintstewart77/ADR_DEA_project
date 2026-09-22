@@ -11,11 +11,15 @@
     "adj_stage1_unresolved": 0,
     "adj_stage1_note": "Synthetic reviewer note.",
     "adj_stage1_affirmed": 1,
-    "adj_evidence": 1,
-    "adj_defensible": 0,
     "adj_rule_conflict": 0,
-    "adj_dom_best": 1,
-    "adj_dom_adequacy": 1
+    "adj_dom_evidence": 1,
+    "adj_dom_best": [
+      1
+    ],
+    "adj_dom_adequacy": 1,
+    "adj_dom_defensible": [
+      1
+    ]
   },
   {
     "assignment_id": "SYN_ASSIGN_002",
@@ -29,13 +33,23 @@
     "adj_stage1_unresolved": 0,
     "adj_stage1_note": "Synthetic reviewer note.",
     "adj_stage1_affirmed": 1,
-    "adj_evidence": 1,
-    "adj_defensible": 0,
     "adj_rule_conflict": 0,
-    "adj_purp_best": 1,
+    "adj_purp_evidence": 1,
+    "adj_purp_best": [
+      1
+    ],
     "adj_purp_adequacy": 1,
-    "adj_equity_best": 1,
-    "adj_equity_adequacy": 1
+    "adj_purp_defensible": [
+      1
+    ],
+    "adj_equity_evidence": 1,
+    "adj_equity_best": [
+      1
+    ],
+    "adj_equity_adequacy": 1,
+    "adj_equity_defensible": [
+      1
+    ]
   },
   {
     "assignment_id": "SYN_ASSIGN_003",
