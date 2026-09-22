@@ -478,12 +478,12 @@ def derive_stage2(r):
 def source_name(c):
     if c["source_type"]=="fable": return "production model"
     sid=c.get("source_id","?"); return "coder "+{"SC_A":"C01","SC_B":"C02","SC_C":"C03"}.get(sid,sid)
-def reveal_map(case,package):
-    """Which source produced each displayed option, with the option's labels.
+def reveal_fields(case,package):
+    """Reveal text per component: which source gave each option, and what it says.
 
-    Only components that differed are listed option by option; what every
-    source agreed on follows in one block.  Imported only after Stage 1 is
-    preserved.
+    One field per component keeps each box short on the form.  A component that
+    does not differ carries no value, so no hidden field holds text.  Imported
+    only after Stage 1 is preserved.
     """
     by_candidate={}
     for c in case["classifications"]:
@@ -491,25 +491,21 @@ def reveal_map(case,package):
         by_candidate.setdefault("C_"+stable_id(candidate_content(c)),[]).append(source_name(c))
     order=lambda n:(n!="production model",n)
     value=lambda v:"; ".join(v) if isinstance(v,list) else v
-    differed=[]; agreed=[]
+    out={}; agreed=[]
     for comp in COMPONENTS:
         interpretations=package["interpretations"][comp]
         if len(interpretations)==1:
-            agreed.append(f"{COMPONENT_LABEL[comp]}: {value(interpretations[0]['value'])}"); continue
-        slots=slot_map(package,comp); lines=[COMPONENT_LABEL[comp]]
-        for x in interpretations:
-            names=sorted({n for cid in x["candidate_ids"] for n in by_candidate[cid]},key=order)
-            lines.append(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]} ({', '.join(names)}): {value(x['value'])}")
-        differed.append("\n".join(lines))
-    out=["WHAT DIFFERED"]+differed if differed else ["NO COMPETING OPTIONS: one displayed set"]
-    if agreed: out+=["","AGREED BY EVERY SOURCE"]+agreed
-    return "\n".join(out)
+            agreed.append(f"{COMPONENT_LABEL[comp]}: {value(interpretations[0]['value'])}"); out[f"adj_reveal_{comp}"]=""; continue
+        slots=slot_map(package,comp)
+        out[f"adj_reveal_{comp}"]="\n".join(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]} ({', '.join(sorted({n for cid in x['candidate_ids'] for n in by_candidate[cid]},key=order))}): {value(x['value'])}" for x in interpretations)
+    out["adj_reveal_agreed"]="\n".join(agreed) if agreed else "Every component differed."
+    return out
 def write_reveal_import(path,pairs):
     """Reveal rows for (case, package) pairs.  Deliberately source-revealing."""
     path.parent.mkdir(parents=True,exist_ok=True)
     with path.open("w",newline="",encoding="utf-8") as f:
-        w=csv.DictWriter(f,fieldnames=["adj_assignment_id","adj_reveal_state","adj_reveal_map"]); w.writeheader()
-        for case,package in pairs: w.writerow({"adj_assignment_id":package["assignment_id"],"adj_reveal_state":1,"adj_reveal_map":reveal_map(case,package)})
+        w=csv.DictWriter(f,fieldnames=["adj_assignment_id","adj_reveal_state"]+[f"adj_reveal_{c}" for c in COMPONENTS]+["adj_reveal_agreed"]); w.writeheader()
+        for case,package in pairs: w.writerow({"adj_assignment_id":package["assignment_id"],"adj_reveal_state":1,**reveal_fields(case,package)})
 REVIEWER_ROLES=((1,"primary",""),(2,"secondary","_SEC"))
 IMPORTED_DEFAULTS={"adj_other_concern":0,"adj_stage1_unresolved":0}
 def slot_hiding(comp):
@@ -640,8 +636,8 @@ def write_record_import(path,cases):
     return rows
 def field_rows():
     rows=[]
-    def add(n,f,t,l,c="",b="",req="",a="",note="",val=""):
-        rows.append([n,f,"",t,l,c,note,val,"","","",b,req,"","","","",a])
+    def add(n,f,t,l,c="",b="",req="",a="",note="",val="",section=""):
+        rows.append([n,f,section,t,l,c,note,val,"","","",b,req,"","","","",a])
     scope_choices="1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag"
     slot_choices=" | ".join(f"{n}, Option {OPTION_LETTERS[n-1]}" for n in range(1,5))
     NOUN={"dom":"Research Domain","purp":"Analytical Purpose","covid":"COVID-19/pandemic tag","equity":"demographic disparities/equity tag"}
@@ -723,32 +719,37 @@ def field_rows():
     add("adj_stage1_note","adj_stage1","notes","Optional note")
     add("adj_stage1_affirmed","adj_stage1","yesno","Complete preserved Stage 1 assessment?","","","y")
     # ---- Stage 2 (ADJ-043): imported reveal, then findings -------------------------------
-    add("adj_reveal_state","adj_stage2","radio","Stage 2 reveal state","0, Not revealed | 1, Revealed | 2, Partial-failure exposure",a="@READONLY")
-    add("adj_reveal_map","adj_stage2","notes","Which source produced each option",a="@READONLY")
-    # Context the reviewer needs on this form.  REDCap shows only the fields of
-    # the open form, so the public entry and the reviewer's own Stage 1 answers
-    # are piped in from Stage 1 rather than copied or re-entered.
-    add("adj_s2_entry","adj_stage2","descriptive",
-        "<b>Public register entry</b><br><b>Title:</b> [adj_case_title]<br><b>Datasets used:</b> [adj_case_datasets]")
+    add("adj_reveal_state","adj_stage2","radio","Stage 2 reveal state","0, Not revealed | 1, Revealed | 2, Partial-failure exposure",a="@READONLY",section="Stage 2: after the source reveal")
+    # REDCap shows only the open form's fields, so Stage 2 carries the entry,
+    # the reveal and a recap of the reviewer's own Stage 1 answers.  Sections
+    # and one box per component keep it readable.
+    add("adj_s2_entry","adj_stage2","descriptive","<b>Title:</b> [adj_case_title]<br><br><b>Datasets used:</b> [adj_case_datasets]",section="The public register entry")
     for comp in COMPONENTS:
-        noun=COMPONENT_LABEL[comp]
+        add(f"adj_reveal_{comp}","adj_stage2","notes",f"{COMPONENT_LABEL[comp]}: which source gave each option","",f"[adj_{comp}_comparative] = '1'",a="@READONLY",
+            section="What each source gave" if comp=="dom" else "")
+    add("adj_reveal_agreed","adj_stage2","notes","Agreed by every source",a="@READONLY")
+    for comp in COMPONENTS:
         add(f"adj_s2_recap_{comp}","adj_stage2","descriptive",
-            f"<b>Your Stage 1 answers: {noun}</b><br>Information in the entry: [adj_{comp}_evidence]<br>"
-            f"Best supported: [adj_{comp}_best:checked]<br>Defensible: [adj_{comp}_defensible:checked]","",f"[adj_{comp}_comparative] = '1'")
-    add("adj_s2_recap_conflict","adj_stage2","descriptive",
-        "<b>Your Stage 1 answer: explicit rule conflict</b><br>[adj_rule_conflict]","",
+            f"<b>{COMPONENT_LABEL[comp]}</b><br>Information in the entry: [adj_{comp}_evidence]<br>"
+            f"Best supported: [adj_{comp}_best:checked]<br>Defensible: [adj_{comp}_defensible:checked]","",f"[adj_{comp}_comparative] = '1'",
+            section="Your Stage 1 assessment" if comp=="dom" else "")
+    add("adj_s2_conflict_no","adj_stage2","descriptive","<b>Explicit rule conflict</b><br>[adj_rule_conflict]","",
         "[adj_pkg_comparative] = '1' and [adj_rule_conflict] <> '1'")
-    add("adj_s2_recap_conflict_yes","adj_stage2","descriptive",
-        "<b>Your Stage 1 answer: explicit rule conflict</b><br>Yes, in: [adj_rule_conflict_scope:checked]<br>"
-        "Research Domain options: [adj_dom_conflict_slots:checked]; labels: [adj_dom_conflict_labels:checked]<br>"
-        "Analytical Purpose options: [adj_purp_conflict_slots:checked]; labels: [adj_purp_conflict_labels:checked]<br>"
-        "COVID-19 tag options: [adj_covid_conflict_slots:checked]; equity tag options: [adj_equity_conflict_slots:checked]<br>"
-        "Part of the rules: [adj_conflict_rule_type] [adj_conflict_rule_other]<br>Explanation: [adj_rule_conflict_note]","",
+    add("adj_s2_conflict_yes","adj_stage2","descriptive","<b>Explicit rule conflict:</b> yes, in [adj_rule_conflict_scope:checked]","",
         "[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1'")
-    add("adj_s2_recap_record","adj_stage2","descriptive",
-        "<b>Your other Stage 1 answers</b><br>Boundary: [adj_boundary:checked] [adj_boundary_note]<br>"
-        "Other concern: [adj_other_concern] [adj_other_concern_note]<br>Unresolved at Stage 1: [adj_stage1_unresolved] [adj_stage1_unresolved_note]")
-    add("adj_stage2_closure","adj_stage2","radio","Now that sources are revealed, does any diagnostic family apply?","1, Yes, record findings | 2, No, completed with no assignable issue | 3, Incomplete | 4, Administrative closure","","y",
+    for comp in COMPONENTS:
+        detail=f"{COMPONENT_LABEL[comp]}: options [adj_{comp}_conflict_slots:checked]"
+        if comp in ("dom","purp"): detail+=f"; labels [adj_{comp}_conflict_labels:checked]"
+        add(f"adj_s2_conflict_{comp}","adj_stage2","descriptive",detail,"",
+            f"[adj_rule_conflict] = '1' and [adj_rule_conflict_scope({COMPONENT_CODE[comp]})] = '1'")
+    add("adj_s2_conflict_rule","adj_stage2","descriptive",
+        "Part of the rules: [adj_conflict_rule_type]<br>Explanation: [adj_rule_conflict_note]","",
+        "[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1'")
+    add("adj_s2_boundary","adj_stage2","descriptive","<b>Boundary:</b> [adj_boundary:checked]")
+    add("adj_s2_boundary_note","adj_stage2","descriptive","Explanation: [adj_boundary_note]","","[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'")
+    add("adj_s2_concern","adj_stage2","descriptive","<b>Other concern:</b> [adj_other_concern_note]","","[adj_other_concern] = '1'")
+    add("adj_s2_unresolved","adj_stage2","descriptive","<b>Unresolved at Stage 1:</b> [adj_stage1_unresolved_note]","","[adj_stage1_unresolved] = '1'")
+    add("adj_stage2_closure","adj_stage2","radio","Now that sources are revealed, does any diagnostic family apply?","1, Yes, record findings | 2, No, completed with no assignable issue | 3, Incomplete | 4, Administrative closure","","y",section="Findings",
         note="If the evidence cannot support a confident diagnosis, record a finding of family 8, Unresolved, rather than no issue.")
     add("adj_no_issue_rationale","adj_stage2","notes","Why does no family apply?","","[adj_stage2_closure] = '2'","y")
     for k in range(1,FINDING_SLOTS+1):

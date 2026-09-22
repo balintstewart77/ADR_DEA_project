@@ -2,7 +2,7 @@ import copy, csv, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,DOMAINS,HEADER,MECH_NEW,mechanism_vocabulary,derive_stage2,reveal_map,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -520,37 +520,55 @@ class PrototypeTests(unittest.TestCase):
         self.assertNotIn("adj_f2_family",asked({"adj_stage2_closure":"1","adj_f1_another":"0"})); self.assertIn("adj_f2_family",asked({"adj_stage2_closure":"1","adj_f1_another":"1"}))
         self.assertEqual(hidden_choices(by["adj_f1_basis"][17],{"adj_f1_family":"1"}),{4})
         self.assertEqual(hidden_choices(by["adj_f1_basis"][17],{"adj_f1_family":"2"}),{2,3})
-        for name in ("adj_reveal_state","adj_reveal_map"): self.assertIn("@READONLY",by[name][17])
+        for name in ["adj_reveal_state","adj_reveal_agreed"]+[f"adj_reveal_{c}" for c in COMPONENTS]: self.assertIn("@READONLY",by[name][17])
         self.assertNotIn("adj_stage2_complete",by)
-    def test_reveal_map_is_separate_and_complete(self):
-        case=self.cases[0]; package=self.packages[0]; text=reveal_map(case,package); lines=text.split("\n")
-        self.assertEqual(lines[0],"WHAT DIFFERED"); self.assertIn("AGREED BY EVERY SOURCE",lines)
-        differed=lines[:lines.index("")]; agreed=lines[lines.index("AGREED BY EVERY SOURCE")+1:]
-        self.assertEqual(differed[1],"Research Domains"); self.assertEqual(len(differed),2+len(package["interpretations"]["dom"]))
-        for line in differed[2:]: self.assertRegex(line,r"^Option [A-D] \((production model|coder C0\d)(, (production model|coder C0\d))*\): .+")
-        self.assertEqual(sum(line.count("production model") for line in differed[2:]),1)
-        self.assertEqual(len(agreed),3,"purposes and both tags agreed")
-        for option in package["interpretations"]["dom"]: self.assertTrue(any("; ".join(option["value"]) in line for line in differed[2:]))
-        single=reveal_map(self.cases[2],self.packages[2]); self.assertTrue(single.startswith("NO COMPETING OPTIONS"))
+    def test_reveal_is_separate_readable_and_complete(self):
+        case=self.cases[0]; package=self.packages[0]; fields=reveal_fields(case,package)
+        self.assertEqual(set(fields),{f"adj_reveal_{c}" for c in COMPONENTS}|{"adj_reveal_agreed"})
+        for comp in COMPONENTS:
+            text=fields[f"adj_reveal_{comp}"]
+            if len(package["interpretations"][comp])==1:
+                self.assertEqual(text,"","a component that does not differ carries no value")
+                self.assertIn(COMPONENT_LABEL[comp],fields["adj_reveal_agreed"])
+            else:
+                lines=text.split("\n"); self.assertEqual(len(lines),len(package["interpretations"][comp]))
+                for line in lines: self.assertRegex(line,r"^Option [A-D] \((production model|coder C0\d)(, (production model|coder C0\d))*\): .+")
+                self.assertEqual(sum(line.count("production model") for line in lines),1)
+                for option in package["interpretations"][comp]:
+                    self.assertTrue(any(("; ".join(option["value"]) if isinstance(option["value"],list) else option["value"]) in line for line in lines))
+        single=reveal_fields(self.cases[2],self.packages[2])
+        self.assertTrue(all(single[f"adj_reveal_{c}"]=="" for c in COMPONENTS))
         with (ROOT/"instruments"/"adjudication_reveal_import_synthetic.csv").open(encoding="utf-8",newline="") as f: reveal=list(csv.DictReader(f))
         self.assertEqual(len(reveal),2*len(self.cases)); self.assertTrue(all(r["adj_reveal_state"]=="1" for r in reveal))
-        self.assertEqual(list(reveal[0]),["adj_assignment_id","adj_reveal_state","adj_reveal_map"])
+        self.assertEqual(list(reveal[0]),["adj_assignment_id","adj_reveal_state"]+[f"adj_reveal_{c}" for c in COMPONENTS]+["adj_reveal_agreed"])
+        names={x[0] for x in field_rows()}
+        self.assertTrue(set(list(reveal[0])[1:])<=names)
         with (ROOT/"instruments"/"adjudication_record_import_synthetic.csv").open(encoding="utf-8",newline="") as f: masked=f.read().lower()
-        self.assertNotIn("production model",masked); self.assertNotIn("adj_reveal_map",masked)
+        self.assertNotIn("production model",masked); self.assertFalse([c for c in ("adj_reveal_dom","adj_reveal_agreed") if c in masked])
     def test_stage2_shows_the_entry_and_stage1_answers(self):
         rows=field_rows(); by={x[0]:x for x in rows}; names=set(by)
         context=[x for x in rows if x[1]=="adj_stage2" and x[3]=="descriptive"]
         self.assertIn("adj_s2_entry",by); self.assertIn("[adj_case_title]",by["adj_s2_entry"][4]); self.assertIn("[adj_case_datasets]",by["adj_s2_entry"][4])
+        # Sections break the form up, and nothing pipes a field that may be blank
+        # unless its own answer is showing.
+        sections=[x[2] for x in rows if x[1]=="adj_stage2" and x[2]]
+        self.assertEqual(sections,["Stage 2: after the source reveal","The public register entry","What each source gave","Your Stage 1 assessment","Findings"])
+        for name,trigger in (("adj_s2_concern","[adj_other_concern] = '1'"),("adj_s2_unresolved","[adj_stage1_unresolved] = '1'"),
+                             ("adj_s2_boundary_note","[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'")):
+            self.assertEqual(by[name][11],trigger,name)
+        for comp in COMPONENTS:
+            self.assertIn("[adj_rule_conflict_scope(",by[f"adj_s2_conflict_{comp}"][11])
+            self.assertIn(f"[adj_{comp}_conflict_slots:checked]",by[f"adj_s2_conflict_{comp}"][4])
         for row in context:
-            for token in re.findall(r"\[([a-z0-9_]+)(?::[a-z]+)?\]",row[4]): self.assertIn(token,names,(row[0],token))
+            for token in re.findall(r"\[([a-z0-9_]+)(?:\(\d+\))?(?::[a-z]+)?\]",row[4]): self.assertIn(token,names,(row[0],token))
             self.assertEqual(by[row[0]][1],"adj_stage2")
         for comp in COMPONENTS:
             label=by[f"adj_s2_recap_{comp}"]
             for piece in (f"[adj_{comp}_evidence]",f"[adj_{comp}_best:checked]",f"[adj_{comp}_defensible:checked]"): self.assertIn(piece,label[4])
             self.assertEqual(label[11],f"[adj_{comp}_comparative] = '1'")
         yes={"adj_pkg_comparative":"1","adj_rule_conflict":"1"}; no={"adj_pkg_comparative":"1","adj_rule_conflict":"0"}
-        self.assertTrue(redcap_shows(by["adj_s2_recap_conflict_yes"][11],yes)); self.assertFalse(redcap_shows(by["adj_s2_recap_conflict"][11],yes))
-        self.assertTrue(redcap_shows(by["adj_s2_recap_conflict"][11],no)); self.assertFalse(redcap_shows(by["adj_s2_recap_conflict_yes"][11],no))
+        self.assertTrue(redcap_shows(by["adj_s2_conflict_yes"][11],yes)); self.assertFalse(redcap_shows(by["adj_s2_conflict_no"][11],yes))
+        self.assertTrue(redcap_shows(by["adj_s2_conflict_no"][11],no)); self.assertFalse(redcap_shows(by["adj_s2_conflict_yes"][11],no))
         order=[x[0] for x in rows if x[1]=="adj_stage2"]
         self.assertLess(order.index("adj_s2_entry"),order.index("adj_stage2_closure"),"context comes before the first question")
     def test_mechanism_vocabulary_and_dropdowns(self):
