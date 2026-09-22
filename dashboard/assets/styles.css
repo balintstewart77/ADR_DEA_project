@@ -217,6 +217,16 @@
     width: 100% !important;
     max-width: 100% !important;
 }
+/* Pinned-column alignment. fixed_columns renders the table twice; the copy that
+   does not own a header cell is emptied, so the pinned copy's header row is
+   taller than the scrolling copy's and every body row below it is offset. A
+   shared minimum header height equalises the two. On a table cell `height` is a
+   minimum, so a header that needs more room still grows (in one copy only).
+   Sized in px because style_header sets the header font in px; the tallest
+   header (Project ID, three lines in 90px) needs about 70px. */
+.enriched-register-table-container .dash-spreadsheet-inner th {
+    height: 80px;
+}
 .enriched-preview {
     display: block;
     min-width: 0;
@@ -357,6 +367,18 @@
     flex-wrap: wrap;
     gap: 0.2rem 0;
     color: #4f6274;
+}
+
+/* Enriched Register filter grid: keep every control in a row on the same line
+   even when one label wraps. Bootstrap already stretches the columns of a row to
+   equal height, so pushing each control to the bottom of its column aligns them
+   without reserving a fixed label height. */
+@media (min-width: 768px) {
+    .enriched-filter-row > [class*="col-"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
 }
 
 /* Hero search */

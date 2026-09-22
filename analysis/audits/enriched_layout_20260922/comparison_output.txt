@@ -1,0 +1,67 @@
+=== A1 (readable) ===
+  F0 count_text             MATCH  Showing 1,343 accreditation records
+  F0 page_size              MATCH  20
+  F0 first_20_record_ids    MATCH  20 ids, sha=32a602e065b6259a
+  F0 facet names           MATCH  13 facets
+      collection_method      MATCH  3 options, sha=7530cf4c50406a63
+      dataset                MATCH  339 options, sha=43996571c7ff8c4e
+      domain                 MATCH  13 options, sha=0fe230982431adbb
+      domain_count           MATCH  6 options, sha=fcb4b6ca4e8d7b9e
+      institution            MATCH  286 options, sha=c633de8847d4af9f
+      provider               MATCH  51 options, sha=e37cade3858543ee
+      purpose                MATCH  9 options, sha=2cc42f37f9c7aa13
+      record_linkage         MATCH  4 options, sha=93684e305b7a6077
+      researcher_sector      MATCH  6 options, sha=a25665389b48ad8f
+      tag                    MATCH  3 options, sha=2245f28f6011de68
+      temporal_structure     MATCH  3 options, sha=51526dc910c20e4e
+      tre                    MATCH  7 options, sha=940d985b6702bdea
+      unit                   MATCH  5 options, sha=989468c99126df4f
+  F1 count_text             MATCH  Showing 129 accreditation records
+  F1 page_size              MATCH  20
+  F1 first_20_record_ids    MATCH  20 ids, sha=30438f5c26f2e986
+  F1 facet names           MATCH  13 facets
+      collection_method      MATCH  3 options, sha=0220fcdc17d60f59
+      dataset                MATCH  339 options, sha=643f6c82e232a6f6
+      domain                 MATCH  13 options, sha=01df87bbc58de0e9
+      domain_count           MATCH  6 options, sha=53c402dd3b99764b
+      institution            MATCH  286 options, sha=b786030a6700336a
+      provider               MATCH  51 options, sha=e02d7e4e26bf2e78
+      purpose                MATCH  9 options, sha=07f9c508935942ca
+      record_linkage         MATCH  4 options, sha=e999046c3817d08a
+      researcher_sector      MATCH  6 options, sha=9ee2febdc9705bd4
+      tag                    MATCH  3 options, sha=a8f99cad1260229b
+      temporal_structure     MATCH  3 options, sha=98dc65143b055470
+      tre                    MATCH  7 options, sha=60ae7aef029cd981
+      unit                   MATCH  5 options, sha=ef687fea255933f6
+=== A2 (complete) ===
+  F0 n_records            1343 -> 1343
+  F0 ordered record ids   MATCH  sha=a355654edf895bb0
+  F0 every displayed cell MATCH  1343 rows x 17 columns, sha=87bf68f5bb88a739
+  F1 n_records            129 -> 129
+  F1 ordered record ids   MATCH  sha=856cedf257bb82f8
+  F1 every displayed cell MATCH  129 rows x 17 columns, sha=ff32161e8ceaf01f
+=== A6 (column set and order) ===
+  columns MATCH  17 columns
+      Project ID
+      details_action
+      Title_display
+      Researchers_display
+      Datasets Used_display
+      Secure Research Service_display
+      Accreditation Date
+      record_linkage
+      dataset_collection_methods_display
+      dataset_temporal_structures_display
+      dataset_units_display
+      researcher_sectors_display
+      substantive_domains_display
+      substantive_domain_count
+      analytical_purpose_display
+      cross_cutting_tags_display
+      rationale_display
+=== defaults / filter states used ===
+  defaults identical: True
+  filter states identical: True
+  callback invoked: register.<locals>.update_enriched_register
+
+RESULT: ALL MATCH
