@@ -479,20 +479,31 @@ def source_name(c):
     if c["source_type"]=="fable": return "production model"
     sid=c.get("source_id","?"); return "coder "+{"SC_A":"C01","SC_B":"C02","SC_C":"C03"}.get(sid,sid)
 def reveal_map(case,package):
-    """Which source produced each displayed option.  Imported only after Stage 1 is preserved."""
+    """Which source produced each displayed option, with the option's labels.
+
+    Only components that differed are listed option by option; what every
+    source agreed on follows in one block.  Imported only after Stage 1 is
+    preserved.
+    """
     by_candidate={}
     for c in case["classifications"]:
         if c["source_type"] not in {"fable","scratch"}: continue
         by_candidate.setdefault("C_"+stable_id(candidate_content(c)),[]).append(source_name(c))
     order=lambda n:(n!="production model",n)
-    lines=[]
+    value=lambda v:"; ".join(v) if isinstance(v,list) else v
+    differed=[]; agreed=[]
     for comp in COMPONENTS:
-        slots=slot_map(package,comp); parts=[]
-        for x in package["interpretations"][comp]:
+        interpretations=package["interpretations"][comp]
+        if len(interpretations)==1:
+            agreed.append(f"{COMPONENT_LABEL[comp]}: {value(interpretations[0]['value'])}"); continue
+        slots=slot_map(package,comp); lines=[COMPONENT_LABEL[comp]]
+        for x in interpretations:
             names=sorted({n for cid in x["candidate_ids"] for n in by_candidate[cid]},key=order)
-            parts.append(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]}: "+", ".join(names))
-        lines.append(f"{COMPONENT_LABEL[comp]}: "+"; ".join(parts))
-    return "\n".join(lines)
+            lines.append(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]} ({', '.join(names)}): {value(x['value'])}")
+        differed.append("\n".join(lines))
+    out=["WHAT DIFFERED"]+differed if differed else ["NO COMPETING OPTIONS: one displayed set"]
+    if agreed: out+=["","AGREED BY EVERY SOURCE"]+agreed
+    return "\n".join(out)
 def write_reveal_import(path,pairs):
     """Reveal rows for (case, package) pairs.  Deliberately source-revealing."""
     path.parent.mkdir(parents=True,exist_ok=True)
@@ -714,6 +725,29 @@ def field_rows():
     # ---- Stage 2 (ADJ-043): imported reveal, then findings -------------------------------
     add("adj_reveal_state","adj_stage2","radio","Stage 2 reveal state","0, Not revealed | 1, Revealed | 2, Partial-failure exposure",a="@READONLY")
     add("adj_reveal_map","adj_stage2","notes","Which source produced each option",a="@READONLY")
+    # Context the reviewer needs on this form.  REDCap shows only the fields of
+    # the open form, so the public entry and the reviewer's own Stage 1 answers
+    # are piped in from Stage 1 rather than copied or re-entered.
+    add("adj_s2_entry","adj_stage2","descriptive",
+        "<b>Public register entry</b><br><b>Title:</b> [adj_case_title]<br><b>Datasets used:</b> [adj_case_datasets]")
+    for comp in COMPONENTS:
+        noun=COMPONENT_LABEL[comp]
+        add(f"adj_s2_recap_{comp}","adj_stage2","descriptive",
+            f"<b>Your Stage 1 answers: {noun}</b><br>Information in the entry: [adj_{comp}_evidence]<br>"
+            f"Best supported: [adj_{comp}_best:checked]<br>Defensible: [adj_{comp}_defensible:checked]","",f"[adj_{comp}_comparative] = '1'")
+    add("adj_s2_recap_conflict","adj_stage2","descriptive",
+        "<b>Your Stage 1 answer: explicit rule conflict</b><br>[adj_rule_conflict]","",
+        "[adj_pkg_comparative] = '1' and [adj_rule_conflict] <> '1'")
+    add("adj_s2_recap_conflict_yes","adj_stage2","descriptive",
+        "<b>Your Stage 1 answer: explicit rule conflict</b><br>Yes, in: [adj_rule_conflict_scope:checked]<br>"
+        "Research Domain options: [adj_dom_conflict_slots:checked]; labels: [adj_dom_conflict_labels:checked]<br>"
+        "Analytical Purpose options: [adj_purp_conflict_slots:checked]; labels: [adj_purp_conflict_labels:checked]<br>"
+        "COVID-19 tag options: [adj_covid_conflict_slots:checked]; equity tag options: [adj_equity_conflict_slots:checked]<br>"
+        "Part of the rules: [adj_conflict_rule_type] [adj_conflict_rule_other]<br>Explanation: [adj_rule_conflict_note]","",
+        "[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1'")
+    add("adj_s2_recap_record","adj_stage2","descriptive",
+        "<b>Your other Stage 1 answers</b><br>Boundary: [adj_boundary:checked] [adj_boundary_note]<br>"
+        "Other concern: [adj_other_concern] [adj_other_concern_note]<br>Unresolved at Stage 1: [adj_stage1_unresolved] [adj_stage1_unresolved_note]")
     add("adj_stage2_closure","adj_stage2","radio","Now that sources are revealed, does any diagnostic family apply?","1, Yes, record findings | 2, No, completed with no assignable issue | 3, Incomplete | 4, Administrative closure","","y",
         note="If the evidence cannot support a confident diagnosis, record a finding of family 8, Unresolved, rather than no issue.")
     add("adj_no_issue_rationale","adj_stage2","notes","Why does no family apply?","","[adj_stage2_closure] = '2'","y")
