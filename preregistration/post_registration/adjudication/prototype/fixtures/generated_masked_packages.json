@@ -2,6 +2,8 @@
   {
     "assignment_id": "SYN_ASSIGN_001",
     "record_id": "SYN_ADJ_001",
+    "title": "Synthetic longitudinal services example",
+    "datasets": "Synthetic linked health and social care extract; synthetic local authority service records, 2015-2024.",
     "package_id": "PKG_91230088a992",
     "seed": 20260921,
     "candidates": [
@@ -89,6 +91,8 @@
   {
     "assignment_id": "SYN_ASSIGN_002",
     "record_id": "SYN_ADJ_002",
+    "title": "Synthetic linked education records example",
+    "datasets": "Synthetic national pupil records linked to synthetic further education enrolments, 2012-2023.",
     "package_id": "PKG_0049cd6f42e3",
     "seed": 20260921,
     "candidates": [
@@ -203,6 +207,8 @@
   {
     "assignment_id": "SYN_ASSIGN_003",
     "record_id": "SYN_ADJ_003",
+    "title": "Synthetic owner-only transport study example",
+    "datasets": "Synthetic regional transport ticketing extract linked to synthetic household survey responses.",
     "package_id": "PKG_2ba347b811ce",
     "seed": 20260921,
     "candidates": [

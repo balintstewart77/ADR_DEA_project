@@ -29,9 +29,11 @@ for restricted joins.
 record-import file: one row per synthetic case–reviewer assignment, six rows in
 all, split between the `primary` and `secondary` reviewer groups. Import it
 **after** the dictionary, and only once data access groups with those two names
-exist. It carries the generator's read-only evidence: neutral slot maps, label
-and tag-status membership, and observed differences derived from displayed
-candidates alone. It contains no source identity, route, count or reveal
+exist. It carries the generator's read-only evidence: the frozen title and
+datasets-used entry, neutral slot maps, label and tag-status membership, and
+observed differences derived from displayed candidates alone. It also carries
+the hidden comparative and applicable flags that gate the form, so a reviewer
+is asked only the questions the package raises. It contains no source identity, route, count or reveal
 material, and generation fails rather than truncating if a package needs a
 fifth slot or carries an input QA flag.
 

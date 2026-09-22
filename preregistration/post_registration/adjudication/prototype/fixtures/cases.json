@@ -1,29 +1,132 @@
 [
   {
-    "record_id": "SYN_ADJ_001", "assignment_id": "SYN_ASSIGN_001",
+    "record_id": "SYN_ADJ_001",
+    "assignment_id": "SYN_ASSIGN_001",
     "title": "Synthetic longitudinal services example",
     "classifications": [
-      {"source_type":"fable","domains":["Health & Social Care"],"purposes":["Outcome Tracking"],"covid":"Not applied","equity":"Applied"},
-      {"source_type":"scratch","source_id":"SC_A","domains":["Health & Social Care"],"purposes":["Outcome Tracking"],"covid":"Not applied","equity":"Applied"},
-      {"source_type":"scratch","source_id":"SC_B","domains":["Health & Social Care","Poverty, Wealth & Living Standards"],"purposes":["Outcome Tracking"],"covid":"Not applied","equity":"Applied"},
-      {"source_type":"gpt55","rationale":"Synthetic excluded rationale","domains":["Crime & Justice"],"purposes":["Risk Prediction / Early Identification"],"covid":"Applied","equity":"Not applied"}
-    ]
+      {
+        "source_type": "fable",
+        "domains": [
+          "Health & Social Care"
+        ],
+        "purposes": [
+          "Outcome Tracking"
+        ],
+        "covid": "Not applied",
+        "equity": "Applied"
+      },
+      {
+        "source_type": "scratch",
+        "source_id": "SC_A",
+        "domains": [
+          "Health & Social Care"
+        ],
+        "purposes": [
+          "Outcome Tracking"
+        ],
+        "covid": "Not applied",
+        "equity": "Applied"
+      },
+      {
+        "source_type": "scratch",
+        "source_id": "SC_B",
+        "domains": [
+          "Health & Social Care",
+          "Poverty, Wealth & Living Standards"
+        ],
+        "purposes": [
+          "Outcome Tracking"
+        ],
+        "covid": "Not applied",
+        "equity": "Applied"
+      },
+      {
+        "source_type": "gpt55",
+        "rationale": "Synthetic excluded rationale",
+        "domains": [
+          "Crime & Justice"
+        ],
+        "purposes": [
+          "Risk Prediction / Early Identification"
+        ],
+        "covid": "Applied",
+        "equity": "Not applied"
+      }
+    ],
+    "datasets": "Synthetic linked health and social care extract; synthetic local authority service records, 2015-2024."
   },
   {
-    "record_id": "SYN_ADJ_002", "assignment_id": "SYN_ASSIGN_002",
+    "record_id": "SYN_ADJ_002",
+    "assignment_id": "SYN_ASSIGN_002",
     "title": "Synthetic linked education records example",
     "classifications": [
-      {"source_type":"fable","domains":["Education & Skills"],"purposes":["Descriptive Monitoring"],"covid":"Not applied","equity":"Not applied"},
-      {"source_type":"scratch","source_id":"SC_A","domains":["Education & Skills"],"purposes":["Outcome Tracking"],"covid":"Not applied","equity":"Not applied"},
-      {"source_type":"scratch","source_id":"SC_B","domains":["Education & Skills"],"purposes":["Policy Evaluation / Impact Analysis"],"covid":"Not applied","equity":"Applied"},
-      {"source_type":"scratch","source_id":"SC_C","domains":["Education & Skills"],"purposes":["Descriptive Monitoring"],"covid":"Not applied","equity":"Not applied"}
-    ]
+      {
+        "source_type": "fable",
+        "domains": [
+          "Education & Skills"
+        ],
+        "purposes": [
+          "Descriptive Monitoring"
+        ],
+        "covid": "Not applied",
+        "equity": "Not applied"
+      },
+      {
+        "source_type": "scratch",
+        "source_id": "SC_A",
+        "domains": [
+          "Education & Skills"
+        ],
+        "purposes": [
+          "Outcome Tracking"
+        ],
+        "covid": "Not applied",
+        "equity": "Not applied"
+      },
+      {
+        "source_type": "scratch",
+        "source_id": "SC_B",
+        "domains": [
+          "Education & Skills"
+        ],
+        "purposes": [
+          "Policy Evaluation / Impact Analysis"
+        ],
+        "covid": "Not applied",
+        "equity": "Applied"
+      },
+      {
+        "source_type": "scratch",
+        "source_id": "SC_C",
+        "domains": [
+          "Education & Skills"
+        ],
+        "purposes": [
+          "Descriptive Monitoring"
+        ],
+        "covid": "Not applied",
+        "equity": "Not applied"
+      }
+    ],
+    "datasets": "Synthetic national pupil records linked to synthetic further education enrolments, 2012-2023."
   },
   {
-    "record_id": "SYN_ADJ_003", "assignment_id": "SYN_ASSIGN_003",
+    "record_id": "SYN_ADJ_003",
+    "assignment_id": "SYN_ASSIGN_003",
     "title": "Synthetic owner-only transport study example",
     "classifications": [
-      {"source_type":"fable","domains":["Housing & Planning"],"purposes":["Service Interaction / Systems Analysis"],"covid":"Not applied","equity":"Not applied"}
-    ]
+      {
+        "source_type": "fable",
+        "domains": [
+          "Housing & Planning"
+        ],
+        "purposes": [
+          "Service Interaction / Systems Analysis"
+        ],
+        "covid": "Not applied",
+        "equity": "Not applied"
+      }
+    ],
+    "datasets": "Synthetic regional transport ticketing extract linked to synthetic household survey responses."
   }
 ]

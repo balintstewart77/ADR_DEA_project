@@ -2,7 +2,7 @@ import copy, csv, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,DOMAINS,HEADER,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,DOMAINS,HEADER,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -41,12 +41,30 @@ class PrototypeTests(unittest.TestCase):
         bad=copy.deepcopy(base); bad["adj_dom_weaker"]=1; bad["adj_dom_weaker_interpretations"]=[]; self.assertTrue(any("weaker support" in x for x in validate_submission(bad,p)))
         bad=copy.deepcopy(base); bad["adj_dom_defensible_state"]=2; bad["adj_dom_defensible_interpretations"]=[]; bad.pop("adj_dom_defensible_note",None); self.assertTrue(any("cannot-judge defensibility" in x for x in validate_submission(bad,p)))
         bad=copy.deepcopy(base); bad["tag_assessments"]["covid"]={"support":1,"rule_conflict":2,"supported_status":0}; self.assertTrue(any("tag cannot-assess" in x for x in validate_submission(bad,p)))
-    def test_shared_additional_and_boundary_rules(self):
-        p=self.packages[0]; base=copy.deepcopy(self.submissions[0])
-        bad=copy.deepcopy(base); bad["adj_dom_shared_label_state"]=1; bad["adj_dom_shared_label_ids"]=["not-a-label"]; bad["adj_dom_shared_label_note"]="Synthetic"; self.assertTrue(any("shared labels" in x for x in validate_submission(bad,p)))
-        bad=copy.deepcopy(base); bad["adj_dom_additional_label_state"]=1; bad["adj_dom_additional_label_ids"]=[DOMAINS[2]]; bad["adj_dom_additional_label_note"]="Synthetic"; self.assertTrue(any("additional labels" in x for x in validate_submission(bad,p)))
+    def test_beyond_disagreement_routes_are_gated_by_recorded_concern(self):
+        # §9.2 bounds comparative Stage 1 to the observed disagreement, so these
+        # routes open only on the single-set path or on a recorded concern.
+        comparative=self.packages[0]; base=copy.deepcopy(self.submissions[0])
+        self.assertEqual(base.get("adj_concern_scope"),[0])
+        for field in ("adj_dom_shared_label_state","adj_dom_additional_label_state"): self.assertNotIn(field,base)
+        self.assertEqual(validate_submission(base,comparative),[])
+        for field,phrase in (("adj_dom_shared_label_state","shared-label route"),("adj_dom_additional_label_state","additional-label route")):
+            bad=copy.deepcopy(base); bad[field]=0
+            self.assertTrue(any(phrase in x for x in validate_submission(bad,comparative)),field)
+        opened=copy.deepcopy(base); opened["adj_concern_scope"]=[1]
+        issues=validate_submission(opened,comparative)
+        self.assertTrue(any("shared-label state required" in x for x in issues)); self.assertTrue(any("additional-label state required" in x for x in issues))
+        opened.update({"adj_dom_shared_label_state":1,"adj_dom_shared_label_ids":["not-a-label"],"adj_dom_shared_label_note":"Synthetic"})
+        self.assertTrue(any("shared labels need permitted IDs" in x for x in validate_submission(opened,comparative)))
+        opened.update({"adj_dom_shared_label_state":0,"adj_dom_shared_label_ids":[],"adj_dom_additional_label_state":1,"adj_dom_additional_label_ids":[DOMAINS[2]],"adj_dom_additional_label_note":"Synthetic"})
+        self.assertTrue(any("additional labels need permitted IDs" in x for x in validate_submission(opened,comparative)))
+        single=self.packages[2]; single_response=copy.deepcopy(self.submissions[2])
+        self.assertIn("adj_dom_additional_label_state",single_response)
+        self.assertEqual(validate_submission(single_response,single),[])
+        missing=copy.deepcopy(single_response); del missing["adj_dom_additional_label_state"]
+        self.assertTrue(any("additional-label state required" in x for x in validate_submission(missing,single)))
         for comp in COMPONENTS:
-            bad=copy.deepcopy(base); bad["boundary"].pop(comp); self.assertIn(f"{comp}: boundary response required",validate_submission(bad,p))
+            bad=copy.deepcopy(base); bad["boundary"].pop(comp); self.assertIn(f"{comp}: boundary response required",validate_submission(bad,comparative))
     def test_diff_and_record_status_controls(self):
         p=self.packages[0]; bad=copy.deepcopy(self.submissions[0]); bad["adj_diff_check"]=2; self.assertIn("generation error blocks Stage 1 completion",validate_submission(bad,p))
         bad=copy.deepcopy(self.submissions[0]); bad["adj_concern_scope"]=[0,1]; self.assertIn("no-concern scope is exclusive",validate_submission(bad,p))
@@ -227,6 +245,46 @@ class PrototypeTests(unittest.TestCase):
         preview=(ROOT/"preview"/"index.html").read_text(encoding="utf-8").lower()
         for forbidden in ("source_id","gpt55","rationale","eligibility","reveal_payload","source_map"): self.assertNotIn(forbidden,preview)
         with (ROOT/"instruments"/"adjudication_stage1_candidate.csv").open(encoding="utf-8",newline="") as f:self.assertEqual(next(csv.reader(f)),HEADER)
+    def test_generated_flags_gate_the_form_and_cut_what_is_asked(self):
+        rows=field_rows(); by={x[0]:x for x in rows}
+        flag=lambda ref: ref.endswith("_applicable") or ref.endswith("_comparative")
+        refs=lambda b: [t.split("]")[0].split("(")[0] for t in b.split("[")[1:]]
+        for comp in COMPONENTS:
+            self.assertIn("@HIDDEN",by[f"adj_{comp}_comparative"][17])
+            for name in ("public_evidence","comparative_outcome","adequacy","defensible_state","weaker","support_note","multiple_defensible"):
+                self.assertIn(f"[adj_{comp}_comparative] = '1'",by[f"adj_{comp}_{name}"][11],name)
+            self.assertFalse(by[f"adj_{comp}_boundary_state"][11],"boundary is required for every component")
+        for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES)):
+            for n in range(1,len(vocab)+1):
+                self.assertIn("@HIDDEN",by[f"adj_{comp}_l{n:02d}_applicable"][17])
+                self.assertIn(f"[adj_{comp}_l{n:02d}_applicable] = '1'",by[f"adj_{comp}_l{n:02d}_support"][11])
+                self.assertIn(f"[adj_{comp}_comparative] = '1'",by[f"adj_{comp}_l{n:02d}_omission"][11])
+            code={"dom":1,"purp":2}[comp]
+            # Beyond-disagreement routes: comparative packages open them only on
+            # a recorded concern; the single-set path always asks the additional
+            # label question, as §9.2 requires.
+            self.assertEqual(by[f"adj_{comp}_shared_label_state"][11],f"[adj_{comp}_comparative] = '1' and [adj_concern_scope({code})] = '1'")
+            self.assertEqual(by[f"adj_{comp}_additional_label_state"][11],f"([adj_{comp}_comparative] = '0' or [adj_concern_scope({code})] = '1')")
+        for case,package in zip(self.cases,self.packages):
+            evidence=generated_evidence(package)
+            comparative={c:evidence[f"adj_{c}_comparative"] for c in COMPONENTS}
+            for comp in COMPONENTS: self.assertEqual(comparative[comp],int(len(package["interpretations"][comp])>1))
+            shown=0
+            for row in rows:
+                if row[1]!="adj_stage1" or "@HIDDEN" in row[17]: continue
+                needed=refs(row[11])
+                if any(not flag(x) for x in needed): continue
+                if all(str(evidence.get(x))=="1" for x in needed): shown+=1
+            unflagged=sum(1 for r in rows if r[1]=="adj_stage1" and "@HIDDEN" not in r[17])
+            self.assertLess(shown,unflagged/2,f"{case['record_id']} still opens with most of the form")
+    def test_frozen_public_entry_is_presented(self):
+        by={x[0]:x for x in field_rows()}
+        for name in ("adj_case_title","adj_case_datasets"):
+            self.assertEqual(by[name][1],"adj_stage1"); self.assertIn("@READONLY",by[name][17])
+        for package,case in zip(self.packages,self.cases):
+            evidence=generated_evidence(package)
+            self.assertEqual(evidence["adj_case_title"],case["title"]); self.assertEqual(evidence["adj_case_datasets"],case["datasets"])
+            self.assertTrue(evidence["adj_case_datasets"].strip())
     def test_no_field_clashes_with_a_redcap_form_completion_name(self):
         rows=field_rows(); names={x[0] for x in rows}; forms={x[1] for x in rows}
         # REDCap generates [form_name]_complete itself and rejects a dictionary

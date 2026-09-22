@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[1]; FIXTURES=ROOT/"fixtures"
 HEADER=["Variable / Field Name","Form Name","Section Header","Field Type","Field Label","Choices, Calculations, OR Slider Labels","Field Note","Text Validation Type OR Show Slider Number","Text Validation Min","Text Validation Max","Identifier?","Branching Logic (Show field only if...)","Required Field?","Custom Alignment","Question Number (surveys only)","Matrix Group Name","Matrix Ranking?","Field Annotation"]
 DOMAINS=["Labour Market & Employment","Education & Skills","Health & Social Care","Crime & Justice","Business & Productivity","Poverty, Wealth & Living Standards","Housing & Planning","Migration & Demographics","Environment & Agriculture","Public Finance & Taxation","Data Infrastructure & Methodology","Unclear from Register Entry"]
 PURPOSES=["Descriptive Monitoring","Outcome Tracking","Life-Course / Trajectory Analysis","Service Interaction / Systems Analysis","Policy Evaluation / Impact Analysis","Risk Prediction / Early Identification","Methodological / Infrastructure Research","Unclear from Register Entry"]
-COMPONENTS=("dom","purp","covid","equity"); KEY={"dom":"domains","purp":"purposes","covid":"covid","equity":"equity"}
+COMPONENTS=("dom","purp","covid","equity"); CONCERN_CODE={"dom":1,"purp":2,"covid":3,"equity":4}; KEY={"dom":"domains","purp":"purposes","covid":"covid","equity":"equity"}
 
 # Structured owner-screening allow-list.  Derived from the frozen owner data
 # dictionary and asserted against it by the test suite.  Every other exported
@@ -66,7 +66,7 @@ def package_case(case,seed=20260921):
         for c in candidates: keyed.setdefault(json.dumps(c[KEY[comp]],sort_keys=True),[]).append(c["candidate_id"])
         interpretations[comp]=[{"interpretation_id":f"{comp.upper()}_{n}","value":json.loads(v),"candidate_ids":cids} for n,(v,cids) in enumerate(keyed.items(),1)]
     identity={"assignment_id":case["assignment_id"],"record_id":case["record_id"],"candidates":candidates}
-    return {"assignment_id":case["assignment_id"],"record_id":case["record_id"],"package_id":"PKG_"+stable_id(identity),"seed":seed,"candidates":candidates,"interpretations":interpretations,"qa_flags":sorted({f for c in kept for f in qa_flags(c)})}
+    return {"assignment_id":case["assignment_id"],"record_id":case["record_id"],"title":case.get("title",""),"datasets":case.get("datasets",""),"package_id":"PKG_"+stable_id(identity),"seed":seed,"candidates":candidates,"interpretations":interpretations,"qa_flags":sorted({f for c in kept for f in qa_flags(c)})}
 def component_labels(package,comp):
     ids={x["interpretation_id"] for x in package["interpretations"][comp]}; labels={}
     for x in package["interpretations"][comp]:
@@ -153,17 +153,29 @@ def validate_submission(r,p):
                 a=assessments.get(comp,{}).get(label)
                 if a is None: out.append(f"{comp}: displayed/differing label {label!r} requires assessment")
                 else: out += [f"{comp}: {x}" for x in validate_label_assessment(a,sorted(ids-present),bool(ids-present))]
+        # §9.2 bounds comparative Stage 1 to the observed disagreement. Routes
+        # that reach beyond it are required only on the single-set path, where
+        # the protocol asks for an alternative or additional label, and are
+        # otherwise opened by the reviewer's own concern-scope selection
+        # (ADJ-035). Forcing them everywhere would push adjudication towards
+        # re-coding the record, which §9.1 excludes.
+        concern_code=CONCERN_CODE[comp]; beyond=(not comparative) or concern_code in concerns
         shared_state=r.get(f"adj_{comp}_shared_label_state"); shared_ids=set(r.get(f"adj_{comp}_shared_label_ids",[])); shared={x for x,present in labels.items() if present==ids}
-        if comparative:
+        if comparative and concern_code in concerns:
             out+=issue(shared_state,{0,1,2},f"{comp}: shared-label state")
             if shared_state==1 and(not shared_ids or not shared_ids<=shared or not r.get(f"adj_{comp}_shared_label_note")): out.append(f"{comp}: shared labels need permitted IDs and note")
             if shared_state in {0,2} and shared_ids: out.append(f"{comp}: shared None/Cannot judge has no IDs")
             if shared_state==2 and not r.get(f"adj_{comp}_shared_label_note"): out.append(f"{comp}: shared Cannot judge needs note")
-        elif any(x in r for x in (f"adj_{comp}_shared_label_state",f"adj_{comp}_shared_label_ids")): out.append(f"{comp}: shared-label controls are comparative only")
-        state=r.get(f"adj_{comp}_additional_label_state"); selected=set(r.get(f"adj_{comp}_additional_label_ids",[])); absent=set(vocab)-set(labels); out+=issue(state,{0,1,2},f"{comp}: additional-label state")
-        if state==1 and(not selected or not selected<=absent or not r.get(f"adj_{comp}_additional_label_note")): out.append(f"{comp}: additional labels need permitted IDs and note")
-        if state in {0,2} and selected: out.append(f"{comp}: additional None/Cannot determine has no IDs")
-        if state==2 and not r.get(f"adj_{comp}_additional_label_note"): out.append(f"{comp}: additional Cannot determine needs note")
+        elif any(x in r for x in (f"adj_{comp}_shared_label_state",f"adj_{comp}_shared_label_ids")):
+            out.append(f"{comp}: shared-label route needs a comparative package and a recorded concern beyond the observed differences")
+        state=r.get(f"adj_{comp}_additional_label_state"); selected=set(r.get(f"adj_{comp}_additional_label_ids",[])); absent=set(vocab)-set(labels)
+        if beyond:
+            out+=issue(state,{0,1,2},f"{comp}: additional-label state")
+            if state==1 and(not selected or not selected<=absent or not r.get(f"adj_{comp}_additional_label_note")): out.append(f"{comp}: additional labels need permitted IDs and note")
+            if state in {0,2} and selected: out.append(f"{comp}: additional None/Cannot determine has no IDs")
+            if state==2 and not r.get(f"adj_{comp}_additional_label_note"): out.append(f"{comp}: additional Cannot determine needs note")
+        elif any(x in r for x in (f"adj_{comp}_additional_label_state",f"adj_{comp}_additional_label_ids")):
+            out.append(f"{comp}: additional-label route needs a single-set package or a recorded concern beyond the observed differences")
         for label in shared_ids|selected:
             a=assessments.get(comp,{}).get(label)
             if a is None: out.append(f"{comp}: selected shared/additional label {label!r} needs assessment")
@@ -183,8 +195,10 @@ def default_valid_submission(p):
         ids,labels=component_labels(p,comp)
         for label,present in labels.items():
             if len(present)<len(ids) or len(ids)==1:r["label_assessments"][comp][label]={"support":1,"rule_conflict":0,"omission":0,"omission_ids":[]}
-        if len(ids)>1:r[f"adj_{comp}_shared_label_state"]=0;r[f"adj_{comp}_shared_label_ids"]=[]
-        r[f"adj_{comp}_additional_label_state"]=0;r[f"adj_{comp}_additional_label_ids"]=[]
+        # Beyond-disagreement routes are answered only where required: the
+        # single-set path, or when a concern beyond the observed differences is
+        # recorded. This default fixture records no such concern.
+        if len(ids)==1:r[f"adj_{comp}_additional_label_state"]=0;r[f"adj_{comp}_additional_label_ids"]=[]
     for comp in ("covid","equity"):r["tag_assessments"][comp]={"support":1,"rule_conflict":0,"supported_status":0}
     return r
 def derive_sufficiency(ratings):
@@ -352,7 +366,11 @@ def generated_evidence(package):
     displayed candidates.  No source identity, route, count or reveal material
     is included.
     """
-    out={}; diff_dimensions=[]; diff_labels=[]; diff_tags=[]
+    out={"adj_case_title":package["title"],"adj_case_datasets":package["datasets"]}; diff_dimensions=[]; diff_labels=[]; diff_tags=[]
+    for comp in COMPONENTS:
+        # Hidden per-record flags drive REDCap branching: the reviewer is only
+        # asked the questions this package actually raises.
+        out[f"adj_{comp}_comparative"]=int(len(package["interpretations"][comp])>1)
     for comp in COMPONENTS:
         interpretations=package["interpretations"][comp]; slots=slot_map(package,comp)
         out[f"adj_{comp}_interpretation_map"]="; ".join(f"Slot {slots[x['interpretation_id']]} = {x['interpretation_id']}: {', '.join(x['value']) if isinstance(x['value'],list) else x['value']} [displayed candidates {', '.join(x['candidate_ids'])}]" for x in interpretations)
@@ -367,6 +385,10 @@ def generated_evidence(package):
                 text="Contained by slots "+", ".join(map(str,containing))+"; omitted by slots "+", ".join(map(str,omitting))
                 diff_labels.append(f"{COMPONENT_LABEL[comp]}: {label}")
             out[f"adj_{comp}_l{n:02d}_membership"]=text
+            # A label row is asked when the label differs across interpretations,
+            # or, in a single-set package, when it is displayed at all.  Shared
+            # and universally absent labels use their own explicit routes.
+            out[f"adj_{comp}_l{n:02d}_applicable"]=int(bool(containing) and (bool(omitting) or len(ids)==1))
     for tag in ("covid","equity"):
         slots=slot_map(package,tag); parts=[]
         for status in ("Applied","Not applied"):
@@ -411,12 +433,15 @@ def write_record_import(path,cases):
 def field_rows():
     rows=[]
     def add(n,f,t,l,c="",b="",req="",a=""):
-        rows.append([n,f,"",t,l,c,"Candidate offline dictionary; not REDCap-import-tested.","","","","",b,req,"","","","",a])
+        rows.append([n,f,"",t,l,c,"","","","","",b,req,"","","","",a])
     # REDCap takes the FIRST field as the record identifier, and that identifier
     # appears in record lists, URLs, logs and every export.  The opaque
     # assignment ID is therefore first; the stable source Record ID stays a
     # hidden field for restricted joins and must never become the record key.
     add("adj_assignment_id","adj_admin","text","Synthetic assignment ID (record key)",req="y");add("adj_source_record_id","adj_admin","text","Stable source Record ID (administrative join)",a="@HIDDEN");add("adj_reviewer_role","adj_admin","radio","Reviewer role","1, Primary | 2, Secondary","","y","@HIDDEN");add("adj_stage1_package_id","adj_admin","text","Masked package ID",a="@READONLY")
+    # The frozen public entry the reviewer assesses against (§9.2). Without it a
+    # reviewer is asked whether a label is supported by evidence they cannot see.
+    add("adj_case_title","adj_stage1","notes","Frozen public register title",a="@READONLY");add("adj_case_datasets","adj_stage1","notes","Frozen datasets-used entry",a="@READONLY")
     for n,l in (("adj_diff_dimensions","Read-only generated affected dimensions"),("adj_diff_labels","Read-only generated differing labels"),("adj_diff_tag_statuses","Read-only generated differing tag statuses")):add(n,"adj_stage1","notes",l,a="@READONLY")
     add("adj_diff_check","adj_stage1","radio","Are generated displayed differences accurate?","1, Accurate | 2, Generation error","","y");add("adj_diff_error_note","adj_stage1","notes","Describe generated-difference error","","[adj_diff_check] = '2'")
     add("adj_concern_scope","adj_stage1","checkbox","Reviewer-identified concern beyond generated differences","1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic | 4, Equity | 5, Other | 0, No concern beyond generated differences","","y","@NONEOFTHEABOVE='0'");add("adj_concern_other_note","adj_stage1","notes","Describe other concern","","[adj_concern_scope(5)] = '1'")
@@ -426,16 +451,25 @@ def field_rows():
     slots="1, Interpretation slot 1 | 2, Interpretation slot 2 | 3, Interpretation slot 3 | 4, Interpretation slot 4"
     for comp in COMPONENTS:
         label={"dom":"Research Domains","purp":"Analytical Purposes","covid":"COVID-19/pandemic tag","equity":"Demographic disparities/equity tag"}[comp];p=f"adj_{comp}_"
-        add(p+"interpretation_map","adj_stage1","notes",f"Read-only generated {label} interpretation map",a="@READONLY");add(p+"public_evidence","adj_stage1","radio",f"{label}: public-entry sufficiency","1, Sufficient to distinguish | 2, Partly sufficient or ambiguous | 3, Insufficient to distinguish | 4, Cannot assess sufficiency")
-        add(p+"comparative_outcome","adj_stage1","radio",f"{label}: relative support","1, Unique relatively best | 2, Tied proper subset | 3, All equally supported | 4, Unable to distinguish");add(p+"best_interpretations","adj_stage1","checkbox",f"{label}: best interpretation slots",slots,f"[{p}comparative_outcome] = '1' or [{p}comparative_outcome] = '2' or [{p}comparative_outcome] = '3'")
-        add(p+"adequacy","adj_stage1","radio",f"{label}: absolute adequacy","1, At least one adequate | 2, None adequate | 3, Cannot judge");add(p+"defensible_state","adj_stage1","radio",f"{label}: displayed defensibility","0, None | 1, Identified interpretations | 2, Cannot judge");add(p+"defensible_interpretations","adj_stage1","checkbox",f"{label}: defensible interpretation slots",slots,f"[{p}defensible_state] = '1'");add(p+"defensible_note","adj_stage1","notes",f"{label}: defensibility note","",f"[{p}defensible_state] = '2'");add(p+"multiple_defensible","adj_stage1","calc",f"{label}: derived multiple-defensible",MULTIPLE_DEFENSIBLE_CALC.format(p=p))
-        add(p+"weaker","adj_stage1","radio",f"{label}: materially weaker support","0, No | 1, Yes | 2, Cannot judge");add(p+"weaker_interpretations","adj_stage1","checkbox",f"{label}: materially weaker slots",slots,f"[{p}weaker] = '1'");add(p+"weaker_note","adj_stage1","notes",f"{label}: weaker-support note","",f"[{p}weaker] = '1' or [{p}weaker] = '2'");add(p+"support_note","adj_stage1","notes",f"{label}: comparative support note")
+        # Generator-written flag: 1 when this component has two or more displayed
+        # interpretations. It drives the whole comparative block below.
+        add(p+"comparative","adj_stage1","text",f"{label}: generated comparative flag",a="@HIDDEN @READONLY")
+        comparative=f"[{p}comparative] = '1'"
+        add(p+"interpretation_map","adj_stage1","notes",f"Read-only generated {label} interpretation map",a="@READONLY");add(p+"public_evidence","adj_stage1","radio",f"{label}: public-entry sufficiency","1, Sufficient to distinguish | 2, Partly sufficient or ambiguous | 3, Insufficient to distinguish | 4, Cannot assess sufficiency",comparative)
+        add(p+"comparative_outcome","adj_stage1","radio",f"{label}: relative support","1, Unique relatively best | 2, Tied proper subset | 3, All equally supported | 4, Unable to distinguish",comparative);add(p+"best_interpretations","adj_stage1","checkbox",f"{label}: best interpretation slots",slots,f"{comparative} and ([{p}comparative_outcome] = '1' or [{p}comparative_outcome] = '2' or [{p}comparative_outcome] = '3')")
+        add(p+"adequacy","adj_stage1","radio",f"{label}: absolute adequacy","1, At least one adequate | 2, None adequate | 3, Cannot judge",comparative);add(p+"defensible_state","adj_stage1","radio",f"{label}: displayed defensibility","0, None | 1, Identified interpretations | 2, Cannot judge",comparative);add(p+"defensible_interpretations","adj_stage1","checkbox",f"{label}: defensible interpretation slots",slots,f"{comparative} and [{p}defensible_state] = '1'");add(p+"defensible_note","adj_stage1","notes",f"{label}: defensibility note","",f"{comparative} and [{p}defensible_state] = '2'");add(p+"multiple_defensible","adj_stage1","calc",f"{label}: derived multiple-defensible",MULTIPLE_DEFENSIBLE_CALC.format(p=p),f"{comparative} and [{p}defensible_state] = '1'")
+        add(p+"weaker","adj_stage1","radio",f"{label}: materially weaker support","0, No | 1, Yes | 2, Cannot judge",comparative);add(p+"weaker_interpretations","adj_stage1","checkbox",f"{label}: materially weaker slots",slots,f"{comparative} and [{p}weaker] = '1'");add(p+"weaker_note","adj_stage1","notes",f"{label}: weaker-support note","",f"{comparative} and ([{p}weaker] = '1' or [{p}weaker] = '2')");add(p+"support_note","adj_stage1","notes",f"{label}: comparative support note","",comparative)
         add(p+"boundary_state","adj_stage1","checkbox",f"{label}: boundary assessment","1, Recognised boundary | 2, Plausible boundary | 0, No boundary | 9, Cannot judge","","y","@NONEOFTHEABOVE='0,9'");add(p+"boundary_scope","adj_stage1","notes",f"{label}: boundary scope","",f"[{p}boundary_state(1)] = '1' or [{p}boundary_state(2)] = '1'");add(p+"recognised_boundary_rule_ref","adj_stage1","text",f"{label}: frozen rule citation","",f"[{p}boundary_state(1)] = '1'");add(p+"recognised_boundary_note","adj_stage1","notes",f"{label}: recognised-boundary explanation","",f"[{p}boundary_state(1)] = '1'");add(p+"plausible_boundary_note","adj_stage1","notes",f"{label}: plausible-boundary explanation","",f"[{p}boundary_state(2)] = '1'")
     for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES)):
         p=f"adj_{comp}_"
         for i,label in enumerate(vocab,1):
-            c=f"l{i:02d}";add(p+c+"_membership","adj_stage1","notes",f"Read-only generated membership: {label}",a="@READONLY");add(p+c+"_support","adj_stage1","radio",f"{label}: visible-public-entry support","1, Supported | 2, Not supported | 3, Cannot determine");add(p+c+"_rule_conflict","adj_stage1","radio",f"{label}: explicit taxonomy-rule conflict","0, No | 1, Possible/confirmed | 2, Cannot assess");add(p+c+"_rule_ref","adj_stage1","text",f"{label}: rule/counterexample citation","",f"[{p}{c}_rule_conflict] = '1'");add(p+c+"_rule_note","adj_stage1","notes",f"{label}: rule-conflict explanation","",f"[{p}{c}_rule_conflict] = '1' or [{p}{c}_rule_conflict] = '2'");add(p+c+"_omission","adj_stage1","radio",f"{label}: supported omission","0, No supported omission | 1, Omission overlooks supported label | 2, Cannot determine");add(p+c+"_omission_interpretations","adj_stage1","checkbox",f"{label}: omitting interpretation slots",slots,f"[{p}{c}_omission] = '1'");add(p+c+"_omission_note","adj_stage1","notes",f"{label}: omission explanation","",f"[{p}{c}_omission] = '1' or [{p}{c}_omission] = '2'")
-        choices=" | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1));add(p+"shared_label_state","adj_stage1","radio",f"{comp}: problematic shared labels","0, None identified | 1, Identified | 2, Cannot judge");add(p+"shared_label_ids","adj_stage1","checkbox",f"{comp}: shared-label IDs",choices,f"[{p}shared_label_state] = '1'");add(p+"shared_label_note","adj_stage1","notes",f"{comp}: shared-label explanation","",f"[{p}shared_label_state] = '1' or [{p}shared_label_state] = '2'");add(p+"additional_label_state","adj_stage1","radio",f"{comp}: supported labels absent from every candidate","0, None identified | 1, Identified | 2, Cannot determine");add(p+"additional_label_ids","adj_stage1","checkbox",f"{comp}: absent-label IDs",choices,f"[{p}additional_label_state] = '1'");add(p+"additional_label_note","adj_stage1","notes",f"{comp}: additional-label explanation","",f"[{p}additional_label_state] = '1' or [{p}additional_label_state] = '2'")
+            c=f"l{i:02d}";applicable=f"[{p}{c}_applicable] = '1'";omission_shown=f"{applicable} and [{p}comparative] = '1'"
+            # Generator-written flag: 1 only when this package actually raises the
+            # label. Unasked canonical rows stay hidden instead of filling the form.
+            add(p+c+"_applicable","adj_stage1","text",f"Generated applicable flag: {label}",a="@HIDDEN @READONLY")
+            add(p+c+"_membership","adj_stage1","notes",f"Read-only generated membership: {label}","",applicable,a="@READONLY");add(p+c+"_support","adj_stage1","radio",f"{label}: visible-public-entry support","1, Supported | 2, Not supported | 3, Cannot determine",applicable);add(p+c+"_rule_conflict","adj_stage1","radio",f"{label}: explicit taxonomy-rule conflict","0, No | 1, Possible/confirmed | 2, Cannot assess",applicable);add(p+c+"_rule_ref","adj_stage1","text",f"{label}: rule/counterexample citation","",f"{applicable} and [{p}{c}_rule_conflict] = '1'");add(p+c+"_rule_note","adj_stage1","notes",f"{label}: rule-conflict explanation","",f"{applicable} and ([{p}{c}_rule_conflict] = '1' or [{p}{c}_rule_conflict] = '2')");add(p+c+"_omission","adj_stage1","radio",f"{label}: supported omission","0, No supported omission | 1, Omission overlooks supported label | 2, Cannot determine",omission_shown);add(p+c+"_omission_interpretations","adj_stage1","checkbox",f"{label}: omitting interpretation slots",slots,f"{omission_shown} and [{p}{c}_omission] = '1'");add(p+c+"_omission_note","adj_stage1","notes",f"{label}: omission explanation","",f"{omission_shown} and ([{p}{c}_omission] = '1' or [{p}{c}_omission] = '2')")
+        choices=" | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1));concern=f"[adj_concern_scope({CONCERN_CODE[comp]})] = '1'";shared_shown=f"[{p}comparative] = '1' and {concern}";extra_shown=f"([{p}comparative] = '0' or {concern})"
+        add(p+"shared_label_state","adj_stage1","radio",f"{comp}: problematic shared labels","0, None identified | 1, Identified | 2, Cannot judge",shared_shown);add(p+"shared_label_ids","adj_stage1","checkbox",f"{comp}: shared-label IDs",choices,f"{shared_shown} and [{p}shared_label_state] = '1'");add(p+"shared_label_note","adj_stage1","notes",f"{comp}: shared-label explanation","",f"{shared_shown} and ([{p}shared_label_state] = '1' or [{p}shared_label_state] = '2')");add(p+"additional_label_state","adj_stage1","radio",f"{comp}: supported labels absent from every candidate","0, None identified | 1, Identified | 2, Cannot determine",extra_shown);add(p+"additional_label_ids","adj_stage1","checkbox",f"{comp}: absent-label IDs",choices,f"{extra_shown} and [{p}additional_label_state] = '1'");add(p+"additional_label_note","adj_stage1","notes",f"{comp}: additional-label explanation","",f"{extra_shown} and ([{p}additional_label_state] = '1' or [{p}additional_label_state] = '2')")
     for tag in ("covid","equity"):
         p=f"adj_{tag}_";add(p+"status_membership","adj_stage1","notes",f"Read-only generated membership for {tag}",a="@READONLY");add(p+"status_support","adj_stage1","radio",f"{tag}: displayed tag-status support","1, Supported | 2, Not supported | 3, Cannot determine");add(p+"rule_conflict","adj_stage1","radio",f"{tag}: explicit taxonomy-rule conflict","0, No | 1, Possible/confirmed | 2, Cannot assess");add(p+"rule_ref","adj_stage1","text",f"{tag}: rule citation","",f"[{p}rule_conflict] = '1'");add(p+"rule_note","adj_stage1","notes",f"{tag}: rule-conflict explanation","",f"[{p}rule_conflict] = '1' or [{p}rule_conflict] = '2'");add(p+"supported_status","adj_stage1","radio",f"{tag}: support for opposite status","0, No alternative supported | 1, Opposite status supported | 2, Cannot determine");add(p+"supported_status_note","adj_stage1","notes",f"{tag}: opposite-status explanation","",f"[{p}supported_status] = '1' or [{p}supported_status] = '2'")
     add("adj_stage1_affirmed","adj_stage1","yesno","Complete preserved Stage 1 assessment?","","","y");add("adj_reveal_state","adj_stage2","radio","Stage 2 reveal state","0, Not revealed | 1, Revealed | 2, Partial-failure exposure");add("adj_stage2_closure","adj_stage2","radio","Stage 2 closure","1, Completed with findings | 2, Completed no assignable issue | 3, Incomplete | 4, Administrative closure");add("adj_no_issue_rationale","adj_stage2","notes","Short rationale for no assignable issue","","[adj_stage2_closure] = '2'")

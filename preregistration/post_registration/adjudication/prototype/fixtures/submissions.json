@@ -77,10 +77,6 @@
     "adj_dom_weaker": 0,
     "adj_dom_weaker_interpretations": [],
     "adj_dom_support_note": "Synthetic comparative basis.",
-    "adj_dom_shared_label_state": 0,
-    "adj_dom_shared_label_ids": [],
-    "adj_dom_additional_label_state": 0,
-    "adj_dom_additional_label_ids": [],
     "adj_purp_additional_label_state": 0,
     "adj_purp_additional_label_ids": []
   },
@@ -188,11 +184,7 @@
     "adj_equity_weaker_interpretations": [],
     "adj_equity_support_note": "Synthetic comparative basis.",
     "adj_dom_additional_label_state": 0,
-    "adj_dom_additional_label_ids": [],
-    "adj_purp_shared_label_state": 0,
-    "adj_purp_shared_label_ids": [],
-    "adj_purp_additional_label_state": 0,
-    "adj_purp_additional_label_ids": []
+    "adj_dom_additional_label_ids": []
   },
   {
     "assignment_id": "SYN_ASSIGN_003",
