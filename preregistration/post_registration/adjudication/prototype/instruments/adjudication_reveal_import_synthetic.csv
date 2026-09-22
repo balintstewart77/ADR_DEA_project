@@ -1,0 +1,25 @@
+adj_assignment_id,adj_reveal_state,adj_reveal_map
+SYN_ASSIGN_001,1,"Research Domains: Option A: coder C02; Option B: production model, coder C01
+Analytical Purposes: Option A: production model, coder C01, coder C02
+COVID-19/pandemic tag: Option A: production model, coder C01, coder C02
+Demographic disparities/equity tag: Option A: production model, coder C01, coder C02"
+SYN_ASSIGN_001_SEC,1,"Research Domains: Option A: production model, coder C01; Option B: coder C02
+Analytical Purposes: Option A: production model, coder C01, coder C02
+COVID-19/pandemic tag: Option A: production model, coder C01, coder C02
+Demographic disparities/equity tag: Option A: production model, coder C01, coder C02"
+SYN_ASSIGN_002,1,"Research Domains: Option A: production model, coder C01, coder C02, coder C03
+Analytical Purposes: Option A: coder C02; Option B: coder C01; Option C: production model, coder C03
+COVID-19/pandemic tag: Option A: production model, coder C01, coder C02, coder C03
+Demographic disparities/equity tag: Option A: coder C02; Option B: production model, coder C01, coder C03"
+SYN_ASSIGN_002_SEC,1,"Research Domains: Option A: production model, coder C01, coder C02, coder C03
+Analytical Purposes: Option A: production model, coder C03; Option B: coder C02; Option C: coder C01
+COVID-19/pandemic tag: Option A: production model, coder C01, coder C02, coder C03
+Demographic disparities/equity tag: Option A: production model, coder C01, coder C03; Option B: coder C02"
+SYN_ASSIGN_003,1,"Research Domains: Option A: production model
+Analytical Purposes: Option A: production model
+COVID-19/pandemic tag: Option A: production model
+Demographic disparities/equity tag: Option A: production model"
+SYN_ASSIGN_003_SEC,1,"Research Domains: Option A: production model
+Analytical Purposes: Option A: production model
+COVID-19/pandemic tag: Option A: production model
+Demographic disparities/equity tag: Option A: production model"

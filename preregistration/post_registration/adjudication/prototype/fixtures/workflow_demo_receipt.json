@@ -1,5 +1,5 @@
 {
-  "snapshot_hash": "f0b0d05432da3f3694dde32aae167fbe7e1c040604594fc16c4f4f8e90c73e13",
+  "snapshot_hash": "eafdfe169fb6ffc3153a2128333aec9b5c3f148c61e89084beac1a4cd392079a",
   "snapshot_integrity_verified": true,
   "snapshot_unchanged_by_caller_mutation": true,
   "tampered_snapshot_detected": true,
@@ -7,11 +7,12 @@
   "derived": {
     "adj_dom_best_outcome": 1,
     "adj_dom_best_skipped": 0,
+    "adj_dom_insufficient_support": 0,
     "adj_dom_multiple_defensible": 0
   },
   "adj_correction": [
     {
-      "snapshot_hash": "f0b0d05432da3f3694dde32aae167fbe7e1c040604594fc16c4f4f8e90c73e13",
+      "snapshot_hash": "eafdfe169fb6ffc3153a2128333aec9b5c3f148c61e89084beac1a4cd392079a",
       "field": "adj_stage1_note",
       "original_value": "Synthetic reviewer note.",
       "corrected_value": "Synthetic reviewer note (transcription corrected).",
@@ -23,25 +24,25 @@
   "events": [
     {
       "event": "preserved",
-      "hash": "f0b0d05432da3f3694dde32aae167fbe7e1c040604594fc16c4f4f8e90c73e13",
-      "at": "2026-09-22T14:54:29.567855+00:00"
+      "hash": "eafdfe169fb6ffc3153a2128333aec9b5c3f148c61e89084beac1a4cd392079a",
+      "at": "2026-09-22T16:05:03.991212+00:00"
     },
     {
       "event": "preserve_rejected_existing_snapshot",
-      "at": "2026-09-22T14:54:29.567871+00:00"
+      "at": "2026-09-22T16:05:03.991226+00:00"
     },
     {
       "event": "correction_recorded",
       "field": "adj_stage1_note",
-      "at": "2026-09-22T14:54:29.567942+00:00"
+      "at": "2026-09-22T16:05:03.991293+00:00"
     },
     {
       "event": "reveal_failed_partial",
-      "at": "2026-09-22T14:54:29.568204+00:00"
+      "at": "2026-09-22T16:05:03.991720+00:00"
     },
     {
       "event": "reveal_recovered",
-      "at": "2026-09-22T14:54:29.568221+00:00"
+      "at": "2026-09-22T16:05:03.991747+00:00"
     }
   ],
   "exposure_history": [
@@ -51,7 +52,7 @@
       "accessibility": "potential",
       "viewing": "unknown",
       "extent": "unknown",
-      "at": "2026-09-22T14:54:29.568200+00:00"
+      "at": "2026-09-22T16:05:03.991714+00:00"
     }
   ],
   "reveal_assignment": "SYN_ASSIGN_001"

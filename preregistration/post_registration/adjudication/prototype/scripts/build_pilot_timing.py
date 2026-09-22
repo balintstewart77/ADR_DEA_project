@@ -21,7 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from prototype_lib import (COMPONENTS, DOMAINS, IMPORTED_DEFAULTS, IMPORT_FORBIDDEN, PURPOSES,
-                           comparative_components, field_rows, generated_evidence, package_case)
+                           comparative_components, field_rows, generated_evidence, package_case,
+                           write_reveal_import)
 
 REPO = Path(__file__).resolve().parents[5]
 EXCLUSIONS = REPO / "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv"
@@ -83,7 +84,7 @@ def main():
             raise SystemExit("coders were not shown one identical public entry for a pilot record")
         classifications = [{"source_type": "fable", **model[rid]}]
         for n, r in enumerate(rows):
-            classifications.append({"source_type": "scratch", "source_id": f"C{n}",
+            classifications.append({"source_type": "scratch", "source_id": r["reviewer_id"].strip(),
                                     "domains": [DOMAINS[i - 1] for i in range(1, 13) if r.get(f"sc_domains___{i}") == "1"],
                                     "purposes": [PURPOSES[i - 1] for i in range(1, 9) if r.get(f"sc_purposes___{i}") == "1"],
                                     "covid": "Applied" if r.get("sc_covid") == "1" else "Not applied",
@@ -129,6 +130,9 @@ def main():
     columns = ["adj_assignment_id", "redcap_data_access_group"] + [n for n in names if n in rows_out[0] and n != "adj_assignment_id"]
     with (OUT / "adjudication_record_import_pilot_timing.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=columns); w.writeheader(); w.writerows(rows_out)
+    # The reveal is a separate file, to import only after Stage 1 is complete
+    # for these cases.  It is never printed.
+    write_reveal_import(OUT / "adjudication_reveal_import_pilot_timing.csv", cases)
     receipt = {"generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                "purpose": "Stage 1 timing on permanently excluded pilot records (ADJ-041); not adjudication evidence",
                "inputs": {"exclusion_list_sha256": EXCLUSIONS_SHA256, "model_output_sha256": MODEL_SHA256,

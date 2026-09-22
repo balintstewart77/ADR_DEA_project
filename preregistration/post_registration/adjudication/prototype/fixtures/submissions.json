@@ -16,7 +16,6 @@
     "adj_dom_best": [
       1
     ],
-    "adj_dom_adequacy": 1,
     "adj_dom_defensible": [
       1
     ]
@@ -38,7 +37,6 @@
     "adj_purp_best": [
       1
     ],
-    "adj_purp_adequacy": 1,
     "adj_purp_defensible": [
       1
     ],
@@ -46,7 +44,6 @@
     "adj_equity_best": [
       1
     ],
-    "adj_equity_adequacy": 1,
     "adj_equity_defensible": [
       1
     ]

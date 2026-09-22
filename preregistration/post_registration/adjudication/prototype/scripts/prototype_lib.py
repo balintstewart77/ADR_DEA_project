@@ -79,40 +79,62 @@ def issue(value,choices,label): return [] if value in choices else [f"{label} re
 # interpretations, whether a recognised or plausible boundary is involved,
 # whether more than one interpretation stays defensible, and whether any set
 # conflicts with an explicit rule.  ADJ-037 adds a blind best-supported choice
-# and an adequacy judgement for each component that actually differs.  The
+# for each component that actually differs; sufficiency is derived (ADJ-042).  The
 # owner-only single-set path keeps the per-label checks §9.2 requires there.
 # ---------------------------------------------------------------------------
 COMPONENT_CODE={"dom":1,"purp":2,"covid":3,"equity":4}
 # Option codes 1-4 are the stable internal slot codes, shown as Options A-D.
 OPTION_LETTERS="ABCD"
 BEST_CANNOT_DETERMINE=6; DEFENSIBLE_NONE=0; DEFENSIBLE_CANNOT_JUDGE=9
-COMPARATIVE_RECORD_KEYS=("adj_rule_conflict","adj_rule_conflict_scope","adj_rule_conflict_ref","adj_rule_conflict_note")
-COMPARATIVE_COMPONENT_KEYS=("evidence","best","adequacy","defensible","conflict_slots")
+COMPARATIVE_RECORD_KEYS=("adj_rule_conflict","adj_rule_conflict_scope","adj_conflict_rule_type","adj_conflict_rule_other","adj_rule_conflict_note","adj_boundary_same_rule")
+COMPARATIVE_COMPONENT_KEYS=("evidence","best","defensible","conflict_slots")
+# The frozen rules carry no identifiers.  The labels already ticked locate the
+# rule; the rule type says which part of the taxonomy it is (ADJ-042).
+RULE_TYPES="1, Definition | 2, Inclusion rule | 3, Exclusion rule | 4, Counterexample | 5, instead_consider reference | 6, Coding instruction | 7, Other"
+RULE_OTHER=7
+def validate_rule_type(value,other,label):
+    out=issue(value,set(range(1,8)),f"{label} rule type")
+    if value==RULE_OTHER and not(other and str(other).strip()): out.append(f"{label} rule type Other needs a description")
+    return out
 SINGLE_SET_KEYS=("label_assessments","tag_assessments")+tuple(f"adj_{c}_additional_label_{x}" for c in ("dom","purp") for x in ("state","ids","note"))
 def comparative_components(p): return [c for c in COMPONENTS if len(p["interpretations"][c])>1]
 def validate_label_assessment(a):
     """Single-set path: is this proposed label supported, and does it breach a rule?"""
     out=issue(a.get("support"),{1,2,3},"label support"); conflict=a.get("rule_conflict"); out+=issue(conflict,{0,1,2},"label rule-conflict state")
-    if conflict==1 and not(a.get("rule_ref") and a.get("rule_note")): out.append("rule conflict needs citation and explanation")
+    if conflict==1:
+        out+=validate_rule_type(a.get("rule_type"),a.get("rule_other"),"label conflict")
+        if not a.get("rule_note"): out.append("rule conflict needs explanation")
     if conflict==2 and not a.get("rule_note"): out.append("cannot-assess conflict needs explanation")
     return out
 def validate_tag_assessment(a):
     out=issue(a.get("support"),{1,2,3},"tag support"); conflict=a.get("rule_conflict"); out+=issue(conflict,{0,1,2},"tag conflict")
-    if conflict==1 and not(a.get("rule_ref") and a.get("rule_note")): out.append("tag conflict needs citation and explanation")
+    if conflict==1:
+        out+=validate_rule_type(a.get("rule_type"),a.get("rule_other"),"tag conflict")
+        if not a.get("rule_note"): out.append("tag conflict needs explanation")
     if conflict==2 and not a.get("rule_note"): out.append("tag cannot-assess conflict needs explanation")
     state=a.get("supported_status"); out+=issue(state,{0,1,2},"tag alternative-status assessment")
     if state in {1,2} and not a.get("supported_status_note"): out.append("tag alternative-status needs explanation")
     return out
 def validate_boundary(r):
-    """Record-level boundary judgement, asked for every record."""
+    """Record-level boundary judgement, asked for every record.
+
+    Where the reviewer has already recorded a rule conflict and ticks a
+    documented boundary, one question asks whether it is the same rule; a Yes
+    skips re-entering the rule type and explanation (ADJ-042).
+    """
     states=set(r.get("adj_boundary",[])); scope=set(r.get("adj_boundary_scope",[])); out=[]
     if not states or not states<={0,1,2,9}: out.append("boundary state required")
     if (0 in states or 9 in states) and len(states)!=1: out.append("no/cannot boundary state is exclusive")
     if states&{1,2}:
         if not scope or not scope<=set(COMPONENT_CODE.values()): out.append("recognised/plausible boundary needs its component scope")
-        if not r.get("adj_boundary_note"): out.append("recognised/plausible boundary needs explanation")
     elif scope: out.append("boundary scope is only recorded for a recognised or plausible boundary")
-    if 1 in states and not r.get("adj_boundary_rule_ref"): out.append("recognised boundary needs a frozen rule citation")
+    shortcut=r.get("adj_rule_conflict")==1 and 1 in states; same=r.get("adj_boundary_same_rule")
+    if shortcut: out+=issue(same,{0,1},"same-rule-as-conflict answer")
+    elif "adj_boundary_same_rule" in r: out.append("same-rule question is only asked for a documented boundary alongside a rule conflict")
+    cites=1 in states and not(shortcut and same==1)
+    if cites: out+=validate_rule_type(r.get("adj_boundary_rule_type"),r.get("adj_boundary_rule_other"),"recognised boundary")
+    elif "adj_boundary_rule_type" in r: out.append("boundary rule type is only recorded for a documented boundary that is not the conflict rule")
+    if (cites or 2 in states) and not r.get("adj_boundary_note"): out.append("recognised/plausible boundary needs explanation")
     return out
 def yes_no_with_note(r,field,note,label):
     value=r.get(field); out=issue(value,{0,1},label)
@@ -129,7 +151,8 @@ def validate_submission(r,p):
     if masking in {1,2} and not r.get("adj_masking_note"): out.append("masking failure needs explanation")
     out+=yes_no_with_note(r,"adj_other_concern","adj_other_concern_note","other concern")
     out+=yes_no_with_note(r,"adj_stage1_unresolved","adj_stage1_unresolved_note","unresolved at Stage 1")
-    if any(k.endswith(("_best_skipped","_best_outcome","_multiple_defensible")) for k in r): out.append("derived indicators cannot be supplied")
+    if any(k.endswith(("_best_skipped","_best_outcome","_multiple_defensible","_insufficient_support")) for k in r): out.append("derived indicators cannot be supplied")
+    if any(k.endswith("_adequacy") for k in r): out.append("sufficient support is derived, not asked (ADJ-042)")
     comps=comparative_components(p)
     if comps:
         if any(k in r for k in SINGLE_SET_KEYS): out.append("single-set questions do not apply when displayed sets compete")
@@ -149,8 +172,6 @@ def validate_submission(r,p):
             elif BEST_CANNOT_DETERMINE in best:
                 if len(best)!=1: out.append(f"{c}: cannot determine is exclusive")
             elif not best<=options: out.append(f"{c}: best-supported names an option that is not displayed")
-            # Sufficient support for at least one complete option.
-            out+=issue(r.get(pre+"adequacy"),{1,2,3},f"{c}: sufficient support")
             # Defensibility: every option reasonable under the rules.
             defensible=set(r.get(pre+"defensible",[]))
             if not defensible: out.append(f"{c}: defensibility answer required")
@@ -160,7 +181,8 @@ def validate_submission(r,p):
         conflict=r.get("adj_rule_conflict"); rscope=set(r.get("adj_rule_conflict_scope",[])); out+=issue(conflict,{0,1,2},"rule-conflict judgement")
         if conflict==1:
             if not rscope or not rscope<=set(COMPONENT_CODE.values()): out.append("rule conflict needs its component scope")
-            if not(r.get("adj_rule_conflict_ref") and r.get("adj_rule_conflict_note")): out.append("rule conflict needs citation and explanation")
+            out+=validate_rule_type(r.get("adj_conflict_rule_type"),r.get("adj_conflict_rule_other"),"rule conflict")
+            if not r.get("adj_rule_conflict_note"): out.append("rule conflict needs explanation")
         elif rscope: out.append("rule-conflict scope is only recorded for a conflict")
         if conflict==2 and not r.get("adj_rule_conflict_note"): out.append("cannot-judge rule conflict needs explanation")
         for c in COMPONENTS:
@@ -205,7 +227,7 @@ def default_valid_submission(p):
     comps=comparative_components(p)
     if comps:
         r["adj_rule_conflict"]=0
-        for c in comps: r.update({f"adj_{c}_evidence":1,f"adj_{c}_best":[1],f"adj_{c}_adequacy":1,f"adj_{c}_defensible":[1]})
+        for c in comps: r.update({f"adj_{c}_evidence":1,f"adj_{c}_best":[1],f"adj_{c}_defensible":[1]})
     else:
         r["label_assessments"]={comp:{label:{"support":1,"rule_conflict":0} for label in component_labels(p,comp)[1]} for comp in ("dom","purp")}
         r["tag_assessments"]={comp:{"support":1,"rule_conflict":0,"supported_status":0} for comp in ("covid","equity")}
@@ -287,6 +309,9 @@ def derive_stage1(response,package):
       equally supported, 4 cannot determine, 9 not asked.  Read off the ticks,
       so the tied options themselves stay in the response.
     * multiple_defensible: 1 when two or more options are ticked defensible.
+    * insufficient_support: 1 where no option is sufficiently supported, read
+      as too little information or no defensible option; 9 where either answer
+      is cannot judge; otherwise 0.  Replaces the asked question (ADJ-042).
     """
     derived={}
     for c in comparative_components(package):
@@ -298,7 +323,11 @@ def derive_stage1(response,package):
         elif len(best)==1: outcome=1
         elif len(best)==n: outcome=3
         else: outcome=2
-        derived.update({pre+"best_skipped":int(skipped),pre+"best_outcome":outcome,pre+"multiple_defensible":int(len(defensible)>=2)})
+        ticked=set(response.get(pre+"defensible",[])); evidence=response.get(pre+"evidence")
+        if evidence==3 or ticked=={DEFENSIBLE_NONE}: insufficient=1
+        elif evidence==4 or ticked=={DEFENSIBLE_CANNOT_JUDGE}: insufficient=9
+        else: insufficient=0
+        derived.update({pre+"best_skipped":int(skipped),pre+"best_outcome":outcome,pre+"multiple_defensible":int(len(defensible)>=2),pre+"insufficient_support":insufficient})
     return derived
 def canonical_bytes(value): return json.dumps(value,sort_keys=True,separators=(",",":")).encode("utf-8")
 def verify_snapshot(store):
@@ -364,6 +393,112 @@ def reveal(a,p,h,payload,store,simulate_partial=False):
         store.setdefault("exposure_history",[]).append({"assignment_id":a,"source_information":"synthetic source-reveal mapping potentially accessible","accessibility":"potential","viewing":"unknown","extent":"unknown","at":datetime.now(timezone.utc).isoformat()});store.setdefault("events",[]).append({"event":"reveal_failed_partial","at":datetime.now(timezone.utc).isoformat()});raise RuntimeError("simulated partial reveal failure")
     store.setdefault("events",[]).append({"event":"reveal_recovered" if store.get("exposure_history") else "reveal_complete","at":datetime.now(timezone.utc).isoformat()});return {"assignment_id":a,"package_id":p,"sources":payload[a]}
 
+# ---------------------------------------------------------------------------
+# Lean Stage 2 (ADJ-043).  After reveal, §9.3 assigns one or more of eight
+# families; a source-specific finding needs a clear basis in the frozen rules
+# and the evidence available to that source.  The release triggers need the
+# mechanism, the labels and the release implication of each finding.  Up to
+# three findings per record; affected sources, mandatory second review and the
+# families per record are derived rather than asked.
+# ---------------------------------------------------------------------------
+FAMILIES="1, Apparent model rule-application problem | 2, Apparent scratch-coder rule-application problem | 3, Evidence problem | 4, Taxonomy problem | 5, Project-knowledge gap | 6, Legitimate boundary case | 7, Data or instrument problem | 8, Unresolved"
+FINDING_SLOTS=3
+BASIS="1, Conflicts with an explicit rule | 2, Materially weaker support than a displayed alternative | 3, Omits a materially better-supported label | 4, Applies the instructions inconsistently"
+BASIS_BY_FAMILY={1:{1,2,3},2:{1,4}}
+RELEASE="0, None | 1, Caveat only | 2, Evidence for prompt revision | 3, Evidence for taxonomy revision | 4, Data or instrument repair | 5, Evidence for non-release | 6, Escalate: may alter a headline dashboard output | 9, Pending"
+RELEASE_CODES={0,1,2,3,4,5,6,9}
+# Mechanisms come from the versioned vocabulary (ADJ-044): boundary and rule
+# mechanisms for families 1, 2, 4 and 6; data and instrument mechanisms for 7.
+MECHANISM_FAMILIES={1,2,4,6,7}; RULE_MECH_FAMILIES={1,2,4,6}; DATA_MECH_FAMILIES={7}
+MECH_NEW=999; MECH_VOCABULARY="mechvocab-0.1"
+def mechanism_vocabulary():
+    path=ROOT/"instruments"/"mechanism_vocabulary.csv"
+    if not path.exists(): raise FileNotFoundError(f"mechanism vocabulary required: {path}; run build_mechanism_vocabulary.py")
+    return [{**r,"code":int(r["code"])} for r in csv.DictReader(path.open(encoding="utf-8"))]
+def mechanism_codes(group): return {r["code"] for r in mechanism_vocabulary() if r["group"]==group}
+CODERS={1:"C01",2:"C02",3:"C03"}
+def validate_stage2(r):
+    """Validate a Stage 2 response against the lean instrument."""
+    out=[]; closure=r.get("adj_stage2_closure"); out+=issue(closure,{1,2,3,4},"Stage 2 closure")
+    if closure==2 and not r.get("adj_no_issue_rationale"): out.append("no assignable issue needs a short positive rationale")
+    shown=closure==1
+    for k in range(1,FINDING_SLOTS+1):
+        pre=f"adj_f{k}_"; present=[x for x in r if x.startswith(pre)]
+        if not shown:
+            if present: out.append(f"finding {k} is only recorded when an earlier finding asks for another")
+            continue
+        family=r.get(pre+"family"); out+=issue(family,set(range(1,9)),f"finding {k} family")
+        components=set(r.get(pre+"components",[]))
+        if not components or not components<={1,2,3,4}: out.append(f"finding {k} needs its components")
+        if family in (1,2):
+            for code,comp in ((1,"dom"),(2,"purp")):
+                if code in components and not r.get(pre+f"{comp}_labels"): out.append(f"finding {k} needs the {comp} labels concerned")
+            basis=r.get(pre+"basis")
+            if basis not in BASIS_BY_FAMILY[family]: out.append(f"finding {k} needs a clear basis valid for its family")
+            if not r.get(pre+"note"): out.append(f"finding {k} needs its basis explained")
+        elif pre+"basis" in r: out.append(f"finding {k}: a basis is only recorded for a source-specific finding")
+        coders=set(r.get(pre+"coders",[]))
+        if family==2:
+            if not coders or not coders<=set(CODERS): out.append(f"finding {k} needs the coder or coders concerned")
+        elif coders: out.append(f"finding {k}: coders are only recorded for a scratch-coder finding")
+        for field,families,group in (("mech",RULE_MECH_FAMILIES,"rule"),("mech_data",DATA_MECH_FAMILIES,"data")):
+            value=r.get(pre+field)
+            if family in families:
+                if value not in mechanism_codes(group)|{MECH_NEW}: out.append(f"finding {k} needs a mechanism from the list, or New mechanism")
+            elif value is not None: out.append(f"finding {k}: {field} does not apply to this family")
+        if MECH_NEW in (r.get(pre+"mech"),r.get(pre+"mech_data")):
+            if not(r.get(pre+"mech_new") and str(r.get(pre+"mech_new")).strip()): out.append(f"finding {k} needs the new mechanism described")
+        elif pre+"mech_new" in r: out.append(f"finding {k}: a new-mechanism description is only recorded for New mechanism")
+        out+=issue(r.get(pre+"release"),RELEASE_CODES,f"finding {k} release implication")
+        if k<FINDING_SLOTS:
+            another=r.get(pre+"another"); out+=issue(another,{0,1},f"finding {k} another-finding answer")
+            shown=another==1
+    if closure in (1,2) and r.get("adj_stage2_affirmed")!=1: out.append("Stage 2 completion not affirmed")
+    if any(x.startswith("adj_stage2_derived") or x.endswith("_mandatory_review") for x in r): out.append("derived Stage 2 indicators cannot be supplied")
+    return out
+def derive_stage2(r):
+    """Families per record, affected sources, and whether second review is mandatory (§9.1)."""
+    findings=[]
+    if r.get("adj_stage2_closure")==1:
+        for k in range(1,FINDING_SLOTS+1):
+            family=r.get(f"adj_f{k}_family")
+            if family is None: break
+            sources=["production model"] if family==1 else [CODERS[c] for c in sorted(r.get(f"adj_f{k}_coders",[]))] if family==2 else []
+            code=r.get(f"adj_f{k}_mech") if family in RULE_MECH_FAMILIES else r.get(f"adj_f{k}_mech_data") if family in DATA_MECH_FAMILIES else None
+            names={x["code"]:x["name"] for x in mechanism_vocabulary()}
+            mechanism=None if code is None else {"code":code,"name":("NEW: "+str(r.get(f"adj_f{k}_mech_new"))) if code==MECH_NEW else names.get(code),"vocabulary":MECH_VOCABULARY}
+            findings.append({"finding":k,"family":family,"affected_sources":sources,"mechanism":mechanism,"release":r.get(f"adj_f{k}_release")})
+            if r.get(f"adj_f{k}_another")!=1: break
+    families=sorted({f["family"] for f in findings})
+    reasons=[]
+    if 1 in families: reasons.append("apparent production-model rule-application problem")
+    if 8 in families: reasons.append("unresolved")
+    if any(f["release"] in (2,3,5) for f in findings): reasons.append("proposed as evidence for prompt revision, taxonomy revision or non-release")
+    return {"findings":findings,"families":families,"family_count":len(families),"mandatory_second_review":int(bool(reasons)),"mandatory_reasons":reasons}
+def source_name(c):
+    if c["source_type"]=="fable": return "production model"
+    sid=c.get("source_id","?"); return "coder "+{"SC_A":"C01","SC_B":"C02","SC_C":"C03"}.get(sid,sid)
+def reveal_map(case,package):
+    """Which source produced each displayed option.  Imported only after Stage 1 is preserved."""
+    by_candidate={}
+    for c in case["classifications"]:
+        if c["source_type"] not in {"fable","scratch"}: continue
+        by_candidate.setdefault("C_"+stable_id(candidate_content(c)),[]).append(source_name(c))
+    order=lambda n:(n!="production model",n)
+    lines=[]
+    for comp in COMPONENTS:
+        slots=slot_map(package,comp); parts=[]
+        for x in package["interpretations"][comp]:
+            names=sorted({n for cid in x["candidate_ids"] for n in by_candidate[cid]},key=order)
+            parts.append(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]}: "+", ".join(names))
+        lines.append(f"{COMPONENT_LABEL[comp]}: "+"; ".join(parts))
+    return "\n".join(lines)
+def write_reveal_import(path,pairs):
+    """Reveal rows for (case, package) pairs.  Deliberately source-revealing."""
+    path.parent.mkdir(parents=True,exist_ok=True)
+    with path.open("w",newline="",encoding="utf-8") as f:
+        w=csv.DictWriter(f,fieldnames=["adj_assignment_id","adj_reveal_state","adj_reveal_map"]); w.writeheader()
+        for case,package in pairs: w.writerow({"adj_assignment_id":package["assignment_id"],"adj_reveal_state":1,"adj_reveal_map":reveal_map(case,package)})
 REVIEWER_ROLES=((1,"primary",""),(2,"secondary","_SEC"))
 IMPORTED_DEFAULTS={"adj_other_concern":0,"adj_stage1_unresolved":0}
 def slot_hiding(comp):
@@ -494,8 +629,8 @@ def write_record_import(path,cases):
     return rows
 def field_rows():
     rows=[]
-    def add(n,f,t,l,c="",b="",req="",a="",note=""):
-        rows.append([n,f,"",t,l,c,note,"","","","",b,req,"","","","",a])
+    def add(n,f,t,l,c="",b="",req="",a="",note="",val=""):
+        rows.append([n,f,"",t,l,c,note,val,"","","",b,req,"","","","",a])
     scope_choices="1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag"
     slot_choices=" | ".join(f"{n}, Option {OPTION_LETTERS[n-1]}" for n in range(1,5))
     NOUN={"dom":"Research Domain","purp":"Analytical Purpose","covid":"COVID-19/pandemic tag","equity":"demographic disparities/equity tag"}
@@ -529,9 +664,6 @@ def field_rows():
             slot_choices+f" | {BEST_CANNOT_DETERMINE}, Cannot determine which is better supported",f"{differs} and [adj_{comp}_evidence] <> '3'","y",
             f"@NONEOFTHEABOVE='{BEST_CANNOT_DETERMINE}' "+slot_hiding(comp),
             note="Relative support: which option has stronger evidence. If options tie for best, tick each of them.")
-        add(f"adj_{comp}_adequacy","adj_stage1","radio",f"Do the title and listed datasets provide sufficient evidence for at least one of these {noun} options under the coding rules?",
-            "1, Yes | 2, No | 3, Cannot judge",differs,"y",
-            note="Sufficient support: whether any complete option has enough evidence. Assess support for the complete option, including all its labels. An option can be better supported than the others without being sufficiently supported.")
         add(f"adj_{comp}_defensible","adj_stage1","checkbox",f"Which {noun} options, if any, could reasonably be assigned under the coding rules using only the title and listed datasets?",
             slot_choices+f" | {DEFENSIBLE_NONE}, None | {DEFENSIBLE_CANNOT_JUDGE}, Cannot judge",differs,"y",
             f"@NONEOFTHEABOVE='{DEFENSIBLE_NONE},{DEFENSIBLE_CANNOT_JUDGE}' "+slot_hiding(comp),
@@ -547,7 +679,9 @@ def field_rows():
         if comp in ("dom","purp"):
             vocab=DOMAINS if comp=="dom" else PURPOSES
             add(f"adj_{comp}_conflict_labels","adj_stage1","checkbox",f"Which {NOUN[comp]} label or labels are involved?"," | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1)),in_scope,"y")
-    add("adj_rule_conflict_ref","adj_stage1","text","Which rule? Cite the frozen rule or example","",f"{comparative_pkg} and [adj_rule_conflict] = '1'","y");add("adj_rule_conflict_note","adj_stage1","notes","Explain the conflict, or why it cannot be judged","",f"{comparative_pkg} and ([adj_rule_conflict] = '1' or [adj_rule_conflict] = '2')","y")
+    add("adj_conflict_rule_type","adj_stage1","radio","Which part of the frozen rules does it conflict with?",RULE_TYPES,f"{comparative_pkg} and [adj_rule_conflict] = '1'","y",
+        note="The labels ticked above say where the rule is; this says which part of the taxonomy it is.")
+    add("adj_conflict_rule_other","adj_stage1","text","Describe the rule","",f"{comparative_pkg} and [adj_rule_conflict] = '1' and [adj_conflict_rule_type] = '7'","y");add("adj_rule_conflict_note","adj_stage1","notes","Explain the conflict, or why it cannot be judged","",f"{comparative_pkg} and ([adj_rule_conflict] = '1' or [adj_rule_conflict] = '2')","y")
     # Owner-only single-set path: §9.2 asks whether each proposed label is
     # supported, whether a rule is breached, and whether an alternative or
     # additional label is supported.
@@ -556,15 +690,19 @@ def field_rows():
         for i,label in enumerate(vocab,1):
             c=f"l{i:02d}";applicable=f"[{p}{c}_applicable] = '1'"
             add(p+c+"_applicable","adj_stage1","text",f"Generated flag: {label} displayed in a single set",a="@HIDDEN @READONLY")
-            add(p+c+"_membership","adj_stage1","notes",f"Proposed label: {label}","",applicable,a="@READONLY");add(p+c+"_support","adj_stage1","radio",f"{label}: supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",applicable,"y");add(p+c+"_rule_conflict","adj_stage1","radio",f"{label}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",applicable,"y");add(p+c+"_rule_ref","adj_stage1","text",f"{label}: rule or counterexample cited","",f"{applicable} and [{p}{c}_rule_conflict] = '1'","y");add(p+c+"_rule_note","adj_stage1","notes",f"{label}: explanation","",f"{applicable} and ([{p}{c}_rule_conflict] = '1' or [{p}{c}_rule_conflict] = '2')","y")
+            add(p+c+"_membership","adj_stage1","notes",f"Proposed label: {label}","",applicable,a="@READONLY");add(p+c+"_support","adj_stage1","radio",f"{label}: supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",applicable,"y");add(p+c+"_rule_conflict","adj_stage1","radio",f"{label}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",applicable,"y");add(p+c+"_rule_type","adj_stage1","radio",f"{label}: which part of the frozen rules?",RULE_TYPES,f"{applicable} and [{p}{c}_rule_conflict] = '1'","y");add(p+c+"_rule_other","adj_stage1","text",f"{label}: describe the rule","",f"{applicable} and [{p}{c}_rule_conflict] = '1' and [{p}{c}_rule_type] = '7'","y");add(p+c+"_rule_note","adj_stage1","notes",f"{label}: explanation","",f"{applicable} and ([{p}{c}_rule_conflict] = '1' or [{p}{c}_rule_conflict] = '2')","y")
         choices=" | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1))
         add(p+"additional_label_state","adj_stage1","radio",f"{COMPONENT_LABEL[comp]}: is an additional or alternative label supported?","0, None identified | 1, Identified | 2, Cannot determine",single_pkg,"y");add(p+"additional_label_ids","adj_stage1","checkbox",f"{COMPONENT_LABEL[comp]}: supported additional labels",choices,f"{single_pkg} and [{p}additional_label_state] = '1'","y");add(p+"additional_label_note","adj_stage1","notes",f"{COMPONENT_LABEL[comp]}: explanation","",f"{single_pkg} and ([{p}additional_label_state] = '1' or [{p}additional_label_state] = '2')","y")
     for tag in ("covid","equity"):
-        p=f"adj_{tag}_";add(p+"status_membership","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: proposed status","",single_pkg,a="@READONLY");add(p+"status_support","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: status supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",single_pkg,"y");add(p+"rule_conflict","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",single_pkg,"y");add(p+"rule_ref","adj_stage1","text",f"{COMPONENT_LABEL[tag]}: rule cited","",f"{single_pkg} and [{p}rule_conflict] = '1'","y");add(p+"rule_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}rule_conflict] = '1' or [{p}rule_conflict] = '2')","y");add(p+"supported_status","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: is the opposite status supported?","0, No | 1, Yes | 2, Cannot determine",single_pkg,"y");add(p+"supported_status_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}supported_status] = '1' or [{p}supported_status] = '2')","y")
+        p=f"adj_{tag}_";add(p+"status_membership","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: proposed status","",single_pkg,a="@READONLY");add(p+"status_support","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: status supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",single_pkg,"y");add(p+"rule_conflict","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",single_pkg,"y");add(p+"rule_type","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: which part of the frozen rules?",RULE_TYPES,f"{single_pkg} and [{p}rule_conflict] = '1'","y");add(p+"rule_other","adj_stage1","text",f"{COMPONENT_LABEL[tag]}: describe the rule","",f"{single_pkg} and [{p}rule_conflict] = '1' and [{p}rule_type] = '7'","y");add(p+"rule_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}rule_conflict] = '1' or [{p}rule_conflict] = '2')","y");add(p+"supported_status","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: is the opposite status supported?","0, No | 1, Yes | 2, Cannot determine",single_pkg,"y");add(p+"supported_status_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}supported_status] = '1' or [{p}supported_status] = '2')","y")
     # Judgement 3: boundary, asked for every record.
     add("adj_boundary","adj_stage1","checkbox","Does a boundary between taxonomy categories help explain the classifications shown?","1, A boundary documented in the frozen rules or examples | 2, A plausible boundary identified in this review | 0, No | 9, Cannot judge","","y","@NONEOFTHEABOVE='0,9'",
         note="Both kinds may apply where distinct boundaries are involved. Sparse register evidence is not a taxonomy boundary.")
-    add("adj_boundary_scope","adj_stage1","checkbox","Which components?",scope_choices,"[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'","y");add("adj_boundary_rule_ref","adj_stage1","text","Frozen rule, example or instead_consider reference documenting the boundary","","[adj_boundary(1)] = '1'","y");add("adj_boundary_note","adj_stage1","notes","Explain the boundary","","[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'","y")
+    add("adj_boundary_scope","adj_stage1","checkbox","Which components?",scope_choices,"[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'","y");add("adj_boundary_same_rule","adj_stage1","radio","Is the documented boundary the same rule you cited for the conflict?","1, Yes, the same rule | 0, No, a different rule","[adj_rule_conflict] = '1' and [adj_boundary(1)] = '1'","y",
+        note="If Yes, the rule and explanation you gave for the conflict are used for the boundary too.")
+    add("adj_boundary_rule_type","adj_stage1","radio","Which part of the frozen rules documents the boundary?",RULE_TYPES,"[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1'","y")
+    add("adj_boundary_rule_other","adj_stage1","text","Describe the rule","","[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1' and [adj_boundary_rule_type] = '7'","y")
+    add("adj_boundary_note","adj_stage1","notes","Explain the boundary","","([adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1') or [adj_boundary(2)] = '1'","y")
     # Masking failures must be logged (§9.3).
     add("adj_masking_failure","adj_stage1","radio","Before the source reveal, did you recognise or become aware of which source produced any displayed option?","1, Yes | 0, No | 2, Unsure","","y",
         note="General prior exposure is recorded once in the adjudicator declaration, not here.");add("adj_masking_note","adj_stage1","notes","What prompted this, and when?","","[adj_masking_failure] = '1' or [adj_masking_failure] = '2'","y")
@@ -572,7 +710,39 @@ def field_rows():
     add("adj_other_concern","adj_stage1","radio","Any other concern, such as a supported label that no option proposed?","0, No | 1, Yes","","y","@DEFAULT='0'");add("adj_other_concern_note","adj_stage1","notes","Describe the concern","","[adj_other_concern] = '1'","y")
     add("adj_stage1_unresolved","adj_stage1","radio","Unresolved at Stage 1?","0, No | 1, Yes","","y","@DEFAULT='0'");add("adj_stage1_unresolved_note","adj_stage1","notes","Why is the case unresolved?","","[adj_stage1_unresolved] = '1'","y")
     add("adj_stage1_note","adj_stage1","notes","Optional note")
-    add("adj_stage1_affirmed","adj_stage1","yesno","Complete preserved Stage 1 assessment?","","","y");add("adj_reveal_state","adj_stage2","radio","Stage 2 reveal state","0, Not revealed | 1, Revealed | 2, Partial-failure exposure");add("adj_stage2_closure","adj_stage2","radio","Stage 2 closure","1, Completed with findings | 2, Completed no assignable issue | 3, Incomplete | 4, Administrative closure");add("adj_no_issue_rationale","adj_stage2","notes","Short rationale for no assignable issue","","[adj_stage2_closure] = '2'")
+    add("adj_stage1_affirmed","adj_stage1","yesno","Complete preserved Stage 1 assessment?","","","y")
+    # ---- Stage 2 (ADJ-043): imported reveal, then findings -------------------------------
+    add("adj_reveal_state","adj_stage2","radio","Stage 2 reveal state","0, Not revealed | 1, Revealed | 2, Partial-failure exposure",a="@READONLY")
+    add("adj_reveal_map","adj_stage2","notes","Which source produced each option",a="@READONLY")
+    add("adj_stage2_closure","adj_stage2","radio","Now that sources are revealed, does any diagnostic family apply?","1, Yes, record findings | 2, No, completed with no assignable issue | 3, Incomplete | 4, Administrative closure","","y",
+        note="If the evidence cannot support a confident diagnosis, record a finding of family 8, Unresolved, rather than no issue.")
+    add("adj_no_issue_rationale","adj_stage2","notes","Why does no family apply?","","[adj_stage2_closure] = '2'","y")
+    for k in range(1,FINDING_SLOTS+1):
+        p=f"adj_f{k}_"
+        shown="[adj_stage2_closure] = '1'"+"".join(f" and [adj_f{j}_another] = '1'" for j in range(1,k))
+        family=f"[{p}family]"
+        add(p+"family","adj_stage2","radio",f"Finding {k}: which diagnostic family?",FAMILIES,shown,"y",
+            note="One family per finding. Record another finding for a second family or mechanism.")
+        add(p+"components","adj_stage2","checkbox",f"Finding {k}: which parts of the classification?","1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag",shown,"y")
+        source_specific=f"({family} = '1' or {family} = '2')"
+        add(p+"dom_labels","adj_stage2","checkbox",f"Finding {k}: which Research Domain labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(DOMAINS,1)),f"{shown} and {source_specific} and [{p}components(1)] = '1'","y")
+        add(p+"purp_labels","adj_stage2","checkbox",f"Finding {k}: which Analytical Purpose labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(PURPOSES,1)),f"{shown} and {source_specific} and [{p}components(2)] = '1'","y")
+        add(p+"coders","adj_stage2","checkbox",f"Finding {k}: which coder or coders?"," | ".join(f"{n}, {c}" for n,c in CODERS.items()),f"{shown} and {family} = '2'","y")
+        add(p+"basis","adj_stage2","radio",f"Finding {k}: what is the clear basis?",BASIS,f"{shown} and {source_specific}","y",
+            f"@IF({family} = '1', @HIDECHOICE='4', @IF({family} = '2', @HIDECHOICE='2,3', ''))",
+            note="A source-specific finding needs a clear basis in the frozen rules and the evidence available to that source; disagreement alone is not enough.")
+        vocab=mechanism_vocabulary()
+        rule_choices=" | ".join(f"{m['code']}, {m['name']}" for m in vocab if m["group"]=="rule")+f" | {MECH_NEW}, New mechanism (describe below)"
+        data_choices=" | ".join(f"{m['code']}, {m['name']}" for m in vocab if m["group"]=="data")+f" | {MECH_NEW}, New mechanism (describe below)"
+        add(p+"mech","adj_stage2","dropdown",f"Finding {k}: which mechanism?",rule_choices,f"{shown} and ({family} = '1' or {family} = '2' or {family} = '4' or {family} = '6')","y",
+            note="Type to search. Pick the same entry whenever the same mechanism recurs; that is what lets recurrence be counted.",val="autocomplete")
+        add(p+"mech_data","adj_stage2","dropdown",f"Finding {k}: which data or instrument mechanism?",data_choices,f"{shown} and {family} = '7'","y",val="autocomplete")
+        add(p+"mech_new","adj_stage2","text",f"Finding {k}: name the new mechanism in a few words","",f"{shown} and ([{p}mech] = '{MECH_NEW}' or [{p}mech_data] = '{MECH_NEW}')","y",
+            note="It is added to the list, with a new code, between sessions.")
+        add(p+"note","adj_stage2","notes",f"Finding {k}: explain the basis","",f"{shown} and {source_specific}","y")
+        add(p+"release","adj_stage2","radio",f"Finding {k}: what does it imply for release?",RELEASE,shown,"y")
+        if k<FINDING_SLOTS: add(p+"another","adj_stage2","radio",f"Record another finding?","1, Yes | 0, No",shown,"y")
+    add("adj_stage2_affirmed","adj_stage2","yesno","Complete Stage 2 assessment?","","[adj_stage2_closure] = '1' or [adj_stage2_closure] = '2'","y")
     return rows
 def write_dictionary(path):
     path.parent.mkdir(parents=True,exist_ok=True)
