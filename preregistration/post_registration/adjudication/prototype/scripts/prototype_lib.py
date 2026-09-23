@@ -949,8 +949,13 @@ def field_rows():
             note="One family per finding. Record another finding for a second family or mechanism.")
         add(p+"components","adj_stage2","checkbox",f"Finding {k}: which parts of the classification?","1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag",shown,"y")
         source_specific=f"({family} = '1' or {family} = '2')"
-        add(p+"dom_labels","adj_stage2","checkbox",f"Finding {k}: which Research Domain labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(DOMAINS,1)),f"{shown} and {source_specific} and [{p}components(1)] = '1'","y")
-        add(p+"purp_labels","adj_stage2","checkbox",f"Finding {k}: which Analytical Purpose labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(PURPOSES,1)),f"{shown} and {source_specific} and [{p}components(2)] = '1'","y")
+        # A substitution reads either way round, so the note fixes which labels
+        # are ticked; without it the second reviewer's counts mix the two
+        # directions and mean nothing (ADJ-052).
+        label_note=("Tick the labels your chosen basis concerns: the label wrongly assigned, or, for an omission, the label left out. "
+                    "Where one label was assigned instead of another, the pair goes in the mechanism, not here.")
+        add(p+"dom_labels","adj_stage2","checkbox",f"Finding {k}: which Research Domain labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(DOMAINS,1)),f"{shown} and {source_specific} and [{p}components(1)] = '1'","y",note=label_note)
+        add(p+"purp_labels","adj_stage2","checkbox",f"Finding {k}: which Analytical Purpose labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(PURPOSES,1)),f"{shown} and {source_specific} and [{p}components(2)] = '1'","y",note=label_note)
         add(p+"coders","adj_stage2","checkbox",f"Finding {k}: which coder or coders?"," | ".join(f"{n}, {c}" for n,c in CODERS.items()),f"{shown} and {family} = '2'","y")
         add(p+"basis","adj_stage2","radio",f"Finding {k}: what is the clear basis?",BASIS,f"{shown} and {source_specific}","y",
             f"@IF({family} = '1', @HIDECHOICE='4', @IF({family} = '2', @HIDECHOICE='2,3', ''))",

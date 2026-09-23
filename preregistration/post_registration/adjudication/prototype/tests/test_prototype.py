@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -715,6 +715,24 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual([x[0] for x in rows if not x[4].startswith("<b>")],
                          ["adj_s2_recap_intro"]+[f"adj_s2_conflict_{c}" for c in COMPONENTS]
                          +[f"adj_s2_conflict2_{c}" for c in COMPONENTS]+["adj_s2_boundary_same"])
+    def test_finding_labels_say_which_direction_to_tick(self):
+        # ADJ-052: a substitution reads either way round.  Without a stated
+        # direction the second reviewer's counts mix assigned-wrongly with
+        # left-out, and neither can be counted.
+        by={x[0]:x for x in field_rows()}
+        for k in range(1,4):
+            for comp in ("dom","purp"):
+                note=by[f"adj_f{k}_{comp}_labels"][6].lower()
+                self.assertTrue(note,f"finding {k} {comp} labels has no note")
+                self.assertIn("basis",note); self.assertIn("wrongly assigned",note)
+                self.assertIn("omission",note); self.assertIn("mechanism",note)
+            self.assertEqual(by[f"adj_f{k}_dom_labels"][6],by[f"adj_f{k}_purp_labels"][6],"one direction for both components")
+        # The note is only useful while the basis it refers to is asked
+        # alongside it, and offers the same directions.
+        for k in range(1,4):
+            self.assertEqual(by[f"adj_f{k}_basis"][11].count("adj_f%d_family"%k),2)
+            for code in (1,3): self.assertIn(f"{code}, ",by[f"adj_f{k}_basis"][5])
+        self.assertIn("Omits a materially better-supported label",BASIS)
     def test_release_note_names_what_the_derivation_acts_on(self):
         # ADJ-050: the release choices do not show that three of them cost a
         # mandatory second review, so the note says so, from the same list the
