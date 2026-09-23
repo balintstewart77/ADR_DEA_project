@@ -300,8 +300,8 @@ class PrototypeTests(unittest.TestCase):
                 "adj_rule_conflict","adj_rule_conflict_scope","adj_rule_conflict_note","adj_dom_conflict_labels","adj_purp_conflict_labels",
                 "adj_boundary","adj_boundary_scope","adj_boundary_same_rule","adj_boundary_rule_cited","adj_boundary_rule_other","adj_boundary_note","adj_conflict_rule_cited","adj_conflict_rule_other","adj_dom_conflict_labels","adj_purp_conflict_labels","adj_masking_failure","adj_masking_note","adj_other_concern","adj_other_concern_note",
                 "adj_stage1_unresolved","adj_stage1_unresolved_note","adj_stage1_note","adj_stage1_affirmed","adj_source_record_id","adj_reviewer_role","adj_pkg_comparative"}
-        record|={"adj_s1_entry","adj_conflict_second","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2"}
-        record|={f"adj_{c}_conflict2_slots" for c in COMPONENTS}
+        record|={"adj_s1_entry","adj_conflict_second","adj_conflict2_scope","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2"}
+        record|={f"adj_{c}_conflict2_slots" for c in COMPONENTS}|{f"adj_{c}_conflict2_labels" for c in ("dom","purp")}
         for comp in COMPONENTS:
             record|={f"adj_{comp}_{x}" for x in ("comparative","slot_count","candidate_map","evidence","best","defensible","conflict_slots")}
             record|={f"adj_{comp}_opt_{l.lower()}" for l in OPTION_LETTERS}|{f"adj_s1_opt_{comp}_{l.lower()}" for l in OPTION_LETTERS}
@@ -713,7 +713,8 @@ class PrototypeTests(unittest.TestCase):
         # Everything else is a heading over its own body.  The exceptions are
         # continuation lines that sit under the heading above them.
         self.assertEqual([x[0] for x in rows if not x[4].startswith("<b>")],
-                         ["adj_s2_recap_intro"]+[f"adj_s2_conflict_{c}" for c in COMPONENTS]+["adj_s2_boundary_same"])
+                         ["adj_s2_recap_intro"]+[f"adj_s2_conflict_{c}" for c in COMPONENTS]
+                         +[f"adj_s2_conflict2_{c}" for c in COMPONENTS]+["adj_s2_boundary_same"])
     def test_release_note_names_what_the_derivation_acts_on(self):
         # ADJ-050: the release choices do not show that three of them cost a
         # mandatory second review, so the note says so, from the same list the
@@ -778,18 +779,33 @@ class PrototypeTests(unittest.TestCase):
         first={"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[1],"adj_dom_conflict_labels":[DOMAINS[2]],
                "adj_conflict_rule_cited":3,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"}
         one=copy.deepcopy(base); one.update(first); self.assertEqual(validate_submission(one,p),[])
-        two=copy.deepcopy(one); two.update({"adj_conflict_second":1,"adj_conflict_rule2_cited":7,
-                                            "adj_dom_conflict2_slots":[2],"adj_rule_conflict_note2":"Synthetic"})
+        two=copy.deepcopy(one); two.update({"adj_conflict_second":1,"adj_conflict2_scope":[1],"adj_conflict_rule2_cited":7,
+                                            "adj_dom_conflict2_slots":[2],"adj_dom_conflict2_labels":[DOMAINS[2]],"adj_rule_conflict_note2":"Synthetic"})
         self.assertEqual(validate_submission(two,p),[])
+        # ADJ-051 as built first reused the first conflict's scope, so a second
+        # conflict in another component could not be reached at all.
+        pair=self.packages[1]; purp_label=sorted(component_labels(pair,"purp")[1])[0]
+        self.assertEqual(comparative_components(pair),["purp","equity"])
+        other=copy.deepcopy(self.submissions[1])
+        other.update({"adj_rule_conflict":1,"adj_rule_conflict_scope":[2],"adj_purp_conflict_slots":[1],"adj_purp_conflict_labels":[purp_label],
+                      "adj_conflict_rule_cited":3,"adj_rule_conflict_note":"Synthetic",
+                      "adj_conflict_second":1,"adj_conflict2_scope":[4],"adj_equity_conflict2_slots":[1],
+                      "adj_conflict_rule2_cited":7,"adj_rule_conflict_note2":"Synthetic"})
+        self.assertEqual(validate_submission(other,pair),[],"a second conflict may sit in a component the first did not")
+        noscope=copy.deepcopy(two); noscope.pop("adj_conflict2_scope")
+        self.assertTrue(any("needs its component scope" in x for x in validate_submission(noscope,p)))
+        nolabel=copy.deepcopy(two); nolabel.pop("adj_dom_conflict2_labels")
+        self.assertTrue(any("second conflict needs the label(s)" in x for x in validate_submission(nolabel,p)))
         # A second conflict names a different rule, an option and an explanation.
         same=copy.deepcopy(two); same["adj_conflict_rule2_cited"]=3
         self.assertTrue(any("different rule" in x for x in validate_submission(same,p)))
         bare=copy.deepcopy(two); bare.pop("adj_dom_conflict2_slots")
-        self.assertTrue(any("needs the option(s) it concerns" in x for x in validate_submission(bare,p)))
+        self.assertTrue(any("second conflict needs the conflicting option(s)" in x for x in validate_submission(bare,p)))
         mute=copy.deepcopy(two); mute.pop("adj_rule_conflict_note2")
         self.assertTrue(any("second conflict needs explanation" in x for x in validate_submission(mute,p)))
         absent=copy.deepcopy(two); absent["adj_dom_conflict2_slots"]=[len(p["interpretations"]["dom"])+1]
-        self.assertTrue(any("not displayed" in x for x in validate_submission(absent,p)))
+        self.assertTrue(any("second conflict needs the conflicting option(s)" in x for x in validate_submission(absent,p)),
+                        "an option the record does not have is refused")
         # It is not recorded without a first conflict, and not left half-entered.
         none=copy.deepcopy(base); none.update({"adj_rule_conflict":0,"adj_conflict_second":1})
         self.assertTrue(any("only recorded alongside a first" in x for x in validate_submission(none,p)))
@@ -802,8 +818,12 @@ class PrototypeTests(unittest.TestCase):
         self.assertFalse(redcap_shows(by["adj_conflict_rule2_cited"][11],conflict))
         self.assertTrue(redcap_shows(by["adj_conflict_rule2_cited"][11],{**conflict,"adj_conflict_second":"1"}))
         self.assertEqual(by["adj_conflict_rule2_cited"][5],by["adj_conflict_rule_cited"][5],"both cite from one catalogue")
+        # The second conflict's own scope drives its options and labels.
         for comp in COMPONENTS:
-            shown={**conflict,"adj_conflict_second":"1","adj_rule_conflict_scope":[1],f"adj_{comp}_comparative":"1"}
-            self.assertEqual(redcap_shows(by[f"adj_{comp}_conflict2_slots"][11],shown),comp=="dom",comp)
+            shown={**conflict,"adj_conflict_second":"1","adj_conflict2_scope":[2],f"adj_{comp}_comparative":"1"}
+            self.assertEqual(redcap_shows(by[f"adj_{comp}_conflict2_slots"][11],shown),comp=="purp",comp)
+            self.assertNotIn("adj_rule_conflict_scope",by[f"adj_{comp}_conflict2_slots"][11],"the second conflict does not borrow the first scope")
+        for comp in ("dom","purp"):
+            self.assertEqual(by[f"adj_{comp}_conflict2_labels"][5],by[f"adj_{comp}_conflict_labels"][5],"one label vocabulary")
         self.assertTrue([r for r in data_quality_rules() if "second-rule" in r[0]],"slot counts are enforced for the second rule too")
 if __name__=="__main__": unittest.main()

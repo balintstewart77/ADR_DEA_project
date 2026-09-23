@@ -117,7 +117,8 @@ COMPONENT_CODE={"dom":1,"purp":2,"covid":3,"equity":4}
 OPTION_LETTERS="ABCD"
 BEST_CANNOT_DETERMINE=6; DEFENSIBLE_NONE=0; DEFENSIBLE_CANNOT_JUDGE=9
 COMPARATIVE_RECORD_KEYS=("adj_rule_conflict","adj_rule_conflict_scope","adj_conflict_rule_cited","adj_conflict_rule_other","adj_rule_conflict_note",
-                         "adj_conflict_second","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2","adj_boundary_same_rule")
+                         "adj_conflict_second","adj_conflict2_scope","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2",
+                         "adj_boundary_same_rule")
 COMPARATIVE_COMPONENT_KEYS=("evidence","best","defensible","conflict_slots")
 # The frozen rules carry no identifiers.  The labels already ticked locate the
 # rule; the rule type says which part of the taxonomy it is (ADJ-042).
@@ -167,14 +168,14 @@ def validate_second_conflict(r,p,rscope):
     """
     second=r.get("adj_conflict_second"); out=issue(second,{0,1},"second-rule question")
     if second!=1:
-        for k in ("adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2"):
+        for k in ("adj_conflict2_scope","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2"):
             if k in r: out.append("the second rule is only recorded where a second conflict is reported")
         return out
     out+=validate_rule_cited(r.get("adj_conflict_rule2_cited"),r.get("adj_conflict_rule2_other"),"second rule conflict")
     if r.get("adj_conflict_rule2_cited")==r.get("adj_conflict_rule_cited") and r.get("adj_conflict_rule2_cited")!=RULE_OTHER:
         out.append("the second conflict must name a different rule from the first")
-    if not any(r.get(f"adj_{c}_conflict2_slots") for c in COMPONENTS if COMPONENT_CODE[c] in rscope):
-        out.append("the second conflict needs the option(s) it concerns")
+    scope2=set(r.get("adj_conflict2_scope",[]))
+    if not scope2 or not scope2<=set(COMPONENT_CODE.values()): out.append("the second conflict needs its component scope")
     if not r.get("adj_rule_conflict_note2"): out.append("the second conflict needs explanation")
     return out
 def validate_boundary(r):
@@ -248,7 +249,7 @@ def validate_submission(r,p):
             out+=validate_second_conflict(r,p,rscope)
         elif rscope: out.append("rule-conflict scope is only recorded for a conflict")
         if conflict!=1:
-            for k in ("adj_conflict_second","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2"):
+            for k in ("adj_conflict_second","adj_conflict2_scope","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2"):
                 if k in r: out.append("a second conflicting rule is only recorded alongside a first")
         if conflict==2 and not r.get("adj_rule_conflict_note"): out.append("cannot-judge rule conflict needs explanation")
         for c in COMPONENTS:
@@ -257,16 +258,19 @@ def validate_submission(r,p):
             if c in comps and in_scope:
                 if not slots or not slots<=set(range(1,len(p["interpretations"][c])+1)): out.append(f"{c}: rule conflict needs the conflicting option(s)")
             elif slots: out.append(f"{c}: conflicting options are only recorded for a conflict in a component that differs")
+            in_scope2=r.get("adj_conflict_second")==1 and COMPONENT_CODE[c] in set(r.get("adj_conflict2_scope",[]))
             second=set(r.get(f"adj_{c}_conflict2_slots",[]))
-            if second and not (c in comps and in_scope and r.get("adj_conflict_second")==1):
-                out.append(f"{c}: second-rule options are only recorded for a second conflict in a component in scope")
-            elif second and not second<=set(range(1,len(p["interpretations"][c])+1)):
-                out.append(f"{c}: second rule names an option that is not displayed")
+            if c in comps and in_scope2:
+                if not second or not second<=set(range(1,len(p["interpretations"][c])+1)): out.append(f"{c}: second conflict needs the conflicting option(s)")
+            elif second: out.append(f"{c}: second-rule options are only recorded for a second conflict in a component that differs")
             if c in ("dom","purp"):
-                labels=set(r.get(f"adj_{c}_conflict_labels",[])); shown=set(component_labels(p,c)[1])
+                shown=set(component_labels(p,c)[1]); labels=set(r.get(f"adj_{c}_conflict_labels",[])); labels2=set(r.get(f"adj_{c}_conflict2_labels",[]))
                 if in_scope:
                     if not labels or not labels<=shown: out.append(f"{c}: rule conflict needs the label(s) concerned, from the displayed options")
                 elif labels: out.append(f"{c}: conflicting labels are only recorded for a conflict in this component")
+                if in_scope2:
+                    if not labels2 or not labels2<=shown: out.append(f"{c}: second conflict needs the label(s) concerned, from the displayed options")
+                elif labels2: out.append(f"{c}: second-rule labels are only recorded for a second conflict in this component")
     else:
         if any(k in r for k in COMPARATIVE_RECORD_KEYS) or any(f"adj_{c}_{x}" in r for c in COMPONENTS for x in COMPARATIVE_COMPONENT_KEYS+("conflict_labels",)):
             out.append("comparative questions do not apply to a single displayed set")
@@ -825,14 +829,23 @@ def field_rows():
     # first conflict is recorded, so it costs nothing on a record without one.
     add("adj_conflict_second","adj_stage1","radio","Does another displayed option conflict with a different rule?","1, Yes | 0, No",
         f"{comparative_pkg} and [adj_rule_conflict] = '1'","y",note="Answer Yes only for a different rule. Several options breaching the same rule are ticked together above.")
-    add("adj_conflict_rule2_cited","adj_stage1","dropdown","Which other rule does it conflict with?",rule_choices(),
-        f"{comparative_pkg} and [adj_conflict_second] = '1'","y",val="autocomplete")
-    add("adj_conflict_rule2_other","adj_stage1","text","Describe the other rule or coding instruction","",
-        f"{comparative_pkg} and [adj_conflict_second] = '1' and [adj_conflict_rule2_cited] = '{RULE_OTHER}'","y")
+    # The second conflict carries its own scope.  Reusing the first scope meant
+    # a second conflict in another component could not be reached without
+    # claiming a first conflict there too.
+    second_pkg=f"{comparative_pkg} and [adj_conflict_second] = '1'"
+    add("adj_conflict2_scope","adj_stage1","checkbox","Which parts of the classification does the other conflict concern?",scope_choices,second_pkg,"y")
     for comp in COMPONENTS:
+        in_scope2=f"{second_pkg} and [adj_conflict2_scope({COMPONENT_CODE[comp]})] = '1'"
         add(f"adj_{comp}_conflict2_slots","adj_stage1","checkbox",f"Which {NOUN[comp]} option or options conflict with the other rule?",slot_choices,
-            f"{comparative_pkg} and [adj_conflict_second] = '1' and [adj_rule_conflict_scope({COMPONENT_CODE[comp]})] = '1' and [adj_{comp}_comparative] = '1'","",slot_hiding(comp))
-    add("adj_rule_conflict_note2","adj_stage1","notes","Explain the other conflict","",f"{comparative_pkg} and [adj_conflict_second] = '1'","y")
+            f"{in_scope2} and [adj_{comp}_comparative] = '1'","y",slot_hiding(comp))
+        if comp in ("dom","purp"):
+            vocab=DOMAINS if comp=="dom" else PURPOSES
+            add(f"adj_{comp}_conflict2_labels","adj_stage1","checkbox",f"Which {NOUN[comp]} label or labels are involved in the other conflict?",
+                " | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1)),in_scope2,"y")
+    add("adj_conflict_rule2_cited","adj_stage1","dropdown","Which other rule does it conflict with?",rule_choices(),second_pkg,"y",val="autocomplete")
+    add("adj_conflict_rule2_other","adj_stage1","text","Describe the other rule or coding instruction","",
+        f"{second_pkg} and [adj_conflict_rule2_cited] = '{RULE_OTHER}'","y")
+    add("adj_rule_conflict_note2","adj_stage1","notes","Explain the other conflict","",second_pkg,"y")
     # Owner-only single-set path: §9.2 asks whether each proposed label is
     # supported, whether a rule is breached, and whether an alternative or
     # additional label is supported.
@@ -906,6 +919,11 @@ def field_rows():
     add("adj_s2_conflict_rule","adj_stage2","descriptive",
         block("Rule cited","[adj_conflict_rule_cited]<br>Explanation: [adj_rule_conflict_note]"),"",
         "[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1'")
+    for comp in COMPONENTS:
+        detail=f"{COMPONENT_LABEL[comp]}: options [adj_{comp}_conflict2_slots:checked]"
+        if comp in ("dom","purp"): detail+=f"; labels [adj_{comp}_conflict2_labels:checked]"
+        add(f"adj_s2_conflict2_{comp}","adj_stage2","descriptive",plain(detail),"",
+            f"[adj_conflict_second] = '1' and [adj_conflict2_scope({COMPONENT_CODE[comp]})] = '1'")
     add("adj_s2_conflict_rule2","adj_stage2","descriptive",
         block("Second rule cited","[adj_conflict_rule2_cited]<br>Explanation: [adj_rule_conflict_note2]"),"",
         "[adj_pkg_comparative] = '1' and [adj_conflict_second] = '1'")
