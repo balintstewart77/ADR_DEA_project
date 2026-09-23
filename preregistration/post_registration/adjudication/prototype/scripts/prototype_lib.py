@@ -557,6 +557,9 @@ RELEASE="0, None | 1, Caveat only | 2, Evidence for prompt revision | 3, Evidenc
 # The three release implications that send a record to mandatory second review
 # (§9.1).  The field note names these, so both read from one list.
 RELEASE_MANDATORY=(2,3,5)
+# Release implications that propose something, and so have something to explain.
+# None and Pending propose nothing.
+RELEASE_PROPOSES=(1,2,3,4,5,6)
 RELEASE_CODES={0,1,2,3,4,5,6,9}
 # Mechanisms come from the versioned vocabulary (ADJ-044): boundary and rule
 # mechanisms for families 1, 2, 4 and 6; data and instrument mechanisms for 7.
@@ -646,6 +649,12 @@ def validate_stage2(r,stage1=None):
             if family in families:
                 if value not in mechanism_codes(group)|{MECH_NEW}: out.append(f"finding {k} needs a mechanism from the list, or New mechanism")
             elif value is not None: out.append(f"finding {k}: {field} does not apply to this family")
+        # REDCap cannot make a field required for some answers only, so the
+        # validator carries it, with a data-quality rule as the backstop.
+        if r.get(pre+"release") in RELEASE_MANDATORY and not str(r.get(pre+"release_note") or "").strip():
+            out.append(f"finding {k} proposes a revision or non-release, so it needs the proposal explained")
+        if r.get(pre+"release") not in RELEASE_PROPOSES and str(r.get(pre+"release_note") or "").strip():
+            out.append(f"finding {k}: a proposal is only explained where one is made")
         if MECH_NEW in (r.get(pre+"mech"),r.get(pre+"mech_data")):
             if not(r.get(pre+"mech_new") and str(r.get(pre+"mech_new")).strip()): out.append(f"finding {k} needs the new mechanism described")
         elif pre+"mech_new" in r: out.append(f"finding {k}: a new-mechanism description is only recorded for New mechanism")
@@ -784,6 +793,10 @@ def data_quality_rules():
                           " or ".join(f"([adj_{comp}_{field}({s})] = '1' and {below(s)})" for s in range(2,5)),"y"))
         rules.append((f"Missing or invalid slot count: {COMPONENT_LABEL[comp]}",
                       f"[adj_{comp}_comparative] = '1' and {count} <> '2' and {count} <> '3' and {count} <> '4'","y"))
+    for k in range(1,FINDING_SLOTS+1):
+        pre=f"adj_f{k}_"
+        rules.append((f"Unexplained proposal: finding {k}",
+                      "("+" or ".join(f"[{pre}release] = '{c}'" for c in RELEASE_MANDATORY)+f") and [{pre}release_note] = ''","y"))
     return rules
 def write_data_quality_rules(path):
     path.parent.mkdir(parents=True,exist_ok=True)
@@ -1138,6 +1151,10 @@ def field_rows():
                  "Release covers the model's classifications, not the coder benchmark, so a coder finding is usually Caveat only, "
                  "or None if no rule was involved. Prompt revision, taxonomy revision and non-release each trigger a mandatory second "
                  "review. If an unclear rule caused the error, add a separate taxonomy finding.")
+        proposes="("+" or ".join(f"[{p}release] = '{c}'" for c in RELEASE_PROPOSES)+")"
+        add(p+"release_note","adj_stage2","notes",f"Finding {k}: what revision or caveat is proposed?","",f"{shown} and {proposes}","",
+            note="Say what should change, and enough of why that someone deciding later, without this case in front of them, can act on it. "
+                 "Required for prompt revision, taxonomy revision and non-release, which each commit a second reviewer.")
         if k<FINDING_SLOTS: add(p+"another","adj_stage2","radio",f"Record another finding?","1, Yes | 0, No",shown,"y")
     add("adj_stage2_affirmed","adj_stage2","yesno","Complete Stage 2 assessment?","","[adj_stage2_closure] = '1' or [adj_stage2_closure] = '2'","y")
     # Stage 2 opens only once Stage 1 is affirmed (ADJ-060).  The two forms sit

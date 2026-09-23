@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,FINDING_SLOTS,recorded_conflicts,inherited_from_conflicts,rule_label,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,RELEASE_PROPOSES,FINDING_SLOTS,recorded_conflicts,inherited_from_conflicts,rule_label,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -555,7 +555,7 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual(validate_stage2(evidence),[],"an evidence problem needs no basis, source or mechanism")
         bad=copy.deepcopy(evidence); bad["adj_f1_basis"]=1; self.assertTrue(any("only recorded for a source-specific" in x for x in validate_stage2(bad)))
         bad=copy.deepcopy(evidence); bad["adj_f2_family"]=4; self.assertTrue(any("finding 2 is only recorded" in x for x in validate_stage2(bad)))
-        two=copy.deepcopy(evidence); two.update({"adj_f1_another":1,"adj_f2_family":4,"adj_f2_components":[2],"adj_f2_mech":34,"adj_f2_release":3,"adj_f2_another":0})
+        two=copy.deepcopy(evidence); two.update({"adj_f1_another":1,"adj_f2_family":4,"adj_f2_components":[2],"adj_f2_mech":34,"adj_f2_release":3,"adj_f2_release_note":"Synthetic proposal","adj_f2_another":0})
         self.assertEqual(validate_stage2(two),[])
         derived=derive_stage2(two); self.assertEqual(derived["families"],[3,4]); self.assertEqual(derived["mandatory_second_review"],1)
         self.assertEqual(derive_stage2(model)["findings"][0]["affected_sources"],["production model"])
@@ -687,7 +687,7 @@ class PrototypeTests(unittest.TestCase):
         self.assertTrue(redcap_shows(by["adj_f1_mech"][11],context)); self.assertFalse(redcap_shows(by["adj_f1_mech_data"][11],context))
         self.assertTrue(redcap_shows(by["adj_f1_mech_data"][11],{**context,"adj_f1_family":"7"})); self.assertFalse(redcap_shows(by["adj_f1_mech"][11],{**context,"adj_f1_family":"3"}))
         self.assertTrue(redcap_shows(by["adj_f1_mech_new"][11],{**context,"adj_f1_mech":str(MECH_NEW)}))
-        finding={"adj_stage2_closure":1,"adj_f1_family":4,"adj_f1_components":[2],"adj_f1_mech":13,"adj_f1_release":3,"adj_f1_another":0,"adj_stage2_affirmed":1}
+        finding={"adj_stage2_closure":1,"adj_f1_family":4,"adj_f1_components":[2],"adj_f1_mech":13,"adj_f1_release":3,"adj_f1_release_note":"Synthetic proposal","adj_f1_another":0,"adj_stage2_affirmed":1}
         self.assertEqual(validate_stage2(finding),[])
         self.assertEqual(derive_stage2(finding)["findings"][0]["mechanism"],{"code":13,"name":"Purposes: Descriptive Monitoring vs Service Interaction / Systems Analysis","vocabulary":"mechvocab-0.1"})
         bad=copy.deepcopy(finding); bad["adj_f1_mech"]=101; self.assertTrue(any("from the list" in x for x in validate_stage2(bad)),"a data mechanism on a taxonomy finding")
@@ -797,6 +797,20 @@ class PrototypeTests(unittest.TestCase):
             # it does not ask the reviewer to decide anything about release.
             self.assertIn("evidence for a later release decision",by[f"adj_f{k}_release"][4])
             self.assertIn("nominating",note); self.assertIn("decision is made later",note)
+            # ADJ-061: a proposal says what it proposes, and only where one is made.
+            shown=by[f"adj_f{k}_release_note"][11]
+            for code in RELEASE_PROPOSES: self.assertIn(f"[adj_f{k}_release] = '{code}'",shown,code)
+            for code in (0,9): self.assertNotIn(f"[adj_f{k}_release] = '{code}'",shown,code)
+            self.assertEqual(by[f"adj_f{k}_release_note"][12],"","optional on the form; the validator carries the rest")
+        base={"adj_stage2_closure":1,"adj_f1_family":4,"adj_f1_components":[1],"adj_f1_mech":1,"adj_f1_another":0,"adj_stage2_affirmed":1}
+        for code in RELEASE_MANDATORY:
+            bare=dict(base,**{"adj_f1_release":code})
+            self.assertTrue(any("needs the proposal explained" in x for x in validate_stage2(bare)),code)
+            self.assertEqual(validate_stage2(dict(bare,**{"adj_f1_release_note":"Synthetic"})),[],code)
+        for code in (0,9):
+            stray=dict(base,**{"adj_f1_release":code,"adj_f1_release_note":"Synthetic"})
+            self.assertTrue(any("only explained where one is made" in x for x in validate_stage2(stray)),code)
+        self.assertTrue([r for r in data_quality_rules() if "Unexplained proposal" in r[0]])
         mandatory={"adj_stage2_closure":1,"adj_f1_family":2,"adj_f1_components":[1],"adj_f1_dom_labels":[DOMAINS[0]],
                    "adj_f1_coders":[1],"adj_f1_basis":2,"adj_f1_mech":1,"adj_f1_note":"Synthetic","adj_f1_another":0,"adj_stage2_affirmed":1}
         for code,expected in [(1,0),(0,0)]+[(c,1) for c in RELEASE_MANDATORY]:
