@@ -1,27 +1,7 @@
-adj_assignment_id,adj_reveal_state,adj_reveal_dom,adj_reveal_purp,adj_reveal_covid,adj_reveal_equity,adj_reveal_agreed
-SYN_ASSIGN_001,1,"Option A (coder C02): Health & Social Care; Poverty, Wealth & Living Standards
-Option B (production model, coder C01): Health & Social Care",,,,"Analytical Purposes: Outcome Tracking
-COVID-19/pandemic tag: Not applied
-Demographic disparities/equity tag: Applied"
-SYN_ASSIGN_001_SEC,1,"Option A (production model, coder C01): Health & Social Care
-Option B (coder C02): Health & Social Care; Poverty, Wealth & Living Standards",,,,"Analytical Purposes: Outcome Tracking
-COVID-19/pandemic tag: Not applied
-Demographic disparities/equity tag: Applied"
-SYN_ASSIGN_002,1,,"Option A (coder C02): Policy Evaluation / Impact Analysis
-Option B (coder C01): Outcome Tracking
-Option C (production model, coder C03): Descriptive Monitoring",,"Option A (coder C02): Applied
-Option B (production model, coder C01, coder C03): Not applied","Research Domains: Education & Skills
-COVID-19/pandemic tag: Not applied"
-SYN_ASSIGN_002_SEC,1,,"Option A (production model, coder C03): Descriptive Monitoring
-Option B (coder C02): Policy Evaluation / Impact Analysis
-Option C (coder C01): Outcome Tracking",,"Option A (production model, coder C01, coder C03): Not applied
-Option B (coder C02): Applied","Research Domains: Education & Skills
-COVID-19/pandemic tag: Not applied"
-SYN_ASSIGN_003,1,,,,,"Research Domains: Housing & Planning
-Analytical Purposes: Service Interaction / Systems Analysis
-COVID-19/pandemic tag: Not applied
-Demographic disparities/equity tag: Not applied"
-SYN_ASSIGN_003_SEC,1,,,,,"Research Domains: Housing & Planning
-Analytical Purposes: Service Interaction / Systems Analysis
-COVID-19/pandemic tag: Not applied
-Demographic disparities/equity tag: Not applied"
+adj_assignment_id,adj_reveal_state,adj_reveal_dom_a_src,adj_reveal_dom_a,adj_reveal_dom_b_src,adj_reveal_dom_b,adj_reveal_dom_c_src,adj_reveal_dom_c,adj_reveal_dom_d_src,adj_reveal_dom_d,adj_reveal_dom_agreed,adj_reveal_purp_a_src,adj_reveal_purp_a,adj_reveal_purp_b_src,adj_reveal_purp_b,adj_reveal_purp_c_src,adj_reveal_purp_c,adj_reveal_purp_d_src,adj_reveal_purp_d,adj_reveal_purp_agreed,adj_reveal_covid_a_src,adj_reveal_covid_a,adj_reveal_covid_b_src,adj_reveal_covid_b,adj_reveal_covid_c_src,adj_reveal_covid_c,adj_reveal_covid_d_src,adj_reveal_covid_d,adj_reveal_covid_agreed,adj_reveal_equity_a_src,adj_reveal_equity_a,adj_reveal_equity_b_src,adj_reveal_equity_b,adj_reveal_equity_c_src,adj_reveal_equity_c,adj_reveal_equity_d_src,adj_reveal_equity_d,adj_reveal_equity_agreed
+SYN_ASSIGN_001,1,coder C02,"Health & Social Care; Poverty, Wealth & Living Standards","production model, coder C01",Health & Social Care,,,,,,,,,,,,,,Outcome Tracking,,,,,,,,,Not applied,,,,,,,,,Applied
+SYN_ASSIGN_001_SEC,1,"production model, coder C01",Health & Social Care,coder C02,"Health & Social Care; Poverty, Wealth & Living Standards",,,,,,,,,,,,,,Outcome Tracking,,,,,,,,,Not applied,,,,,,,,,Applied
+SYN_ASSIGN_002,1,,,,,,,,,Education & Skills,coder C02,Policy Evaluation / Impact Analysis,coder C01,Outcome Tracking,"production model, coder C03",Descriptive Monitoring,,,,,,,,,,,,Not applied,coder C02,Applied,"production model, coder C01, coder C03",Not applied,,,,,
+SYN_ASSIGN_002_SEC,1,,,,,,,,,Education & Skills,"production model, coder C03",Descriptive Monitoring,coder C02,Policy Evaluation / Impact Analysis,coder C01,Outcome Tracking,,,,,,,,,,,,Not applied,"production model, coder C01, coder C03",Not applied,coder C02,Applied,,,,,
+SYN_ASSIGN_003,1,,,,,,,,,Housing & Planning,,,,,,,,,Service Interaction / Systems Analysis,,,,,,,,,Not applied,,,,,,,,,Not applied
+SYN_ASSIGN_003_SEC,1,,,,,,,,,Housing & Planning,,,,,,,,,Service Interaction / Systems Analysis,,,,,,,,,Not applied,,,,,,,,,Not applied

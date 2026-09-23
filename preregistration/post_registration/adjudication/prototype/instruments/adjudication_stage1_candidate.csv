@@ -227,27 +227,81 @@ adj_stage1_unresolved_note,adj_stage1,,notes,Why is the case unresolved?,,,,,,,[
 adj_stage1_note,adj_stage1,,notes,Optional note,,,,,,,,,,,,,
 adj_stage1_affirmed,adj_stage1,,yesno,Complete preserved Stage 1 assessment?,,,,,,,,y,,,,,
 adj_reveal_state,adj_stage2,Stage 2: after the source reveal,radio,Stage 2 reveal state,"0, Not revealed | 1, Revealed | 2, Partial-failure exposure",,,,,,,,,,,,@READONLY
-adj_s2_entry,adj_stage2,The public register entry,descriptive,<b>Title:</b> [adj_case_title]<br><br><b>Datasets used:</b> [adj_case_datasets],,,,,,,,,,,,,
-adj_reveal_dom,adj_stage2,What each source gave,notes,Research Domains: which source gave each option,,,,,,,[adj_dom_comparative] = '1',,,,,,@READONLY
-adj_reveal_purp,adj_stage2,,notes,Analytical Purposes: which source gave each option,,,,,,,[adj_purp_comparative] = '1',,,,,,@READONLY
-adj_reveal_covid,adj_stage2,,notes,COVID-19/pandemic tag: which source gave each option,,,,,,,[adj_covid_comparative] = '1',,,,,,@READONLY
-adj_reveal_equity,adj_stage2,,notes,Demographic disparities/equity tag: which source gave each option,,,,,,,[adj_equity_comparative] = '1',,,,,,@READONLY
-adj_reveal_agreed,adj_stage2,,notes,Agreed by every source,,,,,,,,,,,,,@READONLY
-adj_s2_recap_dom,adj_stage2,Your Stage 1 assessment,descriptive,<b>Research Domains</b><br>Information in the entry: [adj_dom_evidence]<br>Best supported: [adj_dom_best:checked]<br>Defensible: [adj_dom_defensible:checked],,,,,,,[adj_dom_comparative] = '1',,,,,,
-adj_s2_recap_purp,adj_stage2,,descriptive,<b>Analytical Purposes</b><br>Information in the entry: [adj_purp_evidence]<br>Best supported: [adj_purp_best:checked]<br>Defensible: [adj_purp_defensible:checked],,,,,,,[adj_purp_comparative] = '1',,,,,,
-adj_s2_recap_covid,adj_stage2,,descriptive,<b>COVID-19/pandemic tag</b><br>Information in the entry: [adj_covid_evidence]<br>Best supported: [adj_covid_best:checked]<br>Defensible: [adj_covid_defensible:checked],,,,,,,[adj_covid_comparative] = '1',,,,,,
-adj_s2_recap_equity,adj_stage2,,descriptive,<b>Demographic disparities/equity tag</b><br>Information in the entry: [adj_equity_evidence]<br>Best supported: [adj_equity_best:checked]<br>Defensible: [adj_equity_defensible:checked],,,,,,,[adj_equity_comparative] = '1',,,,,,
-adj_s2_conflict_no,adj_stage2,,descriptive,<b>Explicit rule conflict</b><br>[adj_rule_conflict],,,,,,,[adj_pkg_comparative] = '1' and [adj_rule_conflict] <> '1',,,,,,
-adj_s2_conflict_yes,adj_stage2,,descriptive,"<b>Explicit rule conflict:</b> yes, in [adj_rule_conflict_scope:checked]",,,,,,,[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1',,,,,,
-adj_s2_conflict_dom,adj_stage2,,descriptive,Research Domains: options [adj_dom_conflict_slots:checked]; labels [adj_dom_conflict_labels:checked],,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(1)] = '1',,,,,,
-adj_s2_conflict_purp,adj_stage2,,descriptive,Analytical Purposes: options [adj_purp_conflict_slots:checked]; labels [adj_purp_conflict_labels:checked],,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(2)] = '1',,,,,,
-adj_s2_conflict_covid,adj_stage2,,descriptive,COVID-19/pandemic tag: options [adj_covid_conflict_slots:checked],,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(3)] = '1',,,,,,
-adj_s2_conflict_equity,adj_stage2,,descriptive,Demographic disparities/equity tag: options [adj_equity_conflict_slots:checked],,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(4)] = '1',,,,,,
-adj_s2_conflict_rule,adj_stage2,,descriptive,Rule cited: [adj_conflict_rule_cited]<br>Explanation: [adj_rule_conflict_note],,,,,,,[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1',,,,,,
-adj_s2_boundary,adj_stage2,,descriptive,<b>Boundary:</b> [adj_boundary:checked],,,,,,,,,,,,,
-adj_s2_boundary_note,adj_stage2,,descriptive,Explanation: [adj_boundary_note],,,,,,,[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1',,,,,,
-adj_s2_concern,adj_stage2,,descriptive,<b>Other concern:</b> [adj_other_concern_note],,,,,,,[adj_other_concern] = '1',,,,,,
-adj_s2_unresolved,adj_stage2,,descriptive,<b>Unresolved at Stage 1:</b> [adj_stage1_unresolved_note],,,,,,,[adj_stage1_unresolved] = '1',,,,,,
+adj_s2_entry,adj_stage2,The public register entry,descriptive,<b>Title</b><br><span style='font-weight:normal'>[adj_case_title]</span><br><b>Datasets used</b><br><span style='font-weight:normal'>[adj_case_datasets]</span>,,,,,,,,,,,,,
+adj_reveal_dom_a_src,adj_stage2,,text,Revealed source: Research Domains Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_a,adj_stage2,,notes,Revealed value: Research Domains Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_b_src,adj_stage2,,text,Revealed source: Research Domains Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_b,adj_stage2,,notes,Revealed value: Research Domains Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_c_src,adj_stage2,,text,Revealed source: Research Domains Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_c,adj_stage2,,notes,Revealed value: Research Domains Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_d_src,adj_stage2,,text,Revealed source: Research Domains Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_d,adj_stage2,,notes,Revealed value: Research Domains Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_dom_agreed,adj_stage2,,notes,Revealed agreed value: Research Domains,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_s2_opt_dom_a,adj_stage2,Research Domains: what each source gave,descriptive,<b>Option A &mdash; [adj_reveal_dom_a_src]</b><br><span style='font-weight:normal'>[adj_reveal_dom_a]</span>,,,,,,,[adj_dom_comparative] = '1' and ([adj_dom_slot_count] = '1' or [adj_dom_slot_count] = '2' or [adj_dom_slot_count] = '3' or [adj_dom_slot_count] = '4'),,,,,,
+adj_s2_opt_dom_b,adj_stage2,,descriptive,<b>Option B &mdash; [adj_reveal_dom_b_src]</b><br><span style='font-weight:normal'>[adj_reveal_dom_b]</span>,,,,,,,[adj_dom_comparative] = '1' and ([adj_dom_slot_count] = '2' or [adj_dom_slot_count] = '3' or [adj_dom_slot_count] = '4'),,,,,,
+adj_s2_opt_dom_c,adj_stage2,,descriptive,<b>Option C &mdash; [adj_reveal_dom_c_src]</b><br><span style='font-weight:normal'>[adj_reveal_dom_c]</span>,,,,,,,[adj_dom_comparative] = '1' and ([adj_dom_slot_count] = '3' or [adj_dom_slot_count] = '4'),,,,,,
+adj_s2_opt_dom_d,adj_stage2,,descriptive,<b>Option D &mdash; [adj_reveal_dom_d_src]</b><br><span style='font-weight:normal'>[adj_reveal_dom_d]</span>,,,,,,,[adj_dom_comparative] = '1' and ([adj_dom_slot_count] = '4'),,,,,,
+adj_s2_agreed_dom,adj_stage2,Research Domains: what each source gave,descriptive,<b>Agreed by every source</b><br><span style='font-weight:normal'>[adj_reveal_dom_agreed]</span>,,,,,,,[adj_dom_comparative] <> '1',,,,,,
+adj_reveal_purp_a_src,adj_stage2,,text,Revealed source: Analytical Purposes Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_a,adj_stage2,,notes,Revealed value: Analytical Purposes Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_b_src,adj_stage2,,text,Revealed source: Analytical Purposes Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_b,adj_stage2,,notes,Revealed value: Analytical Purposes Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_c_src,adj_stage2,,text,Revealed source: Analytical Purposes Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_c,adj_stage2,,notes,Revealed value: Analytical Purposes Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_d_src,adj_stage2,,text,Revealed source: Analytical Purposes Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_d,adj_stage2,,notes,Revealed value: Analytical Purposes Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_purp_agreed,adj_stage2,,notes,Revealed agreed value: Analytical Purposes,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_s2_opt_purp_a,adj_stage2,Analytical Purposes: what each source gave,descriptive,<b>Option A &mdash; [adj_reveal_purp_a_src]</b><br><span style='font-weight:normal'>[adj_reveal_purp_a]</span>,,,,,,,[adj_purp_comparative] = '1' and ([adj_purp_slot_count] = '1' or [adj_purp_slot_count] = '2' or [adj_purp_slot_count] = '3' or [adj_purp_slot_count] = '4'),,,,,,
+adj_s2_opt_purp_b,adj_stage2,,descriptive,<b>Option B &mdash; [adj_reveal_purp_b_src]</b><br><span style='font-weight:normal'>[adj_reveal_purp_b]</span>,,,,,,,[adj_purp_comparative] = '1' and ([adj_purp_slot_count] = '2' or [adj_purp_slot_count] = '3' or [adj_purp_slot_count] = '4'),,,,,,
+adj_s2_opt_purp_c,adj_stage2,,descriptive,<b>Option C &mdash; [adj_reveal_purp_c_src]</b><br><span style='font-weight:normal'>[adj_reveal_purp_c]</span>,,,,,,,[adj_purp_comparative] = '1' and ([adj_purp_slot_count] = '3' or [adj_purp_slot_count] = '4'),,,,,,
+adj_s2_opt_purp_d,adj_stage2,,descriptive,<b>Option D &mdash; [adj_reveal_purp_d_src]</b><br><span style='font-weight:normal'>[adj_reveal_purp_d]</span>,,,,,,,[adj_purp_comparative] = '1' and ([adj_purp_slot_count] = '4'),,,,,,
+adj_s2_agreed_purp,adj_stage2,Analytical Purposes: what each source gave,descriptive,<b>Agreed by every source</b><br><span style='font-weight:normal'>[adj_reveal_purp_agreed]</span>,,,,,,,[adj_purp_comparative] <> '1',,,,,,
+adj_reveal_covid_a_src,adj_stage2,,text,Revealed source: COVID-19/pandemic tag Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_a,adj_stage2,,notes,Revealed value: COVID-19/pandemic tag Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_b_src,adj_stage2,,text,Revealed source: COVID-19/pandemic tag Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_b,adj_stage2,,notes,Revealed value: COVID-19/pandemic tag Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_c_src,adj_stage2,,text,Revealed source: COVID-19/pandemic tag Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_c,adj_stage2,,notes,Revealed value: COVID-19/pandemic tag Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_d_src,adj_stage2,,text,Revealed source: COVID-19/pandemic tag Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_d,adj_stage2,,notes,Revealed value: COVID-19/pandemic tag Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_covid_agreed,adj_stage2,,notes,Revealed agreed value: COVID-19/pandemic tag,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_s2_opt_covid_a,adj_stage2,COVID-19/pandemic tag: what each source gave,descriptive,<b>Option A &mdash; [adj_reveal_covid_a_src]</b><br><span style='font-weight:normal'>[adj_reveal_covid_a]</span>,,,,,,,[adj_covid_comparative] = '1' and ([adj_covid_slot_count] = '1' or [adj_covid_slot_count] = '2' or [adj_covid_slot_count] = '3' or [adj_covid_slot_count] = '4'),,,,,,
+adj_s2_opt_covid_b,adj_stage2,,descriptive,<b>Option B &mdash; [adj_reveal_covid_b_src]</b><br><span style='font-weight:normal'>[adj_reveal_covid_b]</span>,,,,,,,[adj_covid_comparative] = '1' and ([adj_covid_slot_count] = '2' or [adj_covid_slot_count] = '3' or [adj_covid_slot_count] = '4'),,,,,,
+adj_s2_opt_covid_c,adj_stage2,,descriptive,<b>Option C &mdash; [adj_reveal_covid_c_src]</b><br><span style='font-weight:normal'>[adj_reveal_covid_c]</span>,,,,,,,[adj_covid_comparative] = '1' and ([adj_covid_slot_count] = '3' or [adj_covid_slot_count] = '4'),,,,,,
+adj_s2_opt_covid_d,adj_stage2,,descriptive,<b>Option D &mdash; [adj_reveal_covid_d_src]</b><br><span style='font-weight:normal'>[adj_reveal_covid_d]</span>,,,,,,,[adj_covid_comparative] = '1' and ([adj_covid_slot_count] = '4'),,,,,,
+adj_s2_agreed_covid,adj_stage2,COVID-19/pandemic tag: what each source gave,descriptive,<b>Agreed by every source</b><br><span style='font-weight:normal'>[adj_reveal_covid_agreed]</span>,,,,,,,[adj_covid_comparative] <> '1',,,,,,
+adj_reveal_equity_a_src,adj_stage2,,text,Revealed source: Demographic disparities/equity tag Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_a,adj_stage2,,notes,Revealed value: Demographic disparities/equity tag Option A,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_b_src,adj_stage2,,text,Revealed source: Demographic disparities/equity tag Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_b,adj_stage2,,notes,Revealed value: Demographic disparities/equity tag Option B,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_c_src,adj_stage2,,text,Revealed source: Demographic disparities/equity tag Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_c,adj_stage2,,notes,Revealed value: Demographic disparities/equity tag Option C,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_d_src,adj_stage2,,text,Revealed source: Demographic disparities/equity tag Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_d,adj_stage2,,notes,Revealed value: Demographic disparities/equity tag Option D,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_reveal_equity_agreed,adj_stage2,,notes,Revealed agreed value: Demographic disparities/equity tag,,,,,,,,,,,,,@HIDDEN @READONLY
+adj_s2_opt_equity_a,adj_stage2,Demographic disparities/equity tag: what each source gave,descriptive,<b>Option A &mdash; [adj_reveal_equity_a_src]</b><br><span style='font-weight:normal'>[adj_reveal_equity_a]</span>,,,,,,,[adj_equity_comparative] = '1' and ([adj_equity_slot_count] = '1' or [adj_equity_slot_count] = '2' or [adj_equity_slot_count] = '3' or [adj_equity_slot_count] = '4'),,,,,,
+adj_s2_opt_equity_b,adj_stage2,,descriptive,<b>Option B &mdash; [adj_reveal_equity_b_src]</b><br><span style='font-weight:normal'>[adj_reveal_equity_b]</span>,,,,,,,[adj_equity_comparative] = '1' and ([adj_equity_slot_count] = '2' or [adj_equity_slot_count] = '3' or [adj_equity_slot_count] = '4'),,,,,,
+adj_s2_opt_equity_c,adj_stage2,,descriptive,<b>Option C &mdash; [adj_reveal_equity_c_src]</b><br><span style='font-weight:normal'>[adj_reveal_equity_c]</span>,,,,,,,[adj_equity_comparative] = '1' and ([adj_equity_slot_count] = '3' or [adj_equity_slot_count] = '4'),,,,,,
+adj_s2_opt_equity_d,adj_stage2,,descriptive,<b>Option D &mdash; [adj_reveal_equity_d_src]</b><br><span style='font-weight:normal'>[adj_reveal_equity_d]</span>,,,,,,,[adj_equity_comparative] = '1' and ([adj_equity_slot_count] = '4'),,,,,,
+adj_s2_agreed_equity,adj_stage2,Demographic disparities/equity tag: what each source gave,descriptive,<b>Agreed by every source</b><br><span style='font-weight:normal'>[adj_reveal_equity_agreed]</span>,,,,,,,[adj_equity_comparative] <> '1',,,,,,
+adj_s2_recap_intro,adj_stage2,Your Stage 1 assessment,descriptive,<span style='font-weight:normal'>These are the answers you gave before the sources were revealed.</span>,,,,,,,,,,,,,
+adj_s2_recap_dom,adj_stage2,,descriptive,<b>Research Domains</b><br><span style='font-weight:normal'>Information in the entry: [adj_dom_evidence]<br>Best supported: [adj_dom_best:checked]<br>Defensible: [adj_dom_defensible:checked]</span>,,,,,,,[adj_dom_comparative] = '1',,,,,,
+adj_s2_recap_purp,adj_stage2,,descriptive,<b>Analytical Purposes</b><br><span style='font-weight:normal'>Information in the entry: [adj_purp_evidence]<br>Best supported: [adj_purp_best:checked]<br>Defensible: [adj_purp_defensible:checked]</span>,,,,,,,[adj_purp_comparative] = '1',,,,,,
+adj_s2_recap_covid,adj_stage2,,descriptive,<b>COVID-19/pandemic tag</b><br><span style='font-weight:normal'>Information in the entry: [adj_covid_evidence]<br>Best supported: [adj_covid_best:checked]<br>Defensible: [adj_covid_defensible:checked]</span>,,,,,,,[adj_covid_comparative] = '1',,,,,,
+adj_s2_recap_equity,adj_stage2,,descriptive,<b>Demographic disparities/equity tag</b><br><span style='font-weight:normal'>Information in the entry: [adj_equity_evidence]<br>Best supported: [adj_equity_best:checked]<br>Defensible: [adj_equity_defensible:checked]</span>,,,,,,,[adj_equity_comparative] = '1',,,,,,
+adj_s2_conflict_no,adj_stage2,,descriptive,<b>Explicit rule conflict</b><br><span style='font-weight:normal'>[adj_rule_conflict]</span>,,,,,,,[adj_pkg_comparative] = '1' and [adj_rule_conflict] <> '1',,,,,,
+adj_s2_conflict_yes,adj_stage2,,descriptive,"<b>Explicit rule conflict</b><br><span style='font-weight:normal'>yes, in [adj_rule_conflict_scope:checked]</span>",,,,,,,[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1',,,,,,
+adj_s2_conflict_dom,adj_stage2,,descriptive,<span style='font-weight:normal'>Research Domains: options [adj_dom_conflict_slots:checked]; labels [adj_dom_conflict_labels:checked]</span>,,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(1)] = '1',,,,,,
+adj_s2_conflict_purp,adj_stage2,,descriptive,<span style='font-weight:normal'>Analytical Purposes: options [adj_purp_conflict_slots:checked]; labels [adj_purp_conflict_labels:checked]</span>,,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(2)] = '1',,,,,,
+adj_s2_conflict_covid,adj_stage2,,descriptive,<span style='font-weight:normal'>COVID-19/pandemic tag: options [adj_covid_conflict_slots:checked]</span>,,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(3)] = '1',,,,,,
+adj_s2_conflict_equity,adj_stage2,,descriptive,<span style='font-weight:normal'>Demographic disparities/equity tag: options [adj_equity_conflict_slots:checked]</span>,,,,,,,[adj_rule_conflict] = '1' and [adj_rule_conflict_scope(4)] = '1',,,,,,
+adj_s2_conflict_rule,adj_stage2,,descriptive,<b>Rule cited</b><br><span style='font-weight:normal'>[adj_conflict_rule_cited]<br>Explanation: [adj_rule_conflict_note]</span>,,,,,,,[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1',,,,,,
+adj_s2_boundary,adj_stage2,,descriptive,<b>Boundary</b><br><span style='font-weight:normal'>[adj_boundary:checked]</span>,,,,,,,,,,,,,
+adj_s2_boundary_same,adj_stage2,,descriptive,<span style='font-weight:normal'>The documented boundary is the rule cited above.</span>,,,,,,,[adj_boundary(1)] = '1' and [adj_boundary_same_rule] = '1',,,,,,
+adj_s2_boundary_rule,adj_stage2,,descriptive,<b>Rule documenting the boundary</b><br><span style='font-weight:normal'>[adj_boundary_rule_cited]</span>,,,,,,,[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1',,,,,,
+adj_s2_boundary_note,adj_stage2,,descriptive,<b>Explanation</b><br><span style='font-weight:normal'>[adj_boundary_note]</span>,,,,,,,([adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1') or [adj_boundary(2)] = '1',,,,,,
+adj_s2_concern,adj_stage2,,descriptive,<b>Other concern</b><br><span style='font-weight:normal'>[adj_other_concern_note]</span>,,,,,,,[adj_other_concern] = '1',,,,,,
+adj_s2_unresolved,adj_stage2,,descriptive,<b>Unresolved at Stage 1</b><br><span style='font-weight:normal'>[adj_stage1_unresolved_note]</span>,,,,,,,[adj_stage1_unresolved] = '1',,,,,,
 adj_stage2_closure,adj_stage2,Findings,radio,"Now that sources are revealed, does any diagnostic family apply?","1, Yes, record findings | 2, No, completed with no assignable issue | 3, Incomplete | 4, Administrative closure","If the evidence cannot support a confident diagnosis, record a finding of family 8, Unresolved, rather than no issue.",,,,,,y,,,,,
 adj_no_issue_rationale,adj_stage2,,notes,Why does no family apply?,,,,,,,[adj_stage2_closure] = '2',y,,,,,
 adj_f1_family,adj_stage2,,radio,Finding 1: which diagnostic family?,"1, Apparent model rule-application problem | 2, Apparent scratch-coder rule-application problem | 3, Evidence problem | 4, Taxonomy problem | 5, Project-knowledge gap | 6, Legitimate boundary case | 7, Data or instrument problem | 8, Unresolved",One family per finding. Record another finding for a second family or mechanism.,,,,,[adj_stage2_closure] = '1',y,,,,,

@@ -485,12 +485,22 @@ def derive_stage2(r):
 def source_name(c):
     if c["source_type"]=="fable": return "production model"
     sid=c.get("source_id","?"); return "coder "+{"SC_A":"C01","SC_B":"C02","SC_C":"C03"}.get(sid,sid)
+def reveal_columns():
+    """Reveal import columns: a source and a value per option slot, per component."""
+    cols=[]
+    for comp in COMPONENTS:
+        for letter in OPTION_LETTERS: cols+=[f"adj_reveal_{comp}_{letter.lower()}_src",f"adj_reveal_{comp}_{letter.lower()}"]
+        cols.append(f"adj_reveal_{comp}_agreed")
+    return cols
 def reveal_fields(case,package):
-    """Reveal text per component: which source gave each option, and what it says.
+    """Reveal text per option: which source gave it, and what it says.
 
-    One field per component keeps each box short on the form.  A component that
-    does not differ carries no value, so no hidden field holds text.  Imported
-    only after Stage 1 is preserved.
+    A row per option, rather than one box per component, so the source sits on
+    the option's own heading line instead of wrapping inside shared text
+    (ADJ-047).  A component every source agreed on carries a single agreed
+    value, and a slot the record does not have carries no value, so no hidden
+    field holds text the form never shows.  Imported only after Stage 1 is
+    preserved.
     """
     by_candidate={}
     for c in case["classifications"]:
@@ -498,23 +508,36 @@ def reveal_fields(case,package):
         by_candidate.setdefault("C_"+stable_id(candidate_content(c)),[]).append(source_name(c))
     order=lambda n:(n!="production model",n)
     value=lambda v:"; ".join(v) if isinstance(v,list) else v
-    out={}; agreed=[]
+    out={c:"" for c in reveal_columns()}
     for comp in COMPONENTS:
         interpretations=package["interpretations"][comp]
         if len(interpretations)==1:
-            agreed.append(f"{COMPONENT_LABEL[comp]}: {value(interpretations[0]['value'])}"); out[f"adj_reveal_{comp}"]=""; continue
+            out[f"adj_reveal_{comp}_agreed"]=value(interpretations[0]["value"]); continue
         slots=slot_map(package,comp)
-        out[f"adj_reveal_{comp}"]="\n".join(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]} ({', '.join(sorted({n for cid in x['candidate_ids'] for n in by_candidate[cid]},key=order))}): {value(x['value'])}" for x in interpretations)
-    out["adj_reveal_agreed"]="\n".join(agreed) if agreed else "Every component differed."
+        for x in interpretations:
+            low=OPTION_LETTERS[slots[x["interpretation_id"]]-1].lower()
+            out[f"adj_reveal_{comp}_{low}_src"]=", ".join(sorted({n for cid in x["candidate_ids"] for n in by_candidate[cid]},key=order))
+            out[f"adj_reveal_{comp}_{low}"]=value(x["value"])
     return out
 def write_reveal_import(path,pairs):
     """Reveal rows for (case, package) pairs.  Deliberately source-revealing."""
     path.parent.mkdir(parents=True,exist_ok=True)
     with path.open("w",newline="",encoding="utf-8") as f:
-        w=csv.DictWriter(f,fieldnames=["adj_assignment_id","adj_reveal_state"]+[f"adj_reveal_{c}" for c in COMPONENTS]+["adj_reveal_agreed"]); w.writeheader()
+        w=csv.DictWriter(f,fieldnames=["adj_assignment_id","adj_reveal_state"]+reveal_columns()); w.writeheader()
         for case,package in pairs: w.writerow({"adj_assignment_id":package["assignment_id"],"adj_reveal_state":1,**reveal_fields(case,package)})
 REVIEWER_ROLES=((1,"primary",""),(2,"secondary","_SEC"))
 IMPORTED_DEFAULTS={"adj_other_concern":0,"adj_stage1_unresolved":0}
+BOLD_RESET="<span style='font-weight:normal'>"
+def plain(text):
+    """Body text for a descriptive field.
+
+    REDCap renders descriptive text bold, so a recap written as plain HTML came
+    out entirely bold and nothing stood out (ADJ-047).  An inline weight beats
+    the browser default for the element it wraps, so headings stay bold and
+    everything under them reads normally.
+    """
+    return BOLD_RESET+text+"</span>"
+def block(heading,body): return f"<b>{heading}</b><br>"+plain(body)
 def slot_hiding(comp):
     """@IF/@HIDECHOICE annotation hiding slots beyond this record's count.
 
@@ -730,32 +753,59 @@ def field_rows():
     # REDCap shows only the open form's fields, so Stage 2 carries the entry,
     # the reveal and a recap of the reviewer's own Stage 1 answers.  Sections
     # and one box per component keep it readable.
-    add("adj_s2_entry","adj_stage2","descriptive","<b>Title:</b> [adj_case_title]<br><br><b>Datasets used:</b> [adj_case_datasets]",section="The public register entry")
+    add("adj_s2_entry","adj_stage2","descriptive",block("Title","[adj_case_title]")+"<br>"+block("Datasets used","[adj_case_datasets]"),
+        section="The public register entry")
+    # A row per option, headed by the option and the source that gave it, so a
+    # long classification wraps under its own heading rather than into the next
+    # option (ADJ-047).  Exactly one of the option rows and the agreed row shows
+    # per component, so both carry the component's section header.
     for comp in COMPONENTS:
-        add(f"adj_reveal_{comp}","adj_stage2","notes",f"{COMPONENT_LABEL[comp]}: which source gave each option","",f"[adj_{comp}_comparative] = '1'",a="@READONLY",
-            section="What each source gave" if comp=="dom" else "")
-    add("adj_reveal_agreed","adj_stage2","notes","Agreed by every source",a="@READONLY")
+        head=f"{COMPONENT_LABEL[comp]}: what each source gave"
+        for letter in OPTION_LETTERS:
+            low=letter.lower()
+            add(f"adj_reveal_{comp}_{low}_src","adj_stage2","text",f"Revealed source: {COMPONENT_LABEL[comp]} Option {letter}",a="@HIDDEN @READONLY")
+            add(f"adj_reveal_{comp}_{low}","adj_stage2","notes",f"Revealed value: {COMPONENT_LABEL[comp]} Option {letter}",a="@HIDDEN @READONLY")
+        add(f"adj_reveal_{comp}_agreed","adj_stage2","notes",f"Revealed agreed value: {COMPONENT_LABEL[comp]}",a="@HIDDEN @READONLY")
+        for n,letter in enumerate(OPTION_LETTERS,1):
+            low=letter.lower()
+            add(f"adj_s2_opt_{comp}_{low}","adj_stage2","descriptive",
+                block(f"Option {letter} &mdash; [adj_reveal_{comp}_{low}_src]",f"[adj_reveal_{comp}_{low}]"),"",
+                f"[adj_{comp}_comparative] = '1' and ("+" or ".join(f"[adj_{comp}_slot_count] = '{k}'" for k in range(n,5))+")",
+                section=head if n==1 else "")
+        add(f"adj_s2_agreed_{comp}","adj_stage2","descriptive",block("Agreed by every source",f"[adj_reveal_{comp}_agreed]"),"",
+            f"[adj_{comp}_comparative] <> '1'",section=head)
+    # The recap intro is unconditional, so its section header cannot disappear
+    # with a component that did not differ.
+    add("adj_s2_recap_intro","adj_stage2","descriptive",plain("These are the answers you gave before the sources were revealed."),
+        section="Your Stage 1 assessment")
     for comp in COMPONENTS:
         add(f"adj_s2_recap_{comp}","adj_stage2","descriptive",
-            f"<b>{COMPONENT_LABEL[comp]}</b><br>Information in the entry: [adj_{comp}_evidence]<br>"
-            f"Best supported: [adj_{comp}_best:checked]<br>Defensible: [adj_{comp}_defensible:checked]","",f"[adj_{comp}_comparative] = '1'",
-            section="Your Stage 1 assessment" if comp=="dom" else "")
-    add("adj_s2_conflict_no","adj_stage2","descriptive","<b>Explicit rule conflict</b><br>[adj_rule_conflict]","",
+            block(COMPONENT_LABEL[comp],f"Information in the entry: [adj_{comp}_evidence]<br>"
+                  f"Best supported: [adj_{comp}_best:checked]<br>Defensible: [adj_{comp}_defensible:checked]"),"",
+            f"[adj_{comp}_comparative] = '1'")
+    add("adj_s2_conflict_no","adj_stage2","descriptive",block("Explicit rule conflict","[adj_rule_conflict]"),"",
         "[adj_pkg_comparative] = '1' and [adj_rule_conflict] <> '1'")
-    add("adj_s2_conflict_yes","adj_stage2","descriptive","<b>Explicit rule conflict:</b> yes, in [adj_rule_conflict_scope:checked]","",
+    add("adj_s2_conflict_yes","adj_stage2","descriptive",block("Explicit rule conflict","yes, in [adj_rule_conflict_scope:checked]"),"",
         "[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1'")
     for comp in COMPONENTS:
         detail=f"{COMPONENT_LABEL[comp]}: options [adj_{comp}_conflict_slots:checked]"
         if comp in ("dom","purp"): detail+=f"; labels [adj_{comp}_conflict_labels:checked]"
-        add(f"adj_s2_conflict_{comp}","adj_stage2","descriptive",detail,"",
+        add(f"adj_s2_conflict_{comp}","adj_stage2","descriptive",plain(detail),"",
             f"[adj_rule_conflict] = '1' and [adj_rule_conflict_scope({COMPONENT_CODE[comp]})] = '1'")
     add("adj_s2_conflict_rule","adj_stage2","descriptive",
-        "Rule cited: [adj_conflict_rule_cited]<br>Explanation: [adj_rule_conflict_note]","",
+        block("Rule cited","[adj_conflict_rule_cited]<br>Explanation: [adj_rule_conflict_note]"),"",
         "[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1'")
-    add("adj_s2_boundary","adj_stage2","descriptive","<b>Boundary:</b> [adj_boundary:checked]")
-    add("adj_s2_boundary_note","adj_stage2","descriptive","Explanation: [adj_boundary_note]","","[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'")
-    add("adj_s2_concern","adj_stage2","descriptive","<b>Other concern:</b> [adj_other_concern_note]","","[adj_other_concern] = '1'")
-    add("adj_s2_unresolved","adj_stage2","descriptive","<b>Unresolved at Stage 1:</b> [adj_stage1_unresolved_note]","","[adj_stage1_unresolved] = '1'")
+    add("adj_s2_boundary","adj_stage2","descriptive",block("Boundary","[adj_boundary:checked]"))
+    # A boundary that is the conflict rule was never re-entered at Stage 1, so
+    # the recap points back rather than showing an empty rule and explanation.
+    add("adj_s2_boundary_same","adj_stage2","descriptive",plain("The documented boundary is the rule cited above."),"",
+        "[adj_boundary(1)] = '1' and [adj_boundary_same_rule] = '1'")
+    add("adj_s2_boundary_rule","adj_stage2","descriptive",block("Rule documenting the boundary","[adj_boundary_rule_cited]"),"",
+        "[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1'")
+    add("adj_s2_boundary_note","adj_stage2","descriptive",block("Explanation","[adj_boundary_note]"),"",
+        "([adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1') or [adj_boundary(2)] = '1'")
+    add("adj_s2_concern","adj_stage2","descriptive",block("Other concern","[adj_other_concern_note]"),"","[adj_other_concern] = '1'")
+    add("adj_s2_unresolved","adj_stage2","descriptive",block("Unresolved at Stage 1","[adj_stage1_unresolved_note]"),"","[adj_stage1_unresolved] = '1'")
     add("adj_stage2_closure","adj_stage2","radio","Now that sources are revealed, does any diagnostic family apply?","1, Yes, record findings | 2, No, completed with no assignable issue | 3, Incomplete | 4, Administrative closure","","y",section="Findings",
         note="If the evidence cannot support a confident diagnosis, record a finding of family 8, Unresolved, rather than no issue.")
     add("adj_no_issue_rationale","adj_stage2","notes","Why does no family apply?","","[adj_stage2_closure] = '2'","y")

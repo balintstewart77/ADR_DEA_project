@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,OPTION_LETTERS,reveal_columns,BOLD_RESET,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -522,31 +522,45 @@ class PrototypeTests(unittest.TestCase):
         self.assertNotIn("adj_f2_family",asked({"adj_stage2_closure":"1","adj_f1_another":"0"})); self.assertIn("adj_f2_family",asked({"adj_stage2_closure":"1","adj_f1_another":"1"}))
         self.assertEqual(hidden_choices(by["adj_f1_basis"][17],{"adj_f1_family":"1"}),{4})
         self.assertEqual(hidden_choices(by["adj_f1_basis"][17],{"adj_f1_family":"2"}),{2,3})
-        for name in ["adj_reveal_state","adj_reveal_agreed"]+[f"adj_reveal_{c}" for c in COMPONENTS]: self.assertIn("@READONLY",by[name][17])
+        for name in ["adj_reveal_state"]+reveal_columns(): self.assertIn("@READONLY",by[name][17])
         self.assertNotIn("adj_stage2_complete",by)
     def test_reveal_is_separate_readable_and_complete(self):
-        case=self.cases[0]; package=self.packages[0]; fields=reveal_fields(case,package)
-        self.assertEqual(set(fields),{f"adj_reveal_{c}" for c in COMPONENTS}|{"adj_reveal_agreed"})
+        # ADJ-047: one row per option, so a source sits beside the option it
+        # gave.  Slots the record does not have carry no value, and the row
+        # that would show them is branched away.
+        case=self.cases[0]; package=self.packages[0]; fields=reveal_fields(case,package); by={x[0]:x for x in field_rows()}
+        self.assertEqual(set(fields),set(reveal_columns()))
         for comp in COMPONENTS:
-            text=fields[f"adj_reveal_{comp}"]
-            if len(package["interpretations"][comp])==1:
-                self.assertEqual(text,"","a component that does not differ carries no value")
-                self.assertIn(COMPONENT_LABEL[comp],fields["adj_reveal_agreed"])
+            count=len(package["interpretations"][comp]); agreed=fields[f"adj_reveal_{comp}_agreed"]
+            filled=[l for l in OPTION_LETTERS if fields[f"adj_reveal_{comp}_{l.lower()}"]]
+            if count==1:
+                self.assertEqual(filled,[],"a component that does not differ fills no option row")
+                self.assertTrue(agreed)
             else:
-                lines=text.split("\n"); self.assertEqual(len(lines),len(package["interpretations"][comp]))
-                for line in lines: self.assertRegex(line,r"^Option [A-D] \((production model|coder C0\d)(, (production model|coder C0\d))*\): .+")
-                self.assertEqual(sum(line.count("production model") for line in lines),1)
+                self.assertEqual(agreed,"","a component that differs carries no agreed value")
+                self.assertEqual(filled,list(OPTION_LETTERS[:count]),comp)
+                sources=[fields[f"adj_reveal_{comp}_{l.lower()}_src"] for l in filled]
+                for src in sources: self.assertRegex(src,r"^(production model|coder C0\d)(, (production model|coder C0\d))*$")
+                self.assertEqual(sum(s.count("production model") for s in sources),1)
                 for option in package["interpretations"][comp]:
-                    self.assertTrue(any(("; ".join(option["value"]) if isinstance(option["value"],list) else option["value"]) in line for line in lines))
+                    value="; ".join(option["value"]) if isinstance(option["value"],list) else option["value"]
+                    self.assertIn(value,[fields[f"adj_reveal_{comp}_{l.lower()}"] for l in filled])
+            # The row for a slot this record lacks never displays.
+            for n,letter in enumerate(OPTION_LETTERS,1):
+                context={f"adj_{comp}_comparative":"1" if count>1 else "0",f"adj_{comp}_slot_count":str(count)}
+                shown=redcap_shows(by[f"adj_s2_opt_{comp}_{letter.lower()}"][11],context)
+                self.assertEqual(shown,count>1 and n<=count,(comp,letter))
+                self.assertEqual(bool(fields[f"adj_reveal_{comp}_{letter.lower()}"]),shown,(comp,letter))
+            self.assertEqual(redcap_shows(by[f"adj_s2_agreed_{comp}"][11],{f"adj_{comp}_comparative":"1" if count>1 else "0"}),count==1,comp)
         single=reveal_fields(self.cases[2],self.packages[2])
-        self.assertTrue(all(single[f"adj_reveal_{c}"]=="" for c in COMPONENTS))
+        self.assertTrue(all(not single[f"adj_reveal_{c}_{l.lower()}"] for c in COMPONENTS for l in OPTION_LETTERS))
+        self.assertTrue(all(single[f"adj_reveal_{c}_agreed"] for c in COMPONENTS))
         with (ROOT/"instruments"/"adjudication_reveal_import_synthetic.csv").open(encoding="utf-8",newline="") as f: reveal=list(csv.DictReader(f))
         self.assertEqual(len(reveal),2*len(self.cases)); self.assertTrue(all(r["adj_reveal_state"]=="1" for r in reveal))
-        self.assertEqual(list(reveal[0]),["adj_assignment_id","adj_reveal_state"]+[f"adj_reveal_{c}" for c in COMPONENTS]+["adj_reveal_agreed"])
-        names={x[0] for x in field_rows()}
-        self.assertTrue(set(list(reveal[0])[1:])<=names)
+        self.assertEqual(list(reveal[0]),["adj_assignment_id","adj_reveal_state"]+reveal_columns())
+        self.assertTrue(set(list(reveal[0])[1:])<=set(by))
         with (ROOT/"instruments"/"adjudication_record_import_synthetic.csv").open(encoding="utf-8",newline="") as f: masked=f.read().lower()
-        self.assertNotIn("production model",masked); self.assertFalse([c for c in ("adj_reveal_dom","adj_reveal_agreed") if c in masked])
+        self.assertNotIn("production model",masked); self.assertNotIn("adj_reveal",masked)
     def test_stage2_shows_the_entry_and_stage1_answers(self):
         rows=field_rows(); by={x[0]:x for x in rows}; names=set(by)
         context=[x for x in rows if x[1]=="adj_stage2" and x[3]=="descriptive"]
@@ -554,9 +568,20 @@ class PrototypeTests(unittest.TestCase):
         # Sections break the form up, and nothing pipes a field that may be blank
         # unless its own answer is showing.
         sections=[x[2] for x in rows if x[1]=="adj_stage2" and x[2]]
-        self.assertEqual(sections,["Stage 2: after the source reveal","The public register entry","What each source gave","Your Stage 1 assessment","Findings"])
+        self.assertEqual([s for n,s in enumerate(sections) if n==0 or s!=sections[n-1]],
+                         ["Stage 2: after the source reveal","The public register entry"]
+                         +[f"{COMPONENT_LABEL[c]}: what each source gave" for c in COMPONENTS]
+                         +["Your Stage 1 assessment","Findings"])
+        # Exactly one of a component's option rows and its agreed row shows, so
+        # both carry the header and it cannot vanish with the rows beneath it.
+        for comp in COMPONENTS:
+            head=f"{COMPONENT_LABEL[comp]}: what each source gave"
+            self.assertEqual([x[0] for x in rows if x[2]==head],[f"adj_s2_opt_{comp}_a",f"adj_s2_agreed_{comp}"])
+        for name in ("adj_s2_recap_intro","adj_s2_entry","adj_reveal_state","adj_stage2_closure"):
+            self.assertEqual(by[name][11],"","a field carrying a section header is unconditional")
         for name,trigger in (("adj_s2_concern","[adj_other_concern] = '1'"),("adj_s2_unresolved","[adj_stage1_unresolved] = '1'"),
-                             ("adj_s2_boundary_note","[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'")):
+                             ("adj_s2_boundary_note","([adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1') or [adj_boundary(2)] = '1'"),
+                             ("adj_s2_boundary_same","[adj_boundary(1)] = '1' and [adj_boundary_same_rule] = '1'")):
             self.assertEqual(by[name][11],trigger,name)
         for comp in COMPONENTS:
             self.assertIn("[adj_rule_conflict_scope(",by[f"adj_s2_conflict_{comp}"][11])
@@ -642,4 +667,19 @@ class PrototypeTests(unittest.TestCase):
         for bad_code in (0,900,-1):
             bad=copy.deepcopy(conflict); bad["adj_conflict_rule_cited"]=bad_code
             self.assertTrue(any("cited rule required" in x for x in validate_submission(bad,p)),bad_code)
+    def test_descriptive_text_is_not_all_bold(self):
+        # ADJ-047: REDCap renders descriptive text bold, so every recap line
+        # came out bold and nothing stood out.  Body text resets the weight.
+        rows=[x for x in field_rows() if x[1]=="adj_stage2" and x[3]=="descriptive"]
+        self.assertTrue(rows)
+        for row in rows:
+            label=row[4]
+            self.assertIn(BOLD_RESET,label,row[0])
+            spans=re.findall(re.escape(BOLD_RESET)+r"(.*?)</span>",label)
+            self.assertTrue(spans,row[0])
+            for span in spans: self.assertNotIn("<b>",span,f"{row[0]} puts bold inside the normal-weight body")
+        # Everything else is a heading over its own body.  The exceptions are
+        # continuation lines that sit under the heading above them.
+        self.assertEqual([x[0] for x in rows if not x[4].startswith("<b>")],
+                         ["adj_s2_recap_intro"]+[f"adj_s2_conflict_{c}" for c in COMPONENTS]+["adj_s2_boundary_same"])
 if __name__=="__main__": unittest.main()
