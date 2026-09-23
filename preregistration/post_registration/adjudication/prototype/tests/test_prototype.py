@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -731,4 +731,42 @@ class PrototypeTests(unittest.TestCase):
         for code,expected in [(1,0),(0,0)]+[(c,1) for c in RELEASE_MANDATORY]:
             r=copy.deepcopy(mandatory); r["adj_f1_release"]=code
             self.assertEqual(derive_stage2(r)["mandatory_second_review"],expected,code)
+    def test_no_majority_records_are_a_stratum_not_an_exclusion(self):
+        # ADJ-038: where no label reached two of three coders the reference is
+        # empty, so the model differs from it by construction.  Those records
+        # are still adjudicated, and marked for separate analysis.
+        def case(coder_domains,coder_purposes,model_domains,model_purposes,coders=3):
+            cl=[{"source_type":"fable","domains":model_domains,"purposes":model_purposes,"covid":"Not applied","equity":"Not applied"}]
+            for n in range(coders):
+                cl.append({"source_type":"scratch","source_id":f"SC_{'ABC'[n]}","domains":coder_domains[n],
+                           "purposes":coder_purposes[n],"covid":"Not applied","equity":"Not applied"})
+            return {"assignment_id":"SYN_NM","record_id":"R_NM","title":"Synthetic","datasets":"Synthetic","classifications":cl}
+        split=[[DOMAINS[0]],[DOMAINS[1]],[DOMAINS[2]]]; agreed_p=[[PURPOSES[0]]]*3
+        # Coders split three ways on domains and agree on purpose, which the
+        # model shares: the only component that differs has no majority.
+        only=case(split,agreed_p,[DOMAINS[3]],[PURPOSES[0]])
+        self.assertEqual(no_majority_components(only),["dom"])
+        self.assertEqual(package_stratum(only,package_case(only)),3)
+        # The same split, but the model also differs where a majority exists.
+        mixed=case(split,agreed_p,[DOMAINS[3]],[PURPOSES[1]])
+        self.assertEqual(no_majority_components(mixed),["dom"])
+        self.assertEqual(package_stratum(mixed,package_case(mixed)),2)
+        # Coders agree throughout: an ordinary difference.
+        standard=case([[DOMAINS[0]]]*3,agreed_p,[DOMAINS[3]],[PURPOSES[0]])
+        self.assertEqual(no_majority_components(standard),[])
+        self.assertEqual(package_stratum(standard,package_case(standard)),1)
+        # Both label components can lack a majority at once.
+        both=case(split,[[PURPOSES[0]],[PURPOSES[1]],[PURPOSES[2]]],[DOMAINS[3]],[PURPOSES[3]])
+        self.assertEqual(no_majority_components(both),["dom","purp"])
+        self.assertEqual(package_stratum(both,package_case(both)),3)
+        # A binary tag always has a majority among three coders, and with no
+        # coder panel the question does not arise.
+        for c in (only,mixed,standard,both): self.assertFalse({"covid","equity"}&set(no_majority_components(c)))
+        self.assertEqual(no_majority_components(case(split[:1],agreed_p[:1],[DOMAINS[3]],[PURPOSES[0]],coders=1)),[])
+        # The stratum is analytic, and stays out of the reviewer's record: a
+        # hidden field saying the coders did not converge is source information.
+        names=[x[0] for x in field_rows()]
+        self.assertFalse([n for n in names if "majority" in n or "stratum" in n],"the stratum belongs outside REDCap")
+        with (ROOT/"instruments"/"adjudication_record_import_synthetic.csv").open(encoding="utf-8",newline="") as f:
+            self.assertFalse([c for c in next(csv.reader(f)) if "majority" in c or "stratum" in c])
 if __name__=="__main__": unittest.main()

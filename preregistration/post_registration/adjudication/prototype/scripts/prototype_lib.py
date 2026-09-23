@@ -54,6 +54,36 @@ def qa_flags(c):
         if c.get(tag) not in {"Applied","Not applied"}: flags.append(f"invalid_{tag}_tag")
     return flags
 def candidate_content(c): return {"domains":canonical(c.get("domains",[]),DOMAINS),"purposes":canonical(c.get("purposes",[]),PURPOSES),"covid":c.get("covid"),"equity":c.get("equity")}
+def no_majority_components(case):
+    """Components where no label reached two of three scratch coders.
+
+    Section 9.1 compares the model against the labelwise two-of-three human
+    reference.  Where that reference is empty the model differs from it by
+    construction, not because anyone disagreed about a rule, so these records
+    are adjudicated but analysed as their own stratum (ADJ-038).  What the
+    reviewer sees is unaffected: the displayed options are the coders' own
+    classifications, so the comparison on the form is well formed.
+
+    A binary tag always has a majority among three coders, so only the label
+    components can qualify, and with no coder panel the question does not
+    arise.
+    """
+    coders=[c for c in case["classifications"] if c.get("source_type")=="scratch"]
+    if len(coders)<3: return []
+    return [comp for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES))
+            if not any(sum(lab in (c.get(KEY[comp]) or []) for c in coders)>=2 for lab in vocab)]
+def package_stratum(case,package):
+    """1 standard, 2 mixed, 3 no coder majority anywhere the options differ.
+
+    Stratum 3 is the record that is in adjudication only because the reference
+    was empty.  It is analytic, not operational: nothing on the form reads it,
+    and it is deliberately kept out of the REDCap record, because a hidden
+    field saying the coders did not converge is source information sitting in
+    the reviewer's own export (ADJ-038).
+    """
+    differ=set(comparative_components(package)); empty=set(no_majority_components(case))&differ
+    if not empty: return 1
+    return 3 if differ<=empty else 2
 def package_case(case,seed=20260921):
     kept=[x for x in case["classifications"] if x["source_type"] in {"fable","scratch"}]
     groups={}
