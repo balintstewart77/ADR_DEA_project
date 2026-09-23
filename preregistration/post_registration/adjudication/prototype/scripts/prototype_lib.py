@@ -86,15 +86,22 @@ COMPONENT_CODE={"dom":1,"purp":2,"covid":3,"equity":4}
 # Option codes 1-4 are the stable internal slot codes, shown as Options A-D.
 OPTION_LETTERS="ABCD"
 BEST_CANNOT_DETERMINE=6; DEFENSIBLE_NONE=0; DEFENSIBLE_CANNOT_JUDGE=9
-COMPARATIVE_RECORD_KEYS=("adj_rule_conflict","adj_rule_conflict_scope","adj_conflict_rule_type","adj_conflict_rule_other","adj_rule_conflict_note","adj_boundary_same_rule")
+COMPARATIVE_RECORD_KEYS=("adj_rule_conflict","adj_rule_conflict_scope","adj_conflict_rule_cited","adj_conflict_rule_other","adj_rule_conflict_note","adj_boundary_same_rule")
 COMPARATIVE_COMPONENT_KEYS=("evidence","best","defensible","conflict_slots")
 # The frozen rules carry no identifiers.  The labels already ticked locate the
 # rule; the rule type says which part of the taxonomy it is (ADJ-042).
-RULE_TYPES="1, Definition | 2, Inclusion rule | 3, Exclusion rule | 4, Counterexample | 5, instead_consider reference | 6, Coding instruction | 7, Other"
-RULE_OTHER=7
-def validate_rule_type(value,other,label):
-    out=issue(value,set(range(1,8)),f"{label} rule type")
-    if value==RULE_OTHER and not(other and str(other).strip()): out.append(f"{label} rule type Other needs a description")
+# Every citable rule in the frozen taxonomy carries a permanent ID (ADJ-046),
+# so a finding cites a specific text the second reviewer can read.
+RULE_OTHER=999; RULE_CATALOGUE_VERSION="rulecat-0.1"
+def rule_catalogue():
+    path=ROOT/"instruments"/"rule_catalogue.csv"
+    if not path.exists(): raise FileNotFoundError(f"rule catalogue required: {path}; run build_rule_catalogue.py")
+    return [{**r,"code":int(r["code"])} for r in csv.DictReader(path.open(encoding="utf-8"))]
+def rule_codes(): return {r["code"] for r in rule_catalogue()}
+def rule_choices(): return " | ".join(f"{r['code']}, {r['rule_id']} {r['name']}" for r in rule_catalogue())+f" | {RULE_OTHER}, Other rule or coding instruction"
+def validate_rule_cited(value,other,label):
+    out=issue(value,rule_codes()|{RULE_OTHER},f"{label} cited rule")
+    if value==RULE_OTHER and not(other and str(other).strip()): out.append(f"{label} Other rule needs a description")
     return out
 SINGLE_SET_KEYS=("label_assessments","tag_assessments")+tuple(f"adj_{c}_additional_label_{x}" for c in ("dom","purp") for x in ("state","ids","note"))
 def comparative_components(p): return [c for c in COMPONENTS if len(p["interpretations"][c])>1]
@@ -102,14 +109,14 @@ def validate_label_assessment(a):
     """Single-set path: is this proposed label supported, and does it breach a rule?"""
     out=issue(a.get("support"),{1,2,3},"label support"); conflict=a.get("rule_conflict"); out+=issue(conflict,{0,1,2},"label rule-conflict state")
     if conflict==1:
-        out+=validate_rule_type(a.get("rule_type"),a.get("rule_other"),"label conflict")
+        out+=validate_rule_cited(a.get("rule_cited"),a.get("rule_other"),"label conflict")
         if not a.get("rule_note"): out.append("rule conflict needs explanation")
     if conflict==2 and not a.get("rule_note"): out.append("cannot-assess conflict needs explanation")
     return out
 def validate_tag_assessment(a):
     out=issue(a.get("support"),{1,2,3},"tag support"); conflict=a.get("rule_conflict"); out+=issue(conflict,{0,1,2},"tag conflict")
     if conflict==1:
-        out+=validate_rule_type(a.get("rule_type"),a.get("rule_other"),"tag conflict")
+        out+=validate_rule_cited(a.get("rule_cited"),a.get("rule_other"),"tag conflict")
         if not a.get("rule_note"): out.append("tag conflict needs explanation")
     if conflict==2 and not a.get("rule_note"): out.append("tag cannot-assess conflict needs explanation")
     state=a.get("supported_status"); out+=issue(state,{0,1,2},"tag alternative-status assessment")
@@ -132,8 +139,8 @@ def validate_boundary(r):
     if shortcut: out+=issue(same,{0,1},"same-rule-as-conflict answer")
     elif "adj_boundary_same_rule" in r: out.append("same-rule question is only asked for a documented boundary alongside a rule conflict")
     cites=1 in states and not(shortcut and same==1)
-    if cites: out+=validate_rule_type(r.get("adj_boundary_rule_type"),r.get("adj_boundary_rule_other"),"recognised boundary")
-    elif "adj_boundary_rule_type" in r: out.append("boundary rule type is only recorded for a documented boundary that is not the conflict rule")
+    if cites: out+=validate_rule_cited(r.get("adj_boundary_rule_cited"),r.get("adj_boundary_rule_other"),"recognised boundary")
+    elif "adj_boundary_rule_cited" in r: out.append("boundary rule is only recorded for a documented boundary that is not the conflict rule")
     if (cites or 2 in states) and not r.get("adj_boundary_note"): out.append("recognised/plausible boundary needs explanation")
     return out
 def yes_no_with_note(r,field,note,label):
@@ -181,7 +188,7 @@ def validate_submission(r,p):
         conflict=r.get("adj_rule_conflict"); rscope=set(r.get("adj_rule_conflict_scope",[])); out+=issue(conflict,{0,1,2},"rule-conflict judgement")
         if conflict==1:
             if not rscope or not rscope<=set(COMPONENT_CODE.values()): out.append("rule conflict needs its component scope")
-            out+=validate_rule_type(r.get("adj_conflict_rule_type"),r.get("adj_conflict_rule_other"),"rule conflict")
+            out+=validate_rule_cited(r.get("adj_conflict_rule_cited"),r.get("adj_conflict_rule_other"),"rule conflict")
             if not r.get("adj_rule_conflict_note"): out.append("rule conflict needs explanation")
         elif rscope: out.append("rule-conflict scope is only recorded for a conflict")
         if conflict==2 and not r.get("adj_rule_conflict_note"): out.append("cannot-judge rule conflict needs explanation")
@@ -686,9 +693,9 @@ def field_rows():
         if comp in ("dom","purp"):
             vocab=DOMAINS if comp=="dom" else PURPOSES
             add(f"adj_{comp}_conflict_labels","adj_stage1","checkbox",f"Which {NOUN[comp]} label or labels are involved?"," | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1)),in_scope,"y")
-    add("adj_conflict_rule_type","adj_stage1","radio","Which part of the frozen rules does it conflict with?",RULE_TYPES,f"{comparative_pkg} and [adj_rule_conflict] = '1'","y",
-        note="The labels ticked above say where the rule is; this says which part of the taxonomy it is.")
-    add("adj_conflict_rule_other","adj_stage1","text","Describe the rule","",f"{comparative_pkg} and [adj_rule_conflict] = '1' and [adj_conflict_rule_type] = '7'","y");add("adj_rule_conflict_note","adj_stage1","notes","Explain the conflict, or why it cannot be judged","",f"{comparative_pkg} and ([adj_rule_conflict] = '1' or [adj_rule_conflict] = '2')","y")
+    add("adj_conflict_rule_cited","adj_stage1","dropdown","Which rule does it conflict with?",rule_choices(),f"{comparative_pkg} and [adj_rule_conflict] = '1'","y",
+        note="Type to search by category or rule ID. The same IDs head the rules in the adjudication rule reference.",val="autocomplete")
+    add("adj_conflict_rule_other","adj_stage1","text","Describe the rule or coding instruction","",f"{comparative_pkg} and [adj_rule_conflict] = '1' and [adj_conflict_rule_cited] = '{RULE_OTHER}'","y");add("adj_rule_conflict_note","adj_stage1","notes","Explain the conflict, or why it cannot be judged","",f"{comparative_pkg} and ([adj_rule_conflict] = '1' or [adj_rule_conflict] = '2')","y")
     # Owner-only single-set path: §9.2 asks whether each proposed label is
     # supported, whether a rule is breached, and whether an alternative or
     # additional label is supported.
@@ -697,18 +704,18 @@ def field_rows():
         for i,label in enumerate(vocab,1):
             c=f"l{i:02d}";applicable=f"[{p}{c}_applicable] = '1'"
             add(p+c+"_applicable","adj_stage1","text",f"Generated flag: {label} displayed in a single set",a="@HIDDEN @READONLY")
-            add(p+c+"_membership","adj_stage1","notes",f"Proposed label: {label}","",applicable,a="@READONLY");add(p+c+"_support","adj_stage1","radio",f"{label}: supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",applicable,"y");add(p+c+"_rule_conflict","adj_stage1","radio",f"{label}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",applicable,"y");add(p+c+"_rule_type","adj_stage1","radio",f"{label}: which part of the frozen rules?",RULE_TYPES,f"{applicable} and [{p}{c}_rule_conflict] = '1'","y");add(p+c+"_rule_other","adj_stage1","text",f"{label}: describe the rule","",f"{applicable} and [{p}{c}_rule_conflict] = '1' and [{p}{c}_rule_type] = '7'","y");add(p+c+"_rule_note","adj_stage1","notes",f"{label}: explanation","",f"{applicable} and ([{p}{c}_rule_conflict] = '1' or [{p}{c}_rule_conflict] = '2')","y")
+            add(p+c+"_membership","adj_stage1","notes",f"Proposed label: {label}","",applicable,a="@READONLY");add(p+c+"_support","adj_stage1","radio",f"{label}: supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",applicable,"y");add(p+c+"_rule_conflict","adj_stage1","radio",f"{label}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",applicable,"y");add(p+c+"_rule_cited","adj_stage1","dropdown",f"{label}: which rule?",rule_choices(),f"{applicable} and [{p}{c}_rule_conflict] = '1'","y",val="autocomplete");add(p+c+"_rule_other","adj_stage1","text",f"{label}: describe the rule","",f"{applicable} and [{p}{c}_rule_conflict] = '1' and [{p}{c}_rule_cited] = '{RULE_OTHER}'","y");add(p+c+"_rule_note","adj_stage1","notes",f"{label}: explanation","",f"{applicable} and ([{p}{c}_rule_conflict] = '1' or [{p}{c}_rule_conflict] = '2')","y")
         choices=" | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1))
         add(p+"additional_label_state","adj_stage1","radio",f"{COMPONENT_LABEL[comp]}: is an additional or alternative label supported?","0, None identified | 1, Identified | 2, Cannot determine",single_pkg,"y");add(p+"additional_label_ids","adj_stage1","checkbox",f"{COMPONENT_LABEL[comp]}: supported additional labels",choices,f"{single_pkg} and [{p}additional_label_state] = '1'","y");add(p+"additional_label_note","adj_stage1","notes",f"{COMPONENT_LABEL[comp]}: explanation","",f"{single_pkg} and ([{p}additional_label_state] = '1' or [{p}additional_label_state] = '2')","y")
     for tag in ("covid","equity"):
-        p=f"adj_{tag}_";add(p+"status_membership","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: proposed status","",single_pkg,a="@READONLY");add(p+"status_support","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: status supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",single_pkg,"y");add(p+"rule_conflict","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",single_pkg,"y");add(p+"rule_type","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: which part of the frozen rules?",RULE_TYPES,f"{single_pkg} and [{p}rule_conflict] = '1'","y");add(p+"rule_other","adj_stage1","text",f"{COMPONENT_LABEL[tag]}: describe the rule","",f"{single_pkg} and [{p}rule_conflict] = '1' and [{p}rule_type] = '7'","y");add(p+"rule_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}rule_conflict] = '1' or [{p}rule_conflict] = '2')","y");add(p+"supported_status","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: is the opposite status supported?","0, No | 1, Yes | 2, Cannot determine",single_pkg,"y");add(p+"supported_status_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}supported_status] = '1' or [{p}supported_status] = '2')","y")
+        p=f"adj_{tag}_";add(p+"status_membership","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: proposed status","",single_pkg,a="@READONLY");add(p+"status_support","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: status supported by the visible public entry?","1, Supported | 2, Not supported | 3, Cannot determine",single_pkg,"y");add(p+"rule_conflict","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: conflicts with an explicit taxonomy rule?","0, No | 1, Yes | 2, Cannot assess",single_pkg,"y");add(p+"rule_cited","adj_stage1","dropdown",f"{COMPONENT_LABEL[tag]}: which rule?",rule_choices(),f"{single_pkg} and [{p}rule_conflict] = '1'","y",val="autocomplete");add(p+"rule_other","adj_stage1","text",f"{COMPONENT_LABEL[tag]}: describe the rule","",f"{single_pkg} and [{p}rule_conflict] = '1' and [{p}rule_cited] = '{RULE_OTHER}'","y");add(p+"rule_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}rule_conflict] = '1' or [{p}rule_conflict] = '2')","y");add(p+"supported_status","adj_stage1","radio",f"{COMPONENT_LABEL[tag]}: is the opposite status supported?","0, No | 1, Yes | 2, Cannot determine",single_pkg,"y");add(p+"supported_status_note","adj_stage1","notes",f"{COMPONENT_LABEL[tag]}: explanation","",f"{single_pkg} and ([{p}supported_status] = '1' or [{p}supported_status] = '2')","y")
     # Judgement 3: boundary, asked for every record.
     add("adj_boundary","adj_stage1","checkbox","Does a boundary between taxonomy categories help explain the classifications shown?","1, A boundary documented in the frozen rules or examples | 2, A plausible boundary identified in this review | 0, No | 9, Cannot judge","","y","@NONEOFTHEABOVE='0,9'",
         note="Both kinds may apply where distinct boundaries are involved. Sparse register evidence is not a taxonomy boundary.")
     add("adj_boundary_scope","adj_stage1","checkbox","Which components?",scope_choices,"[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'","y");add("adj_boundary_same_rule","adj_stage1","radio","Is the documented boundary the same rule you cited for the conflict?","1, Yes, the same rule | 0, No, a different rule","[adj_rule_conflict] = '1' and [adj_boundary(1)] = '1'","y",
         note="If Yes, the rule and explanation you gave for the conflict are used for the boundary too.")
-    add("adj_boundary_rule_type","adj_stage1","radio","Which part of the frozen rules documents the boundary?",RULE_TYPES,"[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1'","y")
-    add("adj_boundary_rule_other","adj_stage1","text","Describe the rule","","[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1' and [adj_boundary_rule_type] = '7'","y")
+    add("adj_boundary_rule_cited","adj_stage1","dropdown","Which rule documents the boundary?",rule_choices(),"[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1'","y",val="autocomplete")
+    add("adj_boundary_rule_other","adj_stage1","text","Describe the rule or coding instruction","","[adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1' and [adj_boundary_rule_cited] = '999'","y")
     add("adj_boundary_note","adj_stage1","notes","Explain the boundary","","([adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1') or [adj_boundary(2)] = '1'","y")
     # Masking failures must be logged (§9.3).
     add("adj_masking_failure","adj_stage1","radio","Before the source reveal, did you recognise or become aware of which source produced any displayed option?","1, Yes | 0, No | 2, Unsure","","y",
@@ -743,7 +750,7 @@ def field_rows():
         add(f"adj_s2_conflict_{comp}","adj_stage2","descriptive",detail,"",
             f"[adj_rule_conflict] = '1' and [adj_rule_conflict_scope({COMPONENT_CODE[comp]})] = '1'")
     add("adj_s2_conflict_rule","adj_stage2","descriptive",
-        "Part of the rules: [adj_conflict_rule_type]<br>Explanation: [adj_rule_conflict_note]","",
+        "Rule cited: [adj_conflict_rule_cited]<br>Explanation: [adj_rule_conflict_note]","",
         "[adj_pkg_comparative] = '1' and [adj_rule_conflict] = '1'")
     add("adj_s2_boundary","adj_stage2","descriptive","<b>Boundary:</b> [adj_boundary:checked]")
     add("adj_s2_boundary_note","adj_stage2","descriptive","Explanation: [adj_boundary_note]","","[adj_boundary(1)] = '1' or [adj_boundary(2)] = '1'")
@@ -767,9 +774,9 @@ def field_rows():
             f"@IF({family} = '1', @HIDECHOICE='4', @IF({family} = '2', @HIDECHOICE='2,3', ''))",
             note="A source-specific finding needs a clear basis in the frozen rules and the evidence available to that source; disagreement alone is not enough.")
         vocab=mechanism_vocabulary()
-        rule_choices=" | ".join(f"{m['code']}, {m['name']}" for m in vocab if m["group"]=="rule")+f" | {MECH_NEW}, New mechanism (describe below)"
+        mech_choices=" | ".join(f"{m['code']}, {m['name']}" for m in vocab if m["group"]=="rule")+f" | {MECH_NEW}, New mechanism (describe below)"
         data_choices=" | ".join(f"{m['code']}, {m['name']}" for m in vocab if m["group"]=="data")+f" | {MECH_NEW}, New mechanism (describe below)"
-        add(p+"mech","adj_stage2","dropdown",f"Finding {k}: which mechanism?",rule_choices,f"{shown} and ({family} = '1' or {family} = '2' or {family} = '4' or {family} = '6')","y",
+        add(p+"mech","adj_stage2","dropdown",f"Finding {k}: which mechanism?",mech_choices,f"{shown} and ({family} = '1' or {family} = '2' or {family} = '4' or {family} = '6')","y",
             note="Type to search. Pick the same entry whenever the same mechanism recurs; that is what lets recurrence be counted.",val="autocomplete")
         add(p+"mech_data","adj_stage2","dropdown",f"Finding {k}: which data or instrument mechanism?",data_choices,f"{shown} and {family} = '7'","y",val="autocomplete")
         add(p+"mech_new","adj_stage2","text",f"Finding {k}: name the new mechanism in a few words","",f"{shown} and ([{p}mech] = '{MECH_NEW}' or [{p}mech_data] = '{MECH_NEW}')","y",
