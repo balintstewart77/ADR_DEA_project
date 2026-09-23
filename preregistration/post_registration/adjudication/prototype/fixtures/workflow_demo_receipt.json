@@ -25,24 +25,24 @@
     {
       "event": "preserved",
       "hash": "eafdfe169fb6ffc3153a2128333aec9b5c3f148c61e89084beac1a4cd392079a",
-      "at": "2026-09-23T07:48:28.858678+00:00"
+      "at": "2026-09-23T10:17:25.567452+00:00"
     },
     {
       "event": "preserve_rejected_existing_snapshot",
-      "at": "2026-09-23T07:48:28.858691+00:00"
+      "at": "2026-09-23T10:17:25.567467+00:00"
     },
     {
       "event": "correction_recorded",
       "field": "adj_stage1_note",
-      "at": "2026-09-23T07:48:28.858757+00:00"
+      "at": "2026-09-23T10:17:25.567537+00:00"
     },
     {
       "event": "reveal_failed_partial",
-      "at": "2026-09-23T07:48:28.858968+00:00"
+      "at": "2026-09-23T10:17:25.567769+00:00"
     },
     {
       "event": "reveal_recovered",
-      "at": "2026-09-23T07:48:28.858985+00:00"
+      "at": "2026-09-23T10:17:25.567786+00:00"
     }
   ],
   "exposure_history": [
@@ -52,7 +52,7 @@
       "accessibility": "potential",
       "viewing": "unknown",
       "extent": "unknown",
-      "at": "2026-09-23T07:48:28.858964+00:00"
+      "at": "2026-09-23T10:17:25.567766+00:00"
     }
   ],
   "reveal_assignment": "SYN_ASSIGN_001"

@@ -1,8 +1,12 @@
 # DEA adjudication build documentation
 
 Status: proposed documentation and an offline synthetic prototype for review.
-Neither is approved for formal adjudication, frozen, REDCap-import-tested, or
-authorised for a live project. All prototype records, assignments, sources and
+Neither is approved for formal adjudication, frozen, or authorised for a live
+project. An earlier 209-field dictionary and its data-quality rules were
+imported into the test project PID 9221 on 2026-09-22; the current 484-field
+dictionary, its 36 data-quality rules and everything from ADJ-047 onwards have
+not been imported or seen rendered, and `prototype/verification.md` records
+exactly what each import covered. All prototype records, assignments, sources and
 responses are synthetic; it contains no formal case content or source mapping.
 
 ## Purpose and navigation

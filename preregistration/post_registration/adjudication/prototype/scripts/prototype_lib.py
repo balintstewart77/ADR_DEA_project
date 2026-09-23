@@ -234,10 +234,17 @@ def validate_extra_conflicts(r):
         if not r.get(b["note"]): out.append(f"conflict {n} needs explanation")
     return out
 def validate_cited_component(code,scope,tag):
-    """A category rule can only be breached in its own component."""
+    """A category rule can only be breached in its own component.
+
+    Requiring the rule's component merely to be present let a Purposes rule be
+    scoped to Purposes and the equity tag at once, so an equity option was
+    recorded as breaching a Purposes rule and no error was raised.  One
+    conflict is one rule, so the scope is exactly that rule's component; only a
+    principle, which applies to any layer, and Other span components.
+    """
     comp=rule_component(code)
-    if comp is not None and COMPONENT_CODE[comp] not in scope:
-        return [f"{tag} cites a {COMPONENT_LABEL[comp]} rule, which is outside its component scope"]
+    if comp is not None and scope!={COMPONENT_CODE[comp]}:
+        return [f"{tag} cites a {COMPONENT_LABEL[comp]} rule, so its scope is {COMPONENT_LABEL[comp]} alone"]
     return []
 def validate_boundary(r):
     """Record-level boundary judgement, asked for every record.
@@ -539,7 +546,11 @@ def reveal(a,p,h,payload,store,simulate_partial=False):
 # families per record are derived rather than asked.
 # ---------------------------------------------------------------------------
 FAMILIES="1, Apparent model rule-application problem | 2, Apparent scratch-coder rule-application problem | 3, Evidence problem | 4, Taxonomy problem | 5, Project-knowledge gap | 6, Legitimate boundary case | 7, Data or instrument problem | 8, Unresolved"
-FINDING_SLOTS=3
+# Six, matching the six Stage 1 conflicts: an independent audit found Stage 1
+# could cite six rules while Stage 2 stopped at three findings, so a record with
+# four distinct families or mechanisms could not be recorded, against 9.3.  A
+# slot opens only when the one before it asks for another.
+FINDING_SLOTS=6
 BASIS="1, Conflicts with an explicit rule | 2, Materially weaker support than a displayed alternative | 3, Omits a materially better-supported label | 4, Applies the instructions inconsistently"
 BASIS_BY_FAMILY={1:{1,2,3},2:{1,4}}
 RELEASE="0, None | 1, Caveat only | 2, Evidence for prompt revision | 3, Evidence for taxonomy revision | 4, Data or instrument repair | 5, Evidence for non-release | 6, Escalate: may alter a headline dashboard output | 9, Pending"

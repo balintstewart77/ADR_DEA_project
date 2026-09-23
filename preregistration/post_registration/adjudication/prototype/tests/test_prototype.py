@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,recorded_conflicts,inherited_from_conflicts,rule_label,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,FINDING_SLOTS,recorded_conflicts,inherited_from_conflicts,rule_label,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -110,8 +110,21 @@ class PrototypeTests(unittest.TestCase):
         self.assertTrue(any("label(s) concerned" in x for x in validate_submission(free,p)),"a principle names no label, so it is asked")
         free["adj_dom_conflict_labels"]=[DOMAINS[2]]; self.assertEqual(validate_submission(free,p),[])
         elsewhere=copy.deepcopy(bad); elsewhere["adj_conflict_rule_cited"]=PURP_RULE
-        self.assertTrue(any("outside its component scope" in x for x in validate_submission(elsewhere,p)),
+        self.assertTrue(any("its scope is Analytical Purposes alone" in x for x in validate_submission(elsewhere,p)),
                         "a Purposes rule cannot be breached in a Domains-only conflict")
+        # Independent audit, 2026-09-23: requiring the rule's component merely to
+        # be present let a Purposes rule be scoped to Purposes and a tag at once.
+        pair=self.packages[1]; wide=copy.deepcopy(self.submissions[1])
+        wide.update({"adj_rule_conflict":1,"adj_rule_conflict_scope":[2,4],"adj_purp_conflict_slots":[1],
+                     "adj_equity_conflict_slots":[1],"adj_conflict_rule_cited":PURP_RULE,
+                     "adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"})
+        self.assertTrue(any("its scope is Analytical Purposes alone" in x for x in validate_submission(wide,pair)),
+                        "a category rule cannot carry an unrelated component in its scope")
+        narrow=copy.deepcopy(wide); narrow.update({"adj_rule_conflict_scope":[2]}); narrow.pop("adj_equity_conflict_slots")
+        self.assertEqual(validate_submission(narrow,pair),[])
+        spanning=copy.deepcopy(wide); spanning["adj_conflict_rule_cited"]=PRINCIPLE
+        spanning.update({"adj_purp_conflict_labels":[PURPOSES[0]]})
+        self.assertEqual(validate_submission(spanning,pair),[],"a principle applies to any layer, so it may span components")
         bad["adj_dom_conflict_slots"]=[3]; self.assertTrue(any("conflicting option" in x for x in validate_submission(bad,p)))
         shared=copy.deepcopy(base); shared.update({"adj_rule_conflict":1,"adj_rule_conflict_scope":[2],"adj_conflict_rule_cited":PURP_RULE,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"})
         self.assertEqual(validate_submission(shared,p),[],"a shared Purpose can conflict; no option choice is asked where it does not differ")
@@ -746,7 +759,7 @@ class PrototypeTests(unittest.TestCase):
         # direction the second reviewer's counts mix assigned-wrongly with
         # left-out, and neither can be counted.
         by={x[0]:x for x in field_rows()}
-        for k in range(1,4):
+        for k in range(1,FINDING_SLOTS+1):
             for comp in ("dom","purp"):
                 note=by[f"adj_f{k}_{comp}_labels"][6].lower()
                 self.assertTrue(note,f"finding {k} {comp} labels has no note")
@@ -755,7 +768,7 @@ class PrototypeTests(unittest.TestCase):
             self.assertEqual(by[f"adj_f{k}_dom_labels"][6],by[f"adj_f{k}_purp_labels"][6],"one direction for both components")
         # The note is only useful while the basis it refers to is asked
         # alongside it, and offers the same directions.
-        for k in range(1,4):
+        for k in range(1,FINDING_SLOTS+1):
             self.assertEqual(by[f"adj_f{k}_basis"][11].count("adj_f%d_family"%k),2)
             for code in (1,3): self.assertIn(f"{code}, ",by[f"adj_f{k}_basis"][5])
         self.assertIn("Omits a materially better-supported label",BASIS)
@@ -765,7 +778,7 @@ class PrototypeTests(unittest.TestCase):
         # derivation reads.
         by={x[0]:x for x in field_rows()}
         labels={int(c.split(",",1)[0]):c.split(",",1)[1].strip() for c in RELEASE.split(" | ")}
-        for k in range(1,4):
+        for k in range(1,FINDING_SLOTS+1):
             note=by[f"adj_f{k}_release"][6].lower()
             self.assertTrue(note,f"finding {k} release has no note")
             for code in RELEASE_MANDATORY:
