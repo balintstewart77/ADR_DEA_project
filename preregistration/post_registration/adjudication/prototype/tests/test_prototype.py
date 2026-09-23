@@ -746,6 +746,10 @@ class PrototypeTests(unittest.TestCase):
                 stem=labels[code].replace("Evidence for ","").lower()
                 self.assertIn(stem,note,f"finding {k} note does not name {labels[code]}")
             self.assertIn("caveat only",note); self.assertIn("coder",note)
+            # ADJ-053: the field nominates a case into the §9.1 audit universe;
+            # it does not ask the reviewer to decide anything about release.
+            self.assertIn("evidence for a later release decision",by[f"adj_f{k}_release"][4])
+            self.assertIn("nominating",note); self.assertIn("decision is made later",note)
         mandatory={"adj_stage2_closure":1,"adj_f1_family":2,"adj_f1_components":[1],"adj_f1_dom_labels":[DOMAINS[0]],
                    "adj_f1_coders":[1],"adj_f1_basis":2,"adj_f1_mech":1,"adj_f1_note":"Synthetic","adj_f1_another":0,"adj_stage2_affirmed":1}
         for code,expected in [(1,0),(0,0)]+[(c,1) for c in RELEASE_MANDATORY]:
