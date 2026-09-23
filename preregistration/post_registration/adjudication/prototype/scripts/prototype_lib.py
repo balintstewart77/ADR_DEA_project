@@ -1,6 +1,6 @@
 """Synthetic-only helpers.  This module has no network or production fallback."""
 from __future__ import annotations
-import copy, csv, hashlib, json, random
+import copy, csv, hashlib, json, random, re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -98,7 +98,11 @@ def rule_catalogue():
     if not path.exists(): raise FileNotFoundError(f"rule catalogue required: {path}; run build_rule_catalogue.py")
     return [{**r,"code":int(r["code"])} for r in csv.DictReader(path.open(encoding="utf-8"))]
 def rule_codes(): return {r["code"] for r in rule_catalogue()}
-def rule_choices(): return " | ".join(f"{r['code']}, {r['rule_id']} {r['name']}" for r in rule_catalogue())+f" | {RULE_OTHER}, Other rule or coding instruction"
+# The visible label is the rule, not its ID: the ID is the stored key and the
+# reference's audit handle, and reading it off a dropdown helped nobody
+# (ADJ-049).  Names lead with Domains, Purposes, Tags or Principles, matching
+# the mechanism vocabulary in Stage 2.
+def rule_choices(): return " | ".join(f"{r['code']}, {r['name']}" for r in rule_catalogue())+f" | {RULE_OTHER}, Other rule or coding instruction"
 def validate_rule_cited(value,other,label):
     out=issue(value,rule_codes()|{RULE_OTHER},f"{label} cited rule")
     if value==RULE_OTHER and not(other and str(other).strip()): out.append(f"{label} Other rule needs a description")
@@ -486,38 +490,36 @@ def source_name(c):
     if c["source_type"]=="fable": return "production model"
     sid=c.get("source_id","?"); return "coder "+{"SC_A":"C01","SC_B":"C02","SC_C":"C03"}.get(sid,sid)
 def reveal_columns():
-    """Reveal import columns: a source and a value per option slot, per component."""
-    cols=[]
-    for comp in COMPONENTS:
-        for letter in OPTION_LETTERS: cols+=[f"adj_reveal_{comp}_{letter.lower()}_src",f"adj_reveal_{comp}_{letter.lower()}"]
-        cols.append(f"adj_reveal_{comp}_agreed")
-    return cols
+    """Reveal import columns: the source of each option slot, per component.
+
+    The option values are Stage 1 fields, which Stage 2 pipes, so the reveal
+    adds only what was withheld: who gave each option (ADJ-048).
+    """
+    return [f"adj_reveal_{comp}_{letter.lower()}_src" for comp in COMPONENTS for letter in OPTION_LETTERS]
 def reveal_fields(case,package):
     """Reveal text per option: which source gave it, and what it says.
 
     A row per option, rather than one box per component, so the source sits on
     the option's own heading line instead of wrapping inside shared text
-    (ADJ-047).  A component every source agreed on carries a single agreed
-    value, and a slot the record does not have carries no value, so no hidden
-    field holds text the form never shows.  Imported only after Stage 1 is
-    preserved.
+    (ADJ-047).  Only the source is revealed: the option text is a Stage 1 field
+    Stage 2 pipes, so the blind and revealed views cannot disagree about what
+    was shown (ADJ-048).  A component every source agreed on reveals nothing,
+    and a slot the record does not have carries no value.  Imported only after
+    Stage 1 is preserved.
     """
     by_candidate={}
     for c in case["classifications"]:
         if c["source_type"] not in {"fable","scratch"}: continue
         by_candidate.setdefault("C_"+stable_id(candidate_content(c)),[]).append(source_name(c))
     order=lambda n:(n!="production model",n)
-    value=lambda v:"; ".join(v) if isinstance(v,list) else v
     out={c:"" for c in reveal_columns()}
     for comp in COMPONENTS:
         interpretations=package["interpretations"][comp]
-        if len(interpretations)==1:
-            out[f"adj_reveal_{comp}_agreed"]=value(interpretations[0]["value"]); continue
+        if len(interpretations)==1: continue
         slots=slot_map(package,comp)
         for x in interpretations:
             low=OPTION_LETTERS[slots[x["interpretation_id"]]-1].lower()
             out[f"adj_reveal_{comp}_{low}_src"]=", ".join(sorted({n for cid in x["candidate_ids"] for n in by_candidate[cid]},key=order))
-            out[f"adj_reveal_{comp}_{low}"]=value(x["value"])
     return out
 def write_reveal_import(path,pairs):
     """Reveal rows for (case, package) pairs.  Deliberately source-revealing."""
@@ -527,7 +529,26 @@ def write_reveal_import(path,pairs):
         for case,package in pairs: w.writerow({"adj_assignment_id":package["assignment_id"],"adj_reveal_state":1,**reveal_fields(case,package)})
 REVIEWER_ROLES=((1,"primary",""),(2,"secondary","_SEC"))
 IMPORTED_DEFAULTS={"adj_other_concern":0,"adj_stage1_unresolved":0}
-BOLD_RESET="<span style='font-weight:normal'>"
+BOLD_RESET="<span style='font-weight:normal;white-space:pre-line'>"
+def dataset_lines(text):
+    """The frozen datasets-used entry, one dataset per line.
+
+    The register keeps the entry as a single string, so a narrow box ran the
+    datasets together and the reviewer could not see how many there were
+    (ADJ-048).  Splitting inserts line breaks and changes nothing else: the
+    characters either side of a break are the frozen ones, and a string that
+    does not split is shown exactly as the register holds it.
+
+    A comma separates datasets in the register, but it also ends a clause such
+    as a trailing year range, so a comma splits only when every resulting piece
+    still looks like a dataset name.  Where it does not, the entry is left
+    whole rather than broken in the wrong place.
+    """
+    text=str(text or "")
+    parts=[p.strip() for p in text.split(" & ") if p.strip()]
+    commas=[q.strip() for p in parts for q in p.split(", ") if q.strip()]
+    if len(commas)>len(parts) and all(len(q)>=12 and any(c.isalpha() for c in q) for q in commas): parts=commas
+    return "\n".join(parts) if len(parts)>1 else text
 def plain(text):
     """Body text for a descriptive field.
 
@@ -582,7 +603,7 @@ def generated_evidence(package):
     displayed candidates.  No source identity, route, count or reveal material
     is included.
     """
-    out={"adj_case_title":package["title"],"adj_case_datasets":package["datasets"]}; diff_dimensions=[]; diff_labels=[]; diff_tags=[]
+    out={"adj_case_title":package["title"],"adj_case_datasets":dataset_lines(package["datasets"])}; diff_dimensions=[]; diff_labels=[]; diff_tags=[]
     for comp in COMPONENTS:
         # Hidden per-record flags drive REDCap branching: the reviewer is only
         # asked the questions this package actually raises.
@@ -595,9 +616,14 @@ def generated_evidence(package):
     for comp in COMPONENTS: out[f"adj_{comp}_slot_count"]=len(package["interpretations"][comp])
     for comp in COMPONENTS:
         interpretations=package["interpretations"][comp]; slots=slot_map(package,comp)
-        # What the reviewer reads: one slot per line, labels separated by
-        # semicolons because some canonical labels contain commas.
-        out[f"adj_{comp}_interpretation_map"]="\n".join(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]}: {'; '.join(x['value']) if isinstance(x['value'],list) else x['value']}" for x in interpretations)
+        # What the reviewer reads: one field per displayed option, labels
+        # separated by semicolons because some canonical labels contain commas.
+        # Stage 2 pipes these same fields, so the blind and revealed views
+        # cannot disagree about what was shown (ADJ-048).
+        for letter in OPTION_LETTERS: out[f"adj_{comp}_opt_{letter.lower()}"]=""
+        for x in interpretations:
+            low=OPTION_LETTERS[slots[x["interpretation_id"]]-1].lower()
+            out[f"adj_{comp}_opt_{low}"]="; ".join(x["value"]) if isinstance(x["value"],list) else x["value"]
         # What the joins need: interpretation and candidate content IDs per slot,
         # kept in a hidden field so they never clutter the form.
         out[f"adj_{comp}_candidate_map"]="; ".join(f"Option {OPTION_LETTERS[slots[x['interpretation_id']]-1]} (code {slots[x['interpretation_id']]}) = {x['interpretation_id']}: {', '.join(x['candidate_ids'])}" for x in interpretations)
@@ -683,8 +709,20 @@ def field_rows():
     for comp in COMPONENTS: add(f"adj_{comp}_slot_count","adj_stage1","text",f"Generated count: {COMPONENT_LABEL[comp]} displayed interpretations",a="@HIDDEN @READONLY")
     comparative_pkg="[adj_pkg_comparative] = '1'"; single_pkg="[adj_pkg_comparative] = '0'"
     # The frozen public entry and the displayed interpretations (§9.2).
-    add("adj_case_title","adj_stage1","notes","Frozen public register title",a="@READONLY");add("adj_case_datasets","adj_stage1","notes","Frozen datasets-used entry",a="@READONLY")
-    for comp in COMPONENTS: add(f"adj_{comp}_interpretation_map","adj_stage1","notes",f"{NOUN[comp][0].upper()+NOUN[comp][1:]} classification options",a="@READONLY")
+    add("adj_case_title","adj_stage1","notes","Frozen public register title",a="@HIDDEN @READONLY")
+    add("adj_case_datasets","adj_stage1","notes","Frozen datasets-used entry",a="@HIDDEN @READONLY")
+    add("adj_s1_entry","adj_stage1","descriptive",block("Frozen public register title","[adj_case_title]")+"<br>"+block("Datasets used","[adj_case_datasets]"),
+        section="The public register entry")
+    # A row per displayed option, so an option that names several labels wraps
+    # under its own heading rather than into the next option (ADJ-048).  Option
+    # A always shows, so the component's section header cannot vanish.
+    for comp in COMPONENTS:
+        for letter in OPTION_LETTERS:
+            add(f"adj_{comp}_opt_{letter.lower()}","adj_stage1","notes",f"Displayed option: {COMPONENT_LABEL[comp]} Option {letter}",a="@HIDDEN @READONLY")
+        for n,letter in enumerate(OPTION_LETTERS,1):
+            add(f"adj_s1_opt_{comp}_{letter.lower()}","adj_stage1","descriptive",block(f"Option {letter}",f"[adj_{comp}_opt_{letter.lower()}]"),"",
+                "("+" or ".join(f"[adj_{comp}_slot_count] = '{k}'" for k in range(n,5))+")",
+                section=f"{NOUN[comp][0].upper()+NOUN[comp][1:]} classification options" if n==1 else "")
     for comp in COMPONENTS: add(f"adj_{comp}_candidate_map","adj_stage1","notes",f"{COMPONENT_LABEL[comp]}: option to candidate content IDs (join key)",a="@HIDDEN @READONLY")
     for n,l in (("adj_diff_dimensions","Components that differ"),("adj_diff_labels","Labels that differ"),("adj_diff_tag_statuses","Tag statuses that differ")):add(n,"adj_stage1","notes",l,a="@READONLY")
     # Judgement 1: the generated differences are accurate.
@@ -762,17 +800,14 @@ def field_rows():
     for comp in COMPONENTS:
         head=f"{COMPONENT_LABEL[comp]}: what each source gave"
         for letter in OPTION_LETTERS:
-            low=letter.lower()
-            add(f"adj_reveal_{comp}_{low}_src","adj_stage2","text",f"Revealed source: {COMPONENT_LABEL[comp]} Option {letter}",a="@HIDDEN @READONLY")
-            add(f"adj_reveal_{comp}_{low}","adj_stage2","notes",f"Revealed value: {COMPONENT_LABEL[comp]} Option {letter}",a="@HIDDEN @READONLY")
-        add(f"adj_reveal_{comp}_agreed","adj_stage2","notes",f"Revealed agreed value: {COMPONENT_LABEL[comp]}",a="@HIDDEN @READONLY")
+            add(f"adj_reveal_{comp}_{letter.lower()}_src","adj_stage2","text",f"Revealed source: {COMPONENT_LABEL[comp]} Option {letter}",a="@HIDDEN @READONLY")
         for n,letter in enumerate(OPTION_LETTERS,1):
             low=letter.lower()
             add(f"adj_s2_opt_{comp}_{low}","adj_stage2","descriptive",
-                block(f"Option {letter} &mdash; [adj_reveal_{comp}_{low}_src]",f"[adj_reveal_{comp}_{low}]"),"",
+                block(f"Option {letter} &mdash; [adj_reveal_{comp}_{low}_src]",f"[adj_{comp}_opt_{low}]"),"",
                 f"[adj_{comp}_comparative] = '1' and ("+" or ".join(f"[adj_{comp}_slot_count] = '{k}'" for k in range(n,5))+")",
                 section=head if n==1 else "")
-        add(f"adj_s2_agreed_{comp}","adj_stage2","descriptive",block("Agreed by every source",f"[adj_reveal_{comp}_agreed]"),"",
+        add(f"adj_s2_agreed_{comp}","adj_stage2","descriptive",block("Agreed by every source",f"[adj_{comp}_opt_a]"),"",
             f"[adj_{comp}_comparative] <> '1'",section=head)
     # The recap intro is unconditional, so its section header cannot disappear
     # with a component that did not differ.

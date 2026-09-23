@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,OPTION_LETTERS,reveal_columns,BOLD_RESET,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -300,7 +300,10 @@ class PrototypeTests(unittest.TestCase):
                 "adj_rule_conflict","adj_rule_conflict_scope","adj_rule_conflict_note","adj_dom_conflict_labels","adj_purp_conflict_labels",
                 "adj_boundary","adj_boundary_scope","adj_boundary_same_rule","adj_boundary_rule_cited","adj_boundary_rule_other","adj_boundary_note","adj_conflict_rule_cited","adj_conflict_rule_other","adj_dom_conflict_labels","adj_purp_conflict_labels","adj_masking_failure","adj_masking_note","adj_other_concern","adj_other_concern_note",
                 "adj_stage1_unresolved","adj_stage1_unresolved_note","adj_stage1_note","adj_stage1_affirmed","adj_source_record_id","adj_reviewer_role","adj_pkg_comparative"}
-        for comp in COMPONENTS: record|={f"adj_{comp}_{x}" for x in ("comparative","slot_count","interpretation_map","candidate_map","evidence","best","defensible","conflict_slots")}
+        record|={"adj_s1_entry"}
+        for comp in COMPONENTS:
+            record|={f"adj_{comp}_{x}" for x in ("comparative","slot_count","candidate_map","evidence","best","defensible","conflict_slots")}
+            record|={f"adj_{comp}_opt_{l.lower()}" for l in OPTION_LETTERS}|{f"adj_s1_opt_{comp}_{l.lower()}" for l in OPTION_LETTERS}
         for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES)):
             record|={f"adj_{comp}_{x}" for x in ("additional_label_state","additional_label_ids","additional_label_note")}
             for n in range(1,len(vocab)+1): record|={f"adj_{comp}_l{n:02d}_{x}" for x in ("applicable","membership","support","rule_conflict","rule_cited","rule_other","rule_note")}
@@ -363,8 +366,17 @@ class PrototypeTests(unittest.TestCase):
             self.assertEqual(by[name][1],"adj_stage1"); self.assertIn("@READONLY",by[name][17])
         for package,case in zip(self.packages,self.cases):
             evidence=generated_evidence(package)
-            self.assertEqual(evidence["adj_case_title"],case["title"]); self.assertEqual(evidence["adj_case_datasets"],case["datasets"])
+            self.assertEqual(evidence["adj_case_title"],case["title"])
             self.assertTrue(evidence["adj_case_datasets"].strip())
+            # ADJ-048: line breaks are inserted; no character is dropped,
+            # changed or invented, and every line is frozen text verbatim.
+            for line in evidence["adj_case_datasets"].split("\n"): self.assertIn(line,case["datasets"])
+            squash=lambda s:re.sub(r"[^a-z0-9]","",s.lower())
+            self.assertEqual(squash(evidence["adj_case_datasets"]),squash(case["datasets"]))
+        self.assertEqual(dataset_lines("A dataset name, another dataset name"),"A dataset name\nanother dataset name")
+        self.assertEqual(dataset_lines("A dataset name, 2015-2024."),"A dataset name, 2015-2024.","a trailing clause is not a dataset")
+        self.assertEqual(dataset_lines("One dataset only"),"One dataset only")
+        self.assertEqual(dataset_lines(""),"")
     def test_no_field_clashes_with_a_redcap_form_completion_name(self):
         rows=field_rows(); names={x[0] for x in rows}; forms={x[1] for x in rows}
         # REDCap generates [form_name]_complete itself and rejects a dictionary
@@ -396,13 +408,16 @@ class PrototypeTests(unittest.TestCase):
                     # REDCap offer to erase it, and Keep All then displays it.
                     shown=single if key.endswith("status_membership") else row[key.replace("_membership","_applicable")]=="1"
                     self.assertEqual(bool(str(value).strip()),shown,f"{row['adj_assignment_id']}:{key}")
+                elif re.fullmatch(r"adj_(dom|purp|covid|equity)_opt_[a-d]",key):
+                    slot=ord(key[-1])-ord("a")+1
+                    self.assertEqual(bool(str(value).strip()),slot<=int(row[key[:-6]+"_slot_count"]),f"{row['adj_assignment_id']}:{key}")
                 else: self.assertTrue(str(value).strip(),f"{row['adj_assignment_id']}:{key} is empty")
                 for token in IMPORT_FORBIDDEN: self.assertNotIn(token,str(value).lower())
             # @DEFAULT does not apply to a form the import has written to.
             self.assertEqual((row["adj_other_concern"],row["adj_stage1_unresolved"]),("0","0"))
-            self.assertNotIn("C_",row["adj_dom_interpretation_map"]); self.assertIn("C_",row["adj_dom_candidate_map"])
-            self.assertTrue(row["adj_dom_interpretation_map"].startswith("Option A:")); self.assertNotIn("Slot",row["adj_dom_interpretation_map"])
-            for letter in re.findall(r"Option ([A-Z])",row["adj_dom_interpretation_map"]): self.assertIn(letter,"ABCD")
+            for letter in OPTION_LETTERS:
+                self.assertNotIn("C_",row[f"adj_dom_opt_{letter.lower()}"]); self.assertNotIn("Slot",row[f"adj_dom_opt_{letter.lower()}"])
+            self.assertIn("C_",row["adj_dom_candidate_map"])
         for case in self.cases:
             pair=[x for x in rows if x["adj_source_record_id"]==case["record_id"]]
             self.assertEqual(len({x["adj_stage1_package_id"] for x in pair}),2)
@@ -525,36 +540,40 @@ class PrototypeTests(unittest.TestCase):
         for name in ["adj_reveal_state"]+reveal_columns(): self.assertIn("@READONLY",by[name][17])
         self.assertNotIn("adj_stage2_complete",by)
     def test_reveal_is_separate_readable_and_complete(self):
-        # ADJ-047: one row per option, so a source sits beside the option it
-        # gave.  Slots the record does not have carry no value, and the row
-        # that would show them is branched away.
-        case=self.cases[0]; package=self.packages[0]; fields=reveal_fields(case,package); by={x[0]:x for x in field_rows()}
+        # ADJ-047/048: one row per option, and the reveal adds only the source.
+        # The option text is a Stage 1 field Stage 2 pipes, so the blind and
+        # revealed views cannot disagree about what was shown.
+        case=self.cases[0]; package=self.packages[0]; fields=reveal_fields(case,package)
+        by={x[0]:x for x in field_rows()}; shown=generated_evidence(package)
         self.assertEqual(set(fields),set(reveal_columns()))
+        self.assertFalse([c for c in fields if not c.endswith("_src")],"the reveal carries sources only")
         for comp in COMPONENTS:
-            count=len(package["interpretations"][comp]); agreed=fields[f"adj_reveal_{comp}_agreed"]
-            filled=[l for l in OPTION_LETTERS if fields[f"adj_reveal_{comp}_{l.lower()}"]]
+            count=len(package["interpretations"][comp])
+            named=[l for l in OPTION_LETTERS if fields[f"adj_reveal_{comp}_{l.lower()}_src"]]
+            filled=[l for l in OPTION_LETTERS if shown[f"adj_{comp}_opt_{l.lower()}"]]
+            self.assertEqual(filled,list(OPTION_LETTERS[:count]),comp)
             if count==1:
-                self.assertEqual(filled,[],"a component that does not differ fills no option row")
-                self.assertTrue(agreed)
+                self.assertEqual(named,[],"a component every source agreed on reveals nothing")
             else:
-                self.assertEqual(agreed,"","a component that differs carries no agreed value")
-                self.assertEqual(filled,list(OPTION_LETTERS[:count]),comp)
-                sources=[fields[f"adj_reveal_{comp}_{l.lower()}_src"] for l in filled]
+                self.assertEqual(named,filled,"every displayed option names its source")
+                sources=[fields[f"adj_reveal_{comp}_{l.lower()}_src"] for l in named]
                 for src in sources: self.assertRegex(src,r"^(production model|coder C0\d)(, (production model|coder C0\d))*$")
                 self.assertEqual(sum(s.count("production model") for s in sources),1)
                 for option in package["interpretations"][comp]:
                     value="; ".join(option["value"]) if isinstance(option["value"],list) else option["value"]
-                    self.assertIn(value,[fields[f"adj_reveal_{comp}_{l.lower()}"] for l in filled])
-            # The row for a slot this record lacks never displays.
+                    self.assertIn(value,[shown[f"adj_{comp}_opt_{l.lower()}"] for l in filled])
+            # Stage 1 shows every option it has; Stage 2 shows them only where
+            # the component differed, and the agreed row instead where it did not.
             for n,letter in enumerate(OPTION_LETTERS,1):
+                low=letter.lower(); has=n<=count
                 context={f"adj_{comp}_comparative":"1" if count>1 else "0",f"adj_{comp}_slot_count":str(count)}
-                shown=redcap_shows(by[f"adj_s2_opt_{comp}_{letter.lower()}"][11],context)
-                self.assertEqual(shown,count>1 and n<=count,(comp,letter))
-                self.assertEqual(bool(fields[f"adj_reveal_{comp}_{letter.lower()}"]),shown,(comp,letter))
+                self.assertEqual(redcap_shows(by[f"adj_s1_opt_{comp}_{low}"][11],context),has,(comp,letter))
+                self.assertEqual(redcap_shows(by[f"adj_s2_opt_{comp}_{low}"][11],context),has and count>1,(comp,letter))
+                self.assertEqual(bool(shown[f"adj_{comp}_opt_{low}"]),has,(comp,letter))
             self.assertEqual(redcap_shows(by[f"adj_s2_agreed_{comp}"][11],{f"adj_{comp}_comparative":"1" if count>1 else "0"}),count==1,comp)
+            self.assertIn(f"[adj_{comp}_opt_a]",by[f"adj_s2_agreed_{comp}"][4],"the agreed row pipes the Stage 1 option")
         single=reveal_fields(self.cases[2],self.packages[2])
-        self.assertTrue(all(not single[f"adj_reveal_{c}_{l.lower()}"] for c in COMPONENTS for l in OPTION_LETTERS))
-        self.assertTrue(all(single[f"adj_reveal_{c}_agreed"] for c in COMPONENTS))
+        self.assertTrue(all(not v for v in single.values()),"a package with no competing options reveals nothing")
         with (ROOT/"instruments"/"adjudication_reveal_import_synthetic.csv").open(encoding="utf-8",newline="") as f: reveal=list(csv.DictReader(f))
         self.assertEqual(len(reveal),2*len(self.cases)); self.assertTrue(all(r["adj_reveal_state"]=="1" for r in reveal))
         self.assertEqual(list(reveal[0]),["adj_assignment_id","adj_reveal_state"]+reveal_columns())
@@ -658,6 +677,18 @@ class PrototypeTests(unittest.TestCase):
         for r in catalogue:
             self.assertEqual(r["rule_id"],f"R{int(r['code']):03d}"); self.assertTrue(r["excerpt"].strip(),r["rule_id"])
             if r["scope"]=="category": self.assertIn(r["category"],known,r["rule_id"])
+        # ADJ-049: the reviewer reads the rule, not its ID, and the name leads
+        # with the same groups as the Stage 2 mechanism vocabulary.
+        names=[r["name"] for r in catalogue]
+        self.assertEqual(len(names),len(set(names)),"a rule name identifies one rule")
+        groups={n.split(":",1)[0] for n in names}
+        self.assertEqual(groups,{"Domains","Purposes","Tags","Principles"})
+        for r in catalogue:
+            if r["scope"]=="category": self.assertIn(f": {r['category']} - ",r["name"],r["rule_id"])
+            self.assertNotIn("Layer A",r["name"]); self.assertNotIn("Layer C",r["name"])
+        choices=[x for x in field_rows() if x[0]=="adj_conflict_rule_cited"][0][5]
+        self.assertNotRegex(choices,r"R\d{3}","the dropdown shows the rule, not its ID")
+        for r in catalogue: self.assertIn(f"{r['code']}, {r['name']}",choices,r["rule_id"])
         reference=(ROOT.parent/"reference"/"taxonomy_rule_reference.md").read_text(encoding="utf-8")
         for r in catalogue: self.assertIn(r["rule_id"],reference,f"{r['rule_id']} missing from the rule reference")
         p=self.packages[0]
