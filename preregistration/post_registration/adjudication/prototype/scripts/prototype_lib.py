@@ -417,6 +417,9 @@ FINDING_SLOTS=3
 BASIS="1, Conflicts with an explicit rule | 2, Materially weaker support than a displayed alternative | 3, Omits a materially better-supported label | 4, Applies the instructions inconsistently"
 BASIS_BY_FAMILY={1:{1,2,3},2:{1,4}}
 RELEASE="0, None | 1, Caveat only | 2, Evidence for prompt revision | 3, Evidence for taxonomy revision | 4, Data or instrument repair | 5, Evidence for non-release | 6, Escalate: may alter a headline dashboard output | 9, Pending"
+# The three release implications that send a record to mandatory second review
+# (§9.1).  The field note names these, so both read from one list.
+RELEASE_MANDATORY=(2,3,5)
 RELEASE_CODES={0,1,2,3,4,5,6,9}
 # Mechanisms come from the versioned vocabulary (ADJ-044): boundary and rule
 # mechanisms for families 1, 2, 4 and 6; data and instrument mechanisms for 7.
@@ -484,7 +487,7 @@ def derive_stage2(r):
     reasons=[]
     if 1 in families: reasons.append("apparent production-model rule-application problem")
     if 8 in families: reasons.append("unresolved")
-    if any(f["release"] in (2,3,5) for f in findings): reasons.append("proposed as evidence for prompt revision, taxonomy revision or non-release")
+    if any(f["release"] in RELEASE_MANDATORY for f in findings): reasons.append("proposed as evidence for prompt revision, taxonomy revision or non-release")
     return {"findings":findings,"families":families,"family_count":len(families),"mandatory_second_review":int(bool(reasons)),"mandatory_reasons":reasons}
 def source_name(c):
     if c["source_type"]=="fable": return "production model"
@@ -867,7 +870,15 @@ def field_rows():
         add(p+"mech_new","adj_stage2","text",f"Finding {k}: name the new mechanism in a few words","",f"{shown} and ([{p}mech] = '{MECH_NEW}' or [{p}mech_data] = '{MECH_NEW}')","y",
             note="It is added to the list, with a new code, between sessions.")
         add(p+"note","adj_stage2","notes",f"Finding {k}: explain the basis","",f"{shown} and {source_specific}","y")
-        add(p+"release","adj_stage2","radio",f"Finding {k}: what does it imply for release?",RELEASE,shown,"y")
+        # What is released is the model's classifications and the outputs built
+        # from them, which is why a coder finding rarely bears on release, and
+        # three of the codes carry a second-review cost the reviewer cannot see
+        # from the choice list (ADJ-050).
+        add(p+"release","adj_stage2","radio",f"Finding {k}: what does it imply for release?",RELEASE,shown,"y",
+            note="Release means the model classifications and the outputs built from them, so a coder finding is normally Caveat only, "
+                 "or None where the error has no rule content and changes how no reported figure should be read. Prompt revision, taxonomy "
+                 "revision and non-release each send the record to mandatory second review, so pick one for what it says, not for emphasis. "
+                 "Where a coder error looks invited by an unclear rule, record that as a separate taxonomy finding rather than stretching this one.")
         if k<FINDING_SLOTS: add(p+"another","adj_stage2","radio",f"Record another finding?","1, Yes | 0, No",shown,"y")
     add("adj_stage2_affirmed","adj_stage2","yesno","Complete Stage 2 assessment?","","[adj_stage2_closure] = '1' or [adj_stage2_closure] = '2'","y")
     return rows

@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -713,4 +713,22 @@ class PrototypeTests(unittest.TestCase):
         # continuation lines that sit under the heading above them.
         self.assertEqual([x[0] for x in rows if not x[4].startswith("<b>")],
                          ["adj_s2_recap_intro"]+[f"adj_s2_conflict_{c}" for c in COMPONENTS]+["adj_s2_boundary_same"])
+    def test_release_note_names_what_the_derivation_acts_on(self):
+        # ADJ-050: the release choices do not show that three of them cost a
+        # mandatory second review, so the note says so, from the same list the
+        # derivation reads.
+        by={x[0]:x for x in field_rows()}
+        labels={int(c.split(",",1)[0]):c.split(",",1)[1].strip() for c in RELEASE.split(" | ")}
+        for k in range(1,4):
+            note=by[f"adj_f{k}_release"][6].lower()
+            self.assertTrue(note,f"finding {k} release has no note")
+            for code in RELEASE_MANDATORY:
+                stem=labels[code].replace("Evidence for ","").lower()
+                self.assertIn(stem,note,f"finding {k} note does not name {labels[code]}")
+            self.assertIn("caveat only",note); self.assertIn("coder",note)
+        mandatory={"adj_stage2_closure":1,"adj_f1_family":2,"adj_f1_components":[1],"adj_f1_dom_labels":[DOMAINS[0]],
+                   "adj_f1_coders":[1],"adj_f1_basis":2,"adj_f1_mech":1,"adj_f1_note":"Synthetic","adj_f1_another":0,"adj_stage2_affirmed":1}
+        for code,expected in [(1,0),(0,0)]+[(c,1) for c in RELEASE_MANDATORY]:
+            r=copy.deepcopy(mandatory); r["adj_f1_release"]=code
+            self.assertEqual(derive_stage2(r)["mandatory_second_review"],expected,code)
 if __name__=="__main__": unittest.main()
