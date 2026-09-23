@@ -888,8 +888,9 @@ def field_rows():
         if n==1:
             add(b["ask"],"adj_stage1","radio","Does any displayed option conflict with an explicit rule in the frozen taxonomy or coding instructions?",
                 "1, Yes | 0, No | 2, Cannot judge",comparative_pkg,"y",
-                note="Keep this separate from weaker evidential support. Record one rule per conflict: options breaching the same rule are ticked "
-                     "together, and an option breaching two rules is recorded as two conflicts.")
+                note="A conflict means an option breaches an explicit rule. An option that is merely less well supported by the entry is not a "
+                     "conflict; that is the best-supported question above. Record one rule per conflict: tick together the options breaching the "
+                     "same rule, and record an option breaching two rules as two conflicts.")
         else:
             add(b["ask"],"adj_stage1","radio","Does another displayed option conflict with a rule not yet cited?","1, Yes | 0, No",
                 f"{comparative_pkg} and [{conflict_block(n-1)['ask']}] = '1'","y",
