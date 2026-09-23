@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,RELEASE_PROPOSES,FINDING_SLOTS,recorded_conflicts,inherited_from_conflicts,rule_label,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,RELEASE_PROPOSES,FINDING_SLOTS,recorded_conflicts,inherited_from_conflicts,rule_label,model_differing_components,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -844,6 +844,16 @@ class PrototypeTests(unittest.TestCase):
         both=case(split,[[PURPOSES[0]],[PURPOSES[1]],[PURPOSES[2]]],[DOMAINS[3]],[PURPOSES[3]])
         self.assertEqual(no_majority_components(both),["dom","purp"])
         self.assertEqual(package_stratum(both,package_case(both)),3)
+        # The stratum is read against the components the model differs on, not
+        # the components whose displayed options differ.  Here the coders split
+        # two-to-one on purpose and the model matches that majority, so purpose
+        # is displayed as a difference but is not a model-human one; the record
+        # is still eligible only where the reference was empty.
+        elsewhere=case(split,[[PURPOSES[0]],[PURPOSES[0]],[PURPOSES[1]]],[DOMAINS[3]],[PURPOSES[0]])
+        pkg=package_case(elsewhere)
+        self.assertEqual(set(comparative_components(pkg)),{"dom","purp"},"purpose is displayed as differing")
+        self.assertEqual(model_differing_components(elsewhere),["dom"],"but the model matches the purpose majority")
+        self.assertEqual(package_stratum(elsewhere,pkg),3,"eligibility rests entirely on the empty domain reference")
         # A binary tag always has a majority among three coders, and with no
         # coder panel the question does not arise.
         for c in (only,mixed,standard,both): self.assertFalse({"covid","equity"}&set(no_majority_components(c)))

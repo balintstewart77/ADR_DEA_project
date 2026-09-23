@@ -72,18 +72,48 @@ def no_majority_components(case):
     if len(coders)<3: return []
     return [comp for comp,vocab in (("dom",DOMAINS),("purp",PURPOSES))
             if not any(sum(lab in (c.get(KEY[comp]) or []) for c in coders)>=2 for lab in vocab)]
-def package_stratum(case,package):
-    """1 standard, 2 mixed, 3 no coder majority anywhere the options differ.
+def model_differing_components(case):
+    """Components where the production model differs from the two-of-three reference.
 
-    Stratum 3 is the record that is in adjudication only because the reference
-    was empty.  It is analytic, not operational: nothing on the form reads it,
-    and it is deliberately kept out of the REDCap record, because a hidden
-    field saying the coders did not converge is source information sitting in
-    the reviewer's own export (ADJ-038).
+    This is what route-1 eligibility rests on, and so what the stratum must be
+    read against.  It is not the same as the components whose displayed options
+    differ: coders can split on a component where the model matches the
+    reference, which shows on the form but is not a model-human difference.
     """
-    differ=set(comparative_components(package)); empty=set(no_majority_components(case))&differ
-    if not empty: return 1
-    return 3 if differ<=empty else 2
+    model=next((c for c in case["classifications"] if c.get("source_type")=="fable"),None)
+    coders=[c for c in case["classifications"] if c.get("source_type")=="scratch"]
+    if model is None or not coders: return []
+    out=[]
+    for comp in COMPONENTS:
+        key=KEY[comp]
+        if comp in ("dom","purp"):
+            vocab=DOMAINS if comp=="dom" else PURPOSES
+            majority={l for l in vocab if sum(l in (c.get(key) or []) for c in coders)*2>=len(coders)+1}
+            if set(model.get(key) or [])!=majority: out.append(comp)
+        else:
+            applied=sum(c.get(comp)=="Applied" for c in coders)*2>=len(coders)+1
+            if (model.get(comp)=="Applied")!=applied: out.append(comp)
+    return out
+def package_stratum(case,package):
+    """1 standard, 2 mixed, 3 eligible only where the reference was empty.
+
+    Stratum 3 is the record that is in adjudication only because the two-of-three
+    reference was empty, so the model differs from it by construction (ADJ-038).
+    It is read against the components the model differs on, not the components
+    whose displayed options differ: an earlier version used the displayed ones
+    and counted 11 records where the logged definition counts 22, because a
+    record eligible only on empty references can still display a coder split
+    elsewhere.
+
+    It is analytic, not operational: nothing on the form reads it, and it is
+    deliberately kept out of the REDCap record, because a hidden field saying
+    the coders did not converge is source information sitting in the reviewer's
+    own export.
+    """
+    differ=set(model_differing_components(case))
+    if not differ: return 1
+    empty=set(no_majority_components(case))
+    return 3 if differ<=empty else (2 if differ&empty else 1)
 def package_case(case,seed=20260921):
     kept=[x for x in case["classifications"] if x["source_type"] in {"fable","scratch"}]
     groups={}
