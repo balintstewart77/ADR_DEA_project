@@ -138,6 +138,12 @@ def main():
     # The reveal is a separate file, to import only after Stage 1 is complete
     # for these cases.  It is never printed.
     write_reveal_import(OUT / "adjudication_reveal_import_pilot_timing.csv", [(case, package) for case, _, _, package in assignments])
+    # One file per reviewer as well.  The combined file would put a reviewer's
+    # source mapping into their records before they have done Stage 1, which is
+    # the order the whole blind stage depends on being able to evidence.
+    for wanted in ("primary", "secondary"):
+        write_reveal_import(OUT / f"adjudication_reveal_import_pilot_timing_{wanted}.csv",
+                            [(case, package) for case, _, group, package in assignments if group == wanted])
     # The analytic stratum (ADJ-038) travels beside the import, not inside it:
     # nothing on the form reads it, and a hidden field saying the coders did
     # not converge would be source information in the reviewer's own export.
