@@ -1049,9 +1049,9 @@ def field_rows():
     # One recap group per conflict: the rule, the options it concerns, and the
     # labels only where the rule named none, so no line shows blank.
     for n in CONFLICT_BLOCKS:
-        b=conflict_block(n); word=CONFLICT_ORDINAL[n].capitalize()
+        b=conflict_block(n)
         add(f"adj_s2_conflict{n}_rule","adj_stage2","descriptive",
-            block(f"{word} rule cited",f"[{b['cited']}]<br>Explanation: [{b['note']}]"),"",
+            block(f"Conflict {n}",f"Rule: [{b['cited']}]<br>Explanation: [{b['note']}]"),"",
             f"[adj_pkg_comparative] = '1' and [{b['ask']}] = '1'")
         for comp in COMPONENTS:
             in_scope=f"[{b['ask']}] = '1' and [{b['scope']}({COMPONENT_CODE[comp]})] = '1'"
@@ -1090,7 +1090,8 @@ def field_rows():
         add(p+"conflicts","adj_stage2","checkbox",f"Finding {k}: which recorded conflicts does it rest on?",
             " | ".join(f"{n}, Conflict {n}" for n in CONFLICT_BLOCKS)+f" | {NO_CONFLICT_BASIS}, Not based on a recorded conflict",
             f"{shown} and [adj_rule_conflict] = '1'","y",f"@NONEOFTHEABOVE='{NO_CONFLICT_BASIS}' "+hide,
-            note="The components, labels, basis and explanation you recorded for a conflict carry over; they are not asked again.")
+            note="Conflict numbers are the ones listed under Your Stage 1 assessment above, each headed by the rule you cited. "
+                 "The components, labels, basis and explanation you recorded for a conflict carry over; they are not asked again.")
         # Asked only where the finding rests on no conflict.
         own=f"([adj_rule_conflict] <> '1' or [{p}conflicts({NO_CONFLICT_BASIS})] = '1')"
         add(p+"components","adj_stage2","checkbox",f"Finding {k}: which parts of the classification?","1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag",f"{shown} and {own}","y")

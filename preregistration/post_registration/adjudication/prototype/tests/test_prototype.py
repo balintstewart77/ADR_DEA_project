@@ -937,6 +937,11 @@ class PrototypeTests(unittest.TestCase):
         # and the inherited fields only where the finding rests on none.
         asked={"adj_stage2_closure":"1","adj_rule_conflict":"1"}
         self.assertTrue(redcap_shows(by["adj_f1_conflicts"][11],asked))
+        # The numbers the question uses are the ones the recap prints.
+        for n in CONFLICT_BLOCKS:
+            self.assertIn(f"<b>Conflict {n}</b>",by[f"adj_s2_conflict{n}_rule"][4],n)
+            self.assertIn(f"{n}, Conflict {n}",by["adj_f1_conflicts"][5],n)
+        self.assertIn("Your Stage 1 assessment",by["adj_f1_conflicts"][6])
         self.assertFalse(redcap_shows(by["adj_f1_conflicts"][11],{"adj_stage2_closure":"1","adj_rule_conflict":"0"}))
         self.assertFalse(redcap_shows(by["adj_f1_components"][11],asked))
         self.assertTrue(redcap_shows(by["adj_f1_components"][11],{**asked,"adj_f1_conflicts":[NO_CONFLICT_BASIS]}))
