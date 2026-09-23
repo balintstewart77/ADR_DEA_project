@@ -568,7 +568,7 @@ class PrototypeTests(unittest.TestCase):
     def test_stage2_branching_and_burden(self):
         rows=field_rows(); by={x[0]:x for x in rows}
         stage2=[x for x in rows if x[1]=="adj_stage2" and "@READONLY" not in x[17] and x[3]!="descriptive"]
-        def asked(context): return [x[0] for x in stage2 if redcap_shows(x[11],context)]
+        def asked(context): return [x[0] for x in stage2 if redcap_shows(x[11],{"adj_stage1_affirmed":"1",**context})]
         self.assertEqual(len(asked({"adj_stage2_closure":"1","adj_f1_family":"1","adj_f1_components":[1]})),9+1,"model finding: family, components, labels, basis, mechanism, note, release, another, affirm, plus closure")
         self.assertEqual(len(asked({"adj_stage2_closure":"1","adj_f1_family":"3","adj_f1_components":[2]})),6,"evidence finding: closure, family, components, release, another, affirm")
         self.assertEqual(asked({"adj_stage2_closure":"2"}),["adj_stage2_closure","adj_no_issue_rationale","adj_stage2_affirmed"])
@@ -604,11 +604,11 @@ class PrototypeTests(unittest.TestCase):
             # the component differed, and the agreed row instead where it did not.
             for n,letter in enumerate(OPTION_LETTERS,1):
                 low=letter.lower(); has=n<=count
-                context={f"adj_{comp}_comparative":"1" if count>1 else "0",f"adj_{comp}_slot_count":str(count)}
+                context={"adj_stage1_affirmed":"1",f"adj_{comp}_comparative":"1" if count>1 else "0",f"adj_{comp}_slot_count":str(count)}
                 self.assertEqual(redcap_shows(by[f"adj_s1_opt_{comp}_{low}"][11],context),has,(comp,letter))
                 self.assertEqual(redcap_shows(by[f"adj_s2_opt_{comp}_{low}"][11],context),has and count>1,(comp,letter))
                 self.assertEqual(bool(shown[f"adj_{comp}_opt_{low}"]),has,(comp,letter))
-            self.assertEqual(redcap_shows(by[f"adj_s2_agreed_{comp}"][11],{f"adj_{comp}_comparative":"1" if count>1 else "0"}),count==1,comp)
+            self.assertEqual(redcap_shows(by[f"adj_s2_agreed_{comp}"][11],{"adj_stage1_affirmed":"1",f"adj_{comp}_comparative":"1" if count>1 else "0"}),count==1,comp)
             self.assertIn(f"[adj_{comp}_opt_a]",by[f"adj_s2_agreed_{comp}"][4],"the agreed row pipes the Stage 1 option")
         single=reveal_fields(self.cases[2],self.packages[2])
         self.assertTrue(all(not v for v in single.values()),"a package with no competing options reveals nothing")
@@ -634,12 +634,19 @@ class PrototypeTests(unittest.TestCase):
         for comp in COMPONENTS:
             head=f"{COMPONENT_LABEL[comp]}: what each source gave"
             self.assertEqual([x[0] for x in rows if x[2]==head],[f"adj_s2_opt_{comp}_a",f"adj_s2_agreed_{comp}"])
+        # ADJ-060: every Stage 2 field is gated on the Stage 1 affirmation, so a
+        # section header is unconditional within the form it heads.
+        for row in rows:
+            if row[1]=="adj_stage2": self.assertTrue(row[11].startswith("[adj_stage1_affirmed] = '1'"),row[0])
         for name in ("adj_s2_recap_intro","adj_s2_entry","adj_reveal_state","adj_stage2_closure"):
-            self.assertEqual(by[name][11],"","a field carrying a section header is unconditional")
+            self.assertEqual(by[name][11],"[adj_stage1_affirmed] = '1'",f"{name} carries a section header, so it is conditional only on the gate")
+        self.assertFalse(redcap_shows(by["adj_stage2_closure"][11],{}),"Stage 2 does not open before Stage 1 is affirmed")
+        self.assertTrue(redcap_shows(by["adj_stage2_closure"][11],{"adj_stage1_affirmed":"1"}))
+        ungated=lambda b:b.split(" and (",1)[1][:-1] if " and (" in b else b
         for name,trigger in (("adj_s2_concern","[adj_other_concern] = '1'"),("adj_s2_unresolved","[adj_stage1_unresolved] = '1'"),
                              ("adj_s2_boundary_note","([adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1') or [adj_boundary(2)] = '1'"),
                              ("adj_s2_boundary_same","[adj_boundary(1)] = '1' and [adj_boundary_same_rule] = '1'")):
-            self.assertEqual(by[name][11],trigger,name)
+            self.assertEqual(ungated(by[name][11]),trigger,name)
         for comp in COMPONENTS:
             self.assertIn("[adj_rule_conflict_scope(",by[f"adj_s2_conflict1_{comp}"][11])
             self.assertIn(f"[adj_{comp}_conflict_slots:checked]",by[f"adj_s2_conflict1_{comp}"][4])
@@ -649,8 +656,9 @@ class PrototypeTests(unittest.TestCase):
         for comp in COMPONENTS:
             label=by[f"adj_s2_recap_{comp}"]
             for piece in (f"[adj_{comp}_evidence]",f"[adj_{comp}_best:checked]",f"[adj_{comp}_defensible:checked]"): self.assertIn(piece,label[4])
-            self.assertEqual(label[11],f"[adj_{comp}_comparative] = '1'")
-        yes={"adj_pkg_comparative":"1","adj_rule_conflict":"1"}; no={"adj_pkg_comparative":"1","adj_rule_conflict":"0"}
+            self.assertEqual(ungated(label[11]),f"[adj_{comp}_comparative] = '1'")
+        yes={"adj_stage1_affirmed":"1","adj_pkg_comparative":"1","adj_rule_conflict":"1"}
+        no={"adj_stage1_affirmed":"1","adj_pkg_comparative":"1","adj_rule_conflict":"0"}
         self.assertTrue(redcap_shows(by["adj_s2_conflict_yes"][11],yes)); self.assertFalse(redcap_shows(by["adj_s2_conflict_no"][11],yes))
         self.assertTrue(redcap_shows(by["adj_s2_conflict_no"][11],no)); self.assertFalse(redcap_shows(by["adj_s2_conflict_yes"][11],no))
         order=[x[0] for x in rows if x[1]=="adj_stage2"]
@@ -675,7 +683,7 @@ class PrototypeTests(unittest.TestCase):
             choices={int(c.split(",",1)[0]) for c in by[f"adj_f{k}_mech"][5].split(" | ")}
             self.assertEqual(choices,{m["code"] for m in vocab if m["group"]=="rule"}|{MECH_NEW})
             self.assertNotIn(f"adj_f{k}_mechanism",by)
-        context={"adj_stage2_closure":"1","adj_f1_family":"1"}
+        context={"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_f1_family":"1"}
         self.assertTrue(redcap_shows(by["adj_f1_mech"][11],context)); self.assertFalse(redcap_shows(by["adj_f1_mech_data"][11],context))
         self.assertTrue(redcap_shows(by["adj_f1_mech_data"][11],{**context,"adj_f1_family":"7"})); self.assertFalse(redcap_shows(by["adj_f1_mech"][11],{**context,"adj_f1_family":"3"}))
         self.assertTrue(redcap_shows(by["adj_f1_mech_new"][11],{**context,"adj_f1_mech":str(MECH_NEW)}))
@@ -948,17 +956,17 @@ class PrototypeTests(unittest.TestCase):
         self.assertTrue(any("only cited where Stage 1 recorded one" in x for x in validate_stage2(rests,none)))
         # Branching: the question appears only where Stage 1 recorded a conflict,
         # and the inherited fields only where the finding rests on none.
-        asked={"adj_stage2_closure":"1","adj_rule_conflict":"1"}
+        asked={"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_rule_conflict":"1"}
         self.assertTrue(redcap_shows(by["adj_f1_conflicts"][11],asked))
         # The numbers the question uses are the ones the recap prints.
         for n in CONFLICT_BLOCKS:
             self.assertIn(f"<b>Conflict {n}</b>",by[f"adj_s2_conflict{n}_rule"][4],n)
             self.assertIn(f"{n}, Conflict {n}",by["adj_f1_conflicts"][5],n)
         self.assertIn("Your Stage 1 assessment",by["adj_f1_conflicts"][6])
-        self.assertFalse(redcap_shows(by["adj_f1_conflicts"][11],{"adj_stage2_closure":"1","adj_rule_conflict":"0"}))
+        self.assertFalse(redcap_shows(by["adj_f1_conflicts"][11],{"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_rule_conflict":"0"}))
         self.assertFalse(redcap_shows(by["adj_f1_components"][11],asked))
         self.assertTrue(redcap_shows(by["adj_f1_components"][11],{**asked,"adj_f1_conflicts":[NO_CONFLICT_BASIS]}))
-        self.assertTrue(redcap_shows(by["adj_f1_components"][11],{"adj_stage2_closure":"1","adj_rule_conflict":"0"}))
+        self.assertTrue(redcap_shows(by["adj_f1_components"][11],{"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_rule_conflict":"0"}))
         # Only the conflicts Stage 1 recorded are offered.
         for deepest,hidden in ((1,{2,3,4,5,6}),(2,{3,4,5,6}),(3,{4,5,6}),(6,set())):
             context={conflict_block(n)["ask"]:"1" for n in CONFLICT_BLOCKS[1:deepest]}

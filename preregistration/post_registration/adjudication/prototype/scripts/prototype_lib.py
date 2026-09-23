@@ -1138,6 +1138,15 @@ def field_rows():
                  "review. If an unclear rule caused the error, add a separate taxonomy finding.")
         if k<FINDING_SLOTS: add(p+"another","adj_stage2","radio",f"Record another finding?","1, Yes | 0, No",shown,"y")
     add("adj_stage2_affirmed","adj_stage2","yesno","Complete Stage 2 assessment?","","[adj_stage2_closure] = '1' or [adj_stage2_closure] = '2'","y")
+    # Stage 2 opens only once Stage 1 is affirmed (ADJ-060).  The two forms sit
+    # one click apart on the record home page, so nothing but the reviewer's
+    # discipline kept the stages in order.  The gate makes the sequence
+    # structural: it cannot expose a reveal by accident, and it does not replace
+    # holding the reveal import back, which is what evidences the order.
+    STAGE2_GATE="[adj_stage1_affirmed] = '1'"
+    for row in rows:
+        if row[1]!="adj_stage2": continue
+        row[11]=STAGE2_GATE if not row[11] else f"{STAGE2_GATE} and ({row[11]})"
     return rows
 def write_dictionary(path):
     path.parent.mkdir(parents=True,exist_ok=True)
