@@ -875,10 +875,9 @@ def field_rows():
         # three of the codes carry a second-review cost the reviewer cannot see
         # from the choice list (ADJ-050).
         add(p+"release","adj_stage2","radio",f"Finding {k}: what does it imply for release?",RELEASE,shown,"y",
-            note="Release means the model classifications and the outputs built from them, so a coder finding is normally Caveat only, "
-                 "or None where the error has no rule content and changes how no reported figure should be read. Prompt revision, taxonomy "
-                 "revision and non-release each send the record to mandatory second review, so pick one for what it says, not for emphasis. "
-                 "Where a coder error looks invited by an unclear rule, record that as a separate taxonomy finding rather than stretching this one.")
+            note="Release covers the model's classifications, not the coder benchmark, so a coder finding is usually Caveat only, "
+                 "or None if no rule was involved. Prompt revision, taxonomy revision and non-release each trigger a mandatory second "
+                 "review. If an unclear rule caused the error, add a separate taxonomy finding.")
         if k<FINDING_SLOTS: add(p+"another","adj_stage2","radio",f"Record another finding?","1, Yes | 0, No",shown,"y")
     add("adj_stage2_affirmed","adj_stage2","yesno","Complete Stage 2 assessment?","","[adj_stage2_closure] = '1' or [adj_stage2_closure] = '2'","y")
     return rows
