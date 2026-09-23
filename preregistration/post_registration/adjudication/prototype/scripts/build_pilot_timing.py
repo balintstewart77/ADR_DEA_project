@@ -22,7 +22,7 @@ from pathlib import Path
 
 from prototype_lib import (COMPONENTS, DOMAINS, IMPORTED_DEFAULTS, IMPORT_FORBIDDEN, PURPOSES,
                            comparative_components, field_rows, generated_evidence, package_case,
-                           write_reveal_import, no_majority_components, package_stratum)
+                           write_reveal_import, no_majority_components, package_stratum, assignment_packages)
 
 REPO = Path(__file__).resolve().parents[5]
 EXCLUSIONS = REPO / "preregistration/package/04_exclusions_and_sampling/training_pilot_exclusion_list_v8.csv"
@@ -112,9 +112,14 @@ def main():
 
     names = [x[0] for x in field_rows()]
     rows_out = []
-    for case, package in cases:
-        row = {"adj_assignment_id": package["assignment_id"], "redcap_data_access_group": "primary",
-               "adj_source_record_id": case["record_id"], "adj_reviewer_role": 1,
+    # One record per case-reviewer assignment (ADJ-058): the second adjudicator
+    # works the same cases in their own group, from their own independently
+    # ordered package, so neither sees the other's answers and option letters
+    # do not line up between them.
+    assignments = [(case, role, group, package) for case, _ in cases for role, group, package in assignment_packages(case)]
+    for case, role, group, package in assignments:
+        row = {"adj_assignment_id": package["assignment_id"], "redcap_data_access_group": group,
+               "adj_source_record_id": case["record_id"], "adj_reviewer_role": role,
                "adj_stage1_package_id": package["package_id"], **generated_evidence(package), **IMPORTED_DEFAULTS}
         for key, value in row.items():
             if key in FREE_TEXT: continue
@@ -132,7 +137,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=columns); w.writeheader(); w.writerows(rows_out)
     # The reveal is a separate file, to import only after Stage 1 is complete
     # for these cases.  It is never printed.
-    write_reveal_import(OUT / "adjudication_reveal_import_pilot_timing.csv", cases)
+    write_reveal_import(OUT / "adjudication_reveal_import_pilot_timing.csv", [(case, package) for case, _, _, package in assignments])
     # The analytic stratum (ADJ-038) travels beside the import, not inside it:
     # nothing on the form reads it, and a hidden field saying the coders did
     # not converge would be source information in the reviewer's own export.
@@ -140,8 +145,9 @@ def main():
     with (OUT / "adjudication_stratum_pilot_timing.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["adj_assignment_id", "stratum", "no_majority_components"])
         w.writeheader()
-        for case, package in cases:
-            stratum = package_stratum(case, package); strata[stratum] += 1
+        for case, role, group, package in assignments:
+            stratum = package_stratum(case, package)
+            if role == 1: strata[stratum] += 1
             w.writerow({"adj_assignment_id": package["assignment_id"], "stratum": stratum,
                         "no_majority_components": ";".join(no_majority_components(case))})
     receipt = {"generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -149,7 +155,7 @@ def main():
                "inputs": {"exclusion_list_sha256": EXCLUSIONS_SHA256, "model_output_sha256": MODEL_SHA256,
                           "coder_export_sha256": sha256(EXPORT), "pilot_instrument": PILOT_INSTRUMENT},
                "pilot_records": len(pilot_ids), "not_eligible": not_eligible, "excluded_for_qa_flags": excluded_qa,
-               "timing_cases": len(rows_out), "components_with_no_majority_label": no_majority,
+               "timing_cases": len(cases), "assignment_rows": len(rows_out), "components_with_no_majority_label": no_majority,
                "stratum_counts": {"1_standard": strata[1], "2_mixed": strata[2], "3_no_majority_only": strata[3]},
                "differing_component_patterns": {"+".join(k): v for k, v in sorted(patterns.items())}}
     (OUT / "pilot_timing_receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
