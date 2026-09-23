@@ -1122,7 +1122,9 @@ def field_rows():
         mech_choices=" | ".join(f"{m['code']}, {m['name']}" for m in vocab if m["group"]=="rule")+f" | {MECH_NEW}, New mechanism (describe below)"
         data_choices=" | ".join(f"{m['code']}, {m['name']}" for m in vocab if m["group"]=="data")+f" | {MECH_NEW}, New mechanism (describe below)"
         add(p+"mech","adj_stage2","dropdown",f"Finding {k}: which mechanism?",mech_choices,f"{shown} and ({family} = '1' or {family} = '2' or {family} = '4' or {family} = '6')","y",
-            note="Type to search. Pick the same entry whenever the same mechanism recurs; that is what lets recurrence be counted.",val="autocomplete")
+            note="Not the cited rule again: the rule says what was breached, this says the pattern, and where one label was used "
+                 "instead of another it names the pair. Pick the same entry whenever the same mechanism recurs; a count across "
+                 "records is what shows a problem is more than one case.",val="autocomplete")
         add(p+"mech_data","adj_stage2","dropdown",f"Finding {k}: which data or instrument mechanism?",data_choices,f"{shown} and {family} = '7'","y",val="autocomplete")
         add(p+"mech_new","adj_stage2","text",f"Finding {k}: name the new mechanism in a few words","",f"{shown} and ([{p}mech] = '{MECH_NEW}' or [{p}mech_data] = '{MECH_NEW}')","y",
             note="It is added to the list, with a new code, between sessions.")
