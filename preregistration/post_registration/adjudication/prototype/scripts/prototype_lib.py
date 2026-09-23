@@ -894,10 +894,10 @@ def field_rows():
             add(b["ask"],"adj_stage1","radio","Does another displayed option conflict with a rule not yet cited?","1, Yes | 0, No",
                 f"{comparative_pkg} and [{conflict_block(n-1)['ask']}] = '1'","y",
                 note="Answer Yes only for a rule not already cited. Several options breaching one rule are ticked together within its own conflict.")
-        add(b["cited"],"adj_stage1","dropdown",f"Which rule does the {word} conflict involve?" if n>1 else "Which rule does it conflict with?",
-            rule_choices(),block_pkg,"y",
-            note="Type to search by category or rule ID. The same IDs head the rules in the adjudication rule reference.",val="autocomplete")
-        add(b["other"],"adj_stage1","text","Describe the rule or coding instruction","",f"{block_pkg} and [{b['cited']}] = '{RULE_OTHER}'","y")
+        # Scope, then the options, then the rule they breach: the conflict is
+        # narrowed before it is named.  The labels follow the rule, because the
+        # rule decides whether they are asked for at all, so nothing appears
+        # above the field just answered.
         add(b["scope"],"adj_stage1","checkbox",f"Which parts of the classification does the {word} conflict concern?" if n>1
             else "Which parts of the classification does the conflict concern?",scope_choices,block_pkg,"y")
         for comp in COMPONENTS:
@@ -905,12 +905,17 @@ def field_rows():
             add(b["slots"](comp),"adj_stage1","checkbox",f"Which {NOUN[comp]} option or options conflict with the {word} rule?" if n>1
                 else f"Which {NOUN[comp]} option or options conflict?",slot_choices,
                 f"{in_scope} and [adj_{comp}_comparative] = '1'","y",slot_hiding(comp),note=SAME_RULE_NOTE)
-            if comp in ("dom","purp"):
-                vocab=DOMAINS if comp=="dom" else PURPOSES
-                # Asked only where the cited rule names no label of its own.
-                add(b["labels"](comp),"adj_stage1","checkbox",f"Which {NOUN[comp]} label or labels are involved?",
-                    " | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1)),f"{in_scope} and {label_free(b['cited'])}","y",
-                    note="The rule you cited names no label of its own, so name the labels it was breached over.")
+        add(b["cited"],"adj_stage1","dropdown",f"Which rule does the {word} conflict involve?" if n>1 else "Which rule does it conflict with?",
+            rule_choices(),block_pkg,"y",
+            note="Type to search by category or rule ID. The same IDs head the rules in the adjudication rule reference.",val="autocomplete")
+        add(b["other"],"adj_stage1","text","Describe the rule or coding instruction","",f"{block_pkg} and [{b['cited']}] = '{RULE_OTHER}'","y")
+        for comp in ("dom","purp"):
+            vocab=DOMAINS if comp=="dom" else PURPOSES
+            # Asked only where the cited rule names no label of its own.
+            add(b["labels"](comp),"adj_stage1","checkbox",f"Which {NOUN[comp]} label or labels are involved?",
+                " | ".join(f"{i}, {x}" for i,x in enumerate(vocab,1)),
+                f"{block_pkg} and [{b['scope']}({COMPONENT_CODE[comp]})] = '1' and {label_free(b['cited'])}","y",
+                note="The rule you cited names no label of its own, so name the labels it was breached over.")
         add(b["note"],"adj_stage1","notes","Explain the conflict, or why it cannot be judged" if n==1 else f"Explain the {word} conflict","",
             f"{comparative_pkg} and ([{b['ask']}] = '1' or [{b['ask']}] = '2')" if n==1 else block_pkg,"y")
     # Owner-only single-set path: §9.2 asks whether each proposed label is
