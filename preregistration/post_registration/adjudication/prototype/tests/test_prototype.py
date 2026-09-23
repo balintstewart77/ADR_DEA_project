@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (COMPONENTS,COMPONENT_LABEL,recorded_conflicts,inherited_from_conflicts,rule_label,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -890,4 +890,59 @@ class PrototypeTests(unittest.TestCase):
             b=conflict_block(n)
             for comp in COMPONENTS:
                 self.assertIn("only the options that breach",by[b["slots"](comp)][6].lower(),(n,comp))
+    def test_a_finding_inherits_from_the_conflicts_it_rests_on(self):
+        # ADJ-056: Stage 1 already recorded, blind, which components and options
+        # a rule was breached in and which rule it was.  Asking again after the
+        # reveal adds nothing and lets one finding carry two accounts.
+        by={x[0]:x for x in field_rows()}
+        stage1={"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[1],
+                "adj_conflict_rule_cited":DOM_RULE,"adj_rule_conflict_note":"Synthetic",
+                "adj_conflict_second":1,"adj_conflict2_scope":[2],"adj_purp_conflict2_slots":[1],
+                "adj_conflict_rule2_cited":PURP_RULE,"adj_rule_conflict_note2":"Synthetic","adj_conflict_third":0}
+        self.assertEqual(recorded_conflicts(stage1),[1,2])
+        self.assertEqual(recorded_conflicts({"adj_rule_conflict":0}),[])
+        inherited=inherited_from_conflicts(stage1,[1,2])
+        self.assertEqual(inherited["components"],[1,2]); self.assertEqual(inherited["basis"],BASIS_RULE_CONFLICT)
+        self.assertEqual(inherited["dom_labels"],[rule_label(DOM_RULE)])
+        self.assertEqual(inherited["purp_labels"],[rule_label(PURP_RULE)])
+        base={"adj_stage2_closure":1,"adj_f1_family":1,"adj_f1_mech":1,"adj_f1_release":1,"adj_f1_another":0,"adj_stage2_affirmed":1}
+        rests=dict(base,**{"adj_f1_conflicts":[1]}); self.assertEqual(validate_stage2(rests,stage1),[])
+        # The preserved finding is whole, whether or not it was entered twice.
+        derived=derive_stage2(rests,stage1)["findings"][0]
+        self.assertEqual(derived["rests_on_conflicts"],[1]); self.assertEqual(derived["components"],[1])
+        self.assertEqual(derived["dom_labels"],[rule_label(DOM_RULE)]); self.assertEqual(derived["basis"],BASIS_RULE_CONFLICT)
+        self.assertEqual(derived["basis_explained"],["Synthetic"])
+        # What it inherits is not entered again.
+        for field,value in (("components",[1]),("dom_labels",[DOMAINS[0]]),("basis",1),("note","Synthetic")):
+            double=dict(rests,**{f"adj_f1_{field}":value})
+            self.assertTrue(any(f"{field} is inherited" in x for x in validate_stage2(double,stage1)),field)
+        # A finding resting on no conflict still records its own.
+        own=dict(base,**{"adj_f1_conflicts":[NO_CONFLICT_BASIS],"adj_f1_components":[1],"adj_f1_dom_labels":[DOMAINS[0]],
+                         "adj_f1_basis":3,"adj_f1_note":"Synthetic"})
+        self.assertEqual(validate_stage2(own,stage1),[])
+        self.assertTrue(any("needs the recorded conflicts" in x for x in validate_stage2(base,stage1)))
+        both=dict(rests,**{"adj_f1_conflicts":[NO_CONFLICT_BASIS,1]})
+        self.assertTrue(any("None is exclusive" in x for x in validate_stage2(both,stage1)))
+        unrecorded=dict(rests,**{"adj_f1_conflicts":[3]})
+        self.assertTrue(any("needs the recorded conflicts" in x for x in validate_stage2(unrecorded,stage1)))
+        # Only a source-specific finding rests on a rule conflict.
+        wrong=dict(rests,**{"adj_f1_family":4,"adj_f1_mech":1})
+        self.assertTrue(any("only a source-specific finding" in x for x in validate_stage2(wrong,stage1)))
+        # With no conflict recorded the question is not asked, and none is cited.
+        none={"adj_rule_conflict":0}
+        self.assertEqual(validate_stage2(dict(base,**{"adj_f1_components":[1],"adj_f1_dom_labels":[DOMAINS[0]],
+                                                      "adj_f1_basis":3,"adj_f1_note":"Synthetic"}),none),[])
+        self.assertTrue(any("only cited where Stage 1 recorded one" in x for x in validate_stage2(rests,none)))
+        # Branching: the question appears only where Stage 1 recorded a conflict,
+        # and the inherited fields only where the finding rests on none.
+        asked={"adj_stage2_closure":"1","adj_rule_conflict":"1"}
+        self.assertTrue(redcap_shows(by["adj_f1_conflicts"][11],asked))
+        self.assertFalse(redcap_shows(by["adj_f1_conflicts"][11],{"adj_stage2_closure":"1","adj_rule_conflict":"0"}))
+        self.assertFalse(redcap_shows(by["adj_f1_components"][11],asked))
+        self.assertTrue(redcap_shows(by["adj_f1_components"][11],{**asked,"adj_f1_conflicts":[NO_CONFLICT_BASIS]}))
+        self.assertTrue(redcap_shows(by["adj_f1_components"][11],{"adj_stage2_closure":"1","adj_rule_conflict":"0"}))
+        # Only the conflicts Stage 1 recorded are offered.
+        for deepest,hidden in ((1,{2,3,4,5,6}),(2,{3,4,5,6}),(3,{4,5,6}),(6,set())):
+            context={conflict_block(n)["ask"]:"1" for n in CONFLICT_BLOCKS[1:deepest]}
+            self.assertEqual(hidden_choices(by["adj_f1_conflicts"][17],context),hidden,deepest)
 if __name__=="__main__": unittest.main()

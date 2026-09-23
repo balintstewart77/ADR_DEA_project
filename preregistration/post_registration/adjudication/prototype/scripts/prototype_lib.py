@@ -557,8 +557,40 @@ def mechanism_vocabulary():
     return [{**r,"code":int(r["code"])} for r in csv.DictReader(path.open(encoding="utf-8"))]
 def mechanism_codes(group): return {r["code"] for r in mechanism_vocabulary() if r["group"]==group}
 CODERS={1:"C01",2:"C02",3:"C03"}
-def validate_stage2(r):
-    """Validate a Stage 2 response against the lean instrument."""
+NO_CONFLICT_BASIS=0; BASIS_RULE_CONFLICT=1
+def recorded_conflicts(stage1):
+    """The conflict numbers Stage 1 actually recorded."""
+    if not stage1: return []
+    out=[]
+    for n in CONFLICT_BLOCKS:
+        ask=stage1.get(conflict_block(n)["ask"])
+        if ask!=1: break
+        out.append(n)
+    return out
+def inherited_from_conflicts(stage1,cited):
+    """Components, labels and basis a finding takes from its conflicts (ADJ-056).
+
+    Stage 1 already recorded, blind, which components and options a rule was
+    breached in and which rule it was.  Asking again after the reveal adds no
+    information and lets the two accounts disagree about one finding, which is
+    exactly what the blind stage exists to prevent.
+    """
+    components=set(); labels={"dom":set(),"purp":set()}
+    for n in cited:
+        b=conflict_block(n)
+        components|=set(stage1.get(b["scope"],[]))
+        named=rule_label(stage1.get(b["cited"]))
+        for comp in ("dom","purp"):
+            if COMPONENT_CODE[comp] not in set(stage1.get(b["scope"],[])): continue
+            labels[comp]|={named} if named and rule_component(stage1.get(b["cited"]))==comp else set(stage1.get(b["labels"](comp),[]))
+    return {"components":sorted(components),"dom_labels":sorted(labels["dom"]),"purp_labels":sorted(labels["purp"]),
+            "basis":BASIS_RULE_CONFLICT,"explanations":[stage1.get(conflict_block(n)["note"]) for n in cited]}
+def validate_stage2(r,stage1=None):
+    """Validate a Stage 2 response against the lean instrument.
+
+    With the Stage 1 response it also checks what a finding inherits from the
+    conflicts it rests on, which REDCap cannot express as branching alone.
+    """
     out=[]; closure=r.get("adj_stage2_closure"); out+=issue(closure,{1,2,3,4},"Stage 2 closure")
     if closure==2 and not r.get("adj_no_issue_rationale"): out.append("no assignable issue needs a short positive rationale")
     shown=closure==1
@@ -568,15 +600,32 @@ def validate_stage2(r):
             if present: out.append(f"finding {k} is only recorded when an earlier finding asks for another")
             continue
         family=r.get(pre+"family"); out+=issue(family,set(range(1,9)),f"finding {k} family")
+        available=recorded_conflicts(stage1)
+        cited=set(r.get(pre+"conflicts",[]))
+        if stage1 is not None:
+            if available:
+                if not cited or not cited<={NO_CONFLICT_BASIS}|set(available):
+                    out.append(f"finding {k} needs the recorded conflicts it rests on, or None")
+                elif NO_CONFLICT_BASIS in cited and len(cited)!=1:
+                    out.append(f"finding {k}: None is exclusive")
+            elif cited: out.append(f"finding {k}: conflicts are only cited where Stage 1 recorded one")
+        rests_on=sorted(cited-{NO_CONFLICT_BASIS})
+        inherited=inherited_from_conflicts(stage1,rests_on) if rests_on else None
         components=set(r.get(pre+"components",[]))
-        if not components or not components<={1,2,3,4}: out.append(f"finding {k} needs its components")
-        if family in (1,2):
-            for code,comp in ((1,"dom"),(2,"purp")):
-                if code in components and not r.get(pre+f"{comp}_labels"): out.append(f"finding {k} needs the {comp} labels concerned")
-            basis=r.get(pre+"basis")
-            if basis not in BASIS_BY_FAMILY[family]: out.append(f"finding {k} needs a clear basis valid for its family")
-            if not r.get(pre+"note"): out.append(f"finding {k} needs its basis explained")
-        elif pre+"basis" in r: out.append(f"finding {k}: a basis is only recorded for a source-specific finding")
+        if inherited:
+            # Inherited, not asked: a second account of one finding can disagree.
+            for field in ("components","dom_labels","purp_labels","basis","note"):
+                if pre+field in r: out.append(f"finding {k}: {field} is inherited from the conflicts it rests on, not entered")
+            if family not in (1,2): out.append(f"finding {k}: only a source-specific finding rests on a rule conflict")
+        else:
+            if not components or not components<={1,2,3,4}: out.append(f"finding {k} needs its components")
+            if family in (1,2):
+                for code,comp in ((1,"dom"),(2,"purp")):
+                    if code in components and not r.get(pre+f"{comp}_labels"): out.append(f"finding {k} needs the {comp} labels concerned")
+                basis=r.get(pre+"basis")
+                if basis not in BASIS_BY_FAMILY[family]: out.append(f"finding {k} needs a clear basis valid for its family")
+                if not r.get(pre+"note"): out.append(f"finding {k} needs its basis explained")
+            elif pre+"basis" in r: out.append(f"finding {k}: a basis is only recorded for a source-specific finding")
         coders=set(r.get(pre+"coders",[]))
         if family==2:
             if not coders or not coders<=set(CODERS): out.append(f"finding {k} needs the coder or coders concerned")
@@ -596,8 +645,13 @@ def validate_stage2(r):
     if closure in (1,2) and r.get("adj_stage2_affirmed")!=1: out.append("Stage 2 completion not affirmed")
     if any(x.startswith("adj_stage2_derived") or x.endswith("_mandatory_review") for x in r): out.append("derived Stage 2 indicators cannot be supplied")
     return out
-def derive_stage2(r):
-    """Families per record, affected sources, and whether second review is mandatory (§9.1)."""
+def derive_stage2(r,stage1=None):
+    """Families per record, affected sources, and whether second review is mandatory (§9.1).
+
+    With the Stage 1 response, a finding also carries the components, labels
+    and basis of the conflicts it rests on, so the preserved finding is whole
+    whether or not they were entered twice (ADJ-056).
+    """
     findings=[]
     if r.get("adj_stage2_closure")==1:
         for k in range(1,FINDING_SLOTS+1):
@@ -607,7 +661,15 @@ def derive_stage2(r):
             code=r.get(f"adj_f{k}_mech") if family in RULE_MECH_FAMILIES else r.get(f"adj_f{k}_mech_data") if family in DATA_MECH_FAMILIES else None
             names={x["code"]:x["name"] for x in mechanism_vocabulary()}
             mechanism=None if code is None else {"code":code,"name":("NEW: "+str(r.get(f"adj_f{k}_mech_new"))) if code==MECH_NEW else names.get(code),"vocabulary":MECH_VOCABULARY}
-            findings.append({"finding":k,"family":family,"affected_sources":sources,"mechanism":mechanism,"release":r.get(f"adj_f{k}_release")})
+            rests_on=sorted(set(r.get(f"adj_f{k}_conflicts",[]))-{NO_CONFLICT_BASIS})
+            inherited=inherited_from_conflicts(stage1,rests_on) if rests_on and stage1 else None
+            findings.append({"finding":k,"family":family,"affected_sources":sources,"mechanism":mechanism,"release":r.get(f"adj_f{k}_release"),
+                             "rests_on_conflicts":rests_on,
+                             "components":inherited["components"] if inherited else sorted(r.get(f"adj_f{k}_components",[])),
+                             "dom_labels":inherited["dom_labels"] if inherited else sorted(r.get(f"adj_f{k}_dom_labels",[])),
+                             "purp_labels":inherited["purp_labels"] if inherited else sorted(r.get(f"adj_f{k}_purp_labels",[])),
+                             "basis":inherited["basis"] if inherited else r.get(f"adj_f{k}_basis"),
+                             "basis_explained":inherited["explanations"] if inherited else [r.get(f"adj_f{k}_note")]})
             if r.get(f"adj_f{k}_another")!=1: break
     families=sorted({f["family"] for f in findings})
     reasons=[]
@@ -1019,17 +1081,29 @@ def field_rows():
         family=f"[{p}family]"
         add(p+"family","adj_stage2","radio",f"Finding {k}: which diagnostic family?",FAMILIES,shown,"y",
             note="One family per finding. Record another finding for a second family or mechanism.")
-        add(p+"components","adj_stage2","checkbox",f"Finding {k}: which parts of the classification?","1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag",shown,"y")
+        # A finding rests on the Stage 1 conflicts it follows from, and takes
+        # their components, labels, basis and explanation rather than asking
+        # again after the reveal (ADJ-056).  Only the conflicts Stage 1
+        # recorded are offered.
+        hide=f"@IF([{conflict_block(6)['ask']}] = '1', '', "+"".join(
+            f"@IF([{conflict_block(n)['ask']}] = '1', @HIDECHOICE='{','.join(str(x) for x in range(n+1,7))}', " for n in (5,4,3,2))+            "@HIDECHOICE='2,3,4,5,6'"+")"*5
+        add(p+"conflicts","adj_stage2","checkbox",f"Finding {k}: which recorded conflicts does it rest on?",
+            " | ".join(f"{n}, Conflict {n}" for n in CONFLICT_BLOCKS)+f" | {NO_CONFLICT_BASIS}, Not based on a recorded conflict",
+            f"{shown} and [adj_rule_conflict] = '1'","y",f"@NONEOFTHEABOVE='{NO_CONFLICT_BASIS}' "+hide,
+            note="The components, labels, basis and explanation you recorded for a conflict carry over; they are not asked again.")
+        # Asked only where the finding rests on no conflict.
+        own=f"([adj_rule_conflict] <> '1' or [{p}conflicts({NO_CONFLICT_BASIS})] = '1')"
+        add(p+"components","adj_stage2","checkbox",f"Finding {k}: which parts of the classification?","1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag",f"{shown} and {own}","y")
         source_specific=f"({family} = '1' or {family} = '2')"
         # A substitution reads either way round, so the note fixes which labels
         # are ticked; without it the second reviewer's counts mix the two
         # directions and mean nothing (ADJ-052).
         label_note=("Tick the labels your chosen basis concerns: the label wrongly assigned, or, for an omission, the label left out. "
                     "Where one label was assigned instead of another, the pair goes in the mechanism, not here.")
-        add(p+"dom_labels","adj_stage2","checkbox",f"Finding {k}: which Research Domain labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(DOMAINS,1)),f"{shown} and {source_specific} and [{p}components(1)] = '1'","y",note=label_note)
-        add(p+"purp_labels","adj_stage2","checkbox",f"Finding {k}: which Analytical Purpose labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(PURPOSES,1)),f"{shown} and {source_specific} and [{p}components(2)] = '1'","y",note=label_note)
+        add(p+"dom_labels","adj_stage2","checkbox",f"Finding {k}: which Research Domain labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(DOMAINS,1)),f"{shown} and {source_specific} and {own} and [{p}components(1)] = '1'","y",note=label_note)
+        add(p+"purp_labels","adj_stage2","checkbox",f"Finding {k}: which Analytical Purpose labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(PURPOSES,1)),f"{shown} and {source_specific} and {own} and [{p}components(2)] = '1'","y",note=label_note)
         add(p+"coders","adj_stage2","checkbox",f"Finding {k}: which coder or coders?"," | ".join(f"{n}, {c}" for n,c in CODERS.items()),f"{shown} and {family} = '2'","y")
-        add(p+"basis","adj_stage2","radio",f"Finding {k}: what is the clear basis?",BASIS,f"{shown} and {source_specific}","y",
+        add(p+"basis","adj_stage2","radio",f"Finding {k}: what is the clear basis?",BASIS,f"{shown} and {source_specific} and {own}","y",
             f"@IF({family} = '1', @HIDECHOICE='4', @IF({family} = '2', @HIDECHOICE='2,3', ''))",
             note="A source-specific finding needs a clear basis in the frozen rules and the evidence available to that source; disagreement alone is not enough.")
         vocab=mechanism_vocabulary()
@@ -1040,7 +1114,7 @@ def field_rows():
         add(p+"mech_data","adj_stage2","dropdown",f"Finding {k}: which data or instrument mechanism?",data_choices,f"{shown} and {family} = '7'","y",val="autocomplete")
         add(p+"mech_new","adj_stage2","text",f"Finding {k}: name the new mechanism in a few words","",f"{shown} and ([{p}mech] = '{MECH_NEW}' or [{p}mech_data] = '{MECH_NEW}')","y",
             note="It is added to the list, with a new code, between sessions.")
-        add(p+"note","adj_stage2","notes",f"Finding {k}: explain the basis","",f"{shown} and {source_specific}","y")
+        add(p+"note","adj_stage2","notes",f"Finding {k}: explain the basis","",f"{shown} and {source_specific} and {own}","y")
         # What is released is the model's classifications and the outputs built
         # from them, which is why a coder finding rarely bears on release, and
         # three of the codes carry a second-review cost the reviewer cannot see
