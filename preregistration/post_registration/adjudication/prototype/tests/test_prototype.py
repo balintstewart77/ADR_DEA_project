@@ -87,14 +87,14 @@ class PrototypeTests(unittest.TestCase):
             bad=copy.deepcopy(base); bad["adj_dom_defensible"]=defensible; self.assertTrue(any(phrase in x for x in validate_submission(bad,p)),defensible)
         bad=copy.deepcopy(base); bad["adj_rule_conflict"]=1; issues=validate_submission(bad,p)
         self.assertTrue(any("rule conflict needs its component scope" in x for x in issues)); self.assertTrue(any("rule conflict cited rule required" in x for x in issues)); self.assertTrue(any("rule conflict needs explanation" in x for x in issues))
-        bad.update({"adj_rule_conflict_scope":[1],"adj_conflict_rule_cited":3,"adj_rule_conflict_note":"Synthetic"})
+        bad.update({"adj_rule_conflict_scope":[1],"adj_conflict_rule_cited":3,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"})
         issues=validate_submission(bad,p)
         self.assertTrue(any("conflicting option" in x for x in issues)); self.assertTrue(any("label(s) concerned" in x for x in issues))
         bad["adj_dom_conflict_slots"]=[2]; bad["adj_dom_conflict_labels"]=[DOMAINS[0]]
         self.assertTrue(any("label(s) concerned" in x for x in validate_submission(bad,p)),"label not in any displayed option")
         bad["adj_dom_conflict_labels"]=[DOMAINS[2]]; self.assertEqual(validate_submission(bad,p),[])
         bad["adj_dom_conflict_slots"]=[3]; self.assertTrue(any("conflicting option" in x for x in validate_submission(bad,p)))
-        shared=copy.deepcopy(base); shared.update({"adj_rule_conflict":1,"adj_rule_conflict_scope":[2],"adj_conflict_rule_cited":2,"adj_rule_conflict_note":"Synthetic","adj_purp_conflict_labels":[PURPOSES[1]]})
+        shared=copy.deepcopy(base); shared.update({"adj_rule_conflict":1,"adj_rule_conflict_scope":[2],"adj_conflict_rule_cited":2,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic","adj_purp_conflict_labels":[PURPOSES[1]]})
         self.assertEqual(validate_submission(shared,p),[],"a shared Purpose can conflict; no option choice is asked where it does not differ")
         bad=copy.deepcopy(base); bad["adj_rule_conflict"]=2; self.assertTrue(any("cannot-judge rule conflict" in x for x in validate_submission(bad,p)))
         bad=copy.deepcopy(base); bad["adj_purp_best"]=[1]; self.assertTrue(any("does not differ" in x for x in validate_submission(bad,p)))
@@ -300,7 +300,8 @@ class PrototypeTests(unittest.TestCase):
                 "adj_rule_conflict","adj_rule_conflict_scope","adj_rule_conflict_note","adj_dom_conflict_labels","adj_purp_conflict_labels",
                 "adj_boundary","adj_boundary_scope","adj_boundary_same_rule","adj_boundary_rule_cited","adj_boundary_rule_other","adj_boundary_note","adj_conflict_rule_cited","adj_conflict_rule_other","adj_dom_conflict_labels","adj_purp_conflict_labels","adj_masking_failure","adj_masking_note","adj_other_concern","adj_other_concern_note",
                 "adj_stage1_unresolved","adj_stage1_unresolved_note","adj_stage1_note","adj_stage1_affirmed","adj_source_record_id","adj_reviewer_role","adj_pkg_comparative"}
-        record|={"adj_s1_entry"}
+        record|={"adj_s1_entry","adj_conflict_second","adj_conflict_rule2_cited","adj_conflict_rule2_other","adj_rule_conflict_note2"}
+        record|={f"adj_{c}_conflict2_slots" for c in COMPONENTS}
         for comp in COMPONENTS:
             record|={f"adj_{comp}_{x}" for x in ("comparative","slot_count","candidate_map","evidence","best","defensible","conflict_slots")}
             record|={f"adj_{comp}_opt_{l.lower()}" for l in OPTION_LETTERS}|{f"adj_s1_opt_{comp}_{l.lower()}" for l in OPTION_LETTERS}
@@ -472,7 +473,7 @@ class PrototypeTests(unittest.TestCase):
         # ADJ-042: rule types replace quoted rule text; a documented boundary
         # that is the conflict rule is not re-entered; sufficiency is derived.
         p=self.packages[0]; base=copy.deepcopy(self.submissions[0])
-        conflict={"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[1],"adj_dom_conflict_labels":[DOMAINS[2]],"adj_conflict_rule_cited":3,"adj_rule_conflict_note":"Synthetic"}
+        conflict={"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[1],"adj_dom_conflict_labels":[DOMAINS[2]],"adj_conflict_rule_cited":3,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"}
         r=copy.deepcopy(base); r.update(conflict); self.assertEqual(validate_submission(r,p),[])
         other=copy.deepcopy(r); other["adj_conflict_rule_cited"]=RULE_OTHER; self.assertTrue(any("Other rule needs a description" in x for x in validate_submission(other,p)))
         other["adj_conflict_rule_other"]="Synthetic coding instruction"; self.assertEqual(validate_submission(other,p),[])
@@ -693,7 +694,7 @@ class PrototypeTests(unittest.TestCase):
         for r in catalogue: self.assertIn(r["rule_id"],reference,f"{r['rule_id']} missing from the rule reference")
         p=self.packages[0]
         conflict=copy.deepcopy(self.submissions[0]); conflict.update({"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[1],
-            "adj_dom_conflict_labels":[DOMAINS[2]],"adj_conflict_rule_cited":3,"adj_rule_conflict_note":"Synthetic"})
+            "adj_dom_conflict_labels":[DOMAINS[2]],"adj_conflict_rule_cited":3,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"})
         self.assertEqual(validate_submission(conflict,p),[])
         for bad_code in (0,900,-1):
             bad=copy.deepcopy(conflict); bad["adj_conflict_rule_cited"]=bad_code
@@ -769,4 +770,40 @@ class PrototypeTests(unittest.TestCase):
         self.assertFalse([n for n in names if "majority" in n or "stratum" in n],"the stratum belongs outside REDCap")
         with (ROOT/"instruments"/"adjudication_record_import_synthetic.csv").open(encoding="utf-8",newline="") as f:
             self.assertFalse([c for c in next(csv.reader(f)) if "majority" in c or "stratum" in c])
+    def test_a_second_option_can_breach_a_different_rule(self):
+        # ADJ-051: one citation per record lost which option breached which,
+        # where two options failed on different grounds.
+        by={x[0]:x for x in field_rows()}; p=self.packages[0]
+        base=copy.deepcopy(self.submissions[0])
+        first={"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[1],"adj_dom_conflict_labels":[DOMAINS[2]],
+               "adj_conflict_rule_cited":3,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"}
+        one=copy.deepcopy(base); one.update(first); self.assertEqual(validate_submission(one,p),[])
+        two=copy.deepcopy(one); two.update({"adj_conflict_second":1,"adj_conflict_rule2_cited":7,
+                                            "adj_dom_conflict2_slots":[2],"adj_rule_conflict_note2":"Synthetic"})
+        self.assertEqual(validate_submission(two,p),[])
+        # A second conflict names a different rule, an option and an explanation.
+        same=copy.deepcopy(two); same["adj_conflict_rule2_cited"]=3
+        self.assertTrue(any("different rule" in x for x in validate_submission(same,p)))
+        bare=copy.deepcopy(two); bare.pop("adj_dom_conflict2_slots")
+        self.assertTrue(any("needs the option(s) it concerns" in x for x in validate_submission(bare,p)))
+        mute=copy.deepcopy(two); mute.pop("adj_rule_conflict_note2")
+        self.assertTrue(any("second conflict needs explanation" in x for x in validate_submission(mute,p)))
+        absent=copy.deepcopy(two); absent["adj_dom_conflict2_slots"]=[len(p["interpretations"]["dom"])+1]
+        self.assertTrue(any("not displayed" in x for x in validate_submission(absent,p)))
+        # It is not recorded without a first conflict, and not left half-entered.
+        none=copy.deepcopy(base); none.update({"adj_rule_conflict":0,"adj_conflict_second":1})
+        self.assertTrue(any("only recorded alongside a first" in x for x in validate_submission(none,p)))
+        stray=copy.deepcopy(one); stray["adj_conflict_rule2_cited"]=7
+        self.assertTrue(any("only recorded where a second conflict" in x for x in validate_submission(stray,p)))
+        # Branching: the question appears only once a first conflict is recorded.
+        conflict={"adj_pkg_comparative":"1","adj_rule_conflict":"1"}
+        self.assertTrue(redcap_shows(by["adj_conflict_second"][11],conflict))
+        self.assertFalse(redcap_shows(by["adj_conflict_second"][11],{"adj_pkg_comparative":"1","adj_rule_conflict":"0"}))
+        self.assertFalse(redcap_shows(by["adj_conflict_rule2_cited"][11],conflict))
+        self.assertTrue(redcap_shows(by["adj_conflict_rule2_cited"][11],{**conflict,"adj_conflict_second":"1"}))
+        self.assertEqual(by["adj_conflict_rule2_cited"][5],by["adj_conflict_rule_cited"][5],"both cite from one catalogue")
+        for comp in COMPONENTS:
+            shown={**conflict,"adj_conflict_second":"1","adj_rule_conflict_scope":[1],f"adj_{comp}_comparative":"1"}
+            self.assertEqual(redcap_shows(by[f"adj_{comp}_conflict2_slots"][11],shown),comp=="dom",comp)
+        self.assertTrue([r for r in data_quality_rules() if "second-rule" in r[0]],"slot counts are enforced for the second rule too")
 if __name__=="__main__": unittest.main()
