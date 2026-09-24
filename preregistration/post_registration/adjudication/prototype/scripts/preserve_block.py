@@ -53,6 +53,16 @@ def norm(value):
     return (value or "").replace("\r\n", "\n").replace("\r", "\n").strip()
 
 
+def flat(value):
+    """A displayed field as REDCap's CSV export writes it.
+
+    The export replaces every line break with two spaces, although the stored
+    value and the form keep the break (block 1, 2026-09-24).  Only that exact
+    substitution is equated; any other change to the text still differs.
+    """
+    return norm(value).replace("\n", "  ")
+
+
 def _fields():
     return [r for r in field_rows() if r[1] in ("adj_admin", "adj_stage1") and r[3] != "descriptive"]
 
@@ -138,7 +148,7 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
             out.append(f"{aid}: package ID differs from the package rebuilt from the original classifications")
         generated = generated_evidence(package)
         for field, value in generated.items():
-            if norm(row.get(field)) != norm(str(value)):
+            if flat(row.get(field)) != flat(str(value)):
                 out.append(f"{aid}: displayed field {field} differs from what was generated")
         out += [f"{aid}: {p}" for p in validate_submission(response_from_export(row, generated), package)]
     by_id = {r["adj_assignment_id"]: r for r in reveal_rows}

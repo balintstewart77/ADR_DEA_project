@@ -55,9 +55,12 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertEqual(len({SEED_PRESENTATION, SEED_PRIMARY_QUEUE, SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE}), 4)
 
     def test_block_is_preserved_only_when_complete_valid_unrevealed_and_verified(self):
-        case = {**load_json("cases.json")[0], "assignment_id": "ADJ_0001"}
+        # Two datasets, so the displayed entry spans two lines as real ones do.
+        case = {**load_json("cases.json")[0], "assignment_id": "ADJ_0001",
+                "datasets": "Synthetic linked dataset one & Synthetic linked dataset two"}
         package = package_case(case)
         self.assertTrue(comparative_components(package))
+        self.assertIn("\n", generated_evidence(package)["adj_case_datasets"])
         expected = reveal_fields(case, package)
         response = default_valid_submission(package)
         checkboxes = {c.split("___")[0] for c in stage1_columns() if "___" in c}
@@ -89,6 +92,13 @@ class Route1AndAuditTests(unittest.TestCase):
             return check_block([c for c in columns if c not in dropped], {"ADJ_0001": r}, sources, packages,
                                [{**reveal[0], **(changed_reveal or {})}], wanted)
         self.assertEqual(problems(), [])
+        # REDCap's CSV export writes each stored line break as two spaces; that
+        # exact substitution is accepted, any other change to the text is not.
+        multiline = next(k for k, v in generated_evidence(package).items() if "\n" in str(v))
+        as_exported = str(generated_evidence(package)[multiline]).replace("\n", "  ")
+        self.assertEqual(problems({multiline: as_exported}), [])
+        self.assertTrue(problems({multiline: as_exported.replace("  ", " ", 1)}))
+        self.assertTrue(problems({multiline: as_exported + " extra"}))
         # The converted response is the one submitted, so the validator judges the real answers.
         self.assertEqual(response_from_export(row, generated_evidence(package)), response)
 
