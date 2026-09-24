@@ -1,13 +1,15 @@
 # DEA adjudication build documentation
 
-Status: proposed documentation and an offline synthetic prototype for review.
-Neither is approved for formal adjudication, frozen, or authorised for a live
-project. An earlier 209-field dictionary and its data-quality rules were
-imported into the test project PID 9221 on 2026-09-22; the current 484-field
-dictionary, its 36 data-quality rules and everything from ADJ-047 onwards have
-not been imported or seen rendered, and `prototype/verification.md` records
-exactly what each import covered. All prototype records, assignments, sources and
-responses are synthetic; it contains no formal case content or source mapping.
+Status, 2026-09-24: the instrument is the ADJ-069 amendment of the ADJ-064
+freeze, a 490-field dictionary with 67 data-quality rules, not yet imported
+into PID 9221. The previous 490-field version was walked through there on six
+pilot records. Primary adjudication of the 186 route-1 records has been
+authorised (ADJ-070) and its import generated to the git-ignored restricted
+folder; the formal project is not yet created. `prototype/verification.md`
+records what each import covered, and
+[formal_adjudication_runbook.md](formal_adjudication_runbook.md) is the
+procedure from here. This directory holds no formal case content or source
+mapping; everything in it is synthetic or aggregate.
 
 ## Purpose and navigation
 

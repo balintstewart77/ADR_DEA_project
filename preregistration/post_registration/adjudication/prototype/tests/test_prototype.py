@@ -127,7 +127,11 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual(validate_submission(spanning,pair),[],"a principle applies to any layer, so it may span components")
         bad["adj_dom_conflict_slots"]=[3]; self.assertTrue(any("conflicting option" in x for x in validate_submission(bad,p)))
         shared=copy.deepcopy(base); shared.update({"adj_rule_conflict":1,"adj_rule_conflict_scope":[2],"adj_conflict_rule_cited":PURP_RULE,"adj_conflict_second":0,"adj_rule_conflict_note":"Synthetic"})
-        self.assertEqual(validate_submission(shared,p),[],"a shared Purpose can conflict; no option choice is asked where it does not differ")
+        self.assertIn("conflicting option(s)"," ".join(validate_submission(shared,p)))
+        shared["adj_purp_conflict_slots"]=[1]
+        self.assertEqual(validate_submission(shared,p),[],"a shared Purpose conflict names the shared option")
+        by={x[0]:x for x in field_rows()}
+        self.assertTrue(redcap_shows(by["adj_purp_conflict_slots"][11],{"adj_pkg_comparative":"1","adj_rule_conflict":"1","adj_rule_conflict_scope":[2],"adj_purp_comparative":"0"}))
         bad=copy.deepcopy(base); bad["adj_rule_conflict"]=2; self.assertTrue(any("cannot-judge rule conflict" in x for x in validate_submission(bad,p)))
         bad=copy.deepcopy(base); bad["adj_purp_best"]=[1]; self.assertTrue(any("does not differ" in x for x in validate_submission(bad,p)))
     def test_single_set_and_comparative_paths_do_not_mix(self):
@@ -151,6 +155,10 @@ class PrototypeTests(unittest.TestCase):
     def test_diff_and_record_status_controls(self):
         p=self.packages[0]; base=self.submissions[0]
         bad=copy.deepcopy(base); bad["adj_diff_check"]=2; self.assertIn("generation error blocks Stage 1 completion",validate_submission(bad,p))
+        by={x[0]:x for x in field_rows()}
+        self.assertFalse(redcap_shows(by["adj_stage1_affirmed"][11],{"adj_diff_check":"2"}))
+        self.assertFalse(redcap_shows(by["adj_stage2_closure"][11],{"adj_diff_check":"2","adj_stage1_affirmed":"1"}))
+        self.assertTrue(any(name=="Generation error affirmed as complete Stage 1" for name,_,_ in data_quality_rules()))
         for field,label in (("adj_masking_failure","masking failure"),("adj_other_concern","other concern"),("adj_stage1_unresolved","unresolved at Stage 1")):
             bad=copy.deepcopy(base); bad[field]=1; self.assertIn(f"{label} needs explanation",validate_submission(bad,p),field)
             bad=copy.deepcopy(base); del bad[field]; self.assertIn(f"{label} required",validate_submission(bad,p),field)
@@ -166,15 +174,46 @@ class PrototypeTests(unittest.TestCase):
         p=self.packages[0]; response=self.submissions[0]; store={}; h=preserve(response,p,store); original=store["snapshot_hash"]
         with self.assertRaises(RuntimeError): preserve(response,p,store)
         self.assertEqual(original,store["snapshot_hash"]); self.assertEqual(store["events"][-1]["event"],"preserve_rejected_existing_snapshot")
-        with self.assertRaises(RuntimeError): reveal(p["assignment_id"],p["package_id"],h,load_json("reveal_payloads.json"),store,True)
+        payload={p["assignment_id"]:reveal_fields(self.cases[0],p)}
+        with self.assertRaises(RuntimeError): reveal(p["assignment_id"],p["package_id"],h,payload,store,self.cases[0],True)
         self.assertEqual(store["snapshot_hash"],h); self.assertEqual(store["exposure_history"][0]["extent"],"unknown")
-        reveal(p["assignment_id"],p["package_id"],h,load_json("reveal_payloads.json"),store); self.assertTrue(store["exposure_history"])
+        reveal(p["assignment_id"],p["package_id"],h,payload,store,self.cases[0]); self.assertTrue(store["exposure_history"])
+        wrong=copy.deepcopy(payload); wrong[p["assignment_id"]]["adj_reveal_dom_a_src"]="production model"
+        with self.assertRaises(PermissionError): reveal(p["assignment_id"],p["package_id"],h,wrong,store,self.cases[0])
     def test_sufficiency_and_independence_timing(self):
         self.assertEqual(derive_sufficiency(["Sufficient","Sufficient","Insufficient"]),{"broad":1,"strict":1}); self.assertEqual(derive_sufficiency(["Sufficient"]),{"broad":8,"strict":8})
         f=[{"record_id":"SYN_A","mechanism_versioned":"M1","stream":"scratch","signal_ref":"S1","pre_reveal":1},{"record_id":"SYN_A","mechanism_versioned":"M1","stream":"primary","signal_ref":"P1","pre_reveal":0},{"record_id":"SYN_B","mechanism_versioned":"M2","stream":"primary","signal_ref":"P2","pre_reveal":1},{"record_id":"SYN_B","mechanism_versioned":"M2","stream":"secondary","signal_ref":"S2","pre_reveal":1},{"record_id":"SYN_C","mechanism_versioned":"M3","stream":"scratch","signal_ref":"U","pre_reveal":2},{"record_id":"SYN_C","mechanism_versioned":"M3","stream":"scratch","signal_ref":"U","pre_reveal":2}]
+        for item in f: item["mechanism_code"]=1
         r=aggregate_independence(f,{"M1":"H1","M2":"H2","M3":"H3"}); pre=r["pre_harmonisation"]
         self.assertFalse(pre["M1"]["independent_conservative"]); self.assertFalse(pre["M2"]["independent_conservative"]); self.assertTrue(pre["M2"]["independent_inclusive"]); self.assertEqual(pre["M3"]["pre_reveal_stream_signal_count"],0); self.assertIn("H2",r["post_harmonisation"])
         with self.assertRaises(ValueError): aggregate_independence([{**f[0],"pre_reveal":True}],{})
+        with self.assertRaises(ValueError): aggregate_independence([{k:v for k,v in f[0].items() if k!="mechanism_code"}],{})
+    def test_general_mechanism_recurrence_uses_affected_labels(self):
+        base={"mechanism_versioned":"mechvocab-0.1:35","mechanism_code":35,
+              "stream":"primary","signal_ref":"blind","pre_reveal":1,"purp_labels":[]}
+        first={**base,"record_id":"A","dom_labels":[DOMAINS[0]]}
+        different={**base,"record_id":"B","dom_labels":[DOMAINS[1]]}
+        separate=aggregate_independence([first,different],{})["pre_harmonisation"]
+        self.assertEqual(len(separate),2)
+        self.assertTrue(all(not x["independent_conservative"] for x in separate.values()))
+        harmonised=aggregate_independence([first,different],{"mechvocab-0.1:35":"H"})["post_harmonisation"]
+        self.assertEqual(len(harmonised),2,"harmonisation must not merge disjoint label scopes")
+        same=aggregate_independence([first,{**different,"dom_labels":[DOMAINS[0]]}],{})["pre_harmonisation"]
+        self.assertEqual(len(same),1)
+        self.assertTrue(next(iter(same.values()))["independent_conservative"])
+        with self.assertRaises(ValueError): aggregate_independence([{**base,"record_id":"C","dom_labels":[]}],{})
+    def test_taxonomy_general_mechanism_requires_label_scope(self):
+        finding={"adj_stage2_closure":1,"adj_f1_family":4,"adj_f1_components":[1],
+                 "adj_f1_mech":35,"adj_f1_release":1,"adj_f1_another":0,"adj_stage2_affirmed":1}
+        self.assertIn("dom labels concerned"," ".join(validate_stage2(finding)))
+        finding["adj_f1_dom_labels"]=[1]
+        self.assertEqual(validate_stage2(finding),[])
+        derived=derive_stage2(finding)["findings"][0]
+        self.assertEqual(derived["dom_labels"],[DOMAINS[0]])
+        by={x[0]:x for x in field_rows()}
+        context={"adj_stage1_affirmed":"1","adj_diff_check":"1","adj_stage2_closure":"1",
+                 "adj_f1_family":"4","adj_f1_mech":"35","adj_f1_components":[1]}
+        self.assertTrue(redcap_shows(by["adj_f1_dom_labels"][11],context))
     def test_owner_trigger_qualifying_conditions_on_export_shaped_rows(self):
         # Every row below is export-shaped: string codes, one column per checkbox option.
         for row in ({"po_d01_fit":"2"},{"po_d04_fit":"3"},{"po_p02_fit":"2"}):
@@ -246,7 +285,7 @@ class PrototypeTests(unittest.TestCase):
         package["qa_flags"].pop()
         tampered=copy.deepcopy(store); tampered["snapshot"]["response"]["adj_dom_evidence"]=3
         with self.assertRaises(PermissionError): verify_snapshot(tampered)
-        with self.assertRaises(PermissionError): reveal(package["assignment_id"],package["package_id"],h,load_json("reveal_payloads.json"),tampered)
+        with self.assertRaises(PermissionError): reveal(package["assignment_id"],package["package_id"],h,{package["assignment_id"]:reveal_fields(self.cases[0],package)},tampered,self.cases[0])
         with self.assertRaises(PermissionError): verify_snapshot({})
     def test_derived_best_skipped_indicator(self):
         # Derived at preservation, never reviewer-entered: why best-supported
@@ -383,10 +422,11 @@ class PrototypeTests(unittest.TestCase):
             asked=[row[0] for row in rows if row[1]=="adj_stage1" and row[3] in answerable and row[0]!="adj_stage1_note"
                    and not any(a in row[17] for a in ("@HIDDEN","@READONLY","@DEFAULT")) and redcap_shows(row[11],evidence)]
             if len(package["candidates"])>1:
-                # Differences, rule conflict, boundary, masking and affirmation,
+                # Differences, rule conflict, boundary and masking; affirmation
+                # appears only after the summary is checked as correct.
                 # plus evidence, best-supported and defensible options for
                 # each component that differs; sufficiency is derived.
-                self.assertEqual(len(asked),5+3*len(comparative_components(package)),(case["record_id"],asked))
+                self.assertEqual(len(asked),4+3*len(comparative_components(package)),(case["record_id"],asked))
                 self.assertFalse([x for x in asked if "_l0" in x or "_l1" in x or "additional_label" in x or "status_" in x],case["record_id"])
             else:
                 labels=sum(len(component_labels(package,c)[1]) for c in ("dom","purp"))
@@ -394,7 +434,7 @@ class PrototypeTests(unittest.TestCase):
                 # single-set checks: support and rule conflict per displayed
                 # label, the additional-label question per component, and
                 # support, conflict and alternative status per tag.
-                self.assertEqual(len(asked),4+2*labels+2+3*2,(case["record_id"],asked))
+                self.assertEqual(len(asked),3+2*labels+2+3*2,(case["record_id"],asked))
                 self.assertFalse([x for x in asked if x=="adj_rule_conflict" or x.endswith(("_evidence","_best","_defensible"))],case["record_id"])
     def test_frozen_public_entry_is_presented(self):
         by={x[0]:x for x in field_rows()}
@@ -533,7 +573,7 @@ class PrototypeTests(unittest.TestCase):
             self.assertEqual(by[field][3],"dropdown",field); self.assertEqual(by[field][7],"autocomplete",field)
             self.assertEqual({int(c.split(",",1)[0]) for c in by[field][5].split(" | ")},rule_codes()|{RULE_OTHER},field)
         stale=copy.deepcopy(base); stale["adj_dom_adequacy"]=1; self.assertTrue(any("derived, not asked" in x for x in validate_submission(stale,p)))
-        for evidence,defensible,expected in ((1,[1],0),(3,None,1),(1,[0],1),(4,[1],9),(1,[9],9),(2,[1,2],0)):
+        for evidence,defensible,expected in ((1,[1],0),(3,None,1),(1,[0],1),(4,[1],9),(1,[9],9),(3,[9],9),(4,[0],9),(2,[1,2],0)):
             r=copy.deepcopy(base); r["adj_dom_evidence"]=evidence
             if defensible is None: r.pop("adj_dom_best",None)
             else: r["adj_dom_defensible"]=defensible
@@ -555,7 +595,7 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual(validate_stage2(evidence),[],"an evidence problem needs no basis, source or mechanism")
         bad=copy.deepcopy(evidence); bad["adj_f1_basis"]=1; self.assertTrue(any("only recorded for a source-specific" in x for x in validate_stage2(bad)))
         bad=copy.deepcopy(evidence); bad["adj_f2_family"]=4; self.assertTrue(any("finding 2 is only recorded" in x for x in validate_stage2(bad)))
-        two=copy.deepcopy(evidence); two.update({"adj_f1_another":1,"adj_f2_family":4,"adj_f2_components":[2],"adj_f2_mech":34,"adj_f2_release":3,"adj_f2_release_note":"Synthetic proposal","adj_f2_another":0})
+        two=copy.deepcopy(evidence); two.update({"adj_f1_another":1,"adj_f2_family":4,"adj_f2_components":[2],"adj_f2_purp_labels":[1],"adj_f2_mech":34,"adj_f2_release":3,"adj_f2_release_note":"Synthetic proposal","adj_f2_another":0})
         self.assertEqual(validate_stage2(two),[])
         derived=derive_stage2(two); self.assertEqual(derived["families"],[3,4]); self.assertEqual(derived["mandatory_second_review"],1)
         self.assertEqual(derive_stage2(model)["findings"][0]["affected_sources"],["production model"])
@@ -568,7 +608,7 @@ class PrototypeTests(unittest.TestCase):
     def test_stage2_branching_and_burden(self):
         rows=field_rows(); by={x[0]:x for x in rows}
         stage2=[x for x in rows if x[1]=="adj_stage2" and "@READONLY" not in x[17] and x[3]!="descriptive"]
-        def asked(context): return [x[0] for x in stage2 if redcap_shows(x[11],{"adj_stage1_affirmed":"1",**context})]
+        def asked(context): return [x[0] for x in stage2 if redcap_shows(x[11],{"adj_stage1_affirmed":"1","adj_diff_check":"1",**context})]
         self.assertEqual(len(asked({"adj_stage2_closure":"1","adj_f1_family":"1","adj_f1_components":[1]})),9+1,"model finding: family, components, labels, basis, mechanism, note, release, another, affirm, plus closure")
         self.assertEqual(len(asked({"adj_stage2_closure":"1","adj_f1_family":"3","adj_f1_components":[2]})),6,"evidence finding: closure, family, components, release, another, affirm")
         self.assertEqual(asked({"adj_stage2_closure":"2"}),["adj_stage2_closure","adj_no_issue_rationale","adj_stage2_affirmed"])
@@ -590,10 +630,8 @@ class PrototypeTests(unittest.TestCase):
             named=[l for l in OPTION_LETTERS if fields[f"adj_reveal_{comp}_{l.lower()}_src"]]
             filled=[l for l in OPTION_LETTERS if shown[f"adj_{comp}_opt_{l.lower()}"]]
             self.assertEqual(filled,list(OPTION_LETTERS[:count]),comp)
-            if count==1:
-                self.assertEqual(named,[],"a component every source agreed on reveals nothing")
-            else:
-                self.assertEqual(named,filled,"every displayed option names its source")
+            self.assertEqual(named,filled,"every displayed option names its source")
+            if count>1:
                 sources=[fields[f"adj_reveal_{comp}_{l.lower()}_src"] for l in named]
                 for src in sources: self.assertRegex(src,r"^(production model|coder C0\d)(, (production model|coder C0\d))*$")
                 self.assertEqual(sum(s.count("production model") for s in sources),1)
@@ -604,14 +642,14 @@ class PrototypeTests(unittest.TestCase):
             # the component differed, and the agreed row instead where it did not.
             for n,letter in enumerate(OPTION_LETTERS,1):
                 low=letter.lower(); has=n<=count
-                context={"adj_stage1_affirmed":"1",f"adj_{comp}_comparative":"1" if count>1 else "0",f"adj_{comp}_slot_count":str(count)}
+                context={"adj_stage1_affirmed":"1","adj_diff_check":"1",f"adj_{comp}_comparative":"1" if count>1 else "0",f"adj_{comp}_slot_count":str(count)}
                 self.assertEqual(redcap_shows(by[f"adj_s1_opt_{comp}_{low}"][11],context),has,(comp,letter))
                 self.assertEqual(redcap_shows(by[f"adj_s2_opt_{comp}_{low}"][11],context),has and count>1,(comp,letter))
                 self.assertEqual(bool(shown[f"adj_{comp}_opt_{low}"]),has,(comp,letter))
-            self.assertEqual(redcap_shows(by[f"adj_s2_agreed_{comp}"][11],{"adj_stage1_affirmed":"1",f"adj_{comp}_comparative":"1" if count>1 else "0"}),count==1,comp)
+            self.assertEqual(redcap_shows(by[f"adj_s2_agreed_{comp}"][11],{"adj_stage1_affirmed":"1","adj_diff_check":"1",f"adj_{comp}_comparative":"1" if count>1 else "0"}),count==1,comp)
             self.assertIn(f"[adj_{comp}_opt_a]",by[f"adj_s2_agreed_{comp}"][4],"the agreed row pipes the Stage 1 option")
         single=reveal_fields(self.cases[2],self.packages[2])
-        self.assertTrue(all(not v for v in single.values()),"a package with no competing options reveals nothing")
+        self.assertEqual(sum(bool(v) for v in single.values()),len(COMPONENTS),"a single displayed set still reveals its source")
         with (ROOT/"instruments"/"adjudication_reveal_import_synthetic.csv").open(encoding="utf-8",newline="") as f: reveal=list(csv.DictReader(f))
         self.assertEqual(len(reveal),2*len(self.cases)); self.assertTrue(all(r["adj_reveal_state"]=="1" for r in reveal))
         self.assertEqual(list(reveal[0]),["adj_assignment_id","adj_reveal_state"]+reveal_columns())
@@ -639,9 +677,9 @@ class PrototypeTests(unittest.TestCase):
         for row in rows:
             if row[1]=="adj_stage2": self.assertTrue(row[11].startswith("[adj_stage1_affirmed] = '1'"),row[0])
         for name in ("adj_s2_recap_intro","adj_s2_entry","adj_reveal_state","adj_stage2_closure"):
-            self.assertEqual(by[name][11],"[adj_stage1_affirmed] = '1'",f"{name} carries a section header, so it is conditional only on the gate")
+            self.assertEqual(by[name][11],"[adj_stage1_affirmed] = '1' and [adj_diff_check] = '1'",f"{name} carries a section header, so it is conditional only on the gate")
         self.assertFalse(redcap_shows(by["adj_stage2_closure"][11],{}),"Stage 2 does not open before Stage 1 is affirmed")
-        self.assertTrue(redcap_shows(by["adj_stage2_closure"][11],{"adj_stage1_affirmed":"1"}))
+        self.assertTrue(redcap_shows(by["adj_stage2_closure"][11],{"adj_stage1_affirmed":"1","adj_diff_check":"1"}))
         ungated=lambda b:b.split(" and (",1)[1][:-1] if " and (" in b else b
         for name,trigger in (("adj_s2_concern","[adj_other_concern] = '1'"),("adj_s2_unresolved","[adj_stage1_unresolved] = '1'"),
                              ("adj_s2_boundary_note","([adj_boundary(1)] = '1' and [adj_boundary_same_rule] <> '1') or [adj_boundary(2)] = '1'"),
@@ -657,8 +695,8 @@ class PrototypeTests(unittest.TestCase):
             label=by[f"adj_s2_recap_{comp}"]
             for piece in (f"[adj_{comp}_evidence]",f"[adj_{comp}_best:checked]",f"[adj_{comp}_defensible:checked]"): self.assertIn(piece,label[4])
             self.assertEqual(ungated(label[11]),f"[adj_{comp}_comparative] = '1'")
-        yes={"adj_stage1_affirmed":"1","adj_pkg_comparative":"1","adj_rule_conflict":"1"}
-        no={"adj_stage1_affirmed":"1","adj_pkg_comparative":"1","adj_rule_conflict":"0"}
+        yes={"adj_stage1_affirmed":"1","adj_diff_check":"1","adj_pkg_comparative":"1","adj_rule_conflict":"1"}
+        no={"adj_stage1_affirmed":"1","adj_diff_check":"1","adj_pkg_comparative":"1","adj_rule_conflict":"0"}
         self.assertTrue(redcap_shows(by["adj_s2_conflict_yes"][11],yes)); self.assertFalse(redcap_shows(by["adj_s2_conflict_no"][11],yes))
         self.assertTrue(redcap_shows(by["adj_s2_conflict_no"][11],no)); self.assertFalse(redcap_shows(by["adj_s2_conflict_yes"][11],no))
         order=[x[0] for x in rows if x[1]=="adj_stage2"]
@@ -683,7 +721,7 @@ class PrototypeTests(unittest.TestCase):
             choices={int(c.split(",",1)[0]) for c in by[f"adj_f{k}_mech"][5].split(" | ")}
             self.assertEqual(choices,{m["code"] for m in vocab if m["group"]=="rule"}|{MECH_NEW})
             self.assertNotIn(f"adj_f{k}_mechanism",by)
-        context={"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_f1_family":"1"}
+        context={"adj_stage1_affirmed":"1","adj_diff_check":"1","adj_stage2_closure":"1","adj_f1_family":"1"}
         self.assertTrue(redcap_shows(by["adj_f1_mech"][11],context)); self.assertFalse(redcap_shows(by["adj_f1_mech_data"][11],context))
         self.assertTrue(redcap_shows(by["adj_f1_mech_data"][11],{**context,"adj_f1_family":"7"})); self.assertFalse(redcap_shows(by["adj_f1_mech"][11],{**context,"adj_f1_family":"3"}))
         self.assertTrue(redcap_shows(by["adj_f1_mech_new"][11],{**context,"adj_f1_mech":str(MECH_NEW)}))
@@ -940,7 +978,7 @@ class PrototypeTests(unittest.TestCase):
         # a rule was breached in and which rule it was.  Asking again after the
         # reveal adds nothing and lets one finding carry two accounts.
         by={x[0]:x for x in field_rows()}
-        stage1={"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[1],
+        stage1={"adj_rule_conflict":1,"adj_rule_conflict_scope":[1],"adj_dom_conflict_slots":[2],
                 "adj_conflict_rule_cited":DOM_RULE,"adj_rule_conflict_note":"Synthetic",
                 "adj_conflict_second":1,"adj_conflict2_scope":[2],"adj_purp_conflict2_slots":[1],
                 "adj_conflict_rule2_cited":PURP_RULE,"adj_rule_conflict_note2":"Synthetic","adj_conflict_third":0}
@@ -951,9 +989,15 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual(inherited["dom_labels"],[rule_label(DOM_RULE)])
         self.assertEqual(inherited["purp_labels"],[rule_label(PURP_RULE)])
         base={"adj_stage2_closure":1,"adj_f1_family":1,"adj_f1_mech":1,"adj_f1_release":1,"adj_f1_another":0,"adj_stage2_affirmed":1}
-        rests=dict(base,**{"adj_f1_conflicts":[1]}); self.assertEqual(validate_stage2(rests,stage1),[])
+        rests=dict(base,**{"adj_f1_conflicts":[1]})
+        self.assertIn("original source mapping required", " ".join(validate_stage2(rests,stage1)))
+        self.assertEqual(validate_stage2(rests,stage1,self.cases[0],self.packages[0]),[])
+        wrong_source=copy.deepcopy(stage1); wrong_source["adj_dom_conflict_slots"]=[1]
+        self.assertIn("affected source is absent", " ".join(validate_stage2(rests,wrong_source,self.cases[0],self.packages[0])))
         # The preserved finding is whole, whether or not it was entered twice.
-        derived=derive_stage2(rests,stage1)["findings"][0]
+        with self.assertRaises(ValueError): derive_stage2(rests,stage1)
+        with self.assertRaises(ValueError): derive_stage2(rests,wrong_source,self.cases[0],self.packages[0])
+        derived=derive_stage2(rests,stage1,self.cases[0],self.packages[0])["findings"][0]
         self.assertEqual(derived["rests_on_conflicts"],[1]); self.assertEqual(derived["components"],[1])
         self.assertEqual(derived["dom_labels"],[rule_label(DOM_RULE)]); self.assertEqual(derived["basis"],BASIS_RULE_CONFLICT)
         self.assertEqual(derived["basis_explained"],["Synthetic"])
@@ -980,17 +1024,17 @@ class PrototypeTests(unittest.TestCase):
         self.assertTrue(any("only cited where Stage 1 recorded one" in x for x in validate_stage2(rests,none)))
         # Branching: the question appears only where Stage 1 recorded a conflict,
         # and the inherited fields only where the finding rests on none.
-        asked={"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_rule_conflict":"1"}
+        asked={"adj_stage1_affirmed":"1","adj_diff_check":"1","adj_stage2_closure":"1","adj_rule_conflict":"1"}
         self.assertTrue(redcap_shows(by["adj_f1_conflicts"][11],asked))
         # The numbers the question uses are the ones the recap prints.
         for n in CONFLICT_BLOCKS:
             self.assertIn(f"<b>Conflict {n}</b>",by[f"adj_s2_conflict{n}_rule"][4],n)
             self.assertIn(f"{n}, Conflict {n}",by["adj_f1_conflicts"][5],n)
         self.assertIn("Your Stage 1 assessment",by["adj_f1_conflicts"][6])
-        self.assertFalse(redcap_shows(by["adj_f1_conflicts"][11],{"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_rule_conflict":"0"}))
+        self.assertFalse(redcap_shows(by["adj_f1_conflicts"][11],{"adj_stage1_affirmed":"1","adj_diff_check":"1","adj_stage2_closure":"1","adj_rule_conflict":"0"}))
         self.assertFalse(redcap_shows(by["adj_f1_components"][11],asked))
         self.assertTrue(redcap_shows(by["adj_f1_components"][11],{**asked,"adj_f1_conflicts":[NO_CONFLICT_BASIS]}))
-        self.assertTrue(redcap_shows(by["adj_f1_components"][11],{"adj_stage1_affirmed":"1","adj_stage2_closure":"1","adj_rule_conflict":"0"}))
+        self.assertTrue(redcap_shows(by["adj_f1_components"][11],{"adj_stage1_affirmed":"1","adj_diff_check":"1","adj_stage2_closure":"1","adj_rule_conflict":"0"}))
         # Only the conflicts Stage 1 recorded are offered.
         for deepest,hidden in ((1,{2,3,4,5,6}),(2,{3,4,5,6}),(3,{4,5,6}),(6,set())):
             context={conflict_block(n)["ask"]:"1" for n in CONFLICT_BLOCKS[1:deepest]}

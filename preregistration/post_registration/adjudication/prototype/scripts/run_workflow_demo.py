@@ -1,5 +1,5 @@
 import json
-from prototype_lib import ROOT, load_json, package_case, preserve, record_correction, reveal, verify_snapshot
+from prototype_lib import ROOT, load_json, package_case, preserve, record_correction, reveal, reveal_fields, verify_snapshot
 
 def main():
     case = load_json("cases.json")[0]; response = load_json("submissions.json")[0]
@@ -20,10 +20,10 @@ def main():
     try:
         verify_snapshot({"snapshot": tampered, "snapshot_bytes": store["snapshot_bytes"], "snapshot_hash": snapshot_hash}); tamper_detected = False
     except PermissionError: tamper_detected = True
-    payload = load_json("reveal_payloads.json")
-    try: reveal(package["assignment_id"], package["package_id"], snapshot_hash, payload, store, simulate_partial=True)
+    payload = {package["assignment_id"]: reveal_fields(case,package)}
+    try: reveal(package["assignment_id"], package["package_id"], snapshot_hash, payload, store, case, simulate_partial=True)
     except RuntimeError: pass
-    revealed = reveal(package["assignment_id"], package["package_id"], snapshot_hash, payload, store)
+    revealed = reveal(package["assignment_id"], package["package_id"], snapshot_hash, payload, store, case)
     receipt = {"snapshot_hash": snapshot_hash, "snapshot_integrity_verified": integrity_ok, "snapshot_unchanged_by_caller_mutation": preserved_evidence == 1, "tampered_snapshot_detected": tamper_detected, "snapshot_unchanged_after_correction": unchanged_after_correction, "derived": store["snapshot"]["derived"], "adj_correction": store["adj_correction"], "events": store["events"], "exposure_history": store.get("exposure_history", []), "reveal_assignment": revealed["assignment_id"]}
     (ROOT / "fixtures" / "workflow_demo_receipt.json").write_text(json.dumps(receipt, indent=2), encoding="utf-8")
     print("Preserved, rejected append attempt, verified snapshot integrity, detected a tampered snapshot, appended one clerical correction, recorded partial exposure, and recovered synthetic reveal.")

@@ -1,7 +1,7 @@
 adj_assignment_id,adj_reveal_state,adj_reveal_dom_a_src,adj_reveal_dom_b_src,adj_reveal_dom_c_src,adj_reveal_dom_d_src,adj_reveal_purp_a_src,adj_reveal_purp_b_src,adj_reveal_purp_c_src,adj_reveal_purp_d_src,adj_reveal_covid_a_src,adj_reveal_covid_b_src,adj_reveal_covid_c_src,adj_reveal_covid_d_src,adj_reveal_equity_a_src,adj_reveal_equity_b_src,adj_reveal_equity_c_src,adj_reveal_equity_d_src
-SYN_ASSIGN_001,1,coder C02,"production model, coder C01",,,,,,,,,,,,,,
-SYN_ASSIGN_001_SEC,1,"production model, coder C01",coder C02,,,,,,,,,,,,,,
-SYN_ASSIGN_002,1,,,,,coder C02,coder C01,"production model, coder C03",,,,,,coder C02,"production model, coder C01, coder C03",,
-SYN_ASSIGN_002_SEC,1,,,,,"production model, coder C03",coder C02,coder C01,,,,,,"production model, coder C01, coder C03",coder C02,,
-SYN_ASSIGN_003,1,,,,,,,,,,,,,,,,
-SYN_ASSIGN_003_SEC,1,,,,,,,,,,,,,,,,
+SYN_ASSIGN_001,1,coder C02,"production model, coder C01",,,"production model, coder C01, coder C02",,,,"production model, coder C01, coder C02",,,,"production model, coder C01, coder C02",,,
+SYN_ASSIGN_001_SEC,1,"production model, coder C01",coder C02,,,"production model, coder C01, coder C02",,,,"production model, coder C01, coder C02",,,,"production model, coder C01, coder C02",,,
+SYN_ASSIGN_002,1,"production model, coder C01, coder C02, coder C03",,,,coder C02,coder C01,"production model, coder C03",,"production model, coder C01, coder C02, coder C03",,,,coder C02,"production model, coder C01, coder C03",,
+SYN_ASSIGN_002_SEC,1,"production model, coder C01, coder C02, coder C03",,,,"production model, coder C03",coder C02,coder C01,,"production model, coder C01, coder C02, coder C03",,,,"production model, coder C01, coder C03",coder C02,,
+SYN_ASSIGN_003,1,production model,,,,production model,,,,production model,,,,production model,,,
+SYN_ASSIGN_003_SEC,1,production model,,,,production model,,,,production model,,,,production model,,,

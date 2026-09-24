@@ -158,7 +158,8 @@ RULE_OTHER=999; RULE_CATALOGUE_VERSION="rulecat-0.1"
 def rule_catalogue():
     path=ROOT/"instruments"/"rule_catalogue.csv"
     if not path.exists(): raise FileNotFoundError(f"rule catalogue required: {path}; run build_rule_catalogue.py")
-    return [{**r,"code":int(r["code"])} for r in csv.DictReader(path.open(encoding="utf-8"))]
+    with path.open(encoding="utf-8",newline="") as file:
+        return [{**r,"code":int(r["code"])} for r in csv.DictReader(file)]
 def rule_codes(): return {r["code"] for r in rule_catalogue()}
 # The visible label is the rule, not its ID: the ID is the stored key and the
 # reference's audit handle, and reading it off a dropdown helped nobody
@@ -362,9 +363,9 @@ def validate_submission(r,p):
                 active=(conflict==1) if n==1 else r.get(b["ask"])==1
                 in_scope_n=active and COMPONENT_CODE[c] in set(r.get(b["scope"],[]))
                 slots_n=set(r.get(b["slots"](c),[]))
-                if c in comps and in_scope_n:
+                if in_scope_n:
                     if not slots_n or not slots_n<=options: out.append(f"{c}: conflict {n} needs the conflicting option(s)")
-                elif slots_n: out.append(f"{c}: conflict {n} options are only recorded for that conflict in a component that differs")
+                elif slots_n: out.append(f"{c}: conflict {n} options are only recorded for that conflict in a scoped component")
                 if c in ("dom","purp"):
                     labels_n=set(r.get(b["labels"](c),[])); named=rule_component(r.get(b["cited"])) is not None
                     if in_scope_n and not named:
@@ -463,7 +464,17 @@ def aggregate_independence(findings,mapping):
         if type(r["pre_reveal"]) is not int or r["pre_reveal"] not in {0,1,2}:raise ValueError("pre_reveal must be 0 No, 1 Yes, or 2 Unknown")
     def summaries(mapping):
         groups={}
-        for r in findings:groups.setdefault(mapping.get(r["mechanism_versioned"],r["mechanism_versioned"]),[]).append(r)
+        for r in findings:
+            mech=mapping.get(r["mechanism_versioned"],r["mechanism_versioned"])
+            code=r.get("mechanism_code") or (r.get("mechanism") or {}).get("code")
+            if code is None: raise ValueError("mechanism code required to distinguish general from pair-specific recurrence")
+            code=int(code)
+            if code in GENERAL_MECHANISM_CODES:
+                dom=tuple(finding_label_names(r.get("dom_labels",[]),DOMAINS))
+                purp=tuple(finding_label_names(r.get("purp_labels",[]),PURPOSES))
+                if not(dom or purp): raise ValueError("general mechanism needs its affected labels before aggregation")
+                mech=f"{mech} | dom:{'; '.join(dom)} | purp:{'; '.join(purp)}"
+            groups.setdefault(mech,[]).append(r)
         result={}
         for mech,rows in groups.items():
             records={r["record_id"] for r in rows}; streams={r["stream"] for r in rows if r["pre_reveal"]==1}; pairs={(r["stream"],r["signal_ref"]) for r in rows if r["pre_reveal"]==1}; inclusive=len(records)>=2 or len(streams)>=2; adjudicator_only=len(records)==1 and streams and streams<={"primary","secondary"} and len(streams)>=2
@@ -498,8 +509,8 @@ def derive_stage1(response,package):
         elif len(best)==n: outcome=3
         else: outcome=2
         ticked=set(response.get(pre+"defensible",[])); evidence=response.get(pre+"evidence")
-        if evidence==3 or ticked=={DEFENSIBLE_NONE}: insufficient=1
-        elif evidence==4 or ticked=={DEFENSIBLE_CANNOT_JUDGE}: insufficient=9
+        if evidence==4 or ticked=={DEFENSIBLE_CANNOT_JUDGE}: insufficient=9
+        elif evidence==3 or ticked=={DEFENSIBLE_NONE}: insufficient=1
         else: insufficient=0
         derived.update({pre+"best_skipped":int(skipped),pre+"best_outcome":outcome,pre+"multiple_defensible":int(len(defensible)>=2),pre+"insufficient_support":insufficient})
     return derived
@@ -559,10 +570,13 @@ def record_reflection(store,h,entry):
         raise ValueError(f"reflection scope {entry['scope']!r} is neither a component nor a preserved field")
     store.setdefault("adj_reflection",[]).append(copy.deepcopy({"snapshot_hash":h,**entry}))
     store.setdefault("events",[]).append({"event":"reflection_recorded","scope":entry["scope"],"at":datetime.now(timezone.utc).isoformat()})
-def reveal(a,p,h,payload,store,simulate_partial=False):
+def reveal(a,p,h,payload,store,case,simulate_partial=False):
     if "snapshot" not in store:raise PermissionError("premature reveal rejected: no preserved snapshot")
     verify_snapshot(store)
     if(a,p,h)!=(store["snapshot"]["assignment_id"],store["snapshot"]["package_id"],store["snapshot_hash"]):raise PermissionError("assignment, package, or snapshot mismatch")
+    package=store["snapshot"]["presented"]
+    verified_source_slots(case,package)
+    if payload.get(a)!=reveal_fields(case,package): raise PermissionError("reveal payload does not match the original source classifications")
     if simulate_partial:
         store.setdefault("exposure_history",[]).append({"assignment_id":a,"source_information":"synthetic source-reveal mapping potentially accessible","accessibility":"potential","viewing":"unknown","extent":"unknown","at":datetime.now(timezone.utc).isoformat()});store.setdefault("events",[]).append({"event":"reveal_failed_partial","at":datetime.now(timezone.utc).isoformat()});raise RuntimeError("simulated partial reveal failure")
     store.setdefault("events",[]).append({"event":"reveal_recovered" if store.get("exposure_history") else "reveal_complete","at":datetime.now(timezone.utc).isoformat()});return {"assignment_id":a,"package_id":p,"sources":payload[a]}
@@ -572,7 +586,7 @@ def reveal(a,p,h,payload,store,simulate_partial=False):
 # families; a source-specific finding needs a clear basis in the frozen rules
 # and the evidence available to that source.  The release triggers need the
 # mechanism, the labels and the release implication of each finding.  Up to
-# three findings per record; affected sources, mandatory second review and the
+# six findings per record; affected sources, mandatory second review and the
 # families per record are derived rather than asked.
 # ---------------------------------------------------------------------------
 FAMILIES="1, Apparent model rule-application problem | 2, Apparent scratch-coder rule-application problem | 3, Evidence problem | 4, Taxonomy problem | 5, Project-knowledge gap | 6, Legitimate boundary case | 7, Data or instrument problem | 8, Unresolved"
@@ -595,11 +609,16 @@ RELEASE_CODES={0,1,2,3,4,5,6,9}
 # mechanisms for families 1, 2, 4 and 6; data and instrument mechanisms for 7.
 MECHANISM_FAMILIES={1,2,4,6,7}; RULE_MECH_FAMILIES={1,2,4,6}; DATA_MECH_FAMILIES={7}
 MECH_NEW=999; MECH_VOCABULARY="mechvocab-0.1"
+GENERAL_MECHANISM_CODES={24,25,26,27,34,35}
 def mechanism_vocabulary():
     path=ROOT/"instruments"/"mechanism_vocabulary.csv"
     if not path.exists(): raise FileNotFoundError(f"mechanism vocabulary required: {path}; run build_mechanism_vocabulary.py")
-    return [{**r,"code":int(r["code"])} for r in csv.DictReader(path.open(encoding="utf-8"))]
+    with path.open(encoding="utf-8",newline="") as file:
+        return [{**r,"code":int(r["code"])} for r in csv.DictReader(file)]
 def mechanism_codes(group): return {r["code"] for r in mechanism_vocabulary() if r["group"]==group}
+def finding_label_names(values,vocab):
+    return sorted({vocab[v-1] if type(v) is int and 1<=v<=len(vocab) else v
+                   for v in values})
 CODERS={1:"C01",2:"C02",3:"C03"}
 NO_CONFLICT_BASIS=0; BASIS_RULE_CONFLICT=1
 def recorded_conflicts(stage1):
@@ -629,13 +648,14 @@ def inherited_from_conflicts(stage1,cited):
             labels[comp]|={named} if named and rule_component(stage1.get(b["cited"]))==comp else set(stage1.get(b["labels"](comp),[]))
     return {"components":sorted(components),"dom_labels":sorted(labels["dom"]),"purp_labels":sorted(labels["purp"]),
             "basis":BASIS_RULE_CONFLICT,"explanations":[stage1.get(conflict_block(n)["note"]) for n in cited]}
-def validate_stage2(r,stage1=None):
+def validate_stage2(r,stage1=None,case=None,package=None):
     """Validate a Stage 2 response against the lean instrument.
 
     With the Stage 1 response it also checks what a finding inherits from the
     conflicts it rests on, which REDCap cannot express as branching alone.
     """
     out=[]; closure=r.get("adj_stage2_closure"); out+=issue(closure,{1,2,3,4},"Stage 2 closure")
+    source_slots=verified_source_slots(case,package) if case is not None and package is not None else None
     if closure==2 and not r.get("adj_no_issue_rationale"): out.append("no assignable issue needs a short positive rationale")
     shown=closure==1
     for k in range(1,FINDING_SLOTS+1):
@@ -646,6 +666,7 @@ def validate_stage2(r,stage1=None):
         family=r.get(pre+"family"); out+=issue(family,set(range(1,9)),f"finding {k} family")
         available=recorded_conflicts(stage1)
         cited=set(r.get(pre+"conflicts",[]))
+        if cited and stage1 is None: out.append(f"finding {k}: preserved Stage 1 response required for conflict attribution")
         if stage1 is not None:
             if available:
                 if not cited or not cited<={NO_CONFLICT_BASIS}|set(available):
@@ -655,7 +676,23 @@ def validate_stage2(r,stage1=None):
             elif cited: out.append(f"finding {k}: conflicts are only cited where Stage 1 recorded one")
         rests_on=sorted(cited-{NO_CONFLICT_BASIS})
         inherited=inherited_from_conflicts(stage1,rests_on) if rests_on else None
+        if inherited and family in (1,2):
+            if source_slots is None: out.append(f"finding {k}: original source mapping required to verify attribution")
+            else:
+                affected={"production model"} if family==1 else {"coder "+CODERS[c] for c in r.get(pre+"coders",[]) if c in CODERS}
+                attributed=set()
+                for n in rests_on:
+                    b=conflict_block(n)
+                    cited_sources={source for comp in COMPONENTS if COMPONENT_CODE[comp] in stage1.get(b["scope"],[])
+                                   for slot in stage1.get(b["slots"](comp),[])
+                                   for source in source_slots[comp].get(slot,set())}
+                    attributed|=cited_sources
+                    if not affected&cited_sources:
+                        out.append(f"finding {k}: affected source is absent from conflict {n} option(s)")
+                if not affected<=attributed: out.append(f"finding {k}: an affected source is absent from cited conflict options")
         components=set(r.get(pre+"components",[]))
+        if not inherited and r.get(pre+"mech") in GENERAL_MECHANISM_CODES and not components&{1,2}:
+            out.append(f"finding {k}: general mechanism needs a Domain or Purpose component")
         if inherited:
             # Inherited, not asked: a second account of one finding can disagree.
             for field in ("components","dom_labels","purp_labels","basis","note"):
@@ -663,14 +700,19 @@ def validate_stage2(r,stage1=None):
             if family not in (1,2): out.append(f"finding {k}: only a source-specific finding rests on a rule conflict")
         else:
             if not components or not components<={1,2,3,4}: out.append(f"finding {k} needs its components")
-            if family in (1,2):
+            if family in (1,2) or r.get(pre+"mech") in GENERAL_MECHANISM_CODES:
                 for code,comp in ((1,"dom"),(2,"purp")):
                     if code in components and not r.get(pre+f"{comp}_labels"): out.append(f"finding {k} needs the {comp} labels concerned")
+            if family in (1,2):
                 basis=r.get(pre+"basis")
                 if basis not in BASIS_BY_FAMILY[family]: out.append(f"finding {k} needs a clear basis valid for its family")
                 if not r.get(pre+"note"): out.append(f"finding {k} needs its basis explained")
             elif pre+"basis" in r: out.append(f"finding {k}: a basis is only recorded for a source-specific finding")
         coders=set(r.get(pre+"coders",[]))
+        for code,comp,vocab in ((1,"dom",DOMAINS),(2,"purp",PURPOSES)):
+            selected=set(finding_label_names(r.get(pre+f"{comp}_labels",[]),vocab))
+            if not inherited and selected and (code not in components or not selected<=set(vocab)):
+                out.append(f"finding {k}: {comp} labels must be valid and in scope")
         if family==2:
             if not coders or not coders<=set(CODERS): out.append(f"finding {k} needs the coder or coders concerned")
         elif coders: out.append(f"finding {k}: coders are only recorded for a scratch-coder finding")
@@ -695,13 +737,16 @@ def validate_stage2(r,stage1=None):
     if closure in (1,2) and r.get("adj_stage2_affirmed")!=1: out.append("Stage 2 completion not affirmed")
     if any(x.startswith("adj_stage2_derived") or x.endswith("_mandatory_review") for x in r): out.append("derived Stage 2 indicators cannot be supplied")
     return out
-def derive_stage2(r,stage1=None):
+def derive_stage2(r,stage1=None,case=None,package=None):
     """Families per record, affected sources, and whether second review is mandatory (§9.1).
 
     With the Stage 1 response, a finding also carries the components, labels
     and basis of the conflicts it rests on, so the preserved finding is whole
     whether or not they were entered twice (ADJ-056).
     """
+    if any(set(r.get(f"adj_f{k}_conflicts",[]))-{NO_CONFLICT_BASIS} for k in range(1,FINDING_SLOTS+1)):
+        problems=validate_stage2(r,stage1,case,package)
+        if problems: raise ValueError("; ".join(problems))
     findings=[]
     if r.get("adj_stage2_closure")==1:
         for k in range(1,FINDING_SLOTS+1):
@@ -716,8 +761,8 @@ def derive_stage2(r,stage1=None):
             findings.append({"finding":k,"family":family,"affected_sources":sources,"mechanism":mechanism,"release":r.get(f"adj_f{k}_release"),
                              "rests_on_conflicts":rests_on,
                              "components":inherited["components"] if inherited else sorted(r.get(f"adj_f{k}_components",[])),
-                             "dom_labels":inherited["dom_labels"] if inherited else sorted(r.get(f"adj_f{k}_dom_labels",[])),
-                             "purp_labels":inherited["purp_labels"] if inherited else sorted(r.get(f"adj_f{k}_purp_labels",[])),
+                             "dom_labels":inherited["dom_labels"] if inherited else finding_label_names(r.get(f"adj_f{k}_dom_labels",[]),DOMAINS),
+                             "purp_labels":inherited["purp_labels"] if inherited else finding_label_names(r.get(f"adj_f{k}_purp_labels",[]),PURPOSES),
                              "basis":inherited["basis"] if inherited else r.get(f"adj_f{k}_basis"),
                              "basis_explained":inherited["explanations"] if inherited else [r.get(f"adj_f{k}_note")]})
             if r.get(f"adj_f{k}_another")!=1: break
@@ -730,6 +775,17 @@ def derive_stage2(r,stage1=None):
 def source_name(c):
     if c["source_type"]=="fable": return "production model"
     sid=c.get("source_id","?"); return "coder "+{"SC_A":"C01","SC_B":"C02","SC_C":"C03"}.get(sid,sid)
+def verified_source_slots(case,package):
+    """Resolve option sources from original classifications after Stage 1 preservation."""
+    if package_case({**case,"assignment_id":package["assignment_id"]},seed=package["seed"])["package_id"]!=package["package_id"]:
+        raise PermissionError("original classifications do not match the preserved package")
+    candidates={}
+    for c in case["classifications"]:
+        if c["source_type"] in {"fable","scratch"}:
+            candidates.setdefault("C_"+stable_id(candidate_content(c)),set()).add(source_name(c))
+    return {comp:{slot_map(package,comp)[item["interpretation_id"]]:
+                  {source for cid in item["candidate_ids"] for source in candidates[cid]}
+                  for item in package["interpretations"][comp]} for comp in COMPONENTS}
 def reveal_columns():
     """Reveal import columns: the source of each option slot, per component.
 
@@ -744,8 +800,8 @@ def reveal_fields(case,package):
     the option's own heading line instead of wrapping inside shared text
     (ADJ-047).  Only the source is revealed: the option text is a Stage 1 field
     Stage 2 pipes, so the blind and revealed views cannot disagree about what
-    was shown (ADJ-048).  A component every source agreed on reveals nothing,
-    and a slot the record does not have carries no value.  Imported only after
+    was shown (ADJ-048). A single displayed option still names its source;
+    a slot the record does not have carries no value. Imported only after
     Stage 1 is preserved.
     """
     by_candidate={}
@@ -756,7 +812,6 @@ def reveal_fields(case,package):
     out={c:"" for c in reveal_columns()}
     for comp in COMPONENTS:
         interpretations=package["interpretations"][comp]
-        if len(interpretations)==1: continue
         slots=slot_map(package,comp)
         for x in interpretations:
             low=OPTION_LETTERS[slots[x["interpretation_id"]]-1].lower()
@@ -813,8 +868,9 @@ def slot_hiding(comp):
             f"@IF({count} = '2', @HIDECHOICE='3,4', "
             f"@IF({count} = '3', @HIDECHOICE='4', '')))")
 def data_quality_rules():
-    """Rules flagging slot answers impossible for the record's slot count."""
-    rules=[]
+    """Form-level backstops for impossible, missing and contradictory answers."""
+    rules=[("Generation error affirmed as complete Stage 1",
+            "[adj_diff_check] = '2' and [adj_stage1_affirmed] = '1'","y")]
     for comp in COMPONENTS:
         count=f"[adj_{comp}_slot_count]"
         below=lambda s:"("+" or ".join(f"{count} = '{k}'" for k in [""]+[str(x) for x in range(1,s)])+")"
@@ -823,6 +879,11 @@ def data_quality_rules():
                           " or ".join(f"([adj_{comp}_{field}({s})] = '1' and {below(s)})" for s in range(2,5)),"y"))
         rules.append((f"Missing or invalid slot count: {COMPONENT_LABEL[comp]}",
                       f"[adj_{comp}_comparative] = '1' and {count} <> '2' and {count} <> '3' and {count} <> '4'","y"))
+        for n in CONFLICT_BLOCKS:
+            b=conflict_block(n); slots=b["slots"](comp)
+            rules.append((f"Missing {CONFLICT_ORDINAL[n]}-rule conflicting option: {COMPONENT_LABEL[comp]}",
+                          f"[{b['ask']}] = '1' and [{b['scope']}({COMPONENT_CODE[comp]})] = '1' and " +
+                          " and ".join(f"[{slots}({s})] <> '1'" for s in range(1,5)),"y"))
     for k in range(1,FINDING_SLOTS+1):
         pre=f"adj_f{k}_"
         rules.append((f"Unexplained proposal: finding {k}",
@@ -1021,7 +1082,7 @@ def field_rows():
             in_scope=f"{block_pkg} and [{b['scope']}({COMPONENT_CODE[comp]})] = '1'"
             add(b["slots"](comp),"adj_stage1","checkbox",f"Which {NOUN[comp]} option or options conflict with the {word} rule?" if n>1
                 else f"Which {NOUN[comp]} option or options conflict?",slot_choices,
-                f"{in_scope} and [adj_{comp}_comparative] = '1'","y",slot_hiding(comp),note=SAME_RULE_NOTE)
+                in_scope,"y",slot_hiding(comp),note=SAME_RULE_NOTE)
         add(b["cited"],"adj_stage1","dropdown",f"Which rule does the {word} conflict involve?" if n>1 else "Which rule does it conflict with?",
             rule_choices(),block_pkg,"y",
             note="Type to search by category or rule ID. The same IDs head the rules in the adjudication rule reference.",val="autocomplete")
@@ -1063,7 +1124,7 @@ def field_rows():
     add("adj_other_concern","adj_stage1","radio","Any other concern, such as a supported label that no option proposed?","0, No | 1, Yes","","y","@DEFAULT='0'");add("adj_other_concern_note","adj_stage1","notes","Describe the concern","","[adj_other_concern] = '1'","y")
     add("adj_stage1_unresolved","adj_stage1","radio","Unresolved at Stage 1?","0, No | 1, Yes","","y","@DEFAULT='0'");add("adj_stage1_unresolved_note","adj_stage1","notes","Why is the case unresolved?","","[adj_stage1_unresolved] = '1'","y")
     add("adj_stage1_note","adj_stage1","notes","Optional note")
-    add("adj_stage1_affirmed","adj_stage1","yesno","Complete preserved Stage 1 assessment?","","","y")
+    add("adj_stage1_affirmed","adj_stage1","yesno","Complete preserved Stage 1 assessment?","","[adj_diff_check] = '1'","y")
     # ---- Stage 2 (ADJ-043): imported reveal, then findings -------------------------------
     add("adj_reveal_state","adj_stage2","radio","Stage 2 reveal state","0, Not revealed | 1, Revealed | 2, Partial-failure exposure",a="@READONLY",section="Stage 2: after the source reveal")
     # REDCap shows only the open form's fields, so Stage 2 carries the entry,
@@ -1085,7 +1146,7 @@ def field_rows():
                 block(f"Option {letter} &mdash; [adj_reveal_{comp}_{low}_src]",f"[adj_{comp}_opt_{low}]"),"",
                 f"[adj_{comp}_comparative] = '1' and ("+" or ".join(f"[adj_{comp}_slot_count] = '{k}'" for k in range(n,5))+")",
                 section=head if n==1 else "")
-        add(f"adj_s2_agreed_{comp}","adj_stage2","descriptive",block("Agreed by every source",f"[adj_{comp}_opt_a]"),"",
+        add(f"adj_s2_agreed_{comp}","adj_stage2","descriptive",block(f"Option A &mdash; [adj_reveal_{comp}_a_src]",f"[adj_{comp}_opt_a]"),"",
             f"[adj_{comp}_comparative] <> '1'",section=head)
     # The recap intro is unconditional, so its section header cannot disappear
     # with a component that did not differ.
@@ -1150,13 +1211,14 @@ def field_rows():
         own=f"([adj_rule_conflict] <> '1' or [{p}conflicts({NO_CONFLICT_BASIS})] = '1')"
         add(p+"components","adj_stage2","checkbox",f"Finding {k}: which parts of the classification?","1, Research Domains | 2, Analytical Purposes | 3, COVID-19/pandemic tag | 4, Demographic disparities/equity tag",f"{shown} and {own}","y")
         source_specific=f"({family} = '1' or {family} = '2')"
+        general_mechanism="("+" or ".join(f"[{p}mech] = '{code}'" for code in sorted(GENERAL_MECHANISM_CODES))+")"
         # A substitution reads either way round, so the note fixes which labels
         # are ticked; without it the second reviewer's counts mix the two
         # directions and mean nothing (ADJ-052).
         label_note=("Tick the labels your chosen basis concerns: the label wrongly assigned, or, for an omission, the label left out. "
                     "Where one label was assigned instead of another, the pair goes in the mechanism, not here.")
-        add(p+"dom_labels","adj_stage2","checkbox",f"Finding {k}: which Research Domain labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(DOMAINS,1)),f"{shown} and {source_specific} and {own} and [{p}components(1)] = '1'","y",note=label_note)
-        add(p+"purp_labels","adj_stage2","checkbox",f"Finding {k}: which Analytical Purpose labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(PURPOSES,1)),f"{shown} and {source_specific} and {own} and [{p}components(2)] = '1'","y",note=label_note)
+        add(p+"dom_labels","adj_stage2","checkbox",f"Finding {k}: which Research Domain labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(DOMAINS,1)),f"{shown} and ({source_specific} or {general_mechanism}) and {own} and [{p}components(1)] = '1'","y",note=label_note)
+        add(p+"purp_labels","adj_stage2","checkbox",f"Finding {k}: which Analytical Purpose labels?"," | ".join(f"{i}, {x}" for i,x in enumerate(PURPOSES,1)),f"{shown} and ({source_specific} or {general_mechanism}) and {own} and [{p}components(2)] = '1'","y",note=label_note)
         add(p+"coders","adj_stage2","checkbox",f"Finding {k}: which coder or coders?"," | ".join(f"{n}, {c}" for n,c in CODERS.items()),f"{shown} and {family} = '2'","y")
         add(p+"basis","adj_stage2","radio",f"Finding {k}: what is the clear basis?",BASIS,f"{shown} and {source_specific} and {own}","y",
             f"@IF({family} = '1', @HIDECHOICE='4', @IF({family} = '2', @HIDECHOICE='2,3', ''))",
@@ -1192,7 +1254,7 @@ def field_rows():
     # discipline kept the stages in order.  The gate makes the sequence
     # structural: it cannot expose a reveal by accident, and it does not replace
     # holding the reveal import back, which is what evidences the order.
-    STAGE2_GATE="[adj_stage1_affirmed] = '1'"
+    STAGE2_GATE="[adj_stage1_affirmed] = '1' and [adj_diff_check] = '1'"
     for row in rows:
         if row[1]!="adj_stage2": continue
         row[11]=STAGE2_GATE if not row[11] else f"{STAGE2_GATE} and ({row[11]})"
