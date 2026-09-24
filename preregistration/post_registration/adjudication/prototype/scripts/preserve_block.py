@@ -35,7 +35,7 @@ from pathlib import Path
 
 from build_formal_import import GROUP, OUT, SEED_PRESENTATION
 from build_route1_component import formal_cases, input_hashes
-from prototype_lib import (derive_stage1, field_rows, generated_evidence, package_case,
+from prototype_lib import (DOMAINS, PURPOSES, derive_stage1, field_rows, generated_evidence, package_case,
                            reveal_columns, reveal_fields, validate_submission)
 
 PRESERVED = OUT / "preservation"
@@ -57,8 +57,22 @@ def _fields():
     return [r for r in field_rows() if r[1] in ("adj_admin", "adj_stage1") and r[3] != "descriptive"]
 
 
+def _choices(choices):
+    return [tuple(x.strip() for x in c.partition(",")[::2]) for c in choices.split("|") if c.strip()]
+
+
 def _codes(choices):
-    return [c.partition(",")[0].strip() for c in choices.split("|") if c.strip()]
+    return [code for code, _ in _choices(choices)]
+
+
+def _label_vocabulary(choices):
+    """Code -> label where a checkbox offers the Domain or Purpose vocabulary.
+
+    REDCap stores the code; the validator and the analysis name the label, as
+    the prototype's responses always have.  Only these fields are decoded.
+    """
+    pairs = _choices(choices)
+    return dict(pairs) if [label for _, label in pairs] in (list(DOMAINS), list(PURPOSES)) else None
 
 
 def stage1_columns():
@@ -74,7 +88,7 @@ def required_columns():
 
 
 def response_from_export(row, generated):
-    """The reviewer's answers, in the validator's shape: ints, checked-code lists, text.
+    """The reviewer's answers, in the validator's shape: ints, checked codes, label names, text.
 
     Generated display fields and admin fields are not answers.  A blank cell
     is no answer; a checkbox with nothing ticked is absent, as in the
@@ -86,7 +100,9 @@ def response_from_export(row, generated):
         if name in generated or name in ADMIN:
             continue
         if kind == "checkbox":
-            ticked = [int(code) for code in _codes(r[5]) if row.get(f"{name}___{code}") == "1"]
+            codes = [code for code in _codes(r[5]) if row.get(f"{name}___{code}") == "1"]
+            labels = _label_vocabulary(r[5])
+            ticked = [labels[code] for code in codes] if labels else [int(code) for code in codes]
             if ticked:
                 out[name] = ticked
         elif norm(row.get(name)):

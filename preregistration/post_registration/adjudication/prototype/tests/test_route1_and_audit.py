@@ -13,8 +13,10 @@ from build_formal_import import (BLOCK_SIZE, SEED_PRIMARY_QUEUE, SEED_PRESENTATI
                                  assignment_id, block_of, primary_queue)
 from build_route1_component import component_values
 from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
-from preserve_block import check_block, required_columns, response_from_export, snapshot, stage1_columns
-from prototype_lib import (BEST_CANNOT_DETERMINE, DOMAINS, PURPOSES, comparative_components, default_valid_submission,
+from preserve_block import (_choices, _label_vocabulary, check_block, required_columns, response_from_export,
+                            snapshot, stage1_columns)
+from prototype_lib import (BEST_CANNOT_DETERMINE, DOMAINS, PURPOSES, RULE_OTHER, comparative_components, default_valid_submission,
+                           field_rows, rule_catalogue, validate_submission,
                            derive_stage1, generated_evidence, load_json, package_case,
                            reveal_columns, reveal_fields)
 
@@ -59,6 +61,7 @@ class Route1AndAuditTests(unittest.TestCase):
         expected = reveal_fields(case, package)
         response = default_valid_submission(package)
         checkboxes = {c.split("___")[0] for c in stage1_columns() if "___" in c}
+        choices = {r[0]: r[5] for r in field_rows()}
 
         def export_row(answers):
             # A raw export of every instrument: unticked checkboxes are "0",
@@ -71,7 +74,9 @@ class Route1AndAuditTests(unittest.TestCase):
             for key, value in answers.items():
                 if key in ("assignment_id", "package_id"): continue
                 if key in checkboxes:
-                    for code in value: row[f"{key}___{code}"] = "1"
+                    # REDCap stores a label checkbox as its choice code, never the name.
+                    codes = {label: code for code, label in _choices(choices[key])}
+                    for v in value: row[f"{key}___{codes.get(v, v)}"] = "1"
                 else: row[key] = str(value)
             return row
         row = export_row(response)
@@ -109,6 +114,30 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertTrue(problems({f"adj_{comp}_best___{BEST_CANNOT_DETERMINE}": "1"}))  # cannot determine plus an option
         self.assertTrue(problems({f"adj_{comp}_evidence": ""}))
         self.assertTrue(problems({"adj_rule_conflict": "1"}))  # a conflict with no scope, rule or reason
+
+        # A rule naming no label of its own (an assignment principle, or Other)
+        # makes the reviewer tick the labels; REDCap stores their codes, the
+        # validator reads names.  Both conflicts must survive the round trip.
+        principle = next(r["code"] for r in rule_catalogue() if r["scope"] == "principle")
+        dom_labels, purp_labels = [DOMAINS[2], DOMAINS[5]], [PURPOSES[3]]
+        labelled = {**response, "adj_rule_conflict": 1, "adj_rule_conflict_scope": [1],
+                    "adj_dom_conflict_slots": [1], "adj_conflict_rule_cited": principle,
+                    "adj_dom_conflict_labels": dom_labels, "adj_rule_conflict_note": "Synthetic",
+                    "adj_conflict_second": 1, "adj_conflict2_scope": [2], "adj_purp_conflict2_slots": [1],
+                    "adj_conflict_rule2_cited": RULE_OTHER, "adj_conflict_rule2_other": "Synthetic rule",
+                    "adj_purp_conflict2_labels": purp_labels, "adj_rule_conflict_note2": "Synthetic",
+                    "adj_conflict_third": 0}
+        self.assertEqual(validate_submission(labelled, package), [])
+        labelled_row = export_row(labelled)
+        self.assertEqual(labelled_row["adj_dom_conflict_labels___3"], "1")  # stored as a code
+        back = response_from_export(labelled_row, generated_evidence(package))
+        self.assertEqual(back, labelled)
+        self.assertEqual(check_block(columns, {"ADJ_0001": labelled_row}, sources, packages, reveal, wanted), [])
+        # Every Stage 1 label checkbox is decoded, and no other Stage 1 checkbox.
+        decoded = {r[0] for r in field_rows() if r[1] == "adj_stage1" and r[3] == "checkbox" and _label_vocabulary(r[5])}
+        self.assertEqual(decoded, {f"adj_{c}_conflict{n}_labels".replace("conflict1_", "conflict_")
+                                   for c in ("dom", "purp") for n in range(1, 7)}
+                         | {"adj_dom_additional_label_ids", "adj_purp_additional_label_ids"})
 
         # The snapshot carries the full Stage 1 column set, the response and its derivations.
         body = json.loads(snapshot({"ADJ_0001": row}, packages))["ADJ_0001"]
