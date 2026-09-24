@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from build_formal_import import (BLOCK_SIZE, SEED_PRIMARY_QUEUE, SEED_PRESENTATION,
                                  assignment_id, block_of, primary_queue)
 from build_route1_component import component_values
+from check_blocks import compare as compare_blocks
 from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
 from preserve_block import (_choices, _label_vocabulary, check_block, required_columns, response_from_export,
                             snapshot, stage1_columns)
@@ -157,6 +158,17 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertIn(f"adj_{comp}_insufficient_support", body["derived"])
         self.assertEqual(snapshot({"ADJ_0001": row}, packages),
                          snapshot({"ADJ_0001": dict(reversed(list(row.items())))}, packages))
+
+    def test_later_export_is_checked_against_every_snapshot(self):
+        columns = ["adj_dom_best___1", "adj_stage1_note"]
+        snapshots = {1: {"ADJ_0001": {"stage1_columns": {"adj_dom_best___1": "1", "adj_stage1_note": "a"}},
+                         "ADJ_0002": {"stage1_columns": {"adj_dom_best___1": "0", "adj_stage1_note": ""}}}}
+        rows = {"ADJ_0001": {"adj_dom_best___1": "1", "adj_stage1_note": "a", "adj_reveal_state": "1", "adj_stage2_affirmed": "1"},
+                "ADJ_0002": {"adj_dom_best___1": "1", "adj_stage1_note": "", "adj_reveal_state": "1", "adj_stage2_affirmed": ""}}
+        result = {aid: (changed, reveal, stage2) for _, aid, changed, reveal, stage2 in compare_blocks(rows, snapshots, columns)}
+        self.assertEqual(result["ADJ_0001"], ([], "1", "1"))
+        self.assertEqual(result["ADJ_0002"], (["adj_dom_best___1"], "1", ""))  # edited after preservation
+        self.assertEqual(compare_blocks({}, snapshots, columns)[0][2], ["absent from export"])
 
     def test_audit_is_deterministic_and_overlap_keeps_full_random_draw(self):
         rows = [{"source_record_id": f"SYN_{i:02d}", "completed_primary": "1",
