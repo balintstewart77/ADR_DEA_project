@@ -2,6 +2,7 @@
 import csv
 import contextlib
 import io
+import json
 import sys
 import tempfile
 import unittest
@@ -12,8 +13,9 @@ from build_formal_import import (BLOCK_SIZE, SEED_PRIMARY_QUEUE, SEED_PRESENTATI
                                  assignment_id, block_of, primary_queue)
 from build_route1_component import component_values
 from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
-from preserve_block import check_block, snapshot, stage1_columns
-from prototype_lib import (DOMAINS, PURPOSES, generated_evidence, load_json, package_case,
+from preserve_block import check_block, required_columns, response_from_export, snapshot, stage1_columns
+from prototype_lib import (BEST_CANNOT_DETERMINE, DOMAINS, PURPOSES, comparative_components, default_valid_submission,
+                           derive_stage1, generated_evidence, load_json, package_case,
                            reveal_columns, reveal_fields)
 
 
@@ -50,41 +52,72 @@ class Route1AndAuditTests(unittest.TestCase):
         # Four distinct seeds: presentation, primary queue, audit draw, secondary queue.
         self.assertEqual(len({SEED_PRESENTATION, SEED_PRIMARY_QUEUE, SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE}), 4)
 
-    def test_block_is_preserved_only_when_affirmed_unrevealed_and_verified(self):
+    def test_block_is_preserved_only_when_complete_valid_unrevealed_and_verified(self):
         case = {**load_json("cases.json")[0], "assignment_id": "ADJ_0001"}
         package = package_case(case)
+        self.assertTrue(comparative_components(package))
         expected = reveal_fields(case, package)
-        # A raw export: generated fields with CRLF newlines, as REDCap may return them.
-        row = {"adj_assignment_id": "ADJ_0001", "adj_stage1_package_id": package["package_id"],
-               "adj_stage1_affirmed": "1", "adj_diff_check": "1", "adj_reveal_state": "",
-               "adj_dom_best___1": "1", "adj_dom_best___2": "0",
-               **{c: "" for c in reveal_columns()},
-               **{k: str(v).replace("\n", "\r\n") for k, v in generated_evidence(package).items()}}
+        response = default_valid_submission(package)
+        checkboxes = {c.split("___")[0] for c in stage1_columns() if "___" in c}
+
+        def export_row(answers):
+            # A raw export of every instrument: unticked checkboxes are "0",
+            # generated fields come back with CRLF newlines, reveal is blank.
+            row = {c: ("0" if "___" in c else "") for c in required_columns()}
+            row.update({"adj_assignment_id": "ADJ_0001", "adj_source_record_id": case["record_id"],
+                        "adj_reviewer_role": "1", "adj_stage1_package_id": package["package_id"],
+                        "redcap_data_access_group": "primary", "adj_stage1_complete": "2",
+                        **{k: str(v).replace("\n", "\r\n") for k, v in generated_evidence(package).items()}})
+            for key, value in answers.items():
+                if key in ("assignment_id", "package_id"): continue
+                if key in checkboxes:
+                    for code in value: row[f"{key}___{code}"] = "1"
+                else: row[key] = str(value)
+            return row
+        row = export_row(response)
+        columns = sorted(row)
         reveal = [{"adj_assignment_id": "ADJ_0001", "adj_reveal_state": "1", **expected}]
-        packages, wanted = {"ADJ_0001": package}, {"ADJ_0001": expected}
-        self.assertEqual(check_block({"ADJ_0001": row}, packages, reveal, wanted), [])
+        sources, packages, wanted = {"ADJ_0001": case["record_id"]}, {"ADJ_0001": package}, {"ADJ_0001": expected}
 
-        def fails(changed_row=None, changed_reveal=None):
-            return check_block({"ADJ_0001": {**row, **(changed_row or {})}}, packages,
+        def problems(changed=None, dropped=(), changed_reveal=None):
+            r = {**row, **(changed or {})}
+            return check_block([c for c in columns if c not in dropped], {"ADJ_0001": r}, sources, packages,
                                [{**reveal[0], **(changed_reveal or {})}], wanted)
-        self.assertTrue(fails({"adj_stage1_affirmed": ""}))
-        self.assertTrue(fails({"adj_diff_check": "2"}))
-        self.assertTrue(fails({"adj_reveal_state": "1"}))
-        self.assertTrue(fails({reveal_columns()[0]: "production model"}))
-        self.assertTrue(fails({"adj_dom_opt_a": "An option nobody generated"}))
-        self.assertTrue(fails({"adj_stage1_package_id": "PKG_other"}))
-        slot = next(c for c, v in expected.items() if v)
-        self.assertTrue(fails(changed_reveal={slot: "coder C99"}))
-        self.assertTrue(check_block({}, packages, reveal, wanted))  # record absent from export
-        no_stage2 = {k: v for k, v in row.items() if k != "adj_reveal_state"}
-        self.assertTrue(check_block({"ADJ_0001": no_stage2}, packages, reveal, wanted))
+        self.assertEqual(problems(), [])
+        # The converted response is the one submitted, so the validator judges the real answers.
+        self.assertEqual(response_from_export(row, generated_evidence(package)), response)
 
-        # The snapshot keeps Stage 1 and admin fields, checkbox codes included, and no reveal field.
-        columns = stage1_columns(list(row))
-        self.assertIn("adj_dom_best___1", columns)
-        self.assertIn("adj_stage1_affirmed", columns)
-        self.assertFalse(set(columns) & set(reveal_columns() + ["adj_reveal_state"]))
-        self.assertEqual(snapshot({"ADJ_0001": row}, columns), snapshot({"ADJ_0001": dict(reversed(list(row.items())))}, columns))
+        self.assertTrue(problems({"adj_stage1_affirmed": ""}))
+        self.assertTrue(problems({"adj_diff_check": "2"}))
+        self.assertTrue(problems({"adj_reveal_state": "1"}))
+        self.assertTrue(problems({reveal_columns()[0]: "production model"}))
+        self.assertTrue(problems({"adj_dom_opt_a": "An option nobody generated"}))
+        self.assertTrue(problems({"adj_stage1_package_id": "PKG_other"}))
+        slot = next(c for c, v in expected.items() if v)
+        self.assertTrue(problems(changed_reveal={slot: "coder C99"}))
+        self.assertTrue(check_block(columns, {}, sources, packages, reveal, wanted))  # absent from export
+        # Identity: the right source record, the primary role, the primary group.
+        self.assertTrue(problems({"adj_source_record_id": "SYN_OTHER"}))
+        self.assertTrue(problems({"adj_reviewer_role": "2"}))
+        self.assertTrue(problems({"redcap_data_access_group": "secondary"}))
+        # Schema: an export missing any answer column, or the Stage 2 form, is refused outright.
+        comp = comparative_components(package)[0]
+        self.assertTrue(problems(dropped=(f"adj_{comp}_best___1",)))
+        self.assertTrue(problems(dropped=("adj_reveal_state",)))
+        self.assertTrue(problems(dropped=("redcap_data_access_group",)))
+        # Validation: answers REDCap accepted but the rules refuse are caught before the reveal.
+        self.assertTrue(problems({f"adj_{comp}_best___{BEST_CANNOT_DETERMINE}": "1"}))  # cannot determine plus an option
+        self.assertTrue(problems({f"adj_{comp}_evidence": ""}))
+        self.assertTrue(problems({"adj_rule_conflict": "1"}))  # a conflict with no scope, rule or reason
+
+        # The snapshot carries the full Stage 1 column set, the response and its derivations.
+        body = json.loads(snapshot({"ADJ_0001": row}, packages))["ADJ_0001"]
+        self.assertEqual(sorted(body["stage1_columns"]), stage1_columns())
+        self.assertFalse(set(body["stage1_columns"]) & set(reveal_columns() + ["adj_reveal_state"]))
+        self.assertEqual(body["derived"], derive_stage1(response, package))
+        self.assertIn(f"adj_{comp}_insufficient_support", body["derived"])
+        self.assertEqual(snapshot({"ADJ_0001": row}, packages),
+                         snapshot({"ADJ_0001": dict(reversed(list(row.items())))}, packages))
 
     def test_audit_is_deterministic_and_overlap_keeps_full_random_draw(self):
         rows = [{"source_record_id": f"SYN_{i:02d}", "completed_primary": "1",

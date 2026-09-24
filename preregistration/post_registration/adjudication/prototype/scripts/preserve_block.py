@@ -1,20 +1,28 @@
 """Preserve a block's blind Stage 1 answers and verify its reveal before import.
 
 Run between affirming a block's Stage 1 and importing its reveal file
-(build spec, preservation and reveal; ADJ-071).  From a raw REDCap export it:
+(build spec, preservation and reveal; ADJ-071, ADJ-073).  From a raw REDCap
+export of all instruments it refuses unless:
 
-1. refuses unless every record in the block is affirmed, with the difference
-   summary confirmed, and no reveal field yet carries a value;
-2. checks that what REDCap holds as displayed (package ID, options, candidate
-   maps, counts, public entry) is exactly what the generator imported;
-3. writes an append-only snapshot of the block's Stage 1 and admin fields and
-   logs its SHA-256, refusing to overwrite an earlier one;
-4. checks the block's reveal file against the receipt hash and against the
-   source mapping recomputed from the original classifications for the
-   preserved package, so a wrong or edited reveal file cannot be imported.
+1. the export carries every admin, Stage 1 and reveal column the dictionary
+   defines, so no blind answer can be missing from the snapshot;
+2. each record is the right one: source Record ID, primary role and primary
+   Data Access Group match the import and crosswalk;
+3. what REDCap holds as displayed (package ID, options, candidate maps, counts,
+   public entry) is exactly what the generator imported;
+4. no reveal field yet carries a value;
+5. every response passes the Stage 1 validator, affirmation included.  Pre-
+   reveal is the last point at which a wrong answer can be corrected blind.
 
-Only then does it say the reveal may be imported.  Printed output names the
-block, counts and hashes: never an answer, a classification or a source.
+It then writes an append-only snapshot of the block, holding each record's
+full Stage 1 columns, the validated response and the derived indicators
+(best outcome, multiple defensible, insufficient support), and logs its
+SHA-256.  Finally it checks the block's reveal file against the receipt hash
+and against the source mapping recomputed from the original classifications
+for the preserved package.  Only then does it say the reveal may be imported.
+
+Printed output names records and problems, never an answer, a
+classification or a source.
 """
 from __future__ import annotations
 
@@ -25,12 +33,15 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from build_formal_import import OUT, SEED_PRESENTATION
+from build_formal_import import GROUP, OUT, SEED_PRESENTATION
 from build_route1_component import formal_cases, input_hashes
-from prototype_lib import field_rows, generated_evidence, package_case, reveal_columns, reveal_fields
+from prototype_lib import (derive_stage1, field_rows, generated_evidence, package_case,
+                           reveal_columns, reveal_fields, validate_submission)
 
 PRESERVED = OUT / "preservation"
 LOG_COLUMNS = ("block", "preserved_at_utc", "records", "snapshot_sha256", "export_sha256", "reveal_file_sha256")
+ADMIN = ("adj_assignment_id", "adj_source_record_id", "adj_reviewer_role", "adj_stage1_package_id")
+REVEAL = ["adj_reveal_state"] + reveal_columns()
 
 
 def sha256_bytes(data):
@@ -42,37 +53,78 @@ def norm(value):
     return (value or "").replace("\r\n", "\n").replace("\r", "\n").strip()
 
 
-def stage1_columns(export_columns):
-    """Export columns belonging to the admin and Stage 1 forms, checkbox codes included."""
-    fields = {r[0] for r in field_rows() if r[1] in ("adj_admin", "adj_stage1") and r[3] != "descriptive"}
-    return sorted(c for c in export_columns
-                  if c.split("___")[0] in fields or c in ("adj_admin_complete", "adj_stage1_complete"))
+def _fields():
+    return [r for r in field_rows() if r[1] in ("adj_admin", "adj_stage1") and r[3] != "descriptive"]
 
 
-def check_block(export_rows, packages, reveal_rows, expected_reveal):
+def _codes(choices):
+    return [c.partition(",")[0].strip() for c in choices.split("|") if c.strip()]
+
+
+def stage1_columns():
+    """Every export column the admin and Stage 1 forms produce, checkbox codes expanded."""
+    cols = []
+    for r in _fields():
+        cols += [f"{r[0]}___{code}" for code in _codes(r[5])] if r[3] == "checkbox" else [r[0]]
+    return sorted(cols + ["adj_stage1_complete"])
+
+
+def required_columns():
+    return set(stage1_columns()) | set(REVEAL) | {"redcap_data_access_group"}
+
+
+def response_from_export(row, generated):
+    """The reviewer's answers, in the validator's shape: ints, checked-code lists, text.
+
+    Generated display fields and admin fields are not answers.  A blank cell
+    is no answer; a checkbox with nothing ticked is absent, as in the
+    prototype, so a stale hidden value is caught rather than silently kept.
+    """
+    out = {"assignment_id": row["adj_assignment_id"], "package_id": norm(row["adj_stage1_package_id"])}
+    for r in _fields():
+        name, kind = r[0], r[3]
+        if name in generated or name in ADMIN:
+            continue
+        if kind == "checkbox":
+            ticked = [int(code) for code in _codes(r[5]) if row.get(f"{name}___{code}") == "1"]
+            if ticked:
+                out[name] = ticked
+        elif norm(row.get(name)):
+            value = norm(row[name])
+            out[name] = int(value) if kind in ("radio", "dropdown", "yesno") else value
+    return out
+
+
+def check_block(columns, export_rows, sources, packages, reveal_rows, expected_reveal):
     """Problems preventing preservation or reveal; an empty list means go.
 
-    export_rows: assignment ID -> raw export row.  packages: assignment ID ->
-    package rebuilt from the original classifications.  reveal_rows: the
-    block's reveal file rows.  expected_reveal: assignment ID -> reveal fields
-    recomputed for that package.
+    columns: the export's header.  export_rows: assignment ID -> raw row.
+    sources: assignment ID -> source Record ID from the crosswalk.  packages:
+    assignment ID -> package rebuilt from the original classifications.
+    reveal_rows: the block's reveal file.  expected_reveal: assignment ID ->
+    reveal fields recomputed for that package.
     """
+    missing = sorted(required_columns() - set(columns))
+    if missing:
+        shown = ", ".join(missing[:5]) + (f" and {len(missing) - 5} more" if len(missing) > 5 else "")
+        return [f"export lacks {len(missing)} expected column(s), e.g. {shown}: export all instruments, raw, without de-identification"]
     out = []
     for aid, package in packages.items():
         row = export_rows.get(aid)
         if row is None:
             out.append(f"{aid}: absent from the export"); continue
-        if row.get("adj_stage1_affirmed") != "1": out.append(f"{aid}: Stage 1 not affirmed")
-        if row.get("adj_diff_check") != "1": out.append(f"{aid}: difference summary not confirmed correct")
-        if "adj_reveal_state" not in row:
-            out.append(f"{aid}: export lacks the Stage 2 form, so the pre-reveal state cannot be shown")
-        elif any(norm(row.get(c)) for c in ["adj_reveal_state"] + reveal_columns()):
+        if norm(row.get("adj_source_record_id")) != sources[aid]: out.append(f"{aid}: source Record ID differs from the crosswalk")
+        if row.get("adj_reviewer_role") != "1": out.append(f"{aid}: not a primary assignment")
+        if row.get("redcap_data_access_group") != GROUP: out.append(f"{aid}: not in the {GROUP} Data Access Group")
+        if any(norm(row.get(c)) for c in REVEAL):
             out.append(f"{aid}: a reveal field already holds a value")
         if norm(row.get("adj_stage1_package_id")) != package["package_id"]:
             out.append(f"{aid}: package ID differs from the package rebuilt from the original classifications")
-        for field, value in generated_evidence(package).items():
+        generated = generated_evidence(package)
+        for field, value in generated.items():
             if norm(row.get(field)) != norm(str(value)):
                 out.append(f"{aid}: displayed field {field} differs from what was generated")
+        out += [f"{aid}: {p}" for p in validate_submission(response_from_export(row, generated), package)]
     by_id = {r["adj_assignment_id"]: r for r in reveal_rows}
     if set(by_id) != set(packages):
         out.append("reveal file does not cover exactly this block")
@@ -83,9 +135,16 @@ def check_block(export_rows, packages, reveal_rows, expected_reveal):
     return out
 
 
-def snapshot(export_rows, columns):
-    """Canonical bytes of the block's Stage 1: sorted records, sorted fields."""
-    body = {aid: {c: row.get(c, "") for c in columns} for aid, row in sorted(export_rows.items())}
+def snapshot(export_rows, packages):
+    """Canonical bytes: per record, every Stage 1 column, the response and its derivations."""
+    columns = stage1_columns()
+    body = {}
+    for aid, row in sorted(export_rows.items()):
+        generated = generated_evidence(packages[aid])
+        response = response_from_export(row, generated)
+        body[aid] = {"package_id": packages[aid]["package_id"],
+                     "stage1_columns": {c: row.get(c, "") for c in columns},
+                     "response": response, "derived": derive_stage1(response, packages[aid])}
     return json.dumps(body, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
 
 
@@ -115,24 +174,24 @@ def main(argv=None):
         raise SystemExit(f"no block {args.block}")
     input_hashes()
     cases = {c["record_id"]: c for c in formal_cases()}
-    packages, expected = {}, {}
+    packages, expected, sources = {}, {}, {}
     for m in members:
-        case = {**cases[m["source_record_id"]], "assignment_id": m["adj_assignment_id"]}
+        aid = m["adj_assignment_id"]
+        case = {**cases[m["source_record_id"]], "assignment_id": aid}
         package = package_case(case, seed=SEED_PRESENTATION)
         if package["package_id"] != m["adj_stage1_package_id"]:
-            raise SystemExit(f"{m['adj_assignment_id']}: rebuilt package differs from the crosswalk")
-        packages[m["adj_assignment_id"]] = package
-        expected[m["adj_assignment_id"]] = reveal_fields(case, package)
+            raise SystemExit(f"{aid}: rebuilt package differs from the crosswalk")
+        packages[aid], expected[aid], sources[aid] = package, reveal_fields(case, package), m["source_record_id"]
 
     export_bytes = args.export.read_bytes()
     reader = csv.DictReader(export_bytes.decode("utf-8-sig").splitlines(keepends=True))
     export_rows = {r["adj_assignment_id"]: r for r in reader if r.get("adj_assignment_id") in packages}
     reveal_rows = list(csv.DictReader(reveal_bytes.decode("utf-8").splitlines(keepends=True)))
-    problems = check_block(export_rows, packages, reveal_rows, expected)
+    problems = check_block(reader.fieldnames or [], export_rows, sources, packages, reveal_rows, expected)
     if problems:
-        raise SystemExit("Not preserved; do not import the reveal.\n" + "\n".join(problems))
+        raise SystemExit("Not preserved; do not import the reveal. Correct these in Stage 1, re-export and rerun:\n" + "\n".join(problems))
 
-    body = snapshot(export_rows, stage1_columns(reader.fieldnames))
+    body = snapshot(export_rows, packages)
     PRESERVED.mkdir(parents=True, exist_ok=True)
     snap_path.write_bytes(body)
     entry = {"block": args.block, "preserved_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -144,7 +203,7 @@ def main(argv=None):
         w = csv.DictWriter(f, fieldnames=LOG_COLUMNS)
         if new: w.writeheader()
         w.writerow(entry)
-    print(f"Block {args.block:02d}: {len(export_rows)} records affirmed and preserved, "
+    print(f"Block {args.block:02d}: {len(export_rows)} records validated and preserved, "
           f"snapshot {entry['snapshot_sha256'][:12]}; reveal verified against the original classifications.\n"
           f"Import reveal/{name} now.")
 
