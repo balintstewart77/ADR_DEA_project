@@ -181,3 +181,13 @@ analysis/outputs/model_comparison_fable_5_run2/*
 
 # Local audit run snapshots: full working copies, kept on disk only.
 /analysis/audits/
+
+# Internal adjudication working documents: kept locally, not published
+/preregistration/post_registration/adjudication/adjudication_build_spec.md
+/preregistration/post_registration/adjudication/adjudication_clarification_log.md
+/preregistration/post_registration/adjudication/formal_adjudication_runbook.md
+/preregistration/post_registration/adjudication/input_inventory.md
+/preregistration/post_registration/adjudication/secondary_calibration_exercise.md
+/preregistration/post_registration/adjudication/prototype/verification.md
+/preregistration/post_registration/adjudication/prototype/usability_exercise_template.md
+/preregistration/post_registration/adjudication/prototype/instruments/configuration.md

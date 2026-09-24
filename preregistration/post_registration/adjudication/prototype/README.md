@@ -1,8 +1,16 @@
-# Offline synthetic adjudication prototype
+# Adjudication instrument and generators
 
-Status: candidate, offline-checked, **not REDCap-import-tested**. This package
-contains invented `SYN_ADJ_*` material only. It has no network/API client,
-credentials, production classification path, or fallback to a formal input.
+The frozen adjudication instrument, as imported into REDCap for formal use:
+`instruments/adjudication_stage1_candidate.csv` (SHA-256 `52b63541…adc15305`)
+and `instruments/adjudication_data_quality_rules.csv` (`4c4f9f9f…2ede1`).
+"candidate" in the dictionary's name is historical. The fixtures are invented
+`SYN_ADJ_*` material only, and nothing here has a network or API client or
+credentials.
+
+The scripts that read formal inputs (`build_route1_component.py`,
+`build_formal_import.py`, `preserve_block.py`, `draw_secondary_audit.py`)
+check pinned hashes, write only to the git-ignored `preregistration_restricted/`
+folder, and print aggregates only.
 
 Run from the repository root with Python 3:
 
@@ -13,8 +21,7 @@ python preregistration/post_registration/adjudication/prototype/scripts/run_work
 Start-Process preregistration/post_registration/adjudication/prototype/preview/index.html
 ```
 
-`instruments/adjudication_stage1_candidate.csv` uses the repository REDCap CSV
-header convention, but is only a candidate dictionary. Neutral interpretation
+The dictionary uses the repository REDCap CSV header convention. Neutral interpretation
 slots 1–4 cover the maximum Fable-plus-three-coder complete sets before
 duplicate collapse. The generator maps package-specific stable interpretation
 IDs to those slots and must suppress unused slots; overflow is a QA failure, not
@@ -43,9 +50,8 @@ The intended configuration is one case–reviewer assignment per record, with
 Stage 1 and Stage 2 as distinct instruments and a repeating linked finding
 structure outside this minimum dictionary. REDCap cannot encode all dynamic
 membership/slot choices in a static CSV; the generator supplies read-only maps
-and the local validator enforces cross-field compatibility. Non-production
-REDCap import, branching, requiredness, locking, DAG isolation, export/import
-logging and accounts remain untested operational dependencies.
+and the local validator enforces cross-field compatibility, including at
+preservation, before each block's reveal.
 
 The preview is a review surface, not a security boundary. It is generated from
 masked synthetic packages and contains no reveal mapping. Reveal payloads are

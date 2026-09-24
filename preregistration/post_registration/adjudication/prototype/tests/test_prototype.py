@@ -348,6 +348,7 @@ class PrototypeTests(unittest.TestCase):
             self.assertRegex(value,r"^'\d+(,\d+)*'$",row[0])
             choices={entry.split(",",1)[0].strip() for entry in row[5].split(" | ")}
             for code in value.strip("'").split(","): self.assertIn(code,choices,row[0])
+    @unittest.skipUnless((ROOT/"verification.md").exists(),"internal verification record is kept out of the public repository")
     def test_long_variable_names_match_verification_record(self):
         actual=[x[0] for x in field_rows() if len(x[0])>26]
         text=(ROOT/"verification.md").read_text(encoding="utf-8")
