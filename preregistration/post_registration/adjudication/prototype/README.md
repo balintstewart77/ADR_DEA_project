@@ -1,8 +1,11 @@
 # Adjudication instrument and generators
 
 The frozen adjudication instrument, as imported into REDCap for formal use:
-`instruments/adjudication_stage1_candidate.csv` (SHA-256 `52b63541…adc15305`)
-and `instruments/adjudication_data_quality_rules.csv` (`4c4f9f9f…2ede1`).
+`instruments/adjudication_stage1_candidate.csv` (SHA-256 `66d9f3a4…8677706`)
+and `instruments/adjudication_data_quality_rules.csv` (`4c4f9f9f…2ede1`). The
+dictionary is the ADJ-078 amendment, which adds an optional notes box to each
+Stage 2 finding. ADJ_0001 to ADJ_0010 were adjudicated on the previous version
+(`52b63541…adc15305`), which differs only by lacking those six fields.
 "candidate" in the dictionary's name is historical. The fixtures are invented
 `SYN_ADJ_*` material only, and nothing here has a network or API client or
 credentials.

@@ -1234,6 +1234,16 @@ def field_rows():
         add(p+"mech_new","adj_stage2","text",f"Finding {k}: name the new mechanism in a few words","",f"{shown} and ([{p}mech] = '{MECH_NEW}' or [{p}mech_data] = '{MECH_NEW}')","y",
             note="It is added to the list, with a new code, between sessions.")
         add(p+"note","adj_stage2","notes",f"Finding {k}: explain the basis","",f"{shown} and {source_specific} and {own}","y")
+        # Every other finding had no free text at all unless its release choice
+        # opened the proposal box, so a taxonomy, evidence, boundary or
+        # unresolved finding could not say what it saw (ADJ-078).  Optional,
+        # and shown only where the required basis note is not, so a finding
+        # never offers two boxes.
+        add(p+"comment","adj_stage2","notes",f"Finding {k}: notes (optional)","",
+            f"{shown} and {family} <> '' and (({family} <> '1' and {family} <> '2') or "
+            f"([adj_rule_conflict] = '1' and [{p}conflicts({NO_CONFLICT_BASIS})] <> '1'))",
+            note="Anything a later reader needs to understand this finding: what the entry or the rules left open, "
+                 "or why this family rather than another.")
         # What is released is the model's classifications and the outputs built
         # from them, which is why a coder finding rarely bears on release, and
         # three of the codes carry a second-review cost the reviewer cannot see

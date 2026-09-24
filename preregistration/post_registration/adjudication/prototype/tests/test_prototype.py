@@ -611,7 +611,17 @@ class PrototypeTests(unittest.TestCase):
         stage2=[x for x in rows if x[1]=="adj_stage2" and "@READONLY" not in x[17] and x[3]!="descriptive"]
         def asked(context): return [x[0] for x in stage2 if redcap_shows(x[11],{"adj_stage1_affirmed":"1","adj_diff_check":"1",**context})]
         self.assertEqual(len(asked({"adj_stage2_closure":"1","adj_f1_family":"1","adj_f1_components":[1]})),9+1,"model finding: family, components, labels, basis, mechanism, note, release, another, affirm, plus closure")
-        self.assertEqual(len(asked({"adj_stage2_closure":"1","adj_f1_family":"3","adj_f1_components":[2]})),6,"evidence finding: closure, family, components, release, another, affirm")
+        self.assertEqual(len(asked({"adj_stage2_closure":"1","adj_f1_family":"3","adj_f1_components":[2]})),7,"evidence finding: closure, family, components, optional notes, release, another, affirm")
+        # ADJ-078: every finding offers one free-text box, never two. The
+        # optional notes appear wherever the required basis note does not.
+        base={"adj_stage2_closure":"1","adj_f1_components":[1]}
+        for family in "345678": self.assertIn("adj_f1_comment",asked({**base,"adj_f1_family":family}),family)
+        own=asked({**base,"adj_f1_family":"1"})
+        self.assertIn("adj_f1_note",own); self.assertNotIn("adj_f1_comment",own)
+        inherited=asked({**base,"adj_f1_family":"2","adj_rule_conflict":"1","adj_f1_conflicts":[1]})
+        self.assertIn("adj_f1_comment",inherited); self.assertNotIn("adj_f1_note",inherited)
+        self.assertNotIn("adj_f1_comment",asked({"adj_stage2_closure":"1"}))  # no family chosen yet
+        self.assertEqual(by["adj_f1_comment"][12],"","optional")
         self.assertEqual(asked({"adj_stage2_closure":"2"}),["adj_stage2_closure","adj_no_issue_rationale","adj_stage2_affirmed"])
         self.assertNotIn("adj_f2_family",asked({"adj_stage2_closure":"1","adj_f1_another":"0"})); self.assertIn("adj_f2_family",asked({"adj_stage2_closure":"1","adj_f1_another":"1"}))
         self.assertEqual(hidden_choices(by["adj_f1_basis"][17],{"adj_f1_family":"1"}),{4})
