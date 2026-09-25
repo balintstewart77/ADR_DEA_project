@@ -1253,9 +1253,9 @@ def field_rows():
         # from the choice list (ADJ-050).
         add(p+"release","adj_stage2","radio",f"Finding {k}: is this case evidence for a later release decision?",RELEASE,shown,"y",
             note="You are nominating the case, not deciding anything: the release decision is made later, on the accumulated evidence. "
-                 "Release covers the model's classifications, not the coder benchmark, so a coder finding is usually Caveat only, "
-                 "or None if no rule was involved. Prompt revision, taxonomy revision and non-release each trigger a mandatory second "
-                 "review. If an unclear rule caused the error, add a separate taxonomy finding.")
+                 "Release covers the model's classifications, not the coder benchmark, so record a coder finding as None; a model "
+                 "finding is usually Caveat only (ADJ-084). Prompt revision, taxonomy revision and non-release each trigger a "
+                 "mandatory second review. If an unclear rule caused the error, add a separate taxonomy finding.")
         proposes="("+" or ".join(f"[{p}release] = '{c}'" for c in RELEASE_PROPOSES)+")"
         add(p+"release_note","adj_stage2","notes",f"Finding {k}: what revision or caveat is proposed?","",f"{shown} and {proposes}","",
             note="Say what should change, and enough of why that someone deciding later, without this case in front of them, can act on it. "
