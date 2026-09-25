@@ -13,7 +13,7 @@ from build_formal_import import (BLOCK_SIZE, SEED_PRIMARY_QUEUE, SEED_PRESENTATI
                                  assignment_id, block_of, primary_queue)
 from build_route1_component import component_values
 from check_blocks import compare as compare_blocks
-from rule_groups import catalogue_rows as rule_group_rows, groups_for, is_unclear_problem
+from rule_groups import catalogue_rows as rule_group_rows, groups_for, is_unclear_problem, record_groups
 from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
 from preserve_block import (_choices, _label_vocabulary, check_block, required_columns, response_from_export,
                             snapshot, stage1_columns)
@@ -190,6 +190,12 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertTrue(all(r["category"] for r in rows if r["scope"] == "principle"))
         with self.assertRaises(ValueError):
             groups_for(12345, {"dom"}, {})
+        # One record citing Unclear misuse three ways, in both layers, counts
+        # once per layer, and is one problem at level 3.
+        cited = [(47, {"dom"}, {}), (92, {"dom", "purp"}, {}), (79, {"purp"}, {}), (46, {"dom"}, {})]
+        self.assertEqual(record_groups(cited),
+                         ["Domains: Unclear from Register Entry", "Purposes: Unclear from Register Entry"])
+        self.assertEqual({is_unclear_problem(g) for g in record_groups(cited)}, {True})
         # The archived mapping is exactly what the generator writes.
         with (Path(__file__).resolve().parents[1] / "instruments" / "rule_groups.csv").open(encoding="utf-8", newline="") as f:
             archived = list(csv.DictReader(f))

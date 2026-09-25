@@ -88,6 +88,17 @@ def groups_for(code, scope, labels):
     return sorted(set(groups)) or [f"{row['layer']}: {row['category'] or row['rule_type']}"]
 
 
+def record_groups(conflicts):
+    """Distinct level-2 groups for one record's conflicts.
+
+    conflicts: (code, scope, labels) for each conflict recorded.  One problem
+    cited through two rules on the same record, such as a label's exclusion
+    rule and the Unclear principle, counts once: the unit is the record and
+    group, never the citation.
+    """
+    return sorted({g for code, scope, labels in conflicts for g in groups_for(code, scope, labels)})
+
+
 def is_unclear_problem(group):
     """Level 3: the Domains and Purposes Unclear groups, reported together."""
     return group.endswith(f": {UNCLEAR}") and group.split(":")[0] in ("Domains", "Purposes")
