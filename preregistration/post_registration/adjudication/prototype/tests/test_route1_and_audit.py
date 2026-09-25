@@ -13,6 +13,7 @@ from build_formal_import import (BLOCK_SIZE, SEED_PRIMARY_QUEUE, SEED_PRESENTATI
                                  assignment_id, block_of, primary_queue)
 from build_route1_component import component_values
 from check_blocks import compare as compare_blocks
+from rule_groups import catalogue_rows as rule_group_rows, groups_for, is_unclear_problem
 from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
 from preserve_block import (_choices, _label_vocabulary, check_block, required_columns, response_from_export,
                             snapshot, stage1_columns)
@@ -158,6 +159,41 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertIn(f"adj_{comp}_insufficient_support", body["derived"])
         self.assertEqual(snapshot({"ADJ_0001": row}, packages),
                          snapshot({"ADJ_0001": dict(reversed(list(row.items())))}, packages))
+
+    def test_rule_citations_group_by_label_not_by_rule_type(self):
+        # ADJ-079: the same problem cited through a label's inclusion or its
+        # exclusion rule, or through the Unclear principle, is one group.
+        rows = rule_group_rows()
+        self.assertEqual(len(rows), 100)
+        by = {r["code"]: r for r in rows}
+        for kind, layer in (("Research Domain", "Domains"), ("Analytical Purpose", "Purposes"), ("tag", "Tags")):
+            cats = {r["category"] for r in rows if r["scope"] == "category" and r["layer"] == layer}
+            for cat in cats:
+                codes = [r["code"] for r in rows if r["scope"] == "category" and r["layer"] == layer and r["category"] == cat]
+                self.assertEqual(len(codes), 4, cat)
+                self.assertEqual({tuple(groups_for(c, {"dom", "purp", "covid", "equity"}, {})) for c in codes},
+                                 {(f"{layer}: {cat}",)}, cat)
+        self.assertEqual(len({r["label_group"] for r in rows if r["label_group"]}), 22)
+        # Unclear: the category rules and the principle meet in one group per layer.
+        unclear_dom = {tuple(groups_for(c, {"dom"}, {})) for c in (45, 46, 47, 48, 92)}
+        self.assertEqual(unclear_dom, {("Domains: Unclear from Register Entry",)})
+        self.assertEqual(groups_for(92, {"purp"}, {}), ["Purposes: Unclear from Register Entry"])
+        self.assertEqual(groups_for(92, {"dom", "purp"}, {}),
+                         ["Domains: Unclear from Register Entry", "Purposes: Unclear from Register Entry"])
+        self.assertTrue(all(is_unclear_problem(g) for g in groups_for(92, {"dom", "purp"}, {})))
+        self.assertEqual({r["code"] for r in rows if r["unclear_problem"]}, {45, 46, 47, 48, 77, 78, 79, 80, 92})
+        # Other principles, and Other, take the labels ticked; with none in scope they stand alone.
+        principle = next(c for c, r in by.items() if r["scope"] == "principle" and c != 92)
+        self.assertEqual(groups_for(principle, {"dom"}, {"dom": [DOMAINS[2]]}), [f"Domains: {DOMAINS[2]}"])
+        self.assertEqual(groups_for(999, {"purp"}, {"purp": [PURPOSES[1]]}), [f"Purposes: {PURPOSES[1]}"])
+        self.assertEqual(groups_for(principle, {"equity"}, {}), [f"Principles: {by[principle]['category']}"])
+        self.assertTrue(all(r["category"] for r in rows if r["scope"] == "principle"))
+        with self.assertRaises(ValueError):
+            groups_for(12345, {"dom"}, {})
+        # The archived mapping is exactly what the generator writes.
+        with (Path(__file__).resolve().parents[1] / "instruments" / "rule_groups.csv").open(encoding="utf-8", newline="") as f:
+            archived = list(csv.DictReader(f))
+        self.assertEqual([{k: str(v) for k, v in r.items()} for r in rows], archived)
 
     def test_later_export_is_checked_against_every_snapshot(self):
         columns = ["adj_dom_best___1", "adj_stage1_note"]

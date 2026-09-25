@@ -1,0 +1,101 @@
+code,rule_id,scope,layer,category,rule_type,label_group,grouping,unclear_problem
+1,R001,category,Domains,Business & Productivity,definition,Domains: Business & Productivity,fixed: the rule's own label,0
+2,R002,category,Domains,Business & Productivity,inclusion rule,Domains: Business & Productivity,fixed: the rule's own label,0
+3,R003,category,Domains,Business & Productivity,exclusion rule,Domains: Business & Productivity,fixed: the rule's own label,0
+4,R004,category,Domains,Business & Productivity,counterexample,Domains: Business & Productivity,fixed: the rule's own label,0
+5,R005,category,Domains,Crime & Justice,definition,Domains: Crime & Justice,fixed: the rule's own label,0
+6,R006,category,Domains,Crime & Justice,inclusion rule,Domains: Crime & Justice,fixed: the rule's own label,0
+7,R007,category,Domains,Crime & Justice,exclusion rule,Domains: Crime & Justice,fixed: the rule's own label,0
+8,R008,category,Domains,Crime & Justice,counterexample,Domains: Crime & Justice,fixed: the rule's own label,0
+9,R009,category,Domains,Data Infrastructure & Methodology,definition,Domains: Data Infrastructure & Methodology,fixed: the rule's own label,0
+10,R010,category,Domains,Data Infrastructure & Methodology,inclusion rule,Domains: Data Infrastructure & Methodology,fixed: the rule's own label,0
+11,R011,category,Domains,Data Infrastructure & Methodology,exclusion rule,Domains: Data Infrastructure & Methodology,fixed: the rule's own label,0
+12,R012,category,Domains,Data Infrastructure & Methodology,counterexample,Domains: Data Infrastructure & Methodology,fixed: the rule's own label,0
+13,R013,category,Domains,Education & Skills,definition,Domains: Education & Skills,fixed: the rule's own label,0
+14,R014,category,Domains,Education & Skills,inclusion rule,Domains: Education & Skills,fixed: the rule's own label,0
+15,R015,category,Domains,Education & Skills,exclusion rule,Domains: Education & Skills,fixed: the rule's own label,0
+16,R016,category,Domains,Education & Skills,counterexample,Domains: Education & Skills,fixed: the rule's own label,0
+17,R017,category,Domains,Environment & Agriculture,definition,Domains: Environment & Agriculture,fixed: the rule's own label,0
+18,R018,category,Domains,Environment & Agriculture,inclusion rule,Domains: Environment & Agriculture,fixed: the rule's own label,0
+19,R019,category,Domains,Environment & Agriculture,exclusion rule,Domains: Environment & Agriculture,fixed: the rule's own label,0
+20,R020,category,Domains,Environment & Agriculture,counterexample,Domains: Environment & Agriculture,fixed: the rule's own label,0
+21,R021,category,Domains,Health & Social Care,definition,Domains: Health & Social Care,fixed: the rule's own label,0
+22,R022,category,Domains,Health & Social Care,inclusion rule,Domains: Health & Social Care,fixed: the rule's own label,0
+23,R023,category,Domains,Health & Social Care,exclusion rule,Domains: Health & Social Care,fixed: the rule's own label,0
+24,R024,category,Domains,Health & Social Care,counterexample,Domains: Health & Social Care,fixed: the rule's own label,0
+25,R025,category,Domains,Housing & Planning,definition,Domains: Housing & Planning,fixed: the rule's own label,0
+26,R026,category,Domains,Housing & Planning,inclusion rule,Domains: Housing & Planning,fixed: the rule's own label,0
+27,R027,category,Domains,Housing & Planning,exclusion rule,Domains: Housing & Planning,fixed: the rule's own label,0
+28,R028,category,Domains,Housing & Planning,counterexample,Domains: Housing & Planning,fixed: the rule's own label,0
+29,R029,category,Domains,Labour Market & Employment,definition,Domains: Labour Market & Employment,fixed: the rule's own label,0
+30,R030,category,Domains,Labour Market & Employment,inclusion rule,Domains: Labour Market & Employment,fixed: the rule's own label,0
+31,R031,category,Domains,Labour Market & Employment,exclusion rule,Domains: Labour Market & Employment,fixed: the rule's own label,0
+32,R032,category,Domains,Labour Market & Employment,counterexample,Domains: Labour Market & Employment,fixed: the rule's own label,0
+33,R033,category,Domains,Migration & Demographics,definition,Domains: Migration & Demographics,fixed: the rule's own label,0
+34,R034,category,Domains,Migration & Demographics,inclusion rule,Domains: Migration & Demographics,fixed: the rule's own label,0
+35,R035,category,Domains,Migration & Demographics,exclusion rule,Domains: Migration & Demographics,fixed: the rule's own label,0
+36,R036,category,Domains,Migration & Demographics,counterexample,Domains: Migration & Demographics,fixed: the rule's own label,0
+37,R037,category,Domains,"Poverty, Wealth & Living Standards",definition,"Domains: Poverty, Wealth & Living Standards",fixed: the rule's own label,0
+38,R038,category,Domains,"Poverty, Wealth & Living Standards",inclusion rule,"Domains: Poverty, Wealth & Living Standards",fixed: the rule's own label,0
+39,R039,category,Domains,"Poverty, Wealth & Living Standards",exclusion rule,"Domains: Poverty, Wealth & Living Standards",fixed: the rule's own label,0
+40,R040,category,Domains,"Poverty, Wealth & Living Standards",counterexample,"Domains: Poverty, Wealth & Living Standards",fixed: the rule's own label,0
+41,R041,category,Domains,Public Finance & Taxation,definition,Domains: Public Finance & Taxation,fixed: the rule's own label,0
+42,R042,category,Domains,Public Finance & Taxation,inclusion rule,Domains: Public Finance & Taxation,fixed: the rule's own label,0
+43,R043,category,Domains,Public Finance & Taxation,exclusion rule,Domains: Public Finance & Taxation,fixed: the rule's own label,0
+44,R044,category,Domains,Public Finance & Taxation,counterexample,Domains: Public Finance & Taxation,fixed: the rule's own label,0
+45,R045,category,Domains,Unclear from Register Entry,definition,Domains: Unclear from Register Entry,fixed: the rule's own label,1
+46,R046,category,Domains,Unclear from Register Entry,inclusion rule,Domains: Unclear from Register Entry,fixed: the rule's own label,1
+47,R047,category,Domains,Unclear from Register Entry,exclusion rule,Domains: Unclear from Register Entry,fixed: the rule's own label,1
+48,R048,category,Domains,Unclear from Register Entry,counterexample,Domains: Unclear from Register Entry,fixed: the rule's own label,1
+49,R049,category,Purposes,Descriptive Monitoring,definition,Purposes: Descriptive Monitoring,fixed: the rule's own label,0
+50,R050,category,Purposes,Descriptive Monitoring,inclusion rule,Purposes: Descriptive Monitoring,fixed: the rule's own label,0
+51,R051,category,Purposes,Descriptive Monitoring,exclusion rule,Purposes: Descriptive Monitoring,fixed: the rule's own label,0
+52,R052,category,Purposes,Descriptive Monitoring,counterexample,Purposes: Descriptive Monitoring,fixed: the rule's own label,0
+53,R053,category,Purposes,Life-Course / Trajectory Analysis,definition,Purposes: Life-Course / Trajectory Analysis,fixed: the rule's own label,0
+54,R054,category,Purposes,Life-Course / Trajectory Analysis,inclusion rule,Purposes: Life-Course / Trajectory Analysis,fixed: the rule's own label,0
+55,R055,category,Purposes,Life-Course / Trajectory Analysis,exclusion rule,Purposes: Life-Course / Trajectory Analysis,fixed: the rule's own label,0
+56,R056,category,Purposes,Life-Course / Trajectory Analysis,counterexample,Purposes: Life-Course / Trajectory Analysis,fixed: the rule's own label,0
+57,R057,category,Purposes,Methodological / Infrastructure Research,definition,Purposes: Methodological / Infrastructure Research,fixed: the rule's own label,0
+58,R058,category,Purposes,Methodological / Infrastructure Research,inclusion rule,Purposes: Methodological / Infrastructure Research,fixed: the rule's own label,0
+59,R059,category,Purposes,Methodological / Infrastructure Research,exclusion rule,Purposes: Methodological / Infrastructure Research,fixed: the rule's own label,0
+60,R060,category,Purposes,Methodological / Infrastructure Research,counterexample,Purposes: Methodological / Infrastructure Research,fixed: the rule's own label,0
+61,R061,category,Purposes,Outcome Tracking,definition,Purposes: Outcome Tracking,fixed: the rule's own label,0
+62,R062,category,Purposes,Outcome Tracking,inclusion rule,Purposes: Outcome Tracking,fixed: the rule's own label,0
+63,R063,category,Purposes,Outcome Tracking,exclusion rule,Purposes: Outcome Tracking,fixed: the rule's own label,0
+64,R064,category,Purposes,Outcome Tracking,counterexample,Purposes: Outcome Tracking,fixed: the rule's own label,0
+65,R065,category,Purposes,Policy Evaluation / Impact Analysis,definition,Purposes: Policy Evaluation / Impact Analysis,fixed: the rule's own label,0
+66,R066,category,Purposes,Policy Evaluation / Impact Analysis,inclusion rule,Purposes: Policy Evaluation / Impact Analysis,fixed: the rule's own label,0
+67,R067,category,Purposes,Policy Evaluation / Impact Analysis,exclusion rule,Purposes: Policy Evaluation / Impact Analysis,fixed: the rule's own label,0
+68,R068,category,Purposes,Policy Evaluation / Impact Analysis,counterexample,Purposes: Policy Evaluation / Impact Analysis,fixed: the rule's own label,0
+69,R069,category,Purposes,Risk Prediction / Early Identification,definition,Purposes: Risk Prediction / Early Identification,fixed: the rule's own label,0
+70,R070,category,Purposes,Risk Prediction / Early Identification,inclusion rule,Purposes: Risk Prediction / Early Identification,fixed: the rule's own label,0
+71,R071,category,Purposes,Risk Prediction / Early Identification,exclusion rule,Purposes: Risk Prediction / Early Identification,fixed: the rule's own label,0
+72,R072,category,Purposes,Risk Prediction / Early Identification,counterexample,Purposes: Risk Prediction / Early Identification,fixed: the rule's own label,0
+73,R073,category,Purposes,Service Interaction / Systems Analysis,definition,Purposes: Service Interaction / Systems Analysis,fixed: the rule's own label,0
+74,R074,category,Purposes,Service Interaction / Systems Analysis,inclusion rule,Purposes: Service Interaction / Systems Analysis,fixed: the rule's own label,0
+75,R075,category,Purposes,Service Interaction / Systems Analysis,exclusion rule,Purposes: Service Interaction / Systems Analysis,fixed: the rule's own label,0
+76,R076,category,Purposes,Service Interaction / Systems Analysis,counterexample,Purposes: Service Interaction / Systems Analysis,fixed: the rule's own label,0
+77,R077,category,Purposes,Unclear from Register Entry,definition,Purposes: Unclear from Register Entry,fixed: the rule's own label,1
+78,R078,category,Purposes,Unclear from Register Entry,inclusion rule,Purposes: Unclear from Register Entry,fixed: the rule's own label,1
+79,R079,category,Purposes,Unclear from Register Entry,exclusion rule,Purposes: Unclear from Register Entry,fixed: the rule's own label,1
+80,R080,category,Purposes,Unclear from Register Entry,counterexample,Purposes: Unclear from Register Entry,fixed: the rule's own label,1
+81,R081,category,Tags,COVID-19 & Pandemic,definition,Tags: COVID-19 & Pandemic,fixed: the rule's own label,0
+82,R082,category,Tags,COVID-19 & Pandemic,inclusion rule,Tags: COVID-19 & Pandemic,fixed: the rule's own label,0
+83,R083,category,Tags,COVID-19 & Pandemic,exclusion rule,Tags: COVID-19 & Pandemic,fixed: the rule's own label,0
+84,R084,category,Tags,COVID-19 & Pandemic,counterexample,Tags: COVID-19 & Pandemic,fixed: the rule's own label,0
+85,R085,category,Tags,Demographic disparities / equity tag,definition,Tags: Demographic disparities / equity tag,fixed: the rule's own label,0
+86,R086,category,Tags,Demographic disparities / equity tag,inclusion rule,Tags: Demographic disparities / equity tag,fixed: the rule's own label,0
+87,R087,category,Tags,Demographic disparities / equity tag,exclusion rule,Tags: Demographic disparities / equity tag,fixed: the rule's own label,0
+88,R088,category,Tags,Demographic disparities / equity tag,counterexample,Tags: Demographic disparities / equity tag,fixed: the rule's own label,0
+89,R089,principle,Principles,how many labels each layer takes,layer_cardinality,,the labels ticked for the conflict,0
+90,R090,principle,Principles,assigning Research Domains,layer_a_assignment_rule,,the labels ticked for the conflict,0
+91,R091,principle,Principles,assigning Analytical Purposes,layer_c_assignment_rule,,the labels ticked for the conflict,0
+92,R092,principle,Principles,when Unclear from Register Entry applies,unclear_fallback_rule,,scoped layer's Unclear from Register Entry group,1
+93,R093,principle,Principles,Methodological research as a domain or as a purpose,methodology_domain_purpose_distinction,,the labels ticked for the conflict,0
+94,R094,principle,Principles,"domains, purposes and tags are assigned independently",layer_independence,,the labels ticked for the conflict,0
+95,R095,principle,Principles,"evidence, not a keyword",evidence_not_keyword_rule,,the labels ticked for the conflict,0
+96,R096,principle,Principles,which register fields count as evidence,register_field_evidence_rule,,the labels ticked for the conflict,0
+97,R097,principle,Principles,domain and purpose are separate questions,domain_purpose_separation,,the labels ticked for the conflict,0
+98,R098,principle,Principles,a data source or service setting is not a purpose,setting_vs_purpose_rule,,the labels ticked for the conflict,0
+99,R099,principle,Principles,"a tag is a lens, not a domain or purpose",tag_lens_rule,,the labels ticked for the conflict,0
+999,,other,Other,,other,,the labels ticked for the conflict,0
