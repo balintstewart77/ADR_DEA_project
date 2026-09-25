@@ -121,7 +121,7 @@ def response_from_export(row, generated):
     return out
 
 
-def check_block(columns, export_rows, sources, packages, reveal_rows, expected_reveal):
+def check_block(columns, export_rows, sources, packages, reveal_rows, expected_reveal, post_reveal=False):
     """Problems preventing preservation or reveal; an empty list means go.
 
     columns: the export's header.  export_rows: assignment ID -> raw row.
@@ -129,12 +129,19 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
     assignment ID -> package rebuilt from the original classifications.
     reveal_rows: the block's reveal file.  expected_reveal: assignment ID ->
     reveal fields recomputed for that package.
+
+    post_reveal: the reveal was imported before the block was preserved (a
+    logged deviation, ADJ-081).  The reveal fields must then hold exactly the
+    sources recomputed for the package, instead of being empty.  Nothing else
+    is relaxed: the schema, identity, display and validation checks still run,
+    but Stage 1 can no longer be corrected blind, so validation problems are
+    returned separately, as (blocking, invalid), to be recorded rather than fixed.
     """
     missing = sorted(required_columns() - set(columns))
     if missing:
         shown = ", ".join(missing[:5]) + (f" and {len(missing) - 5} more" if len(missing) > 5 else "")
         return [f"export lacks {len(missing)} expected column(s), e.g. {shown}: export all instruments, raw, without de-identification"]
-    out = []
+    out, invalid = [], []
     for aid, package in packages.items():
         row = export_rows.get(aid)
         if row is None:
@@ -142,7 +149,11 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
         if norm(row.get("adj_source_record_id")) != sources[aid]: out.append(f"{aid}: source Record ID differs from the crosswalk")
         if row.get("adj_reviewer_role") != "1": out.append(f"{aid}: not a primary assignment")
         if row.get("redcap_data_access_group") != GROUP: out.append(f"{aid}: not in the {GROUP} Data Access Group")
-        if any(norm(row.get(c)) for c in REVEAL):
+        if post_reveal:
+            held = {c: norm(row.get(c)) for c in reveal_columns()}
+            if row.get("adj_reveal_state") != "1" or held != {c: norm(v) for c, v in expected_reveal[aid].items()}:
+                out.append(f"{aid}: the reveal REDCap holds does not match the sources recomputed for the package")
+        elif any(norm(row.get(c)) for c in REVEAL):
             out.append(f"{aid}: a reveal field already holds a value")
         if norm(row.get("adj_stage1_package_id")) != package["package_id"]:
             out.append(f"{aid}: package ID differs from the package rebuilt from the original classifications")
@@ -150,7 +161,7 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
         for field, value in generated.items():
             if flat(row.get(field)) != flat(str(value)):
                 out.append(f"{aid}: displayed field {field} differs from what was generated")
-        out += [f"{aid}: {p}" for p in validate_submission(response_from_export(row, generated), package)]
+        invalid += [f"{aid}: {p}" for p in validate_submission(response_from_export(row, generated), package)]
     by_id = {r["adj_assignment_id"]: r for r in reveal_rows}
     if set(by_id) != set(packages):
         out.append("reveal file does not cover exactly this block")
@@ -158,7 +169,7 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
         got = by_id.get(aid, {})
         if got.get("adj_reveal_state") != "1" or any(norm(got.get(c)) != norm(v) for c, v in expected.items()):
             out.append(f"{aid}: reveal file does not match the sources recomputed for the preserved package")
-    return out
+    return (out, invalid) if post_reveal else out + invalid
 
 
 def snapshot(export_rows, packages):
@@ -178,6 +189,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--export", type=Path, required=True, help="raw CSV export of all instruments, inside the restricted folder")
     parser.add_argument("--block", type=int, required=True)
+    parser.add_argument("--post-reveal", metavar="REASON",
+                        help="the reveal was already imported: preserve Stage 1 as it stands, flag the block, and say why")
     args = parser.parse_args(argv)
     if not args.export.resolve().is_relative_to(OUT.resolve()):
         parser.error("the export must be saved inside preregistration_restricted/adjudication_formal")
@@ -213,9 +226,16 @@ def main(argv=None):
     reader = csv.DictReader(export_bytes.decode("utf-8-sig").splitlines(keepends=True))
     export_rows = {r["adj_assignment_id"]: r for r in reader if r.get("adj_assignment_id") in packages}
     reveal_rows = list(csv.DictReader(reveal_bytes.decode("utf-8").splitlines(keepends=True)))
-    problems = check_block(reader.fieldnames or [], export_rows, sources, packages, reveal_rows, expected)
-    if problems:
-        raise SystemExit("Not preserved; do not import the reveal. Correct these in Stage 1, re-export and rerun:\n" + "\n".join(problems))
+    invalid = []
+    if args.post_reveal:
+        problems, invalid = check_block(reader.fieldnames or [], export_rows, sources, packages, reveal_rows, expected,
+                                        post_reveal=True)
+        if problems:
+            raise SystemExit("Not preserved:\n" + "\n".join(problems))
+    else:
+        problems = check_block(reader.fieldnames or [], export_rows, sources, packages, reveal_rows, expected)
+        if problems:
+            raise SystemExit("Not preserved; do not import the reveal. Correct these in Stage 1, re-export and rerun:\n" + "\n".join(problems))
 
     body = snapshot(export_rows, packages)
     PRESERVED.mkdir(parents=True, exist_ok=True)
@@ -229,6 +249,21 @@ def main(argv=None):
         w = csv.DictWriter(f, fieldnames=LOG_COLUMNS)
         if new: w.writeheader()
         w.writerow(entry)
+    if args.post_reveal:
+        # Every post-reveal preservation is flagged, with its reason and any
+        # Stage 1 answer that failed validation and now stands uncorrected.
+        flags = PRESERVED / "post_reveal_blocks.csv"
+        first = not flags.exists()
+        with flags.open("a", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=("block", "preserved_at_utc", "reason", "uncorrected_validation_problems"))
+            if first: w.writeheader()
+            w.writerow({"block": args.block, "preserved_at_utc": entry["preserved_at_utc"], "reason": args.post_reveal,
+                        "uncorrected_validation_problems": "; ".join(invalid)})
+        print(f"Block {args.block:02d}: {len(export_rows)} records preserved AFTER the reveal and flagged, "
+              f"snapshot {entry['snapshot_sha256'][:12]}; the reveal REDCap holds matches the original classifications.")
+        print(("Recorded, not corrected: " + "; ".join(invalid)) if invalid else "All Stage 1 answers pass validation.")
+        print("Do not change Stage 1 for this block.")
+        return
     print(f"Block {args.block:02d}: {len(export_rows)} records validated and preserved, "
           f"snapshot {entry['snapshot_sha256'][:12]}; reveal verified against the original classifications.\n"
           f"Import reveal/{name} now.")

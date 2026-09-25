@@ -151,6 +151,19 @@ class Route1AndAuditTests(unittest.TestCase):
                                    for c in ("dom", "purp") for n in range(1, 7)}
                          | {"adj_dom_additional_label_ids", "adj_purp_additional_label_ids"})
 
+        # Post-reveal mode (ADJ-081): the reveal must be the right one, and
+        # validation problems are returned for recording, not as blockers.
+        revealed = {**row, "adj_reveal_state": "1", **expected}
+        blocking, invalid = check_block(columns, {"ADJ_0001": revealed}, sources, packages, reveal, wanted, post_reveal=True)
+        self.assertEqual((blocking, invalid), ([], []))
+        wrong = {**revealed, slot: "coder C99"}
+        self.assertTrue(check_block(columns, {"ADJ_0001": wrong}, sources, packages, reveal, wanted, post_reveal=True)[0])
+        stale = {**revealed, "adj_rule_conflict": "1"}
+        blocking, invalid = check_block(columns, {"ADJ_0001": stale}, sources, packages, reveal, wanted, post_reveal=True)
+        self.assertEqual(blocking, [])
+        self.assertTrue(invalid)
+        self.assertTrue(problems({"adj_reveal_state": "1", **expected}))  # the normal mode still refuses
+
         # The snapshot carries the full Stage 1 column set, the response and its derivations.
         body = json.loads(snapshot({"ADJ_0001": row}, packages))["ADJ_0001"]
         self.assertEqual(sorted(body["stage1_columns"]), stage1_columns())
