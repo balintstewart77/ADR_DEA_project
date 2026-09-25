@@ -608,7 +608,7 @@ RELEASE_CODES={0,1,2,3,4,5,6,9}
 # Mechanisms come from the versioned vocabulary (ADJ-044): boundary and rule
 # mechanisms for families 1, 2, 4 and 6; data and instrument mechanisms for 7.
 MECHANISM_FAMILIES={1,2,4,6,7}; RULE_MECH_FAMILIES={1,2,4,6}; DATA_MECH_FAMILIES={7}
-MECH_NEW=999; MECH_VOCABULARY="mechvocab-0.1"
+MECH_NEW=999; MECH_VOCABULARY="mechvocab-0.2"
 GENERAL_MECHANISM_CODES={24,25,26,27,34,35}
 def mechanism_vocabulary():
     path=ROOT/"instruments"/"mechanism_vocabulary.csv"
@@ -754,8 +754,11 @@ def derive_stage2(r,stage1=None,case=None,package=None):
             if family is None: break
             sources=["production model"] if family==1 else [CODERS[c] for c in sorted(r.get(f"adj_f{k}_coders",[]))] if family==2 else []
             code=r.get(f"adj_f{k}_mech") if family in RULE_MECH_FAMILIES else r.get(f"adj_f{k}_mech_data") if family in DATA_MECH_FAMILIES else None
-            names={x["code"]:x["name"] for x in mechanism_vocabulary()}
-            mechanism=None if code is None else {"code":code,"name":("NEW: "+str(r.get(f"adj_f{k}_mech_new"))) if code==MECH_NEW else names.get(code),"vocabulary":MECH_VOCABULARY}
+            # A code carries the version it was introduced in, so its versioned
+            # key never shifts when later versions add entries (ADJ-082).
+            vocab={x["code"]:x for x in mechanism_vocabulary()}
+            mechanism=None if code is None else {"code":code,"name":("NEW: "+str(r.get(f"adj_f{k}_mech_new"))) if code==MECH_NEW else vocab[code]["name"],
+                                                 "vocabulary":MECH_VOCABULARY if code==MECH_NEW else vocab[code]["introduced_in"]}
             rests_on=sorted(set(r.get(f"adj_f{k}_conflicts",[]))-{NO_CONFLICT_BASIS})
             inherited=inherited_from_conflicts(stage1,rests_on) if rests_on and stage1 else None
             findings.append({"finding":k,"family":family,"affected_sources":sources,"mechanism":mechanism,"release":r.get(f"adj_f{k}_release"),

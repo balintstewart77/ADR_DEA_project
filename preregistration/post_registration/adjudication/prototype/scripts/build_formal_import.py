@@ -35,12 +35,12 @@ from prototype_lib import (IMPORTED_DEFAULTS, IMPORT_FORBIDDEN, ROOT, field_rows
 REPO = Path(__file__).resolve().parents[5]
 OUT = REPO / "preregistration_restricted/adjudication_formal"
 DICTIONARY = ROOT / "instruments" / "adjudication_stage1_candidate.csv"
-# The ADJ-078 amendment: ADJ-069 plus optional per-finding notes, with Stage 1
-# and every imported field unchanged.  The import is refused against any other
+# The ADJ-082 amendment: ADJ-078 with mechanism vocabulary mechvocab-0.2, which
+# changes only the six mechanism dropdowns' choices.  ADJ-078 was 66d9f3a4...;  The import is refused against any other
 # dictionary, so a later change to the instrument has to be made here on
 # purpose.  The first 186-record import was built against the ADJ-069 version,
 # 52b63541...adc15305, as its receipt records.
-DICTIONARY_SHA256 = "66d9f3a4046da51a782c4f4ba19de0ee5169cb75da5af8ca0ca608cca8677706"
+DICTIONARY_SHA256 = "5e9476fd0e5f869542d6a0185b3d91280125e2913326e16668142a250ada9d37"
 # Its data-quality rules, pinned alongside: the two files are one instrument.
 RULES = ROOT / "instruments" / "adjudication_data_quality_rules.csv"
 RULES_SHA256 = "4c4f9f9f41d0d41d219b581017724982c120da1aefcca6d65fd47bf62802ede1"

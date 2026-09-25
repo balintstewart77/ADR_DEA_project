@@ -717,13 +717,17 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual(len(codes),len(set(codes))); self.assertNotIn(MECH_NEW,codes)
         self.assertTrue(all(1<=m["code"]<=98 for m in vocab if m["group"]=="rule")); self.assertTrue(all(101<=m["code"]<=198 for m in vocab if m["group"]=="data"))
         names=[m["name"] for m in vocab]
-        self.assertEqual(sum(1 for n in names if " vs " in n),23,"boundary pairs the frozen rules name")
+        self.assertEqual(sum(1 for m in vocab if " vs " in m["name"] and m["introduced_in"]=="mechvocab-0.1"),23,"boundary pairs the frozen rules name")
+        # ADJ-082: mechanisms added from adjudication keep the next codes and carry their version.
+        added={m["code"]:m["name"] for m in vocab if m["introduced_in"]=="mechvocab-0.2"}
+        self.assertEqual(added,{36:"Purposes: Descriptive Monitoring vs Methodological / Infrastructure Research",
+                                37:"Domain vs purpose: Data Infrastructure & Methodology vs Methodological / Infrastructure Research"})
         self.assertIn("Purposes: Descriptive Monitoring vs Service Interaction / Systems Analysis",names)
         self.assertIn("Domains: Labour Market & Employment vs Poverty, Wealth & Living Standards",names)
         self.assertFalse([n for n in names if n.startswith("Domains:") and "Policy Evaluation" in n],"a purpose pair filed as a domain pair")
         known=set(DOMAINS)|set(PURPOSES)|{"COVID-19 & Pandemic","Demographic disparities / equity tag"}
         for m in vocab:
-            self.assertTrue(m["source"] and m["description"] and m["introduced_in"]=="mechvocab-0.1",m["name"])
+            self.assertTrue(m["source"] and m["description"] and m["introduced_in"]==("mechvocab-0.1" if m["code"]<=35 or m["code"]>100 else "mechvocab-0.2"),m["name"])
             if " vs " in m["name"]:
                 for label in m["name"].split(": ",1)[1].split(" vs "): self.assertIn(label,known,m["name"])
         by={x[0]:x for x in field_rows()}

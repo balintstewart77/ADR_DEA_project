@@ -23,7 +23,7 @@ REPO = Path(__file__).resolve().parents[5]
 TAXONOMY = REPO / "taxonomy_data_dictionary.yaml"
 TAXONOMY_SHA256 = "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
 OUT = Path(__file__).resolve().parents[1] / "instruments" / "mechanism_vocabulary.csv"
-VERSION = "mechvocab-0.1"
+VERSION = "mechvocab-0.2"
 COLUMNS = ["code", "group", "name", "description", "components", "source", "introduced_in"]
 # Group "rule": families 1, 2, 4 and 6.  Group "data": family 7.
 GENERAL = [
@@ -83,6 +83,20 @@ GENERAL = [
      "dom;purp;covid;equity", "Protocol §9.3(7): related procedure"),
 ]
 
+# Mechanisms named during adjudication as New mechanism and added between
+# sessions, each with the version it arrived in.  Worded as general patterns,
+# in the style of the entries above, so later records can pick them.
+ADDED = [
+    ("mechvocab-0.2", "rule", "Purposes: Descriptive Monitoring vs Methodological / Infrastructure Research",
+     "One is assigned where the frozen rules point to the other: monitoring or describing data is taken for method "
+     "development, or method development for monitoring.",
+     "purp", "New mechanism typed at Stage 2, primary pass, blocks 1-7 (ADJ-082); dict-1.0-rc2 R051, R057-R059"),
+    ("mechvocab-0.2", "rule", "Domain vs purpose: Data Infrastructure & Methodology vs Methodological / Infrastructure Research",
+     "The Data Infrastructure & Methodology domain is assigned where only the Methodological / Infrastructure Research "
+     "purpose applies, or the reverse: method work is taken for the research object, or the object for mere method.",
+     "dom;purp", "New mechanism typed at Stage 2, primary pass, blocks 1-7 (ADJ-082); dict-1.0-rc2 principle R093"),
+]
+
 
 def boundary_pairs():
     if hashlib.sha256(TAXONOMY.read_bytes()).hexdigest() != TAXONOMY_SHA256:
@@ -127,7 +141,7 @@ def boundary_pairs():
 
 
 def main():
-    entries = boundary_pairs() + GENERAL
+    entries = [("mechvocab-0.1",) + e for e in boundary_pairs() + GENERAL] + ADDED
     existing = {}
     if OUT.exists():
         for r in csv.DictReader(OUT.open(encoding="utf-8")):
@@ -136,11 +150,11 @@ def main():
     for r in existing.values():
         g = r["group"]; next_code[g] = max(next_code[g], int(r["code"]) + 1)
     rows = []
-    for group, name, description, components, source in entries:
+    for introduced, group, name, description, components, source in entries:
         if name in existing:
             rows.append(existing[name]); continue
         rows.append({"code": next_code[group], "group": group, "name": name, "description": description,
-                     "components": components, "source": source, "introduced_in": VERSION})
+                     "components": components, "source": source, "introduced_in": introduced})
         next_code[group] += 1
         if next_code["rule"] > 998 or next_code["data"] > 998:
             raise SystemExit("vocabulary codes exhausted")
