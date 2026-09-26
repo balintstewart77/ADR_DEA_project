@@ -23,7 +23,7 @@ REPO = Path(__file__).resolve().parents[5]
 TAXONOMY = REPO / "taxonomy_data_dictionary.yaml"
 TAXONOMY_SHA256 = "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
 OUT = Path(__file__).resolve().parents[1] / "instruments" / "mechanism_vocabulary.csv"
-VERSION = "mechvocab-0.2"
+VERSION = "mechvocab-0.3"
 COLUMNS = ["code", "group", "name", "description", "components", "source", "introduced_in"]
 # Group "rule": families 1, 2, 4 and 6.  Group "data": family 7.
 GENERAL = [
@@ -95,6 +95,16 @@ ADDED = [
      "The Data Infrastructure & Methodology domain is assigned where only the Methodological / Infrastructure Research "
      "purpose applies, or the reverse: method work is taken for the research object, or the object for mere method.",
      "dom;purp", "New mechanism typed at Stage 2, primary pass, blocks 1-7 (ADJ-082); dict-1.0-rc2 principle R093"),
+    ("mechvocab-0.3", "rule", "Domains: Health & Social Care vs Poverty, Wealth & Living Standards",
+     "One is assigned where the frozen rules point to the other: health outcomes read as living-standards research, "
+     "or household resources and hardship read as health research.",
+     "dom", "New mechanism typed twice at Stage 2, in either order, primary pass, blocks 11-15 (ADJ-086); dict-1.0-rc2 "
+            "R021-R024, R037-R040"),
+    ("mechvocab-0.3", "rule", "Purposes: infrastructure work given the purposes it would enable, or the reverse",
+     "A project whose operation is building, linking or documenting data or infrastructure is given the purposes that "
+     "infrastructure would later support, such as Outcome Tracking or Risk Prediction, or the reverse. Asks which "
+     "labels are affected, because the enabled purpose varies.",
+     "purp", "New mechanism typed twice at Stage 2, primary pass, blocks 11-15 (ADJ-086); dict-1.0-rc2 R057-R059, R093"),
 ]
 
 

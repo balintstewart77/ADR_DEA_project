@@ -609,7 +609,7 @@ RELEASE_CODES={0,1,2,3,4,5,6,9}
 # mechanisms for families 1, 2, 4 and 6; data and instrument mechanisms for 7.
 MECHANISM_FAMILIES={1,2,4,6,7}; RULE_MECH_FAMILIES={1,2,4,6}; DATA_MECH_FAMILIES={7}
 MECH_NEW=999; MECH_VOCABULARY="mechvocab-0.2"
-GENERAL_MECHANISM_CODES={24,25,26,27,34,35}
+GENERAL_MECHANISM_CODES={24,25,26,27,34,35,39}  # 39 added in mechvocab-0.3 (ADJ-086)
 def mechanism_vocabulary():
     path=ROOT/"instruments"/"mechanism_vocabulary.csv"
     if not path.exists(): raise FileNotFoundError(f"mechanism vocabulary required: {path}; run build_mechanism_vocabulary.py")

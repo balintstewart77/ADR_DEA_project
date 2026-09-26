@@ -2,7 +2,7 @@ import collections, copy, csv, hashlib, json, re, sys, unittest
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(HERE/"scripts"))
-from prototype_lib import (COMPONENTS,COMPONENT_LABEL,RELEASE_PROPOSES,FINDING_SLOTS,recorded_conflicts,inherited_from_conflicts,rule_label,model_differing_components,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
+from prototype_lib import (GENERAL_MECHANISM_CODES,COMPONENTS,COMPONENT_LABEL,RELEASE_PROPOSES,FINDING_SLOTS,recorded_conflicts,inherited_from_conflicts,rule_label,model_differing_components,NO_CONFLICT_BASIS,BASIS_RULE_CONFLICT,CONFLICT_BLOCKS,CONFLICT_ORDINAL,conflict_block,rule_component,label_free_rules,BASIS,no_majority_components,package_stratum,RELEASE,RELEASE_MANDATORY,OPTION_LETTERS,reveal_columns,BOLD_RESET,dataset_lines,RULE_OTHER,rule_catalogue,rule_codes,DOMAINS,HEADER,reveal_fields,MECH_NEW,mechanism_vocabulary,derive_stage2,validate_stage2,data_quality_rules,comparative_components,component_labels,generated_evidence,IMPORT_FORBIDDEN,import_rows,slot_map,OWNER_CHECKBOX_FIELDS,OWNER_RADIO_FIELDS,OWNER_VIS_FIELDS,PURPOSES,ROOT,aggregate_independence,default_valid_submission,derive_stage1,derive_sufficiency,field_rows,load_json,owner_trigger,package_case,preserve,record_correction,record_reflection,reveal,validate_submission,verify_snapshot)
 
 FROZEN_OWNER=ROOT.parents[3]/"preregistration"/"package"/"06_redcap"/"DEAValidationStudyProjectOwner_DataDictionary_frozen_2026-08-24.csv"
 
@@ -719,15 +719,19 @@ class PrototypeTests(unittest.TestCase):
         names=[m["name"] for m in vocab]
         self.assertEqual(sum(1 for m in vocab if " vs " in m["name"] and m["introduced_in"]=="mechvocab-0.1"),23,"boundary pairs the frozen rules name")
         # ADJ-082: mechanisms added from adjudication keep the next codes and carry their version.
-        added={m["code"]:m["name"] for m in vocab if m["introduced_in"]=="mechvocab-0.2"}
+        added={m["code"]:m["name"] for m in vocab if m["introduced_in"] in ("mechvocab-0.2","mechvocab-0.3")}
         self.assertEqual(added,{36:"Purposes: Descriptive Monitoring vs Methodological / Infrastructure Research",
-                                37:"Domain vs purpose: Data Infrastructure & Methodology vs Methodological / Infrastructure Research"})
+                                37:"Domain vs purpose: Data Infrastructure & Methodology vs Methodological / Infrastructure Research",
+                                38:"Domains: Health & Social Care vs Poverty, Wealth & Living Standards",
+                                39:"Purposes: infrastructure work given the purposes it would enable, or the reverse"})
+        # ADJ-086: 39 names no fixed pair, so it asks which labels are affected, like the other general mechanisms.
+        self.assertIn(39,GENERAL_MECHANISM_CODES); self.assertNotIn(38,GENERAL_MECHANISM_CODES)
         self.assertIn("Purposes: Descriptive Monitoring vs Service Interaction / Systems Analysis",names)
         self.assertIn("Domains: Labour Market & Employment vs Poverty, Wealth & Living Standards",names)
         self.assertFalse([n for n in names if n.startswith("Domains:") and "Policy Evaluation" in n],"a purpose pair filed as a domain pair")
         known=set(DOMAINS)|set(PURPOSES)|{"COVID-19 & Pandemic","Demographic disparities / equity tag"}
         for m in vocab:
-            self.assertTrue(m["source"] and m["description"] and m["introduced_in"]==("mechvocab-0.1" if m["code"]<=35 or m["code"]>100 else "mechvocab-0.2"),m["name"])
+            self.assertTrue(m["source"] and m["description"] and m["introduced_in"]==("mechvocab-0.1" if m["code"]<=35 or m["code"]>100 else "mechvocab-0.2" if m["code"]<=37 else "mechvocab-0.3"),m["name"])
             if " vs " in m["name"]:
                 for label in m["name"].split(": ",1)[1].split(" vs "): self.assertIn(label,known,m["name"])
         by={x[0]:x for x in field_rows()}
