@@ -100,10 +100,11 @@ ADDED = [
      "or household resources and hardship read as health research.",
      "dom", "New mechanism typed twice at Stage 2, in either order, primary pass, blocks 11-15 (ADJ-086); dict-1.0-rc2 "
             "R021-R024, R037-R040"),
-    ("mechvocab-0.3", "rule", "Purposes: infrastructure work given the purposes it would enable, or the reverse",
-     "A project whose operation is building, linking or documenting data or infrastructure is given the purposes that "
-     "infrastructure would later support, such as Outcome Tracking or Risk Prediction, or the reverse. Asks which "
-     "labels are affected, because the enabled purpose varies.",
+    ("mechvocab-0.3", "rule", "Purposes: Methodological / Infrastructure Research omitted; the purposes the infrastructure would serve assigned instead",
+     "A project whose analytical operation is building, linking or documenting data or infrastructure is not given "
+     "Methodological / Infrastructure Research, and is given instead the purposes that infrastructure would later "
+     "serve, such as Outcome Tracking or Risk Prediction. Asks which purposes were assigned instead. The opposite "
+     "error, Methodological given to a project that only uses advanced methods, is mechanism 24 (R059).",
      "purp", "New mechanism typed twice at Stage 2, primary pass, blocks 11-15 (ADJ-086); dict-1.0-rc2 R057-R059, R093"),
     ("mechvocab-0.4", "rule", "Domains: Environment & Agriculture vs Health & Social Care", "One is assigned where the frozen rules point to the other, or the pair is confused.",
      "dom", "New mechanism typed at Stage 2, primary pass, blocks 16-20 (ADJ-088); dict-1.0-rc2 R017-R020, R021-R024; typed on a model and a coder finding"),

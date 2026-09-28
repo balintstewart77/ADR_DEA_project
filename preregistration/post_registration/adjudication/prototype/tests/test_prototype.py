@@ -723,7 +723,7 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual(added,{36:"Purposes: Descriptive Monitoring vs Methodological / Infrastructure Research",
                                 37:"Domain vs purpose: Data Infrastructure & Methodology vs Methodological / Infrastructure Research",
                                 38:"Domains: Health & Social Care vs Poverty, Wealth & Living Standards",
-                                39:"Purposes: infrastructure work given the purposes it would enable, or the reverse",
+                                39:"Purposes: Methodological / Infrastructure Research omitted; the purposes the infrastructure would serve assigned instead",
                                 40:"Domains: Environment & Agriculture vs Health & Social Care",
                                 41:"Domains: Business & Productivity vs Poverty, Wealth & Living Standards",
                                 42:"Purposes: Descriptive Monitoring vs Life-Course / Trajectory Analysis",
