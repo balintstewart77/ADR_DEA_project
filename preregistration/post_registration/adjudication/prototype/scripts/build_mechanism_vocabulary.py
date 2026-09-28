@@ -23,7 +23,7 @@ REPO = Path(__file__).resolve().parents[5]
 TAXONOMY = REPO / "taxonomy_data_dictionary.yaml"
 TAXONOMY_SHA256 = "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
 OUT = Path(__file__).resolve().parents[1] / "instruments" / "mechanism_vocabulary.csv"
-VERSION = "mechvocab-0.3"
+VERSION = "mechvocab-0.4"
 COLUMNS = ["code", "group", "name", "description", "components", "source", "introduced_in"]
 # Group "rule": families 1, 2, 4 and 6.  Group "data": family 7.
 GENERAL = [
@@ -105,6 +105,14 @@ ADDED = [
      "infrastructure would later support, such as Outcome Tracking or Risk Prediction, or the reverse. Asks which "
      "labels are affected, because the enabled purpose varies.",
      "purp", "New mechanism typed twice at Stage 2, primary pass, blocks 11-15 (ADJ-086); dict-1.0-rc2 R057-R059, R093"),
+    ("mechvocab-0.4", "rule", "Domains: Environment & Agriculture vs Health & Social Care", "One is assigned where the frozen rules point to the other, or the pair is confused.",
+     "dom", "New mechanism typed at Stage 2, primary pass, blocks 16-20 (ADJ-088); dict-1.0-rc2 R017-R020, R021-R024; typed on a model and a coder finding"),
+    ("mechvocab-0.4", "rule", "Domains: Business & Productivity vs Poverty, Wealth & Living Standards", "One is assigned where the frozen rules point to the other, or the pair is confused.",
+     "dom", "New mechanism typed at Stage 2, primary pass, blocks 16-20 (ADJ-088); dict-1.0-rc2 R001-R004, R037-R040"),
+    ("mechvocab-0.4", "rule", "Purposes: Descriptive Monitoring vs Life-Course / Trajectory Analysis", "One is assigned where the frozen rules point to the other, or the pair is confused.",
+     "purp", "New mechanism typed at Stage 2, primary pass, blocks 16-20 (ADJ-088); dict-1.0-rc2 R049-R052, R053-R056"),
+    ("mechvocab-0.4", "rule", "Purposes: Life-Course / Trajectory Analysis vs Policy Evaluation / Impact Analysis", "One is assigned where the frozen rules point to the other, or the pair is confused.",
+     "purp", "New mechanism typed at Stage 2, primary pass, blocks 16-20 (ADJ-088); dict-1.0-rc2 R053-R056, R065-R068"),
 ]
 
 

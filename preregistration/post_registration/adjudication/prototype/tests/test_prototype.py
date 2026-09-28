@@ -719,11 +719,18 @@ class PrototypeTests(unittest.TestCase):
         names=[m["name"] for m in vocab]
         self.assertEqual(sum(1 for m in vocab if " vs " in m["name"] and m["introduced_in"]=="mechvocab-0.1"),23,"boundary pairs the frozen rules name")
         # ADJ-082: mechanisms added from adjudication keep the next codes and carry their version.
-        added={m["code"]:m["name"] for m in vocab if m["introduced_in"] in ("mechvocab-0.2","mechvocab-0.3")}
+        added={m["code"]:m["name"] for m in vocab if m["introduced_in"] in ("mechvocab-0.2","mechvocab-0.3","mechvocab-0.4")}
         self.assertEqual(added,{36:"Purposes: Descriptive Monitoring vs Methodological / Infrastructure Research",
                                 37:"Domain vs purpose: Data Infrastructure & Methodology vs Methodological / Infrastructure Research",
                                 38:"Domains: Health & Social Care vs Poverty, Wealth & Living Standards",
-                                39:"Purposes: infrastructure work given the purposes it would enable, or the reverse"})
+                                39:"Purposes: infrastructure work given the purposes it would enable, or the reverse",
+                                40:"Domains: Environment & Agriculture vs Health & Social Care",
+                                41:"Domains: Business & Productivity vs Poverty, Wealth & Living Standards",
+                                42:"Purposes: Descriptive Monitoring vs Life-Course / Trajectory Analysis",
+                                43:"Purposes: Life-Course / Trajectory Analysis vs Policy Evaluation / Impact Analysis"})
+        # No listed pair may repeat another in either order.
+        pairs=[frozenset(m["name"].split(": ",1)[1].split(" vs ")) for m in vocab if " vs " in m["name"]]
+        self.assertEqual(len(pairs),len(set(pairs)),"a pair listed twice")
         # ADJ-086: 39 names no fixed pair, so it asks which labels are affected, like the other general mechanisms.
         self.assertIn(39,GENERAL_MECHANISM_CODES); self.assertNotIn(38,GENERAL_MECHANISM_CODES)
         self.assertIn("Purposes: Descriptive Monitoring vs Service Interaction / Systems Analysis",names)
@@ -731,7 +738,7 @@ class PrototypeTests(unittest.TestCase):
         self.assertFalse([n for n in names if n.startswith("Domains:") and "Policy Evaluation" in n],"a purpose pair filed as a domain pair")
         known=set(DOMAINS)|set(PURPOSES)|{"COVID-19 & Pandemic","Demographic disparities / equity tag"}
         for m in vocab:
-            self.assertTrue(m["source"] and m["description"] and m["introduced_in"]==("mechvocab-0.1" if m["code"]<=35 or m["code"]>100 else "mechvocab-0.2" if m["code"]<=37 else "mechvocab-0.3"),m["name"])
+            self.assertTrue(m["source"] and m["description"] and m["introduced_in"]==("mechvocab-0.1" if m["code"]<=35 or m["code"]>100 else "mechvocab-0.2" if m["code"]<=37 else "mechvocab-0.3" if m["code"]<=39 else "mechvocab-0.4"),m["name"])
             if " vs " in m["name"]:
                 for label in m["name"].split(": ",1)[1].split(" vs "): self.assertIn(label,known,m["name"])
         by={x[0]:x for x in field_rows()}
