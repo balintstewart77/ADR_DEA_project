@@ -18,3 +18,8 @@ analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv -text -eol
 *.xlsx  -text
 *.ods   -text
 *.pdf   -text
+
+# Adjudication instrument files are identified by SHA-256 hashes of their
+# bytes as generated and uploaded to REDCap (CRLF). Store them byte for byte
+# so every checkout reproduces the recorded hashes (ADJ-090).
+preregistration/post_registration/adjudication/prototype/instruments/*.csv -text -eol
