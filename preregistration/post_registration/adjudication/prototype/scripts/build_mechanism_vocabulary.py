@@ -23,7 +23,7 @@ REPO = Path(__file__).resolve().parents[5]
 TAXONOMY = REPO / "taxonomy_data_dictionary.yaml"
 TAXONOMY_SHA256 = "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
 OUT = Path(__file__).resolve().parents[1] / "instruments" / "mechanism_vocabulary.csv"
-VERSION = "mechvocab-0.4"
+VERSION = "mechvocab-0.5"
 COLUMNS = ["code", "group", "name", "description", "components", "source", "introduced_in"]
 # Group "rule": families 1, 2, 4 and 6.  Group "data": family 7.
 GENERAL = [
@@ -114,6 +114,11 @@ ADDED = [
      "purp", "New mechanism typed at Stage 2, primary pass, blocks 16-20 (ADJ-088); dict-1.0-rc2 R049-R052, R053-R056"),
     ("mechvocab-0.4", "rule", "Purposes: Life-Course / Trajectory Analysis vs Policy Evaluation / Impact Analysis", "One is assigned where the frozen rules point to the other, or the pair is confused.",
      "purp", "New mechanism typed at Stage 2, primary pass, blocks 16-20 (ADJ-088); dict-1.0-rc2 R053-R056, R065-R068"),
+    ("mechvocab-0.5", "rule", "General: label assigned with no basis in the title or datasets",
+     "A label is assigned although nothing in the title or the datasets points to it: inferred from outside the entry, or "
+     "guessed. Distinct from 24, where something in the entry mentions the label but it is not central, and from 27, where "
+     "nothing in the entry resolves the whole layer. Asks which labels are affected.",
+     "dom;purp", "Split from mechanism 24 at the study lead's request, primary pass, block 23 (ADJ-091); dict-1.0-rc2 R095, R096"),
 ]
 
 

@@ -1,7 +1,7 @@
 # Adjudication instrument and generators
 
 The frozen adjudication instrument, as imported into REDCap for formal use:
-`instruments/adjudication_stage1_candidate.csv` (SHA-256 `ff160e75…3745`)
+`instruments/adjudication_stage1_candidate.csv` (SHA-256 `10e05c25…5464`)
 and `instruments/adjudication_data_quality_rules.csv` (`4c4f9f9f…2ede1`). The
 dictionary carries two amendments made during the primary pass, neither
 touching Stage 1: ADJ-078 added an optional notes box to each Stage 2 finding
@@ -11,7 +11,8 @@ vocabulary mechvocab-0.2 to the mechanism dropdowns (from ADJ_0036; before it,
 (from ADJ_0051; before it, `5e9476fd…9d37`), and ADJ-086 added mechanism
 vocabulary mechvocab-0.3 (from ADJ_0076; before it, `fbff7ef7…5189`), and ADJ-088
 added mechvocab-0.4 (from ADJ_0101; before it, `860d56bb…97ac`), with mechanism 39
-reworded in the same upload (ADJ-089).
+reworded in the same upload (ADJ-089). ADJ-091 added mechvocab-0.5, mechanism 44
+(from ADJ_0111's Stage 2; before it, `ff160e75…3745`).
 "candidate" in the dictionary's name is historical. The fixtures are invented
 `SYN_ADJ_*` material only, and nothing here has a network or API client or
 credentials.
