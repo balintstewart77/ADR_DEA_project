@@ -40,7 +40,7 @@ DICTIONARY = ROOT / "instruments" / "adjudication_stage1_candidate.csv"
 # dictionary, so a later change to the instrument has to be made here on
 # purpose.  The first 186-record import was built against the ADJ-069 version,
 # 52b63541...adc15305, as its receipt records.
-DICTIONARY_SHA256 = "10e05c25f3a0e498a05cc36cdfdb7eeaabd5ce990f65bc245dd8a27f08615464"  # ADJ-091 mechvocab-0.5 (44); ADJ-089 was ff160e75...; ADJ-088 was 4faea931...; ADJ-086 was 860d56bb..., ADJ-084 fbff7ef7..., ADJ-082 5e9476fd...
+DICTIONARY_SHA256 = "58c75453b46db76ecf3a405391d470adcff972848b955894a620f27c02571cb2"  # ADJ-092 mechvocab-0.6 (45, 46); ADJ-091 was 10e05c25...; ADJ-089 was ff160e75...; ADJ-088 was 4faea931...; ADJ-086 was 860d56bb..., ADJ-084 fbff7ef7..., ADJ-082 5e9476fd...
 # Its data-quality rules, pinned alongside: the two files are one instrument.
 RULES = ROOT / "instruments" / "adjudication_data_quality_rules.csv"
 RULES_SHA256 = "4c4f9f9f41d0d41d219b581017724982c120da1aefcca6d65fd47bf62802ede1"

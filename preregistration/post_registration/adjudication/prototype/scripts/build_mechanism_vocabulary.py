@@ -23,7 +23,7 @@ REPO = Path(__file__).resolve().parents[5]
 TAXONOMY = REPO / "taxonomy_data_dictionary.yaml"
 TAXONOMY_SHA256 = "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
 OUT = Path(__file__).resolve().parents[1] / "instruments" / "mechanism_vocabulary.csv"
-VERSION = "mechvocab-0.5"
+VERSION = "mechvocab-0.6"
 COLUMNS = ["code", "group", "name", "description", "components", "source", "introduced_in"]
 # Group "rule": families 1, 2, 4 and 6.  Group "data": family 7.
 GENERAL = [
@@ -119,6 +119,10 @@ ADDED = [
      "guessed. Distinct from 24, where something in the entry mentions the label but it is not central, and from 27, where "
      "nothing in the entry resolves the whole layer. Asks which labels are affected.",
      "dom;purp", "Split from mechanism 24 at the study lead's request, primary pass, block 23 (ADJ-091); dict-1.0-rc2 R095, R096"),
+    ("mechvocab-0.6", "rule", "Domains: Crime & Justice vs Migration & Demographics", "One is assigned where the frozen rules point to the other, or the pair is confused.",
+     "dom", "New mechanism typed at Stage 2, primary pass, blocks 21-26 (ADJ-092); dict-1.0-rc2 R005-R008, R033-R036"),
+    ("mechvocab-0.6", "rule", "Purposes: Policy Evaluation / Impact Analysis vs Risk Prediction / Early Identification", "One is assigned where the frozen rules point to the other, or the pair is confused.",
+     "purp", "New mechanism typed at Stage 2, primary pass, blocks 21-26 (ADJ-092); dict-1.0-rc2 R065-R068, R069-R072"),
 ]
 
 
