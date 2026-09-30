@@ -21,10 +21,12 @@ answer, circulated to all three coders on 3 August, restated the existing
 field-note distinction between thin register evidence and a genuine taxonomy
 limitation. It changes no rule, field or classification.
 
-DEV-005 (open) records the extension of project-owner data collection from
-5 to 12 October 2026, and of the withdrawal deadline from 19 to 26 October
-2026. The dates in the live owner instrument were left unchanged; 26 October is
-the working withdrawal date for every owner.
+DEV-005 records the extension of project-owner data collection from 5 to 12
+October 2026, and of the withdrawal deadline from 19 to 26 October 2026. The
+dates in the live owner instrument were left unchanged; 26 October is the
+working withdrawal date for every owner. The ethics committee was not
+consulted, because the change asks nothing more of participants and alters no
+approved participant-facing document.
 
 REDCAP-017 records the 23 July 2026 documentation-only alignment of the Project
 Owner participant materials and protocol candidate v0.16 to the one-link Survey

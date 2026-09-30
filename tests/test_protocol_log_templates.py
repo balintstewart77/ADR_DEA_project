@@ -380,15 +380,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
     ]
 
     owner_close_extension = deviation_entries[4]
-    assert all(owner_close_extension[column].strip() for column in required_while_open)
-    assert owner_close_extension["resolved_date"] == ""
+    assert all(owner_close_extension[column].strip() for column in required_deviation_columns)
+    assert owner_close_extension["resolved_date"] == "2026-09-30"
     assert owner_close_extension["substantive"] == "no"
     assert owner_close_extension["amendment_required"] == "no"
-    assert owner_close_extension["status"] == "open"
+    assert owner_close_extension["status"] == "applied"
     assert "Monday 12 October 2026" in owner_close_extension["description"]
     assert "Monday 26 October 2026" in owner_close_extension["description"]
     assert "before any substantive analysis of owner responses" in owner_close_extension["reason"]
-    assert "Research Ethics Committee" in owner_close_extension["resolution"]
+    assert "Research Ethics Committee was not consulted" in owner_close_extension["resolution"]
+    assert "asks nothing more of participants" in owner_close_extension["resolution"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():
