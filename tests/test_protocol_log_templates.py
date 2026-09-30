@@ -42,7 +42,14 @@ def test_required_log_files_and_post_pilot_governance_entry():
     by_id = {row["clarification_id"]: row for row in entries}
     assert len(entries) == len(by_id)
     assert all(re.fullmatch(r"CAL-[A-Z]+-\d{3}", entry_id) for entry_id in by_id)
-    assert set(by_id) == {"CAL-PILOT-001", "CAL-STATUS-002"}
+    assert set(by_id) == {"CAL-PILOT-001", "CAL-STATUS-002", "CAL-FORMAL-003"}
+    formal = by_id["CAL-FORMAL-003"]
+    assert formal["phase"] == "formal coding"
+    assert formal["circulated_at"] == "2026-08-03"
+    assert formal["all_coders_notified"] == "yes"
+    assert formal["simultaneous_circulation"] == "yes"
+    assert formal["case_specific_guidance_prohibited"].startswith("yes")
+    assert "recorded retrospectively on 2026-09-30" in formal["status"]
     entry = by_id["CAL-PILOT-001"]
     assert entry["phase"] == "pre-formal pilot calibration"
     assert entry["circulation_status"] == "circulated"

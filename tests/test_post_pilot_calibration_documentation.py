@@ -192,7 +192,7 @@ def test_protocol_and_logs_preserve_preformal_boundaries():
     assert all(re.fullmatch(r"CAL-[A-Z]+-\d{3}", entry_id) for entry_id in clarification_ids)
     assert len(entries) == len(clarification_ids) == len(set(clarification_ids))
     by_clarification_id = {row["clarification_id"]: row for row in entries}
-    assert set(by_clarification_id) == {"CAL-PILOT-001", "CAL-STATUS-002"}
+    assert set(by_clarification_id) == {"CAL-PILOT-001", "CAL-STATUS-002", "CAL-FORMAL-003"}
     entry = by_clarification_id["CAL-PILOT-001"]
     status_entry = by_clarification_id["CAL-STATUS-002"]
     assert entry["circulation_status"] == "circulated"

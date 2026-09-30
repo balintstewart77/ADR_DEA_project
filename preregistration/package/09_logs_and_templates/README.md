@@ -14,6 +14,13 @@ Package 05 and is closed for coder feedback. Formal sampling and assignment
 import remain prohibited until preregistration and the subsequent authorisation
 gate are complete.
 
+CAL-FORMAL-003 records, retrospectively on 30 September 2026, a rule-level
+clarification given during formal coding. A coder asked on 31 July whether
+sufficiency, taxonomy fit and confidence cover both Domain and Purpose; the
+answer, circulated to all three coders on 3 August, restated the existing
+field-note distinction between thin register evidence and a genuine taxonomy
+limitation. It changes no rule, field or classification.
+
 REDCAP-017 records the 23 July 2026 documentation-only alignment of the Project
 Owner participant materials and protocol candidate v0.16 to the one-link Survey
 Queue architecture. It changes no REDCap field, taxonomy rule, classification,
