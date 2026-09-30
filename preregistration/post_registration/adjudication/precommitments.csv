@@ -1,0 +1,3 @@
+id,recorded,item,what_is_hashed,sha256,withheld_until
+PC-001,2026-09-30,"ADJ-094, internal adjudication clarification log","the entry's table row, UTF-8, without its line break",19e3b9777da28f99bd43c41c0ce2dbcea8c3daba101d00da237b2289b01df4b1,the secondary adjudication review ends (ADJ-073)
+PC-002,2026-09-30,"MEMO-001, primary adjudicator's memo file",the whole file adjudicator_memos.md as bytes,ab3e32ddfd9e619b6eacf95c18eac981701bf06b9ade9209ac5c4f12441fc76d,the secondary adjudication review ends (ADJ-073)

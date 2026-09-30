@@ -40,6 +40,10 @@ from prototype_lib import (DOMAINS, PURPOSES, derive_stage1, field_rows, generat
 
 PRESERVED = OUT / "preservation"
 LOG_COLUMNS = ("block", "preserved_at_utc", "records", "snapshot_sha256", "export_sha256", "reveal_file_sha256")
+# Every refused preservation attempt, so a corrected Stage 1 leaves a record of
+# what was refused and why (audit of 2026-09-30, ADJ-095).
+REFUSALS = PRESERVED / "refusal_log.csv"
+REFUSAL_COLUMNS = ("block", "logged_at_utc", "recorded", "export_file", "export_sha256", "problem_count", "problems")
 ADMIN = ("adj_assignment_id", "adj_source_record_id", "adj_reviewer_role", "adj_stage1_package_id")
 REVEAL = ["adj_reveal_state"] + reveal_columns()
 
@@ -172,6 +176,44 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
     return (out, invalid) if post_reveal else out + invalid
 
 
+def log_refusal(path, block, export_name, export_bytes, problems, recorded="at refusal"):
+    """Append one refused attempt; the log is append-only, like the preservation log."""
+    new = not path.exists()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=REFUSAL_COLUMNS)
+        if new: w.writeheader()
+        w.writerow({"block": block, "logged_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    "recorded": recorded, "export_file": export_name, "export_sha256": sha256_bytes(export_bytes),
+                    "problem_count": len(problems), "problems": " | ".join(problems)})
+
+
+def load_block(block):
+    """The block's reveal file, members and packages rebuilt from the original classifications, all hash-checked."""
+    receipt = json.loads((OUT / "formal_import_receipt.json").read_text(encoding="utf-8"))
+    crosswalk_path = OUT / "adjudication_formal_crosswalk.csv"
+    if sha256_bytes(crosswalk_path.read_bytes()) != receipt["crosswalk_sha256"]:
+        raise SystemExit("the crosswalk does not match the receipt")
+    name = f"adjudication_reveal_formal_block_{block:02d}.csv"
+    reveal_bytes = (OUT / "reveal" / name).read_bytes()
+    if sha256_bytes(reveal_bytes) != receipt["reveal_files"].get(name):
+        raise SystemExit(f"{name} does not match the receipt")
+    members = [r for r in csv.DictReader(crosswalk_path.open(encoding="utf-8")) if r["block"] == str(block)]
+    if not members:
+        raise SystemExit(f"no block {block}")
+    input_hashes()
+    cases = {c["record_id"]: c for c in formal_cases()}
+    packages, expected, sources = {}, {}, {}
+    for m in members:
+        aid = m["adj_assignment_id"]
+        case = {**cases[m["source_record_id"]], "assignment_id": aid}
+        package = package_case(case, seed=SEED_PRESENTATION)
+        if package["package_id"] != m["adj_stage1_package_id"]:
+            raise SystemExit(f"{aid}: rebuilt package differs from the crosswalk")
+        packages[aid], expected[aid], sources[aid] = package, reveal_fields(case, package), m["source_record_id"]
+    return name, reveal_bytes, packages, expected, sources
+
+
 def snapshot(export_rows, packages):
     """Canonical bytes: per record, every Stage 1 column, the response and its derivations."""
     columns = stage1_columns()
@@ -195,32 +237,10 @@ def main(argv=None):
     if not args.export.resolve().is_relative_to(OUT.resolve()):
         parser.error("the export must be saved inside preregistration_restricted/adjudication_formal")
 
-    receipt = json.loads((OUT / "formal_import_receipt.json").read_text(encoding="utf-8"))
-    crosswalk_path = OUT / "adjudication_formal_crosswalk.csv"
-    if sha256_bytes(crosswalk_path.read_bytes()) != receipt["crosswalk_sha256"]:
-        raise SystemExit("the crosswalk does not match the receipt")
-    name = f"adjudication_reveal_formal_block_{args.block:02d}.csv"
-    reveal_path = OUT / "reveal" / name
-    reveal_bytes = reveal_path.read_bytes()
-    if sha256_bytes(reveal_bytes) != receipt["reveal_files"].get(name):
-        raise SystemExit(f"{name} does not match the receipt")
     snap_path = PRESERVED / f"block_{args.block:02d}_stage1_snapshot.json"
     if snap_path.exists():
         raise SystemExit(f"block {args.block} is already preserved; snapshots are never overwritten")
-
-    members = [r for r in csv.DictReader(crosswalk_path.open(encoding="utf-8")) if r["block"] == str(args.block)]
-    if not members:
-        raise SystemExit(f"no block {args.block}")
-    input_hashes()
-    cases = {c["record_id"]: c for c in formal_cases()}
-    packages, expected, sources = {}, {}, {}
-    for m in members:
-        aid = m["adj_assignment_id"]
-        case = {**cases[m["source_record_id"]], "assignment_id": aid}
-        package = package_case(case, seed=SEED_PRESENTATION)
-        if package["package_id"] != m["adj_stage1_package_id"]:
-            raise SystemExit(f"{aid}: rebuilt package differs from the crosswalk")
-        packages[aid], expected[aid], sources[aid] = package, reveal_fields(case, package), m["source_record_id"]
+    name, reveal_bytes, packages, expected, sources = load_block(args.block)
 
     export_bytes = args.export.read_bytes()
     reader = csv.DictReader(export_bytes.decode("utf-8-sig").splitlines(keepends=True))
@@ -231,10 +251,12 @@ def main(argv=None):
         problems, invalid = check_block(reader.fieldnames or [], export_rows, sources, packages, reveal_rows, expected,
                                         post_reveal=True)
         if problems:
+            log_refusal(REFUSALS, args.block, args.export.name, export_bytes, problems, recorded="at refusal (post-reveal)")
             raise SystemExit("Not preserved:\n" + "\n".join(problems))
     else:
         problems = check_block(reader.fieldnames or [], export_rows, sources, packages, reveal_rows, expected)
         if problems:
+            log_refusal(REFUSALS, args.block, args.export.name, export_bytes, problems)
             raise SystemExit("Not preserved; do not import the reveal. Correct these in Stage 1, re-export and rerun:\n" + "\n".join(problems))
 
     body = snapshot(export_rows, packages)

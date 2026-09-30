@@ -19,7 +19,8 @@ reworded in the same upload (ADJ-089). ADJ-091 added mechvocab-0.5, mechanism 44
 credentials.
 
 The scripts that read formal inputs (`build_route1_component.py`,
-`build_formal_import.py`, `preserve_block.py`, `draw_secondary_audit.py`)
+`build_formal_import.py`, `preserve_block.py`, `reconstruct_block_history.py`,
+`draw_secondary_audit.py`)
 check pinned hashes, write only to the git-ignored `preregistration_restricted/`
 folder, and print aggregates only.
 

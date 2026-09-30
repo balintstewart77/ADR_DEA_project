@@ -15,8 +15,8 @@ from build_route1_component import component_values
 from check_blocks import compare as compare_blocks
 from rule_groups import catalogue_rows as rule_group_rows, groups_for, is_unclear_problem, record_groups
 from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
-from preserve_block import (_choices, _label_vocabulary, check_block, required_columns, response_from_export,
-                            snapshot, stage1_columns)
+from preserve_block import (REFUSAL_COLUMNS, _choices, _label_vocabulary, check_block, log_refusal, required_columns,
+                            response_from_export, snapshot, stage1_columns)
 from prototype_lib import (BEST_CANNOT_DETERMINE, DOMAINS, PURPOSES, RULE_OTHER, comparative_components, default_valid_submission,
                            field_rows, rule_catalogue, validate_submission,
                            derive_stage1, generated_evidence, load_json, package_case,
@@ -224,6 +224,19 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertEqual(result["ADJ_0001"], ([], "1", "1"))
         self.assertEqual(result["ADJ_0002"], (["adj_dom_best___1"], "1", ""))  # edited after preservation
         self.assertEqual(compare_blocks({}, snapshots, columns)[0][2], ["absent from export"])
+
+    def test_refused_attempts_are_appended_to_the_refusal_log(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "preservation" / "refusal_log.csv"
+            log_refusal(path, 7, "export_a.csv", b"a", ["ADJ_0031: problem one", "ADJ_0032: problem two"])
+            log_refusal(path, 7, "export_b.csv", b"b", ["ADJ_0031: problem one"], recorded="backfilled")
+            rows = list(csv.DictReader(path.open(encoding="utf-8")))
+        self.assertEqual(tuple(rows[0]), REFUSAL_COLUMNS)  # one header, then append-only rows
+        self.assertEqual([r["export_file"] for r in rows], ["export_a.csv", "export_b.csv"])
+        self.assertEqual([r["problem_count"] for r in rows], ["2", "1"])
+        self.assertEqual(rows[0]["recorded"], "at refusal")
+        self.assertEqual(rows[1]["recorded"], "backfilled")
+        self.assertEqual(rows[0]["problems"], "ADJ_0031: problem one | ADJ_0032: problem two")
 
     def test_audit_is_deterministic_and_overlap_keeps_full_random_draw(self):
         rows = [{"source_record_id": f"SYN_{i:02d}", "completed_primary": "1",
