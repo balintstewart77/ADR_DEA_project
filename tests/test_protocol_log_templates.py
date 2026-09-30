@@ -331,6 +331,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         "DEV-002",
         "DEV-003",
         "DEV-004",
+        "DEV-005",
     ]
     deviation = deviation_entries[0]
     assert all(deviation[column].strip() for column in required_deviation_columns)
@@ -377,6 +378,17 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "every real owner response" in hidden_child_deviation[
         "affected_records_or_outputs"
     ]
+
+    owner_close_extension = deviation_entries[4]
+    assert all(owner_close_extension[column].strip() for column in required_while_open)
+    assert owner_close_extension["resolved_date"] == ""
+    assert owner_close_extension["substantive"] == "no"
+    assert owner_close_extension["amendment_required"] == "no"
+    assert owner_close_extension["status"] == "open"
+    assert "Monday 12 October 2026" in owner_close_extension["description"]
+    assert "Monday 26 October 2026" in owner_close_extension["description"]
+    assert "before any substantive analysis of owner responses" in owner_close_extension["reason"]
+    assert "Research Ethics Committee" in owner_close_extension["resolution"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():
