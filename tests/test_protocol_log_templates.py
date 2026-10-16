@@ -332,6 +332,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         "DEV-003",
         "DEV-004",
         "DEV-005",
+        "DEV-006",
     ]
     deviation = deviation_entries[0]
     assert all(deviation[column].strip() for column in required_deviation_columns)
@@ -390,6 +391,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "before any substantive analysis of owner responses" in owner_close_extension["reason"]
     assert "Research Ethics Committee was not consulted" in owner_close_extension["resolution"]
     assert "asks nothing more of participants" in owner_close_extension["resolution"]
+
+    early_owner_analysis = deviation_entries[5]
+    assert all(early_owner_analysis[column].strip() for column in required_while_open)
+    assert early_owner_analysis["resolved_date"] == ""
+    assert early_owner_analysis["substantive"] == "no"
+    assert early_owner_analysis["amendment_required"] == "no"
+    assert early_owner_analysis["status"] == "open"
+    assert "26 October 2026" in early_owner_analysis["description"]
+    assert "every owner analysis is re-run" in early_owner_analysis["affected_records_or_outputs"]
+    assert "audit draw is taken only after 26 October 2026" in early_owner_analysis["affected_records_or_outputs"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

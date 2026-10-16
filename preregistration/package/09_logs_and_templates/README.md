@@ -28,6 +28,11 @@ working withdrawal date for every owner. The ethics committee was not
 consulted, because the change asks nothing more of participants and alters no
 approved participant-facing document.
 
+DEV-006 (open) allows substantive owner analysis, and owner-derived adjudication
+records, to begin before the 26 October 2026 withdrawal deadline. Any review
+withdrawn by then is removed and the owner analyses re-run, and the secondary-
+review audit draw is held until after the deadline.
+
 REDCAP-017 records the 23 July 2026 documentation-only alignment of the Project
 Owner participant materials and protocol candidate v0.16 to the one-link Survey
 Queue architecture. It changes no REDCap field, taxonomy rule, classification,
