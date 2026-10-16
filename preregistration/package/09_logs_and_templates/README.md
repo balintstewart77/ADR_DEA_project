@@ -33,6 +33,11 @@ records, to begin before the 26 October 2026 withdrawal deadline. Any review
 withdrawn by then is removed and the owner analyses re-run, and the secondary-
 review audit draw is held until after the deadline.
 
+DEV-004 is resolved by amendment AMD-001
+(`../../post_registration/amendments/`), which corrects the §8.6 statement about
+hidden follow-up values: REDCap deletes them, and derived variables use the final
+branching state. No derived variable or result is affected.
+
 REDCAP-017 records the 23 July 2026 documentation-only alignment of the Project
 Owner participant materials and protocol candidate v0.16 to the one-link Survey
 Queue architecture. It changes no REDCap field, taxonomy rule, classification,

@@ -367,12 +367,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
     hidden_child_deviation = deviation_entries[3]
     required_while_open = required_deviation_columns - {"resolved_date"}
     assert all(
-        hidden_child_deviation[column].strip() for column in required_while_open
+        hidden_child_deviation[column].strip() for column in required_deviation_columns
     )
-    assert hidden_child_deviation["resolved_date"] == ""
+    assert hidden_child_deviation["resolved_date"] == "2026-10-16"
     assert hidden_child_deviation["substantive"] == "no"
     assert hidden_child_deviation["amendment_required"] == "yes"
-    assert hidden_child_deviation["status"] == "open"
+    assert hidden_child_deviation["status"] == "applied"
+    assert "AMD-001" in hidden_child_deviation["resolution"]
+    assert Path(
+        "preregistration/post_registration/amendments/AMD-001_owner_hidden_follow_up_values.md"
+    ).is_file()
     assert "not confined to QA" in hidden_child_deviation[
         "affected_records_or_outputs"
     ]
