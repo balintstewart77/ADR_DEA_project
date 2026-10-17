@@ -190,6 +190,9 @@ def log_refusal(path, block, export_name, export_bytes, problems, recorded="at r
 
 def load_block(block):
     """The block's reveal file, members and packages rebuilt from the original classifications, all hash-checked."""
+    from build_route2_import import FIRST_BLOCK as ROUTE2_FIRST_BLOCK, load_route2_block
+    if block >= ROUTE2_FIRST_BLOCK:
+        return load_route2_block(block)   # route 2 (ADJ-106): its own crosswalk, receipt and reveal files
     receipt = json.loads((OUT / "formal_import_receipt.json").read_text(encoding="utf-8"))
     crosswalk_path = OUT / "adjudication_formal_crosswalk.csv"
     if sha256_bytes(crosswalk_path.read_bytes()) != receipt["crosswalk_sha256"]:
@@ -288,7 +291,7 @@ def main(argv=None):
         return
     print(f"Block {args.block:02d}: {len(export_rows)} records validated and preserved, "
           f"snapshot {entry['snapshot_sha256'][:12]}; reveal verified against the original classifications.\n"
-          f"Import reveal/{name} now.")
+          f"Import {'route2/reveal' if args.block >= 39 else 'reveal'}/{name} now.")
 
 
 if __name__ == "__main__":
