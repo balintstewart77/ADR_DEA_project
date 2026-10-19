@@ -500,7 +500,7 @@ class PrototypeTests(unittest.TestCase):
             self.assertEqual(len({x["adj_stage1_package_id"] for x in pair}),2)
             self.assertEqual(len({x["adj_assignment_id"] for x in pair}),2)
         single=[x for x in rows if x["adj_source_record_id"]=="SYN_ADJ_003"]
-        for row in single: self.assertIn("single displayed candidate set",row["adj_diff_dimensions"])
+        for row in single: self.assertIn("only one classification is shown",row["adj_diff_dimensions"])
     def test_import_generation_refuses_qa_flags_and_slot_overflow(self):
         flagged={"record_id":"SYN_ADJ_QA_IMPORT","assignment_id":"SYN_ASSIGN_QA_IMPORT","classifications":[{"source_type":"fable","domains":[],"purposes":[PURPOSES[0]],"covid":"Applied","equity":"Applied"}]}
         with self.assertRaises(ValueError): import_rows([flagged])

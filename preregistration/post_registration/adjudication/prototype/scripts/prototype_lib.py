@@ -897,7 +897,7 @@ def write_data_quality_rules(path):
     with path.open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f); w.writerow(["rule_name","rule_logic","real_time_execution"]); w.writerows(data_quality_rules())
 COMPONENT_LABEL={"dom":"Research Domains","purp":"Analytical Purposes","covid":"COVID-19/pandemic tag","equity":"Demographic disparities/equity tag"}
-SINGLE_SET_NOTE="No competing candidate differences; a single displayed candidate set is not a finding of no concern"
+SINGLE_SET_NOTE="None: only one classification is shown. Assess each label below."
 # Tokens that would betray a source if they ever reached a masked import row.
 IMPORT_FORBIDDEN=("fable","scratch","gpt","coder","source_type","source_id","rationale","reveal")
 
