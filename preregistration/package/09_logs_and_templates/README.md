@@ -38,6 +38,11 @@ DEV-004 is resolved by amendment AMD-001
 hidden follow-up values: REDCap deletes them, and derived variables use the final
 branching state. No derived variable or result is affected.
 
+DEV-007 (open) fixes, before owner results are viewed, how inconsistent owner
+answers are handled: missing-label selections naming an already-proposed label
+are not counted as missing-label reports, and tag answers whose explanations
+contradict them are reported in a sensitivity analysis.
+
 REDCAP-017 records the 23 July 2026 documentation-only alignment of the Project
 Owner participant materials and protocol candidate v0.16 to the one-link Survey
 Queue architecture. It changes no REDCap field, taxonomy rule, classification,

@@ -333,6 +333,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         "DEV-004",
         "DEV-005",
         "DEV-006",
+        "DEV-007",
     ]
     deviation = deviation_entries[0]
     assert all(deviation[column].strip() for column in required_deviation_columns)
@@ -405,6 +406,13 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "26 October 2026" in early_owner_analysis["description"]
     assert "every owner analysis is re-run" in early_owner_analysis["affected_records_or_outputs"]
     assert "audit draw is taken only after 26 October 2026" in early_owner_analysis["affected_records_or_outputs"]
+
+    owner_inconsistency = deviation_entries[6]
+    assert all(owner_inconsistency[column].strip() for column in required_while_open)
+    assert owner_inconsistency["status"] == "open"
+    assert owner_inconsistency["substantive"] == "no"
+    assert "already-proposed label are not counted" in owner_inconsistency["temporary_action"]
+    assert "before viewing owner results" in owner_inconsistency["temporary_action"]
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():
