@@ -38,7 +38,7 @@ DEV-004 is resolved by amendment AMD-001
 hidden follow-up values: REDCap deletes them, and derived variables use the final
 branching state. No derived variable or result is affected.
 
-DEV-007 (open) fixes, before owner results are viewed, how inconsistent owner
+DEV-007 (applied 2026-10-19) fixed, before owner results were viewed, how inconsistent owner
 answers are handled: missing-label selections naming an already-proposed label
 are not counted as missing-label reports, and tag answers whose explanations
 contradict them are reported in a sensitivity analysis.

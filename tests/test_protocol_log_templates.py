@@ -408,8 +408,10 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "audit draw is taken only after 26 October 2026" in early_owner_analysis["affected_records_or_outputs"]
 
     owner_inconsistency = deviation_entries[6]
-    assert all(owner_inconsistency[column].strip() for column in required_while_open)
-    assert owner_inconsistency["status"] == "open"
+    assert all(owner_inconsistency[column].strip() for column in required_deviation_columns)
+    assert owner_inconsistency["status"] == "applied"
+    assert owner_inconsistency["resolved_date"] == "2026-10-19"
+    assert "4 consistent with the answer, 11 contradicting it" in owner_inconsistency["resolution"]
     assert owner_inconsistency["substantive"] == "no"
     assert "already-proposed label are not counted" in owner_inconsistency["temporary_action"]
     assert "before viewing owner results" in owner_inconsistency["temporary_action"]

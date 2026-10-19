@@ -110,6 +110,19 @@ def main():
         owner_reviews.append(OwnerReview(record_id=r["source_record_id"], respondent_id=r["owner_id"], recruitment_route="sequence_based",
                                          proposed_label_verdicts=per_review, public_entry_sufficiency=lab("po_sufficiency", r.get("po_sufficiency", "")) or None,
                                          missing_label_report=None, taxonomy_fit=lab("po_taxonomy_fit", r.get("po_taxonomy_fit", "")) or None))
+    # DEV-007 rule 2: tag answers stand as given (primary); the sensitivity reading
+    # takes an "incorrect" answer whose explanation contradicts it as "correct".
+    TAGCLASS = REPO / "preregistration_restricted/owner_responses/tag_explanation_classification.csv"
+    contradicts = {(c["owner_id"], c["record"], c["tag"]) for c in csv.DictReader(TAGCLASS.open(encoding="utf-8")) if c["classification"] == "contradicts"}
+    tags_sensitivity = defaultdict(Counter)
+    for r in complete:
+        for slot in TAG_SLOTS:
+            tag = (r.get(f"prop_{slot}_label") or "").strip()
+            status = lab(f"prop_{slot}_status", r.get(f"prop_{slot}_status", ""))
+            answer = lab(f"po_{slot}_correct", r.get(f"po_{slot}_correct", ""))
+            if r.get(f"po_{slot}_correct") == "0" and (r["owner_id"], r["source_record_id"], tag) in contradicts:
+                answer = lab(f"po_{slot}_correct", "1")
+            tags_sensitivity[f"{tag} (proposed {status.lower()})"][answer] += 1
     tags = defaultdict(Counter)
     for r in complete:
         for slot in TAG_SLOTS:
@@ -118,17 +131,29 @@ def main():
             tags[f"{tag} (proposed {status.lower()})"][lab(f"po_{slot}_correct", r.get(f"po_{slot}_correct", ""))] += 1
             visibility[f"Tag: {tag}"][lab(f"po_{slot}_vis", r.get(f"po_{slot}_vis", ""))] += 1
 
-    # Missing labels
+    # Missing labels.  DEV-007 rule 1: a label already proposed cannot be missing,
+    # so such selections are endorsements, excluded from the primary counts and
+    # reported raw alongside.
     missing_any, missing_names, records_with_missing = Counter(), Counter(), set()
+    raw_any, raw_names, dup_reviews, dup_selections = Counter(), Counter(), 0, 0
     for r in complete:
-        any_here = False
+        proposed = {(r.get(f"prop_{slot}_label") or "").strip() for _, slot in LABEL_SLOTS} - {""}
+        any_here, dup_here = False, False
         for field, layer in (("po_miss_domains", "Research Domains"), ("po_miss_purposes", "Analytical Purposes"), ("po_miss_tags", "Tags")):
             picked = [name for code, name in dd[field]["choices"].items() if r.get(f"{field}___{code}") == "1"]
             if picked:
+                raw_any[layer] += 1
+                for name in picked:
+                    raw_names[f"{layer}: {name}"] += 1
+            genuine = [name for name in picked if name not in proposed]
+            dup_selections += len(picked) - len(genuine)
+            dup_here |= len(genuine) < len(picked)
+            if genuine:
                 missing_any[layer] += 1
                 any_here = True
-                for name in picked:
+                for name in genuine:
                     missing_names[f"{layer}: {name}"] += 1
+        dup_reviews += dup_here
         if any_here:
             records_with_missing.add(r["source_record_id"])
     overall = {name: Counter(lab(f, r.get(f, "")) for r in complete) for name, f in
@@ -157,8 +182,15 @@ def main():
                "label_verdicts_by_label": {k: dict(v) for k, v in sorted(by_label.items())},
                "record_label_patterns": dict(record_label_response_patterns(tuple(owner_reviews))),
                "tag_status_correctness": {k: dict(v) for k, v in tags.items()},
+               "tag_status_correctness_sensitivity_DEV007": {k: dict(v) for k, v in tags_sensitivity.items()},
+               "tag_answers_read_as_misread_DEV007": len(contradicts),
                "visibility": {k: dict(v) for k, v in visibility.items()},
-               "missing_labels": {"reviews naming a missing label, by layer": dict(missing_any),
+               "missing_labels": {"rule": "DEV-007: already-proposed labels selected as missing are excluded",
+                                  "reviews selecting an already-proposed label": dup_reviews,
+                                  "already-proposed selections excluded": dup_selections,
+                                  "raw: reviews selecting any label, by layer": dict(raw_any),
+                                  "raw: labels selected": dict(raw_names),
+                                  "reviews naming a missing label, by layer": dict(missing_any),
                                   "reviews naming any missing label": sum(1 for r in complete if r["source_record_id"] in records_with_missing),
                                   "records with any missing label": len(records_with_missing),
                                   "labels named missing": dict(missing_names)},
@@ -190,7 +222,8 @@ def main():
     table("Proposed-label verdicts, by layer", verdicts, ["Fits", "Does not fit", "Unsure"])
     table("Proposed-label verdicts, by label", dict(sorted(by_label.items())), ["Fits", "Does not fit", "Unsure"])
     md += [f"Record-label patterns: {results['record_label_patterns']}", ""]
-    table("Tag status correctness", tags)
+    table("Tag status correctness (as answered; primary)", tags)
+    table("Tag status correctness (sensitivity: answers whose explanation contradicts them read as correct; DEV-007)", tags_sensitivity)
     table("Basis visible in the public entry", visibility)
     md += ["## Missing labels", ""] + [f"* {k}: {v}" for k, v in results["missing_labels"].items()] + [""]
     for k, v in overall.items():
