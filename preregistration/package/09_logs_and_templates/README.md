@@ -43,6 +43,12 @@ answers are handled: missing-label selections naming an already-proposed label
 are not counted as missing-label reports, and tag answers whose explanations
 contradict them are reported in a sensitivity analysis.
 
+DEV-008 (applied 2026-10-19) narrows mandatory second review by amendment AMD-002,
+made before the audit draw and any second review: revision or non-release
+proposals, unresolved findings, retracted model findings, and at least one
+record for each recurring model-attributable mechanism, beside the unchanged
+random audit.
+
 REDCAP-017 records the 23 July 2026 documentation-only alignment of the Project
 Owner participant materials and protocol candidate v0.16 to the one-link Survey
 Queue architecture. It changes no REDCap field, taxonomy rule, classification,

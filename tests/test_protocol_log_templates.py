@@ -334,6 +334,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         "DEV-005",
         "DEV-006",
         "DEV-007",
+        "DEV-008",
     ]
     deviation = deviation_entries[0]
     assert all(deviation[column].strip() for column in required_deviation_columns)
@@ -415,6 +416,16 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert owner_inconsistency["substantive"] == "no"
     assert "already-proposed label are not counted" in owner_inconsistency["temporary_action"]
     assert "before viewing owner results" in owner_inconsistency["temporary_action"]
+
+    second_review_scope = deviation_entries[7]
+    assert all(second_review_scope[column].strip() for column in required_deviation_columns)
+    assert second_review_scope["status"] == "applied"
+    assert second_review_scope["resolved_date"] == "2026-10-19"
+    assert second_review_scope["substantive"] == "yes"
+    assert second_review_scope["amendment_required"] == "yes"
+    assert "AMD-002" in second_review_scope["resolution"]
+    assert "20261019" in second_review_scope["description"]
+    assert Path("preregistration/post_registration/amendments/AMD-002_secondary_review_scope.md").is_file()
 
 
 def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():

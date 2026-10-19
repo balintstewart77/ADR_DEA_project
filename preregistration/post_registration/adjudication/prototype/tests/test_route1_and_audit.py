@@ -254,14 +254,19 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertEqual(rows[1]["recorded"], "backfilled")
         self.assertEqual(rows[0]["problems"], "ADJ_0031: problem one | ADJ_0032: problem two")
 
+    @staticmethod
+    def audit_rows(n):
+        return [{"source_record_id": f"SYN_{i:02d}", "completed_primary": "1", "unresolved_finding": "0",
+                 "retracted_model_finding": "0", "release_implications": "", "model_mechanisms": ""}
+                for i in range(n)]
+
     def test_audit_is_deterministic_and_overlap_keeps_full_random_draw(self):
-        rows = [{"source_record_id": f"SYN_{i:02d}", "completed_primary": "1",
-                 "apparent_production_model_rule_problem": "0", "unresolved_finding": "0",
-                 "release_implications": ""} for i in range(10)]
-        universe, random_ids, mandatory_ids, result = draw(rows)
+        rows = self.audit_rows(10)
+        universe, random_ids, mandatory_ids, result, coverage = draw(rows)
         self.assertEqual(len(universe), 10)
         self.assertEqual(len(random_ids), 2)
         self.assertFalse(mandatory_ids)
+        self.assertFalse(coverage)
         overlap = next(iter(random_ids))
         extra = next(r["source_record_id"] for r in rows if r["source_record_id"] not in random_ids)
         for row in rows:
@@ -284,35 +289,64 @@ class Route1AndAuditTests(unittest.TestCase):
         with contextlib.redirect_stderr(io.StringIO()):
             with self.assertRaises(SystemExit):
                 main([])
+        header = ("source_record_id", "completed_primary", "unresolved_finding",
+                  "retracted_model_finding", "release_implications", "model_mechanisms")
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "synthetic_manifest.csv"
             with self.assertRaises(ValueError):
                 read_manifest(path)
             with path.open("w", newline="", encoding="utf-8") as f:
-                csv.writer(f).writerow(("source_record_id", "completed_primary",
-                                        "apparent_production_model_rule_problem",
-                                        "unresolved_finding", "release_implications"))
+                csv.writer(f).writerow(header)
             with self.assertRaises(ValueError):
                 read_manifest(path)
             with path.open("a", newline="", encoding="utf-8") as f:
-                csv.writer(f).writerow(("SYN_VALID", "1", "0", "0", "2"))
+                csv.writer(f).writerow(("SYN_VALID", "1", "0", "0", "2", "10; 24 | Health & Social Care"))
             self.assertEqual(read_manifest(path)[0]["source_record_id"], "SYN_VALID")
+            for bad in ("24 | (labels not recorded)", "mechanism ten"):
+                with path.open("w", newline="", encoding="utf-8") as f:
+                    csv.writer(f).writerows([header, ("SYN_BAD", "1", "0", "0", "", bad)])
+                with self.assertRaises(ValueError):
+                    read_manifest(path)
 
     def test_audit_mandatory_flags_and_zero_completed_primary(self):
-        rows = [{"source_record_id": f"SYN_{i}", "completed_primary": "1",
-                 "apparent_production_model_rule_problem": "0", "unresolved_finding": "0",
-                 "release_implications": ""} for i in range(6)]
-        rows[0]["apparent_production_model_rule_problem"] = "1"
+        rows = self.audit_rows(7)
+        rows[0]["retracted_model_finding"] = "1"
         rows[1]["release_implications"] = "2"
         rows[2]["release_implications"] = "3"
         rows[3]["release_implications"] = "5"
         rows[4]["unresolved_finding"] = "1"
-        self.assertEqual(draw(rows)[2], {f"SYN_{i}" for i in range(5)})
+        rows[5]["model_mechanisms"] = "10"  # a model finding that does not recur is not mandatory (AMD-002)
+        self.assertEqual(draw(rows)[2], {f"SYN_{i:02d}" for i in range(5)})
         for row in rows:
             row["completed_primary"] = "0"
-        universe, random_ids, mandatory_ids, result = draw(rows)
-        self.assertEqual((universe, random_ids, mandatory_ids, result), ([], set(), set(), []))
+        self.assertEqual(draw(rows), ([], set(), set(), [], []))
 
+    def test_audit_covers_each_recurring_mechanism_once(self):
+        rows = self.audit_rows(40)
+        _, random_ids, _, _, _ = draw(rows)
+        unselected = [r for r in rows if r["source_record_id"] not in random_ids]
+        for row in unselected[:3]:  # mechanism 12 on three unselected records: one is drawn
+            row["model_mechanisms"] = "12"
+        for row in unselected[3:5]:  # general mechanism split by label: each label its own mechanism
+            row["model_mechanisms"] = "24 | Education & Skills; 24 | Crime & Justice"
+        selected_carrier = sorted(random_ids)[0]
+        rows[[r["source_record_id"] for r in rows].index(selected_carrier)]["model_mechanisms"] = "15"
+        unselected[5]["model_mechanisms"] = "15"  # covered by the random audit: nothing drawn
+        unselected[6]["model_mechanisms"] = "31"  # one record only: not recurring
+        _, random_after, mandatory_ids, result, coverage = draw(rows)
+        self.assertEqual(random_after, random_ids)
+        by_key = {c["mechanism"]: c for c in coverage}
+        self.assertEqual(set(by_key), {"12", "15", "24 | Crime & Justice", "24 | Education & Skills"})
+        self.assertEqual([c["mechanism"] for c in coverage],
+                         ["15", "24 | Crime & Justice", "24 | Education & Skills", "12"])
+        self.assertEqual(by_key["15"], {"mechanism": "15", "records": 2, "covered_by": selected_carrier, "drawn": False})
+        self.assertTrue(by_key["24 | Crime & Justice"]["drawn"])
+        self.assertFalse(by_key["24 | Education & Skills"]["drawn"])  # covered by the record drawn for Crime & Justice
+        self.assertEqual(by_key["24 | Education & Skills"]["covered_by"], by_key["24 | Crime & Justice"]["covered_by"])
+        self.assertIn(by_key["12"]["covered_by"], {r["source_record_id"] for r in unselected[:3]})
+        self.assertEqual(mandatory_ids, {by_key["12"]["covered_by"], by_key["24 | Crime & Justice"]["covered_by"]})
+        self.assertNotIn(unselected[6]["source_record_id"], mandatory_ids)
+        self.assertEqual(draw(rows), draw(rows))
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,7 +9,8 @@ Builds one long table of findings, then the 8.7 tables from it:
   more than 100%), and codes per record; overall and by sample;
 * source-specific findings by source; mechanisms by family, general
   mechanisms split by label, and recurrence (two or more distinct records);
-* release implications, and the mandatory second-review set;
+* release implications, AMD-002 mandatory items 1 to 3, and the manifest for
+  the secondary audit draw (draw_secondary_audit.py);
 * Stage 1 outcomes from the preserved snapshots: evidence, best supported,
   multiple defensible, insufficient support, rule conflicts and their rule
   groups (ADJ-079), boundaries, masking, single-set label support.
@@ -193,15 +194,20 @@ def main():
 
     # Release and the mandatory second-review set
     release = dict(Counter(f["release"] or "(not asked)" for f in live))
-    mandatory = defaultdict(set)
+    unresolved = {f["adj_assignment_id"] for f in live if f["family_code"] == 8}
+    retracted_model = {f["adj_assignment_id"] for f in findings if f["retracted"] and f["family_code"] == 1}
+    releases = defaultdict(set)
     for f in live:
-        if f["family_code"] == 1:
-            mandatory[f["adj_assignment_id"]].add("model rule-application finding")
-        if f["family_code"] == 8:
-            mandatory[f["adj_assignment_id"]].add("unresolved")
-        if f["release_code"] in MANDATORY_RELEASE:
-            mandatory[f["adj_assignment_id"]].add(f"release: {f['release']}")
-    mandatory["ADJ_0167"].add("retracted model finding (ADJ-112)")
+        if f["release_code"]:
+            releases[f["adj_assignment_id"]].add(f["release_code"])
+    mandatory = unresolved | retracted_model | {a for a, codes in releases.items() if codes & MANDATORY_RELEASE}
+    model_mech = defaultdict(set)  # AMD-002 item 4: one key per mechanism, general ones per label
+    for (fam, m), ids in mech.items():
+        if fam == FAMILIES[1]:
+            code, _, label = m.partition(" | ")
+            for a in ids:
+                model_mech[a].add(code.split()[0] + (f" | {label}" if label else ""))
+    recurring_model = sum(1 for x in mechanisms if x["family"] == FAMILIES[1] and x["recurring"])
 
     # Stage 1 outcomes from the preserved snapshots
     evidence, best, multi, insuff = defaultdict(Counter), defaultdict(Counter), defaultdict(Counter), defaultdict(Counter)
@@ -236,7 +242,8 @@ def main():
                "source_specific_records": source, "findings": {"total": len(findings), "retracted": len(findings) - len(live),
                                                                "addendum": sum(f["addendum"] for f in live)},
                "mechanisms": mechanisms, "release_implications": release,
-               "mandatory_second_review_records": len(mandatory),
+               "amd002_mandatory_items_1_to_3_records": len(mandatory & set(completed)),
+               "recurring_model_mechanisms": recurring_model,
                "stage1": {"evidence": {k: dict(v) for k, v in evidence.items()}, "best_supported": {k: dict(v) for k, v in best.items()},
                           "multiple_defensible": {k: dict(v) for k, v in multi.items()}, "insufficient_support": {k: dict(v) for k, v in insuff.items()},
                           "rule_conflicts_per_record": dict(sorted(conflicts_per_record.items())),
@@ -249,11 +256,13 @@ def main():
         w = csv.DictWriter(fh, fieldnames=list(findings[0]), lineterminator="\n")
         w.writeheader()
         w.writerows(findings)
-    with (DEST / "mandatory_second_review.csv").open("w", newline="", encoding="utf-8") as fh:
+    with (DEST / "secondary_audit_manifest.csv").open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh, lineterminator="\n")
-        w.writerow(["adj_assignment_id", "source_record_id", "reasons"])
-        for aid in sorted(mandatory):
-            w.writerow([aid, cw[aid]["source"], "; ".join(sorted(mandatory[aid]))])
+        w.writerow(["source_record_id", "completed_primary", "unresolved_finding", "retracted_model_finding",
+                    "release_implications", "model_mechanisms"])
+        for aid in aids:
+            w.writerow([cw[aid]["source"], int(aid in completed), int(aid in unresolved), int(aid in retracted_model),
+                        ";".join(sorted(releases[aid])), "; ".join(sorted(model_mech[aid]))])
     print("written:", ", ".join(p.name for p in sorted(DEST.glob("*"))))
 
 
