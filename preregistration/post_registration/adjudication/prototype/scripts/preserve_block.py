@@ -122,7 +122,38 @@ def response_from_export(row, generated):
         elif norm(row.get(name)):
             value = norm(row[name])
             out[name] = int(value) if kind in ("radio", "dropdown", "yesno") else value
+    if str(generated.get("adj_pkg_comparative", "")) == "0":
+        _nest_single_set(out)
     return out
+
+
+def _nest_single_set(out):
+    """Group single-set answers as the validator expects (ADJ-109).
+
+    On the form each label has numbered fields, adj_dom_l03_support being the
+    third Domain in the vocabulary, and each tag has adj_equity_status_support
+    and so on.  The validator reads them grouped by label name and by tag.
+    """
+    label_keys = {"support": "support", "rule_conflict": "rule_conflict", "rule_cited": "rule_cited",
+                  "rule_other": "rule_other", "rule_note": "rule_note"}
+    assessments = {}
+    for comp, vocab in (("dom", DOMAINS), ("purp", PURPOSES)):
+        for n, label in enumerate(vocab, 1):
+            pre = f"adj_{comp}_l{n:02d}_"
+            if pre + "support" in out or pre + "rule_conflict" in out:
+                assessments.setdefault(comp, {})[label] = {k: out.pop(pre + f) for f, k in label_keys.items() if pre + f in out}
+    if assessments:
+        out["label_assessments"] = assessments
+    tag_keys = {"status_support": "support", "rule_conflict": "rule_conflict", "rule_cited": "rule_cited", "rule_other": "rule_other",
+                "rule_note": "rule_note", "supported_status": "supported_status", "supported_status_note": "supported_status_note"}
+    tags = {}
+    for tag in ("covid", "equity"):
+        pre = f"adj_{tag}_"
+        found = {k: out.pop(pre + f) for f, k in tag_keys.items() if pre + f in out}
+        if found:
+            tags[tag] = found
+    if tags:
+        out["tag_assessments"] = tags
 
 
 def check_block(columns, export_rows, sources, packages, reveal_rows, expected_reveal, post_reveal=False):

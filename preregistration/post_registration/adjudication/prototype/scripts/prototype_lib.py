@@ -386,10 +386,11 @@ def validate_submission(r,p):
             if state==1 and(not selected or not selected<=absent or not r.get(f"adj_{comp}_additional_label_note")): out.append(f"{comp}: additional labels need permitted IDs and note")
             if state in {0,2} and selected: out.append(f"{comp}: additional None/Cannot determine has no IDs")
             if state==2 and not r.get(f"adj_{comp}_additional_label_note"): out.append(f"{comp}: additional Cannot determine needs note")
+            # The frozen form collects an added label's ID and note only, not a
+            # per-label assessment (ADJ-109); one is validated only if present.
             for label in selected:
                 a=assessments.get(comp,{}).get(label)
-                if a is None: out.append(f"{comp}: selected additional label {label!r} needs assessment")
-                else: out+=[f"{comp}: {x}" for x in validate_label_assessment(a)]
+                if a is not None: out+=[f"{comp}: {x}" for x in validate_label_assessment(a)]
         for comp in ("covid","equity"):
             a=r.get("tag_assessments",{}).get(comp)
             if a is None: out.append(f"{comp}: tag assessment required")

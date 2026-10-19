@@ -150,7 +150,8 @@ class PrototypeTests(unittest.TestCase):
             bad=copy.deepcopy(single_response); bad[field]=value
             self.assertTrue(any("comparative questions do not apply" in x for x in validate_submission(bad,single)),field)
         opened=copy.deepcopy(single_response); opened.update({"adj_dom_additional_label_state":1,"adj_dom_additional_label_ids":[DOMAINS[0]],"adj_dom_additional_label_note":"Synthetic"})
-        self.assertTrue(any("selected additional label" in x for x in validate_submission(opened,single)))
+        self.assertEqual(validate_submission(opened,single),[])  # the form collects an added label's ID and note only (ADJ-109)
+        opened["label_assessments"]["dom"][DOMAINS[0]]={"support":9}; self.assertTrue(any("label support" in x for x in validate_submission(opened,single)))
         opened["label_assessments"]["dom"][DOMAINS[0]]={"support":1,"rule_conflict":0}; self.assertEqual(validate_submission(opened,single),[])
     def test_diff_and_record_status_controls(self):
         p=self.packages[0]; base=self.submissions[0]

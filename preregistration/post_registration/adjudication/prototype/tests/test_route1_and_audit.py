@@ -15,7 +15,7 @@ from build_route1_component import component_values
 from check_blocks import compare as compare_blocks
 from rule_groups import catalogue_rows as rule_group_rows, groups_for, is_unclear_problem, record_groups
 from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
-from preserve_block import (REFUSAL_COLUMNS, _choices, _label_vocabulary, check_block, log_refusal, required_columns,
+from preserve_block import (REFUSAL_COLUMNS, _choices, _nest_single_set, _label_vocabulary, check_block, log_refusal, required_columns,
                             response_from_export, snapshot, stage1_columns)
 from prototype_lib import (BEST_CANNOT_DETERMINE, DOMAINS, PURPOSES, RULE_OTHER, comparative_components, default_valid_submission,
                            field_rows, rule_catalogue, validate_submission,
@@ -224,6 +224,22 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertEqual(result["ADJ_0001"], ([], "1", "1"))
         self.assertEqual(result["ADJ_0002"], (["adj_dom_best___1"], "1", ""))  # edited after preservation
         self.assertEqual(compare_blocks({}, snapshots, columns)[0][2], ["absent from export"])
+
+    def test_single_set_export_answers_are_grouped_for_the_validator(self):
+        # A REDCap export holds single-set answers as numbered flat fields (ADJ-109).
+        out = {"adj_dom_l03_support": 1, "adj_dom_l03_rule_conflict": 0, "adj_purp_l02_support": 2,
+               "adj_purp_l02_rule_conflict": 1, "adj_purp_l02_rule_cited": 7, "adj_purp_l02_rule_note": "n",
+               "adj_equity_status_support": 2, "adj_equity_rule_conflict": 0, "adj_equity_supported_status": 1,
+               "adj_equity_supported_status_note": "n", "adj_covid_status_support": 1, "adj_covid_rule_conflict": 0,
+               "adj_covid_supported_status": 0, "adj_stage1_affirmed": 1}
+        _nest_single_set(out)
+        self.assertEqual(out["label_assessments"]["dom"][DOMAINS[2]], {"support": 1, "rule_conflict": 0})
+        self.assertEqual(out["label_assessments"]["purp"][PURPOSES[1]],
+                         {"support": 2, "rule_conflict": 1, "rule_cited": 7, "rule_note": "n"})
+        self.assertEqual(out["tag_assessments"]["equity"],
+                         {"support": 2, "rule_conflict": 0, "supported_status": 1, "supported_status_note": "n"})
+        self.assertNotIn("adj_dom_l03_support", out)
+        self.assertEqual(out["adj_stage1_affirmed"], 1)
 
     def test_refused_attempts_are_appended_to_the_refusal_log(self):
         with tempfile.TemporaryDirectory() as folder:
