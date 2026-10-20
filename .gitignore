@@ -193,3 +193,9 @@ analysis/outputs/model_comparison_fable_5_run2/*
 /preregistration/post_registration/adjudication/prototype/instruments/configuration.md
 /preregistration/post_registration/adjudication/free_text_analysis_plan.md
 /preregistration/post_registration/adjudication/adjudication_methods_draft.md
+
+# ADR UK guest-blog preliminary analysis (local until Jo and Holly have checked figures)
+/analysis/adr_blog_prelim/
+
+# Independent ADR UK audit working files
+/analysis/adr_blog_audit/
