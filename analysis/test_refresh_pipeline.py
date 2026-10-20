@@ -206,9 +206,12 @@ class VerifiedRepublicationComparisonTest(unittest.TestCase):
             for frame in cleaned
         ]
         self.assertEqual(clean_bytes[0], clean_bytes[1])
+        # Updated for the "Understanding Society:" parser rule: 2021/178's
+        # merged duplicate now keeps its Understanding Society line in source
+        # order instead of appending it as a parser-dropped line.
         self.assertEqual(
             hashlib.sha256(clean_bytes[0]).hexdigest(),
-            "6b8d3c5f12e1bbe957fecbada4885c450f4c3ab41d1bd1ec2fa67170494abc5f",
+            "5919a837e4c991b07882dd5082e6665b2aa9de31a7b06d57d37723c421e5bf87",
         )
 
         indexes = build_indexes(load_reference())
@@ -221,9 +224,11 @@ class VerifiedRepublicationComparisonTest(unittest.TestCase):
             for frame in properties
         ]
         self.assertEqual(property_bytes[0], property_bytes[1])
+        # Updated with the parser fix: Understanding Society restored for
+        # 2021/142, 2021/178 and 2025/085 (longitudinal / household facets).
         self.assertEqual(
             hashlib.sha256(property_bytes[0]).hexdigest(),
-            "318bc4409a7d41c9c96b6d364e0e78b9c340165c1a0244f6243faf801565a43f",
+            "cbdd6bea508b6e5d581f2952f664a1a8faec11d5fa166174fa43bae0f4209d96",
         )
 
     def test_csv_physical_diff_is_one_deleted_two_added_without_encoding_churn(self):

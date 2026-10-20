@@ -75,7 +75,7 @@ def _browse_callback():
         spec for callback_id, spec in app.callback_map.items()
         if "browse-table.data" in callback_id
     )
-    return explorer_callbacks, spec["callback"]
+    return explorer_callbacks, spec
 
 
 def _download_callback():
@@ -101,19 +101,17 @@ def _run_browse_callback(
     institution_filter="ALL",
     tre_filter="ALL",
 ):
-    explorer_callbacks, callback = _browse_callback()
+    explorer_callbacks, spec = _browse_callback()
     outputs = [
-        {"id": "browse-table", "property": "data"},
-        {"id": "browse-table", "property": "tooltip_data"},
-        {"id": "browse-table", "property": "page_size"},
-        {"id": "browse-count", "property": "children"},
+        {"id": output.component_id, "property": output.component_property}
+        for output in spec["output"]
     ]
     with patch.object(
         explorer_callbacks,
         "_get_browse_display_df",
         return_value=display,
     ) as display_getter:
-        response = callback(
+        response = spec["callback"](
             dataset_filter, provider_filter, institution_filter, tre_filter, None,
             page_size, accreditation_year_range,
             accreditation_year_min, accreditation_year_max,

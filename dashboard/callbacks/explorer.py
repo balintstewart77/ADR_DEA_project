@@ -9,6 +9,7 @@ from dashboard.data.filtering import (
     _csv_date_stamp,
 )
 from dashboard.data.year_filter import YearRange, filter_records_by_year, parse_accreditation_dates
+from dashboard.display_text import datasets_display_text, researcher_display_text
 
 
 def _filter_accreditation_year_range(
@@ -22,7 +23,30 @@ def _filter_accreditation_year_range(
     return filtered, parse_accreditation_dates(display)
 
 
+BROWSE_FILTER_DROPDOWN_IDS = (
+    "browse-dataset-filter",
+    "browse-provider-filter",
+    "browse-institution-filter",
+    "browse-tre-filter",
+)
+
+
 def register(app):
+    @app.callback(
+        # navigation.py also writes the search box.
+        Output("browse-search", "value", allow_duplicate=True),
+        *[Output(dropdown_id, "value") for dropdown_id in BROWSE_FILTER_DROPDOWN_IDS],
+        Output("browse-accreditation-year-filter", "value"),
+        Output("browse-table", "page_current"),
+        Input("browse-clear-filters-btn", "n_clicks"),
+        State("browse-accreditation-year-filter", "min"),
+        State("browse-accreditation-year-filter", "max"),
+        prevent_initial_call=True,
+    )
+    def clear_browse_filters(_n_clicks, year_min, year_max):
+        # An empty dropdown means "ALL" to the filters and shows its "All …" placeholder.
+        return ("", *[None] * len(BROWSE_FILTER_DROPDOWN_IDS), [year_min, year_max], 0)
+
     @app.callback(
         Output("browse-table", "data"),
         Output("browse-table", "tooltip_data"),
@@ -72,13 +96,20 @@ def register(app):
         )
         table_data = display.to_dict("records")
 
+        # Tooltips keep the register text as written. Markdown collapses single
+        # newlines; a trailing double space keeps each source line on its own.
         tooltip_data = [
             {
-                col: {"value": str(row.get(col, "")), "type": "markdown"}
+                col: {"value": str(row.get(col, "")).replace("\n", "  \n"), "type": "markdown"}
                 for col in _BROWSE_DISPLAY_COLUMNS
             }
             for row in table_data
         ]
+        # The cells show tidied text: one researcher per line, and datasets
+        # listed under their source organisation.
+        for row in table_data:
+            row["Researchers"] = researcher_display_text(row.get("Researchers"))
+            row["Datasets Used"] = datasets_display_text(row.get("Datasets Used"))
 
         count_text = (
             f"Showing {len(table_data):,} accreditation "

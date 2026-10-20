@@ -64,7 +64,7 @@
       },
       {
         "value": "Annual Population Survey: Well-Being",
-        "count": 4
+        "count": 5
       },
       {
         "value": "Annual Purchases Survey",
@@ -272,10 +272,6 @@
       },
       {
         "value": "COVID-19 Schools Infection Survey linked to Test and Trace",
-        "count": 2
-      },
-      {
-        "value": "COVID-19 Study",
         "count": 2
       },
       {
@@ -711,10 +707,6 @@
         "count": 1
       },
       {
-        "value": "Innovation Panel",
-        "count": 2
-      },
-      {
         "value": "Integrated Census Microdata",
         "count": 2
       },
@@ -789,10 +781,6 @@
       {
         "value": "Linked Census, HES and Mortality Data",
         "count": 3
-      },
-      {
-        "value": "Linked Credit Reference Agency (CRA)",
-        "count": 1
       },
       {
         "value": "Linked Director's mortality",
@@ -1251,14 +1239,6 @@
         "count": 1
       },
       {
-        "value": "UK Household Longitudinal Study Mainstage Survey Wave 6",
-        "count": 1
-      },
-      {
-        "value": "UK Household Longitudinal Study Mainstage Survey Wave 9",
-        "count": 1
-      },
-      {
         "value": "UK Innovation Survey (UKIS)",
         "count": 81
       },
@@ -1307,6 +1287,38 @@
         "count": 1
       },
       {
+        "value": "Understanding Society: COVID-19 Study",
+        "count": 2
+      },
+      {
+        "value": "Understanding Society: Innovation Panel",
+        "count": 2
+      },
+      {
+        "value": "Understanding Society: Linked Credit Reference Agency (CRA)",
+        "count": 1
+      },
+      {
+        "value": "Understanding Society: UK Household Longitudinal Study Mainstage Survey Wave 6",
+        "count": 1
+      },
+      {
+        "value": "Understanding Society: UK Household Longitudinal Study Mainstage Survey Wave 9",
+        "count": 1
+      },
+      {
+        "value": "Understanding Society: Waves 1-10 and Harmonised BHPS Geography files",
+        "count": 2
+      },
+      {
+        "value": "Understanding Society: Waves 1-10 and Harmonised BHPS: Waves 1-18",
+        "count": 2
+      },
+      {
+        "value": "Understanding Society: Waves 1-14",
+        "count": 1
+      },
+      {
         "value": "United Kingdom Time Use Survey (UKTUS)",
         "count": 1
       },
@@ -1327,19 +1339,11 @@
         "count": 1
       },
       {
-        "value": "Waves 1-10 and Harmonised BHPS Geography files",
-        "count": 2
-      },
-      {
         "value": "Wealth and Assets Survey (WAS)",
         "count": 30
       },
       {
         "value": "Wealth and Assets Survey Great Britain",
-        "count": 1
-      },
-      {
-        "value": "Well-Being",
         "count": 1
       },
       {
@@ -1356,10 +1360,6 @@
       }
     ],
     "provider": [
-      {
-        "value": "Annual Population Survey",
-        "count": 1
-      },
       {
         "value": "Bank of England",
         "count": 11
@@ -1414,7 +1414,7 @@
       },
       {
         "value": "Institute for Social and Economic Research",
-        "count": 50
+        "count": 60
       },
       {
         "value": "Intellectual Property Office (IPO)",
@@ -1497,16 +1497,8 @@
         "count": 2
       },
       {
-        "value": "Office for National Statistcs",
-        "count": 1
-      },
-      {
         "value": "Office for National Statistics (ONS)",
-        "count": 956
-      },
-      {
-        "value": "Office for the National Statistics",
-        "count": 1
+        "count": 958
       },
       {
         "value": "Office of Qualifications and Examinations Regulation (Ofqual)",
@@ -1535,10 +1527,6 @@
       {
         "value": "UK Health Security Agency",
         "count": 1
-      },
-      {
-        "value": "Understanding Society",
-        "count": 7
       },
       {
         "value": "Universities and Colleges Admissions Service (UCAS)",
@@ -2872,7 +2860,7 @@
       },
       {
         "value": "longitudinal",
-        "count": 604
+        "count": 606
       }
     ],
     "unit": [
@@ -2886,7 +2874,7 @@
       },
       {
         "value": "household",
-        "count": 168
+        "count": 171
       },
       {
         "value": "individual",

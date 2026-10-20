@@ -22,8 +22,13 @@ def registered():
     callbacks.register(app)
     table_specs = [v for k, v in app.callback_map.items() if "enriched-register-table.data" in k]
     assert len(table_specs) == 1
+    table_callback = table_specs[0]["callback"].__wrapped__
+
+    def date_table_outputs(*args):
+        return table_callback(*args)[:3]
+
     return (
-        table_specs[0]["callback"].__wrapped__,
+        date_table_outputs,
         app.callback_map["enriched-download-csv.data"]["callback"].__wrapped__,
         table_specs[0],
         app.callback_map["enriched-download-csv.data"],

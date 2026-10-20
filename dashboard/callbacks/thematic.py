@@ -15,6 +15,7 @@ from dashboard.data.thematic import (
     df_thematic_projects,
 )
 from dashboard.dataset_normalisation import iter_dataset_entries
+from dashboard.display_text import researcher_display_text
 from dashboard.data.registry import PARTIAL_YEAR_INFO, df_all
 from dashboard.data.filtering import (
     _get_enriched_register_display_df,
@@ -84,14 +85,21 @@ def _enriched_detail_control(record_id: str, label: str) -> str:
     )
 
 
+def _escape_with_line_breaks(text: str) -> str:
+    """Escape text for the markdown cell, keeping source line breaks (e.g. one
+    researcher per line) as <br> instead of letting HTML collapse them."""
+    lines = (line.strip() for line in text.splitlines())
+    return "<br>".join(escape(line, quote=True) for line in lines if line)
+
+
 def _generic_preview_display(value, record_id: str) -> str:
     """Render a character preview for fields without a reliable entry parser."""
     text = _enriched_text(value)
     if not text:
         return "—"
     if len(text) <= _PREVIEW_CHARACTER_LIMIT:
-        return escape(text, quote=True)
-    preview = escape(text[:_PREVIEW_CHARACTER_LIMIT].rstrip() + "…", quote=True)
+        return _escape_with_line_breaks(text)
+    preview = _escape_with_line_breaks(text[:_PREVIEW_CHARACTER_LIMIT].rstrip() + "…")
     return (
         '<div class="enriched-preview">'
         f'<span class="enriched-preview-text">{preview}</span> '
@@ -132,7 +140,7 @@ def _enriched_detail_display_fields(record: dict) -> list:
         ("Project ID", record.get("Project ID")),
         ("Record ID", record.get("id")),
         ("Title", record.get("Title")),
-        ("Researchers", record.get("Researchers")),
+        ("Researchers", researcher_display_text(record.get("Researchers"))),
         ("Datasets Used", record.get("Datasets Used")),
         ("Processing environment", record.get("Secure Research Service")),
         ("Accreditation Date", record.get("Accreditation Date")),
@@ -219,7 +227,7 @@ def _enriched_table_records(display) -> list[dict]:
         row["id"] = record_id
         row["Title_display"] = _generic_preview_display(row.get("Title"), record_id)
         row["Researchers_display"] = _generic_preview_display(
-            row.get("Researchers"), record_id,
+            researcher_display_text(row.get("Researchers")), record_id,
         )
         row["Datasets Used_display"] = _dataset_preview_display(
             row.get("Datasets Used"), record_id,
@@ -291,9 +299,40 @@ def _sort_enriched_table_records(records: list[dict], sort_by) -> list[dict]:
     return sorted(records, key=cmp_to_key(compare))
 
 
+ENRICHED_FILTER_DROPDOWN_IDS = (
+    "enriched-dataset-filter",
+    "enriched-provider-filter",
+    "enriched-institution-filter",
+    "enriched-tre-filter",
+    "enriched-domain-filter",
+    "enriched-domain-count-filter",
+    "enriched-purpose-filter",
+    "enriched-tag-filter",
+    "enriched-record-linkage-filter",
+    "enriched-collection-method-filter",
+    "enriched-temporal-structure-filter",
+    "enriched-unit-filter",
+    "enriched-researcher-sector-filter",
+)
+
+
 def register(app):
     if not THEMATIC_DATA_AVAILABLE:
         return
+
+    @app.callback(
+        Output("enriched-search", "value"),
+        *[Output(dropdown_id, "value") for dropdown_id in ENRICHED_FILTER_DROPDOWN_IDS],
+        Output("enriched-accreditation-year-filter", "value"),
+        Output("enriched-register-table", "page_current"),
+        Input("enriched-clear-filters-btn", "n_clicks"),
+        State("enriched-accreditation-year-filter", "min"),
+        State("enriched-accreditation-year-filter", "max"),
+        prevent_initial_call=True,
+    )
+    def clear_enriched_filters(_n_clicks, year_min, year_max):
+        # An empty dropdown means "ALL" to the filters and shows its "All …" placeholder.
+        return ("", *[None] * len(ENRICHED_FILTER_DROPDOWN_IDS), [year_min, year_max], 0)
 
     app.clientside_callback(
         ClientsideFunction(namespace="enrichedRationale", function_name="update"),

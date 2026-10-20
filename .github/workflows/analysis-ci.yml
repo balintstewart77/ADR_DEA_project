@@ -1,0 +1,43 @@
+# Continuous integration for the analysis test suite, so test failures surface
+# on code changes instead of only in the weekly register refresh.
+#
+# Tests only: this workflow never runs the refresh pipeline, LLM classification
+# or pull request creation.
+
+name: Analysis CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      # Full history: the analysis tests verify figure provenance with
+      # `git show <pinned commit>:<path>`, which fails on a shallow checkout.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements-dashboard.txt
+            requirements-scrape.txt
+            requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dashboard.txt -r requirements-scrape.txt -r requirements-dev.txt
+
+      - name: Run test suite
+        run: python -m pytest analysis -q

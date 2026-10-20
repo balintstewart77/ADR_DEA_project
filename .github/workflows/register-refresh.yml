@@ -22,7 +22,11 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
+      # Full history: the analysis tests verify figure provenance with
+      # `git show <pinned commit>:<path>`, which fails on a shallow checkout.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:

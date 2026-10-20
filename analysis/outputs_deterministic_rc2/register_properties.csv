@@ -274,7 +274,7 @@
 2021/139,No record linkage,,,survey; administrative,cross-sectional,business,academic
 2021/140,No record linkage,,,survey,cross-sectional,individual,academic
 2021/141,Cross-domain record linkage,"Linked Census, HES and Mortality Data; Covid-19 Infection Survey linked with VOA and EPC data",Health & Social Care; Housing & Planning; Migration & Demographics,survey; administrative,cross-sectional; longitudinal,individual; business,government
-2021/142,No record linkage,,,survey,cross-sectional,individual,academic
+2021/142,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2021/143,No record linkage,,,survey,cross-sectional,individual; business,academic
 2021/145,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2021/146,No record linkage,,,administrative,cross-sectional,business,academic; commercial
@@ -308,7 +308,7 @@
 2021/175,No record linkage,,,administrative,cross-sectional,business,commercial
 2021/176,No record linkage,,,administrative,cross-sectional,area,academic
 2021/177,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
-2021/178,No record linkage,,,survey,cross-sectional,individual,academic
+2021/178,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2021/179,No record linkage,,,administrative,cross-sectional,individual,academic
 2021/180,No record linkage,,,survey,longitudinal,business,academic
 2021/181,No record linkage,,,administrative,cross-sectional,business,commercial
@@ -1041,7 +1041,7 @@
 2025/082,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,academic
 2025/083,Within-domain record linkage,Linked Trade-in-Goods/IDBR,Business & Productivity,survey; administrative,cross-sectional,business,government; commercial
 2025/084,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,cross-sectional; longitudinal,individual,third-sector
-2025/085,No record linkage,,,survey,cross-sectional; longitudinal,individual,academic
+2025/085,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
 2025/086,No record linkage,,,survey; administrative,cross-sectional,individual; business,academic
 2025/087,No record linkage,,,survey,cross-sectional,household,academic
 2025/088,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic

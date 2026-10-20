@@ -9,6 +9,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "dashboard"))
 
 from dataset_normalisation import (  # noqa: E402
+    _clean_datasets_text,
     dataset_family_for,
     describe_dataset_normalisation,
     iter_dataset_entries,
@@ -224,6 +225,97 @@ class DatasetNormalisationTest(unittest.TestCase):
                 ("Office for National Statistics", "Labour Force Survey Household"),
             ],
         )
+
+    def test_wrapped_dataset_title_with_colon_keeps_current_provider(self):
+        # 2026/064: the second line is the APS Well-Being dataset, not an
+        # "Annual Population Survey" provider header.
+        raw = (
+            "Office for National Statistics: Annual Population Survey,\n"
+            "Annual Population Survey: Well-Being"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Annual Population Survey"),
+                ("Office for National Statistics", "Annual Population Survey: Well-Being"),
+            ],
+        )
+
+    def test_understanding_society_component_lines_are_iser_datasets(self):
+        # 2023/170, 2022/032, 2025/085: "Understanding Society: X" names a
+        # dataset owned by ISER, whatever header precedes it.
+        raw = (
+            "Office for National Statistics: Labour Force Survey,\n"
+            "Understanding Society: COVID-19 Study,\n"
+            "Understanding Society: Innovation Panel\n"
+            "Institute for Economic and Social Research:\n"
+            "Understanding Society: Waves 1-14"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        iser = "Institute for Social and Economic Research"
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Labour Force Survey"),
+                (iser, "Understanding Society: COVID-19 Study"),
+                (iser, "Understanding Society: Innovation Panel"),
+                (iser, "Understanding Society: Waves 1-14"),
+            ],
+        )
+
+    def test_ons_datasets_after_innovation_panel_keep_ons_provider(self):
+        # 2023/234: the datasets after the Innovation Panel continue the ONS list.
+        raw = (
+            "Office for National Statistics: British Household Panel Survey,\n"
+            "Understanding Society: Innovation Panel, Annual Survey of Hours and Earnings, "
+            "Workplace Employment Relations Survey"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "British Household Panel Survey"),
+                ("Institute for Social and Economic Research", "Understanding Society: Innovation Panel"),
+                ("Office for National Statistics", "Annual Survey of Hours and Earnings"),
+                ("Office for National Statistics", "Workplace Employment Relations Survey"),
+            ],
+        )
+
+    def test_understanding_society_line_continues_header_but_keeps_study_datasets(self):
+        # Wrapped lines after an Understanding Society line return to the
+        # header; a later Understanding Society dataset on the line stays ISER.
+        raw = (
+            "Office for National Statistics: Labour Force Survey,\n"
+            "Understanding Society: COVID-19 Study, Understanding Society,\n"
+            "Business Structure Database"
+        )
+        entries = [(provider, part) for _, provider, part in iter_dataset_entries(raw)]
+        iser = "Institute for Social and Economic Research"
+        self.assertEqual(
+            entries,
+            [
+                ("Office for National Statistics", "Labour Force Survey"),
+                (iser, "Understanding Society: COVID-19 Study"),
+                (iser, "Understanding Society"),
+                ("Office for National Statistics", "Business Structure Database"),
+            ],
+        )
+
+    def test_cleaning_does_not_rewrite_understanding_society_register_text(self):
+        # The parser rules must not change the register text that cleaning
+        # passes through to the dashboard's Datasets Used column.
+        raw = (
+            "Office for National Statistics: British Household Panel Survey,\n"
+            "Understanding Society: Innovation Panel, Annual Survey of Hours and Earnings"
+        )
+        self.assertEqual(_clean_datasets_text(raw), raw)
+
+    def test_ons_misspellings_normalise_to_ons(self):
+        for raw in ("Office for National Statistcs", "Office for the National Statistics"):
+            self.assertEqual(
+                normalise_provider_name(raw), "Office for National Statistics (ONS)"
+            )
 
     def test_semicolon_compound_is_split(self):
         raw = (

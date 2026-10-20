@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG, CHART_HEIGHT
 from dashboard.components.chart_tips import chart_wrapper
+from dashboard.components.filter_controls import all_option_label
 from dashboard.components.stat_card import stat_card
 from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
 from dashboard import taxonomy
@@ -568,93 +569,97 @@ def _analyses_accordion():
                                 placeholder="Search by project ID, title, researcher, or rationale…",
                                 type="text",
                             ),
-                        ], md=5),
+                        ], md=8, lg=4),
                         dbc.Col([
                             html.Label("Dataset", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-dataset-filter",
                                 options=_ALL_DATASET_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_DATASET_OPTIONS),
                                 searchable=True,
-                                placeholder="All datasets",
                             ),
-                        ], md=3),
+                        ], md=4, lg=4),
                         dbc.Col([
                             html.Label("Dataset source organisation", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-provider-filter",
                                 options=_ALL_PROVIDER_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_PROVIDER_OPTIONS),
                                 searchable=True,
-                                placeholder="All dataset source organisations",
                             ),
-                        ], md=2),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Domain count", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-domain-count-filter",
                                 options=_THEMATIC_DOMAIN_COUNT_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_DOMAIN_COUNT_OPTIONS),
                                 searchable=False,
                             ),
-                        ], md=2),
-                    ], className="mb-2 g-2"),
+                        ], md=4, lg=2),
+                    ], className="mb-2 g-2 enriched-filter-row"),
                     dbc.Row([
                         dbc.Col([
                             html.Label("Research institution", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-institution-filter",
                                 options=_ALL_INSTITUTION_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_INSTITUTION_OPTIONS),
                                 searchable=True,
-                                placeholder="All institutions",
                             ),
-                        ], md=3),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Processing environment", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-tre-filter",
                                 options=_ALL_TRE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_ALL_TRE_OPTIONS),
                                 searchable=True,
-                                placeholder="All processing environments",
                             ),
-                        ], md=2),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Domain", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-domain-filter",
                                 options=_THEMATIC_DOMAIN_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_DOMAIN_OPTIONS),
                                 searchable=True,
                             ),
-                        ], md=2),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Analytical purpose", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-purpose-filter",
                                 options=_THEMATIC_PURPOSE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_PURPOSE_OPTIONS),
                                 searchable=True,
                             ),
-                        ], md=2),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Cross-cutting tag", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-tag-filter",
                                 options=_THEMATIC_TAG_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_THEMATIC_TAG_OPTIONS),
                                 searchable=False,
                             ),
-                        ], md=3),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Per page", className="filter-label"),
                             dcc.Dropdown(
@@ -664,80 +669,95 @@ def _analyses_accordion():
                                 clearable=False,
                                 searchable=False,
                             ),
-                        ], md=1),
-                    ], className="mb-2 g-2"),
+                        ], md=4, lg=2),
+                    ], className="mb-2 g-2 enriched-filter-row"),
                     dbc.Row([
                         dbc.Col([
                             html.Label("Record Linkage", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-record-linkage-filter",
                                 options=_DETERMINISTIC_RECORD_LINKAGE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_RECORD_LINKAGE_OPTIONS),
                                 searchable=False,
                             ),
-                        ], md=2),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Collection method", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-collection-method-filter",
                                 options=_DETERMINISTIC_COLLECTION_METHOD_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_COLLECTION_METHOD_OPTIONS),
                                 searchable=True,
                             ),
-                        ], md=3),
+                        ], md=4, lg=4),
                         dbc.Col([
                             html.Label("Temporal structure", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-temporal-structure-filter",
                                 options=_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_TEMPORAL_STRUCTURE_OPTIONS),
                                 searchable=True,
                             ),
-                        ], md=2),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Unit of observation", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-unit-filter",
                                 options=_DETERMINISTIC_UNIT_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_UNIT_OPTIONS),
                                 searchable=True,
                             ),
-                        ], md=2),
+                        ], md=4, lg=2),
                         dbc.Col([
                             html.Label("Researcher sector", className="filter-label"),
                             dcc.Dropdown(
                                 id="enriched-researcher-sector-filter",
                                 options=_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
-                                value="ALL",
-                                clearable=False,
+                                value=None,
+                                clearable=True,
+                                placeholder=all_option_label(_DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS),
                                 searchable=True,
                             ),
-                        ], md=3),
-                    ], className="mb-2 g-2"),
+                        ], md=4, lg=2),
+                    ], className="mb-2 g-2 enriched-filter-row"),
                     dbc.Row([
                         dbc.Col([
                             html.Div(
                                 id="enriched-browse-count",
                                 className="text-muted small",
-                                style={"paddingTop": "0.35rem", "textAlign": "center"},
                             ),
-                        ], md=9),
-                        dbc.Col([
-                            html.Button(
-                                "Download CSV",
-                                id="enriched-download-btn",
-                                className="btn btn-outline-primary btn-sm w-100",
+                            html.Div([
+                                html.Button(
+                                    "Clear filters",
+                                    id="enriched-clear-filters-btn",
+                                    className="btn btn-outline-secondary btn-sm",
+                                ),
+                                html.Button(
+                                    "Download CSV",
+                                    id="enriched-download-btn",
+                                    className="btn btn-outline-primary btn-sm",
+                                ),
+                                dbc.Tooltip(
+                                    "Downloads all projects matching the current filters.",
+                                    target="enriched-download-btn",
+                                    placement="top",
+                                ),
+                            ], className="d-flex gap-2"),
+                        ],
+                            md=12,
+                            className=(
+                                "d-flex flex-wrap align-items-center "
+                                "justify-content-between gap-2"
                             ),
-                            dbc.Tooltip(
-                                "Downloads all projects matching the current filters.",
-                                target="enriched-download-btn",
-                                placement="top",
-                            ),
-                        ], md=3),
+                        ),
                     ], className="mb-3 g-2"),
                     html.Div(
                         dash_table.DataTable(
@@ -776,20 +796,20 @@ def _analyses_accordion():
                             fixed_columns={"headers": True, "data": 1},
                             markdown_options={"html": True},
                             style_cell_conditional=[
-                                {"if": {"column_id": "Project ID"}, "minWidth": "90px", "width": "90px", "maxWidth": "90px"},
+                                {"if": {"column_id": "Project ID"}, "minWidth": "90px", "width": "90px", "maxWidth": "90px", "verticalAlign": "top"},
                                 {"if": {"column_id": "details_action"}, "minWidth": "118px", "width": "118px", "maxWidth": "118px", "verticalAlign": "top"},
                                 {"if": {"column_id": "Title_display"}, "minWidth": "260px", "width": "260px", "maxWidth": "260px", "verticalAlign": "top"},
                                 {"if": {"column_id": "Researchers_display"}, "minWidth": "270px", "width": "270px", "maxWidth": "270px", "verticalAlign": "top"},
                                 {"if": {"column_id": "Datasets Used_display"}, "minWidth": "300px", "width": "300px", "maxWidth": "300px", "verticalAlign": "top"},
                                 {"if": {"column_id": "Secure Research Service_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
-                                {"if": {"column_id": "Accreditation Date"}, "minWidth": "145px", "width": "145px", "maxWidth": "145px"},
-                                {"if": {"column_id": "record_linkage"}, "minWidth": "145px", "width": "145px", "maxWidth": "145px"},
+                                {"if": {"column_id": "Accreditation Date"}, "minWidth": "145px", "width": "145px", "maxWidth": "145px", "verticalAlign": "top"},
+                                {"if": {"column_id": "record_linkage"}, "minWidth": "145px", "width": "145px", "maxWidth": "145px", "verticalAlign": "top"},
                                 {"if": {"column_id": "dataset_collection_methods_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
                                 {"if": {"column_id": "dataset_temporal_structures_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
                                 {"if": {"column_id": "dataset_units_display"}, "minWidth": "175px", "width": "175px", "maxWidth": "175px", "verticalAlign": "top"},
                                 {"if": {"column_id": "researcher_sectors_display"}, "minWidth": "185px", "width": "185px", "maxWidth": "185px", "verticalAlign": "top"},
                                 {"if": {"column_id": "substantive_domains_display"}, "minWidth": "210px", "width": "210px", "maxWidth": "210px", "verticalAlign": "top"},
-                                {"if": {"column_id": "substantive_domain_count"}, "minWidth": "155px", "width": "155px", "maxWidth": "155px"},
+                                {"if": {"column_id": "substantive_domain_count"}, "minWidth": "155px", "width": "155px", "maxWidth": "155px", "verticalAlign": "top"},
                                 {"if": {"column_id": "analytical_purpose_display"}, "minWidth": "200px", "width": "200px", "maxWidth": "200px", "verticalAlign": "top"},
                                 {"if": {"column_id": "cross_cutting_tags_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
                                 {"if": {"column_id": "rationale_display"}, "minWidth": "330px", "width": "330px", "maxWidth": "330px", "verticalAlign": "top"},
