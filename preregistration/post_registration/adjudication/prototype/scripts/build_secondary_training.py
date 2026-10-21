@@ -82,10 +82,10 @@ def shared_pool():
     return pool
 
 
-def build_rows(entries, group, role, prefix):
+def build_rows(entries, group, role, prefix, start=1):
     """entries: [(case, set_role)] in queue order -> import rows, reveal pairs, crosswalk rows."""
     rows, pairs, key = [], [], []
-    for n, (case, set_role) in enumerate(entries, 1):
+    for n, (case, set_role) in enumerate(entries, start):
         case = {**case, "assignment_id": f"{prefix}{n:02d}"}
         package = package_case(case, seed=SEED_PRESENTATION)
         if package["qa_flags"]:
@@ -165,5 +165,40 @@ def main():
     print("secondary forms:", sorted(k["form"] for k in s_key))
 
 
+JOINT_ADDENDUM = {"TRN_J05": "SYN_TRN_005", "TRN_J07": "SYN_TRN_007"}  # ADJ-115; fixtures/training_cases.json
+
+
+def joint_addendum():
+    """ADJ-115: replace joint case J05 and add J07, leaving every other training file unchanged.
+
+    The new J05 has the old one's shape (Purposes three options, equity tag two), so
+    importing it overwrites every field of the record already in PID 9221.
+    """
+    out = {p: OUT / p for p in ("joint_addendum_record_import.csv", "joint_addendum_reveal_import.csv")}
+    if any(p.exists() for p in out.values()):
+        raise SystemExit("the joint addendum already exists; it is built once")
+    fixtures = {c["record_id"]: c for c in load_json("training_cases.json")}
+    rows, pairs = [], []
+    for aid, rid in JOINT_ADDENDUM.items():
+        (row,), (pair,), _ = build_rows([(fixtures[rid], "joint: synthetic")], "training", 1, "TRN_J", start=int(aid[-2:]))
+        assert row["adj_assignment_id"] == aid
+        rows.append(row)
+        pairs.append(pair)
+    names = [r[0] for r in field_rows()]
+    unknown = sorted({k for r in rows for k in r if k != "redcap_data_access_group" and k not in names})
+    if unknown:
+        raise SystemExit("columns absent from the dictionary: " + ", ".join(unknown))
+    write_import(out["joint_addendum_record_import.csv"], rows, names)
+    write_reveal_import(out["joint_addendum_reveal_import.csv"], pairs)
+    receipt_path = OUT / "training_receipt.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["joint_addendum"] = {"decision": "ADJ-115", "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                 "records": JOINT_ADDENDUM,
+                                 "files": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in out.values()}}
+    receipt_path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+    print("joint addendum:", ", ".join(JOINT_ADDENDUM), "(training group)")
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    joint_addendum() if "--joint-addendum" in sys.argv[1:] else main()

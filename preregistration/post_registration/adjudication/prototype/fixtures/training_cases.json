@@ -1,0 +1,112 @@
+[
+ {
+  "record_id": "SYN_TRN_005",
+  "assignment_id": "SYN_ASSIGN_TRN_005",
+  "title": "Free school meal eligibility and progression from school to further education in England, 2012-2023",
+  "datasets": "Department for Education: National Pupil Database; Individualised Learner Record",
+  "classifications": [
+   {
+    "source_type": "fable",
+    "domains": [
+     "Education & Skills"
+    ],
+    "purposes": [
+     "Descriptive Monitoring"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied"
+   },
+   {
+    "source_type": "scratch",
+    "domains": [
+     "Education & Skills"
+    ],
+    "purposes": [
+     "Outcome Tracking"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied",
+    "source_id": "SC_A"
+   },
+   {
+    "source_type": "scratch",
+    "domains": [
+     "Education & Skills"
+    ],
+    "purposes": [
+     "Life-Course / Trajectory Analysis"
+    ],
+    "covid": "Not applied",
+    "equity": "Applied",
+    "source_id": "SC_B"
+   },
+   {
+    "source_type": "scratch",
+    "domains": [
+     "Education & Skills"
+    ],
+    "purposes": [
+     "Descriptive Monitoring"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied",
+    "source_id": "SC_C"
+   }
+  ]
+ },
+ {
+  "record_id": "SYN_TRN_007",
+  "assignment_id": "SYN_ASSIGN_TRN_007",
+  "title": "Regional resilience after the 2008 financial crisis",
+  "datasets": "Office for National Statistics: Business Structure Database; Office for National Statistics: Annual Business Survey",
+  "classifications": [
+   {
+    "source_type": "fable",
+    "domains": [
+     "Unclear from Register Entry"
+    ],
+    "purposes": [
+     "Outcome Tracking"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied"
+   },
+   {
+    "source_type": "scratch",
+    "domains": [
+     "Business & Productivity"
+    ],
+    "purposes": [
+     "Outcome Tracking"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied",
+    "source_id": "SC_A"
+   },
+   {
+    "source_type": "scratch",
+    "domains": [
+     "Business & Productivity"
+    ],
+    "purposes": [
+     "Outcome Tracking"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied",
+    "source_id": "SC_B"
+   },
+   {
+    "source_type": "scratch",
+    "domains": [
+     "Business & Productivity"
+    ],
+    "purposes": [
+     "Outcome Tracking"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied",
+    "source_id": "SC_C"
+   }
+  ]
+ }
+]
