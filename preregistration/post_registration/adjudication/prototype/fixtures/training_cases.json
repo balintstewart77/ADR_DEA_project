@@ -55,6 +55,25 @@
   ]
  },
  {
+  "record_id": "SYN_TRN_006",
+  "assignment_id": "SYN_ASSIGN_TRN_006",
+  "title": "Bus use and travel patterns in English city regions, 2015-2022",
+  "datasets": "Department for Transport: National Travel Survey; Department for Communities and Local Government: English Housing Survey",
+  "classifications": [
+   {
+    "source_type": "fable",
+    "domains": [
+     "Housing & Planning"
+    ],
+    "purposes": [
+     "Descriptive Monitoring"
+    ],
+    "covid": "Not applied",
+    "equity": "Not applied"
+   }
+  ]
+ },
+ {
   "record_id": "SYN_TRN_007",
   "assignment_id": "SYN_ASSIGN_TRN_007",
   "title": "Regional resilience after the 2008 financial crisis",

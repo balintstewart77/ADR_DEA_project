@@ -165,14 +165,14 @@ def main():
     print("secondary forms:", sorted(k["form"] for k in s_key))
 
 
-JOINT_ADDENDUM = {"TRN_J05": "SYN_TRN_005", "TRN_J07": "SYN_TRN_007"}  # ADJ-115; fixtures/training_cases.json
+JOINT_ADDENDUM = {"TRN_J05": "SYN_TRN_005", "TRN_J06": "SYN_TRN_006", "TRN_J07": "SYN_TRN_007"}  # ADJ-115; fixtures/training_cases.json
 
 
 def joint_addendum():
-    """ADJ-115: replace joint case J05 and add J07, leaving every other training file unchanged.
+    """ADJ-115: replace joint cases J05 and J06 and add J07, leaving every other training file unchanged.
 
-    The new J05 has the old one's shape (Purposes three options, equity tag two), so
-    importing it overwrites every field of the record already in PID 9221.
+    The new J05 and J06 have the old ones' shapes, so importing them overwrites the
+    records already in PID 9221 (J06's old per-label fields are switched off).
     """
     out = {p: OUT / p for p in ("joint_addendum_record_import.csv", "joint_addendum_reveal_import.csv")}
     if any(p.exists() for p in out.values()):
