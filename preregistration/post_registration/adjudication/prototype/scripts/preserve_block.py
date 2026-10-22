@@ -156,7 +156,7 @@ def _nest_single_set(out):
         out["tag_assessments"] = tags
 
 
-def check_block(columns, export_rows, sources, packages, reveal_rows, expected_reveal, post_reveal=False):
+def check_block(columns, export_rows, sources, packages, reveal_rows, expected_reveal, post_reveal=False, assignments=None):
     """Problems preventing preservation or reveal; an empty list means go.
 
     columns: the export's header.  export_rows: assignment ID -> raw row.
@@ -171,6 +171,10 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
     is relaxed: the schema, identity, display and validation checks still run,
     but Stage 1 can no longer be corrected blind, so validation problems are
     returned separately, as (blocking, invalid), to be recorded rather than fixed.
+
+    assignments: assignment ID -> (Data Access Group, reviewer role code) where a
+    set mixes reviewers (preserve_group.py); otherwise every record must be a
+    primary assignment in the primary group.
     """
     missing = sorted(required_columns() - set(columns))
     if missing:
@@ -182,8 +186,9 @@ def check_block(columns, export_rows, sources, packages, reveal_rows, expected_r
         if row is None:
             out.append(f"{aid}: absent from the export"); continue
         if norm(row.get("adj_source_record_id")) != sources[aid]: out.append(f"{aid}: source Record ID differs from the crosswalk")
-        if row.get("adj_reviewer_role") != "1": out.append(f"{aid}: not a primary assignment")
-        if row.get("redcap_data_access_group") != GROUP: out.append(f"{aid}: not in the {GROUP} Data Access Group")
+        group, role = (assignments or {}).get(aid, (GROUP, "1"))
+        if row.get("adj_reviewer_role") != role: out.append(f"{aid}: reviewer role differs from the import")
+        if row.get("redcap_data_access_group") != group: out.append(f"{aid}: not in the {group} Data Access Group")
         if post_reveal:
             held = {c: norm(row.get(c)) for c in reveal_columns()}
             if row.get("adj_reveal_state") != "1" or held != {c: norm(v) for c, v in expected_reveal[aid].items()}:
