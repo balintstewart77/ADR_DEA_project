@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "current": "20260813",
+  "current": "20261021",
   "pointers": {
     "current_latest_revision": {
-      "snapshot_id": "sha256:dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
-      "raw_xlsx_sha256": "dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
-      "canonical_csv_sha256": "381593a7c64b297b9ee289c84b02a6982824b74f85800b4082e5ff1f059583f4"
+      "snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "raw_xlsx_sha256": "9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "canonical_csv_sha256": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad"
     },
     "frozen_validation_snapshot": {
       "snapshot_id": "sha256:4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
@@ -51,6 +51,18 @@
       "sha256_xlsx": "dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40",
       "row_count": 1485,
       "snapshot_id": "sha256:dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40"
+    },
+    {
+      "version": "20261021",
+      "latest_snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "csv": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/canonical.csv",
+      "xlsx": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/10/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "retrieved_at": "2026-10-26T13:57:34+00:00",
+      "sha256_csv": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad",
+      "sha256_xlsx": "9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "row_count": 1528,
+      "snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82"
     },
     {
       "version": "legacy",
@@ -140,6 +152,26 @@
         "canonical_line_terminator": "LF",
         "index": false
       }
+    },
+    {
+      "snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "raw_xlsx_path": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "canonical_csv_path": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/canonical.csv",
+      "raw_xlsx_sha256": "9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "canonical_csv_sha256": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad",
+      "raw_row_count": 1528,
+      "first_seen_at": "2026-10-26T13:57:34+00:00",
+      "nominal_source_date": "2026-10-21",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/10/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "upstream_filename": "21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "converter": {
+        "identity": "scrape.fetch_register.xlsx_to_dataframe:v1",
+        "pandas": "3.1.0",
+        "openpyxl": "3.1.5",
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF",
+        "index": false
+      }
     }
   ],
   "fetch_observations": [
@@ -197,6 +229,25 @@
         "canonical_line_terminator": "LF",
         "index": false
       }
+    },
+    {
+      "observation_id": "obs-0005",
+      "observed_at": "2026-10-26T13:57:34+00:00",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/10/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "upstream_filename": "21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "nominal_source_date": "2026-10-21",
+      "upload_directory_date": "2026-10",
+      "raw_xlsx_sha256": "9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "canonical_csv_sha256": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad",
+      "snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "converter": {
+        "identity": "scrape.fetch_register.xlsx_to_dataframe:v1",
+        "pandas": "3.1.0",
+        "openpyxl": "3.1.5",
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF",
+        "index": false
+      }
     }
   ],
   "analytical_states": [
@@ -234,6 +285,21 @@
       "deterministic_properties": {
         "content_sha256": "a08c62ec84d8a14ddd66aa77c6147cb315667e9c1a714cb1b9020f5f59708b60",
         "row_count": 1343,
+        "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF)"
+      }
+    },
+    {
+      "analytical_state_id": "sha256:a48d07693eeb5ca04ba2f6cecd5e2b06673fb84d85e3ea13e0afc412db2d5fad",
+      "cleaned_content_sha256": "a48d07693eeb5ca04ba2f6cecd5e2b06673fb84d85e3ea13e0afc412db2d5fad",
+      "cleaned_row_count": 1385,
+      "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF), include_quarter_date=True",
+      "cleaning_rules": {},
+      "source_snapshot_ids": [
+        "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82"
+      ],
+      "deterministic_properties": {
+        "content_sha256": "7f15769d12cb7f022d96018af207d1c3cdec09755e1eb0da22002c525ea4de6b",
+        "row_count": 1385,
         "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF)"
       }
     }

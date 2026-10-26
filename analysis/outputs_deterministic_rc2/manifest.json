@@ -1,48 +1,48 @@
 {
   "cleaning_stats": {
-    "after_filters": 1344,
+    "after_filters": 1386,
     "dropped_exact_duplicates": 23,
-    "dropped_no_date": 0,
-    "dropped_no_date_or_title": 0,
+    "dropped_no_date": 1,
+    "dropped_no_date_or_title": 1,
     "dropped_non_dea": 106,
     "dropped_same_id_same_title": 35,
     "dropped_special_duplicate_rows": 0,
-    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-aps-fix\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
+    "duplicate_review_file": "/home/runner/work/ADR_DEA_project/ADR_DEA_project/analysis/outputs_deterministic_rc2/quality/duplicate_review_flagged.csv",
     "duplicate_ruling_groups_applied": 5,
     "duplicate_ruling_merged_source_rows": 2,
     "duplicate_ruling_retained_project_ids": [
-      "2020/030",
-      "2022/036",
+      "2024/095",
       "2024/014",
-      "2024/095"
+      "2022/036",
+      "2020/030"
     ],
     "duplicate_ruling_rows_removed": 1,
-    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-aps-fix\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
-    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-aps-fix\\analysis\\register_duplicate_rulings.yaml",
+    "duplicate_rulings_audit_file": "/home/runner/work/ADR_DEA_project/ADR_DEA_project/analysis/outputs_deterministic_rc2/quality/duplicate_rulings_audit.csv",
+    "duplicate_rulings_file": "/home/runner/work/ADR_DEA_project/ADR_DEA_project/analysis/register_duplicate_rulings.yaml",
     "duplicate_tier1_rows_removed": 23,
     "duplicate_tier2_input_rows": 24,
     "duplicate_tier2_merge_groups": 12,
     "duplicate_tier2_rows_removed": 12,
     "duplicate_tier3_rows_flagged": 0,
-    "final_rows": 1343,
-    "raw_loaded": 1485,
-    "rows_after_dea_filter": 1379,
-    "rows_after_duplicate_policy": 1344,
-    "rows_after_duplicate_rulings": 1343,
-    "rows_after_required_fields": 1485
+    "final_rows": 1385,
+    "raw_loaded": 1528,
+    "rows_after_dea_filter": 1421,
+    "rows_after_duplicate_policy": 1386,
+    "rows_after_duplicate_rulings": 1385,
+    "rows_after_required_fields": 1527
   },
-  "created_at_utc": "2026-09-22T08:44:36.755278+00:00",
+  "created_at_utc": "2026-10-26T13:57:48.026546+00:00",
   "git": {
-    "commit": "acc05ba98ddf3eea16df999559aab8a8b1492b51",
+    "commit": "e7908ff3ada9f58684275839de6a8542c89cae62",
     "dirty": true,
-    "status_porcelain": "M analysis/outputs_deterministic_rc2/manifest.json\n M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/test_refresh_pipeline.py\n M dashboard/dataset_normalisation.py\n M tests/fixtures/filter_option_count_baseline.json\n M tests/test_filter_option_counts.py"
+    "status_porcelain": "M analysis/outputs_deterministic_rc2/register_properties.csv\n M data/register_provenance_manifest.json\n?? analysis/outputs_refresh/20261021-9030a288f445/\n?? data/register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/"
   },
   "model": null,
   "output_files": [
-    "analysis\\outputs_deterministic_rc2\\register_properties.csv"
+    "analysis/outputs_deterministic_rc2/register_properties.csv"
   ],
   "reference_table_version": "0.5.8",
-  "row_count": 1343,
+  "row_count": 1385,
   "run_type": "deterministic_properties",
-  "source_file": "register_snapshots/dc97c680115fc036b26ed486b163d5b6afeb242411e2f1a1020d71eacbc44a40/canonical.csv"
+  "source_file": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/canonical.csv"
 }

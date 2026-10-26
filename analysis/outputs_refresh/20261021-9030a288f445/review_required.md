@@ -1,0 +1,55 @@
+# Review required: reference-layer coverage gaps
+
+- Dataset mentions matched: 3,362/3,471
+- Organisation mentions matched: 1,931/1,947
+- Known residuals (adjudicated unclassifiable, no action): 3
+
+## Unmatched organisations (add to register_reference.yaml or alias maps)
+
+- Barnardos (1 mention)
+- Centre of Expertise on Child Sexual Abuse (1 mention)
+- Université de Lille (1 mention)
+- DfE NI (1 mention)
+- Universite de Lille (1 mention)
+- Massachusetts Institute of Technology Department of Economics (1 mention)
+- Birkbeck University of London (1 mention)
+- Perinatal Institute (1 mention)
+- Institute of the Motore Industry (IMI) (1 mention)
+- London School of Hygiene & Tropical Medicine (1 mention)
+- Nest (1 mention)
+- University of West London (1 mention)
+- Liverpool University (1 mention)
+
+## Unmatched datasets (top 30 by mentions)
+
+- Research and Development Expenditures and Subsidies (3 mentions)
+- Firm Productivity (3 mentions)
+- Employment Creation and Survival (3 mentions)
+- Public Attitudes Tracker (2 mentions)
+- Children of the 2020s: Wave 1 (2 mentions)
+- Foreign Direct Investment Index (2 mentions)
+- Wellcome Trust (1 mention)
+- E-Commerce Business Survey (1 mention)
+- Manufacturers Sales by Product - PRODCOM (1 mention)
+- English Housing Survey (1 mention)
+- 1970 British Cohort Study (1 mention)
+- Millenium Cohort Study (1 mention)
+- National Child Development Study (1 mention)
+- Next Steps (1 mention)
+- Wave 2 (1 mention)
+- Northern Ireland Economic Trade Statistics (NIETS) Northern Ireland Annual Survey of Hours and Earnings (NI ASHE) (1 mention)
+- ONS Census 2021 (1 mention)
+- Business Data Research (BDR) 2022 Themed (1 mention)
+- Northern Ireland Economic Trade Statistics (NIETS) (1 mention)
+- Quarterly Fuels Inquiry / Quarterly Fuels Survey (1 mention)
+- Business Register Emplyment Survey (1 mention)
+- Business Structure Database - UK Annual Survey of Hours and Earnings - GB Annual Population Survey - UK Annual International Trade in Services (1 mention)
+- Longitudinal Business Register (1 mention)
+- Annual Respondents Database X (ARDx) Business Register and Employment Survey (1 mention)
+- Northern Ireland Economic Trade (1 mention)
+- Low carbon and renewable energy economy (1 mention)
+- UK: 2023 (1 mention)
+- Longitudinal Inter-Development Business Register (1 mention)
+- Employer Skills Survey: Investment in Training (1 mention)
+- Longitudinal Study of young people in England (1 mention)
+- ... and 70 more
