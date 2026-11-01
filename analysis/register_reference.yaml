@@ -2043,6 +2043,36 @@ known_unclassifiable_organisations:
   - "Calver Pang"
 
 organisations:
+  - canonical: "Barnardo's"
+    aliases: ["Barnardo's", "Barnardos"]
+    sectors: ["third-sector"]
+    notes: "Registered charity 216250 (England and Wales), SC037605 (Scotland); also a company limited by guarantee."
+    sector_source: "https://www.barnardos.org.uk/"
+  - canonical: "Centre of Expertise on Child Sexual Abuse"
+    aliases: ["Centre of Expertise on Child Sexual Abuse", "CSA Centre"]
+    sectors: ["third-sector"]
+    notes: "Hosted by Barnardo's and funded by the Home Office; the hosting charity fixes its structural status, not the funding department."
+    sector_source: "https://www.csacentre.org.uk/about-us"
+  - canonical: "National Employment Savings Trust (Nest)"
+    aliases: ["National Employment Savings Trust (Nest)", "Nest", "Nest Insight"]
+    sectors: ["government"]
+    notes: "Nest Corporation is a public corporation established under the Pensions Act 2008 and sponsored by DWP; its Nest Insight research unit carries that status. Distinct from Nesta, the charity."
+    sector_source: "https://www.nestpensions.org.uk/schemeweb/nest/nestcorporation/legal.html"
+  - canonical: "Perinatal Institute"
+    aliases: ["Perinatal Institute"]
+    sectors: ["third-sector"]
+    notes: "Company limited by guarantee without share capital, using the 'Limited' exemption (Companies House 08466773); self-described not-for-profit social enterprise."
+    sector_source: "https://find-and-update.company-information.service.gov.uk/company/08466773"
+  - canonical: "University of West London"
+    aliases: ["University of West London"]
+    sectors: ["academic"]
+    notes: "UK HEI."
+    sector_source: "https://www.uwl.ac.uk/about-us"
+  - canonical: "Université de Lille"
+    aliases: ["Université de Lille", "Universite de Lille"]
+    sectors: ["academic"]
+    notes: "French public university; non-UK HEIs follow the same academic classification as Columbia University in this reference."
+    sector_source: "https://www.univ-lille.fr/en/"
   - canonical: "University College London"
     aliases: ["UCL", "University College London"]
     sectors: ["academic"]

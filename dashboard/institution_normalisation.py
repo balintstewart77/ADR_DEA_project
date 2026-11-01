@@ -159,6 +159,32 @@ _ALIASES = {
     "behavioural insights team": "Behavioural Insights Team",
     "belmana ltd": "Belmana",
     "birkbeck, university of london": "Birkbeck, University of London",
+    "birkbeck university of london": "Birkbeck, University of London",
+    "liverpool university": "University of Liverpool",
+    "london school of hygiene & tropical medicine": "London School of Hygiene and Tropical Medicine",
+    # Department sub-unit of the parent HEI.
+    "massachusetts institute of technology department of economics": (
+        "Massachusetts Institute of Technology"
+    ),
+    # Register misspelling of the Motor Industry institute.
+    "institute of the motore industry (imi)": "Institute of the Motor Industry",
+    "institute of the motore industry": "Institute of the Motor Industry",
+    # 2026/161 writes the Northern Ireland Department for the Economy as
+    # "DfE NI". In Northern Ireland DfE is the Department for the Economy,
+    # which holds further and higher education; the schools department there
+    # is the Department of Education. The same researcher appears in 2025/150
+    # as "Department for the Economy (Northern Ireland)". Never fold this into
+    # the English Department for Education, which is also in this register.
+    "dfe ni": "Department for the Economy (Northern Ireland)",
+    "dfe (ni)": "Department for the Economy (Northern Ireland)",
+    # Accent-stripped spelling of the same French university (2026/158, 2026/169).
+    "universite de lille": "Universit\u00e9 de Lille",
+    # Registered charity; the register omits the apostrophe.
+    "barnardos": "Barnardo's",
+    # Nest Insight is the research unit of Nest Corporation. Distinct from
+    # Nesta, the charity, which is a separate entry.
+    "nest": "National Employment Savings Trust (Nest)",
+    "nest insight": "National Employment Savings Trust (Nest)",
     "british psychological society": "British Psychological Society",
     "british sociological society": "British Sociological Society",
     "cambridge ocr": "Cambridge OCR",
@@ -573,7 +599,12 @@ _INSTITUTION_SECTORS = {
     "AQA Education": "third-sector",
     "ARUP": "commercial",
     "Aston University": "academic",
+    # Registered charity (England and Wales 216250, Scotland SC037605).
+    "Barnardo's": "third-sector",
     "Bank of England": "government",
+    # Hosted by Barnardo's, a registered charity, and funded by the Home
+    # Office; the hosting charity fixes its structural status.
+    "Centre of Expertise on Child Sexual Abuse": "third-sector",
     "Be the Business": "third-sector",
     "Behavioural Insights Team": "third-sector",
     "Belmana": "commercial",
@@ -704,6 +735,9 @@ _INSTITUTION_SECTORS = {
     "National Institute for Economic and Social Research (NIESR)": "third-sector",
     "National Institute of Social and Economic Research": "third-sector",
     "Nesta": "third-sector",
+    # Nest Corporation is a public corporation established under the Pensions
+    # Act 2008 and sponsored by DWP; its Nest Insight unit carries that status.
+    "National Employment Savings Trust (Nest)": "government",
     "Netherlands Interdisciplinary Demographic Institute": "third-sector",
     "Nevin Economic Research Institute": "third-sector",
     "New Economics Foundation": "third-sector",
@@ -728,6 +762,9 @@ _INSTITUTION_SECTORS = {
     "Oxford Economics": "commercial",
     "PA Consulting": "commercial",
     "Pearson": "commercial",
+    # Company limited by guarantee with the "Limited" exemption (08466773),
+    # self-described not-for-profit social enterprise.
+    "Perinatal Institute": "third-sector",
     "Pensions Policy Institute": "third-sector",
     "Perspective Economics": "commercial",
     "Pro Bono Economics": "third-sector",
@@ -826,8 +863,10 @@ _INSTITUTION_SECTORS = {
     "University of Texas at Austin": "academic",
     "University of the West of England": "academic",
     "University of Warwick": "academic",
+    "University of West London": "academic",
     "University of Westminster": "academic",
     "University of York": "academic",
+    "Université de Lille": "academic",  # French public university.
     "Umeå University": "academic",
     "Utrecht University": "academic",
     "Vanguard": "commercial",
