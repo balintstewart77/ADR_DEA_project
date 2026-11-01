@@ -3,12 +3,25 @@
 #
 # Tests only: this workflow never runs the refresh pipeline, LLM classification
 # or pull request creation.
+#
+# Pull requests are filtered to code and the files that drive it. The weekly
+# register refresh opens a data-only pull request as github-actions[bot], and
+# GitHub holds workflow runs on bot-opened pull requests at "action required"
+# until a maintainer approves them, which left a check that never completed.
+# Refreshed data is still tested twice: by the refresh job before it opens the
+# pull request, and by the push trigger below once that pull request lands.
 
 name: Analysis CI
 
 on:
   pull_request:
     branches: [main]
+    paths:
+      - "**.py"
+      - "requirements*.txt"
+      - ".github/workflows/**"
+      - "taxonomy_data_dictionary.yaml"
+      - "analysis/register_reference.yaml"
   push:
     branches: [main]
 
