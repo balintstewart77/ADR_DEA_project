@@ -29,6 +29,7 @@ from dashboard.charts.thematic import (
     make_domain_cooccurrence, make_latent_demand_cooccurrence,
     make_compact_distribution_bar,
     make_record_linkage_trend, make_domain_record_linkage_breakdown,
+    make_domain_linkage_map,
     make_researcher_sector_cooccurrence, make_domain_breadth_trend,
 )
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
@@ -699,6 +700,15 @@ def register(app):
             granularity=selected_granularity,
             partial_year_info=PARTIAL_YEAR_INFO,
         )
+        return annotate_empty(fig, data["THEMATIC_PROJECT_COUNT"] == 0)
+
+    @app.callback(
+        Output("deterministic-domain-linkage-map", "figure"),
+        Input("portfolio-accreditation-year-filter", "value"),
+    )
+    def update_domain_linkage_map(year_selection):
+        data = _aggregates(year_selection)
+        fig = make_domain_linkage_map(data["df_record_linkage_domain_pairs"])
         return annotate_empty(fig, data["THEMATIC_PROJECT_COUNT"] == 0)
 
     _MULTI_COUNT_NOTE = "Multi-count: a project carrying both values counts in both lines."

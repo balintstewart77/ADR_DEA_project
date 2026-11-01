@@ -10,6 +10,10 @@ LOGGER = logging.getLogger(__name__)
 
 REGISTER_PROPERTIES_KEY_COL = "Record ID"
 RECORD_LINKAGE_COL = "record_linkage"
+# Which data domains a project's record linkage spans. Deliberately kept out of
+# DETERMINISTIC_FACET_COLUMNS: it describes the linkage rather than the project,
+# so it is not an Enriched Register column or filter.
+RECORD_LINKAGE_COMPONENT_DOMAINS_COL = "record_linkage_component_domains"
 
 DETERMINISTIC_FACET_COLUMNS = [
     RECORD_LINKAGE_COL,

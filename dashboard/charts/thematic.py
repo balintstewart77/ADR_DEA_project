@@ -196,6 +196,28 @@ def make_compact_distribution_bar(
     return _apply_common(fig, height=height)
 
 
+SHORT_DOMAIN_LABELS = {
+    "Education & Skills": "Education",
+    "Labour Market & Employment": "Labour market",
+    "Health & Social Care": "Health",
+    "Migration & Demographics": "Migration",
+    "Business & Productivity": "Business",
+    "Crime & Justice": "Crime",
+    "Housing & Planning": "Housing",
+    "Environment & Agriculture": "Environment",
+    "Public Finance & Taxation": "Public finance",
+    "Poverty, Wealth & Living Standards": "Poverty & wealth",
+    "Data Infrastructure & Methodology": "Data infrastructure",
+    "Transport & Infrastructure": "Transport",
+}
+
+RECORD_LINKAGE_COLOURS = {
+    "Cross-domain": "#e76f51",
+    "Within-domain": "#2a9d8f",
+    "No record linkage": "#8d99ae",
+}
+
+
 def make_record_linkage_trend(
     df_by_year: pd.DataFrame,
     metric: str = "pct",
@@ -203,7 +225,13 @@ def make_record_linkage_trend(
     granularity: str = "year",
     partial_year_info=None,
 ) -> go.Figure:
-    """Stacked area trend for record-linkage span by year or quarter."""
+    """Linked-data uptake over time, as one line per linkage span.
+
+    Plots the two linkage spans only. "No record linkage" is the remainder and
+    is stated in the subtitle rather than drawn: stacking it placed the series
+    carrying the story on a moving baseline, where its thickness could not be
+    read against the axis.
+    """
     fig = go.Figure()
     if df_by_year.empty:
         return _apply_common(fig, height=height)
@@ -212,7 +240,7 @@ def make_record_linkage_trend(
     is_quarter = granularity == "quarter" and "period_label" in df_by_year.columns
     x_col = "period_label" if is_quarter else "Year"
     sort_cols = ["period_date"] if is_quarter and "period_date" in df_by_year.columns else ["Year"]
-    period_axis_title = "Quarter" if is_quarter else "Year"
+    period_axis_title = "Quarter" if is_quarter else None
     category_order = []
     if is_quarter:
         category_order = (
@@ -222,33 +250,62 @@ def make_record_linkage_trend(
             .astype(str)
             .tolist()
         )
-    linkage_order = ["No record linkage", "Within-domain", "Cross-domain"]
-    colours = {
-        "No record linkage": "#8d99ae",
-        "Within-domain": "#2a9d8f",
-        "Cross-domain": "#e76f51",
-    }
-    for linkage in linkage_order:
+
+    # The final period is incomplete - a part year, or a quarter still subject
+    # to publication lag - so it is drawn dotted, not as a downturn.
+    partial_year = getattr(partial_year_info, "year", None)
+    plotted = []
+    for linkage in ("Cross-domain", "Within-domain"):
         sub = df_by_year[df_by_year["record_linkage"] == linkage].sort_values(sort_cols)
         if sub.empty:
             continue
+        xs = sub[x_col].tolist()
+        ys = sub[metric_col].tolist()
+        colour = RECORD_LINKAGE_COLOURS[linkage]
+        if is_quarter or (partial_year is not None and xs and xs[-1] == partial_year):
+            split = max(len(xs) - 1, 1)
+        else:
+            split = len(xs)
+        units = "% of projects" if metric == "pct" else " projects"
+        value_format = "%{y:.1f}" if metric == "pct" else "%{y}"
+        hover = f"<b>{linkage} linkage</b><br>%{{x}}<br>{value_format}{units}<extra></extra>"
         fig.add_trace(go.Scatter(
-            x=sub[x_col],
-            y=sub[metric_col],
-            name=linkage,
-            mode="lines",
-            stackgroup="one",
-            line=dict(color=colours.get(linkage, "#999999"), width=1.5),
-            fillcolor=colours.get(linkage, "#999999"),
-            hovertemplate=(
-                f"<b>{linkage}</b><br>%{{x}}<br>"
-                + ("%{y:.1f}% of projects" if metric == "pct" else "%{y} projects")
-                + "<extra></extra>"
-            ),
+            x=xs[:split], y=ys[:split], name=f"{linkage} linkage", mode="lines+markers",
+            line=dict(color=colour, width=3),
+            marker=dict(size=9, color=colour, line=dict(color="white", width=2)),
+            hovertemplate=hover,
         ))
+        if split < len(xs):
+            fig.add_trace(go.Scatter(
+                x=xs[split - 1:], y=ys[split - 1:], name=f"{linkage} linkage",
+                mode="lines+markers", showlegend=False,
+                line=dict(color=colour, width=3, dash="dot"),
+                marker=dict(size=9, color="white", line=dict(color=colour, width=2.5)),
+                hovertemplate=hover,
+            ))
+        plotted.append((linkage, xs[-1], ys[-1], colour))
+
+    # Direct labels, so the series are never identified by colour alone.
+    for linkage, x_last, y_last, colour in plotted:
+        value = f"{y_last:.0f}%" if metric == "pct" else f"{y_last:,.0f}"
+        fig.add_annotation(
+            x=x_last, y=y_last, text=f"  <b>{linkage}</b> {value}", showarrow=False,
+            xanchor="left", font=dict(color=colour, size=12),
+        )
+
+    subtitle = (
+        "Share of that period's accredited projects. The remainder used no record linkage."
+        if metric == "pct"
+        else "Accredited projects using record linkage; projects with no linkage are not plotted."
+    )
+    fig.add_annotation(
+        text=subtitle, xref="paper", yref="paper", x=0, y=1.14,
+        showarrow=False, xanchor="left", yanchor="bottom",
+        font=dict(size=11, color="#4f6274"),
+    )
 
     fig.update_layout(
-        title="Record Linkage Over Time",
+        title="Use of linked data over time",
         xaxis_title=period_axis_title,
         yaxis_title="% of projects" if metric == "pct" else "Projects",
         xaxis=dict(
@@ -258,42 +315,93 @@ def make_record_linkage_trend(
             categoryarray=category_order if category_order else None,
             tickangle=-35 if is_quarter else 0,
         ),
-        yaxis=dict(range=[0, 100] if metric == "pct" else None),
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.03,
-            xanchor="left",
-            x=0,
-        ),
-        margin=dict(r=160, t=112, b=56),
+        yaxis=dict(rangemode="tozero", ticksuffix="%" if metric == "pct" else None),
+        legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
+        margin=dict(r=200, t=124, b=64),
     )
     if is_quarter and category_order:
-        latest = category_order[-1]
         fig.add_annotation(
-            x=latest,
-            y=1,
-            yref="paper",
-            text="latest quarter provisional — publication lag",
-            showarrow=True,
-            arrowhead=2,
-            ax=0,
-            ay=-34,
-            font=dict(size=10, color="#7f8c8d"),
-        )
-        fig.add_annotation(
-            text="Latest quarter provisional — publication lag.",
-            xref="paper",
-            yref="paper",
-            x=0,
-            y=1.12,
-            showarrow=False,
-            xanchor="left",
-            yanchor="bottom",
+            text="Latest quarter provisional - publication lag.",
+            xref="paper", yref="paper", x=0, y=1.06,
+            showarrow=False, xanchor="left", yanchor="bottom",
             font=dict(size=10, color="#7f8c8d"),
         )
     else:
-        _annotate_partial_year(fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info)
+        _annotate_partial_year(
+            fig, years=df_by_year["Year"].unique(), partial_year_info=partial_year_info,
+        )
+        # The shared helper footnotes below the axis, where the direct labels
+        # and the asterisked final tick already sit. Move it to the free space
+        # opposite the subtitle instead.
+        note = getattr(partial_year_info, "note", "")
+        for annotation in fig.layout.annotations:
+            if note and annotation.text == note:
+                annotation.update(x=1, y=1.14, xanchor="right", yanchor="bottom")
+    return _apply_common(fig, height=height)
+
+
+def make_domain_linkage_map(df_pairs: pd.DataFrame, height: int = 560) -> go.Figure:
+    """Which data domains are linked to which, across linked projects.
+
+    Lower triangle only: the matrix is symmetric, so the upper half would
+    repeat every value. Blank cells carry the finding - those domain pairs
+    appear in no accredited project.
+    """
+    fig = go.Figure()
+    if df_pairs.empty:
+        return _apply_common(fig, height=height)
+
+    involvement: dict = {}
+    for row in df_pairs.itertuples():
+        for domain in {row.domain_a, row.domain_b}:
+            involvement[domain] = involvement.get(domain, 0) + int(row.count)
+    order = sorted(involvement, key=lambda domain: (-involvement[domain], domain))
+    index = {domain: position for position, domain in enumerate(order)}
+
+    size = len(order)
+    z = [[None] * size for _ in range(size)]
+    text = [[""] * size for _ in range(size)]
+    diagonal = []
+    for row in df_pairs.itertuples():
+        i, j = index[row.domain_a], index[row.domain_b]
+        lower, upper = max(i, j), min(i, j)
+        z[lower][upper] = int(row.count)
+        text[lower][upper] = f"{int(row.count):,}"
+        if row.within_domain:
+            diagonal.append(lower)
+
+    labels = [SHORT_DOMAIN_LABELS.get(domain, domain) for domain in order]
+    fig.add_trace(go.Heatmap(
+        z=z, x=labels, y=labels, text=text, texttemplate="%{text}",
+        textfont=dict(size=13),
+        colorscale=[[0, "#eaf4f2"], [0.25, "#9ed3cb"], [0.6, "#41a99c"], [1, "#1f7a6f"]],
+        hovertemplate="<b>%{y}</b> + <b>%{x}</b><br>%{z} projects<extra></extra>",
+        xgap=3, ygap=3, zmin=0,
+        colorbar=dict(title=dict(text="Projects", side="right"), thickness=12, len=0.6),
+    ))
+    for position in diagonal:
+        fig.add_shape(
+            type="rect",
+            x0=position - 0.5, x1=position + 0.5,
+            y0=position - 0.5, y1=position + 0.5,
+            line=dict(color="#2c3e50", width=1.5, dash="dot"),
+            fillcolor="rgba(0,0,0,0)",
+        )
+    fig.add_annotation(
+        text=(
+            "Blank means no accredited project has linked those two domains. "
+            "Dotted cells are linkage inside one domain."
+        ),
+        xref="paper", yref="paper", x=0, y=1.07,
+        showarrow=False, xanchor="left", yanchor="bottom",
+        font=dict(size=11, color="#4f6274"),
+    )
+    fig.update_layout(
+        title="Domain linkage map",
+        xaxis=dict(side="bottom", showgrid=False, tickfont=dict(size=11), tickangle=-30),
+        yaxis=dict(autorange="reversed", showgrid=False, tickfont=dict(size=11)),
+        margin=dict(l=140, r=40, t=112, b=104),
+    )
     return _apply_common(fig, height=height)
 
 

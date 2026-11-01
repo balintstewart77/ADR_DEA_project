@@ -17,6 +17,7 @@ from dashboard.config import (
 from dashboard.taxonomy import DOMAIN_LABELS
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
+    RECORD_LINKAGE_COMPONENT_DOMAINS_COL,
     RECORD_LINKAGE_DISPLAY_LABELS,
     display_deterministic_value,
     load_register_properties,
@@ -618,6 +619,44 @@ def domain_breadth_aggregates(
     }
 
 
+_LINKAGE_PAIR_COLUMNS = ["domain_a", "domain_b", "count", "within_domain"]
+
+
+def _record_linkage_domain_pairs(df: pd.DataFrame) -> pd.DataFrame:
+    """Domain pairs spanned by each project's record linkage.
+
+    Deterministic: reads the controlled-vocabulary component domains recorded
+    for the linkage itself, not the project's inferred substantive domains. A
+    project linking three domains contributes each of its three pairs once;
+    within-domain linkage contributes a single same-domain row.
+    """
+    if df.empty or "Record ID" not in df.columns:
+        return pd.DataFrame(columns=_LINKAGE_PAIR_COLUMNS)
+
+    properties = load_register_properties(columns=[RECORD_LINKAGE_COMPONENT_DOMAINS_COL])
+    if properties.empty:
+        return pd.DataFrame(columns=_LINKAGE_PAIR_COLUMNS)
+
+    merged = df[["Record ID"]].merge(properties, on="Record ID", how="left")
+    counts: Counter = Counter()
+    for value in merged[RECORD_LINKAGE_COMPONENT_DOMAINS_COL].fillna(""):
+        domains = sorted({part.strip() for part in str(value).split(";") if part.strip()})
+        if not domains:
+            continue
+        if len(domains) == 1:
+            counts[(domains[0], domains[0])] += 1
+        else:
+            counts.update(combinations(domains, 2))
+
+    return pd.DataFrame(
+        [
+            {"domain_a": a, "domain_b": b, "count": count, "within_domain": a == b}
+            for (a, b), count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+        ],
+        columns=_LINKAGE_PAIR_COLUMNS,
+    )
+
+
 def _merge_deterministic_facets(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     base = df.copy()
     for col in columns:
@@ -874,6 +913,7 @@ def build_thematic_aggregates(df: pd.DataFrame) -> dict:
         ),
         "df_record_linkage_by_year": _record_linkage_by_year(work),
         "df_record_linkage_by_quarter": _record_linkage_by_quarter(work),
+        "df_record_linkage_domain_pairs": _record_linkage_domain_pairs(work),
         "df_collection_method_by_year": _facet_values_by_year(
             work, "dataset_collection_methods", "collection_method",
         ),
@@ -1101,6 +1141,7 @@ def load_thematic_data(thematic_dir):
         )
         df_record_linkage_by_year = _record_linkage_by_year(df_thematic_projects)
         df_record_linkage_by_quarter = _record_linkage_by_quarter(df_thematic_projects)
+        df_record_linkage_domain_pairs = _record_linkage_domain_pairs(df_thematic_projects)
         df_collection_method_by_year = _facet_values_by_year(
             df_thematic_projects, "dataset_collection_methods", "collection_method",
         )
@@ -1135,6 +1176,7 @@ def load_thematic_data(thematic_dir):
             "df_researcher_sector_totals": df_researcher_sector_totals,
             "df_record_linkage_by_year": df_record_linkage_by_year,
             "df_record_linkage_by_quarter": df_record_linkage_by_quarter,
+            "df_record_linkage_domain_pairs": df_record_linkage_domain_pairs,
             "df_collection_method_by_year": df_collection_method_by_year,
             "df_temporal_structure_by_year": df_temporal_structure_by_year,
             "df_unit_by_year": df_unit_by_year,
@@ -1175,6 +1217,7 @@ def load_thematic_data(thematic_dir):
             "df_researcher_sector_totals": pd.DataFrame(),
             "df_record_linkage_by_year": pd.DataFrame(),
             "df_record_linkage_by_quarter": pd.DataFrame(),
+            "df_record_linkage_domain_pairs": pd.DataFrame(),
             "df_collection_method_by_year": pd.DataFrame(),
             "df_temporal_structure_by_year": pd.DataFrame(),
             "df_unit_by_year": pd.DataFrame(),
@@ -1218,6 +1261,7 @@ df_unit_totals = _thematic_data["df_unit_totals"]
 df_researcher_sector_totals = _thematic_data["df_researcher_sector_totals"]
 df_record_linkage_by_year = _thematic_data["df_record_linkage_by_year"]
 df_record_linkage_by_quarter = _thematic_data["df_record_linkage_by_quarter"]
+df_record_linkage_domain_pairs = _thematic_data["df_record_linkage_domain_pairs"]
 df_collection_method_by_year = _thematic_data["df_collection_method_by_year"]
 df_temporal_structure_by_year = _thematic_data["df_temporal_structure_by_year"]
 df_unit_by_year = _thematic_data["df_unit_by_year"]

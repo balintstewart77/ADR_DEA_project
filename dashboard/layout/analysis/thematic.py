@@ -39,6 +39,7 @@ DOMAIN_LINKAGE_HEIGHT = 560
 TAG_DOMAIN_HEIGHT = 440
 DOMAIN_TREND_HEIGHT = 480
 RECORD_LINKAGE_TREND_HEIGHT = 360
+DOMAIN_LINKAGE_MAP_HEIGHT = 560
 COMPACT_DISTRIBUTION_HEIGHT = 280
 RESEARCHER_SECTOR_MATRIX_HEIGHT = 500
 
@@ -461,6 +462,10 @@ def _analyses_accordion():
                     _graph(
                         "deterministic-record-linkage-trend",
                         height=RECORD_LINKAGE_TREND_HEIGHT,
+                    ),
+                    _graph(
+                        "deterministic-domain-linkage-map",
+                        height=DOMAIN_LINKAGE_MAP_HEIGHT,
                     ),
                     _metric_dropdown("deterministic-domain-linkage-metric"),
                     _graph(

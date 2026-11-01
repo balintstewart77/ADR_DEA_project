@@ -334,7 +334,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             str(annotation.get("text", ""))
             for annotation in payload["layout"].get("annotations", [])
         )
-        self.assertIn("latest quarter provisional", annotation_text)
+        self.assertIn("latest quarter provisional", annotation_text.lower())
 
     def test_tag_domain_bars_exclude_unclear_display_only(self):
         frame = pd.DataFrame([
