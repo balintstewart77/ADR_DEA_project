@@ -103,6 +103,12 @@ CACHE_SCHEMA_VERSION = 6
 PROMPT_VERSION = "dict-1.0-rc2"
 
 MODEL      = "claude-fable-5"
+# Reasoning effort, sent explicitly on every request. "high" is what the API
+# applies to this model when output_config is omitted, so pinning it records
+# the setting without changing what earlier runs did. Classifications depend
+# on it, so it is written into the cache metadata and a change invalidates the
+# cache. Raise it only against a measured comparison.
+EFFORT     = "high"      # low | medium | high | xhigh | max
 BATCH_SIZE = 10          # projects per LLM batch
 MAX_TOKENS = 8192        # generous ceiling -- 20 projects x ~180 tokens/entry
 MAX_RETRIES = 3          # retry transient API failures before giving up
@@ -470,6 +476,17 @@ def load_cache(cache_path: str) -> dict:
             print(f"[cache] Model changed ({meta.get('model')} -> {MODEL}) "
                   f"- invalidating cache")
             return {}
+        cached_effort = meta.get("effort")
+        if cached_effort is None:
+            # Written before effort was pinned. The entries were produced at
+            # the API default, which EFFORT now names, so they stay valid and
+            # the setting is recorded from this run on.
+            print(f"[cache] Effort not recorded in this cache; keeping entries "
+                  f"and recording '{EFFORT}' from now on")
+        elif cached_effort != EFFORT:
+            print(f"[cache] Effort changed ({cached_effort} -> {EFFORT}) "
+                  f"- invalidating cache")
+            return {}
         return raw.get("entries", {})
     return {}
 
@@ -481,6 +498,7 @@ def save_cache(cache: dict, cache_path: str):
             "cache_schema_version": CACHE_SCHEMA_VERSION,
             "prompt_version": PROMPT_VERSION,
             "model": MODEL,
+            "effort": EFFORT,
         },
         "entries": cache,
     }
@@ -710,6 +728,11 @@ def _validate_batch_integrity(
         raise BatchClassificationError("; ".join(problems))
 
 
+def _output_config() -> dict:
+    """Reasoning effort for every request this run makes."""
+    return {"effort": EFFORT}
+
+
 def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
     """
     Returns dict: project_id -> classification fields.
@@ -724,6 +747,7 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             max_tokens=MAX_TOKENS,
             messages=messages,
             output_format=BatchLayerResult,
+            output_config=_output_config(),
         )
         _record_prompt_cache_usage(response)
         LAST_CLASSIFY_API_PATH = "messages.parse"
@@ -735,6 +759,7 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             model=MODEL,
             max_tokens=MAX_TOKENS,
             messages=messages,
+            output_config=_output_config(),
         )
         _record_prompt_cache_usage(raw_response)
         LAST_CLASSIFY_API_PATH = "messages.create fallback"
@@ -1040,6 +1065,7 @@ def generate_narrative(
         model=MODEL,
         max_tokens=2000,
         messages=[{"role": "user", "content": prompt}],
+        output_config=_output_config(),
     )
     if not response.content or not hasattr(response.content[0], "text"):
         raise RuntimeError("Narrative generation failed: API returned empty or non-text response")
@@ -1155,6 +1181,16 @@ if __name__ == "__main__":
         help="Anthropic model ID to use for classification and narrative generation",
     )
     parser.add_argument(
+        "--effort",
+        default=EFFORT,
+        choices=["low", "medium", "high", "xhigh", "max"],
+        help=(
+            "Reasoning effort sent with every request (default: %(default)s, "
+            "which matches the API default for this model). Changing it "
+            "invalidates the classification cache."
+        ),
+    )
+    parser.add_argument(
         "--output-dir",
         default=OUTPUT_DIR,
         help="Directory to write outputs and cache into",
@@ -1172,6 +1208,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     MODEL = args.model
+    EFFORT = args.effort
     OUTPUT_DIR = args.output_dir
     CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
 
@@ -1183,6 +1220,7 @@ if __name__ == "__main__":
         )
 
     client = _require_anthropic().Anthropic(api_key=api_key)
+    print(f"[config] model={MODEL} effort={EFFORT} prompt_version={PROMPT_VERSION}")
 
     # Load data
     df = load_data()

@@ -94,13 +94,23 @@ def build_cache_entries(classifications: pd.DataFrame) -> dict:
     return entries
 
 
-def write_cache(entries: dict, output_path: str, *, model: str, prompt_version: str) -> None:
+def write_cache(
+    entries: dict,
+    output_path: str,
+    *,
+    model: str,
+    prompt_version: str,
+    effort: str | None = None,
+) -> None:
+    meta = {
+        "cache_schema_version": CACHE_SCHEMA_VERSION,
+        "prompt_version": prompt_version,
+        "model": model,
+    }
+    if effort is not None:
+        meta["effort"] = effort
     payload = {
-        "__meta__": {
-            "cache_schema_version": CACHE_SCHEMA_VERSION,
-            "prompt_version": prompt_version,
-            "model": model,
-        },
+        "__meta__": meta,
         "entries": entries,
     }
     output_dir = os.path.dirname(output_path) or "."

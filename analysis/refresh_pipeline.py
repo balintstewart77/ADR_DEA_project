@@ -431,7 +431,7 @@ def _current_classification_dir() -> Path:
     return PROJECT_ROOT / Path(*pointers["classification_dir"].split("/"))
 
 
-def classify_step(version: str, *, model: str | None) -> Path:
+def classify_step(version: str, *, model: str | None, effort: str | None) -> Path:
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         raise EnvironmentError("--classify requires ANTHROPIC_API_KEY to be set")
@@ -446,13 +446,14 @@ def classify_step(version: str, *, model: str | None) -> Path:
     if model:
         seed_kwargs["model"] = model
     if seed_csv.exists():
-        from analysis.llm_theme_analysis_v3 import MODEL, PROMPT_VERSION
+        from analysis.llm_theme_analysis_v3 import EFFORT, MODEL, PROMPT_VERSION
         entries = build_cache_entries(pd.read_csv(seed_csv, encoding="utf-8-sig"))
         write_cache(
             entries,
             str(output_dir / "llm_layer_cache.json"),
             model=model or MODEL,
             prompt_version=PROMPT_VERSION,
+            effort=effort or EFFORT,
         )
         print(f"[classify] seeded cache with {len(entries):,} entries from {seed_csv}")
     else:
@@ -466,6 +467,8 @@ def classify_step(version: str, *, model: str | None) -> Path:
     ]
     if model:
         command += ["--model", model]
+    if effort:
+        command += ["--effort", effort]
     subprocess.run(command, check=True, cwd=PROJECT_ROOT)
     return output_dir
 
@@ -493,6 +496,10 @@ def main() -> int:
     parser.add_argument("--classify", action="store_true",
                         help="Run incremental LLM classification (needs ANTHROPIC_API_KEY)")
     parser.add_argument("--model", default=None, help="Model for the classification step")
+    parser.add_argument("--effort", default=None,
+                        choices=["low", "medium", "high", "xhigh", "max"],
+                        help="Reasoning effort for the classification step "
+                             "(default: the pinned value in llm_theme_analysis_v3)")
     parser.add_argument("--baseline-version", default=None,
                         help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -623,7 +630,7 @@ def main() -> int:
         analytical_changed or (args.skip_fetch and args.force)
     )
     if classify_current:
-        classification_dir = classify_step(report_key, model=args.model)
+        classification_dir = classify_step(report_key, model=args.model, effort=args.effort)
         classifications_csv = classification_dir / "layer_classifications.csv"
         summary.append(f"- Classification run: {classification_dir.name}")
     elif args.classify:
