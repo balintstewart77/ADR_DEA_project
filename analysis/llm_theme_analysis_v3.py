@@ -52,6 +52,7 @@ import sys
 import tempfile
 import textwrap
 import time
+from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 
@@ -94,6 +95,7 @@ _make_console_output_safe()
 # Configuration
 # ---------------------------------------------------------------------------
 
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "outputs_v3")
 
 CACHE_FILE = os.path.join(OUTPUT_DIR, "llm_layer_cache.json")
@@ -115,6 +117,18 @@ MAX_RETRIES = 3          # retry transient API failures before giving up
 RATIONALE_PLACEHOLDER = "(rationale not provided)"
 LAST_PROMPT_CACHE_USAGE: dict[str, int | None] = {}
 LAST_CLASSIFY_API_PATH = ""
+
+# Facts about this run, accumulated as it goes and written to
+# run_metadata.json at the end. Only what the run observes directly.
+RUN_STATS: dict = {
+    "source_register": None,
+    "seed_cache_entries": 0,
+    "fresh_api_classifications": 0,
+    "api_batch_sizes": [],
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "prompt_cache_reuse_batches": 0,
+}
 
 # ---------------------------------------------------------------------------
 # Taxonomy data dictionary
@@ -425,7 +439,8 @@ def _normalise_classification_dict(raw_dict: dict) -> dict:
 
 
 def load_data(data_dir: str = DATA_DIR) -> pd.DataFrame:
-    df_raw, _source_file = load_raw_register(data_dir)
+    df_raw, source_file = load_raw_register(data_dir)
+    RUN_STATS["source_register"] = _relative_to_project(source_file)
     df, _stats = clean_register_dataframe(df_raw, output_dir=OUTPUT_DIR)
     return df
 
@@ -684,6 +699,14 @@ def _record_prompt_cache_usage(response) -> dict[str, int | None]:
         "cache_creation_input_tokens": cache_creation,
         "cache_read_input_tokens": cache_read,
     })
+    # Only real counts are accumulated, so an unexpected usage shape cannot
+    # make run_metadata.json unserialisable.
+    if isinstance(cache_creation, int):
+        RUN_STATS["cache_creation_input_tokens"] += cache_creation
+    if isinstance(cache_read, int):
+        RUN_STATS["cache_read_input_tokens"] += cache_read
+        if cache_read:
+            RUN_STATS["prompt_cache_reuse_batches"] += 1
     print(
         "  [prompt-cache] "
         f"cache_creation_input_tokens={cache_creation}; "
@@ -830,6 +853,7 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
             "fingerprint": fingerprint,
         })
 
+    RUN_STATS["seed_cache_entries"] = len(cache)
     print(
         f"[llm] {len(df) - len(to_classify):,} projects cached; "
         f"{len(to_classify):,} to classify"
@@ -865,6 +889,8 @@ def classify_all(df: pd.DataFrame, client: anthropic.Anthropic) -> pd.DataFrame:
                             entry["fingerprint"] = project["fingerprint"]
                     cache.update(results)
                     save_cache(cache, CACHE_FILE)
+                    RUN_STATS["api_batch_sizes"].append(len(batch))
+                    RUN_STATS["fresh_api_classifications"] += len(results)
                     break
                 except Exception as e:
                     if attempt < MAX_RETRIES:
@@ -1169,6 +1195,70 @@ def save_outputs(df: pd.DataFrame, trends: dict, narrative: str, output_dir: str
         print(f"  - {name}")
 
 
+def _relative_to_project(path) -> str:
+    """Project-relative POSIX path, so the record is not machine-specific."""
+    try:
+        return os.path.relpath(str(path), PROJECT_ROOT).replace(os.sep, "/")
+    except ValueError:  # different drive on Windows
+        return str(path)
+
+
+def write_run_metadata(
+    output_dir: str,
+    *,
+    n_projects: int,
+    final_cache_entries: int,
+    run_type: str | None = None,
+    seed_classification_csv: str | None = None,
+) -> str:
+    """Record what produced this run's classifications, beside its outputs.
+
+    Written by the run itself so model, effort and prompt version are never
+    reconstructed by hand afterwards. Fields the run cannot observe are
+    omitted rather than guessed; a caller that knows them (the refresh
+    pipeline) passes them in.
+    """
+    batch_sizes = list(RUN_STATS["api_batch_sizes"])
+    metadata = {
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "model": MODEL,
+        "effort": EFFORT,
+        "prompt_version": PROMPT_VERSION,
+        "cache_schema_version": CACHE_SCHEMA_VERSION,
+        "n_projects": n_projects,
+        "seed_cache_entries": RUN_STATS["seed_cache_entries"],
+        "fresh_api_classifications": RUN_STATS["fresh_api_classifications"],
+        "api_batches": len(batch_sizes),
+        "api_batch_sizes": batch_sizes,
+        "final_cache_entries": final_cache_entries,
+        "output_dir": _relative_to_project(output_dir),
+        "prompt_cache_observed": {
+            "cache_creation_input_tokens": RUN_STATS["cache_creation_input_tokens"],
+            "cache_read_input_tokens": RUN_STATS["cache_read_input_tokens"],
+            "reuse_batches": RUN_STATS["prompt_cache_reuse_batches"],
+        },
+        "usage_note": (
+            "Prompt-cache token counts are summed from the responses this run "
+            "observed. Complete per-response input/output token usage is not "
+            "persisted, so no total token count or cost is asserted here."
+        ),
+    }
+    if RUN_STATS["source_register"]:
+        metadata["source_register"] = RUN_STATS["source_register"]
+    if run_type:
+        metadata["run_type"] = run_type
+    if seed_classification_csv:
+        metadata["seed_classification_csv"] = _relative_to_project(seed_classification_csv)
+
+    path = os.path.join(output_dir, "run_metadata.json")
+    os.makedirs(output_dir, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(metadata, handle, indent=2, ensure_ascii=False)
+        handle.write("\n")
+    print(f"[run-metadata] model={MODEL} effort={EFFORT} -> {path}")
+    return path
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -1199,6 +1289,16 @@ if __name__ == "__main__":
         "--record-ids-csv",
         default=None,
         help="Optional CSV containing a 'Record ID' column to restrict the run to a fixed subset",
+    )
+    parser.add_argument(
+        "--run-type",
+        default=None,
+        help="Optional label recorded in run_metadata.json (e.g. incremental_register_refresh)",
+    )
+    parser.add_argument(
+        "--seed-classification-csv",
+        default=None,
+        help="Optional path recorded in run_metadata.json as the cache seed source",
     )
     parser.add_argument(
         "--skip-narrative",
@@ -1248,4 +1348,11 @@ if __name__ == "__main__":
 
     # Save
     save_outputs(df_classified, trends, narrative, OUTPUT_DIR)
+    write_run_metadata(
+        OUTPUT_DIR,
+        n_projects=len(df_classified),
+        final_cache_entries=len(load_cache(CACHE_FILE)),
+        run_type=args.run_type,
+        seed_classification_csv=args.seed_classification_csv,
+    )
     print("\n[done]")

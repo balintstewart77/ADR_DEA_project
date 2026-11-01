@@ -140,3 +140,69 @@ class EffortIsSettableFromTheCommandLineTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RunMetadataTest(unittest.TestCase):
+    def setUp(self):
+        self.original = {k: (list(v) if isinstance(v, list) else v)
+                         for k, v in classifier.RUN_STATS.items()}
+        classifier.RUN_STATS.update({
+            "source_register": None, "seed_cache_entries": 0,
+            "fresh_api_classifications": 0, "api_batch_sizes": [],
+            "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0,
+            "prompt_cache_reuse_batches": 0,
+        })
+
+    def tearDown(self):
+        classifier.RUN_STATS.clear()
+        classifier.RUN_STATS.update(self.original)
+
+    def _write(self, tmp, **kwargs):
+        path = classifier.write_run_metadata(
+            tmp, n_projects=42, final_cache_entries=1385, **kwargs)
+        with open(path, encoding="utf-8") as handle:
+            return json.load(handle)
+
+    def test_records_what_produced_the_classifications(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            meta = self._write(tmp)
+        self.assertEqual(meta["model"], classifier.MODEL)
+        self.assertEqual(meta["effort"], classifier.EFFORT)
+        self.assertEqual(meta["prompt_version"], classifier.PROMPT_VERSION)
+        self.assertEqual(meta["cache_schema_version"], classifier.CACHE_SCHEMA_VERSION)
+        self.assertEqual(meta["n_projects"], 42)
+        self.assertEqual(meta["final_cache_entries"], 1385)
+        self.assertIn("created_at_utc", meta)
+
+    def test_batch_and_cache_counters_are_summed_from_the_run(self):
+        classifier.RUN_STATS["api_batch_sizes"] = [10, 10, 5]
+        classifier.RUN_STATS["fresh_api_classifications"] = 25
+        classifier.RUN_STATS["cache_read_input_tokens"] = 18278
+        classifier.RUN_STATS["prompt_cache_reuse_batches"] = 2
+        with tempfile.TemporaryDirectory() as tmp:
+            meta = self._write(tmp)
+        self.assertEqual(meta["api_batches"], 3)
+        self.assertEqual(meta["api_batch_sizes"], [10, 10, 5])
+        self.assertEqual(meta["fresh_api_classifications"], 25)
+        self.assertEqual(meta["prompt_cache_observed"]["cache_read_input_tokens"], 18278)
+        self.assertEqual(meta["prompt_cache_observed"]["reuse_batches"], 2)
+
+    def test_unknown_fields_are_omitted_not_guessed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            meta = self._write(tmp)
+        self.assertNotIn("run_type", meta)
+        self.assertNotIn("seed_classification_csv", meta)
+
+    def test_caller_supplied_fields_are_recorded_relative_to_the_project(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            meta = self._write(
+                tmp,
+                run_type="incremental_register_refresh",
+                seed_classification_csv=os.path.join(
+                    PROJECT_ROOT, "analysis", "outputs_classified_x", "layer_classifications.csv"),
+            )
+        self.assertEqual(meta["run_type"], "incremental_register_refresh")
+        self.assertEqual(
+            meta["seed_classification_csv"],
+            "analysis/outputs_classified_x/layer_classifications.csv",
+        )

@@ -469,6 +469,9 @@ def classify_step(version: str, *, model: str | None, effort: str | None) -> Pat
         command += ["--model", model]
     if effort:
         command += ["--effort", effort]
+    command += ["--run-type", "incremental_register_refresh"]
+    if seed_csv.exists():
+        command += ["--seed-classification-csv", str(seed_csv)]
     subprocess.run(command, check=True, cwd=PROJECT_ROOT)
     return output_dir
 
