@@ -48,6 +48,8 @@ FULL_OBSERVATION_WINDOW = ObservationWindow(
 # Short display labels for annotation/legend use; canonical names stay the key.
 PRODUCT_SHORT_LABELS = {
     "Longitudinal Education Outcomes (LEO)": "LEO",
+    "Registration and Population Interaction Database (RAPID)": "RAPID",
+    "Cross Government Income Administrative Dataset (CGIAD)": "CGIAD",
     "Education and Child Health Insights from Linked Data (ECHILD)": "ECHILD",
     "Linked Census, HES and Mortality Data": "Census-HES-Mortality",
     "GRading and Admissions Data England (GRADE)": "GRADE",

@@ -2105,3 +2105,39 @@ documents the dataset without evidencing accessibility at the time of use.
 
 Effect: one project moves from no linkage to within-domain. Within-domain rises
 to 104 and linked projects to 404; cross-domain remains 300.
+
+## Domain linkage map: attributed per product, not per project union (2026-11-02)
+
+The map drew its cells from `record_linkage_component_domains`, the recorded
+union of component domains across every linked product a project matched. That
+was wrong, and in the one way the linkage rule explicitly forbids: the rule
+makes the span a property of each linked product, so a project matching two
+separate single-domain products has not performed cross-domain linkage.
+
+The map is now built from `matched_products`, mapping each product to the cells
+its own `component_domains` span, and counting distinct projects per cell. The
+union column is untouched and still correct for what it records.
+
+Effect on the map (the derived register properties do not change, only the
+dashboard aggregation):
+
+- Four cross-domain cells disappear, each drawn from a union no single product
+  spanned: Health & Social Care x Labour Market & Employment (2 projects),
+  Business & Productivity x Labour Market & Employment (1),
+  Business & Productivity x Migration & Demographics (1),
+  Environment & Agriculture x Labour Market & Employment (1).
+- Two diagonals were understated, because a project's single-domain products
+  were absorbed into the union and never reached their own cells: Health &
+  Social Care 8 -> 10, Business & Productivity 30 -> 31.
+- Four cross-domain counts fall by one project each, for the same reason:
+  Education & Skills x Labour Market & Employment 130 -> 129, Health & Social
+  Care x Migration & Demographics 75 -> 74, Education & Skills x Migration &
+  Demographics 13 -> 12, Housing & Planning x Migration & Demographics 5 -> 4.
+- Cells 18 -> 14, of which cross-domain 13 -> 9.
+
+Hovering a cell now names the linked products behind it, largest first, so the
+pairing can be traced to the products that produce it rather than taken on
+trust: "Education & Skills + Labour Market & Employment, 129 projects, LEO
+129". Where a project matched several products in one cell the per-product
+counts sum past the cell's project count, and the label says "(projects
+overlap)" rather than silently implying the counts partition it.

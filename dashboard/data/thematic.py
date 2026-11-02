@@ -17,12 +17,14 @@ from dashboard.config import (
 from dashboard.taxonomy import DOMAIN_LABELS
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
+    MATCHED_PRODUCTS_COL,
     RECORD_LINKAGE_COMPONENT_DOMAINS_COL,
     RECORD_LINKAGE_DISPLAY_LABELS,
     display_deterministic_value,
     load_register_properties,
 )
 from dashboard.data.keys import _project_id_key
+from dashboard.data.uptake import LINKED_PRODUCTS, product_short_label
 from dashboard.data.year_filter import (
     YearRange,
     is_all_years,
@@ -619,42 +621,81 @@ def domain_breadth_aggregates(
     }
 
 
-_LINKAGE_PAIR_COLUMNS = ["domain_a", "domain_b", "count", "within_domain"]
+_LINKAGE_PAIR_COLUMNS = ["domain_a", "domain_b", "count", "within_domain", "products"]
+_LINKAGE_PRODUCTS_SHOWN = 3
+
+
+def _product_cells() -> dict[str, set[tuple[str, str]]]:
+    """Domain-pair cells each linked product spans, from the reference."""
+    cells: dict[str, set[tuple[str, str]]] = {}
+    for product in LINKED_PRODUCTS:
+        domains = sorted(set(product["component_domains"]))
+        if not domains:
+            continue
+        cells[product["canonical"]] = (
+            {(domains[0], domains[0])} if len(domains) == 1
+            else set(combinations(domains, 2))
+        )
+    return cells
+
+
+def _products_label(product_counts: Counter, cell_projects: int) -> str:
+    """Which products put projects in this cell, biggest first."""
+    if not product_counts:
+        return ""
+    shown = product_counts.most_common(_LINKAGE_PRODUCTS_SHOWN)
+    parts = [f"{product_short_label(name)} {count}" for name, count in shown]
+    remaining = len(product_counts) - len(shown)
+    if remaining:
+        parts.append(f"+{remaining} more")
+    label = "; ".join(parts)
+    # A project can match several products in one cell, so the per-product
+    # counts can sum past the cell's project count.
+    if sum(product_counts.values()) > cell_projects:
+        label += " (projects overlap)"
+    return label
 
 
 def _record_linkage_domain_pairs(df: pd.DataFrame) -> pd.DataFrame:
-    """Domain pairs spanned by each project's record linkage.
+    """Domain pairs spanned by each project's record linkage, per product.
 
-    Deterministic: reads the controlled-vocabulary component domains recorded
-    for the linkage itself, not the project's inferred substantive domains. A
-    project linking three domains contributes each of its three pairs once;
-    within-domain linkage contributes a single same-domain row.
+    Deterministic, and attributed the way the linkage rule defines span: a
+    cell counts projects that matched a linked product spanning that pair.
+    The recorded component-domain column is a union across a project's
+    products, so using it would draw pairs no single product spans - which the
+    rule explicitly does not treat as cross-domain linkage - and would hide the
+    diagonal cells of that project's single-domain products.
     """
     if df.empty or "Record ID" not in df.columns:
         return pd.DataFrame(columns=_LINKAGE_PAIR_COLUMNS)
 
-    properties = load_register_properties(columns=[RECORD_LINKAGE_COMPONENT_DOMAINS_COL])
+    properties = load_register_properties(columns=[MATCHED_PRODUCTS_COL])
     if properties.empty:
         return pd.DataFrame(columns=_LINKAGE_PAIR_COLUMNS)
 
+    product_cells = _product_cells()
     merged = df[["Record ID"]].merge(properties, on="Record ID", how="left")
-    counts: Counter = Counter()
-    for value in merged[RECORD_LINKAGE_COMPONENT_DOMAINS_COL].fillna(""):
-        domains = sorted({part.strip() for part in str(value).split(";") if part.strip()})
-        if not domains:
-            continue
-        if len(domains) == 1:
-            counts[(domains[0], domains[0])] += 1
-        else:
-            counts.update(combinations(domains, 2))
+    cell_projects: dict[tuple[str, str], set[str]] = {}
+    cell_products: dict[tuple[str, str], Counter] = {}
+    for record_id, value in zip(merged["Record ID"], merged[MATCHED_PRODUCTS_COL].fillna("")):
+        products = [part.strip() for part in str(value).split(";") if part.strip()]
+        for product in products:
+            for cell in product_cells.get(product, ()):  # unknown products contribute nothing
+                cell_projects.setdefault(cell, set()).add(str(record_id))
+                cell_products.setdefault(cell, Counter())[product] += 1
 
-    return pd.DataFrame(
-        [
-            {"domain_a": a, "domain_b": b, "count": count, "within_domain": a == b}
-            for (a, b), count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
-        ],
-        columns=_LINKAGE_PAIR_COLUMNS,
-    )
+    rows = [
+        {
+            "domain_a": a,
+            "domain_b": b,
+            "count": len(projects),
+            "within_domain": a == b,
+            "products": _products_label(cell_products[(a, b)], len(projects)),
+        }
+        for (a, b), projects in cell_projects.items()
+    ]
+    rows.sort(key=lambda row: (-row["count"], row["domain_a"], row["domain_b"]))
+    return pd.DataFrame(rows, columns=_LINKAGE_PAIR_COLUMNS)
 
 
 def _merge_deterministic_facets(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:

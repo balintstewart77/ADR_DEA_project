@@ -361,12 +361,15 @@ def make_domain_linkage_map(df_pairs: pd.DataFrame, height: int = 560) -> go.Fig
     size = len(order)
     z = [[None] * size for _ in range(size)]
     text = [[""] * size for _ in range(size)]
+    products = [[""] * size for _ in range(size)]
     diagonal = []
     for row in df_pairs.itertuples():
         i, j = index[row.domain_a], index[row.domain_b]
         lower, upper = max(i, j), min(i, j)
         z[lower][upper] = int(row.count)
         text[lower][upper] = f"{int(row.count):,}"
+        label = str(getattr(row, "products", "") or "")
+        products[lower][upper] = f"Linked products: {label}" if label else ""
         if row.within_domain:
             diagonal.append(lower)
 
@@ -375,7 +378,11 @@ def make_domain_linkage_map(df_pairs: pd.DataFrame, height: int = 560) -> go.Fig
         z=z, x=labels, y=labels, text=text, texttemplate="%{text}",
         textfont=dict(size=13),
         colorscale=[[0, "#eaf4f2"], [0.25, "#9ed3cb"], [0.6, "#41a99c"], [1, "#1f7a6f"]],
-        hovertemplate="<b>%{y}</b> + <b>%{x}</b><br>%{z} projects<extra></extra>",
+        customdata=products,
+        hovertemplate=(
+            "<b>%{y}</b> + <b>%{x}</b><br>%{z} projects"
+            "<br>%{customdata}<extra></extra>"
+        ),
         xgap=3, ygap=3, zmin=0,
         colorbar=dict(title=dict(text="Projects", side="right"), thickness=12, len=0.6),
     ))
@@ -390,7 +397,8 @@ def make_domain_linkage_map(df_pairs: pd.DataFrame, height: int = 560) -> go.Fig
     fig.add_annotation(
         text=(
             "Blank means no accredited project has linked those two domains. "
-            "Dotted cells are linkage inside one domain."
+            "Dotted cells are linkage inside one domain. Hover a cell for the "
+            "linked products behind it."
         ),
         xref="paper", yref="paper", x=0, y=1.07,
         showarrow=False, xanchor="left", yanchor="bottom",

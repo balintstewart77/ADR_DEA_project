@@ -14,6 +14,9 @@ RECORD_LINKAGE_COL = "record_linkage"
 # DETERMINISTIC_FACET_COLUMNS: it describes the linkage rather than the project,
 # so it is not an Enriched Register column or filter.
 RECORD_LINKAGE_COMPONENT_DOMAINS_COL = "record_linkage_component_domains"
+# Linked products a project matched. The linkage span is a property of each
+# product, so this is what attributes a project to a domain pair.
+MATCHED_PRODUCTS_COL = "matched_products"
 
 DETERMINISTIC_FACET_COLUMNS = [
     RECORD_LINKAGE_COL,
