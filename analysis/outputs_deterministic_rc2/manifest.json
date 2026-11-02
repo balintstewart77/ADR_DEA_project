@@ -7,7 +7,7 @@
     "dropped_non_dea": 106,
     "dropped_same_id_same_title": 35,
     "dropped_special_duplicate_rows": 0,
-    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-ref\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
+    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-link\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
     "duplicate_ruling_groups_applied": 5,
     "duplicate_ruling_merged_source_rows": 2,
     "duplicate_ruling_retained_project_ids": [
@@ -17,8 +17,8 @@
       "2020/030"
     ],
     "duplicate_ruling_rows_removed": 1,
-    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-ref\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
-    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-ref\\analysis\\register_duplicate_rulings.yaml",
+    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-link\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
+    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-link\\analysis\\register_duplicate_rulings.yaml",
     "duplicate_tier1_rows_removed": 23,
     "duplicate_tier2_input_rows": 24,
     "duplicate_tier2_merge_groups": 12,
@@ -31,9 +31,9 @@
     "rows_after_duplicate_rulings": 1385,
     "rows_after_required_fields": 1527
   },
-  "created_at_utc": "2026-11-02T08:09:15.191165+00:00",
+  "created_at_utc": "2026-11-02T08:22:05.948765+00:00",
   "git": {
-    "commit": "3ce03dea4096a891a75ce2585dd9f60a12a0a3a4",
+    "commit": "58fbe70b271626667ef9b38340847675c0dc98a8",
     "dirty": true,
     "status_porcelain": "M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/register_reference.yaml"
   },

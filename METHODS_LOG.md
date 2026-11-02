@@ -2038,3 +2038,40 @@ would add its seven projects to the record-linkage counts and change the
 linked-data growth series. That needs an availability basis with a source and a
 decision on component domains, so it is left for a separate adjudication rather
 than taken as a side effect of a facet fix.
+
+## RAPID admitted as a linked product, within-domain (2026-11-02)
+
+The open question from the facet fix is settled: RAPID is a recognised linked
+product, and its derived span is within-domain, not cross-domain.
+
+RAPID links DWP benefit, pension and employment records with HMRC earnings
+records for National Insurance number holders, so under the linked-products
+rule its span follows its component-domain union. Both components read as
+labour-market and income-support objects, which is the reading already applied
+to LEO's DWP benefits and HMRC earnings components and to the DWP benefit, Tax
+Credit and PAYE components of "2011 Census linked to Benefits and Income". The
+union is therefore a single domain, Labour Market & Employment.
+
+The tempting second domain is population or demography, because RAPID covers
+everyone with a National Insurance number and ONS uses it for admin-based
+population and migration estimates. The lens-versus-object rule excludes it:
+whole-population coverage is a property of RAPID's NINO frame, and ONS's use of
+it is a use, not a substantive origin. The contrast is exact with the
+Census-linked benefits product, which is cross-domain only because a Census
+component is a population-origin source. Classifying RAPID cross-domain on
+coverage would also have made the same argument available for every
+NINO-framed administrative product, which the rule is written to prevent.
+
+Availability is documented rather than bounded by first use: the ADR UK and ONS
+SRS data catalogue records a distribution release date of 14 April 2026, with
+ONS and DWP as publishers, in the ONS Secure Research Service. First register
+use is 22 June 2026 (2026/098), after that release, so the documented date
+stands on its own evidence. ADR UK lists RAPID as a flagship dataset, but
+flagship_collection in this reference is scoped to the ADR England collection,
+so it is left unset, as it is for the other thirteen non-England products.
+
+Effect: seven projects move from "No record linkage" to within-domain linkage.
+Within-domain rises from 96 to 103 and linked projects from 396 to 403.
+**Cross-domain linkage is unchanged at 300**, so the cross-domain growth series
+is unaffected by this adjudication; what changes is the within-domain share of
+2026.

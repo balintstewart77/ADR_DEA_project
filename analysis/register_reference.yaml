@@ -1135,6 +1135,46 @@ linked_products:
     component_datasets_verified: true
     component_datasets_source: "https://ons.metadata.works/browser/dataset/290"
 
+  - canonical: "Registration and Population Interaction Database (RAPID)"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2026-Q2"
+    availability_basis: "documented_accessible"
+    availability_source: "https://datacatalogue.adruk.org/browser/dataset/2148303/1"
+    availability_note: >
+      ADR UK / ONS SRS data catalogue: distribution release date 14 April 2026,
+      publishers ONS and DWP, ONS Secure Research Service (Access Level 2).
+      First register use is 2026-06-22 (2026/098), after that release, so the
+      documented date is not bounded by first use.
+    aliases:
+      - "Registration and Population Interaction Database (RAPID)"
+      - "RAPID"
+      - "RAPID dataset"
+    component_domains:
+      - "Labour Market & Employment"
+    notes: >
+      DWP-HMRC linkage of benefit, pension, employment and earnings records for
+      National Insurance number holders. Single component domain, so the
+      derived span is within-domain: both components read as labour-market and
+      income-support objects under the reference rule, following the LEO and
+      "2011 Census linked to Benefits and Income" readings. RAPID's whole-
+      population coverage is a property of its NINO frame, not a
+      population-origin component, so the lens-versus-object rule gives it no
+      Migration & Demographics component - unlike the Census-linked benefits
+      product, which is cross-domain only because of its Census component.
+      Listed by ADR UK as a flagship dataset, but flagship_collection here is
+      scoped to the ADR England collection, so it is left unset.
+    component_datasets:
+      - dataset: "DWP benefit and pension records"
+        domain_reading: "Labour Market & Employment"
+        reason: "benefits/income support records under the reference rule."
+      - dataset: "HMRC employment and earnings records (PAYE / Self Assessment)"
+        domain_reading: "Labour Market & Employment"
+        reason: "earnings and employment spells are labour-market outcomes."
+    component_datasets_verified: true
+    component_datasets_source: "https://www.adruk.org/data-access/flagship-datasets/rapid-population-interactions-with-employment-benefits-and-pensions-uk/ ; https://www.adruk.org/fileadmin/uploads/adruk/Documents/2025_Fellowships/RAPID-documentation.docx"
+
 datasets:
   - canonical: "Registration and Population Interaction Database (RAPID)"
     aliases:
