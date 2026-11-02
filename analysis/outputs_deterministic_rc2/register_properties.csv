@@ -411,7 +411,7 @@
 2025/017,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic; commercial
 2025/016,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,government; commercial
 2025/015,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,government
-2025/014,No record linkage,,,administrative,cross-sectional,household,academic
+2025/014,Within-domain record linkage,Cross Government Income Administrative Dataset (CGIAD),Labour Market & Employment,administrative,cross-sectional,household,academic
 2025/013,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic; commercial
 2025/012,No record linkage,,,survey; administrative,cross-sectional,individual; business,third-sector
 2025/011,No record linkage,,,survey,longitudinal,household,third-sector

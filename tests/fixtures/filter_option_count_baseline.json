@@ -2920,7 +2920,7 @@
     "record_linkage": [
       {
         "value": "No record linkage",
-        "count": 982
+        "count": 981
       },
       {
         "value": "Cross-domain",
@@ -2928,7 +2928,7 @@
       },
       {
         "value": "Within-domain",
-        "count": 103
+        "count": 104
       }
     ],
     "collection_method": [

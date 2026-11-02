@@ -227,12 +227,13 @@ class VerifiedRepublicationComparisonTest(unittest.TestCase):
         # Updated as the deterministic rules and reference changed:
         # Understanding Society restored for 2021/142, 2021/178 and 2025/085;
         # RAPID, CGIAD and 2026/014's repaired names reaching the facets;
-        # RAPID and CGIAD entering the reference dataset layer. Admitting
-        # RAPID as a linked product does not move this hash: these are older
-        # republication snapshots, which contain no RAPID projects.
+        # RAPID and CGIAD entering the reference dataset layer; then CGIAD
+        # admitted as a linked product, which gives 2025/014 within-domain
+        # linkage. Admitting RAPID did not move this hash - its projects are
+        # all 2026 and absent from these older republication snapshots.
         self.assertEqual(
             hashlib.sha256(property_bytes[0]).hexdigest(),
-            "4669d2ed946f65b8090ae8d0a9a34f2df98384a4449721916c14aafb37641bdc",
+            "02f860679b632a026a2610e96de62bd8e1771b53e137a8531c9f66a510056e8a",
         )
 
     def test_csv_physical_diff_is_one_deleted_two_added_without_encoding_churn(self):

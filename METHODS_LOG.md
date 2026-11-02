@@ -2075,3 +2075,33 @@ Within-domain rises from 96 to 103 and linked projects from 396 to 403.
 **Cross-domain linkage is unchanged at 300**, so the cross-domain growth series
 is unaffected by this adjudication; what changes is the within-domain share of
 2026.
+
+## CGIAD admitted as a linked product, within-domain (2026-11-02)
+
+The companion question to RAPID is settled the same way, and for a reason worth
+recording because the competing reading is more tempting here.
+
+CGIAD is a pre-linked NISRA and Department for Communities dataset joining
+social security benefit, earnings and housing benefit records for about 729,000
+Northern Ireland households, accessed in the NISRA Secure Research Environment.
+Four providers contribute: DfC, DWP (administering benefits on behalf of DfC),
+HMRC, and the Northern Ireland Housing Executive.
+
+The Housing Executive component invites a Housing & Planning reading, which
+would make the product cross-domain. The reference already answers it: housing
+benefit records are income-support records, the reading applied to the DWP
+Single Housing Benefit Extract inside "2011 Census linked to Benefits and
+Income", and Housing & Planning is reserved for property objects — Land and
+Property Services Capital Value data, Valuation Office property data, Energy
+Performance Certificates, the AddressBase spine. The distinction is object, not
+subject matter: a payment to a household is an income-support object, a dwelling
+is a housing object. Every component therefore reads as Labour Market &
+Employment and the union is one domain.
+
+Availability is bounded by first use rather than documented. The data catalogue
+entry (version 1.0.5) was published 18 March 2025, but the single register
+project, 2025/014, was accredited on 31 January 2025, so the catalogue
+documents the dataset without evidencing accessibility at the time of use.
+
+Effect: one project moves from no linkage to within-domain. Within-domain rises
+to 104 and linked projects to 404; cross-domain remains 300.

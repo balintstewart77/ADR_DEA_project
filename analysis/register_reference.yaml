@@ -1175,6 +1175,59 @@ linked_products:
     component_datasets_verified: true
     component_datasets_source: "https://www.adruk.org/data-access/flagship-datasets/rapid-population-interactions-with-employment-benefits-and-pensions-uk/ ; https://www.adruk.org/fileadmin/uploads/adruk/Documents/2025_Fellowships/RAPID-documentation.docx"
 
+  - canonical: "Cross Government Income Administrative Dataset (CGIAD)"
+    status: "standing"
+    available_from: null
+    discontinued_date: null
+    availability_date: "2025-Q1"
+    availability_basis: "bounded_by_first_use"
+    availability_source: null
+    availability_note: >
+      No curated documented-access date sourced before first use; availability
+      bounded by first accredited register use (2025 Q1; 2025/014 accredited
+      31 January 2025). The ADR UK / NISRA data catalogue entry (version 1.0.5)
+      was published 18 March 2025, after that use, so it documents the dataset
+      but cannot evidence accessibility at the time of use:
+      https://datacatalogue.adruk.org/browser/dataset/97932/6
+    aliases:
+      - "Cross Government Income Administrative Dataset (CGIAD)"
+      - "CGIAD"
+    component_domains:
+      - "Labour Market & Employment"
+    notes: >
+      Pre-linked NISRA/DfC dataset joining social security benefit, earnings
+      and housing benefit records for about 729,000 Northern Ireland
+      households, accessed in the NISRA Secure Research Environment rather than
+      the ONS SRS. Single component domain, so the derived span is
+      within-domain. The reading that would make it cross-domain is housing:
+      the Northern Ireland Housing Executive contributes housing benefit
+      records. Under the reference rule those are income-support records, the
+      same reading already applied to the DWP Single Housing Benefit Extract
+      (SHBE) inside the Census-linked benefits product; Housing & Planning is
+      reserved for property objects such as Capital Value, Valuation Office and
+      EPC data. The object here is a payment to a household, not a dwelling.
+      Register-present through one project (2025/014). Listed by ADR UK as a
+      flagship dataset, but flagship_collection here is scoped to the ADR
+      England collection, so it is left unset.
+    component_datasets:
+      - dataset: "Department for Communities social security benefit records"
+        domain_reading: "Labour Market & Employment"
+        reason: "benefits/income support records under the reference rule."
+      - dataset: "DWP benefit records administered on behalf of DfC"
+        domain_reading: "Labour Market & Employment"
+        reason: "benefits/income support records under the reference rule."
+      - dataset: "HMRC earnings, employment and tax credit records"
+        domain_reading: "Labour Market & Employment"
+        reason: "earnings and income-support records are labour-market objects."
+      - dataset: "Northern Ireland Housing Executive housing benefit records"
+        domain_reading: "Labour Market & Employment"
+        reason: >
+          housing benefit is an income-support payment, read as SHBE is in the
+          Census-linked benefits product; a dwelling-object source such as
+          Capital Value data would instead read Housing & Planning.
+    component_datasets_verified: true
+    component_datasets_source: "https://datacatalogue.adruk.org/browser/dataset/97932/6 ; https://www.nisra.gov.uk/sites/nisra.gov.uk/files/publications/CGIAD%20Guidance%20Document%20November%202024%20%28for%20publication%29.pdf"
+
 datasets:
   - canonical: "Registration and Population Interaction Database (RAPID)"
     aliases:
