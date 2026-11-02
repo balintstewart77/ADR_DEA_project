@@ -176,8 +176,8 @@ def test_both_tabs_use_same_full_register_options_and_independent_state():
 def test_current_date_coverage_and_derived_fields_reconcile_exactly():
     coverage = date_coverage(registry.df_all)
     assert coverage == {
-        "eligible_records": 1343,
-        "valid_year_records": 1343,
+        "eligible_records": 1385,
+        "valid_year_records": 1385,
         "missing_date_records": 0,
         "malformed_date_records": 0,
         "undated_or_invalid_records": 0,
@@ -190,9 +190,9 @@ def test_current_date_coverage_and_derived_fields_reconcile_exactly():
     assert sum(yearly.values()) + coverage["undated_or_invalid_records"] == len(registry.df_all)
 
     for frame, expected in [
-        (registry.df_datasets, 1333),
-        (registry.df_institutions, 1334),
-        (thematic.df_thematic_projects, 1343),
+        (registry.df_datasets, 1372),
+        (registry.df_institutions, 1376),
+        (thematic.df_thematic_projects, 1385),
     ]:
         record_units = frame.drop_duplicates(RECORD_KEY)
         assert record_units[RECORD_KEY].nunique() == expected
@@ -583,7 +583,7 @@ def test_zero_match_is_explicit_and_reset_value_restores_full_population():
         )
     assert "No selected projects" in portfolio_filter_summary([2030, 2030])
     bounds = year_range(registry.df_all)
-    assert len(filter_records_by_year(registry.df_all, bounds.value, bounds)) == 1343
+    assert len(filter_records_by_year(registry.df_all, bounds.value, bounds)) == 1385
 
 
 def test_every_portfolio_output_callback_depends_on_the_global_year_selection():

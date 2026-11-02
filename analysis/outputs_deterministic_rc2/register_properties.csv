@@ -1,20 +1,20 @@
 ﻿Record ID,record_linkage,matched_products,record_linkage_component_domains,dataset_collection_methods,dataset_temporal_structures,dataset_units,researcher_sectors
 2026/175,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
 2026/174,No record linkage,,,survey,cross-sectional,individual,academic
-2026/173,No record linkage,,,survey,cross-sectional,individual,unclassified
+2026/173,No record linkage,,,survey,cross-sectional,individual,third-sector
 2026/172,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic
 2026/170,No record linkage,,,,,,academic
-2026/169,No record linkage,,,administrative,cross-sectional,individual,unclassified
+2026/169,No record linkage,,,administrative,cross-sectional,individual,academic
 2026/168,No record linkage,,,,,,academic
 2026/167,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2026/166,No record linkage,,,survey,cross-sectional,business,third-sector
 2026/163,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic; third-sector
-2026/161,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic; unclassified
+2026/161,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic; government
 2026/160,No record linkage,,,survey,cross-sectional,individual,academic; third-sector
-2026/158,No record linkage,,,survey,cross-sectional,individual,unclassified
+2026/158,No record linkage,,,survey,cross-sectional,individual,academic
 2026/157,No record linkage,,,survey,cross-sectional,individual,academic
 2026/156,No record linkage,,,survey,cross-sectional,individual,government
-2026/154,No record linkage,,,survey,longitudinal,business,unclassified
+2026/154,No record linkage,,,survey,longitudinal,business,academic
 2026/153,No record linkage,,,,,,academic
 2026/152,Cross-domain record linkage,ONS Longitudinal Study,Health & Social Care; Migration & Demographics,survey,longitudinal,individual,academic
 2026/151,No record linkage,,,survey,cross-sectional; longitudinal,individual; household; area,academic
@@ -25,20 +25,20 @@
 2026/146,No record linkage,,,survey; administrative,cross-sectional; longitudinal,business,academic
 2026/144,No record linkage,,,survey,longitudinal,household,academic
 2026/143,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
-2026/142,No record linkage,,,,,,unclassified
-2026/141,No record linkage,,,administrative,cross-sectional,individual,unclassified
+2026/142,No record linkage,,,,,,academic
+2026/141,No record linkage,,,administrative,cross-sectional,individual,third-sector
 2026/140,No record linkage,,,survey,cross-sectional; longitudinal,individual; household; business,commercial
 2026/139,No record linkage,,,,,,academic
 2026/138,No record linkage,,,survey,cross-sectional; longitudinal,individual; household,academic
-2026/137,No record linkage,,,survey,cross-sectional,individual,unclassified
+2026/137,No record linkage,,,survey,cross-sectional,individual,third-sector
 2026/136,No record linkage,,,survey,cross-sectional,individual,academic
 2026/135,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,government
 2026/134,No record linkage,,,survey,cross-sectional,individual,academic
 2026/133,No record linkage,,,survey; administrative,cross-sectional; longitudinal,individual; business,commercial
-2026/132,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,unclassified
-2026/131,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; household,unclassified
-2026/130,No record linkage,,,administrative,cross-sectional,individual,unclassified
-2026/129,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic; unclassified
+2026/132,Cross-domain record linkage,Education and Child Health Insights from Linked Data (ECHILD),Education & Skills; Health & Social Care,administrative,longitudinal,individual,academic
+2026/131,Within-domain record linkage,Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment,Labour Market & Employment,survey,cross-sectional; longitudinal,individual; household,government
+2026/130,No record linkage,,,administrative,cross-sectional,individual,academic
+2026/129,Cross-domain record linkage,Longitudinal Education Outcomes (LEO),Labour Market & Employment; Education & Skills,administrative,longitudinal,individual,academic
 2026/128,No record linkage,,,administrative,cross-sectional,business,commercial
 2026/127,No record linkage,,,survey,cross-sectional,individual,academic
 2026/126,No record linkage,,,,,,third-sector

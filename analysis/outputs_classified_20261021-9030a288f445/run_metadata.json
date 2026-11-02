@@ -1,0 +1,31 @@
+{
+  "created_at_utc": "2026-11-01T22:20:57.672399+00:00",
+  "model": "claude-fable-5",
+  "effort": "high",
+  "prompt_version": "dict-1.0-rc2",
+  "taxonomy_version": "dict-1.0-rc2",
+  "cache_schema_version": 6,
+  "n_projects": 1385,
+  "seed_cache_entries": 1343,
+  "fresh_api_classifications": 43,
+  "api_batches": 5,
+  "api_batch_sizes": [
+    10,
+    10,
+    10,
+    10,
+    3
+  ],
+  "final_cache_entries": 1385,
+  "output_dir": "analysis/outputs_classified_20261021-9030a288f445",
+  "prompt_cache_observed": {
+    "cache_creation_input_tokens": 9139,
+    "cache_read_input_tokens": 36556,
+    "reuse_batches": 4
+  },
+  "usage_note": "Prompt-cache token counts are summed from the responses this run observed. Complete per-response input/output token usage is not persisted, so no total token count or cost is asserted here.",
+  "source_register": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/canonical.csv",
+  "run_type": "incremental_register_refresh",
+  "seed_classification_csv": "analysis/outputs_classified_20260813-dc97c680115f/layer_classifications.csv",
+  "note": "Classifications produced by the run at created_at_utc. The refresh pipeline was re-run at 2026-11-01T22:27:23Z to record the analytical state against the corrected deterministic properties; that re-run classified nothing (all 1,385 fingerprints cached) and made no API calls."
+}

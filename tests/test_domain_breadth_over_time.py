@@ -510,11 +510,11 @@ def test_current_release_reconciles_against_an_independent_record_level_count():
     )
     assert current == expected
     assert result["domain_breadth_selection_coverage"] == {
-        "selected_records": 1343,
-        "dated_selected_records": 1343,
+        "selected_records": 1385,
+        "dated_selected_records": 1385,
         "undated_selected_records": 0,
         "undated_omitted_records": 0,
-        "included_records": 1341,
+        "included_records": 1383,
         "unmatched_classification": 0,
         "missing_classification": 0,
         "invalid_classification": 0,

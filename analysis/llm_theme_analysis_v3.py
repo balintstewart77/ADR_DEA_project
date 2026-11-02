@@ -1203,6 +1203,20 @@ def _relative_to_project(path) -> str:
         return str(path)
 
 
+def _taxonomy_version() -> str:
+    """Dictionary version the prompt was built from, as the project writes it.
+
+    Read from the dictionary rather than mirrored from PROMPT_VERSION, so a
+    dictionary bumped without a matching prompt version shows up in the record
+    instead of being papered over.
+    """
+    try:
+        version = _load_taxonomy_dictionary().get("metadata", {}).get("dictionary_version")
+    except Exception:  # the dictionary is validated elsewhere; never block the record
+        version = None
+    return f"dict-{version}" if version else PROMPT_VERSION
+
+
 def write_run_metadata(
     output_dir: str,
     *,
@@ -1224,6 +1238,7 @@ def write_run_metadata(
         "model": MODEL,
         "effort": EFFORT,
         "prompt_version": PROMPT_VERSION,
+        "taxonomy_version": _taxonomy_version(),
         "cache_schema_version": CACHE_SCHEMA_VERSION,
         "n_projects": n_projects,
         "seed_cache_entries": RUN_STATS["seed_cache_entries"],

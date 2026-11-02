@@ -1,24 +1,12 @@
 # Review required: reference-layer coverage gaps
 
 - Dataset mentions matched: 3,362/3,471
-- Organisation mentions matched: 1,931/1,947
+- Organisation mentions matched: 1,944/1,947
 - Known residuals (adjudicated unclassifiable, no action): 3
 
 ## Unmatched organisations (add to register_reference.yaml or alias maps)
 
-- Barnardos (1 mention)
-- Centre of Expertise on Child Sexual Abuse (1 mention)
-- Université de Lille (1 mention)
-- DfE NI (1 mention)
-- Universite de Lille (1 mention)
-- Massachusetts Institute of Technology Department of Economics (1 mention)
-- Birkbeck University of London (1 mention)
-- Perinatal Institute (1 mention)
-- Institute of the Motore Industry (IMI) (1 mention)
-- London School of Hygiene & Tropical Medicine (1 mention)
-- Nest (1 mention)
-- University of West London (1 mention)
-- Liverpool University (1 mention)
+- (none)
 
 ## Unmatched datasets (top 30 by mentions)
 

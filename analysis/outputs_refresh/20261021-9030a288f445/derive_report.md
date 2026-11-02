@@ -2,7 +2,7 @@
 
 ## Scope
 
-Reference version `0.5.8` was applied to 1,385 cleaned DEA register records. Output CSV: `analysis/outputs_deterministic_rc2/register_properties.csv`.
+Reference version `0.5.8` was applied to 1,385 cleaned DEA register records. Output CSV: `analysis\outputs_deterministic_rc2\register_properties.csv`.
 
 This run is deterministic and uses no LLM calls.
 
@@ -116,7 +116,7 @@ No additional longitudinal dataset records with time-series/index/aggregate cues
 | Labour Force Survey Longitudinal | longitudinal | longitudinal | True |
 | Annual Survey of Hours and Earnings (ASHE) | cross-sectional | cross-sectional | True |
 
-Full migration review table: `analysis/outputs_deterministic_rc2/quality/dataset_collection_split_review.csv`. It lists every dataset with `legacy_collection_type`, `collection_method`, `temporal_structure`, and `temporal_is_new_decision`, now refreshed under reference 0.4.1.
+Full migration review table: `analysis\outputs_deterministic_rc2\quality\dataset_collection_split_review.csv`. It lists every dataset with `legacy_collection_type`, `collection_method`, `temporal_structure`, and `temporal_is_new_decision`, now refreshed under reference 0.4.1.
 
 ## Dataset unit of observation
 
@@ -141,8 +141,8 @@ Census appears in three facets as survey, individual, and Migration & Demographi
 | household; business | 12 |
 | individual; household; business; area | 6 |
 | area | 4 |
-| individual; area | 3 |
 | individual; business; area | 3 |
+| individual; area | 3 |
 | household; area | 3 |
 | individual; household; area | 2 |
 | business; area | 2 |
@@ -183,20 +183,19 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 
 | Project researcher-sector set | Count |
 |---|---:|
-| academic | 856 |
+| academic | 863 |
 | commercial | 119 |
-| third-sector | 112 |
-| government | 103 |
-| academic; government | 65 |
+| third-sector | 115 |
+| government | 104 |
+| academic; government | 66 |
 | academic; third-sector | 58 |
-| unclassified | 21 |
 | academic; commercial | 14 |
+| unclassified | 11 |
 | government; commercial | 10 |
 | academic; government; third-sector | 7 |
 | academic; government; commercial | 5 |
 | government; third-sector | 4 |
 | third-sector; commercial | 3 |
-| academic; unclassified | 2 |
 | government; third-sector; commercial | 2 |
 | academic; third-sector; commercial | 1 |
 | commercial; unclassified | 1 |
@@ -224,7 +223,7 @@ Researcher sector is structural/legal status, not behaviour. Classify each organ
 
 Dataset reference coverage: 3,362/3,471 project-dataset mentions (96.9%), 251/351 unique canonical datasets.
 
-Organisation reference coverage: 1,931/1,947 project-organisation mentions (99.2%), 282/298 unique canonical organisations.
+Organisation reference coverage: 1,944/1,947 project-organisation mentions (99.8%), 288/291 unique canonical organisations.
 
 Largest unmatched datasets:
 
@@ -260,19 +259,6 @@ Largest unmatched organisations:
 
 | Organisation | Mentions |
 |---|---:|
-| Barnardos | 1 |
-| Centre of Expertise on Child Sexual Abuse | 1 |
-| Université de Lille | 1 |
-| DfE NI | 1 |
-| Universite de Lille | 1 |
-| Massachusetts Institute of Technology Department of Economics | 1 |
-| Birkbeck University of London | 1 |
-| Perinatal Institute | 1 |
-| Institute of the Motore Industry (IMI) | 1 |
-| London School of Hygiene & Tropical Medicine | 1 |
-| Nest | 1 |
-| University of West London | 1 |
-| Liverpool University | 1 |
 | Calver Pang | 1 |
 | OREC | 1 |
 | Independent Researcher | 1 |
@@ -296,13 +282,13 @@ Largest unmatched organisations:
 | 2026/172 | Predicting higher education access, participation and degree completion for care-experienced young p | Cross-domain record linkage | Longitudinal Education Outcomes (LEO) | administrative | longitudinal | individual | academic |
 | 2026/167 | Long-term residential stability in England and Wales: Understanding trends, disparities and geograph | Cross-domain record linkage | ONS Longitudinal Study | survey | longitudinal | individual | academic |
 | 2026/163 | Childhood Absence and Long-run Return: Evidence from Low Emission Zones | Cross-domain record linkage | Longitudinal Education Outcomes (LEO) | administrative | longitudinal | individual | academic; third-sector |
-| 2026/161 | Investigating post-school transitions and outcomes of young people with special educational needs: a | Cross-domain record linkage | Longitudinal Education Outcomes (LEO) | administrative | longitudinal | individual | academic; unclassified |
+| 2026/161 | Investigating post-school transitions and outcomes of young people with special educational needs: a | Cross-domain record linkage | Longitudinal Education Outcomes (LEO) | administrative | longitudinal | individual | academic; government |
 | 2026/152 | Investigating the role of working conditions in relation to occupational inequalities in health and  | Cross-domain record linkage | ONS Longitudinal Study | survey | longitudinal | individual | academic |
 | 2026/149 | Education and health trajectories of children with neurodevelopmental conditions in England: develop | Cross-domain record linkage | Education and Child Health Insights from Linked Data (ECHILD) | administrative | longitudinal | individual | academic |
 | 2026/143 | Mapping educational pathways and health outcomes for children with social, emotional and mental heal | Cross-domain record linkage | Education and Child Health Insights from Linked Data (ECHILD) | administrative | longitudinal | individual | academic |
-| 2026/132 | Evaluating the implementation of the Transforming Children and Young People's Mental Health Provisio | Cross-domain record linkage | Education and Child Health Insights from Linked Data (ECHILD) | administrative | longitudinal | individual | unclassified |
-| 2026/131 | Supporting low- and moderate-income households to be financially secure | Within-domain record linkage | Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment | survey | cross-sectional; longitudinal | individual; household | unclassified |
-| 2026/129 | University-level study abroad in post-Brexit England | Cross-domain record linkage | Longitudinal Education Outcomes (LEO) | administrative | longitudinal | individual | academic; unclassified |
+| 2026/132 | Evaluating the implementation of the Transforming Children and Young People's Mental Health Provisio | Cross-domain record linkage | Education and Child Health Insights from Linked Data (ECHILD) | administrative | longitudinal | individual | academic |
+| 2026/131 | Supporting low- and moderate-income households to be financially secure | Within-domain record linkage | Annual Survey of Hours and Earnings linked to PAYE and Self-Assessment | survey | cross-sectional; longitudinal | individual; household | government |
+| 2026/129 | University-level study abroad in post-Brexit England | Cross-domain record linkage | Longitudinal Education Outcomes (LEO) | administrative | longitudinal | individual | academic |
 | 2026/125 | Student Loans, Field of Study, and Retraining | Cross-domain record linkage | Longitudinal Education Outcomes (LEO) | administrative | longitudinal | individual | academic; third-sector |
 | 2026/118 | Supporting workforce and social integration, retention and career development of internationally rec | Cross-domain record linkage | Annual Survey of Hours and Earnings linked to Census 2011; Nursing and Midwifery Council Register - UK Linked to Census  | survey; administrative | cross-sectional; longitudinal | individual | academic |
 | 2026/116 | Short term healthcare utilisation following recorded maltreatment concerns in England | Cross-domain record linkage | Education and Child Health Insights from Linked Data (ECHILD) | administrative | longitudinal | individual | academic |
@@ -342,10 +328,10 @@ Largest unmatched organisations:
 
 ## Manifests and rc1
 
-Deterministic output manifest: `analysis/outputs_deterministic_rc2/manifest.json`.
+Deterministic output manifest: `analysis\outputs_deterministic_rc2\manifest.json`.
 
-Quality output manifest: `analysis/outputs_deterministic_rc2/quality/manifest.json`.
+Quality output manifest: `analysis\outputs_deterministic_rc2\quality\manifest.json`.
 
-Report output manifest: `analysis/outputs_refresh/20261021-9030a288f445/manifest.json`.
+Report output manifest: `analysis\outputs_refresh\20261021-9030a288f445\manifest.json`.
 
 No git status entries under rc1 output prefixes were present after this run.
