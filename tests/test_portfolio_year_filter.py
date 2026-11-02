@@ -190,7 +190,7 @@ def test_current_date_coverage_and_derived_fields_reconcile_exactly():
     assert sum(yearly.values()) + coverage["undated_or_invalid_records"] == len(registry.df_all)
 
     for frame, expected in [
-        (registry.df_datasets, 1372),
+        (registry.df_datasets, 1381),
         (registry.df_institutions, 1376),
         (thematic.df_thematic_projects, 1385),
     ]:

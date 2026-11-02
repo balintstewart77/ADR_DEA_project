@@ -606,6 +606,66 @@ class DatasetNormalisationTest(unittest.TestCase):
         self.assertIsNone(dataset_family_for("Census 2011 (CENW); Census 2021 (CENS) Ministry of Justice; Family Court (FACO)"))
         self.assertEqual(dataset_family_for("MoJ Data First Crown Court Defendant Case Level Dataset; Moj Data First Magistrates' Court Defendant Case Level Dataset"), "Data First")
 
+    def test_acronym_only_datasets_survive_the_short_name_guard(self):
+        # "RAPID dataset" and "CGIAD 2019-2020" normalised to bare acronyms,
+        # which the single-word guard discards - the declared dataset then
+        # vanished from the register entirely (7 and 1 projects).
+        self.assertEqual(
+            normalise_dataset_name("RAPID dataset"),
+            "Registration and Population Interaction Database (RAPID)",
+        )
+        self.assertEqual(
+            normalise_dataset_name("CGIAD 2019-2020"),
+            "Cross Government Income Administrative Dataset (CGIAD)",
+        )
+        self.assertEqual(
+            normalise_dataset_name("CGIAD 2019/20"),
+            "Cross Government Income Administrative Dataset (CGIAD)",
+        )
+        for raw in ("RAPID dataset", "CGIAD 2019-2020"):
+            parts = [part for _, _, part in iter_dataset_entries(
+                f"Department for Work and Pensions: {raw}")]
+            self.assertEqual(len(parts), 1, f"{raw} parsed to no dataset")
 
+    def test_acronym_aliases_do_not_swallow_longer_names(self):
+        for raw in ("CGIADx", "My CGIAD study", "RAPID response survey"):
+            self.assertEqual(normalise_dataset_name(raw), raw)
+
+    def test_mangled_business_database_names_are_repaired(self):
+        # 2026/014 arrived with "Business " missing and the second name broken
+        # mid-word; both fragments parsed to nothing.
+        raw = ("Office for National Statistics: Structure Database - UK, "
+               "udinal Busin ess Database - UK")
+        parts = [normalise_dataset_name(part) for _, _, part in iter_dataset_entries(raw)]
+        self.assertEqual(
+            parts, ["Business Structure Database (BSD)", "Longitudinal Business Database"])
+
+    def test_generic_descriptions_are_still_not_datasets(self):
+        # The guard must keep rejecting generic wording; these are deliberate
+        # exclusions, not datasets with names. Checked through parse_datasets,
+        # because the rejection happens on the normalised name.
+        for raw in ("Death data", "Offending data", "Racial Disparity Audit Data"):
+            frame = pd.DataFrame([{
+                "Project ID": "2020/044", "Record ID": "2020/044", "Year": 2020,
+                "quarter_date": "2020-01-01",
+                "Datasets Used": f"Northern Ireland General Register Office: {raw}",
+            }])
+            self.assertEqual(
+                len(parse_datasets(frame)), 0, f"{raw} should not parse as a dataset")
+
+    def test_rapid_and_cgiad_reach_the_parsed_dataset_table(self):
+        frame = pd.DataFrame([
+            {"Project ID": "2026/097", "Record ID": "2026/097", "Year": 2026,
+             "quarter_date": "2026-01-01",
+             "Datasets Used": "Department for Work and Pensions, His Majesty Revenue & Customs: RAPID dataset"},
+            {"Project ID": "2025/014", "Record ID": "2025/014", "Year": 2025,
+             "quarter_date": "2025-01-01",
+             "Datasets Used": "Northern Ireland Statistics and Research Agency: CGIAD 2019-2020"},
+        ])
+        parsed = parse_datasets(frame)
+        self.assertEqual(sorted(parsed["dataset"]), [
+            "Cross Government Income Administrative Dataset (CGIAD)",
+            "Registration and Population Interaction Database (RAPID)",
+        ])
 if __name__ == "__main__":
     unittest.main()

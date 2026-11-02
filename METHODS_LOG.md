@@ -1944,3 +1944,71 @@ that the committed deterministic output is reproducible from current code and
 reference data. This records the methodological safeguard, not the individual
 cell fixes: the deterministic layer is now enforced-reproducible rather than
 trusted to remain aligned by convention.
+
+# Methods log — reference-layer corrections to the deterministic facets (2026-11-02)
+
+## Researcher sector: organisations resolved, not reclassified
+
+The 2026-10-21 register introduced organisations the reference layer did not
+recognise, and recognition drives the researcher-sector facet: an organisation
+with no sector is `unclassified`, and a project's `researcher_sectors` is the
+union of its researchers' organisation sectors. Thirteen unmatched
+organisations were adjudicated. Six were spelling variants of bodies already in
+the reference (an ampersand for "and", a dropped comma, an accent stripped, a
+misspelling, a department sub-unit), and six were genuinely new.
+
+Twelve records consequently moved from `unclassified` to a sector, and
+`2026/161` from `academic; unclassified` to `academic; government`. No record
+changed from one named sector to another: every change resolves an absence.
+
+Two adjudications are worth recording because the obvious reading is wrong in
+both cases. In Northern Ireland "DfE" is the Department for the Economy, which
+holds further and higher education, not the Department for Education; the same
+researcher appears in `2025/150` with the department written out in full, and
+the English Department for Education appears in the same register, so folding
+the short form into it would have merged two departments. Second, "Nest" is
+Nest Insight, the research unit of Nest Corporation — a public corporation
+established under the Pensions Act 2008 — and not Nesta, the charity, which is
+a separate entry with a different sector.
+
+Sectors follow the standing rule: structural or legal status, never
+behaviour. Sources are recorded per organisation in `register_reference.yaml`.
+
+## Declared datasets that parsed to nothing
+
+A reconciliation of parsed dataset rows against register entries found 13
+records whose declared datasets produced no dataset rows at all — distinct from
+a dataset that parses but is unmatched against the reference, and invisible in
+the curation queue, which only lists what parses.
+
+Nine were a single mechanism. The fragment guard rejects a single-word name of
+eight characters or fewer unless it is allow-listed, which is how stray
+acronyms and bare years are kept out of the dataset layer. But the guard runs
+on the *normalised* name, so "RAPID dataset" became "RAPID" and was discarded
+(seven projects), as was "CGIAD 2019-2020" (one project). Both are real
+datasets: the Registration and Population Interaction Database (DWP and HMRC)
+and the Cross Government Income Administrative Dataset (NISRA). They are now
+expanded to their full names with the acronym retained, the same treatment
+ASHE and LEO already receive, which both names them properly and takes them out
+of the guard's reach. A tenth record, `2026/014`, arrived with its dataset
+names corrupted in the source ("Business " missing from one, the other broken
+mid-word) and is repaired in place, as other known source corruption is.
+
+The remaining four are correct as they stand: three declare generic wording
+rather than named datasets ("Death data", "Offending data", "Racial Disparity
+Audit Data"), which the exclusion list rejects deliberately, and one declares
+no datasets at all.
+
+Only `2026/014` changes the deterministic facets, gaining a collection method,
+temporal structure and unit; RAPID and CGIAD are not yet in the reference
+dataset layer, so they contribute dataset rows without facets and now appear in
+the curation queue where they can be adjudicated.
+
+## Recorded analytical state
+
+Both corrections change deterministic output for a register snapshot already
+released, so the analytical state recorded for the 2026-10-21 cleaned register
+was re-recorded against the regenerated properties. The committed deterministic
+output is required to be reproducible from current code, so the recorded
+identity has to follow the rules rather than the release date; the superseded
+identity remains in the manifest's version history.

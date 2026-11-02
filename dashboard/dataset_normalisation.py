@@ -397,6 +397,12 @@ GEOGRAPHY_SUFFIX_FALLBACK_NAMES = {
 
 DATASET_ALIASES = [
     # -- Explicit manual aliases for reviewed problem cases --
+    # DWP/HMRC population-interaction dataset, held in the ONS SRS. Without
+    # the expansion "RAPID dataset" normalises to "RAPID", which the
+    # single-word short-name guard drops, losing the dataset entirely.
+    (re.compile(r"(?i)^rapid(?: dataset)?$"), "Registration and Population Interaction Database (RAPID)"),
+    # NISRA cross-government income dataset; same short-name problem.
+    (re.compile(r"(?i)^cgiad(?:\s*20\d\d[-/](?:20)?\d\d)?$"), "Cross Government Income Administrative Dataset (CGIAD)"),
     (re.compile(r"(?i)^2011 census data welsh(?: residents)?$"), "Census Wales 2011"),
     (re.compile(r"(?i)^welsh census 2011$"), "Census Wales 2011"),
     (re.compile(r"(?i)^census 2011 welsh(?: records| residents)?$"), "Census Wales 2011"),
@@ -713,6 +719,14 @@ def _repair_known_text_corruption(text: str) -> str:
     text = re.sub(r"\s*\u2122(?=\s|$)", "'", text)
     text = text.replace("\u00b4", "'")
     text = re.sub(r"(?<=21st Century)\s+\u201c\s+(?=Chapter\b)", " \u2013 ", text)
+    # 2026/014 lost "Business " from the first dataset and had the second
+    # broken mid-word ("udinal Busin ess"). The record is an ONS business-data
+    # project naming the Business Structure Database and the Longitudinal
+    # Business Database; without this both fragments parse to nothing.
+    text = text.replace(
+        "Structure Database - UK, udinal Busin ess Database - UK",
+        "Business Structure Database - UK, Longitudinal Business Database - UK",
+    )
     return text
 
 

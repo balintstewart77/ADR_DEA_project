@@ -7,7 +7,7 @@
     "dropped_non_dea": 106,
     "dropped_same_id_same_title": 35,
     "dropped_special_duplicate_rows": 0,
-    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-classify\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
+    "duplicate_review_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-rapid\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_review_flagged.csv",
     "duplicate_ruling_groups_applied": 5,
     "duplicate_ruling_merged_source_rows": 2,
     "duplicate_ruling_retained_project_ids": [
@@ -17,8 +17,8 @@
       "2020/030"
     ],
     "duplicate_ruling_rows_removed": 1,
-    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-classify\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
-    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-classify\\analysis\\register_duplicate_rulings.yaml",
+    "duplicate_rulings_audit_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-rapid\\analysis\\outputs_deterministic_rc2\\quality\\duplicate_rulings_audit.csv",
+    "duplicate_rulings_file": "C:\\Users\\balin\\Desktop\\ADR_DEA_project-rapid\\analysis\\register_duplicate_rulings.yaml",
     "duplicate_tier1_rows_removed": 23,
     "duplicate_tier2_input_rows": 24,
     "duplicate_tier2_merge_groups": 12,
@@ -31,11 +31,11 @@
     "rows_after_duplicate_rulings": 1385,
     "rows_after_required_fields": 1527
   },
-  "created_at_utc": "2026-11-01T22:27:25.912579+00:00",
+  "created_at_utc": "2026-11-02T07:52:54.802173+00:00",
   "git": {
-    "commit": "f0564030d3323fc8cbc15cc6972da0dfcbefd760",
+    "commit": "02253c94ae407a50fe9663f4236875849daa9571",
     "dirty": true,
-    "status_porcelain": "M analysis/outputs_deterministic_rc2/manifest.json\n M analysis/outputs_deterministic_rc2/register_properties.csv\n M analysis/outputs_refresh/20261021-9030a288f445/derive_report.md\n M analysis/outputs_refresh/20261021-9030a288f445/ingest_revision_diff.md\n M analysis/outputs_refresh/20261021-9030a288f445/manifest.json\n M analysis/outputs_refresh/20261021-9030a288f445/nominal_release_diff.md\n M analysis/outputs_refresh/20261021-9030a288f445/review_required.md\n M data/register_provenance_manifest.json\n M data/release_pointers.json\n?? analysis/outputs_classified_20261021-9030a288f445/"
+    "status_porcelain": "M analysis/outputs_deterministic_rc2/register_properties.csv\n M dashboard/dataset_normalisation.py"
   },
   "model": null,
   "output_files": [

@@ -21,7 +21,7 @@
     "researcher_sector_excluded": 11
   },
   "eligibility": {
-    "dataset_demand_record_units": 1372,
+    "dataset_demand_record_units": 1381,
     "institution_record_units": 1376,
     "linked_uptake_record_units": 396,
     "thematic_record_units": 1385
@@ -40,9 +40,9 @@
     "overall_yearly": "60d5d06eafce1ed07467ae271ebbb03c51ef22ba924ac7284f7e87eaa1b0f2d7",
     "overall_quarterly": "a4e5cc6def189c9fda5312e11c1cf687384afc40fe26e63c3238ce7db14ac38c",
     "overall_srs": "cddd404192c4bc873bdfbb80087ce47074cc63ce40d6d2c3c9a204c752176f5c",
-    "datasets_top10": "30d3efa7b91acd332ece62dd4cd7e127cd4b82ed12a6b608b3e945156e4dc829",
-    "datasets_trend": "6de9c84f2f4f7dde4e5df81aad328de9fc1e553ee8fbe7c35ac3a864cb7a5b25",
-    "datasets_provider": "18e0cb7a0fd48939af634587a109e5cd7940692ddd889aa50aaa6705de930f17",
+    "datasets_top10": "bc3be5f7b47838e06fc6c9a171072ae52f91f5e2a78c57ec375853db0fbf561b",
+    "datasets_trend": "35672135d290441964152e2c85e726e24a7ae6766eac733dd118efd323b16a25",
+    "datasets_provider": "1e442da9fc9c3e7a1f41d9458bf136e88139d0eab62c4be9113aeb1525d3247b",
     "institutions_top10": "ee8009ee793ca5b74243d78e159062c8957278b10a3d5d1a2d3a724d99ff30ff",
     "institutions_trend_top8": "382e492cf02ce656f86f666fc4771d86f88af45817e8f9a68da1a323bd8a6091",
     "uptake_curve": "c0a3769c68248ac643970eba43e17b2d4c220fb144e8a769e56b98c0a56a6b08",
@@ -61,15 +61,15 @@
     "df_domain_cooccurrence": "cc9837d12d7b0c505c5a05a7ab36ba913ccac767a27bbcffa83e0f6faa636208",
     "df_latent_demand_cooccurrence": "b9d97d4d80988722f5c76c10adb9b8962abbdf8a00df6a78afc2114aca3a1bf4",
     "df_record_linkage_totals": "9feb14e69f8bcdf01b7db78cf22204393c7f58fd7ec030272e81615a09cfb18e",
-    "df_collection_method_totals": "da61ac240e4564a7b4ecf2ee2872bf38edab9cb990ea08a9993507d1cddc0166",
-    "df_temporal_structure_totals": "a387f9acb4e1f4373aae2fcfd3b7d06ea3c2589ae885171e9664895c5fc1997c",
-    "df_unit_totals": "32428cce812f02ce945350169a0149d7db08be50577fbecc0210585b72f55e25",
+    "df_collection_method_totals": "0c49928387dcec4e366f2b5fd0cdaab0e15c06e862230a4ab733fdd92c813aed",
+    "df_temporal_structure_totals": "f618eb27c5a217dd0f01615a58956d3768f9158d7331e33ea79c3b2d2fdea384",
+    "df_unit_totals": "b742662ad76e699be071e8e7385abfbc82813bcf8762872465ed623f02b802c2",
     "df_researcher_sector_totals": "e8f9da34ebe3db6bf3f7f58feff8884b34a017c1ef7e39f19b1c4c6c417874a7",
     "df_record_linkage_by_year": "0fa49e31801466764f8e1f45836a8fa62d5189621bf9b7e3e0021cc67967cd49",
     "df_record_linkage_by_quarter": "d6dee5df3dd314ac14f6d8291669b83cce0edcf7feca2d22781ca06cf43a34fb",
-    "df_collection_method_by_year": "c8158aa650519252de70e824f51ddb37eb6afb679d2671719cef95a2e6a848ec",
-    "df_temporal_structure_by_year": "4ce4eb3955267f5433b825a2be487a089086e4291f5b45e8c12a2c0c242c17c2",
-    "df_unit_by_year": "5460b6398ac7765b6fb7b702e4fa92e62cf8f41372b886179e0271c5d5b43761",
+    "df_collection_method_by_year": "1348b9a636ab724b8c6a5edee22ed2d1491715438fb9a099611af30e38248a50",
+    "df_temporal_structure_by_year": "5426a4074be94c461ae45e929a428ad497a2610c0e4854b7f25f6ff72b72929c",
+    "df_unit_by_year": "315fc9af67efde6eef2f1cc4d5de1cfbf7877ec86bf771494b1fdfa61afc6cd9",
     "df_domain_record_linkage": "5de5ce336433ea18dd095237fe3e4d3bc9ea077c407c0cd4dd1c9f67848dafb4",
     "df_researcher_sector_cooccurrence": "f5f3cbfeb9b3b74aa0388d47edc314409d0b4967feda8bc9c432e6b8726e7ef8"
   }

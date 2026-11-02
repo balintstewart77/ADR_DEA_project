@@ -224,11 +224,12 @@ class VerifiedRepublicationComparisonTest(unittest.TestCase):
             for frame in properties
         ]
         self.assertEqual(property_bytes[0], property_bytes[1])
-        # Updated with the parser fix: Understanding Society restored for
-        # 2021/142, 2021/178 and 2025/085 (longitudinal / household facets).
+        # Updated as the deterministic rules changed: Understanding Society
+        # restored for 2021/142, 2021/178 and 2025/085, then RAPID, CGIAD and
+        # 2026/014's repaired dataset names reaching the facets.
         self.assertEqual(
             hashlib.sha256(property_bytes[0]).hexdigest(),
-            "cbdd6bea508b6e5d581f2952f664a1a8faec11d5fa166174fa43bae0f4209d96",
+            "97babfab4bdcc8b394b01f5a8764fac9716029954288da5c07d3a06cd2f67424",
         )
 
     def test_csv_physical_diff_is_one_deleted_two_added_without_encoding_churn(self):
