@@ -75,6 +75,7 @@ PRODUCT_SHORT_LABELS = {
     "COVID-19 Infection Survey linked to Mortality - England and Wales ONS": "CIS-Mortality",
     "Covid-19 Schools Infection Survey linked with Test and Trace": "Schools IS-Test & Trace",
     "Covid-19 Infection Survey linked with VOA and EPC data": "CIS-VOA/EPC",
+    "Decision Maker Panel matched to Business Insights and Conditions Survey UK": "DMP-BICS",
 }
 
 ADR_ENGLAND_FLAGSHIP_COLLECTION = "ADR England"
