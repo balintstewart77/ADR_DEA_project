@@ -224,12 +224,14 @@ class VerifiedRepublicationComparisonTest(unittest.TestCase):
             for frame in properties
         ]
         self.assertEqual(property_bytes[0], property_bytes[1])
-        # Updated as the deterministic rules changed: Understanding Society
-        # restored for 2021/142, 2021/178 and 2025/085, then RAPID, CGIAD and
-        # 2026/014's repaired dataset names reaching the facets.
+        # Updated as the deterministic rules and reference changed:
+        # Understanding Society restored for 2021/142, 2021/178 and 2025/085;
+        # RAPID, CGIAD and 2026/014's repaired names reaching the facets; then
+        # RAPID and CGIAD entering the reference dataset layer, which gives
+        # their 8 projects a collection method, temporal structure and unit.
         self.assertEqual(
             hashlib.sha256(property_bytes[0]).hexdigest(),
-            "97babfab4bdcc8b394b01f5a8764fac9716029954288da5c07d3a06cd2f67424",
+            "4669d2ed946f65b8090ae8d0a9a34f2df98384a4449721916c14aafb37641bdc",
         )
 
     def test_csv_physical_diff_is_one_deleted_two_added_without_encoding_churn(self):

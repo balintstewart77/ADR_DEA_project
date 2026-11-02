@@ -2012,3 +2012,29 @@ was re-recorded against the regenerated properties. The committed deterministic
 output is required to be reproducible from current code, so the recorded
 identity has to follow the rules rather than the release date; the superseded
 identity remains in the manifest's version history.
+
+## RAPID and CGIAD in the reference dataset layer (2026-11-02)
+
+Recovering the two datasets from the fragment guard put them in the dataset
+layer but not the reference, so their projects carried dataset rows with no
+deterministic facets. Both are now reference datasets, classified under the
+standing single-label rules.
+
+RAPID is administrative, longitudinal and individual: DWP and HMRC records for
+everyone with a National Insurance number, released to follow the same people
+month by month across tax years, with the person as the record and household
+grouping secondary. CGIAD is administrative, cross-sectional and household: the
+2019/20 release is a standalone single-year extract that cannot be linked to
+other datasets, and it is published as a household-level income dataset, which
+follows the Understanding Society precedent rather than the Census one.
+
+Eight records gain a collection method, temporal structure and unit where they
+previously had none; no record changes an existing value. Dataset reference
+coverage rises to 3,372/3,481 mentions.
+
+Not settled here: whether RAPID belongs in the linked-product layer. It is a
+DWP-HMRC linkage and ADR UK lists it as a flagship dataset, so admitting it
+would add its seven projects to the record-linkage counts and change the
+linked-data growth series. That needs an availability basis with a source and a
+decision on component domains, so it is left for a separate adjudication rather
+than taken as a side effect of a facet fix.

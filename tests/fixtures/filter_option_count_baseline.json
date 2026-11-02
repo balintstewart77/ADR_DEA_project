@@ -2934,7 +2934,7 @@
     "collection_method": [
       {
         "value": "administrative",
-        "count": 652
+        "count": 660
       },
       {
         "value": "survey",
@@ -2944,11 +2944,11 @@
     "temporal_structure": [
       {
         "value": "cross-sectional",
-        "count": 987
+        "count": 988
       },
       {
         "value": "longitudinal",
-        "count": 628
+        "count": 635
       }
     ],
     "unit": [
@@ -2962,11 +2962,11 @@
       },
       {
         "value": "household",
-        "count": 176
+        "count": 177
       },
       {
         "value": "individual",
-        "count": 1034
+        "count": 1041
       }
     ],
     "researcher_sector": [

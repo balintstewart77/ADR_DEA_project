@@ -1136,6 +1136,40 @@ linked_products:
     component_datasets_source: "https://ons.metadata.works/browser/dataset/290"
 
 datasets:
+  - canonical: "Registration and Population Interaction Database (RAPID)"
+    aliases:
+      - "Registration and Population Interaction Database (RAPID)"
+      - "RAPID"
+      - "RAPID dataset"
+    collection_method: "administrative"
+    temporal_structure: "longitudinal"
+    unit_of_observation: "individual"
+    notes: >
+      DWP and HMRC administrative records for everyone with a National
+      Insurance number, held in the ONS Secure Research Service.
+      Administrative by provenance; longitudinal because releases are built to
+      follow the same people month by month across tax years (Release 8 covers
+      2010/11 to 2023/24); individual because the record is the person, with
+      household grouping secondary.
+      https://www.adruk.org/data-access/flagship-datasets/rapid-population-interactions-with-employment-benefits-and-pensions-uk/
+
+  - canonical: "Cross Government Income Administrative Dataset (CGIAD)"
+    aliases:
+      - "Cross Government Income Administrative Dataset (CGIAD)"
+      - "CGIAD"
+    collection_method: "administrative"
+    temporal_structure: "cross-sectional"
+    unit_of_observation: "household"
+    notes: >
+      NISRA dataset linking Department for Communities, HMRC, DWP and Northern
+      Ireland Housing Executive income records for about 729,000 households.
+      Administrative by provenance; cross-sectional because the 2019/20 release
+      is a standalone single-year extract that cannot be linked to other
+      datasets; household because it is released as a household-level income
+      dataset, following the Understanding Society precedent rather than the
+      Census one.
+      https://www.adruk.org/data-access/flagship-datasets/cross-government-income-administrative-dataset-2019/20-northern-ireland/
+
   - canonical: "Census"
     aliases:
       - "Census"
