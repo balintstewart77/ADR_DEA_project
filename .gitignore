@@ -199,3 +199,9 @@ analysis/outputs/model_comparison_fable_5_run2/*
 
 # Independent ADR UK audit working files
 /analysis/adr_blog_audit/
+
+# Independent audit of the deep funding-matching search
+/analysis/adr_blog_deep_audit/
+
+# Public data-use register audit bundle (local only)
+/analysis/public_register_audit/
