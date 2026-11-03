@@ -1,4 +1,5 @@
 # Optional dependencies for refreshing the source data from the public register.
+-c requirements.lock
 openpyxl
 pandas
 requests
