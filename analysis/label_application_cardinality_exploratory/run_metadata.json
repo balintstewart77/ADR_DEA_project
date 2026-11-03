@@ -1,0 +1,682 @@
+{
+  "status": "exploratory descriptive, not preregistered",
+  "specification": {
+    "path": "analysis/label_application_cardinality_exploratory/SPEC_label_application_cardinality_2026-11-03.md",
+    "sha256": "f17ef33b8f0bdebb6b0d3f8b225de59b456c033eca5ebfa3982df6e09ce4d61c",
+    "created": "2026-11-03",
+    "committed_before_run": false,
+    "note": "Investigator instructed no commit in this session; specification hash recorded instead."
+  },
+  "run_started_utc": "2026-11-03T18:08:21.585243+00:00",
+  "run_completed_utc": "2026-11-03T18:08:22.066853+00:00",
+  "repository_head": "7e77c471fb420db04fbd3aab45f6502d7c555983",
+  "run_directory_uncommitted": true,
+  "populations": {
+    "Research Domains": {
+      "population": "baseline",
+      "records": 150,
+      "valid_common_records": 150,
+      "excluded_records": 0,
+      "excluded_reasons": []
+    },
+    "Analytical Purposes": {
+      "population": "baseline",
+      "records": 150,
+      "valid_common_records": 150,
+      "excluded_records": 0,
+      "excluded_reasons": []
+    }
+  },
+  "raters": [
+    "C01",
+    "C02",
+    "C03",
+    "Fable 5"
+  ],
+  "dimensions": [
+    "Research Domains",
+    "Analytical Purposes"
+  ],
+  "reconciliation_sources": {
+    "results_md": {
+      "path": "analysis/scratch_coder_results/results.md",
+      "sha256": "e6cd1a9bc7caf29d49206392efc46a9d4fcedd850c7eefeea5d3cfa39611f017"
+    },
+    "tables": {
+      "Research Domains": {
+        "labels": "S5T001",
+        "unclear": "S10T001"
+      },
+      "Analytical Purposes": {
+        "labels": "S5T002",
+        "unclear": "S10T002"
+      }
+    },
+    "g12_fable_totals": {
+      "Research Domains": [
+        199,
+        198
+      ],
+      "Analytical Purposes": [
+        160,
+        159
+      ]
+    }
+  },
+  "checks": [
+    {
+      "check": "hash POST-028",
+      "status": "passed",
+      "actual": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d",
+      "expected": "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+    },
+    {
+      "check": "hash PRO-018",
+      "status": "passed",
+      "actual": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77",
+      "expected": "fd1fa40b8047a4fb512cc6fc00f0ae686001b2fe9510ffe34e1c335a1df2fb77"
+    },
+    {
+      "check": "hash RED-036",
+      "status": "passed",
+      "actual": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc",
+      "expected": "1bb8d75675bd1723c398680dff3625955ac5760d4987b4c41bce44fe57d2bbcc"
+    },
+    {
+      "check": "hash RED-013",
+      "status": "passed",
+      "actual": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190",
+      "expected": "f28f45cdc45fd1dbc3f97d8bc0c8e4cfc2e1ce29ae4f95bcd3d423975f030190"
+    },
+    {
+      "check": "hash RED-005",
+      "status": "passed",
+      "actual": "bb7f55be07352f87e4704bdbfdccc37436c23d5da2db68ec2ae52b5564376e52",
+      "expected": "bb7f55be07352f87e4704bdbfdccc37436c23d5da2db68ec2ae52b5564376e52"
+    },
+    {
+      "check": "hash RED-006",
+      "status": "passed",
+      "actual": "2dbc2005f832dfa6887fda9994d917598b4f12d63ed060bba8a7ea0e27f11f9c",
+      "expected": "2dbc2005f832dfa6887fda9994d917598b4f12d63ed060bba8a7ea0e27f11f9c"
+    },
+    {
+      "check": "hash RED-007",
+      "status": "passed",
+      "actual": "414e25368757568f9c5db9cadf830e94089123333f7e0264d835863c236e0aca",
+      "expected": "414e25368757568f9c5db9cadf830e94089123333f7e0264d835863c236e0aca"
+    },
+    {
+      "check": "hash RED-003",
+      "status": "passed",
+      "actual": "e0dc33b0bcccd6983fa273b3f05bf3903bf8afd68be9242c89c0436b19525760",
+      "expected": "e0dc33b0bcccd6983fa273b3f05bf3903bf8afd68be9242c89c0436b19525760"
+    },
+    {
+      "check": "hash RED-017",
+      "status": "passed",
+      "actual": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8",
+      "expected": "fab68791df9a8bbb15dd93d2d06a6be15a0e6fd3ebb7d59b6ea75fef4aa7dfe8"
+    },
+    {
+      "check": "hash POST-019",
+      "status": "passed",
+      "actual": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666",
+      "expected": "96daddae15848331f7bef486a6c630e00de598ddb91f5ce317457e09a8bdd666"
+    },
+    {
+      "check": "hash POST-022",
+      "status": "passed",
+      "actual": "327107366d9c741c87cd561475befcf5921e36b3202058dac83f9c42241c09e0",
+      "expected": "327107366d9c741c87cd561475befcf5921e36b3202058dac83f9c42241c09e0"
+    },
+    {
+      "check": "hash POST-009",
+      "status": "passed",
+      "actual": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11",
+      "expected": "0ea3ccab580d1037bf4e35695f2554a69ef79628b53692b2664a2f251f6a4a11"
+    },
+    {
+      "check": "hash POST-011",
+      "status": "passed",
+      "actual": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11",
+      "expected": "582f248d39d911275e4e4f11bc34660b51809a1ed7c330644f9e2036299cfb11"
+    },
+    {
+      "check": "hash MOD-001",
+      "status": "passed",
+      "actual": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de",
+      "expected": "7ddbf1bb5ae4588c82c7c23f90bd96885684ff1ec71382f6403c36c4b89e31de"
+    },
+    {
+      "check": "hash MOD-006",
+      "status": "passed",
+      "actual": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "expected": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299"
+    },
+    {
+      "check": "baseline record count",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Research Domains: one panel per baseline record",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Research Domains: valid common records",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Research Domains: Unclear in frozen label set",
+      "status": "passed",
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "Research Domains/C01: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/C01: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/C01: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Research Domains/C02: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/C02: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/C02: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Research Domains/C03: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/C03: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/C03: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Research Domains/Fable 5: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/Fable 5: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/Fable 5: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Research Domains/Business & Productivity: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 45,
+      "expected": 45
+    },
+    {
+      "check": "Research Domains/Business & Productivity: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 41,
+      "expected": 41
+    },
+    {
+      "check": "Research Domains/Crime & Justice: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "check": "Research Domains/Crime & Justice: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "check": "Research Domains/Data Infrastructure & Methodology: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "check": "Research Domains/Data Infrastructure & Methodology: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/Education & Skills: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 35,
+      "expected": 35
+    },
+    {
+      "check": "Research Domains/Education & Skills: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 27,
+      "expected": 27
+    },
+    {
+      "check": "Research Domains/Environment & Agriculture: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 10,
+      "expected": 10
+    },
+    {
+      "check": "Research Domains/Environment & Agriculture: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "check": "Research Domains/Health & Social Care: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 25,
+      "expected": 25
+    },
+    {
+      "check": "Research Domains/Health & Social Care: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 23,
+      "expected": 23
+    },
+    {
+      "check": "Research Domains/Housing & Planning: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "Research Domains/Housing & Planning: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Research Domains/Labour Market & Employment: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 56,
+      "expected": 56
+    },
+    {
+      "check": "Research Domains/Labour Market & Employment: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 39,
+      "expected": 39
+    },
+    {
+      "check": "Research Domains/Migration & Demographics: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 6,
+      "expected": 6
+    },
+    {
+      "check": "Research Domains/Migration & Demographics: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 9,
+      "expected": 9
+    },
+    {
+      "check": "Research Domains/Poverty, Wealth & Living Standards: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 10,
+      "expected": 10
+    },
+    {
+      "check": "Research Domains/Poverty, Wealth & Living Standards: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 11,
+      "expected": 11
+    },
+    {
+      "check": "Research Domains/Public Finance & Taxation: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 2,
+      "expected": 2
+    },
+    {
+      "check": "Research Domains/Public Finance & Taxation: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 2,
+      "expected": 2
+    },
+    {
+      "check": "Research Domains/Unclear from Register Entry: Fable 5 count equals S5T001",
+      "status": "passed",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "Research Domains/Unclear from Register Entry: recomputed majority equals S5T001",
+      "status": "passed",
+      "actual": 13,
+      "expected": 13
+    },
+    {
+      "check": "Research Domains/C01: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Research Domains/C02: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Research Domains/C03: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Research Domains: Fable 5 totals equal G.12 derivations 3-4",
+      "status": "passed",
+      "actual": [
+        199,
+        198
+      ],
+      "expected": [
+        199,
+        198
+      ]
+    },
+    {
+      "check": "Research Domains/Fable 5: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Research Domains: coder Unclear uses equal S10T001",
+      "status": "passed",
+      "actual": 60,
+      "expected": 60
+    },
+    {
+      "check": "Analytical Purposes: one panel per baseline record",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Analytical Purposes: valid common records",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Analytical Purposes: Unclear in frozen label set",
+      "status": "passed",
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "Analytical Purposes/C01: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/C01: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/C01: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Analytical Purposes/C02: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/C02: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/C02: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Analytical Purposes/C03: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/C03: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/C03: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Analytical Purposes/Fable 5: no empty sets",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/Fable 5: Unclear exclusive",
+      "status": "passed",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "Analytical Purposes/Fable 5: labels within frozen taxonomy",
+      "status": "passed",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "Analytical Purposes/Descriptive Monitoring: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 52,
+      "expected": 52
+    },
+    {
+      "check": "Analytical Purposes/Descriptive Monitoring: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 36,
+      "expected": 36
+    },
+    {
+      "check": "Analytical Purposes/Life-Course / Trajectory Analysis: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 11,
+      "expected": 11
+    },
+    {
+      "check": "Analytical Purposes/Life-Course / Trajectory Analysis: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 9,
+      "expected": 9
+    },
+    {
+      "check": "Analytical Purposes/Methodological / Infrastructure Research: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 10,
+      "expected": 10
+    },
+    {
+      "check": "Analytical Purposes/Methodological / Infrastructure Research: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 7,
+      "expected": 7
+    },
+    {
+      "check": "Analytical Purposes/Outcome Tracking: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 47,
+      "expected": 47
+    },
+    {
+      "check": "Analytical Purposes/Outcome Tracking: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 19,
+      "expected": 19
+    },
+    {
+      "check": "Analytical Purposes/Policy Evaluation / Impact Analysis: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 33,
+      "expected": 33
+    },
+    {
+      "check": "Analytical Purposes/Policy Evaluation / Impact Analysis: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 30,
+      "expected": 30
+    },
+    {
+      "check": "Analytical Purposes/Risk Prediction / Early Identification: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 2,
+      "expected": 2
+    },
+    {
+      "check": "Analytical Purposes/Risk Prediction / Early Identification: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "Analytical Purposes/Service Interaction / Systems Analysis: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "check": "Analytical Purposes/Service Interaction / Systems Analysis: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "Analytical Purposes/Unclear from Register Entry: Fable 5 count equals S5T002",
+      "status": "passed",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "Analytical Purposes/Unclear from Register Entry: recomputed majority equals S5T002",
+      "status": "passed",
+      "actual": 26,
+      "expected": 26
+    },
+    {
+      "check": "Analytical Purposes/C01: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Analytical Purposes/C02: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Analytical Purposes/C03: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Analytical Purposes: Fable 5 totals equal G.12 derivations 3-4",
+      "status": "passed",
+      "actual": [
+        160,
+        159
+      ],
+      "expected": [
+        160,
+        159
+      ]
+    },
+    {
+      "check": "Analytical Purposes/Fable 5: classified plus Unclear equals N",
+      "status": "passed",
+      "actual": 150,
+      "expected": 150
+    },
+    {
+      "check": "Analytical Purposes: coder Unclear uses equal S10T002",
+      "status": "passed",
+      "actual": 106,
+      "expected": 106
+    }
+  ],
+  "outputs": {
+    "LAC1T001.csv": "ed4faf76a6ac7a6f43f7de4548e1ec18b7d333744f0c30c18179ec8d2d7d658e",
+    "LAC1T002.csv": "f2422fb96ce1eb6f7f3506130e82d7bba354775d15a2bc3cc7ad5afc28cae1bc",
+    "results_label_application_cardinality.md": "a3dab2008ec69a8c9cbd5a6a21ee8dc2f594d4d8886cad928e04d809c8ca2d38"
+  },
+  "restricted_outputs": [],
+  "not_accessed": [
+    "adjudication findings",
+    "project-owner responses"
+  ],
+  "software": {
+    "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26300-SP0"
+  }
+}

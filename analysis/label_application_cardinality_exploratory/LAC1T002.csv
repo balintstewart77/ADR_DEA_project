@@ -1,0 +1,9 @@
+table_id,population,dimension,rater,records_N,substantive_label_applications,mean_substantive_labels_per_record,unclear_records,unclear_proportion,substantively_classified_records,mean_substantive_labels_among_classified,all_label_applications_including_unclear,empty_set_records,unclear_with_substantive_records,status
+LAC1T002,baseline,Research Domains,C01,150,216,1.44,7,0.04666666666666667,143,1.5104895104895104,223,0,0,exploratory descriptive; not preregistered; no intervals
+LAC1T002,baseline,Research Domains,C02,150,154,1.0266666666666666,14,0.09333333333333334,136,1.1323529411764706,168,0,0,exploratory descriptive; not preregistered; no intervals
+LAC1T002,baseline,Research Domains,C03,150,139,0.9266666666666666,39,0.26,111,1.2522522522522523,178,0,0,exploratory descriptive; not preregistered; no intervals
+LAC1T002,baseline,Research Domains,Fable 5,150,198,1.32,1,0.006666666666666667,149,1.3288590604026846,199,0,0,exploratory descriptive; not preregistered; no intervals
+LAC1T002,baseline,Analytical Purposes,C01,150,159,1.06,23,0.15333333333333332,127,1.2519685039370079,182,0,0,exploratory descriptive; not preregistered; no intervals
+LAC1T002,baseline,Analytical Purposes,C02,150,136,0.9066666666666666,15,0.1,135,1.0074074074074073,151,0,0,exploratory descriptive; not preregistered; no intervals
+LAC1T002,baseline,Analytical Purposes,C03,150,86,0.5733333333333334,68,0.4533333333333333,82,1.048780487804878,154,0,0,exploratory descriptive; not preregistered; no intervals
+LAC1T002,baseline,Analytical Purposes,Fable 5,150,159,1.06,1,0.006666666666666667,149,1.0671140939597314,160,0,0,exploratory descriptive; not preregistered; no intervals
