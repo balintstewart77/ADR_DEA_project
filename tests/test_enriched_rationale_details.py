@@ -67,16 +67,18 @@ def _run_detail_callback(
         "prop_id": trigger,
         "value": active_cell,
     }]))
+    # The modal looks records up server-side; serve this test's rows instead.
+    lookup = {row["id"]: row for row in table_rows}
     try:
-        return callback(
-            active_cell,
-            None,
-            viewport_rows,
-            0,
-            table_rows,
-            viewport_record_ids,
-            selected_record_id,
-        )
+        with patch.object(callbacks, "_enriched_records_by_id", return_value=lookup):
+            return callback(
+                active_cell,
+                None,
+                viewport_rows,
+                0,
+                viewport_record_ids,
+                selected_record_id,
+            )
     finally:
         context_value.reset(token)
 
@@ -471,8 +473,11 @@ def test_detail_layout_is_accessible_keyed_and_keeps_rationale_lifecycle():
     assert {item["property"] for item in detail_spec["inputs"]} == {
         "active_cell", "n_clicks", "derived_viewport_data", "page_current",
     }
-    assert [item["property"] for item in detail_spec["state"]] == [
-        "data", "derived_viewport_row_ids", "data",
+    # The full table is never uploaded: only the visible row ids and the
+    # selected-record store travel with the detail callback.
+    assert [(item["id"], item["property"]) for item in detail_spec["state"]] == [
+        ("enriched-register-table", "derived_viewport_row_ids"),
+        ("enriched-record-detail-record-id", "data"),
     ]
 
     asset = (Path(__file__).parents[1] / "dashboard/assets/enriched_record_detail.js").read_text()
@@ -482,6 +487,23 @@ def test_detail_layout_is_accessible_keyed_and_keeps_rationale_lifecycle():
 
     rationale_asset = (Path(__file__).parents[1] / "dashboard/assets/rationale_overflow.js").read_text()
     assert "ResizeObserver" in rationale_asset and "MutationObserver" in rationale_asset
+
+
+def test_detail_lookup_matches_the_table_row_for_a_real_record():
+    callback, _ = _table_callback()
+    bounds = callbacks._YEAR_RANGE
+    records = callback(*FILTERS, 20, bounds.value, bounds.value, [], *bounds.value)[0]
+    lookup = callbacks._enriched_records_by_id()
+    assert len(lookup) == len(records)
+    for row in records[:5]:
+        assert lookup[row["id"]] == row
+
+
+def test_search_inputs_are_debounced():
+    from dashboard.layout.explorer import build_explorer_tab
+
+    assert _component_by_id(build_analysis_tab(), "enriched-search").debounce == 400
+    assert _component_by_id(build_explorer_tab(), "browse-search").debounce == 400
 
 
 def test_csv_export_keeps_full_dataset_value_when_table_uses_a_preview():

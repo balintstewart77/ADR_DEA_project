@@ -181,9 +181,7 @@ def _aggregates(selection) -> dict:
 
 
 def _filter_enriched_accreditation_year_range(display, year_range, year_min, year_max):
-    bounds = YearRange(int(year_min), int(year_max))
-    filtered = filter_records_by_year(display, year_range, bounds)
-    return filtered, parse_accreditation_dates(filtered)
+    return filter_records_by_year(display, year_range, YearRange(int(year_min), int(year_max)))
 
 
 def _rationale_display(rationale, title, record_id) -> str:
@@ -260,6 +258,29 @@ def _is_sort_null(value) -> bool:
         return False
 
 
+def _enriched_rows_with_iso_dates(display) -> list[dict]:
+    """Table rows for a filtered display frame, with ISO accreditation dates."""
+    display = display.copy()
+    display["Accreditation Date"] = (
+        parse_accreditation_dates(display).dt.strftime("%Y-%m-%d").fillna("")
+    )
+    return _enriched_table_records(display)
+
+
+@lru_cache(maxsize=1)
+def _enriched_records_by_id() -> dict[str, dict]:
+    """Every Enriched Register row keyed by Record ID, for the detail modal.
+
+    A row's values do not depend on the active filters, so the modal looks
+    the record up here rather than uploading the whole table from the browser
+    on every page change and cell click.
+    """
+    display, _ = _get_enriched_register_display_df(
+        *_ALL_ENRICHED_FILTERS, include_record_id=True,
+    )
+    return {row["id"]: row for row in _enriched_rows_with_iso_dates(display)}
+
+
 def _sort_enriched_table_records(records: list[dict], sort_by) -> list[dict]:
     """Sort complete data, mapping presentation-only columns to full source values."""
     sort_specs = [
@@ -315,6 +336,8 @@ ENRICHED_FILTER_DROPDOWN_IDS = (
     "enriched-unit-filter",
     "enriched-researcher-sector-filter",
 )
+# Search text plus one "ALL" per dropdown: the unfiltered register.
+_ALL_ENRICHED_FILTERS = (None, *(["ALL"] * len(ENRICHED_FILTER_DROPDOWN_IDS)))
 
 
 def register(app):
@@ -351,7 +374,6 @@ def register(app):
         Input("enriched-record-detail-close", "n_clicks"),
         Input("enriched-register-table", "derived_viewport_data"),
         Input("enriched-register-table", "page_current"),
-        State("enriched-register-table", "data"),
         State("enriched-register-table", "derived_viewport_row_ids"),
         State("enriched-record-detail-record-id", "data"),
         prevent_initial_call=True,
@@ -361,7 +383,6 @@ def register(app):
         _close_clicks,
         viewport_rows,
         _page_current,
-        table_rows,
         viewport_record_ids,
         selected_record_id,
     ):
@@ -388,10 +409,7 @@ def register(app):
                 ):
                     record_id = str(viewport_rows[row_index].get("id") or "").strip()
             if column_id in _ENRICHED_DETAIL_COLUMNS and record_id:
-                record = next(
-                    (row for row in (table_rows or []) if row.get("id") == record_id),
-                    None,
-                )
+                record = _enriched_records_by_id().get(record_id)
                 if record is not None:
                     return (
                         True,
@@ -874,17 +892,16 @@ def register(app):
             include_record_id=True,
         )
 
-        display, accreditation_dates = _filter_enriched_accreditation_year_range(
+        display = _filter_enriched_accreditation_year_range(
             display, accreditation_year_range, accreditation_year_min, accreditation_year_max,
         )
-        display["Accreditation Date"] = accreditation_dates.dt.strftime("%Y-%m-%d").fillna("")
         count_text = (
             f"Showing {len(display):,} accreditation "
             f"record{'s' if len(display) != 1 else ''}"
         )
 
         records = _sort_enriched_table_records(
-            _enriched_table_records(display), sort_by,
+            _enriched_rows_with_iso_dates(display), sort_by,
         )
         facet_options = _get_enriched_register_facet_options(
             search,
@@ -988,7 +1005,7 @@ def register(app):
             eligible_ids,
         )
         filename = f"dea-enriched-register-{_csv_date_stamp()}.csv"
-        display, _ = _filter_enriched_accreditation_year_range(
+        display = _filter_enriched_accreditation_year_range(
             display, accreditation_year_range, accreditation_year_min, accreditation_year_max,
         )
         return dcc.send_data_frame(display.to_csv, filename, index=False)

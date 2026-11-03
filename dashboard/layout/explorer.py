@@ -30,6 +30,8 @@ def build_explorer_tab():
                     id="browse-search",
                     placeholder="Search by project ID, title, or researcher…",
                     type="text",
+                    # Wait for a pause in typing: each update re-filters and re-counts the register.
+                    debounce=400,
                 ),
             ],
                 md=6,

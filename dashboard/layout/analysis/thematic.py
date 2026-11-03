@@ -573,6 +573,8 @@ def _analyses_accordion():
                                 id="enriched-search",
                                 placeholder="Search by project ID, title, researcher, or rationale…",
                                 type="text",
+                                # Wait for a pause in typing: each update re-filters and re-counts the register.
+                                debounce=400,
                             ),
                         ], md=8, lg=4),
                         dbc.Col([
