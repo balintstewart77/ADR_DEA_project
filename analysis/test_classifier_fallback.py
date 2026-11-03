@@ -2,6 +2,7 @@
 
 A refused, truncated or malformed reply must never trigger a second paid request.
 """
+import importlib
 import json
 import os
 import sys
@@ -95,7 +96,8 @@ class ClassifyBatchTest(unittest.TestCase):
 def _sdk_client(replies, bodies):
     """A real Anthropic client whose HTTP transport returns canned replies."""
     anthropic = pytest.importorskip("anthropic")
-    httpx = pytest.importorskip("httpx2")
+    # 0.x is built on httpx, 1.x onwards on httpx2: use the SDK's own transport.
+    httpx = importlib.import_module(anthropic.DefaultHttpxClient.__mro__[1].__module__.split(".")[0])
 
     def handler(request):
         bodies.append(json.loads(request.content))
