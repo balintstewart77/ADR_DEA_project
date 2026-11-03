@@ -166,6 +166,36 @@ SUPPORTING_PHRASES: tuple[Phrase, ...] = (
     _phrase("trusted_research_environment", "supporting", r"\btrusted[\s\-]+research[\s\-]+environments?\b"),
 )
 
+# Sentences where a route phrase describes an environment's or a programme's
+# standing rather than this project's access: data "made available to
+# accredited researchers only" (CVD-COVID-UK / NHS England SDE wording),
+# "accredited researchers can apply", or a TRE "accredited under the Digital
+# Economy Act". Route phrases inside these sentences are recorded as
+# boilerplate and do not count as statements.
+BOILERPLATE_RE = re.compile(
+    r"made[\s\-]+available[\s\-]+to[\s\-]+accredited[\s\-]+researchers"
+    r"|accredited[\s\-]+researchers?[\s\-]+(?:can|may|are[\s\-]+able[\s\-]+to)[\s\-]+apply"
+    r"|(?:research[\s\-]+environment|TRE|databank|processing[\s\-]+environment|secure[\s\-]+(?:data|research)[\s\-]+environment)"
+    r"\W+(?:\w+\W+){0,6}?accredited[\s\-]+(?:under|by|through)\b"
+    r"|accredited[\s\-]+(?:trusted[\s\-]+research[\s\-]+environment|TRE|processing[\s\-]+environment|data[\s\-]+processor)",
+    re.I,
+)
+
+
+def statement_hits(text: str) -> tuple[list[PhraseHit], list[PhraseHit]]:
+    """(statement hits, boilerplate route hits), judged sentence by sentence."""
+    kept: list[PhraseHit] = []
+    boilerplate: list[PhraseHit] = []
+    for sentence in split_sentences(text):
+        hits = find_phrases(sentence)
+        if not hits:
+            continue
+        is_boilerplate = bool(BOILERPLATE_RE.search(sentence))
+        for hit in hits:
+            (boilerplate if is_boilerplate and hit.category == "route" else kept).append(hit)
+    return kept, boilerplate
+
+
 # Register processing-environment labels -> environment codes.
 ENVIRONMENT_CODES = {
     "ONS Secure Research Service (SRS)": "SRS",
@@ -278,11 +308,25 @@ class DatasetTerm:
 AMBIGUOUS_ACRONYMS = frozenset({
     "X", "LS", "WAS", "ABS", "APS", "CIS", "MES", "ONS", "NHS", "DFE", "DWP", "HMRC", "UK",
     "IDS", "SRS", "LEO2", "PAYE", "BOE", "UCAS",
+    # Topics, not datasets: "COVID-19" is the normaliser's family key for the
+    # COVID-19 Infection Survey and would match every pandemic paper.
+    "COVID-19", "COVID", "SARS-COV-2",
+    # Common outside the register's meaning (GRADE evidence ratings, a
+    # multidimensional poverty index, credit agencies, end of life).
+    "GRADE", "MPI", "CRA", "EOL",
 })
 # Single-word names that are too generic to match alone.
 GENERIC_NAMES = frozenset({
     "census", "survey", "dataset", "data", "linked", "database", "registrations", "births", "deaths",
+    "family court", "crown court", "magistrates court",
+    # Reviewed against every short term in the 20261021 register: everyday
+    # research phrases, a funder and a parsing remnant, not dataset names.
+    "longitudinal study", "innovation panel", "capital stock", "capital stocks", "firm productivity",
+    "wellcome trust", "uk: 2023",
 })
+# Product names made of everyday words: match only in their own capitalisation
+# ("Data First" the MoJ programme, not "the data first became available").
+CASE_SENSITIVE_NAMES = frozenset({"Data First", "Family Man", "Next Steps"})
 _ACRONYM_SUFFIX_RE = re.compile(r"^(?P<name>.*?)\s*\((?P<acronym>[A-Za-z0-9&|/\- ]{2,15})\)\s*$")
 _TRAILING_QUALIFIER_RE = re.compile(
     r"\s+(?:-\s+.*|Longitudinal|Person|Persons|Household|Households|X|2|Iteration\s+\d+"
@@ -354,6 +398,8 @@ def build_dataset_terms(spellings_by_dataset: dict[str, Iterable[str]]) -> list[
                     continue
                 if kind == "acronym":
                     pattern = re.compile(rf"(?<![A-Za-z0-9]){re.escape(label)}(?![A-Za-z0-9])")
+                elif label in CASE_SENSITIVE_NAMES:
+                    pattern = re.compile(rf"(?<![\w]){_flex(label)}(?![\w])")
                 else:
                     pattern = re.compile(rf"(?<![\w]){_flex(label)}(?![\w])", re.I)
                 terms[key] = DatasetTerm(label, dataset, kind, pattern)
@@ -475,7 +521,9 @@ def find_names_in_text(names: Iterable[str], text: str) -> list[str]:
 # Evidence snippets
 # ---------------------------------------------------------------------------
 
-_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+(?=[A-Z(\"'])")
+# Sentence ends: punctuation + space + capital, or (PDF/abstract run-ons such
+# as "interventions.Records") a lower-case word, full stop, capital, lower.
+_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+(?=[A-Z(\"'])|(?<=[a-z]{3}[.!?])(?=[A-Z][a-z])")
 _STATEMENT_CUE_RE = re.compile(
     r"acknowledg|data availability|data access|data statement|crown copyright|disclaimer|"
     r"accredit|secure research|secure lab|securelab|safe haven|trusted research",

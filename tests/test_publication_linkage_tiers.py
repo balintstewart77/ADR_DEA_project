@@ -228,3 +228,23 @@ def test_adjudicated_tier2_capped_without_statement(tmp_path):
     adjudicated, counts = apply_decisions(links, tmp_path)
     assert adjudicated.loc[0, "final_tier"] == 3 and counts["capped_to_tier3"] == 1
     assert isinstance(adjudicated, pd.DataFrame)
+
+
+def test_evidence_quote_is_the_statement_sentence():
+    from analysis.publication_linkage.tiers import best_evidence_quote
+
+    text = (
+        "Data access. Results were robust. We used Longitudinal Education Outcomes data in the "
+        "ONS Secure Research Service.Further work follows."
+    )
+    group = dedupe_outputs([output(full_text=text, abstract=None)])[0]
+    evidence = collect_evidence(project(), group, SNAPSHOT)
+    quote = best_evidence_quote(project(), group, evidence)
+    assert quote == "We used Longitudinal Education Outcomes data in the ONS Secure Research Service."
+
+
+def test_covid_topic_is_not_a_dataset_term():
+    from analysis.publication_linkage.matching import dataset_name_variants
+
+    assert ("COVID-19", "acronym") not in dataset_name_variants("COVID-19")
+    assert ("COVID-19 Infection Survey", "name") in dataset_name_variants("COVID-19 Infection Survey (CIS)")

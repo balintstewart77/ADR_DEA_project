@@ -15,7 +15,7 @@ from analysis.publication_linkage.http_client import BudgetExhausted, QueryRejec
 from analysis.publication_linkage.matching import find_project_id_mentions, parse_person_name
 from analysis.publication_linkage.outputs import CandidateOutput, OutputGroup, dedupe_outputs
 from analysis.publication_linkage.register_records import ProjectRecord, sector_group
-from analysis.publication_linkage.tiers import Evidence, assign_tier, collect_evidence
+from analysis.publication_linkage.tiers import Evidence, assign_tier, best_evidence_quote, collect_evidence
 
 ALL_SOURCES = ("openalex", "core", "europepmc", "gtr", "govuk")
 ENRICHERS = ("semanticscholar",)
@@ -217,10 +217,7 @@ def link_outputs(groups: list[OutputGroup], projects: list[ProjectRecord], snaps
 # ---------------------------------------------------------------------------
 
 def evidence_quote(row: LinkRow) -> str:
-    if row.evidence.project_id_mentions:
-        return row.evidence.project_id_mentions[0]
-    snippets = row.group.snippets()
-    return snippets[0] if snippets else ""
+    return best_evidence_quote(row.project, row.group, row.evidence)
 
 
 def outputs_table(groups: list[OutputGroup]) -> pd.DataFrame:
@@ -275,6 +272,7 @@ def links_table(rows: list[LinkRow]) -> pd.DataFrame:
             "environment_phrases": "; ".join(ev.environment_phrases),
             "environment_consistent": ev.environment_consistent,
             "supporting_phrases": "; ".join(ev.supporting_phrases),
+            "boilerplate_phrases": "; ".join(ev.boilerplate_phrases),
             "index_phrase_hits": "; ".join(ev.index_phrase_hits),
             "publication_date": ev.publication_date or "",
             "date_in_window": ev.date_in_window,
@@ -289,7 +287,7 @@ def links_table(rows: list[LinkRow]) -> pd.DataFrame:
     columns = [
         "Record ID", "Project ID", "output_key", "rule_tier", "needs_adjudication", "rule_reasons", "evidence_quote",
         "sources", "project_id_quoted", "author_matches", "authors_named_in_text", "datasets_named", "statement_type", "route_phrases",
-        "environment_phrases", "environment_consistent", "supporting_phrases", "index_phrase_hits",
+        "environment_phrases", "environment_consistent", "supporting_phrases", "boilerplate_phrases", "index_phrase_hits",
         "publication_date", "date_in_window", "adjudication_status", "adjudication_match", "adjudication_tier",
         "adjudication_reason", "adjudication_quote", "adjudication_quote_verified", "final_tier",
     ]

@@ -27,7 +27,7 @@ from datetime import date
 
 from analysis.publication_linkage.config import WINDOW_MONTHS_BEFORE
 from analysis.publication_linkage.matching import (
-    ACCREDITATION_PHRASES,
+    BOILERPLATE_RE,
     SUPPORTING_PHRASES,
     clean_text,
     find_dataset_mentions,
@@ -36,6 +36,8 @@ from analysis.publication_linkage.matching import (
     find_project_id_mentions,
     name_match_level,
     parse_person_name,
+    split_sentences,
+    statement_hits,
 )
 from analysis.publication_linkage.outputs import OutputGroup
 from analysis.publication_linkage.register_records import ProjectRecord
@@ -103,6 +105,7 @@ class Evidence:
     environment_consistent: bool = False
     supporting_phrases: list[str] = field(default_factory=list)
     index_phrase_hits: list[str] = field(default_factory=list)  # reported by a search index, no quote
+    boilerplate_phrases: list[str] = field(default_factory=list)  # route phrases in boilerplate sentences
     date_in_window: bool | None = None
     publication_date: str | None = None
 
@@ -147,6 +150,15 @@ class TierDecision:
     reasons: tuple[str, ...]
 
 
+def group_statement_hits(group: OutputGroup, statement_text: str):
+    """Sentence-level statement hits, computed once per output group."""
+    cached = getattr(group, "_statement_hits", None)
+    if cached is None:
+        cached = statement_hits(statement_text)
+        group._statement_hits = cached
+    return cached
+
+
 def collect_evidence(project: ProjectRecord, group: OutputGroup, snapshot_date: date) -> Evidence:
     text = group.matching_text()
     statement_text = group.statement_text() or text
@@ -175,7 +187,9 @@ def collect_evidence(project: ProjectRecord, group: OutputGroup, snapshot_date: 
 
     evidence.dataset_hits = [(hit.dataset, hit.label, hit.kind) for hit in find_dataset_mentions(text, project.dataset_terms)]
 
-    for hit in find_phrases(statement_text, ACCREDITATION_PHRASES):
+    kept_hits, boilerplate_hits = group_statement_hits(group, statement_text)
+    evidence.boilerplate_phrases = sorted({hit.key for hit in boilerplate_hits})
+    for hit in kept_hits:
         if hit.category == "route":
             if hit.key not in evidence.route_phrases:
                 evidence.route_phrases.append(hit.key)
@@ -231,3 +245,36 @@ def assign_tier(evidence: Evidence) -> TierDecision:
     if evidence.project_id_mentions:
         return TierDecision(None, True, ("project_id_quoted_without_author_or_dataset",))
     return TierDecision(None, False, ())
+
+
+def best_evidence_quote(project: ProjectRecord, group: OutputGroup, evidence: Evidence, max_chars: int = 600) -> str:
+    """The verbatim sentence that best supports the pair's tier.
+
+    Order: the sentence quoting the Project ID; a statement sentence (route
+    phrase, or the project's own environment) that also names a dataset; any
+    such statement sentence; a sentence naming a register dataset.
+    """
+    if evidence.project_id_mentions:
+        target = project.project_id
+        for sentence in split_sentences(group.statement_text()):
+            if any(m.project_id == target for m in find_project_id_mentions(sentence)):
+                return sentence[:max_chars]
+        return evidence.project_id_mentions[0][:max_chars]
+    best: tuple[int, str] | None = None
+    for sentence in split_sentences(group.statement_text()):
+        if len(sentence) > 2000:
+            continue
+        hits = find_phrases(sentence)
+        if BOILERPLATE_RE.search(sentence):
+            hits = [hit for hit in hits if hit.category != "route"]
+        statement = any(
+            hit.category == "route" or (hit.environment and hit.environment == project.environment_code)
+            for hit in hits
+        )
+        names_dataset = bool(find_dataset_mentions(sentence, project.dataset_terms))
+        rank = 0 if statement and names_dataset else 1 if statement else 2 if names_dataset else None
+        if rank is not None and (best is None or rank < best[0]):
+            best = (rank, sentence[:max_chars])
+            if rank == 0:
+                break
+    return best[1] if best else ""

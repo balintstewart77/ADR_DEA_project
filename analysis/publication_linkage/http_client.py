@@ -218,6 +218,10 @@ class CachedClient:
         cached = self._read_cache(key)
         if cached is not None:
             self.stats.cached_calls += 1
+            if cached.get("rejected"):
+                # A definitive query rejection is replayed, so offline runs
+                # take the same fallback paths as the live run did.
+                raise QueryRejected(f"{self.source} {cached.get('status')}: {cached.get('body', '')[:300]}")
             return cached
         if self.offline:
             raise SourceBlocked(f"{self.source}: offline mode and no cached response")
@@ -288,6 +292,13 @@ class CachedClient:
             self.stats.errors += 1
             message = config.redact(response.text[:300])
             if _looks_like_query_error(response) or response.status_code in (400, 422):
+                self._write_cache(key, {
+                    "request": {"method": method, "url": url, "params": self._public_params(params), "json": json_body},
+                    "status": response.status_code,
+                    "rejected": True,
+                    "fetched_at": _now(),
+                    "body": response.text[:2000],
+                })
                 raise QueryRejected(f"{self.source} {response.status_code}: {message}")
             raise RuntimeError(f"{self.source} HTTP {response.status_code}: {message}")
         record = {

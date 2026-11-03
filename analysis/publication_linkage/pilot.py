@@ -15,9 +15,11 @@ later draws (validation recall sheet) can exclude it.
 from __future__ import annotations
 
 import argparse
+import json
 import math
 import time
-from datetime import date
+from collections import defaultdict
+from datetime import date, datetime, timezone
 
 import numpy as np
 import pandas as pd
@@ -99,6 +101,55 @@ def draw_pilot_sample(frame: pd.DataFrame, cutoff: date, n: int = PILOT_SIZE, se
     return sample
 
 
+def summarise_call_log(started_at: str, finished_at: str, call_log=None) -> dict:
+    """Per-source live-call summary from ``call_log.jsonl`` in a UTC window."""
+    path = call_log or (config.CACHE_DIR / "call_log.jsonl")
+    summary: dict = defaultdict(lambda: {
+        "live_calls": 0, "http_errors": 0, "blocked": False, "cost_usd": 0.0, "seconds_live": 0.0,
+        "first_ts": None, "last_ts": None,
+    })
+    if not path.exists():
+        return {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        entry = json.loads(line)
+        if not (started_at <= entry["ts"] <= finished_at):
+            continue
+        source = summary[entry["source"]]
+        source["first_ts"] = source["first_ts"] or entry["ts"]
+        source["last_ts"] = entry["ts"]
+        if entry.get("outcome") == "blocked":
+            source["blocked"] = True
+            continue
+        if "status" in entry:
+            source["live_calls"] += 1
+            source["http_errors"] += int(int(entry["status"]) >= 400)
+            source["cost_usd"] = round(source["cost_usd"] + float(entry.get("cost_usd") or 0), 6)
+            source["seconds_live"] = round(source["seconds_live"] + float(entry.get("seconds") or 0), 1)
+    for source in summary.values():
+        first, last = source.pop("first_ts"), source.pop("last_ts")
+        source["elapsed_seconds"] = round(
+            (datetime.fromisoformat(last) - datetime.fromisoformat(first)).total_seconds(), 1
+        ) if first and last else 0.0
+    return dict(summary)
+
+
+def live_runs_record(runs: dict, enrichment_run, started_at: str, finished_at: str) -> dict:
+    log = summarise_call_log(started_at, finished_at)
+    sources = {}
+    for name, run in [*runs.items(), ("semanticscholar", enrichment_run)]:
+        sources[name] = {
+            "status": run.status,
+            "candidates": run.candidates,
+            "live_calls": log.get(name, {}).get("live_calls", run.stats.get("live_calls", 0)),
+            "cached_calls": run.stats.get("cached_calls", 0),
+            "http_errors": log.get(name, {}).get("http_errors", 0),
+            "cost_usd": log.get(name, {}).get("cost_usd", run.stats.get("cost_usd", 0.0)),
+            "seconds": run.seconds,
+            "notes": sorted(set(run.notes)),
+        }
+    return {"started_at": started_at, "finished_at": finished_at, "sources": sources}
+
+
 def wilson_text(k: int, n: int) -> str:
     if n == 0:
         return "n/a"
@@ -160,7 +211,7 @@ def full_run_estimates(all_records, snapshot_date: date, pilot_runs: dict, pilot
     return pd.DataFrame(rows)
 
 
-def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings) -> None:
+def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings, live=None) -> None:
     n = len(summary)
     t12 = int(summary["has_output_t1_t2"].sum())
     any_tier = int(summary["has_output_any_tier"].sum())
@@ -168,17 +219,24 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
     t3_only = int((summary["has_tier3"] & ~summary["has_output_t1_t2"]).sum())
     tier_values = pd.to_numeric(links["final_tier"], errors="coerce") if len(links) else pd.Series(dtype=float)
     status_rows = []
-    for name, run in [*runs.items(), ("semanticscholar", enrichment_run)]:
-        status_rows.append({
-            "source": name, "status": run.status, "candidates": run.candidates,
-            "live_calls": run.stats.get("live_calls", 0), "cached_calls": run.stats.get("cached_calls", 0),
-            "errors": run.stats.get("errors", 0), "cost_usd": run.stats.get("cost_usd", 0.0),
-            "seconds": run.seconds or run.stats.get("seconds_live", 0),
-        })
     notes = []
-    for name, run in [*runs.items(), ("semanticscholar", enrichment_run)]:
-        for note in sorted(set(run.notes)):
-            notes.append(f"- **{name}**: {note}")
+    if live:
+        for name, record in live["sources"].items():
+            status_rows.append({
+                "source": name, "status": record["status"], "candidates": record["candidates"],
+                "live_calls": record["live_calls"], "http_errors": record["http_errors"],
+                "cost_usd": record["cost_usd"], "seconds": record["seconds"],
+            })
+            notes.extend(f"- **{name}**: {note}" for note in record["notes"])
+    else:
+        for name, run in [*runs.items(), ("semanticscholar", enrichment_run)]:
+            status_rows.append({
+                "source": name, "status": run.status, "candidates": run.candidates,
+                "live_calls": run.stats.get("live_calls", 0), "http_errors": run.stats.get("errors", 0),
+                "cost_usd": run.stats.get("cost_usd", 0.0), "seconds": run.seconds,
+            })
+            notes.extend(f"- **{name}**: {note}" for note in sorted(set(run.notes)))
+    live_sources = live["sources"] if live else {n: {"status": r.status} for n, r in [*runs.items(), ("semanticscholar", enrichment_run)]}
     by_year = summary.groupby("accreditation_year").agg(projects=("Record ID", "count"), with_t1_t2=("has_output_t1_t2", "sum"), with_any_tier=("has_output_any_tier", "sum")).reset_index()
     by_sector = summary.groupby("sector_group").agg(projects=("Record ID", "count"), with_t1_t2=("has_output_t1_t2", "sum"), with_any_tier=("has_output_any_tier", "sum")).reset_index()
     pairs_by_tier = pd.DataFrame({
@@ -193,10 +251,8 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         if len(links) else pd.DataFrame()
     )
     lags = summary["lag_months_t1_t2"].dropna()
-    blocked = [name for name, run in runs.items() if run.status == "blocked"]
-    if enrichment_run.status == "blocked":
-        blocked.append("semanticscholar")
-    ran = [name for name, run in runs.items() if run.status in {"ok", "budget_stopped"}]
+    blocked = [name for name, record in live_sources.items() if record["status"] == "blocked"]
+    ran = [name for name, record in live_sources.items() if record["status"] in {"ok", "budget_stopped"}]
 
     lines = [
         f"# Publication linkage: feasibility pilot ({timings['run_date']})",
@@ -223,6 +279,9 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         "",
         markdown_table(sample.groupby(["accreditation_year", "sector_group"]).size().unstack(fill_value=0).reset_index()),
         "## Source runs",
+        "",
+        (f"Live run {live['started_at']} to {live['finished_at']} (UTC); calls and errors from the call log."
+         f" Tables were rebuilt from the cache on {timings['run_date']} without further calls." if live else ""),
         "",
         markdown_table(pd.DataFrame(status_rows)),
         *notes,
@@ -285,9 +344,14 @@ def main(argv=None) -> None:
     parser.add_argument("--sources", default=",".join(ALL_SOURCES))
     parser.add_argument("--offline", action="store_true", help="use cached responses only")
     parser.add_argument("--no-enrich", action="store_true")
+    parser.add_argument(
+        "--record-live-window", nargs=2, metavar=("START", "END"),
+        help="with --offline: record the live-run window (UTC ISO timestamps) from the call log",
+    )
     args = parser.parse_args(argv)
 
     started = time.monotonic()
+    started_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     out_dir = config.OUTPUT_ROOT / args.run_date / "pilot"
     df, meta = load_register()
     records = build_project_records(df)
@@ -339,8 +403,26 @@ def main(argv=None) -> None:
         if extras.get(name):
             tables[frame_extra] = pd.DataFrame(extras[name])
     write_tables(out_dir, tables)
+    live_path = out_dir / "live_source_runs.json"
+    if not args.offline:
+        live = live_runs_record(runs, enrichment_run, started_at, datetime.now(timezone.utc).isoformat(timespec="seconds"))
+        live_path.write_text(json.dumps(live, indent=2) + "\n", encoding="utf-8")
+    elif args.record_live_window:
+        # Reconstruct the record of an earlier live run from the call log.
+        live = live_runs_record(runs, enrichment_run, *args.record_live_window)
+        log = summarise_call_log(*args.record_live_window)
+        for name, record in live["sources"].items():
+            record["notes"] = [n for n in record["notes"] if "offline mode" not in n]
+            record["seconds"] = log.get(name, {}).get("elapsed_seconds", record["seconds"])
+            if log.get(name, {}).get("blocked"):
+                record["status"] = "blocked"
+                record["notes"].append("network policy refused host (proxy 403)")
+        live["reconstructed_from_call_log"] = True
+        live_path.write_text(json.dumps(live, indent=2) + "\n", encoding="utf-8")
+    else:
+        live = json.loads(live_path.read_text(encoding="utf-8")) if live_path.exists() else None
     timings = {"run_date": args.run_date, "mature_cutoff": cutoff.isoformat(), "seconds": round(time.monotonic() - started, 1)}
-    write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings)
+    write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings, live)
     write_manifest(out_dir, {
         "kind": "publication_linkage_pilot",
         "run_date": args.run_date,
@@ -357,6 +439,7 @@ def main(argv=None) -> None:
         "adjudication": adjudication_counts,
         "seconds": timings["seconds"],
         "offline": args.offline,
+        "live_run": {k: live[k] for k in ("started_at", "finished_at")} if live else None,
     })
     print(f"[pilot] wrote {out_dir} in {timings['seconds']}s")
 

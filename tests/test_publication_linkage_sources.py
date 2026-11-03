@@ -184,3 +184,14 @@ def test_two_stage_allocation_keeps_every_year():
     allocation = allocate_two_stage(pd.DataFrame(rows), 10)
     assert allocation.sum() == 10
     assert allocation["2019 | academic"] >= 1
+
+
+def test_query_rejections_are_cached_and_replayed(tmp_path):
+    body = {"message": "Illegal arguments in query request: fullText is not a searchable field"}
+    session = FakeSession([response(500, body)])
+    client = CachedClient("core", cache_dir=tmp_path, session=session, min_interval=0)
+    with pytest.raises(QueryRejected):
+        client.get_json("https://core.example/search", params={"q": "fullText:x"})
+    offline = CachedClient("core", cache_dir=tmp_path, offline=True, min_interval=0)
+    with pytest.raises(QueryRejected):
+        offline.get_json("https://core.example/search", params={"q": "fullText:x"})

@@ -157,3 +157,47 @@ def test_doi_and_title_normalisation():
     assert normalise_doi("https://doi.org/10.1093/IJE/dyab149.") == "10.1093/ije/dyab149"
     assert normalise_doi("not a doi") is None
     assert normalise_title("The Returns to <i>Undergraduate</i> Degrees: Evidence!") == "the returns to undergraduate degrees evidence"
+
+
+# --- register researchers ---------------------------------------------------------
+
+def test_register_researcher_field_pairs_names_with_institutions():
+    from analysis.publication_linkage.register_records import parse_researchers
+
+    raw = (
+        "Alisha Davies , Public Health Wales\nLaura Bentley,\nPublic Health Wales\n"
+        "Ashley Akbari, Swansea University,\nWalid Chehtane, Social Care Wales"
+    )
+    pairs = [(r.name, r.institution) for r in parse_researchers(raw)]
+    # Institutions come back canonicalised, with the approved acronym.
+    assert ("Alisha Davies", "Public Health Wales (PHW)") in pairs
+    assert ("Laura Bentley", "Public Health Wales (PHW)") in pairs
+    assert ("Ashley Akbari", "Swansea University") in pairs
+    assert len(pairs) == 4
+    assert parse_researchers(None) == []
+
+
+def test_environment_accreditation_boilerplate_is_not_a_route_statement():
+    from analysis.publication_linkage.matching import statement_hits
+
+    boilerplate = (
+        "The de-identified data used in this study were made available to accredited researchers only. "
+        "Applications to use data held within the SAIL Databank, an ISO 27001 and UK Statistics Authority (UKSA) "
+        "Digital Economy Act (DEA) accredited Trusted Research Environment, must first be approved. "
+        "We used SAIL, a Trusted Research Environment (TRE), accredited under the Digital Economy Act."
+    )
+    kept, dropped = statement_hits(boilerplate)
+    assert not [h for h in kept if h.category == "route"]
+    assert {h.key for h in dropped} >= {"accredited_researcher", "digital_economy_act"}
+    assert {h.environment for h in kept} == {"SAIL"}
+    real = "Use of the 2011 Census was approved by the Research Accreditation Panel under the Digital Economy Act."
+    kept, dropped = statement_hits(real)
+    assert {h.key for h in kept} == {"research_accreditation_panel", "digital_economy_act"} and not dropped
+
+
+def test_everyday_word_product_names_are_case_sensitive():
+    terms = build_dataset_terms({"MoJ Data First Family Court Data Extract": ["Data First", "Family Court (FACO)"]})
+    assert find_dataset_mentions("linked through Data First", terms)
+    assert not find_dataset_mentions("when the data first became available", terms)
+    assert not find_dataset_mentions("the family court process", terms)
+    assert find_dataset_mentions("the FACO extract", terms)
