@@ -178,3 +178,9 @@ analysis/outputs/model_comparison_fable_5_run2/*
 # Preserve the deterministic generator used to reproduce current cross-model evidence.
 !analysis/outputs/gpt55_crossmodel_stratum_run.py
 /analysis/ari_exploration/
+
+# --- Publication linkage: raw API caches (responses, full texts, call log and
+# OpenAlex spend ledger) stay local; adjudication batch inputs carry abstracts
+# and are regenerated from the cache, so only decisions are tracked ---
+data/publication_linkage_cache/
+analysis/outputs_publication_linkage/**/adjudication/batch_*[0-9].jsonl
