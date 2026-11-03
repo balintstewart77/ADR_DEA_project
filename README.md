@@ -137,6 +137,29 @@ python -m uv pip compile requirements-browser.txt --python-version 3.12 --python
 After changing versions, install the affected groups, run `python -m pip check`
 and the relevant tests before committing the lock.
 
+### Running the CI checks locally
+
+```bash
+python -m ruff check dashboard analysis scrape scripts tests conftest.py
+python -m pytest analysis tests -q -ra -m "not browser" --require-history
+python -m pytest tests/test_enriched_register_alignment_browser.py -q --require-browser
+```
+
+Historical provenance tests require a full Git checkout. Tests that need
+untracked private inputs report explicit skips when those inputs are absent;
+use `--require-private` to make missing inputs fail instead. Browser CI requires
+Playwright and Chromium and fails if either is unavailable. The dashboard's
+external stylesheet also requires network access for the browser checks.
+
+Tests redirect cleaning reports and generator outputs to temporary directories.
+CI checks that tracked files remain unchanged after testing. Ruff currently
+checks syntax and undefined names, with one documented exception for the
+byte-pinned historical candidate-0.3 validator.
+
+The portfolio baseline includes the provider and facet changes from the
+previously committed parser correction (`acc05ba`, `02d61fa`), including two
+additional longitudinal and three additional household classifications.
+
 ## Refreshing The Data
 
 One command runs the whole flow — fetch, compare against both the preceding

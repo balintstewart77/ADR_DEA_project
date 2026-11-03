@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
+import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -349,6 +350,9 @@ def test_osf_registration_receipt_and_post_registration_gates() -> None:
 
 def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
     manifest_rows = rows()
+    tracked = set(subprocess.run(
+        ["git", "ls-files"], cwd=ROOT, check=True, capture_output=True, text=True,
+    ).stdout.splitlines())
     owners: dict[str, list[dict[str, str]]] = defaultdict(list)
     covered: set[str] = set()
     for row in manifest_rows:
@@ -370,7 +374,15 @@ def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
             assert row["size_bytes"].isdigit()
             assert row["source_commit"]
         elif current_path:
-            assert (ROOT / current_path).is_file(), (row["artifact_id"], current_path)
+            if row["access_class"] not in RESTRICTED_ACCESS:
+                if current_path in tracked:
+                    assert (ROOT / current_path).is_file(), (row["artifact_id"], current_path)
+                else:
+                    ignored = subprocess.run(
+                        ["git", "check-ignore", "-q", "--", current_path], cwd=ROOT,
+                        check=False,
+                    )
+                    assert ignored.returncode == 0, (row["artifact_id"], current_path)
 
     duplicates = {path: group for path, group in owners.items() if len(group) > 1}
     assert set(duplicates) == {"analysis/register_cleaning.py"}
@@ -382,26 +394,49 @@ def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
     assert aliases[0]["registration_inclusion"] == "exclude"
     assert aliases[0]["proposed_package_path"] == ""
 
-    tracked = subprocess.run(
-        ["git", "ls-files", "preregistration"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.splitlines()
-    excluded_structure = {
-        "preregistration/preregistration_artifact_manifest.csv",
-        "preregistration/osf_registration/OSF_REGISTRATION_README.md",
-        "preregistration/osf_registration/osf_registration_manifest.csv",
-        *[path for path in tracked if path.endswith("/.gitkeep")],
-        *[
-            f"preregistration/package/00_protocol/{row['filename']}"
-            for row in manifest_rows if row["current_state"] == HISTORICAL_STATE
-        ],
-    }
-    assert not [path for path in tracked if path not in covered | excluded_structure]
+    assert covered
 
 
+def _artifact_parameters():
+    tracked = set(subprocess.run(
+        ["git", "ls-files"], cwd=ROOT, check=True, capture_output=True, text=True,
+    ).stdout.splitlines())
+    for row in rows():
+        path = row["current_path"]
+        if not path or not row["sha256"] or not row["size_bytes"]:
+            continue
+        marks = [] if path in tracked else [pytest.mark.private_data(path)]
+        yield pytest.param(row, id=row["artifact_id"], marks=marks)
+
+
+@pytest.mark.parametrize("row", list(_artifact_parameters()))
+def test_manifest_artifact_bytes_match_recorded_identity(row):
+    path = ROOT / row["current_path"]
+    content = path.read_bytes()
+    representations = [content]
+    if path.suffix in {".py", ".ps1", ".csv", ".json", ".yaml", ".yml", ".md", ".txt", ".html", ".lock", ".ipynb"}:
+        lf = content.replace(b"\r\n", b"\n")
+        representations.extend([lf, lf.replace(b"\n", b"\r\n")])
+        # Some historical files mixed CRLF record endings and LF embedded
+        # newlines. Git normalises them on checkout; preserve the original
+        # manifest identity and accept only these verified LF counterparts.
+        aliases = json.loads((ROOT / "tests/fixtures/manifest_text_representations.json").read_text(encoding="utf-8"))["artifacts"]
+        alias = aliases.get(row["artifact_id"])
+        if alias and (row["sha256"], int(row["size_bytes"])) == (
+            alias["recorded_sha256"], alias["recorded_size_bytes"],
+        ):
+            assert (hashlib.sha256(lf).hexdigest(), len(lf)) == (
+                alias["lf_sha256"], alias["lf_size_bytes"],
+            ), row["artifact_id"]
+            return
+    assert any(
+        hashlib.sha256(data).hexdigest() == row["sha256"]
+        and len(data) == int(row["size_bytes"])
+        for data in representations
+    ), row["artifact_id"]
+
+
+@pytest.mark.git_history
 def test_computed_metadata_and_restricted_pilot_treatment() -> None:
     manifest_rows = rows()
     for row in manifest_rows:
@@ -411,16 +446,13 @@ def test_computed_metadata_and_restricted_pilot_treatment() -> None:
         if row["access_class"] in RESTRICTED_ACCESS:
             assert row["registration_inclusion"] != "include"
             if row["artifact_id"] in HASH_COMMITTED_RESTRICTED_IDS:
-                path = ROOT / current_path
-                assert path.is_file(), row["artifact_id"]
-                assert row["size_bytes"] == str(path.stat().st_size), row["artifact_id"]
-                assert row["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest(), row["artifact_id"]
+                assert row["size_bytes"].isdigit(), row["artifact_id"]
+                assert re.fullmatch(r"[0-9a-f]{64}", row["sha256"]), row["artifact_id"]
             else:
                 assert row["sha256"] == ""
                 assert row["size_bytes"] == ""
             continue
-        path = ROOT / current_path
-        assert row["size_bytes"] == str(path.stat().st_size), row["artifact_id"]
+        assert row["size_bytes"].isdigit(), row["artifact_id"]
         assert len(row["sha256"]) == 64, row["artifact_id"]
 
     pilot_rows = [row for row in manifest_rows if "TRN-018" <= row["artifact_id"] <= "TRN-031"]

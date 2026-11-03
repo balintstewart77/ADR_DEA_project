@@ -18,6 +18,10 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  PYTHONUTF8: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -33,21 +37,29 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: |
-            requirements-dashboard.txt
-            requirements-scrape.txt
-            requirements-dev.txt
+            requirements*.txt
+            requirements.lock
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dashboard.txt -r requirements-scrape.txt -r requirements-dev.txt
+          python -m pip install -r requirements-test.txt
+          python -m pip check
+
+      - name: Check Python correctness
+        run: python -m ruff check dashboard analysis scrape scripts tests conftest.py
+
+      - name: Run test suite
+        run: python -m pytest analysis tests -q -ra -m "not browser" --require-history
+
+      - name: Verify tests leave tracked files unchanged
+        run: git diff --exit-code
 
       - name: Run refresh pipeline
         id: refresh
         run: python -m analysis.refresh_pipeline
 
-      - name: Run test suite
-        run: python -m pytest analysis -q
+      - name: Check refreshed analysis
+        run: python -m pytest analysis -q -ra --require-history
 
       - name: Read immutable snapshot identity for the PR title
         id: version

@@ -9,6 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import pytest
+
 from analysis.visualisations.extract_scratch_coder_paper import ROOT, status_parts
 from analysis.visualisations.render_scratch_coder_paper import display_value
 
@@ -33,6 +35,7 @@ class StatusPresentationTests(unittest.TestCase):
         self.assertEqual(display_value(self.row(estimate="0", interval_status="N", lower="", upper="")), "0.000")
 
 
+@pytest.mark.git_history
 class IsolatedWorkflowTests(unittest.TestCase):
     def test_stage1_and_stage2_complete_from_copied_extractions(self):
         with tempfile.TemporaryDirectory(prefix="scratch_coder_paper_test_") as temp:

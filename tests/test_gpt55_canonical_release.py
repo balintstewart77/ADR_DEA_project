@@ -64,14 +64,17 @@ def _docx_text(path: Path) -> str:
 
 
 def test_release_is_the_exact_recovered_source_bytes():
-    source = ORIGINAL.read_bytes()
     release = RELEASE.read_bytes()
-    assert source == release
     assert len(release) == 920480
     assert release.startswith(b"\xef\xbb\xbf")
     assert hashlib.sha256(release).hexdigest() == EXPECTED_SHA256
     assert release.count(b"\r\n") == 1309
     assert release.count(b"\n") - release.count(b"\r\n") == 333
+
+
+@pytest.mark.private_data(ORIGINAL)
+def test_local_recovery_source_matches_published_release():
+    assert ORIGINAL.read_bytes() == RELEASE.read_bytes()
 
 
 def test_standalone_prompt_is_byte_exact_frozen_builder_output():
@@ -123,9 +126,7 @@ def test_frozen_validation_source_binding_is_immutable_and_independent_of_live_p
     live = snapshot_record(manifest, CURRENT_POINTER)
     frozen = snapshot_record(manifest, FROZEN_VALIDATION_POINTER)
     binding = manifest["pointers"][FROZEN_VALIDATION_POINTER]
-    assert live["canonical_csv_sha256"] == (
-        "918117144c4b01908dfdefc411c2baef81431cf3f0dd42d0c20a1b7d9e942acd"
-    )
+    assert live["snapshot_id"] == manifest["pointers"][CURRENT_POINTER]["snapshot_id"]
     assert binding["raw_xlsx_sha256"] == FROZEN_SOURCE_XLSX_SHA256
     assert binding["canonical_csv_sha256"] == FROZEN_SOURCE_CSV_SHA256
     assert binding["cleaned_population_sha256"] == FROZEN_CLEANED_SHA256

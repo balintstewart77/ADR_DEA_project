@@ -6,6 +6,7 @@ import html
 import inspect
 import json
 import re
+import shutil
 import zipfile
 from collections import Counter
 from pathlib import Path
@@ -1068,17 +1069,44 @@ def test_project_review_preserves_existing_names_and_types_with_documented_chang
 def test_deterministic_build_includes_approval_and_concordance_records(
     monkeypatch, tmp_path
 ):
+    source_root = builder.ROOT
+    for relative in builder.C03_HASHES:
+        destination = tmp_path / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / relative, destination)
+    for name, source in list(vars(builder).items()):
+        if not isinstance(source, Path) or not source.is_relative_to(source_root):
+            continue
+        destination = tmp_path / source.relative_to(source_root)
+        if source.is_file():
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if source.suffix in {".csv", ".yaml", ".md", ".py", ".json", ".html"}:
+                destination.write_bytes(source.read_bytes().replace(b"\r\n", b"\n"))
+            else:
+                shutil.copy2(source, destination)
+        else:
+            destination.mkdir(parents=True, exist_ok=True)
+        monkeypatch.setattr(builder, name, destination)
+    monkeypatch.setattr(builder, "_PRESERVED_TEXT_NEWLINES", {})
+    for name in (
+        "VERSION", "STATUS", "PARTICIPANT_INFO_VERSION", "CONSENT_FORM_VERSION",
+        "DICTIONARY", "SPEC", "LIVE_CONFIG", "IMPORT_FIXTURE", "FIELD_SPEC",
+        "BRANCH_SPEC", "EXPORT_SPEC", "FORMATTING_AUDIT",
+    ):
+        monkeypatch.setattr(builder.base, name, getattr(builder.base, name))
     outputs = (
         builder.DICTIONARY,
         builder.SPEC,
         builder.LIVE_CONFIG,
         builder.IMPORT_FIXTURE,
+        builder.QA_IMPORT_FIXTURE,
         builder.FIELD_SPEC,
         builder.BRANCH_SPEC,
         builder.EXPORT_SPEC,
         builder.FORMATTING_AUDIT,
         builder.MISSING_DOMAIN_REVIEW,
         builder.DOMAIN_CONCORDANCE,
+        builder.TAG_AND_QUOTATION_AUDIT,
     )
     before = {path: path.read_bytes() for path in outputs}
     captured = {}
@@ -1123,7 +1151,15 @@ def test_deterministic_build_includes_approval_and_concordance_records(
     assert unsigned_path.read_bytes() == first == builder._generated_text_bytes(expected_text)
 
 
-def test_participant_document_updater_is_idempotent():
+def test_participant_document_updater_is_idempotent(monkeypatch, tmp_path):
+    for name in ("CONSENT", "QUESTIONNAIRE"):
+        source = getattr(updater, name)
+        destination = tmp_path / source.relative_to(updater.ROOT)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+        monkeypatch.setattr(updater, name, destination)
+    monkeypatch.setattr(updater, "ROOT", tmp_path)
+    monkeypatch.setattr(updater, "MATERIALS", updater.CONSENT.parent)
     before = {path: path.read_bytes() for path in (updater.CONSENT, updater.QUESTIONNAIRE)}
     assert updater.main() == 0
     assert {path: path.read_bytes() for path in before} == before

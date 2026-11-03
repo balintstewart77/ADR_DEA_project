@@ -1,0 +1,65 @@
+{
+  "note": "Narrow aliases verified against the recorded raw bytes on 2026-11-03. Only CRLF-to-LF replacement was applied; mixed CSV field newlines remain part of the original identity. Frozen manifest hashes are retained.",
+  "artifacts": {
+    "SRC-005": {
+      "recorded_sha256": "297108affcdc2711a26d359c6a9495f1c48223cd4c093cfcb65bcf04f7f79740",
+      "recorded_size_bytes": 148365,
+      "lf_sha256": "3ee89da03ec8efefd1809a8e2d027f70b6a92920a656b0afa2c04127bbce8fd0",
+      "lf_size_bytes": 146509
+    },
+    "SRC-008": {
+      "recorded_sha256": "816c8f5d4e30a3d047e1e3212dabb1885b5d433591b233fab0bc114f306463d1",
+      "recorded_size_bytes": 8054,
+      "lf_sha256": "c4c675c7b19750e3f649013a36f319695122e3009eabbe885d657132323b97a2",
+      "lf_size_bytes": 7921
+    },
+    "SRC-012": {
+      "recorded_sha256": "ef71a41d445ab8fcc1c8b2540c687b4f0c656525a7c8403a42c751329033c916",
+      "recorded_size_bytes": 636202,
+      "lf_sha256": "56d148ea3e17cb8fdbe21fb6b70636dbf91c2642e9282e51c85932dd6ade5aac",
+      "lf_size_bytes": 634788
+    },
+    "SRC-013": {
+      "recorded_sha256": "ba37ad6883c8b1d07edac84aede8772f82c8b0acad99ac043d9b38644322747c",
+      "recorded_size_bytes": 519893,
+      "lf_sha256": "ce3eab8a0eb5bd560187f8fb0aee01c38611cecce23f843e064c46d5abe84040",
+      "lf_size_bytes": 518739
+    },
+    "MOD-004": {
+      "recorded_sha256": "51adce65e808290dc7750a15f334fdcb7794f6d426d4aa7dc3edd9e98f460eac",
+      "recorded_size_bytes": 48169,
+      "lf_sha256": "97acd1e93debe14880f5f10a458d2372040cee870efd09d92ab911384bf31c65",
+      "lf_size_bytes": 46967
+    },
+    "MOD-006": {
+      "recorded_sha256": "6f4ff530a3620167c37dc0ddee927ac592ca4ea2410c663535674503f811e299",
+      "recorded_size_bytes": 1252471,
+      "lf_sha256": "9827fc9f01b9e1f3e9b58fe8f41b59eb5a569c77aacb77d5140628ec04f5eeab",
+      "lf_size_bytes": 1251162
+    },
+    "EVD-017": {
+      "recorded_sha256": "440d8a06d5b65d201918c13d952ec4c9b0bd1b1efee5ccc4ea68670828cad324",
+      "recorded_size_bytes": 50776,
+      "lf_sha256": "bda7e0f2bcca6d900c0a049b1aed5064a97dde6966f34b3a26853621b80f0bca",
+      "lf_size_bytes": 50625
+    },
+    "RED-038": {
+      "recorded_sha256": "8df3f5791e1a205f5866e2ff79c0489862debd48ecef2713f005f8d4a24b8111",
+      "recorded_size_bytes": 13870,
+      "lf_sha256": "28411781ac8d122f6ced60f78fe2060984a5fa789448f0c45f249a98d93f520c",
+      "lf_size_bytes": 13755
+    },
+    "RED-049": {
+      "recorded_sha256": "32a28dc5256daf814e1f1ac646aa874e44e5a71d1619f0f2e14a0e5c0dd9df19",
+      "recorded_size_bytes": 20231,
+      "lf_sha256": "59f1d2b46005a01eaa28461c98218d2f1ddec303825d0a6f2104aafc6842f28e",
+      "lf_size_bytes": 20010
+    },
+    "ANA-003": {
+      "recorded_sha256": "c0214fb18d9390df599e59082841150e53ff29bbfe22f778a44fbab3c0783fde",
+      "recorded_size_bytes": 178,
+      "lf_sha256": "9e80ea09552c6d99d1e84d784dc63a594e5c8aab41ea37af25730b157a6cc22e",
+      "lf_size_bytes": 175
+    }
+  }
+}

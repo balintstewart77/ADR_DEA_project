@@ -36,6 +36,10 @@ from scripts.validate_redcap_candidate import validate_scratch
 
 
 RAW_SHA = "29809349496bae050b66c158a595f235431b7457982990b8c4c29cf2abd0ee1d"
+requires_stage_a = pytest.mark.private_data(
+    "manifest:POST-028", "manifest:POST-009", "manifest:POST-011",
+    "manifest:POST-019", "manifest:POST-022",
+)
 
 
 @pytest.fixture(scope="module")
@@ -43,6 +47,7 @@ def stage_data():
     return build_stage_a_data()
 
 
+@requires_stage_a
 def test_frozen_raw_export_is_hash_pinned_unchanged_and_ignored():
     assert hashlib.sha256(RAW_EXPORT.read_bytes()).hexdigest() == RAW_SHA
     row = resolve_manifest_row("POST-028")
@@ -54,6 +59,7 @@ def test_frozen_raw_export_is_hash_pinned_unchanged_and_ignored():
     assert result.returncode == 0
 
 
+@requires_stage_a
 def test_formal_panel_and_strata_reconcile(stage_data):
     assert len(stage_data.responses) == 675
     assert len(stage_data.formal_ids) == 225
@@ -63,11 +69,13 @@ def test_formal_panel_and_strata_reconcile(stage_data):
     assert len(counts) == 675 and (counts == 1).all()
 
 
+@requires_stage_a
 def test_candidate_07_structural_validation_passes_without_repair(stage_data):
     assert stage_data.structural_invalid_response_count == 0
     assert stage_data.structural_invalid_ids == frozenset()
 
 
+@requires_stage_a
 def test_zero_is_substantive_and_checkbox_applicability_uses_parent(stage_data):
     assert set(stage_data.responses["exposure"]) == {0, 1}
     assert set(stage_data.responses["equity"]) <= {0, 1}
@@ -142,6 +150,7 @@ def test_type7_percentile_and_undefined_alpha_are_explicit():
     assert undefined.undefined_reason == "expected_disagreement_zero"
 
 
+@requires_stage_a
 def test_sufficiency_majority_subsets_and_wilson(stage_data):
     assert majority_category((1, 1, 2), SUFFICIENCY_LABELS) == "Sufficient"
     assert majority_category((1, 2, 3), SUFFICIENCY_LABELS) == SPLIT
@@ -151,6 +160,7 @@ def test_sufficiency_majority_subsets_and_wilson(stage_data):
     assert interval.lower < 0.5 < interval.upper
 
 
+@requires_stage_a
 def test_cannot_assess_and_multilabel_issue_denominators_remain_separate(stage_data):
     taxonomy = summarise_taxonomy_fit(stage_data)
     assert any(row["category"] == "Cannot assess from register entry" for row in taxonomy["responses"])
@@ -158,6 +168,7 @@ def test_cannot_assess_and_multilabel_issue_denominators_remain_separate(stage_d
     assert all(row["note"] == "Percentages may sum to more than 100%." for row in taxonomy["issues"])
 
 
+@requires_stage_a
 def test_all_four_dimensions_have_complete_baseline_panels(stage_data):
     for dimension in ("Research Domains", "Analytical Purposes", "Demographic disparities / equity", "COVID-19 & Pandemic"):
         panels = dimension_panels(stage_data, stage_data.baseline_ids, dimension)
@@ -165,6 +176,7 @@ def test_all_four_dimensions_have_complete_baseline_panels(stage_data):
         assert len(result.common_record_ids) == 150
 
 
+@requires_stage_a
 def test_trackable_outputs_are_aggregate_masked_and_not_stage_b(stage_data):
     assert OUTPUT_DIR.is_dir()
     prohibited_names = {"disagreement_records.csv", "adjudication_population.csv", "model_errors.csv", "majority_vs_model.csv"}
