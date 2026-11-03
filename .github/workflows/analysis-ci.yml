@@ -28,6 +28,10 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONUTF8: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -43,14 +47,40 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: |
-            requirements-dashboard.txt
-            requirements-scrape.txt
-            requirements-dev.txt
+            requirements*.txt
+            requirements.lock
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dashboard.txt -r requirements-scrape.txt -r requirements-dev.txt
+          python -m pip install -r requirements-test.txt
+          python -m pip check
+
+      - name: Check Python correctness
+        run: python -m ruff check dashboard analysis scrape scripts tests conftest.py
 
       - name: Run test suite
-        run: python -m pytest analysis -q
+        run: python -m pytest analysis tests -q -ra -m "not browser" --require-history
+
+      - name: Verify tests leave tracked files unchanged
+        run: git diff --exit-code
+
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            requirements.lock
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install -r requirements-browser.txt
+          python -m pip check
+          python -m playwright install --with-deps chromium
+      - name: Run browser tests
+        run: python -m pytest tests/test_enriched_register_alignment_browser.py -q --require-browser
+      - name: Verify browser tests leave tracked files unchanged
+        run: git diff --exit-code

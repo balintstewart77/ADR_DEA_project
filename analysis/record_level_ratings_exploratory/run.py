@@ -99,11 +99,6 @@ def analysis_1_patterns(ratings: dict[str, tuple[str, str, str]], labels: dict[i
     pattern_counter = Counter(ratings.values())
     pattern_rows = []
     for pattern, count in sorted(pattern_counter.items(), key=lambda x: (-x[1], x[0])):
-        maj = majority_category(
-            tuple(code for code, lab in labels.items() if lab == cat for cat in [pattern[i]] for _ in [None])[0]
-            if False else _majority_from_labels(pattern, labels),
-            labels,
-        )
         pattern_rows.append({
             "C01": pattern[0], "C02": pattern[1], "C03": pattern[2],
             "count": count, "percentage": round(100 * count / n_expected, 2),

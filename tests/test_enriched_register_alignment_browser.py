@@ -6,11 +6,12 @@ rows drift apart, collapsed or with a rationale expanded. It needs Playwright
 and its Chromium build, and is skipped where they are not installed.
 """
 
+import importlib
 import threading
 
 import pytest
 
-sync_api = pytest.importorskip("playwright.sync_api")
+pytestmark = pytest.mark.browser
 
 from werkzeug.serving import make_server
 
@@ -42,11 +43,19 @@ def dashboard_url():
 
 
 @pytest.fixture(scope="module")
-def browser():
+def browser(pytestconfig):
+    try:
+        sync_api = importlib.import_module("playwright.sync_api")
+    except ImportError:
+        if pytestconfig.getoption("--require-browser"):
+            pytest.fail("Browser CI requires Playwright")
+        pytest.skip("Playwright is not installed")
     with sync_api.sync_playwright() as playwright:
         try:
             chromium = playwright.chromium.launch()
         except sync_api.Error as exc:
+            if pytestconfig.getoption("--require-browser"):
+                pytest.fail(f"Browser CI requires Chromium: {exc}")
             pytest.skip(f"Playwright Chromium unavailable: {exc}")
         yield chromium
         chromium.close()

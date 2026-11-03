@@ -6,6 +6,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
+from . import preflight, supplement
 from .audit_applicability import content_sha256, validate as validate_audit_applicability
 from .generate import historical_housekeeping
 from .preflight import Fatal, ROOT, Sources, TAGS
@@ -13,11 +16,16 @@ from .report import Report, esc, unresolved_explanation_rollup
 from .supplement import WilsonSupplement
 
 
+@pytest.mark.git_history
 class CollationChecks(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.sources = Sources({})
-        cls.sources.load()
+    @pytest.fixture(autouse=True)
+    def frozen_sources(self, git_snapshot, monkeypatch):
+        snapshot = git_snapshot("9bcf38b")
+        monkeypatch.setattr(preflight, "ROOT", snapshot)
+        monkeypatch.setattr(supplement, "ROOT", snapshot)
+        monkeypatch.setitem(globals(), "ROOT", snapshot)
+        self.sources = Sources({})
+        self.sources.load()
 
     def fresh(self):
         return copy.deepcopy(self.sources)

@@ -1354,9 +1354,7 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
         ),
         "participant_document_sha256": PARTICIPANT_SOURCE_SHA256,
         "participant_document_size_bytes": PARTICIPANT_SOURCE_SIZE,
-        "inline_participant_information_source": str(
-            INLINE_PARTICIPANT_INFO_SOURCE.relative_to(ROOT)
-        ),
+        "inline_participant_information_source": INLINE_PARTICIPANT_INFO_SOURCE.relative_to(ROOT).as_posix(),
         "inline_participant_information_sha256": INLINE_PARTICIPANT_INFO_SHA256,
         "inline_participant_information_field": "participant_info_link",
         "intended_recipient_gate": "[intended_recipient] = '1'",

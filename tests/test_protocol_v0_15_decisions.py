@@ -96,7 +96,7 @@ def test_sam_003_manifest_row_is_column_aligned():
         "preregistration/package/04_exclusions_and_sampling/official_sampling_runbook.md"
     )
     assert row["proposed_package_path"] == row["current_path"]
-    assert row["description"] == "Controlled one-page runbook for the future Gate 2 official draw"
+    assert row["description"] == "Controlled runbook and administrative record for the Gate 2 official draw"
     assert row["version"] == "runbook-1.0-rc1"
     assert row["current_state"] == "existing"
     assert row["status_at_registration"] == "draft_template"
@@ -104,7 +104,9 @@ def test_sam_003_manifest_row_is_column_aligned():
     assert row["access_class"] == "public"
     assert row["registration_inclusion"] == "include"
     assert row["authoritative_status"] == "supporting_current_candidate"
-    assert row["supersedes_or_superseded_by"] == "SAM-001"
+    assert set(row["supersedes_or_superseded_by"].split("; ")) == {
+        "SAM-001", "POST-008", "POST-016", "POST-017", "POST-023",
+    }
 
 
 def test_manifest_retains_v0_15_and_v0_17_as_superseded_predecessors():

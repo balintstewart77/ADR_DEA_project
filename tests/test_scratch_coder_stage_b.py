@@ -5,15 +5,20 @@ from math import ceil
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from analysis.scratch_coder_stage_b.agreement import exact_jaccard
 from analysis.scratch_coder_stage_b.bootstrap import interval, samples
-from analysis.scratch_coder_stage_b.config import LF_MOD, OUT, RAW_MOD, SEED
+from analysis.scratch_coder_stage_b.config import LF_MOD, OUT, RAW_MOD, SEED, RAW, OVERRIDE
 from analysis.scratch_coder_stage_b.metrics import ac1, contingency, jac, kappa, prf, tagstats
 from analysis.scratch_coder_stage_b.performance import support_contingencies
 from analysis.scratch_coder_stage_b.support import authorities, band, build_stage_b_data
 
 
+requires_stage_b = pytest.mark.private_data(RAW, *OVERRIDE.values())
+
+
+@requires_stage_b
 def test_known_mod006_raw_vs_lf_representation_is_narrowly_accepted():
     model = next(x for x in authorities() if x.manifest_id == "MOD-006")
     assert model.expected_sha256 == RAW_MOD
@@ -21,6 +26,7 @@ def test_known_mod006_raw_vs_lf_representation_is_narrowly_accepted():
     assert model.matched
 
 
+@requires_stage_b
 def test_frozen_panel_reuses_stage_a_parsing_and_reconciles():
     data = build_stage_b_data()
     assert (len(data.responses), len(data.formal_ids), len(data.baseline_ids), len(data.hard_case_ids)) == (675, 225, 150, 75)
@@ -28,6 +34,7 @@ def test_frozen_panel_reuses_stage_a_parsing_and_reconciles():
     assert data.structural_invalid_response_count == 0 and data.exposure_response_count == 1
 
 
+@requires_stage_b
 def test_majority_support_bands_and_hard_cases_not_used():
     assert [band(x) for x in (0, 9, 10, 29, 30)] == ["RARE", "RARE", "LOW SUPPORT", "LOW SUPPORT", "STANDARD"]
     data = build_stage_b_data(); _, _, supports = support_contingencies(data)
@@ -61,6 +68,7 @@ def test_bootstrap_is_record_joint_deterministic_and_type7_threshold():
     assert ceil(.9 * 2000) == 1800
 
 
+@requires_stage_b
 def test_outputs_are_aggregate_masked_and_rare_labels_not_performance_rows():
     data = build_stage_b_data(); support = pd.read_csv(OUT / "label_support.csv"); perf = pd.read_csv(OUT / "per_label_model_performance.csv")
     rare = support[(support.dimension != "Cross-cutting tag") & (support.support_band == "RARE")].label

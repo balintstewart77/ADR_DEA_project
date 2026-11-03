@@ -52,6 +52,8 @@ def _normalise(value):
     if isinstance(value, (pd.Timestamp, pd.Period)):
         return str(value)
     if isinstance(value, np.ndarray):
+        if value.dtype.kind == "M":
+            value = value.astype("datetime64[us]")
         return [_normalise(item) for item in value.tolist()]
     if isinstance(value, (list, tuple)):
         return [_normalise(item) for item in value]

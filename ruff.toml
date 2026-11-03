@@ -1,0 +1,11 @@
+target-version = "py312"
+include = ["*.py"]
+extend-exclude = ["venv", "analysis/audits"]
+
+[lint]
+select = ["E9", "F821", "F822", "F823"]
+
+[lint.per-file-ignores]
+# Historical candidate 0.3 is byte-pinned by the candidate 0.4 builder's
+# C03_HASHES. Preserve its dormant undefined-name branch as frozen evidence.
+"scripts/validate_project_owner_redcap_candidate_0_3.py" = ["F821"]

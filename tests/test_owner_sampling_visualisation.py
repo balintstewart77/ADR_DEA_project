@@ -108,6 +108,7 @@ def test_registered_tie_break_is_deterministic_at_both_levels():
     assert "conservative_identity_key_asc" in result[2].tie_break_applied
 
 
+@pytest.mark.private_data("preregistration_restricted/owner_candidate_frame_8a/owner_candidate_frame_restricted.csv", "preregistration_restricted/owner_candidate_frame_8a/owner_recruitment_table.csv")
 def test_pure_curves_reconcile_all_25_expected_values_without_contactability():
     inputs = load_authoritative_inputs()
     assert len(inputs.portfolios) == 2353
@@ -136,6 +137,7 @@ def test_pure_curves_reconcile_all_25_expected_values_without_contactability():
     assert greedy[-1].cumulative_unique_projects == 203
 
 
+@pytest.mark.private_data("preregistration_restricted/owner_candidate_frame_8a/owner_candidate_frame_restricted.csv", "preregistration_restricted/owner_candidate_frame_8a/owner_recruitment_table.csv")
 def test_generated_algorithm_data_has_common_selection_semantics_and_denominator():
     inputs = load_authoritative_inputs()
     greedy = greedy_marginal_coverage(
@@ -184,6 +186,7 @@ def test_generated_algorithm_data_has_common_selection_semantics_and_denominator
     )
 
 
+@pytest.mark.private_data("preregistration_restricted/owner_candidate_frame_8a/owner_candidate_frame_restricted.csv", "preregistration_restricted/owner_candidate_frame_8a/owner_recruitment_table.csv")
 def test_public_outputs_are_anonymous_and_structurally_restricted():
     assert FIGURE_DATA_PATH.is_file()
     assert METADATA_PATH.is_file()

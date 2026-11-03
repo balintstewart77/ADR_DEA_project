@@ -3,6 +3,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+import pytest
+
 
 PATH = Path("preregistration/package/07_analysis/run_validation_analysis.py")
 SPEC = spec_from_file_location("run_validation_analysis", PATH)
@@ -12,7 +14,13 @@ sys.modules[SPEC.name] = runner
 SPEC.loader.exec_module(runner)
 
 
-def test_static_check_validates_v0_15_frozen_instrument_and_closed_gate():
+@pytest.mark.git_history
+def test_historical_static_check_validates_v0_15_and_closed_gate(git_snapshot, monkeypatch):
+    source_root = runner.ROOT
+    snapshot = git_snapshot("6337c3e")
+    for name, path in list(vars(runner).items()):
+        if isinstance(path, Path) and path.is_relative_to(source_root):
+            monkeypatch.setattr(runner, name, snapshot / path.relative_to(source_root))
     result = runner.static_check()
     assert result["protocol_version"] == "v0.15"
     assert result["instrument_version"] == "redcap-candidate-0.7"
@@ -27,8 +35,8 @@ def test_check_cli_is_read_only_and_run_is_explicitly_not_implemented():
         [sys.executable, "-B", str(PATH), "--check"],
         check=False, capture_output=True, text=True,
     )
-    assert checked.returncode == 0, checked.stderr
-    assert "gate_open: false" in checked.stdout
+    assert checked.returncode == 1
+    assert "v0.15 must remain a review_candidate" in checked.stderr
     refused = subprocess.run(
         [sys.executable, "-B", str(PATH), "--run"],
         check=False, capture_output=True, text=True,
