@@ -1,7 +1,8 @@
 """The displayed model string must come from the live release's run metadata.
 
 Incident guard (hygiene audit P2/P3): the About and Thematic pages once said
-claude-opus-4-8 while the release pointer targeted the Fable 5 run. The
+claude-opus-4-8 while the release pointer targeted the Fable 5 run, and the
+Thematic tab's caveat banner later still said "Claude Opus". The
 displayed model is now sourced from <classification_dir>/run_metadata.json via
 dashboard.config.RELEASE_MODEL, with a visible placeholder when the metadata is
 missing — it can match the live run or say it is unknown, never drift.
@@ -38,11 +39,19 @@ class ReleaseModelStringTest(unittest.TestCase):
             elif hasattr(node, "children"):
                 yield from component_strings(node.children)
 
-        about_text = " ".join(component_strings(build_about_tab()))
-        self.assertIn(RELEASE_MODEL, about_text)
-        self.assertNotIn("claude-opus-4-8", about_text)
-        self.assertIn(RELEASE_MODEL, thematic._thematic_methodology_md)
-        self.assertNotIn("claude-opus-4-8", thematic._thematic_methodology_md)
+        pages = {
+            "About": " ".join(component_strings(build_about_tab())),
+            "Thematic tab": " ".join(component_strings(thematic.build_thematic_tab())),
+            "Thematic methodology": thematic._thematic_methodology_md,
+        }
+        for page, text in pages.items():
+            with self.subTest(page=page):
+                self.assertIn(RELEASE_MODEL, text)
+                # The thematic banner once said "Claude Opus" for the Fable 5
+                # run: no page may name a model family the live run did not use.
+                for family in ("opus", "sonnet", "haiku", "fable"):
+                    if family not in RELEASE_MODEL.lower():
+                        self.assertNotIn(family, text.lower())
 
     def test_fallback_when_metadata_missing_or_unreadable(self):
         self.assertEqual(

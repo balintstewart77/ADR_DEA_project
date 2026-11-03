@@ -901,8 +901,10 @@ def build_thematic_tab():
                 "are controlled-vocabulary lookups: exact and reproducible. ",
                 html.Strong("LLM classifications"),
                 " (substantive domain, analytical purpose, and cross-cutting tags) are inferred by "
-                "Claude Opus from project titles and dataset names only. They are indicative rather "
-                "than definitive, pending validation, and ambiguous or terse titles may be misclassified.",
+                # The model recorded in the live run's metadata, as on the About page.
+                "Claude (", html.Code(RELEASE_MODEL), ") from project titles and dataset names "
+                "only. They are indicative rather than definitive, pending validation, and "
+                "ambiguous or terse titles may be misclassified.",
             ], color="warning", className="mb-3 mt-2"),
 
             # Summary stats
