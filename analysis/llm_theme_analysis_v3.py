@@ -62,7 +62,7 @@ except ImportError:  # optional dependency: only needed to run classification
     anthropic = None
 import pandas as pd
 import yaml
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator
 
 
 def _require_anthropic():
@@ -112,7 +112,7 @@ MODEL      = "claude-fable-5"
 # cache. Raise it only against a measured comparison.
 EFFORT     = "high"      # low | medium | high | xhigh | max
 BATCH_SIZE = 10          # projects per LLM batch
-MAX_TOKENS = 8192        # generous ceiling -- 20 projects x ~180 tokens/entry
+MAX_TOKENS = 8192        # generous ceiling -- BATCH_SIZE projects x ~180 tokens/entry
 MAX_RETRIES = 3          # retry transient API failures before giving up
 RATIONALE_PLACEHOLDER = "(rationale not provided)"
 LAST_PROMPT_CACHE_USAGE: dict[str, int | None] = {}
@@ -722,29 +722,16 @@ def _validate_batch_integrity(
     """Check that the LLM returned exactly the IDs we asked for.
 
     The prompt shows sanitised ``prompt_id`` values to the LLM, so the
-    returned ``project_id`` fields are compared against those.
+    returned ``project_id`` fields are compared against those. Duplicate
+    entries are dropped (first kept) by ``classify_batch`` before this check.
     """
     expected_ids = [p["prompt_id"] for p in projects]
-    expected_set = set(expected_ids)
-    seen = set()
-    duplicate_ids = set()
-    unexpected_ids = set()
-
-    for cls in classifications:
-        if cls.project_id not in expected_set:
-            unexpected_ids.add(cls.project_id)
-            continue
-        if cls.project_id in seen:
-            duplicate_ids.add(cls.project_id)
-            continue
-        seen.add(cls.project_id)
-
-    missing_ids = [pid for pid in expected_ids if pid not in seen]
+    returned_ids = {cls.project_id for cls in classifications}
+    unexpected_ids = returned_ids - set(expected_ids)
+    missing_ids = [pid for pid in expected_ids if pid not in returned_ids]
     problems = []
     if unexpected_ids:
         problems.append(f"unexpected IDs: {sorted(unexpected_ids)}")
-    if duplicate_ids:
-        problems.append(f"duplicate IDs: {sorted(duplicate_ids)}")
     if missing_ids:
         problems.append(f"missing IDs: {missing_ids}")
     if problems:
@@ -756,6 +743,16 @@ def _output_config() -> dict:
     return {"effort": EFFORT}
 
 
+_STOPPED_EARLY_REASONS = {"max_tokens", "refusal"}
+
+
+def _raise_if_stopped_early(response) -> None:
+    """Reject truncated or refused output rather than salvaging part of it."""
+    stop_reason = getattr(response, "stop_reason", None)
+    if stop_reason in _STOPPED_EARLY_REASONS:
+        raise BatchClassificationError(f"Classification stopped early: stop_reason={stop_reason}")
+
+
 def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
     """
     Returns dict: project_id -> classification fields.
@@ -764,6 +761,10 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
 
     messages = _build_prompt_messages(projects)
 
+    # Only a response that arrived but did not fit the schema falls back to a
+    # second, raw request. API errors (rate limits, auth, timeouts, 5xx)
+    # propagate to classify_all's retry loop instead of doubling the calls.
+    response = None
     try:
         response = client.messages.parse(
             model=MODEL,
@@ -772,12 +773,22 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
             output_format=BatchLayerResult,
             output_config=_output_config(),
         )
+    except ValidationError as e:
+        print(
+            f"  [warning] Structured output failed validation "
+            f"({e.error_count()} error(s)); falling back to raw JSON"
+        )
+    else:
         _record_prompt_cache_usage(response)
         LAST_CLASSIFY_API_PATH = "messages.parse"
-        result_obj: BatchLayerResult = response.parsed_output
+        _raise_if_stopped_early(response)
+
+    result_obj: BatchLayerResult | None = (
+        response.parsed_output if response is not None else None
+    )
+    if result_obj is not None:
         classifications = result_obj.classifications
-    except Exception as e:
-        print(f"  [warning] Structured parse failed ({e}); falling back to raw JSON")
+    else:
         raw_response = client.messages.create(
             model=MODEL,
             max_tokens=MAX_TOKENS,
@@ -786,9 +797,15 @@ def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
         )
         _record_prompt_cache_usage(raw_response)
         LAST_CLASSIFY_API_PATH = "messages.create fallback"
-        if not raw_response.content or not hasattr(raw_response.content[0], "text"):
-            raise RuntimeError("API returned empty or non-text response content")
-        raw_text = raw_response.content[0].text
+        _raise_if_stopped_early(raw_response)
+        # Thinking blocks precede the answer, so take the first text block
+        # rather than content[0].
+        raw_text = next(
+            (block.text for block in raw_response.content or [] if block.type == "text"),
+            None,
+        )
+        if not raw_text:
+            raise BatchClassificationError("API response contained no text block")
         raw_dict = _parse_raw_json(raw_text, projects)
         raw_dict = _normalise_classification_dict(raw_dict)
 
