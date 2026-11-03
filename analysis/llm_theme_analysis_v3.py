@@ -62,7 +62,7 @@ except ImportError:  # optional dependency: only needed to run classification
     anthropic = None
 import pandas as pd
 import yaml
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel, Field, TypeAdapter, ValidationError, field_validator
 
 
 def _require_anthropic():
@@ -116,7 +116,6 @@ MAX_TOKENS = 8192        # generous ceiling -- BATCH_SIZE projects x ~180 tokens
 MAX_RETRIES = 3          # retry transient API failures before giving up
 RATIONALE_PLACEHOLDER = "(rationale not provided)"
 LAST_PROMPT_CACHE_USAGE: dict[str, int | None] = {}
-LAST_CLASSIFY_API_PATH = ""
 
 # Facts about this run, accumulated as it goes and written to
 # run_metadata.json at the end. Only what the run observes directly.
@@ -357,7 +356,7 @@ class BatchClassificationError(RuntimeError):
 
 
 # ---------------------------------------------------------------------------
-# Label normalisation (for raw JSON fallback)
+# Label normalisation (for replies that miss the label vocabulary)
 # ---------------------------------------------------------------------------
 
 # Build lookup tables: lowercase → canonical label
@@ -753,66 +752,48 @@ def _raise_if_stopped_early(response) -> None:
         raise BatchClassificationError(f"Classification stopped early: stop_reason={stop_reason}")
 
 
+@lru_cache(maxsize=1)
+def _batch_output_format() -> dict:
+    """The structured-output format messages.parse would send for BatchLayerResult."""
+    schema = TypeAdapter(BatchLayerResult).json_schema()
+    return {"type": "json_schema", "schema": _require_anthropic().transform_schema(schema)}
+
+
 def classify_batch(client: anthropic.Anthropic, projects: list[dict]) -> dict:
     """
     Returns dict: project_id -> classification fields.
+
+    One request per call. It carries the schema messages.parse would send,
+    but the reply is validated here, after its stop_reason: messages.parse
+    validates first, so a refused or truncated reply only surfaced as a
+    schema error and triggered a second paid request. API errors (rate
+    limits, auth, timeouts, 5xx) propagate to classify_all's retry loop.
     """
-    global LAST_CLASSIFY_API_PATH
-
-    messages = _build_prompt_messages(projects)
-
-    # Only a response that arrived but did not fit the schema falls back to a
-    # second, raw request. API errors (rate limits, auth, timeouts, 5xx)
-    # propagate to classify_all's retry loop instead of doubling the calls.
-    response = None
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=MAX_TOKENS,
+        messages=_build_prompt_messages(projects),
+        output_config={**_output_config(), "format": _batch_output_format()},
+    )
+    _record_prompt_cache_usage(response)
+    _raise_if_stopped_early(response)
+    # Thinking blocks precede the answer, so take the first text block.
+    text = next((block.text for block in response.content or [] if block.type == "text"), None)
+    if not text:
+        raise BatchClassificationError("API response contained no text block")
     try:
-        response = client.messages.parse(
-            model=MODEL,
-            max_tokens=MAX_TOKENS,
-            messages=messages,
-            output_format=BatchLayerResult,
-            output_config=_output_config(),
-        )
+        classifications = BatchLayerResult.model_validate_json(text).classifications
     except ValidationError as e:
+        # The schema fixes the reply's shape, not the label vocabulary: map
+        # near-miss labels in this reply instead of paying for another request.
         print(
             f"  [warning] Structured output failed validation "
-            f"({e.error_count()} error(s)); falling back to raw JSON"
+            f"({e.error_count()} error(s)); normalising labels"
         )
-    else:
-        _record_prompt_cache_usage(response)
-        LAST_CLASSIFY_API_PATH = "messages.parse"
-        _raise_if_stopped_early(response)
-
-    result_obj: BatchLayerResult | None = (
-        response.parsed_output if response is not None else None
-    )
-    if result_obj is not None:
-        classifications = result_obj.classifications
-    else:
-        raw_response = client.messages.create(
-            model=MODEL,
-            max_tokens=MAX_TOKENS,
-            messages=messages,
-            output_config=_output_config(),
-        )
-        _record_prompt_cache_usage(raw_response)
-        LAST_CLASSIFY_API_PATH = "messages.create fallback"
-        _raise_if_stopped_early(raw_response)
-        # Thinking blocks precede the answer, so take the first text block
-        # rather than content[0].
-        raw_text = next(
-            (block.text for block in raw_response.content or [] if block.type == "text"),
-            None,
-        )
-        if not raw_text:
-            raise BatchClassificationError("API response contained no text block")
-        raw_dict = _parse_raw_json(raw_text, projects)
-        raw_dict = _normalise_classification_dict(raw_dict)
-
+        raw_dict = _normalise_classification_dict(_parse_raw_json(text, projects))
         try:
-            result_obj = BatchLayerResult(**raw_dict)
-            classifications = result_obj.classifications
-        except Exception as e2:
+            classifications = BatchLayerResult(**raw_dict).classifications
+        except (ValidationError, TypeError) as e2:
             raise BatchClassificationError(f"Pydantic validation failed: {e2}") from e2
 
     # Deduplicate: keep first occurrence of each project_id

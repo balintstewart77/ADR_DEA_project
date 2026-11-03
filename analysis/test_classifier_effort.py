@@ -10,7 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
@@ -37,32 +37,33 @@ class EffortReachesTheApiTest(unittest.TestCase):
             "prompt_datasets": "Labour Force Survey",
         }]
 
-    def _client_returning_parsed(self):
+    def _client_returning_reply(self):
         client = MagicMock()
-        parsed = MagicMock()
-        parsed.classifications = []
-        response = MagicMock(parsed_output=parsed, usage=MagicMock())
-        client.messages.parse.return_value = response
+        client.messages.create.return_value = MagicMock(
+            content=[MagicMock(type="text", text='{"classifications": []}')],
+            stop_reason="end_turn", usage=MagicMock(),
+        )
         return client
 
+    def _request_kwargs(self):
+        client = self._client_returning_reply()
+        # The schema comes from the SDK, which the test environment lacks.
+        with patch.object(classifier, "_batch_output_format", return_value={"type": "json_schema"}):
+            try:
+                classifier.classify_batch(client, self.projects)
+            except Exception:
+                pass  # no classifications fail validation; the request is what matters
+        client.messages.create.assert_called_once()
+        return client.messages.create.call_args.kwargs
+
     def test_classification_request_sends_the_effort(self):
-        client = self._client_returning_parsed()
-        try:
-            classifier.classify_batch(client, self.projects)
-        except Exception:
-            pass  # empty classifications fail validation; the request is what matters
-        self.assertTrue(client.messages.parse.called, "no classification request was made")
-        kwargs = client.messages.parse.call_args.kwargs
-        self.assertEqual(kwargs.get("output_config"), {"effort": classifier.EFFORT})
+        output_config = self._request_kwargs()["output_config"]
+        self.assertEqual(output_config["effort"], classifier.EFFORT)
+        self.assertEqual(output_config["format"], {"type": "json_schema"})
 
     def test_no_sampling_parameters_are_sent(self):
         # temperature / top_p / top_k return 400 on current models.
-        client = self._client_returning_parsed()
-        try:
-            classifier.classify_batch(client, self.projects)
-        except Exception:
-            pass
-        kwargs = client.messages.parse.call_args.kwargs
+        kwargs = self._request_kwargs()
         for forbidden in ("temperature", "top_p", "top_k"):
             self.assertNotIn(forbidden, kwargs)
 
