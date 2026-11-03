@@ -1,9 +1,9 @@
 {
   "deliverable": "Supplementary Figure S1",
   "slug": "supplementary_figure_s1_baseline_vs_hardcase",
-  "generated_utc": "2026-09-16T16:56:21.497737+00:00",
-  "numeric_baseline": "pass-2 figure data at 64679cf",
+  "generated_utc": "2026-11-03T18:39:34.744143+00:00",
   "rows": 64,
+  "numeric_baseline": "pass-3 figure data at 7e77c47",
   "dimension_names": [
     "Research Domains",
     "Analytical Purposes",

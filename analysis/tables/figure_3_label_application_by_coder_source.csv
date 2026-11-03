@@ -1,0 +1,21 @@
+Dimension,Label,C01,C02,C03,Fable 5,Coder minimum,Coder maximum,Fable 5 relative to coders,Population,Records (denominator),Coder-count source,Fable 5 count source
+Research Domains,Business & Productivity,47,38,32,45,32,47,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Labour Market & Employment,50,40,32,56,32,50,More than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Education & Skills,31,27,22,35,22,31,More than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Health & Social Care,25,19,24,25,19,25,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,"Poverty, Wealth & Living Standards",22,14,15,10,14,22,Fewer than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Migration & Demographics,15,7,7,6,7,15,Fewer than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Crime & Justice,4,4,3,4,3,4,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Environment & Agriculture,9,3,4,10,3,9,More than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Public Finance & Taxation,7,2,0,2,0,7,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Data Infrastructure & Methodology,3,0,0,4,0,3,More than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Housing & Planning,3,0,0,1,0,3,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Research Domains,Unclear from Register Entry,7,14,39,1,7,39,Fewer than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T001 model-positive count
+Analytical Purposes,Descriptive Monitoring,48,50,33,52,33,50,More than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count
+Analytical Purposes,Policy Evaluation / Impact Analysis,33,20,37,33,20,37,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count
+Analytical Purposes,Outcome Tracking,28,37,6,47,6,37,More than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count
+Analytical Purposes,Life-Course / Trajectory Analysis,23,22,4,11,4,23,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count
+Analytical Purposes,Methodological / Infrastructure Research,21,5,4,10,4,21,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count
+Analytical Purposes,Risk Prediction / Early Identification,3,2,1,2,1,3,Within coder range,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count
+Analytical Purposes,Service Interaction / Systems Analysis,3,0,1,4,0,3,More than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count
+Analytical Purposes,Unclear from Register Entry,23,15,68,1,15,68,Fewer than every coder,Random baseline,150,LAC1T001 (exploratory descriptive),S5T002 model-positive count

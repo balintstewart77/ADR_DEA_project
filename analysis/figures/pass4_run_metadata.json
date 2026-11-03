@@ -1,0 +1,133 @@
+{
+  "manifest_generated_utc": "2026-11-03T18:39:34.744143+00:00",
+  "rendered_utc": "2026-11-03T18:39:41.044054+00:00",
+  "provenance": {
+    "logs": {
+      "scratch_coder_figure_revisions_log_pass4.md": {
+        "path": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\DEA_paper\\DEA_working_logs_copy\\scratch_coder_figure_revisions_log_pass4.md",
+        "sha256": "0ccd00446ed5a5a7d96b5f81a15a153a6bc09cb291356fa53ce2c92a4954ee12",
+        "size_bytes": 16521,
+        "last_modified_utc": "2026-11-03T18:39:24.487323+00:00"
+      },
+      "scratch_coder_figure_revisions_log_pass3.md": {
+        "path": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\DEA_paper\\DEA_working_logs_copy\\scratch_coder_figure_revisions_log_pass3.md",
+        "sha256": "b2025a3b41ec7df8ee13c352e7d7aa7e3b91c33923e960daaa7a3e19353cd86c",
+        "size_bytes": 36382,
+        "last_modified_utc": "2026-11-03T18:30:12.616597+00:00"
+      },
+      "scratch_coder_interpretive_findings.md": {
+        "path": "C:\\Users\\balin\\Desktop\\ADR_DEA_project\\DEA_paper\\DEA_working_logs_copy\\scratch_coder_interpretive_findings.md",
+        "sha256": "62297919dddbd4cb6e3d3605b6171c3feb852b4479584ebcaed0e8c874d3101a",
+        "size_bytes": 31556,
+        "last_modified_utc": "2026-09-18T12:41:24.519711+00:00"
+      }
+    },
+    "archived_figure_data": [],
+    "head_at_run_start": "7e77c471fb420db04fbd3aab45f6502d7c555983",
+    "pass3_figure_data": {
+      "Figure 1": "analysis/figure_data/archive/pass4_preexisting_7e77c47/figure_3_sufficiency_sensitivity.csv",
+      "Figure 2": "analysis/figure_data/archive/pass4_preexisting_7e77c47/figure_2_coder_ratings_baseline.csv",
+      "Supplementary Figure S1": "analysis/figure_data/archive/pass4_preexisting_7e77c47/supplementary_figure_s1_baseline_vs_hardcase.csv",
+      "Supplementary Figure S2": "analysis/figure_data/archive/pass4_preexisting_7e77c47/supplementary_figure_s2_hardcase_ratings_confidence.csv",
+      "Supplementary Figure S3": "analysis/figure_data/archive/pass4_preexisting_7e77c47/figure_1_panel_agreement_replacement.csv"
+    },
+    "label_application_cardinality": {
+      "directory": "analysis/label_application_cardinality_exploratory",
+      "specification_sha256": "f17ef33b8f0bdebb6b0d3f8b225de59b456c033eca5ebfa3982df6e09ce4d61c",
+      "outputs": {
+        "LAC1T001.csv": "ed4faf76a6ac7a6f43f7de4548e1ec18b7d333744f0c30c18179ec8d2d7d658e",
+        "LAC1T002.csv": "f2422fb96ce1eb6f7f3506130e82d7bba354775d15a2bc3cc7ad5afc28cae1bc",
+        "results_label_application_cardinality.md": "a3dab2008ec69a8c9cbd5a6a21ee8dc2f594d4d8886cad928e04d809c8ca2d38"
+      },
+      "status": "exploratory descriptive, not preregistered"
+    },
+    "preexisting_model_evidence": {
+      "stability": {
+        "path": "preregistration/package/03_preexisting_model_evidence/fable_run_stability_metrics.json",
+        "sha256": "26a1494410b36aa2b05ef52ec74f643cb34dc9f5d5a0f7e35530aac03e6dc975"
+      },
+      "cross_model": {
+        "path": "preregistration/package/03_preexisting_model_evidence/fable5_gpt55_metrics.json",
+        "sha256": "d84c3d497d3c556f7d59aaf1471738ff455d6edcf626d39f0f618b97bd136e7a"
+      },
+      "stability_sample_composition": {
+        "path": "analysis/outputs/model_comparison_sample.csv",
+        "tracked": false,
+        "sha256": "0e6c33456c1aaf1695bc089adb29d96e2dcb4b26a43feb8cb04262d6e8c46271",
+        "hash_pinned_by": "preregistration/package/03_preexisting_model_evidence/fable_run_stability_metrics.json comparison_sample.source_sha256",
+        "strata": {
+          "adjudicated": 31,
+          "random": 170
+        },
+        "random_draw": "seed 20260702 from the live register excluding the 31 purposively selected IDs (analysis/outputs/model_comparison_fable5_build_sample.py)",
+        "purposive_sources": "earlier rc2 temporal-correction spot-checks, unclassified-dataset review cases, alias regression tests, and two cases flagged by an earlier re-classification stability check"
+      }
+    }
+  },
+  "font_family": "Arial",
+  "software": {
+    "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+    "matplotlib": "3.10.3",
+    "font": "C:\\Windows\\Fonts\\arial.ttf"
+  },
+  "isolation_test": {
+    "status": "PASS",
+    "completed_utc": "2026-11-03T18:39:47.674078+00:00",
+    "copied_inputs": [
+      "figure_1_replacement_reliability_baseline_sufficient.csv",
+      "figure_1_replacement_reliability_baseline_sufficient_metadata.json",
+      "figure_2_coder_ratings_baseline.csv",
+      "figure_2_coder_ratings_baseline_metadata.json",
+      "figure_3_label_application_by_coder.csv",
+      "figure_3_label_application_by_coder_metadata.json",
+      "figure_3_label_application_by_coder_source.csv",
+      "figure_3_label_application_by_coder_source_metadata.json",
+      "pass4_deliverable_manifest.json",
+      "pass4_run_metadata.json",
+      "supplementary_figure_s1_baseline_vs_hardcase.csv",
+      "supplementary_figure_s1_baseline_vs_hardcase_metadata.json",
+      "supplementary_figure_s2_hardcase_ratings_confidence.csv",
+      "supplementary_figure_s2_hardcase_ratings_confidence_metadata.json",
+      "supplementary_figure_s3_tag_replacement_baseline.csv",
+      "supplementary_figure_s3_tag_replacement_baseline_metadata.json",
+      "supplementary_figure_s4_repeatability_cross_model.csv",
+      "supplementary_figure_s4_repeatability_cross_model_metadata.json",
+      "supplementary_table_s13_cardinality_abstention.csv",
+      "supplementary_table_s13_cardinality_abstention_metadata.json",
+      "supplementary_table_s14_repeatability_cross_model.csv",
+      "supplementary_table_s14_repeatability_cross_model_metadata.json"
+    ],
+    "copied_code": [
+      "render_scratch_coder_pass4.py",
+      "render_scratch_coder_pass3.py",
+      "figure_style.py",
+      "rating_bars.py"
+    ],
+    "forbidden_source_path_literals_in_code": [],
+    "expected_outputs": 20,
+    "missing_outputs": [],
+    "content_identical_to_production": {
+      "figure_1_replacement_reliability_baseline_sufficient.png": true,
+      "figure_1_replacement_reliability_baseline_sufficient.svg": true,
+      "figure_2_coder_ratings_baseline.png": true,
+      "figure_2_coder_ratings_baseline.svg": true,
+      "figure_3_label_application_by_coder.png": true,
+      "figure_3_label_application_by_coder.svg": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.png": true,
+      "supplementary_figure_s1_baseline_vs_hardcase.svg": true,
+      "supplementary_figure_s2_hardcase_ratings_confidence.png": true,
+      "supplementary_figure_s2_hardcase_ratings_confidence.svg": true,
+      "supplementary_figure_s3_tag_replacement_baseline.png": true,
+      "supplementary_figure_s3_tag_replacement_baseline.svg": true,
+      "supplementary_figure_s4_repeatability_cross_model.png": true,
+      "supplementary_figure_s4_repeatability_cross_model.svg": true,
+      "figure_3_label_application_by_coder_source.csv": true,
+      "figure_3_label_application_by_coder_source.md": true,
+      "supplementary_table_s13_cardinality_abstention.csv": true,
+      "supplementary_table_s13_cardinality_abstention.md": true,
+      "supplementary_table_s14_repeatability_cross_model.csv": true,
+      "supplementary_table_s14_repeatability_cross_model.md": true
+    },
+    "comparison_rule": "Exact bytes for PNG/CSV/Markdown; SVG after canonicalizing opaque generated id attributes and references by occurrence."
+  }
+}
