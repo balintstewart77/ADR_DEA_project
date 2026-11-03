@@ -38,7 +38,7 @@ DOMAIN_PURPOSE_HEIGHT = 560
 DOMAIN_LINKAGE_HEIGHT = 560
 TAG_DOMAIN_HEIGHT = 440
 DOMAIN_TREND_HEIGHT = 480
-RECORD_LINKAGE_TREND_HEIGHT = 360
+RECORD_LINKAGE_TREND_HEIGHT = 440
 DOMAIN_LINKAGE_MAP_HEIGHT = 560
 COMPACT_DISTRIBUTION_HEIGHT = 280
 RESEARCHER_SECTOR_MATRIX_HEIGHT = 500
@@ -445,6 +445,19 @@ def _analyses_accordion():
                     ], className="g-3"),
                     _metric_dropdown("deterministic-record-linkage-trend-metric"),
                     dbc.Row([
+                        dbc.Col([
+                            html.Label("Breakdown", className="filter-label"),
+                            dcc.Dropdown(
+                                id="deterministic-record-linkage-trend-view",
+                                options=[
+                                    {"label": "Any linked data", "value": "any"},
+                                    {"label": "Cross- vs within-domain", "value": "split"},
+                                ],
+                                value="any",
+                                clearable=False,
+                                searchable=False,
+                            ),
+                        ], md=3),
                         dbc.Col([
                             html.Label("Granularity", className="filter-label"),
                             dcc.Dropdown(

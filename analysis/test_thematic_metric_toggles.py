@@ -41,7 +41,7 @@ EXPECTED_TOGGLE_GRAPH_HEIGHTS = {
     "thematic-tag-trend": 400,
     "thematic-covid-tag-domain": 440,
     "thematic-demographic-tag-domain": 440,
-    "deterministic-record-linkage-trend": 360,
+    "deterministic-record-linkage-trend": 440,
     "deterministic-domain-linkage-breakdown": 560,
     "deterministic-collection-method-trend": 400,
     "deterministic-temporal-structure-trend": 400,
@@ -420,6 +420,7 @@ class ThematicMetricToggleRegressionTest(unittest.TestCase):
             "thematic-demographic-tag-domain.figure": {"thematic-demographic-tag-domain-metric.value"},
             "deterministic-record-linkage-trend.figure": {
                 "deterministic-record-linkage-trend-metric.value",
+                "deterministic-record-linkage-trend-view.value",
                 "deterministic-record-linkage-trend-granularity.value",
             },
             "deterministic-domain-linkage-breakdown.figure": {"deterministic-domain-linkage-metric.value"},

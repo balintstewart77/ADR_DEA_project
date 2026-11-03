@@ -683,10 +683,11 @@ def register(app):
     @app.callback(
         Output("deterministic-record-linkage-trend", "figure"),
         Input("deterministic-record-linkage-trend-metric", "value"),
+        Input("deterministic-record-linkage-trend-view", "value"),
         Input("deterministic-record-linkage-trend-granularity", "value"),
         Input("portfolio-accreditation-year-filter", "value"),
     )
-    def update_record_linkage_trend(metric, granularity, year_selection):
+    def update_record_linkage_trend(metric, view, granularity, year_selection):
         data = _aggregates(year_selection)
         selected_granularity = granularity or "year"
         source = (
@@ -699,6 +700,7 @@ def register(app):
             metric=metric or "pct",
             granularity=selected_granularity,
             partial_year_info=PARTIAL_YEAR_INFO,
+            view=view or "any",
         )
         return annotate_empty(fig, data["THEMATIC_PROJECT_COUNT"] == 0)
 

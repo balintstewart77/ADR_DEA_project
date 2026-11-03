@@ -8,7 +8,11 @@ import pandas as pd
 import pytest
 from dash.development.base_component import Component
 
-from dashboard.charts.thematic import make_domain_linkage_map, make_record_linkage_trend
+from dashboard.charts.thematic import (
+    ANY_LINKAGE_LABEL,
+    make_domain_linkage_map,
+    make_record_linkage_trend,
+)
 from dashboard.data.thematic import _record_linkage_domain_pairs
 from dashboard.layout.analysis import build_analysis_tab
 
@@ -164,7 +168,8 @@ def _trend_frame():
 
 
 def test_trend_plots_linkage_spans_only_and_dots_the_partial_year():
-    fig = make_record_linkage_trend(_trend_frame(), metric="pct", partial_year_info=_PartialYear())
+    fig = make_record_linkage_trend(
+        _trend_frame(), metric="pct", partial_year_info=_PartialYear(), view="split")
     names = {trace.name for trace in fig.data}
     assert names == {"Cross-domain linkage", "Within-domain linkage"}, (
         "'No record linkage' is the remainder and is not plotted"
@@ -177,10 +182,53 @@ def test_trend_plots_linkage_spans_only_and_dots_the_partial_year():
 
 
 def test_trend_direct_labels_carry_the_series_name_and_value():
-    fig = make_record_linkage_trend(_trend_frame(), metric="pct", partial_year_info=_PartialYear())
+    fig = make_record_linkage_trend(
+        _trend_frame(), metric="pct", partial_year_info=_PartialYear(), view="split")
     labels = [a.text for a in fig.layout.annotations if "<b>" in (a.text or "")]
     assert any("Cross-domain" in text and "25%" in text for text in labels)
     assert any("Within-domain" in text and "11%" in text for text in labels)
+
+
+def test_trend_headline_is_one_combined_line_summing_both_spans():
+    fig = make_record_linkage_trend(_trend_frame(), metric="pct", partial_year_info=_PartialYear())
+    assert {trace.name for trace in fig.data} == {ANY_LINKAGE_LABEL}
+    # 2024: 40 cross + 9 within of 100 projects.
+    solid = next(trace for trace in fig.data if trace.line.dash != "dot")
+    assert dict(zip(solid.x, solid.y))[2024] == 49.0
+    # The direct label names the line, so the legend box would only repeat it.
+    assert fig.layout.showlegend is False
+
+
+def test_trend_combined_share_comes_from_counts_not_rounded_percentages():
+    # Each span rounds to 33.3%, which sums to 66.6; the true share is 66.7.
+    frame = pd.DataFrame([
+        {"Year": 2025, "record_linkage": linkage, "count": count,
+         "total": 3, "pct_of_projects": pct}
+        for linkage, count, pct in [
+            ("Cross-domain", 1, 33.3), ("Within-domain", 1, 33.3),
+            ("No record linkage", 1, 33.3),
+        ]
+    ])
+    fig = make_record_linkage_trend(frame, metric="pct")
+    assert list(fig.data[0].y) == [66.7]
+
+
+def test_trend_split_view_keeps_the_legend_for_its_two_series():
+    fig = make_record_linkage_trend(
+        _trend_frame(), metric="pct", partial_year_info=_PartialYear(), view="split")
+    assert fig.layout.showlegend is not False
+
+
+def test_trend_breakdown_control_is_wired_to_the_figure():
+    from dashboard.app import app
+
+    assert _component_by_id(
+        build_analysis_tab(), "deterministic-record-linkage-trend-view") is not None
+    callback = next(
+        spec for key, spec in app.callback_map.items()
+        if "deterministic-record-linkage-trend.figure" in key
+    )
+    assert "deterministic-record-linkage-trend-view" in [item["id"] for item in callback["inputs"]]
 
 
 def test_trend_partial_year_note_clears_the_axis():

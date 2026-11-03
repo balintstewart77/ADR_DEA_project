@@ -2141,3 +2141,28 @@ trust: "Education & Skills + Labour Market & Employment, 129 projects, LEO
 129". Where a project matched several products in one cell the per-product
 counts sum past the cell's project count, and the label says "(projects
 overlap)" rather than silently implying the counts partition it.
+
+## Linked-data trend: one headline line, spans on demand (2026-11-03)
+
+The trend chart drew the two linkage spans as separate lines. That split the
+uptake story in half: the taller line peaks at 31.8%, so the chart never
+visited its own upper third, and neither line alone states how much of the
+register uses linked data.
+
+The headline view is now a single line, the share of each period's projects
+using record linkage of any span: 4.5% in 2019 to 40.7% in 2024, holding at
+40.4% in 2025 and 37.8% across Jan-Oct 2026. A "Breakdown" control switches to
+"Cross- vs within-domain", which is the previous chart unchanged.
+
+The combined share is recomputed from the counts, not by adding the two spans'
+rounded percentages. The three spans partition each period, so the combined
+figure is the linked count over the same denominator; adding the published
+percentages would drift by up to a tenth of a point.
+
+The panel is also taller (360 to 440 px). A wide, short panel flattens every
+slope it draws; at the old proportions a nine-fold rise banked at roughly eight
+degrees and read as flat.
+
+What the series says has not changed: a step change in 2024 that has since
+held, not continuing growth. The 2026 figure is a within-year share, so it is
+not depressed by the year being partial.

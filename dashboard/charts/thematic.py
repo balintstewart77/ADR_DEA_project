@@ -218,19 +218,48 @@ RECORD_LINKAGE_COLOURS = {
 }
 
 
+ANY_LINKAGE_LABEL = "Any linked data"
+ANY_LINKAGE_COLOUR = "#1f7a6f"
+
+
+def _combined_linkage_frame(df_by_year: pd.DataFrame) -> pd.DataFrame:
+    """One series for projects using record linkage of any span.
+
+    Recomputed from the counts rather than by adding the two spans' rounded
+    percentages: the three spans partition each period, so the combined share
+    is the linked count over the same denominator.
+    """
+    linked = df_by_year[df_by_year["record_linkage"] != "No record linkage"]
+    if linked.empty:
+        return linked
+    group_cols = [c for c in ("Year", "period_label", "period_date") if c in linked.columns]
+    combined = linked.groupby(group_cols, as_index=False, sort=False).agg(
+        count=("count", "sum"), total=("total", "max"),
+    )
+    combined["record_linkage"] = ANY_LINKAGE_LABEL
+    combined["pct_of_projects"] = (combined["count"] / combined["total"] * 100).round(1)
+    return combined
+
+
 def make_record_linkage_trend(
     df_by_year: pd.DataFrame,
     metric: str = "pct",
-    height: int = 360,
+    height: int = 440,
     granularity: str = "year",
     partial_year_info=None,
+    view: str = "any",
 ) -> go.Figure:
-    """Linked-data uptake over time, as one line per linkage span.
+    """Linked-data uptake over time.
 
-    Plots the two linkage spans only. "No record linkage" is the remainder and
-    is stated in the subtitle rather than drawn: stacking it placed the series
-    carrying the story on a moving baseline, where its thickness could not be
-    read against the axis.
+    The headline view is a single line: the share of each period's projects
+    that used record linkage of any span. Splitting it across two lines halves
+    the movement the chart has to show, and neither line alone carries the
+    uptake story. "Cross- vs within-domain" draws the spans separately.
+
+    "No record linkage" is the remainder in both views and is stated in the
+    subtitle rather than drawn: stacking it placed the series carrying the
+    story on a moving baseline, where its thickness could not be read against
+    the axis.
     """
     fig = go.Figure()
     if df_by_year.empty:
@@ -254,30 +283,34 @@ def make_record_linkage_trend(
     # The final period is incomplete - a part year, or a quarter still subject
     # to publication lag - so it is drawn dotted, not as a downturn.
     partial_year = getattr(partial_year_info, "year", None)
+    combined_view = view != "split"
+    source = _combined_linkage_frame(df_by_year) if combined_view else df_by_year
+    spans = (ANY_LINKAGE_LABEL,) if combined_view else ("Cross-domain", "Within-domain")
     plotted = []
-    for linkage in ("Cross-domain", "Within-domain"):
-        sub = df_by_year[df_by_year["record_linkage"] == linkage].sort_values(sort_cols)
+    for linkage in spans:
+        sub = source[source["record_linkage"] == linkage].sort_values(sort_cols)
         if sub.empty:
             continue
         xs = sub[x_col].tolist()
         ys = sub[metric_col].tolist()
-        colour = RECORD_LINKAGE_COLOURS[linkage]
+        colour = RECORD_LINKAGE_COLOURS.get(linkage, ANY_LINKAGE_COLOUR)
+        series_name = linkage if combined_view else f"{linkage} linkage"
         if is_quarter or (partial_year is not None and xs and xs[-1] == partial_year):
             split = max(len(xs) - 1, 1)
         else:
             split = len(xs)
         units = "% of projects" if metric == "pct" else " projects"
         value_format = "%{y:.1f}" if metric == "pct" else "%{y}"
-        hover = f"<b>{linkage} linkage</b><br>%{{x}}<br>{value_format}{units}<extra></extra>"
+        hover = f"<b>{series_name}</b><br>%{{x}}<br>{value_format}{units}<extra></extra>"
         fig.add_trace(go.Scatter(
-            x=xs[:split], y=ys[:split], name=f"{linkage} linkage", mode="lines+markers",
+            x=xs[:split], y=ys[:split], name=series_name, mode="lines+markers",
             line=dict(color=colour, width=3),
             marker=dict(size=9, color=colour, line=dict(color="white", width=2)),
             hovertemplate=hover,
         ))
         if split < len(xs):
             fig.add_trace(go.Scatter(
-                x=xs[split - 1:], y=ys[split - 1:], name=f"{linkage} linkage",
+                x=xs[split - 1:], y=ys[split - 1:], name=series_name,
                 mode="lines+markers", showlegend=False,
                 line=dict(color=colour, width=3, dash="dot"),
                 marker=dict(size=9, color="white", line=dict(color=colour, width=2.5)),
@@ -293,11 +326,17 @@ def make_record_linkage_trend(
             xanchor="left", font=dict(color=colour, size=12),
         )
 
-    subtitle = (
-        "Share of that period's accredited projects. The remainder used no record linkage."
-        if metric == "pct"
-        else "Accredited projects using record linkage; projects with no linkage are not plotted."
-    )
+    if metric == "pct":
+        subtitle = (
+            "Share of that period's accredited projects using record linkage of any span. "
+            "The remainder used none."
+            if combined_view
+            else "Share of that period's accredited projects. The remainder used no record linkage."
+        )
+    else:
+        subtitle = (
+            "Accredited projects using record linkage; projects with no linkage are not plotted."
+        )
     fig.add_annotation(
         text=subtitle, xref="paper", yref="paper", x=0, y=1.14,
         showarrow=False, xanchor="left", yanchor="bottom",
@@ -316,6 +355,9 @@ def make_record_linkage_trend(
             tickangle=-35 if is_quarter else 0,
         ),
         yaxis=dict(rangemode="tozero", ticksuffix="%" if metric == "pct" else None),
+        # One series is named by its own direct label, so the legend box would
+        # only repeat it.
+        showlegend=not combined_view,
         legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
         margin=dict(r=200, t=124, b=64),
     )
@@ -334,9 +376,12 @@ def make_record_linkage_trend(
         # and the asterisked final tick already sit. Move it to the free space
         # opposite the subtitle instead.
         note = getattr(partial_year_info, "note", "")
+        # The combined subtitle is long enough to reach the note on the same
+        # line, so it drops to the row the hidden legend would have used.
+        note_y = 1.06 if combined_view else 1.14
         for annotation in fig.layout.annotations:
             if note and annotation.text == note:
-                annotation.update(x=1, y=1.14, xanchor="right", yanchor="bottom")
+                annotation.update(x=1, y=note_y, xanchor="right", yanchor="bottom")
     return _apply_common(fig, height=height)
 
 
