@@ -273,6 +273,20 @@ class ValidationTest(unittest.TestCase):
         problems = validate_register_dataframe(df, min_rows=None)
         self.assertTrue(any("Accreditation Date" in p for p in problems))
 
+    def test_day_month_text_dates_are_not_guessed(self):
+        # "05/06/2026" is 5 June or 6 May; only ISO 8601 text is accepted.
+        df = self._valid_df(5)
+        df["Accreditation Date"] = ["25/10/2025", "05/06/2026", "10/25/2025", "1/17/2026", "13/01/2026"]
+        problems = validate_register_dataframe(df, min_rows=None)
+        self.assertTrue(any("100.0% of Accreditation Date" in p for p in problems), problems)
+
+    def test_iso_text_and_workbook_dates_pass(self):
+        df = self._valid_df(4)
+        df["Accreditation Date"] = ["2026-01-02", "2026-01-03T00:00:00", "2026-01-04", "2026-01-05"]
+        self.assertEqual(validate_register_dataframe(df, min_rows=None), [])
+        df["Accreditation Date"] = pd.to_datetime(df["Accreditation Date"], format="ISO8601")
+        self.assertEqual(validate_register_dataframe(df, min_rows=None), [])
+
 
 class LocalDryRunTest(unittest.TestCase):
     def test_republished_fixture_dry_run_has_no_network_or_writes(self):

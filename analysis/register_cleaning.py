@@ -142,7 +142,11 @@ def normalise_register_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 def filter_dea_projects(df: pd.DataFrame, stats: dict | None = None) -> pd.DataFrame:
     out = df.copy()
-    out["Accreditation Date"] = pd.to_datetime(out["Accreditation Date"], errors="coerce")
+    # Canonical register CSVs carry ISO 8601 dates. Parse that format explicitly:
+    # guessing reads mixed DD/MM and MM/DD text inconsistently.
+    out["Accreditation Date"] = pd.to_datetime(
+        out["Accreditation Date"], format="ISO8601", errors="coerce",
+    )
 
     n_before = len(out)
     out = out.dropna(subset=["Accreditation Date", "Title"])
@@ -195,7 +199,7 @@ def _normalise_title_key(value) -> str:
 def _normalise_date_key(value) -> str:
     if pd.isna(value):
         return ""
-    parsed = pd.to_datetime(value, errors="coerce")
+    parsed = pd.to_datetime(value, format="ISO8601", errors="coerce")
     if pd.isna(parsed):
         return _normalise_duplicate_text(value)
     return parsed.strftime("%Y-%m-%d")

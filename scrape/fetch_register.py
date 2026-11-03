@@ -251,7 +251,9 @@ def validate_register_dataframe(
             "--allow-shrink to accept)"
         )
 
-    dates = pd.to_datetime(df["Accreditation Date"], errors="coerce")
+    # Workbook date cells arrive as datetimes; text must be ISO 8601. Other
+    # text counts as unparseable rather than being guessed (DD/MM vs MM/DD).
+    dates = pd.to_datetime(df["Accreditation Date"], format="ISO8601", errors="coerce")
     unparseable = float(dates.isna().mean())
     if unparseable > MAX_UNPARSEABLE_DATE_SHARE:
         problems.append(
