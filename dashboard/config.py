@@ -125,10 +125,6 @@ def _load_release_model(path=RUN_METADATA_JSON) -> str:
 
 
 RELEASE_MODEL = _load_release_model()
-# Where register cleaning WRITES its duplicate-review diagnostic at startup.
-# Kept separate from CLASSIFICATION_DIR so the live app never writes into the
-# committed results directory.
-CLEANING_OUTPUT_DIR = os.path.join(_PACKAGE_DIR, "..", "analysis", "outputs_v3")
 
 REGISTER_SOURCE_ICON = "▣"
 DERIVED_FIELD_ICON = "✦"

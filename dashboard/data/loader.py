@@ -2,10 +2,7 @@
 
 import pandas as pd
 
-from dashboard.config import (
-    DATA_DIR,
-    CLEANING_OUTPUT_DIR,
-)
+from dashboard.config import DATA_DIR
 from analysis.register_cleaning import clean_register_dataframe, load_raw_register
 from analysis.derive_register_properties import (
     REFERENCE_PATH,
@@ -91,11 +88,14 @@ def process_data(df_raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict
         df_flagship -- exploded dataset (one row per dataset request x collection)
         stats       -- dict of row counts at each processing step
     """
+    # The dashboard only reads: the duplicate review and rulings audit files
+    # are written by the refresh pipeline, not on every app start.
     df, stats = clean_register_dataframe(
         df_raw,
-        output_dir=CLEANING_OUTPUT_DIR,
+        output_dir=None,
         include_quarter_date=True,
         include_project_row_id=True,
+        verbose=False,
     )
 
     df["Secure Research Service"] = df["Secure Research Service"].apply(

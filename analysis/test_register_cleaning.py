@@ -1,5 +1,9 @@
+import os
 import tempfile
 import unittest
+from unittest import mock
+
+import pandas as pd
 
 from analysis.register_cleaning import (
     apply_reviewed_duplicate_rulings,
@@ -41,6 +45,30 @@ class RegisterCleaningTests(unittest.TestCase):
         self.assertEqual(self.stats["duplicate_ruling_groups_applied"], 5)
         self.assertEqual(self.stats["duplicate_ruling_rows_removed"], 1)
         self.assertEqual(len(self.df), 1271)
+
+    def test_written_diagnostics_exist(self):
+        quality = os.path.join(self._tmp.name, "quality")
+        self.assertTrue(os.path.isfile(os.path.join(quality, "duplicate_review_flagged.csv")))
+        self.assertTrue(os.path.isfile(os.path.join(quality, "duplicate_rulings_audit.csv")))
+
+    def test_output_dir_none_writes_nothing_and_cleans_identically(self):
+        raw, _source_file = load_raw_register(version=self.REGISTER_VERSION)
+        with tempfile.TemporaryDirectory() as cwd, mock.patch.object(
+            pd.DataFrame, "to_csv", side_effect=AssertionError("unexpected write"),
+        ):
+            previous = os.getcwd()
+            os.chdir(cwd)
+            try:
+                df, stats = clean_register_dataframe(raw, output_dir=None, verbose=False)
+            finally:
+                os.chdir(previous)
+            self.assertEqual(os.listdir(cwd), [])
+        pd.testing.assert_frame_equal(df, self.df)
+        self.assertIsNone(stats["duplicate_review_file"])
+        self.assertIsNone(stats["duplicate_rulings_audit_file"])
+        self.assertEqual(
+            stats["duplicate_tier3_rows_flagged"], self.stats["duplicate_tier3_rows_flagged"],
+        )
 
     def test_2023_113_survives(self):
         rows = self.df[self.df["Project ID"].astype(str).eq("2023/113")]
@@ -126,12 +154,8 @@ class RegisterCleaningTests(unittest.TestCase):
     def test_reviewed_rulings_cover_all_residual_duplicate_ids(self):
         raw, _source_file = load_raw_register(version=self.REGISTER_VERSION)
         filtered = filter_dea_projects(normalise_register_columns(raw), {})
-        exact_result = apply_duplicate_policy(filtered, verbose=False)
-        with tempfile.TemporaryDirectory() as tmp:
-            result = apply_reviewed_duplicate_rulings(
-                exact_result.dataframe,
-                audit_file=f"{tmp}/duplicate_rulings_audit.csv",
-            )
+        exact_result = apply_duplicate_policy(filtered, review_file=None, verbose=False)
+        result = apply_reviewed_duplicate_rulings(exact_result.dataframe, audit_file=None)
         residual = sorted(
             result.dataframe.loc[
                 result.dataframe["Project ID"].astype(str).duplicated(keep=False),

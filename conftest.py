@@ -1,7 +1,6 @@
 import csv
 import io
 import subprocess
-import tempfile
 import zipfile
 from pathlib import Path
 
@@ -31,16 +30,6 @@ def pytest_addoption(parser):
     parser.addoption("--require-private", action="store_true", help="Fail if a marked private input is missing")
     parser.addoption("--require-history", action="store_true", help="Require a full Git checkout for provenance tests")
     parser.addoption("--require-browser", action="store_true", help="Fail if Playwright or Chromium is unavailable")
-
-
-def pytest_configure(config):
-    from dashboard import config as dashboard_config
-
-    outputs = tempfile.TemporaryDirectory(prefix="adr_pytest_cleaning_")
-    patch = pytest.MonkeyPatch()
-    patch.setattr(dashboard_config, "CLEANING_OUTPUT_DIR", outputs.name)
-    config.add_cleanup(outputs.cleanup)
-    config.add_cleanup(patch.undo)
 
 
 def pytest_runtest_setup(item):

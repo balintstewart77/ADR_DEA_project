@@ -72,8 +72,8 @@ Duplicate policy:
 
 - Same **Project ID** and **Title** rows with identical normalised datasets and researchers are collapsed as clerical duplicates.
 - Same **Project ID**, **Title**, and accreditation date rows with fragmented datasets or researchers are merged by taking the union of parsed dataset entries and researcher entries.
-- Ambiguous same-ID/same-title rows are retained and written to `{PROCESSING_STATS['duplicate_review_file']}` for manual review. Current flagged rows: {PROCESSING_STATS['duplicate_tier3_rows_flagged']:,}.
-- Residual duplicate **Project ID** values are reviewed individually in `{PROCESSING_STATS['duplicate_rulings_file']}`. Clear identifier collisions and materially distinct register entries are retained as separate classification units with explicit stable Record IDs, while reviewed duplicate/update rows are collapsed.
+- Ambiguous same-ID/same-title rows are retained and flagged for manual review in `analysis/outputs_deterministic_rc2/quality/duplicate_review_flagged.csv`, written by the register refresh. Current flagged rows: {PROCESSING_STATS['duplicate_tier3_rows_flagged']:,}.
+- Residual duplicate **Project ID** values are reviewed individually in `analysis/register_duplicate_rulings.yaml`. Clear identifier collisions and materially distinct register entries are retained as separate classification units with explicit stable Record IDs, while reviewed duplicate/update rows are collapsed.
 
 Retained duplicated official Project IDs after reviewed rulings:
 `{RETAINED_CONFLICTING_DUPLICATE_IDS_TEXT}`

@@ -78,7 +78,7 @@ class DuplicatePolicyResult:
     tier2_input_rows: int = 0
     tier3_rows_flagged: int = 0
     tier2_project_ids: list[str] = field(default_factory=list)
-    review_file: str = DUPLICATE_REVIEW_FILE
+    review_file: str | None = DUPLICATE_REVIEW_FILE
 
     @property
     def tier2_rows_removed(self) -> int:
@@ -89,7 +89,7 @@ class DuplicatePolicyResult:
 class DuplicateRulingsResult:
     dataframe: pd.DataFrame
     audit: pd.DataFrame
-    audit_file: str = DUPLICATE_RULINGS_AUDIT_FILE
+    audit_file: str | None = DUPLICATE_RULINGS_AUDIT_FILE
     merged_source_rows: int = 0
     retained_project_ids: list[str] = field(default_factory=list)
 
@@ -352,8 +352,11 @@ def _append_duplicate_review_rows(
 def write_duplicate_review(
     flagged_rows: list[pd.DataFrame],
     columns: list[str],
-    review_file: str = DUPLICATE_REVIEW_FILE,
+    review_file: str | None = DUPLICATE_REVIEW_FILE,
 ) -> None:
+    """Write the Tier 3 review file; ``review_file=None`` skips the write."""
+    if review_file is None:
+        return
     os.makedirs(os.path.dirname(review_file), exist_ok=True)
     if flagged_rows:
         review = pd.concat(flagged_rows, ignore_index=True)
@@ -536,7 +539,10 @@ def _audit_row(
     }
 
 
-def write_duplicate_rulings_audit(audit: pd.DataFrame, audit_file: str) -> None:
+def write_duplicate_rulings_audit(audit: pd.DataFrame, audit_file: str | None) -> None:
+    """Write the rulings audit; ``audit_file=None`` skips the write."""
+    if audit_file is None:
+        return
     os.makedirs(os.path.dirname(audit_file), exist_ok=True)
     audit.to_csv(audit_file, index=False, encoding="utf-8-sig")
 
@@ -545,7 +551,7 @@ def apply_reviewed_duplicate_rulings(
     df: pd.DataFrame,
     *,
     rulings_path: str = REGISTER_DUPLICATE_RULINGS_FILE,
-    audit_file: str = DUPLICATE_RULINGS_AUDIT_FILE,
+    audit_file: str | None = DUPLICATE_RULINGS_AUDIT_FILE,
     stats: dict | None = None,
 ) -> DuplicateRulingsResult:
     """Apply reviewed rulings to residual duplicate Project IDs."""
@@ -694,7 +700,7 @@ def apply_reviewed_duplicate_rulings(
 def apply_duplicate_policy(
     df: pd.DataFrame,
     *,
-    review_file: str = DUPLICATE_REVIEW_FILE,
+    review_file: str | None = DUPLICATE_REVIEW_FILE,
     stats: dict | None = None,
     verbose: bool = True,
 ) -> DuplicatePolicyResult:
@@ -790,7 +796,8 @@ def apply_duplicate_policy(
             f"({result.tier2_input_rows:,} input rows); "
             f"Tier 3 rows flagged: {result.tier3_rows_flagged:,}"
         )
-        print(f"[duplicates] Tier 3 review file: {review_file}")
+        if review_file is not None:
+            print(f"[duplicates] Tier 3 review file: {review_file}")
     return result
 
 
@@ -923,18 +930,25 @@ def add_time_fields(df: pd.DataFrame, *, include_quarter_date: bool = False) -> 
 def clean_register_dataframe(
     df_raw: pd.DataFrame,
     *,
-    output_dir: str = OUTPUT_DIR,
+    output_dir: str | None = OUTPUT_DIR,
     include_quarter_date: bool = False,
     include_project_row_id: bool = False,
     verbose: bool = True,
 ) -> tuple[pd.DataFrame, dict]:
-    output_dir = os.path.abspath(os.path.normpath(output_dir))
+    """Clean a raw register extract.
+
+    ``output_dir`` receives the duplicate review and rulings audit CSVs under
+    ``quality/``; pass ``None`` to clean without writing any files.
+    """
+    review_file = rulings_audit_file = None
+    if output_dir is not None:
+        quality_dir = os.path.join(os.path.abspath(os.path.normpath(output_dir)), "quality")
+        review_file = os.path.join(quality_dir, "duplicate_review_flagged.csv")
+        rulings_audit_file = os.path.join(quality_dir, "duplicate_rulings_audit.csv")
     stats: dict = {"raw_loaded": len(df_raw)}
     df = normalise_register_columns(df_raw)
     df = filter_dea_projects(df, stats)
-    review_file = os.path.join(output_dir, "quality", "duplicate_review_flagged.csv")
     duplicate_result = apply_duplicate_policy(df, review_file=review_file, stats=stats, verbose=verbose)
-    rulings_audit_file = os.path.join(output_dir, "quality", "duplicate_rulings_audit.csv")
     rulings_result = apply_reviewed_duplicate_rulings(
         duplicate_result.dataframe,
         audit_file=rulings_audit_file,
@@ -960,7 +974,7 @@ def load_clean_register(
     data_dir: str = DATA_DIR,
     *,
     candidate_files: Iterable[str] | None = None,
-    output_dir: str = OUTPUT_DIR,
+    output_dir: str | None = OUTPUT_DIR,
     include_quarter_date: bool = False,
     include_project_row_id: bool = False,
     verbose: bool = True,
