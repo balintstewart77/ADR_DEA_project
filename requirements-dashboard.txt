@@ -1,6 +1,8 @@
 # Runtime dependencies for the Dash dashboard and shared data utilities.
 -c requirements.lock
 dash
+# Interactive tables (replaces the deprecated dash_table.DataTable).
+dash-ag-grid
 dash-bootstrap-components
 # Response compression for Dash(compress=True).
 flask-compress

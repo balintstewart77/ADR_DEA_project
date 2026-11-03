@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pandas as pd
+from dash import no_update
 from dash.development.base_component import Component
 from dash._callback_context import context_value
 from dash._utils import AttributeDict
@@ -13,6 +14,7 @@ from dashboard.data import thematic
 from dashboard.data.registry import df_all
 from dashboard.data.filtering import _apply_register_filters
 from dashboard.layout.analysis import build_analysis_tab
+from dashboard.layout.analysis.thematic import ENRICHED_PREVIEW_COLUMNS
 
 
 FILTERS = (None, *(["ALL"] * 13))
@@ -38,7 +40,7 @@ def _table_callback():
 
     matches = [
         spec for key, spec in app.callback_map.items()
-        if "enriched-register-table.data" in key
+        if "enriched-register-table.rowData" in key
     ]
     assert len(matches) == 1
     return matches[0]["callback"].__wrapped__, matches[0]
@@ -54,36 +56,25 @@ def _detail_callback():
     return app.callback_map[key]["callback"].__wrapped__, app.callback_map[key]
 
 
-def _run_detail_callback(
-    active_cell,
-    viewport_rows,
-    table_rows,
-    viewport_record_ids,
-    selected_record_id=None,
-    trigger="enriched-register-table.active_cell",
-):
+def _run_detail_callback(trigger, value, table_rows, selected_record_id=None):
+    """Run the detail callback as Dash would for one triggering input."""
     callback, _ = _detail_callback()
+    cell = value if trigger == "enriched-register-table.cellClicked" else None
+    view = value if trigger == "enriched-register-view.data" else None
     token = context_value.set(AttributeDict(triggered_inputs=[{
         "prop_id": trigger,
-        "value": active_cell,
+        "value": value,
     }]))
     # The modal looks records up server-side; serve this test's rows instead.
     lookup = {row["id"]: row for row in table_rows}
     try:
         with patch.object(callbacks, "_enriched_records_by_id", return_value=lookup):
-            return callback(
-                active_cell,
-                None,
-                viewport_rows,
-                0,
-                viewport_record_ids,
-                selected_record_id,
-            )
+            return callback(cell, None, view, selected_record_id)
     finally:
         context_value.reset(token)
 
 
-def _run_table(display, sort_by=None, page_size=10):
+def _run_table(display):
     callback, _ = _table_callback()
     bounds = callbacks._YEAR_RANGE
     with patch.object(
@@ -91,16 +82,13 @@ def _run_table(display, sort_by=None, page_size=10):
         "_get_enriched_register_display_df",
         return_value=(display.copy(), "old count"),
     ):
-        result = callback(
-            *FILTERS,
-            page_size,
-            [2023, 2024],
-            bounds.value,
-            sort_by or [],
-            2023,
-            2024,
-        )
-    return result[:3]
+        result = callback(*FILTERS, [2023, 2024], bounds.value, 2023, 2024)
+    return result[:2]
+
+
+def _column_def(column_id):
+    table = _component_by_id(build_analysis_tab(), "enriched-register-table")
+    return next(column for column in table.columnDefs if column["colId"] == column_id)
 
 
 def _fixture_rows():
@@ -190,73 +178,28 @@ def test_multiline_long_and_boundary_text_all_reach_rendered_measurement():
         assert '<details class="rationale-details" data-overflow="unknown">' in record["rationale_display"]
 
 
-def test_rationale_sort_uses_raw_full_text_in_both_directions_across_pages():
-    rows = []
-    for index in range(25):
-        reverse_key = 24 - index
-        rows.append({
-            "Record ID": f"record/{index:02d}",
-            "Project ID": "repeated-project" if index < 2 else f"project/{index:02d}",
-            "Title": f"Title {reverse_key:02d}",
-            "Accreditation Date": "01 Jan 2024",
-            "substantive_domain_count": index,
-            "rationale": f"{reverse_key:02d} raw rationale " + ("evidence " * 20),
-        })
-    display = pd.DataFrame(rows)
-
-    ascending, page_size, _ = _run_table(
-        display,
-        [{"column_id": "rationale_display", "direction": "asc"}],
-    )
-    descending, _, _ = _run_table(
-        display,
-        [{"column_id": "rationale_display", "direction": "desc"}],
-    )
-
-    assert len(ascending) == len(descending) == 25 > page_size == 10
-    assert [row["id"] for row in ascending] == [
-        f"record/{index:02d}" for index in range(24, -1, -1)
-    ]
-    assert [row["id"] for row in descending] == [
-        f"record/{index:02d}" for index in range(25)
-    ]
-    for row in ascending:
-        assert f'data-record-id="{row["id"]}"' in row["rationale_display"]
+def test_rows_keep_full_source_values_beside_their_previews():
+    records, count = _run_table(_fixture_rows())
+    assert count == "Showing 3 accreditation records"
+    assert [row["id"] for row in records] == ['record/alpha"<&', "record/beta", "record/gamma"]
+    assert records[0]["rationale"].endswith("<script>not executable</script>")
+    assert records[0]["Title"] == 'Zulu title "<&'
+    assert pd.isna(records[2]["substantive_domain_count"])
 
 
-def test_sort_preserves_nulls_ties_numeric_titles_dates_and_multi_column_order():
-    display = pd.DataFrame([
-        {"Record ID": "r3", "Project ID": "repeat", "Title": "Beta", "Accreditation Date": "01 Dec 2023", "substantive_domain_count": 10, "rationale": "Same"},
-        {"Record ID": "r1", "Project ID": "repeat", "Title": "Alpha", "Accreditation Date": "15 Feb 2023", "substantive_domain_count": 2, "rationale": "Same"},
-        {"Record ID": "r2", "Project ID": "other", "Title": "Gamma", "Accreditation Date": "01 Jan 2024", "substantive_domain_count": None, "rationale": None},
-        {"Record ID": "r4", "Project ID": "other", "Title": "Delta", "Accreditation Date": "20 Mar 2023", "substantive_domain_count": 2, "rationale": "Alpha"},
-    ])
-
-    rationale_asc, _, _ = _run_table(
-        display, [{"column_id": "rationale_display", "direction": "asc"}],
-    )
-    rationale_desc, _, _ = _run_table(
-        display, [{"column_id": "rationale_display", "direction": "desc"}],
-    )
-    assert [row["id"] for row in rationale_asc] == ["r4", "r3", "r1", "r2"]
-    assert [row["id"] for row in rationale_desc] == ["r3", "r1", "r4", "r2"]
-
-    expected = {
-        "Title": ["r1", "r3", "r4", "r2"],
-        "substantive_domain_count": ["r1", "r4", "r3", "r2"],
-        "Accreditation Date": ["r1", "r4", "r3", "r2"],
-    }
-    for column_id, record_ids in expected.items():
-        records, _, _ = _run_table(
-            display, [{"column_id": column_id, "direction": "asc"}],
-        )
-        assert [row["id"] for row in records] == record_ids
-
-    multiple, _, _ = _run_table(display, [
-        {"column_id": "rationale_display", "direction": "asc"},
-        {"column_id": "Title", "direction": "asc"},
-    ])
-    assert [row["id"] for row in multiple] == ["r4", "r1", "r3", "r2"]
+def test_preview_and_rationale_columns_sort_on_the_full_source_value():
+    # The grid sorts in the browser (tests/test_dashboard_tables_browser.py),
+    # on each column's field. A preview column's field is its source value.
+    for display_column, source_column in ENRICHED_PREVIEW_COLUMNS.items():
+        column = _column_def(display_column)
+        assert column["field"] == source_column
+        assert column["cellRenderer"] == "ServerHtml"
+    rationale = _column_def("rationale_display")
+    assert (rationale["field"], rationale["cellRenderer"]) == ("rationale", "ServerHtml")
+    assert _column_def("details_action")["sortable"] is False
+    for plain in ("Project ID", "Accreditation Date", "record_linkage", "substantive_domain_count"):
+        assert _column_def(plain)["field"] == plain
+        assert "cellRenderer" not in _column_def(plain)
 
 
 def test_search_scope_is_enriched_only_and_uses_raw_full_text():
@@ -286,39 +229,37 @@ def test_search_scope_is_enriched_only_and_uses_raw_full_text():
     ).empty
 
 
-def test_table_registers_custom_full_result_sort_and_lifecycle_callback():
+def test_grid_shows_server_html_and_registers_the_page_change_callback():
     from dashboard.app import app
 
     layout = build_analysis_tab()
     table = _component_by_id(layout, "enriched-register-table")
-    rationale_column = next(
-        column for column in table.columns if column["id"] == "rationale_display"
-    )
-    assert rationale_column["presentation"] == "markdown"
-    assert table.markdown_options == {"html": True}
-    assert table.sort_action == "custom"
-    assert table.page_current == 0
-    assert _component_by_id(layout, "enriched-rationale-view-reset") is not None
+    assert table.getRowId == "params.data.id"
+    assert table.defaultColDef["comparator"] == {"function": "nullsLast"}
+    assert _component_by_id(layout, "enriched-register-view") is not None
 
     _, table_spec = _table_callback()
-    assert {"id": "enriched-register-table", "property": "sort_by"} in table_spec["inputs"]
-    reset = next(
+    assert not any(item["id"] == "enriched-register-table" for item in table_spec["inputs"])
+    page_changed = next(
         item for item in app._callback_list
-        if item["output"] == "enriched-rationale-view-reset.data"
+        if item["output"] == "enriched-register-view.data"
     )
-    assert reset["clientside_function"] == {
-        "namespace": "enrichedRationale",
-        "function_name": "update",
+    assert page_changed["clientside_function"] == {
+        "namespace": "enrichedRegister",
+        "function_name": "pageChanged",
     }
-    assert {item["property"] for item in reset["inputs"]} == {
-        "derived_viewport_data", "page_current", "sort_by",
-    }
+    assert [(item["id"], item["property"]) for item in page_changed["inputs"]] == [
+        ("enriched-register-table", "virtualRowData"),
+        ("enriched-register-table", "paginationInfo"),
+    ]
 
-    asset = (
-        Path(__file__).parents[1] / "dashboard/assets/rationale_overflow.js"
-    ).read_text()
-    assert "ResizeObserver" in asset and "MutationObserver" in asset
-    assert "setInterval" not in asset and "addEventListener(\"resize\"" not in asset
+    assets = Path(__file__).parents[1] / "dashboard/assets"
+    rationale = (assets / "rationale_overflow.js").read_text()
+    assert "ResizeObserver" in rationale and "MutationObserver" in rationale
+    assert "setInterval" not in rationale and "addEventListener(\"resize\"" not in rationale
+    grid_functions = (assets / "dash_ag_grid_functions.js").read_text()
+    assert "functions.nullsLast" in grid_functions
+    assert "components.ServerHtml" in grid_functions
 
 
 def test_csv_export_keeps_full_rationale_and_existing_order():
@@ -392,13 +333,9 @@ def test_previews_reuse_existing_entry_parsers_and_keep_raw_values_for_sorting()
     assert "more researchers" not in zulu["Researchers_display"]
     assert "View full value" in zulu["Title_display"]
     assert 'data-record-id="record/zulu"' in zulu["details_action"]
-
-    sorted_records = callbacks._sort_enriched_table_records(
-        records, [{"column_id": "Title_display", "direction": "asc"}],
-    )
-    assert [record["id"] for record in sorted_records] == [
-        "record/alpha", "record/zulu",
-    ]
+    # The full values stay in the row for the grid to sort on.
+    assert zulu["Title"] == rows.loc[0, "Title"]
+    assert zulu["researcher_sectors"] == "Academic; Government; Commercial"
 
 
 def test_preview_sort_uses_raw_value_when_the_truncated_previews_are_identical():
@@ -420,21 +357,19 @@ def test_preview_sort_uses_raw_value_when_the_truncated_previews_are_identical()
     assert previews[0].replace("record/zulu", "record") == previews[1].replace(
         "record/alpha", "record",
     )
-    assert [record["id"] for record in callbacks._sort_enriched_table_records(
-        records, [{"column_id": "Title_display", "direction": "asc"}],
-    )] == ["record/alpha", "record/zulu"]
+    # The grid sorts the Title column on the full title, which differs.
+    assert _column_def("Title_display")["field"] == "Title"
+    assert sorted(record["Title"] for record in records)[0].endswith("Alpha full value")
 
 
 def test_detail_callback_uses_record_id_not_duplicate_project_id_and_closes_out_of_view():
-    display = _fixture_rows()
-    records = _enriched_table_records(display)
-    open_result = _run_detail_callback(
-        {"row": 0, "column_id": "details_action"},
-        [records[1]],
+    records = _enriched_table_records(_fixture_rows())
+    # Both rows share a Project ID; the grid reports the clicked row's Record ID.
+    is_open, body, selected = _run_detail_callback(
+        "enriched-register-table.cellClicked",
+        {"colId": "details_action", "rowId": "record/beta", "rowIndex": 1},
         records,
-        ["record/beta"],
     )
-    is_open, body, selected = open_result
     assert is_open is True
     assert selected == "record/beta"
     text = " ".join(str(child) for child in body.children)
@@ -442,57 +377,72 @@ def test_detail_callback_uses_record_id_not_duplicate_project_id_and_closes_out_
     assert "Alpha title" in text
     assert "Zulu rationale" not in text
 
-    close_result = _run_detail_callback(
-        None,
-        [records[0]],
+    preview_click = _run_detail_callback(
+        "enriched-register-table.cellClicked",
+        {"colId": "Title_display", "rowId": 'record/alpha"<&', "rowIndex": 0},
         records,
-        ["record/alpha"],
-        selected_record_id="record/beta",
-        trigger="enriched-register-table.derived_viewport_data",
     )
-    assert close_result == (False, [], None)
+    assert preview_click[2] == 'record/alpha"<&'
+
+    for cell in (
+        {"colId": "Project ID", "rowId": "record/beta"},
+        {"colId": "rationale_display", "rowId": "record/beta"},
+        {"colId": "details_action", "rowId": "record/unknown"},
+    ):
+        assert _run_detail_callback(
+            "enriched-register-table.cellClicked", cell, records,
+        ) == (no_update, no_update, no_update)
+
+    still_visible = _run_detail_callback(
+        "enriched-register-view.data",
+        {"recordIds": ["record/alpha", "record/beta"]},
+        records,
+        selected_record_id="record/beta",
+    )
+    assert still_visible == (no_update, no_update, no_update)
+    left_page = _run_detail_callback(
+        "enriched-register-view.data",
+        {"recordIds": ["record/alpha"]},
+        records,
+        selected_record_id="record/beta",
+    )
+    assert left_page == (False, [], None)
+    closed = _run_detail_callback(
+        "enriched-record-detail-close.n_clicks", 1, records, selected_record_id="record/beta",
+    )
+    assert closed == (False, [], None)
 
 
 def test_detail_layout_is_accessible_keyed_and_keeps_rationale_lifecycle():
-    from dashboard.app import app
-
     layout = build_analysis_tab()
-    table = _component_by_id(layout, "enriched-register-table")
-    assert table.fixed_columns == {"headers": True, "data": 1}
-    project_id_style = next(
-        style for style in table.style_cell_conditional
-        if style["if"]["column_id"] == "Project ID"
-    )
-    assert project_id_style["width"] == "90px"
-    details_column = next(column for column in table.columns if column["id"] == "details_action")
-    assert details_column["presentation"] == "markdown"
+    project_id = _column_def("Project ID")
+    assert (project_id["pinned"], project_id["width"]) == ("left", 90)
+    assert _column_def("details_action")["cellRenderer"] == "ServerHtml"
     assert _component_by_id(layout, "enriched-record-detail-modal") is not None
     assert _component_by_id(layout, "enriched-record-detail-close") is not None
 
     _, detail_spec = _detail_callback()
-    assert {item["property"] for item in detail_spec["inputs"]} == {
-        "active_cell", "n_clicks", "derived_viewport_data", "page_current",
-    }
-    # The full table is never uploaded: only the visible row ids and the
-    # selected-record store travel with the detail callback.
+    assert [(item["id"], item["property"]) for item in detail_spec["inputs"]] == [
+        ("enriched-register-table", "cellClicked"),
+        ("enriched-record-detail-close", "n_clicks"),
+        ("enriched-register-view", "data"),
+    ]
+    # The full table is never uploaded: only the clicked cell, the visible
+    # Record IDs and the selected-record store travel with the detail callback.
     assert [(item["id"], item["property"]) for item in detail_spec["state"]] == [
-        ("enriched-register-table", "derived_viewport_row_ids"),
         ("enriched-record-detail-record-id", "data"),
     ]
 
     asset = (Path(__file__).parents[1] / "dashboard/assets/enriched_record_detail.js").read_text()
-    assert "Escape" in asset
+    assert "Escape" in asset and "Enter" in asset
     assert "enriched-record-detail-close" in asset
     assert "focus" in asset
-
-    rationale_asset = (Path(__file__).parents[1] / "dashboard/assets/rationale_overflow.js").read_text()
-    assert "ResizeObserver" in rationale_asset and "MutationObserver" in rationale_asset
 
 
 def test_detail_lookup_matches_the_table_row_for_a_real_record():
     callback, _ = _table_callback()
     bounds = callbacks._YEAR_RANGE
-    records = callback(*FILTERS, 20, bounds.value, bounds.value, [], *bounds.value)[0]
+    records = callback(*FILTERS, bounds.value, bounds.value, *bounds.value)[0]
     lookup = callbacks._enriched_records_by_id()
     assert len(lookup) == len(records)
     for row in records[:5]:

@@ -48,28 +48,33 @@ def test_truncated_enriched_preview_keeps_line_breaks():
 def test_explorer_researcher_and_dataset_cells_preserve_line_breaks():
     table = _component_by_id(build_explorer_tab(), "browse-table")
     pre_line = {
-        rule["if"]["column_id"]
-        for rule in table.style_cell_conditional
-        if rule.get("whiteSpace") == "pre-line"
+        column["field"] for column in table.columnDefs
+        if column.get("cellClass") == "dea-pre-line"
     }
     assert pre_line == {"Researchers", "Datasets Used"}
+    tooltips = {column["field"]: column["tooltipField"] for column in table.columnDefs}
+    assert tooltips["Researchers"] == "Researchers_tooltip"
+    assert tooltips["Datasets Used"] == "Datasets Used_tooltip"
 
 
-def test_explorer_tooltips_use_markdown_hard_breaks():
+def test_explorer_tooltips_keep_the_register_line_breaks():
     from dashboard.app import app
 
     callback = next(
         spec["callback"].__wrapped__
         for key, spec in app.callback_map.items()
-        if "browse-table.tooltip_data" in key
+        if "browse-table.rowData" in key
     )
     bounds = year_range(df_all)
-    data, tooltips, *_ = callback(
-        None, None, None, None, "2026/122", 20, bounds.value, bounds.minimum, bounds.maximum,
+    data, *_ = callback(
+        None, None, None, None, "2026/122", bounds.value, bounds.minimum, bounds.maximum,
     )
-    row = next(i for i, record in enumerate(data) if record["Project ID"] == "2026/122")
-    researchers = tooltips[row]["Researchers"]["value"]
-    assert "Genevieve Cezard, University of Cambridge  \nAshley Akbari, Swansea University" in researchers
+    row = next(record for record in data if record["Project ID"] == "2026/122")
+    # styles.css shows tooltips with white-space: pre-line.
+    assert (
+        "Genevieve Cezard, University of Cambridge\nAshley Akbari, Swansea University"
+        in row["Researchers_tooltip"]
+    )
 
 
 def test_researcher_name_wrapped_before_its_organisation_is_rejoined():
@@ -136,13 +141,16 @@ def test_explorer_cells_show_tidied_text_and_tooltips_keep_the_register_text():
     callback = next(
         spec["callback"].__wrapped__
         for key, spec in app.callback_map.items()
-        if "browse-table.tooltip_data" in key
+        if "browse-table.rowData" in key
     )
     bounds = year_range(df_all)
-    data, tooltips, *_ = callback(
-        None, None, None, None, "2019/005", 20, bounds.value, bounds.minimum, bounds.maximum,
+    data, *_ = callback(
+        None, None, None, None, "2019/005", bounds.value, bounds.minimum, bounds.maximum,
     )
-    row = next(i for i, record in enumerate(data) if record["Project ID"] == "2019/005")
-    assert data[row]["Researchers"].splitlines()[0] == "Daniele Cox, Office for National Statistics"
-    assert data[row]["Datasets Used"].splitlines()[1].startswith("• ")
-    assert "Daniele Cox,  \nOffice for National Statistics" in tooltips[row]["Researchers"]["value"]
+    row = next(record for record in data if record["Project ID"] == "2019/005")
+    assert row["Researchers"].splitlines()[0] == "Daniele Cox, Office for National Statistics"
+    assert row["Datasets Used"].splitlines()[1].startswith("• ")
+    assert "Daniele Cox,\nOffice for National Statistics" in row["Researchers_tooltip"]
+    assert row["Datasets Used_tooltip"] == df_all.loc[
+        df_all["Project ID"].eq("2019/005"), "Datasets Used"
+    ].iloc[0]

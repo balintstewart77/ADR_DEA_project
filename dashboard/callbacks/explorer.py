@@ -2,7 +2,7 @@
 
 from dash import dcc, Input, Output, State
 
-from dashboard.config import _BROWSE_DISPLAY_COLUMNS
+from dashboard.components.data_grid import page_size_patch
 from dashboard.data.filtering import (
     _get_browse_display_df,
     _get_browse_facet_options,
@@ -37,7 +37,7 @@ def register(app):
         Output("browse-search", "value", allow_duplicate=True),
         *[Output(dropdown_id, "value") for dropdown_id in BROWSE_FILTER_DROPDOWN_IDS],
         Output("browse-accreditation-year-filter", "value"),
-        Output("browse-table", "page_current"),
+        Output("browse-table", "paginationGoTo"),
         Input("browse-clear-filters-btn", "n_clicks"),
         State("browse-accreditation-year-filter", "min"),
         State("browse-accreditation-year-filter", "max"),
@@ -45,12 +45,18 @@ def register(app):
     )
     def clear_browse_filters(_n_clicks, year_min, year_max):
         # An empty dropdown means "ALL" to the filters and shows its "All …" placeholder.
-        return ("", *[None] * len(BROWSE_FILTER_DROPDOWN_IDS), [year_min, year_max], 0)
+        return ("", *[None] * len(BROWSE_FILTER_DROPDOWN_IDS), [year_min, year_max], "first")
 
     @app.callback(
-        Output("browse-table", "data"),
-        Output("browse-table", "tooltip_data"),
-        Output("browse-table", "page_size"),
+        Output("browse-table", "dashGridOptions"),
+        Input("browse-page-size", "value"),
+        prevent_initial_call=True,
+    )
+    def set_browse_page_size(page_size):
+        return page_size_patch(page_size)
+
+    @app.callback(
+        Output("browse-table", "rowData"),
         Output("browse-count", "children"),
         Output("browse-dataset-filter", "options"),
         Output("browse-provider-filter", "options"),
@@ -61,7 +67,6 @@ def register(app):
         Input("browse-institution-filter", "value"),
         Input("browse-tre-filter", "value"),
         Input("browse-search", "value"),
-        Input("browse-page-size", "value"),
         Input("browse-accreditation-year-filter", "value"),
         State("browse-accreditation-year-filter", "min"),
         State("browse-accreditation-year-filter", "max"),
@@ -72,7 +77,6 @@ def register(app):
         institution_filter,
         tre_filter,
         search,
-        page_size,
         accreditation_year_range,
         accreditation_year_min,
         accreditation_year_max,
@@ -96,20 +100,16 @@ def register(app):
         )
         table_data = display.to_dict("records")
 
-        # Tooltips keep the register text as written. Markdown collapses single
-        # newlines; a trailing double space keeps each source line on its own.
-        tooltip_data = [
-            {
-                col: {"value": str(row.get(col, "")).replace("\n", "  \n"), "type": "markdown"}
-                for col in _BROWSE_DISPLAY_COLUMNS
-            }
-            for row in table_data
-        ]
         # The cells show tidied text: one researcher per line, and datasets
-        # listed under their source organisation.
+        # listed under their source organisation. The tooltips keep the
+        # register text as written.
         for row in table_data:
-            row["Researchers"] = researcher_display_text(row.get("Researchers"))
-            row["Datasets Used"] = datasets_display_text(row.get("Datasets Used"))
+            for column, tidy in (
+                ("Researchers", researcher_display_text),
+                ("Datasets Used", datasets_display_text),
+            ):
+                row[f"{column}_tooltip"] = row.get(column)
+                row[column] = tidy(row.get(column))
 
         count_text = (
             f"Showing {len(table_data):,} accreditation "
@@ -127,8 +127,6 @@ def register(app):
         )
         return (
             table_data,
-            tooltip_data,
-            page_size or 20,
             count_text,
             facet_options["dataset"],
             facet_options["provider"],

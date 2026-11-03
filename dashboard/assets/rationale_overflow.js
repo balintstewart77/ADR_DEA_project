@@ -81,39 +81,12 @@
         if (cell) {
             cell.classList.toggle("rationale-expanded", details.open);
         }
-        this.mirrorToggle(details);
         if (details.open) {
             // Never remove the control while the row is expanded.
             details.dataset.overflow = "true";
         } else {
             this.schedule();
         }
-    };
-
-    // fixed_columns renders the body twice (pinned and scrolling copies) and each
-    // copy sizes its rows independently. A disclosure opened in the visible copy
-    // must open in the hidden one too, or every row below it goes out of line.
-    // The counterpart's own toggle event lands here again and stops at the
-    // equality check.
-    RationaleOverflowManager.prototype.mirrorToggle = function (details) {
-        const td = details.closest("td");
-        const tr = td && td.parentElement;
-        const table = tr && tr.closest("table");
-        const container = table && table.closest(".dt-table-container__row");
-        if (!container) {
-            return;
-        }
-        container.querySelectorAll("table").forEach((other) => {
-            if (other === table) {
-                return;
-            }
-            const otherRow = other.rows[tr.rowIndex];
-            const otherCell = otherRow && otherRow.cells[td.cellIndex];
-            const counterpart = otherCell && otherCell.querySelector(DETAILS_SELECTOR);
-            if (counterpart && counterpart.open !== details.open) {
-                counterpart.open = details.open;
-            }
-        });
     };
 
     RationaleOverflowManager.prototype.closeExpanded = function () {
@@ -152,8 +125,8 @@
     }
 
     window.dash_clientside = Object.assign({}, window.dash_clientside, {
-        enrichedRationale: {
-            update: function (viewportRows, pageCurrent, sortBy) {
+        enrichedRegister: {
+            pageChanged: function (sortedRows, pagination, openRecordId) {
                 window.requestAnimationFrame(() => {
                     window.requestAnimationFrame(() => {
                         const manager = ensureManager();
@@ -164,11 +137,15 @@
                         }
                     });
                 });
-                return {
-                    page: pageCurrent,
-                    sort: sortBy || [],
-                    recordIds: (viewportRows || []).map((row) => row.id)
-                };
+                // Only an open record needs the server to check the new page.
+                if (!openRecordId) {
+                    return window.dash_clientside.no_update;
+                }
+                const info = pagination || {};
+                const rows = sortedRows || [];
+                const size = info.pageSize || rows.length;
+                const start = (info.currentPage || 0) * size;
+                return {recordIds: rows.slice(start, start + size).map((row) => row.id)};
             }
         }
     });

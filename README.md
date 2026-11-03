@@ -150,14 +150,15 @@ and the relevant tests before committing the lock.
 ```bash
 python -m ruff check dashboard analysis scrape scripts tests conftest.py
 python -m pytest analysis tests -q -ra -m "not browser" --require-history
-python -m pytest tests/test_enriched_register_alignment_browser.py -q --require-browser
+python -m pytest tests -m browser -q --require-browser
 ```
 
 Historical provenance tests require a full Git checkout. Tests that need
 untracked private inputs report explicit skips when those inputs are absent;
 use `--require-private` to make missing inputs fail instead. Browser CI requires
-Playwright and Chromium and fails if either is unavailable. The dashboard's
-external stylesheet also requires network access for the browser checks.
+Playwright and Chromium and fails if either is unavailable. The browser checks
+drive the dashboard's tables in Chromium and need no network access: the app
+serves its stylesheet and table scripts itself.
 
 Tests redirect cleaning reports and generator outputs to temporary directories.
 CI checks that tracked files remain unchanged after testing. Ruff currently

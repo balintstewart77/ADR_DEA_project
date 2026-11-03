@@ -1,6 +1,6 @@
 """Thematic Analysis callbacks."""
 
-from functools import cmp_to_key, lru_cache
+from functools import lru_cache
 from html import escape
 
 import pandas as pd
@@ -33,7 +33,9 @@ from dashboard.charts.thematic import (
     make_domain_linkage_map,
     make_researcher_sector_cooccurrence, make_domain_breadth_trend,
 )
+from dashboard.components.data_grid import page_size_patch
 from dashboard.config import DOMAIN_COLOURS, PURPOSE_COLOURS, TAG_COLOURS
+from dashboard.layout.analysis.thematic import ENRICHED_PREVIEW_COLUMNS
 from dashboard.data.uptake import SERVED_DOMAIN_PAIRS
 from dashboard.data.year_filter import (
     YearRange,
@@ -48,20 +50,7 @@ from dashboard.data.year_filter import (
 _YEAR_RANGE = year_range(df_all)
 
 
-_ENRICHED_PREVIEW_COLUMNS = {
-    "Title_display": "Title",
-    "Researchers_display": "Researchers",
-    "Datasets Used_display": "Datasets Used",
-    "Secure Research Service_display": "Secure Research Service",
-    "dataset_collection_methods_display": "dataset_collection_methods",
-    "dataset_temporal_structures_display": "dataset_temporal_structures",
-    "dataset_units_display": "dataset_units",
-    "researcher_sectors_display": "researcher_sectors",
-    "substantive_domains_display": "substantive_domains",
-    "analytical_purpose_display": "analytical_purpose",
-    "cross_cutting_tags_display": "cross_cutting_tags",
-}
-_ENRICHED_DETAIL_COLUMNS = set(_ENRICHED_PREVIEW_COLUMNS) | {"details_action"}
+_ENRICHED_DETAIL_COLUMNS = set(ENRICHED_PREVIEW_COLUMNS) | {"details_action"}
 _PREVIEW_CHARACTER_LIMIT = 96
 _PREVIEW_ENTRY_LIMIT = 2
 
@@ -235,7 +224,7 @@ def _enriched_table_records(display) -> list[dict]:
         row["Secure Research Service_display"] = _generic_preview_display(
             row.get("Secure Research Service"), record_id,
         )
-        for display_column, source_column in _ENRICHED_PREVIEW_COLUMNS.items():
+        for display_column, source_column in ENRICHED_PREVIEW_COLUMNS.items():
             if display_column in row:
                 continue
             row[display_column] = _semicolon_preview_display(
@@ -247,16 +236,6 @@ def _enriched_table_records(display) -> list[dict]:
         )
         records.append(row)
     return records
-
-
-def _is_sort_null(value) -> bool:
-    """Match DataTable's null handling without treating blank strings as null."""
-    if value is None:
-        return True
-    try:
-        return bool(pd.isna(value))
-    except (TypeError, ValueError):
-        return False
 
 
 def _enriched_rows_with_iso_dates(display) -> list[dict]:
@@ -282,46 +261,6 @@ def _enriched_records_by_id() -> dict[str, dict]:
     return {row["id"]: row for row in _enriched_rows_with_iso_dates(display)}
 
 
-def _sort_enriched_table_records(records: list[dict], sort_by) -> list[dict]:
-    """Sort complete data, mapping presentation-only columns to full source values."""
-    sort_specs = [
-        spec for spec in (sort_by or [])
-        if spec.get("column_id") and spec.get("direction") in {"asc", "desc"}
-    ]
-    if not sort_specs:
-        return records
-
-    def compare(left, right):
-        for spec in sort_specs:
-            column_id = spec["column_id"]
-            source_id = {
-                "rationale_display": "rationale",
-                **_ENRICHED_PREVIEW_COLUMNS,
-            }.get(column_id, column_id)
-            left_value = left.get(source_id)
-            right_value = right.get(source_id)
-            left_null = _is_sort_null(left_value)
-            right_null = _is_sort_null(right_value)
-            if left_null or right_null:
-                if left_null and right_null:
-                    continue
-                # Dash DataTable keeps actual nulls after non-null values in either direction.
-                return 1 if left_null else -1
-
-            try:
-                result = (left_value > right_value) - (left_value < right_value)
-            except TypeError:
-                left_text = str(left_value)
-                right_text = str(right_value)
-                result = (left_text > right_text) - (left_text < right_text)
-            if result:
-                return -result if spec["direction"] == "desc" else result
-        return 0
-
-    # Python's stable sort preserves filtered register order for complete ties.
-    return sorted(records, key=cmp_to_key(compare))
-
-
 # One dropdown per facet, e.g. "domain_count" -> "enriched-domain-count-filter".
 ENRICHED_FILTER_DROPDOWN_IDS = tuple(
     f"enriched-{facet.replace('_', '-')}-filter" for facet in ENRICHED_FACETS
@@ -338,7 +277,7 @@ def register(app):
         Output("enriched-search", "value"),
         *[Output(dropdown_id, "value") for dropdown_id in ENRICHED_FILTER_DROPDOWN_IDS],
         Output("enriched-accreditation-year-filter", "value"),
-        Output("enriched-register-table", "page_current"),
+        Output("enriched-register-table", "paginationGoTo"),
         Input("enriched-clear-filters-btn", "n_clicks"),
         State("enriched-accreditation-year-filter", "min"),
         State("enriched-accreditation-year-filter", "max"),
@@ -346,77 +285,64 @@ def register(app):
     )
     def clear_enriched_filters(_n_clicks, year_min, year_max):
         # An empty dropdown means "ALL" to the filters and shows its "All …" placeholder.
-        return ("", *[None] * len(ENRICHED_FILTER_DROPDOWN_IDS), [year_min, year_max], 0)
+        return ("", *[None] * len(ENRICHED_FILTER_DROPDOWN_IDS), [year_min, year_max], "first")
 
+    @app.callback(
+        Output("enriched-register-table", "dashGridOptions"),
+        Input("enriched-page-size", "value"),
+        prevent_initial_call=True,
+    )
+    def set_enriched_page_size(page_size):
+        return page_size_patch(page_size)
+
+    # A page, sort or data change collapses expanded rationales and, while a
+    # record is open, reports the Record IDs now on the visible page.
     app.clientside_callback(
-        ClientsideFunction(namespace="enrichedRationale", function_name="update"),
-        Output("enriched-rationale-view-reset", "data"),
-        Input("enriched-register-table", "derived_viewport_data"),
-        Input("enriched-register-table", "page_current"),
-        Input("enriched-register-table", "sort_by"),
+        ClientsideFunction(namespace="enrichedRegister", function_name="pageChanged"),
+        Output("enriched-register-view", "data"),
+        Input("enriched-register-table", "virtualRowData"),
+        Input("enriched-register-table", "paginationInfo"),
+        State("enriched-record-detail-record-id", "data"),
     )
 
     @app.callback(
         Output("enriched-record-detail-modal", "is_open"),
         Output("enriched-record-detail-body", "children"),
         Output("enriched-record-detail-record-id", "data"),
-        Input("enriched-register-table", "active_cell"),
+        Input("enriched-register-table", "cellClicked"),
         Input("enriched-record-detail-close", "n_clicks"),
-        Input("enriched-register-table", "derived_viewport_data"),
-        Input("enriched-register-table", "page_current"),
-        State("enriched-register-table", "derived_viewport_row_ids"),
+        Input("enriched-register-view", "data"),
         State("enriched-record-detail-record-id", "data"),
         prevent_initial_call=True,
     )
-    def update_enriched_record_detail(
-        active_cell,
-        _close_clicks,
-        viewport_rows,
-        _page_current,
-        viewport_record_ids,
-        selected_record_id,
-    ):
-        """Open only Record-ID keyed details and close them when the row leaves view."""
-        trigger = next(iter(ctx.triggered_prop_ids), None)
-        if trigger == "enriched-record-detail-close.n_clicks":
+    def update_enriched_record_detail(cell, _close_clicks, view, selected_record_id):
+        """Open details by Record ID and close them when the row leaves the page."""
+        trigger = ctx.triggered_id
+        if trigger == "enriched-record-detail-close":
             return False, [], None
 
-        if trigger == "enriched-register-table.active_cell" and active_cell:
-            column_id = active_cell.get("column_id")
-            record_id = str(active_cell.get("row_id") or "").strip()
-            if not record_id:
-                row_index = active_cell.get("row")
-                if (
-                    isinstance(row_index, int)
-                    and viewport_record_ids
-                    and 0 <= row_index < len(viewport_record_ids)
-                ):
-                    record_id = str(viewport_record_ids[row_index] or "").strip()
-                elif (
-                    isinstance(row_index, int)
-                    and viewport_rows
-                    and 0 <= row_index < len(viewport_rows)
-                ):
-                    record_id = str(viewport_rows[row_index].get("id") or "").strip()
-            if column_id in _ENRICHED_DETAIL_COLUMNS and record_id:
-                record = _enriched_records_by_id().get(record_id)
-                if record is not None:
-                    return (
-                        True,
-                        html.Dl(
-                            _enriched_detail_display_fields(record),
-                            className="enriched-record-detail-fields",
-                        ),
-                        record_id,
-                    )
+        if (
+            trigger == "enriched-register-table"
+            and cell
+            and cell.get("colId") in _ENRICHED_DETAIL_COLUMNS
+        ):
+            record = _enriched_records_by_id().get(str(cell.get("rowId") or "").strip())
+            if record is not None:
+                return (
+                    True,
+                    html.Dl(
+                        _enriched_detail_display_fields(record),
+                        className="enriched-record-detail-fields",
+                    ),
+                    record["id"],
+                )
 
-        if selected_record_id and trigger in {
-            "enriched-register-table.derived_viewport_data",
-            "enriched-register-table.page_current",
-        }:
-            visible_record_ids = {str(record_id).strip() for record_id in (viewport_record_ids or [])}
-            if selected_record_id not in visible_record_ids:
-                return False, [], None
+        if (
+            trigger == "enriched-register-view"
+            and selected_record_id
+            and selected_record_id not in (view or {}).get("recordIds", [])
+        ):
+            return False, [], None
 
         return no_update, no_update, no_update
 
@@ -805,16 +731,13 @@ def register(app):
         return annotate_empty(fig, data["THEMATIC_PROJECT_COUNT"] == 0)
 
     @app.callback(
-        Output("enriched-register-table", "data"),
-        Output("enriched-register-table", "page_size"),
+        Output("enriched-register-table", "rowData"),
         Output("enriched-browse-count", "children"),
         *[Output(dropdown_id, "options") for dropdown_id in ENRICHED_FILTER_DROPDOWN_IDS],
         Input("enriched-search", "value"),
         *[Input(dropdown_id, "value") for dropdown_id in ENRICHED_FILTER_DROPDOWN_IDS],
-        Input("enriched-page-size", "value"),
         Input("enriched-accreditation-year-filter", "value"),
         Input("portfolio-accreditation-year-filter", "value"),
-        Input("enriched-register-table", "sort_by"),
         State("enriched-accreditation-year-filter", "min"),
         State("enriched-accreditation-year-filter", "max"),
     )
@@ -833,10 +756,8 @@ def register(app):
         temporal_structure_filter,
         unit_filter,
         researcher_sector_filter,
-        page_size,
         accreditation_year_range,
         portfolio_year_range,
-        sort_by,
         accreditation_year_min,
         accreditation_year_max,
     ):
@@ -868,9 +789,7 @@ def register(app):
             f"record{'s' if len(display) != 1 else ''}"
         )
 
-        records = _sort_enriched_table_records(
-            _enriched_rows_with_iso_dates(display), sort_by,
-        )
+        records = _enriched_rows_with_iso_dates(display)
         facet_options = _get_enriched_register_facet_options(
             search,
             dataset_filter,
@@ -893,7 +812,6 @@ def register(app):
         )
         return (
             records,
-            page_size or 20,
             count_text,
             *(facet_options[facet] for facet in ENRICHED_FACETS),
         )

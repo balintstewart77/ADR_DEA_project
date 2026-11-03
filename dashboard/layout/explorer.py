@@ -1,6 +1,6 @@
 """Project Explorer tab."""
 
-from dash import dcc, html, dash_table
+from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 from dashboard.data.registry import (
@@ -8,8 +8,31 @@ from dashboard.data.registry import (
     df_all,
 )
 from dashboard.components.filter_controls import all_option_label
-from dashboard.components.table_styles import BROWSE_TABLE_STYLES
+from dashboard.components.data_grid import data_grid
 from dashboard.data.year_filter import year_slider_kwargs
+
+# The register separates researchers (and datasets) with line breaks, which the
+# pre-line cells show. Each tooltip shows the register text as written.
+_BROWSE_COLUMNS = [
+    {"headerName": "Project ID", "field": "Project ID", "tooltipField": "Project ID", "width": 115},
+    {"headerName": "Title", "field": "Title", "tooltipField": "Title", "flex": 2, "minWidth": 220},
+    {
+        "headerName": "Researchers", "field": "Researchers", "tooltipField": "Researchers_tooltip",
+        "cellClass": "dea-pre-line", "flex": 2, "minWidth": 220,
+    },
+    {
+        "headerName": "Datasets Used", "field": "Datasets Used", "tooltipField": "Datasets Used_tooltip",
+        "cellClass": "dea-pre-line", "flex": 3, "minWidth": 260,
+    },
+    {
+        "headerName": "Processing environment", "field": "Secure Research Service",
+        "tooltipField": "Secure Research Service", "flex": 1, "minWidth": 150,
+    },
+    {
+        "headerName": "Accreditation Date", "field": "Accreditation Date",
+        "tooltipField": "Accreditation Date", "width": 140,
+    },
+]
 
 
 def build_explorer_tab():
@@ -129,31 +152,5 @@ def build_explorer_tab():
                 ),
             ),
         ], className="mb-3 g-2"),
-        html.Div(
-            dash_table.DataTable(
-                id="browse-table",
-                columns=[
-                    {"name": "Project ID", "id": "Project ID"},
-                    {"name": "Title", "id": "Title"},
-                    {"name": "Researchers", "id": "Researchers"},
-                    {"name": "Datasets Used", "id": "Datasets Used"},
-                    {"name": "Processing environment", "id": "Secure Research Service"},
-                    {"name": "Accreditation Date", "id": "Accreditation Date"},
-                ],
-                page_size=20,
-                sort_action="native",
-                filter_action="none",
-                tooltip_data=[],
-                tooltip_delay=0,
-                tooltip_duration=None,
-                # The register separates researchers (and datasets) with line
-                # breaks; pre-line shows them instead of collapsing them.
-                style_cell_conditional=[
-                    {"if": {"column_id": column}, "whiteSpace": "pre-line"}
-                    for column in ("Researchers", "Datasets Used")
-                ],
-                **BROWSE_TABLE_STYLES,
-            ),
-            className="dea-table",
-        ),
+        data_grid(_BROWSE_COLUMNS, id="browse-table"),
     ])

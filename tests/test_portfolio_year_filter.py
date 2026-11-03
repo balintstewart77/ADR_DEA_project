@@ -569,11 +569,11 @@ def test_empty_and_zero_exposure_execute_dataset_and_uptake_callback_paths():
         ]
         assert all(np.isfinite(value) for value in numeric_values)
     assert any("No projects match" in str(item.text) for item in rate_figure.layout.annotations)
-    assert table.data[0]["exposure_years"] == 0.0
-    assert table.data[0]["projects_per_exposure_year"] is None
+    assert table.rowData[0]["exposure_years"] == 0.0
+    assert table.rowData[0]["projects_per_exposure_year"] is None
     assert not empty_curve.data
     assert not empty_rate.data
-    assert empty_table.data == []
+    assert empty_table.rowData == []
 
 
 def test_zero_match_is_explicit_and_reset_value_restores_full_population():

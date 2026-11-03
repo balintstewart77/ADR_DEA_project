@@ -1,98 +1,73 @@
 (function () {
     "use strict";
 
+    // AG Grid moves keyboard focus between cells, never into them. Enter or
+    // Space on a focused Enriched Register cell presses the control inside it
+    // ("View details", "+N more entries", "View full value" or "Read more").
+    // Closing the record modal puts focus back on the cell that opened it.
+    const GRID_SELECTOR = "#enriched-register-table";
+    const CELL_SELECTOR = `${GRID_SELECTOR} .ag-cell`;
+    const CONTROL_SELECTOR = ".enriched-detail-trigger, details.rationale-details > summary";
     const MODAL_SELECTOR = "#enriched-record-detail-modal";
     const CLOSE_ID = "enriched-record-detail-close";
-    let invokingControl = null;
-    let invokingRecordId = null;
-    let modalHasOpened = false;
-
-    function rememberInvokingControl(target) {
-        const control = target && target.closest && target.closest(".enriched-detail-trigger");
-        if (control) {
-            invokingControl = control;
-            invokingRecordId = control.dataset.recordId || null;
-        }
-    }
+    let origin = null;
 
     function modalIsOpen() {
         const modal = document.querySelector(MODAL_SELECTOR);
         return Boolean(modal && window.getComputedStyle(modal).display !== "none");
     }
 
-    function returnFocusAfterClose() {
-        if (modalIsOpen()) {
-            modalHasOpened = true;
-            return;
-        }
-        if (modalHasOpened && invokingControl) {
-            let control = invokingControl;
-            if (!document.contains(control) && invokingRecordId) {
-                control = document.querySelector(
-                    `.enriched-detail-trigger[data-record-id="${CSS.escape(invokingRecordId)}"]`,
-                );
-            }
-            invokingControl = null;
-            invokingRecordId = null;
-            modalHasOpened = false;
-            if (control) {
-                window.setTimeout(function () { control.focus(); }, 0);
-            }
+    function rememberOrigin(target) {
+        const cell = target.closest && target.closest(CELL_SELECTOR);
+        const row = cell && cell.closest(".ag-row");
+        if (row) {
+            origin = {rowId: row.getAttribute("row-id"), colId: cell.getAttribute("col-id")};
         }
     }
 
-    function scheduleFocusReturn() {
+    function returnFocusOnceClosed() {
+        let checks = 0;
         window.setTimeout(function waitForClose() {
-            if (modalIsOpen()) {
+            if (modalIsOpen() && checks++ < 50) {
                 window.setTimeout(waitForClose, 100);
                 return;
             }
-            returnFocusAfterClose();
-        }, 300);
-    }
-
-    function restoreFocusFromRecordId() {
-        const recordId = invokingRecordId;
-        if (!recordId) {
-            return;
-        }
-        window.setTimeout(function () {
-            const control = document.querySelector(
-                `.enriched-detail-trigger[data-record-id="${CSS.escape(recordId)}"]`,
+            const target = origin;
+            origin = null;
+            const cell = target && document.querySelector(
+                `${GRID_SELECTOR} .ag-row[row-id="${CSS.escape(target.rowId)}"]`
+                + ` .ag-cell[col-id="${CSS.escape(target.colId)}"]`,
             );
-            if (control) {
-                control.focus();
+            if (cell) {
+                cell.focus();
             }
-        }, 350);
+        }, 100);
     }
 
     document.addEventListener("click", function (event) {
-        rememberInvokingControl(event.target);
-        if (event.target && event.target.id === CLOSE_ID) {
-            scheduleFocusReturn();
-            restoreFocusFromRecordId();
+        if (event.target.id === CLOSE_ID) {
+            returnFocusOnceClosed();
+        } else {
+            rememberOrigin(event.target);
         }
     }, true);
-    document.addEventListener("focusin", function (event) {
-        rememberInvokingControl(event.target);
-    }, true);
+
     document.addEventListener("keydown", function (event) {
-        if (event.key !== "Escape" || !modalIsOpen()) {
+        if (event.key === "Escape" && modalIsOpen()) {
+            // The modal ignores Escape itself so that closing goes through Dash.
+            event.preventDefault();
+            const close = document.getElementById(CLOSE_ID);
+            if (close) {
+                close.click();
+            }
             return;
         }
-        event.preventDefault();
-        const closeControl = document.getElementById(CLOSE_ID);
-        if (closeControl) {
-            closeControl.click();
-            scheduleFocusReturn();
-            restoreFocusFromRecordId();
+        if ((event.key === "Enter" || event.key === " ") && event.target.matches(CELL_SELECTOR)) {
+            const control = event.target.querySelector(CONTROL_SELECTOR);
+            if (control) {
+                event.preventDefault();
+                control.click();
+            }
         }
-    });
-
-    new MutationObserver(returnFocusAfterClose).observe(document.documentElement, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ["class"],
     });
 }());

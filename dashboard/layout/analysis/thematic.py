@@ -1,13 +1,13 @@
 """Thematic Analysis sub-tab."""
 
-from dash import dcc, html, dash_table
+from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 from dashboard.charts.template import CHART_CONFIG, CHART_HEIGHT
 from dashboard.components.chart_tips import chart_wrapper
 from dashboard.components.filter_controls import all_option_label
 from dashboard.components.stat_card import stat_card
-from dashboard.components.table_styles import ENRICHED_TABLE_STYLES
+from dashboard.components.data_grid import data_grid
 from dashboard import taxonomy
 from dashboard import reference_definitions
 from dashboard.config import RELEASE_MODEL
@@ -41,6 +41,77 @@ RECORD_LINKAGE_TREND_HEIGHT = 440
 DOMAIN_LINKAGE_MAP_HEIGHT = 560
 COMPACT_DISTRIBUTION_HEIGHT = 280
 RESEARCHER_SECTOR_MATRIX_HEIGHT = 500
+
+# Enriched Register display columns that preview a longer source value. The
+# cell shows HTML the server built under the display column's id; the grid
+# sorts on the full source value.
+ENRICHED_PREVIEW_COLUMNS = {
+    "Title_display": "Title",
+    "Researchers_display": "Researchers",
+    "Datasets Used_display": "Datasets Used",
+    "Secure Research Service_display": "Secure Research Service",
+    "dataset_collection_methods_display": "dataset_collection_methods",
+    "dataset_temporal_structures_display": "dataset_temporal_structures",
+    "dataset_units_display": "dataset_units",
+    "researcher_sectors_display": "researcher_sectors",
+    "substantive_domains_display": "substantive_domains",
+    "analytical_purpose_display": "analytical_purpose",
+    "cross_cutting_tags_display": "cross_cutting_tags",
+}
+_HTML_COLUMN_SORT_FIELDS = {
+    **ENRICHED_PREVIEW_COLUMNS,
+    "rationale_display": "rationale",
+    "details_action": None,
+}
+_SHADED_DERIVED_COLUMNS = {
+    "record_linkage",
+    "dataset_collection_methods_display",
+    "dataset_temporal_structures_display",
+    "dataset_units_display",
+    "researcher_sectors_display",
+    "substantive_domains_display",
+    "substantive_domain_count",
+    "analytical_purpose_display",
+}
+_ENRICHED_COLUMNS = [
+    # (header, column id, width in px)
+    (f"{REGISTER_SOURCE_ICON} Project ID", "Project ID", 90),
+    ("Details", "details_action", 118),
+    (f"{REGISTER_SOURCE_ICON} Title", "Title_display", 260),
+    (f"{REGISTER_SOURCE_ICON} Researchers", "Researchers_display", 270),
+    (f"{REGISTER_SOURCE_ICON} Datasets Used", "Datasets Used_display", 300),
+    (f"{REGISTER_SOURCE_ICON} Processing environment", "Secure Research Service_display", 190),
+    (f"{REGISTER_SOURCE_ICON} Accreditation Date", "Accreditation Date", 145),
+    (f"{DERIVED_FIELD_ICON} Record Linkage", "record_linkage", 145),
+    (f"{DERIVED_FIELD_ICON} Collection method", "dataset_collection_methods_display", 190),
+    (f"{DERIVED_FIELD_ICON} Temporal structure", "dataset_temporal_structures_display", 190),
+    (f"{DERIVED_FIELD_ICON} Unit of observation", "dataset_units_display", 175),
+    (f"{DERIVED_FIELD_ICON} Researcher sector", "researcher_sectors_display", 185),
+    (f"{DERIVED_FIELD_ICON} Domains", "substantive_domains_display", 210),
+    (f"{DERIVED_FIELD_ICON} Substantive domain count", "substantive_domain_count", 155),
+    (f"{DERIVED_FIELD_ICON} Purpose", "analytical_purpose_display", 200),
+    (f"{DERIVED_FIELD_ICON} Cross-cutting tags", "cross_cutting_tags_display", 190),
+    (f"{DERIVED_FIELD_ICON} Rationale", "rationale_display", 330),
+]
+
+
+def _enriched_column_def(header: str, column_id: str, width: int) -> dict:
+    column = {"headerName": header, "colId": column_id, "field": column_id, "width": width}
+    if column_id in _HTML_COLUMN_SORT_FIELDS:
+        sort_field = _HTML_COLUMN_SORT_FIELDS[column_id]
+        column["cellRenderer"] = "ServerHtml"
+        if sort_field:
+            column["field"] = sort_field
+        else:
+            column["sortable"] = False
+    if column_id == "Project ID":
+        column["pinned"] = "left"
+    if column_id in _SHADED_DERIVED_COLUMNS:
+        column["cellClass"] = "dea-derived-cell"
+    return column
+
+
+_ENRICHED_COLUMN_DEFS = [_enriched_column_def(*column) for column in _ENRICHED_COLUMNS]
 
 
 def _md_table(layer: str) -> str:
@@ -779,65 +850,15 @@ def _analyses_accordion():
                         ),
                     ], className="mb-3 g-2"),
                     html.Div(
-                        dash_table.DataTable(
+                        data_grid(
+                            _ENRICHED_COLUMN_DEFS,
                             id="enriched-register-table",
-                            columns=[
-                                {"name": f"{REGISTER_SOURCE_ICON} Project ID", "id": "Project ID"},
-                                {
-                                    "name": "Details",
-                                    "id": "details_action",
-                                    "presentation": "markdown",
-                                },
-                                {"name": f"{REGISTER_SOURCE_ICON} Title", "id": "Title_display", "presentation": "markdown"},
-                                {"name": f"{REGISTER_SOURCE_ICON} Researchers", "id": "Researchers_display", "presentation": "markdown"},
-                                {"name": f"{REGISTER_SOURCE_ICON} Datasets Used", "id": "Datasets Used_display", "presentation": "markdown"},
-                                {"name": f"{REGISTER_SOURCE_ICON} Processing environment", "id": "Secure Research Service_display", "presentation": "markdown"},
-                                {"name": f"{REGISTER_SOURCE_ICON} Accreditation Date", "id": "Accreditation Date"},
-                                {"name": f"{DERIVED_FIELD_ICON} Record Linkage", "id": "record_linkage"},
-                                {"name": f"{DERIVED_FIELD_ICON} Collection method", "id": "dataset_collection_methods_display", "presentation": "markdown"},
-                                {"name": f"{DERIVED_FIELD_ICON} Temporal structure", "id": "dataset_temporal_structures_display", "presentation": "markdown"},
-                                {"name": f"{DERIVED_FIELD_ICON} Unit of observation", "id": "dataset_units_display", "presentation": "markdown"},
-                                {"name": f"{DERIVED_FIELD_ICON} Researcher sector", "id": "researcher_sectors_display", "presentation": "markdown"},
-                                {"name": f"{DERIVED_FIELD_ICON} Domains", "id": "substantive_domains_display", "presentation": "markdown"},
-                                {"name": f"{DERIVED_FIELD_ICON} Substantive domain count", "id": "substantive_domain_count"},
-                                {"name": f"{DERIVED_FIELD_ICON} Purpose", "id": "analytical_purpose_display", "presentation": "markdown"},
-                                {"name": f"{DERIVED_FIELD_ICON} Cross-cutting tags", "id": "cross_cutting_tags_display", "presentation": "markdown"},
-                                {
-                                    "name": f"{DERIVED_FIELD_ICON} Rationale",
-                                    "id": "rationale_display",
-                                    "presentation": "markdown",
-                                },
-                            ],
-                            page_size=20,
-                            page_current=0,
-                            sort_action="custom",
-                            filter_action="none",
-                            fixed_columns={"headers": True, "data": 1},
-                            markdown_options={"html": True},
-                            style_cell_conditional=[
-                                {"if": {"column_id": "Project ID"}, "minWidth": "90px", "width": "90px", "maxWidth": "90px", "verticalAlign": "top"},
-                                {"if": {"column_id": "details_action"}, "minWidth": "118px", "width": "118px", "maxWidth": "118px", "verticalAlign": "top"},
-                                {"if": {"column_id": "Title_display"}, "minWidth": "260px", "width": "260px", "maxWidth": "260px", "verticalAlign": "top"},
-                                {"if": {"column_id": "Researchers_display"}, "minWidth": "270px", "width": "270px", "maxWidth": "270px", "verticalAlign": "top"},
-                                {"if": {"column_id": "Datasets Used_display"}, "minWidth": "300px", "width": "300px", "maxWidth": "300px", "verticalAlign": "top"},
-                                {"if": {"column_id": "Secure Research Service_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
-                                {"if": {"column_id": "Accreditation Date"}, "minWidth": "145px", "width": "145px", "maxWidth": "145px", "verticalAlign": "top"},
-                                {"if": {"column_id": "record_linkage"}, "minWidth": "145px", "width": "145px", "maxWidth": "145px", "verticalAlign": "top"},
-                                {"if": {"column_id": "dataset_collection_methods_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
-                                {"if": {"column_id": "dataset_temporal_structures_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
-                                {"if": {"column_id": "dataset_units_display"}, "minWidth": "175px", "width": "175px", "maxWidth": "175px", "verticalAlign": "top"},
-                                {"if": {"column_id": "researcher_sectors_display"}, "minWidth": "185px", "width": "185px", "maxWidth": "185px", "verticalAlign": "top"},
-                                {"if": {"column_id": "substantive_domains_display"}, "minWidth": "210px", "width": "210px", "maxWidth": "210px", "verticalAlign": "top"},
-                                {"if": {"column_id": "substantive_domain_count"}, "minWidth": "155px", "width": "155px", "maxWidth": "155px", "verticalAlign": "top"},
-                                {"if": {"column_id": "analytical_purpose_display"}, "minWidth": "200px", "width": "200px", "maxWidth": "200px", "verticalAlign": "top"},
-                                {"if": {"column_id": "cross_cutting_tags_display"}, "minWidth": "190px", "width": "190px", "maxWidth": "190px", "verticalAlign": "top"},
-                                {"if": {"column_id": "rationale_display"}, "minWidth": "330px", "width": "330px", "maxWidth": "330px", "verticalAlign": "top"},
-                            ],
-                            **ENRICHED_TABLE_STYLES,
+                            # The detail modal looks rows up by Record ID.
+                            getRowId="params.data.id",
                         ),
-                        className="dea-table enriched-register-table-container mb-2",
+                        className="mb-2",
                     ),
-                    dcc.Store(id="enriched-rationale-view-reset"),
+                    dcc.Store(id="enriched-register-view"),
                     dcc.Store(id="enriched-record-detail-record-id"),
                     dbc.Modal([
                         dbc.ModalHeader(dbc.ModalTitle("Record details")),

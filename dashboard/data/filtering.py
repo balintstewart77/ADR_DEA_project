@@ -728,7 +728,7 @@ def _get_enriched_register_display_df(
     for col in _DERIVED_CLASSIFICATION_COLUMNS:
         display[col] = display[col].fillna(DERIVED_EMPTY_VALUE)
     # Tag is blank (not "—") when no equity/demographic lens applies. Preserve
-    # missing rationale values so table sorting retains DataTable's nulls-last policy.
+    # missing rationale values so the table sorts them last (nullsLast comparator).
     if CROSS_CUTTING_TAGS_COL in display.columns:
         display[CROSS_CUTTING_TAGS_COL] = display[CROSS_CUTTING_TAGS_COL].fillna("")
     if RATIONALE_COL in display.columns:

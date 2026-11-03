@@ -86,6 +86,6 @@ jobs:
           python -m pip check
           python -m playwright install --with-deps chromium
       - name: Run browser tests
-        run: python -m pytest tests/test_enriched_register_alignment_browser.py -q --require-browser
+        run: python -m pytest tests -m browser -q --require-browser
       - name: Verify browser tests leave tracked files unchanged
         run: git diff --exit-code

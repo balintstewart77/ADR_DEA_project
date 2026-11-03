@@ -20,12 +20,12 @@ FILTERS = (None, *(["ALL"] * 13))
 def registered():
     app = Dash(__name__)
     callbacks.register(app)
-    table_specs = [v for k, v in app.callback_map.items() if "enriched-register-table.data" in k]
+    table_specs = [v for k, v in app.callback_map.items() if "enriched-register-table.rowData" in k]
     assert len(table_specs) == 1
     table_callback = table_specs[0]["callback"].__wrapped__
 
     def date_table_outputs(*args):
-        return table_callback(*args)[:3]
+        return table_callback(*args)[:2]
 
     return (
         date_table_outputs,
@@ -47,8 +47,8 @@ def display():
 
 def test_iso_sorting_blanks_and_other_columns(registered, display):
     with patch.object(callbacks, "_get_enriched_register_display_df", return_value=(display, "old count")):
-        records, _, count = registered[0](
-            *FILTERS, 20, [2023, 2024], callbacks._YEAR_RANGE.value, [], 2023, 2024,
+        records, count = registered[0](
+            *FILTERS, [2023, 2024], callbacks._YEAR_RANGE.value, 2023, 2024,
         )
     dates = [r["Accreditation Date"] for r in records]
     assert dates[3:] == ["", "", ""]
@@ -65,10 +65,10 @@ def test_iso_sorting_blanks_and_other_columns(registered, display):
 @pytest.mark.parametrize("reset", [[2023, 2024], [2024, 2023], None, [], [2023], [2023, 2024, 2025], ["bad", 2024]])
 def test_inclusive_narrowing_widening_and_reset(registered, display, reset):
     with patch.object(callbacks, "_get_enriched_register_display_df", return_value=(display, "old count")):
-        lower, _, count = registered[0](*FILTERS, 20, [2023, 2023], callbacks._YEAR_RANGE.value, [], 2023, 2024)
-        upper, _, singular = registered[0](*FILTERS, 20, [2024, 2024], callbacks._YEAR_RANGE.value, [], 2023, 2024)
-        restored, _, _ = registered[0](*FILTERS, 20, reset, callbacks._YEAR_RANGE.value, [], 2023, 2024)
-        empty, _, empty_count = registered[0](*FILTERS, 20, [2022, 2022], callbacks._YEAR_RANGE.value, [], 2023, 2024)
+        lower, count = registered[0](*FILTERS, [2023, 2023], callbacks._YEAR_RANGE.value, 2023, 2024)
+        upper, singular = registered[0](*FILTERS, [2024, 2024], callbacks._YEAR_RANGE.value, 2023, 2024)
+        restored, _ = registered[0](*FILTERS, reset, callbacks._YEAR_RANGE.value, 2023, 2024)
+        empty, empty_count = registered[0](*FILTERS, [2022, 2022], callbacks._YEAR_RANGE.value, 2023, 2024)
     assert [r["Accreditation Date"] for r in lower] == ["2023-12-01", "2023-02-15"]
     assert [r["Accreditation Date"] for r in upper] == ["2024-01-01"]
     assert len(restored) == len(display)
@@ -83,14 +83,15 @@ def test_global_bounds_and_complete_native_pages(registered, display):
     filters = ("search", "dataset", "provider", "institution", "tre", "domain", "2",
                "purpose", "tag", "linkage", "collection", "temporal", "unit", "sector")
     with patch.object(callbacks, "_get_enriched_register_display_df", return_value=(subset, "old count")) as getter:
-        records, page, count = registered[0](
-            *filters, 10, [2023, 2023], callbacks._YEAR_RANGE.value, [], 2019, 2026,
+        records, count = registered[0](
+            *filters, [2023, 2023], callbacks._YEAR_RANGE.value, 2019, 2026,
         )
         getter.assert_called_once_with(*filters, ANY, include_record_id=True)
-        restored, _, _ = registered[0](
-            *filters, 10, [2019, 2026], callbacks._YEAR_RANGE.value, [], 2019, 2026,
+        restored, _ = registered[0](
+            *filters, [2019, 2026], callbacks._YEAR_RANGE.value, 2019, 2026,
         )
-    assert len(records) == 25 > page == 10
+    # The grid pages in the browser: every matching row is sent.
+    assert len(records) == 25
     assert count == "Showing 25 accreditation records"
     assert len(restored) == 27
 
@@ -128,8 +129,8 @@ def test_real_search_composes_with_year_and_download(registered):
     searched, _ = callbacks._get_enriched_register_display_df(*filters)
     selected = searched.loc[pd.to_datetime(searched["Accreditation Date"], format="%d %b %Y").dt.year.eq(year)]
     assert 0 < len(selected) < len(full)
-    records, _, count = registered[0](
-        *filters, 10, [year, year], callbacks._YEAR_RANGE.value, [], *bounds,
+    records, count = registered[0](
+        *filters, [year, year], callbacks._YEAR_RANGE.value, *bounds,
     )
     expected = selected.copy()
     expected["Accreditation Date"] = pd.to_datetime(expected["Accreditation Date"], format="%d %b %Y").dt.strftime("%Y-%m-%d")
@@ -142,8 +143,8 @@ def test_real_search_composes_with_year_and_download(registered):
         1, *filters, [year, year], *bounds, callbacks._YEAR_RANGE.value,
     )
     assert downloaded["content"] == selected.to_csv(index=False)
-    restored, _, _ = registered[0](
-        *FILTERS, 10, None, callbacks._YEAR_RANGE.value, [], *bounds,
+    restored, _ = registered[0](
+        *FILTERS, None, callbacks._YEAR_RANGE.value, *bounds,
     )
     assert len(restored) == len(full) > 10
 
@@ -162,12 +163,14 @@ def test_layout_settings_global_bounds_help_and_registration(registered):
     assert "Accreditation year" in text
     assert "Records without a usable accreditation date" in text
     props = _find_component(tab, "enriched-register-table").to_plotly_json()["props"]
-    assert props["sort_action"] == "custom" and props["filter_action"] == "none"
-    assert props["page_size"] == 20
-    assert all(prop not in props for prop in ("sort_mode", "page_action", "data"))
+    # The grid sorts and pages the complete filtered rows in the browser.
+    assert props["dashGridOptions"]["pagination"] is True
+    assert props["dashGridOptions"]["paginationPageSize"] == 20
+    assert props["defaultColDef"]["sortable"] is True and "filter" not in props["defaultColDef"]
+    assert props["rowData"] == []
     year_id = "enriched-accreditation-year-filter"
     assert {"id": year_id, "property": "value"} in registered[2]["inputs"]
-    assert {"id": "enriched-register-table", "property": "sort_by"} in registered[2]["inputs"]
+    assert not any(item["id"] == "enriched-register-table" for item in registered[2]["inputs"])
     for prop in ("min", "max"):
         assert {"id": year_id, "property": prop} in registered[2]["state"]
     for prop in ("value", "min", "max"):

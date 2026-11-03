@@ -87,7 +87,7 @@ def test_adoption_summary_hides_availability_and_lag_presentation():
     table = build_adoption_summary_table(
         uptake.product_summary_table(collection_view="grouped")
     )
-    column_names = [str(column["name"]) for column in table.columns]
+    column_names = [str(column["headerName"]) for column in table.columnDefs]
     rendered = " ".join(column_names).lower()
 
     for obsolete in (

@@ -46,13 +46,13 @@ def _callback(output_key):
 PANELS = [
     pytest.param(
         build_explorer_tab, BROWSE_FILTER_DROPDOWN_IDS,
-        "browse-clear-filters-btn.n_clicks", "browse-table.data",
+        "browse-clear-filters-btn.n_clicks", "browse-table.rowData",
         "browse-search", "browse-accreditation-year-filter", "browse-table",
         id="explorer",
     ),
     pytest.param(
         build_analysis_tab, ENRICHED_FILTER_DROPDOWN_IDS,
-        "enriched-clear-filters-btn.n_clicks", "enriched-register-table.data",
+        "enriched-clear-filters-btn.n_clicks", "enriched-register-table.rowData",
         "enriched-search", "enriched-accreditation-year-filter", "enriched-register-table",
         id="enriched",
     ),
@@ -99,7 +99,7 @@ def test_clear_button_resets_every_filter_the_table_reads(
     assert values[search_id] == ""
     assert all(values[dropdown_id] is None for dropdown_id in dropdown_ids)
     assert values[year_id] == [2019, 2026]
-    assert values[table_id] == 0
+    assert values[table_id] == "first"  # back to the first page
 
 
 def _clear_callback(button_input):

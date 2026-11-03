@@ -188,44 +188,37 @@
     margin-bottom: 0;
 }
 
-/* Table */
-.dea-table .dash-spreadsheet-container .dash-spreadsheet-inner th {
-    background-color: #2c3e50 !important;
-    color: white !important;
-    font-weight: 600;
-    font-size: 0.82rem;
+/* Tables (AG Grid). The theme reads its settings from these variables. */
+.dea-grid {
+    --ag-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --ag-font-size: 13px;
+    --ag-header-background-color: #2c3e50;
+    --ag-header-text-color: #fff;
+    --ag-header-font-weight: 600;
+    --ag-header-font-size: 12px;
+    --ag-odd-row-background-color: #fafbfc;
+    --ag-row-border: 1px solid #f0f0f0;
+    --ag-cell-horizontal-padding: 12px;
+    --ag-wrapper-border-radius: 0;
+}
+.dea-grid .ag-header-cell-text {
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    padding: 10px 12px !important;
-    border: none !important;
 }
-.dea-table .dash-spreadsheet-container .dash-spreadsheet-inner td {
-    border-color: #f0f0f0 !important;
-    font-size: 0.85rem;
+.dea-grid .ag-cell {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    line-height: 1.45;
 }
-.enriched-register-table-container,
-.enriched-register-table-container .dash-table-container,
-.enriched-register-table-container .dash-spreadsheet-container {
-    min-width: 0;
-    max-width: 100%;
+.dea-grid .ag-cell.dea-pre-line {
+    white-space: pre-line;
 }
-.enriched-register-table-container .dash-table-container {
-    width: 100%;
+.dea-grid .ag-cell.dea-derived-cell {
+    background-color: #f5f8fa;
 }
-.enriched-register-table-container .dash-spreadsheet-container {
-    overflow-x: auto !important;
-    width: 100% !important;
-    max-width: 100% !important;
-}
-/* Pinned-column alignment. fixed_columns renders the table twice; the copy that
-   does not own a header cell is emptied, so the pinned copy's header row is
-   taller than the scrolling copy's and every body row below it is offset. A
-   shared minimum header height equalises the two. On a table cell `height` is a
-   minimum, so a header that needs more room still grows (in one copy only).
-   Sized in px because style_header sets the header font in px; the tallest
-   header (Project ID, three lines in 90px) needs about 70px. */
-.enriched-register-table-container .dash-spreadsheet-inner th {
-    height: 80px;
+/* Tooltips keep the register's line breaks. */
+.ag-tooltip {
+    white-space: pre-line;
 }
 .enriched-preview {
     display: block;

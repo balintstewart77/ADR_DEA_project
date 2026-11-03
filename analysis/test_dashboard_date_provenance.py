@@ -73,7 +73,7 @@ def _browse_callback():
     explorer_callbacks.register(app)
     spec = next(
         spec for callback_id, spec in app.callback_map.items()
-        if "browse-table.data" in callback_id
+        if "browse-table.rowData" in callback_id
     )
     return explorer_callbacks, spec
 
@@ -93,7 +93,6 @@ def _download_callback():
 def _run_browse_callback(
     display,
     accreditation_year_range,
-    page_size=20,
     accreditation_year_min=2023,
     accreditation_year_max=2024,
     dataset_filter="ALL",
@@ -113,7 +112,7 @@ def _run_browse_callback(
     ) as display_getter:
         response = spec["callback"](
             dataset_filter, provider_filter, institution_filter, tre_filter, None,
-            page_size, accreditation_year_range,
+            accreditation_year_range,
             accreditation_year_min, accreditation_year_max,
             outputs_list=outputs,
         )
@@ -132,7 +131,7 @@ def _browse_fixture():
 
 def test_explorer_uses_iso_dates_for_native_chronological_sorting():
     response, _ = _run_browse_callback(_browse_fixture(), [2023, 2024])
-    records = response["browse-table"]["data"]
+    records = response["browse-table"]["rowData"]
     dates = [record["Accreditation Date"] for record in records]
     valid_dates = [value for value in dates if value]
 
@@ -147,10 +146,10 @@ def test_explorer_accreditation_year_filter_is_inclusive_and_returns_complete_da
     full_range, _ = _run_browse_callback(fixture.copy(), [2023, 2024])
     cleared, _ = _run_browse_callback(fixture.copy(), None)
     selected_2023, _ = _run_browse_callback(fixture.copy(), [2023, 2023])
-    records_2023 = selected_2023["browse-table"]["data"]
+    records_2023 = selected_2023["browse-table"]["rowData"]
 
-    assert len(full_range["browse-table"]["data"]) == len(fixture)
-    assert len(cleared["browse-table"]["data"]) == len(fixture)
+    assert len(full_range["browse-table"]["rowData"]) == len(fixture)
+    assert len(cleared["browse-table"]["rowData"]) == len(fixture)
     assert full_range["browse-count"]["children"] == "Showing 5 accreditation records"
     assert [record["Project ID"] for record in records_2023] == ["2023/001", "2023/002"]
     assert selected_2023["browse-count"]["children"] == "Showing 2 accreditation records"
@@ -159,9 +158,9 @@ def test_explorer_accreditation_year_filter_is_inclusive_and_returns_complete_da
     assert single_record["browse-count"]["children"] == "Showing 1 accreditation record"
 
     paged_fixture = pd.concat([fixture.iloc[:1]] * 25, ignore_index=True)
-    paged, _ = _run_browse_callback(paged_fixture, [2023, 2023], page_size=10)
-    assert len(paged["browse-table"]["data"]) == 25
-    assert paged["browse-table"]["page_size"] == 10
+    # The grid pages in the browser: every matching row is sent.
+    paged, _ = _run_browse_callback(paged_fixture, [2023, 2023])
+    assert len(paged["browse-table"]["rowData"]) == 25
     assert paged["browse-count"]["children"] == "Showing 25 accreditation records"
 
 
@@ -180,7 +179,7 @@ def test_explorer_year_filter_intersects_existing_server_side_filters():
     )
 
     assert filter_call.args == (None, "Dataset A", "Provider A", "Institution A", "TRE A")
-    assert [row["Project ID"] for row in response["browse-table"]["data"]] == ["2023/050"]
+    assert [row["Project ID"] for row in response["browse-table"]["rowData"]] == ["2023/050"]
 
 
 def test_explorer_download_respects_accreditation_year_range():
@@ -204,7 +203,7 @@ def test_explorer_download_respects_accreditation_year_range():
     assert [row for row in downloaded["Project ID"]] == ["2023/001", "2023/002"]
 
 
-def test_explorer_layout_keeps_native_table_behavior_and_derived_year_range():
+def test_explorer_layout_keeps_browser_sorting_paging_and_derived_year_range():
     from dashboard.layout.explorer import build_explorer_tab
 
     layout = build_explorer_tab()
@@ -213,9 +212,9 @@ def test_explorer_layout_keeps_native_table_behavior_and_derived_year_range():
     props = table.to_plotly_json()["props"]
     parsed_dates = pd.to_datetime(df_all["Accreditation Date"], errors="coerce")
 
-    assert props["sort_action"] == "native"
-    assert props["filter_action"] == "none"
-    assert "page_action" not in props
-    assert props["page_size"] == 20
+    assert props["defaultColDef"]["sortable"] is True
+    assert "filter" not in props["defaultColDef"]
+    assert props["dashGridOptions"]["pagination"] is True
+    assert props["dashGridOptions"]["paginationPageSize"] == 20
     assert year_filter.value == [parsed_dates.min().year, parsed_dates.max().year]
     assert year_filter.allowCross is False

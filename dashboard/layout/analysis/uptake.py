@@ -1,13 +1,14 @@
 """Linked data uptake section shared by portfolio analysis tabs."""
 
-from dash import dcc, html, dash_table
+from dash import dcc, html
+import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import pandas as pd
 
 from dashboard.charts.template import CHART_CONFIG
 from dashboard.charts.uptake import make_exposure_rate_bar
 from dashboard.components.chart_tips import chart_wrapper
-from dashboard.components.table_styles import BROWSE_TABLE_STYLES
+from dashboard.components.data_grid import data_grid
 from dashboard.data.uptake import (
     FLAGSHIP_PRODUCTS,
     OTHER_PRODUCTS,
@@ -32,27 +33,22 @@ def _uptake_graph(graph_id: str, height: int) -> html.Div:
     )
 
 
-def build_adoption_summary_table(summary: pd.DataFrame) -> dash_table.DataTable:
+_ADOPTION_SUMMARY_COLUMNS = [
+    {"headerName": "Linked product", "field": "product", "flex": 2, "minWidth": 200},
+    {"headerName": "Flagship grouping", "field": "flagship_group", "flex": 2, "minWidth": 170},
+    {"headerName": "Linkage span", "field": "linkage_span", "flex": 1, "minWidth": 120},
+    {"headerName": "Historical first accredited use", "field": "first_use", "flex": 1, "minWidth": 140},
+    {"headerName": "Selected-window exposure (years)", "field": "exposure_years", "flex": 1, "minWidth": 140},
+    {"headerName": "Selected projects", "field": "total_projects", "flex": 1, "minWidth": 120},
+    {"headerName": "Selected projects / exposure-year", "field": "projects_per_exposure_year", "flex": 1, "minWidth": 150},
+]
+
+
+def build_adoption_summary_table(summary: pd.DataFrame) -> dag.AgGrid:
     """Static per-product adoption summary (deterministic)."""
-    display = summary.copy()
-    columns = [
-        {"name": "Linked product", "id": "product"},
-        {"name": "Flagship grouping", "id": "flagship_group"},
-        {"name": "Linkage span", "id": "linkage_span"},
-        {"name": "Historical first accredited use", "id": "first_use"},
-        {"name": "Selected-window exposure (years)", "id": "exposure_years", "type": "numeric"},
-        {"name": "Selected projects", "id": "total_projects", "type": "numeric"},
-        {"name": "Selected projects / exposure-year", "id": "projects_per_exposure_year", "type": "numeric"},
-    ]
-    table_cols = [column["id"] for column in columns]
-    table_data = display[table_cols].astype(object).where(pd.notna(display[table_cols]), None)
-    return dash_table.DataTable(
-        data=table_data.to_dict("records"),
-        columns=columns,
-        sort_action="native",
-        page_size=20,
-        **BROWSE_TABLE_STYLES,
-    )
+    fields = [column["field"] for column in _ADOPTION_SUMMARY_COLUMNS]
+    rows = summary[fields].astype(object).where(pd.notna(summary[fields]), None)
+    return data_grid(_ADOPTION_SUMMARY_COLUMNS, rows.to_dict("records"))
 
 
 def _linked_data_uptake_content() -> list:
@@ -181,7 +177,7 @@ def _linked_data_uptake_content() -> list:
                 html.Div(
                     build_adoption_summary_table(initial_summary),
                     id="uptake-adoption-summary-table",
-                    className="dea-table mb-2",
+                    className="mb-2",
                 ),
             ],
             className="g-3",
