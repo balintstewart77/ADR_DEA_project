@@ -1258,6 +1258,9 @@ def write_run_metadata(
     }
     if RUN_STATS["source_register"]:
         metadata["source_register"] = RUN_STATS["source_register"]
+    sdk_version = getattr(anthropic, "__version__", None) if anthropic is not None else None
+    if sdk_version:
+        metadata["anthropic_sdk_version"] = sdk_version
     if run_type:
         metadata["run_type"] = run_type
     if seed_classification_csv:

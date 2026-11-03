@@ -2,6 +2,8 @@
 -r requirements-scrape.txt
 pytest
 pydantic
+# The classifier's real-SDK tests; also pins the SDK classification runs install.
+anthropic
 matplotlib
 nbformat
 seaborn

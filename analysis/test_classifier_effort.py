@@ -188,6 +188,14 @@ class RunMetadataTest(unittest.TestCase):
         self.assertEqual(meta["prompt_cache_observed"]["cache_read_input_tokens"], 18278)
         self.assertEqual(meta["prompt_cache_observed"]["reuse_batches"], 2)
 
+    def test_records_the_installed_sdk_version(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            meta = self._write(tmp)
+        if classifier.anthropic is None:
+            self.assertNotIn("anthropic_sdk_version", meta)
+        else:
+            self.assertEqual(meta["anthropic_sdk_version"], classifier.anthropic.__version__)
+
     def test_unknown_fields_are_omitted_not_guessed(self):
         with tempfile.TemporaryDirectory() as tmp:
             meta = self._write(tmp)

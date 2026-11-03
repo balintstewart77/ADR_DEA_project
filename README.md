@@ -119,8 +119,11 @@ python -m pip check
 
 The browser group adds Playwright; Chromium is installed separately with
 `python -m playwright install chromium`. CI targets Python 3.12; the local
-Windows environment also uses Python 3.13. Notebook, optional analysis, LLM and
-archived ML dependencies outside these groups are not fully locked.
+Windows environment also uses Python 3.13. The test group includes the
+`anthropic` SDK, so the lock also pins the SDK that `requirements-llm.txt`
+installs for classification runs; each run records it in `run_metadata.json`.
+Notebook, optional analysis and archived ML dependencies outside these groups
+are not fully locked.
 
 To regenerate the constraints while retaining the selected versions, use the
 recorded resolver and include platform markers:
