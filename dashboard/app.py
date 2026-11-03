@@ -29,10 +29,15 @@ from dashboard.layout.analysis import build_analysis_tab
 from dashboard.layout.about import build_about_tab
 from dashboard.callbacks import register_callbacks
 
+# Bootstrap is served from assets/ (bootstrap-5.3.6.min.css, the stylesheet
+# dash-bootstrap-components' BOOTSTRAP theme names) rather than a CDN. Dash
+# loads asset CSS in filename order, so it precedes styles.css's overrides.
+# compress=True gzip/brotli-encodes responses (flask-compress); the Enriched
+# Register's full table is ~5 MB of JSON uncompressed.
 app = Dash(
     "dashboard",
     assets_folder=os.path.join(_PACKAGE_DIR, "assets"),
-    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    compress=True,
     title="DEA Projects Dashboard",
 )
 server = app.server
@@ -71,9 +76,11 @@ register_callbacks(app)
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    # Local by default; set HOST=0.0.0.0 to accept connections from other
+    # machines (e.g. a host that starts the app with `python dashboard/app.py`).
     debug_mode = os.environ.get("DEBUG", "false").lower() == "true"
     app.run(
         debug=debug_mode,
-        host="0.0.0.0",
+        host=os.environ.get("HOST", "127.0.0.1"),
         port=int(os.environ.get("PORT", 8050)),
     )

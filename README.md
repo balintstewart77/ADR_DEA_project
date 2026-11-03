@@ -79,6 +79,11 @@ You can also launch the app from the repo root with:
 python -m dashboard.app
 ```
 
+The development server listens only on this computer (`127.0.0.1`). To accept
+connections from other machines, set `HOST=0.0.0.0` (and `PORT` if needed).
+A production host can instead serve `dashboard.app:server` with gunicorn,
+which ignores both settings.
+
 ## Optional Dependency Sets
 
 Install extra dependency groups only when needed:

@@ -2,6 +2,8 @@
 -c requirements.lock
 dash
 dash-bootstrap-components
+# Response compression for Dash(compress=True).
+flask-compress
 gunicorn
 numpy
 pandas
