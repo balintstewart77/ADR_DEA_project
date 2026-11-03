@@ -30,7 +30,7 @@ from analysis.derive_register_properties import (
     parse_register_entities,
 )
 from scrape.fetch_register import xlsx_to_dataframe
-from dashboard.config import _DEFAULT_RELEASE_POINTERS, _load_release_pointers
+from dashboard.config import ReleasePointerError, _load_release_pointers
 
 
 def _register(rows: list[dict]) -> pd.DataFrame:
@@ -366,33 +366,32 @@ class ReleasePointersTest(unittest.TestCase):
                 json.dump(payload, f)
         return path
 
-    def test_valid_file_overrides_defaults(self):
-        path = self._write_pointers({
+    def test_valid_file_is_used(self):
+        payload = {
             "classification_dir": "analysis/outputs_classified_20260601",
-        })
-        pointers = _load_release_pointers(path)
-        self.assertEqual(
-            pointers["classification_dir"], "analysis/outputs_classified_20260601"
-        )
-        self.assertEqual(
-            pointers["register_properties_csv"],
-            _DEFAULT_RELEASE_POINTERS["register_properties_csv"],
-        )
+            "register_properties_csv": "analysis/outputs_deterministic_rc2/register_properties.csv",
+        }
+        self.assertEqual(_load_release_pointers(self._write_pointers(payload)), payload)
 
-    def test_missing_file_falls_back_to_defaults(self):
+    # No fallback: each of these must stop the app rather than serve another run.
+    def test_missing_file_raises(self):
         missing = os.path.join(self.tmp, "does_not_exist.json")
-        self.assertEqual(_load_release_pointers(missing), _DEFAULT_RELEASE_POINTERS)
+        with self.assertRaisesRegex(ReleasePointerError, "Cannot read"):
+            _load_release_pointers(missing)
 
-    def test_invalid_json_falls_back_to_defaults(self):
-        path = self._write_pointers("{not json")
-        self.assertEqual(_load_release_pointers(path), _DEFAULT_RELEASE_POINTERS)
+    def test_invalid_json_raises(self):
+        with self.assertRaisesRegex(ReleasePointerError, "not valid JSON"):
+            _load_release_pointers(self._write_pointers("{not json"))
 
-    def test_blank_or_non_string_values_are_ignored(self):
-        path = self._write_pointers({
-            "classification_dir": "   ",
-            "register_properties_csv": 42,
-        })
-        self.assertEqual(_load_release_pointers(path), _DEFAULT_RELEASE_POINTERS)
+    def test_missing_blank_or_non_string_values_raise(self):
+        for payload, named in [
+            ({"classification_dir": "analysis/outputs_classified_20260601"}, "register_properties_csv"),
+            ({"classification_dir": "   ", "register_properties_csv": "x.csv"}, "classification_dir"),
+            ({"classification_dir": "a", "register_properties_csv": 42}, "register_properties_csv"),
+            (["not", "an", "object"], "JSON object"),
+        ]:
+            with self.subTest(payload=payload), self.assertRaisesRegex(ReleasePointerError, named):
+                _load_release_pointers(self._write_pointers(payload))
 
     def test_committed_pointer_targets_exist(self):
         project_root = os.path.normpath(

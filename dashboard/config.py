@@ -75,26 +75,37 @@ SOURCE_URL = "https://github.com/balintstewart77/ADR_DEA_project"
 
 # Where the dashboard READS the frozen classification outputs (the results
 # run). The pointers live in data/release_pointers.json so a register refresh
-# can publish a new classification run without code changes; the defaults
-# below apply when the file is missing or unreadable.
+# can publish a new classification run without code changes. There is no
+# fallback: a missing or malformed file stops the app rather than silently
+# serving a different run.
 _PROJECT_ROOT = os.path.normpath(os.path.join(_PACKAGE_DIR, ".."))
 _RELEASE_POINTERS_PATH = os.path.join(_PROJECT_ROOT, "data", "release_pointers.json")
-_DEFAULT_RELEASE_POINTERS = {
-    "classification_dir": "analysis/outputs_v4_8_rc2",
-    "register_properties_csv": "analysis/outputs_deterministic_rc2/register_properties.csv",
-}
+_REQUIRED_RELEASE_POINTERS = ("classification_dir", "register_properties_csv")
+
+
+class ReleasePointerError(RuntimeError):
+    """data/release_pointers.json is missing, unreadable or malformed."""
 
 
 def _load_release_pointers(path=_RELEASE_POINTERS_PATH) -> dict:
     try:
         with open(path, "r", encoding="utf-8") as f:
             loaded = json.load(f)
-        return {**_DEFAULT_RELEASE_POINTERS, **{
-            key: value for key, value in loaded.items()
-            if isinstance(value, str) and value.strip()
-        }}
-    except (OSError, ValueError):
-        return dict(_DEFAULT_RELEASE_POINTERS)
+    except OSError as exc:
+        raise ReleasePointerError(f"Cannot read release pointers {path}: {exc}") from exc
+    except ValueError as exc:
+        raise ReleasePointerError(f"Release pointers {path} are not valid JSON: {exc}") from exc
+    if not isinstance(loaded, dict):
+        raise ReleasePointerError(f"Release pointers {path} must be a JSON object")
+    invalid = [
+        key for key in _REQUIRED_RELEASE_POINTERS
+        if not isinstance(loaded.get(key), str) or not loaded[key].strip()
+    ]
+    if invalid:
+        raise ReleasePointerError(
+            f"Release pointers {path} need a non-empty path for: {', '.join(invalid)}"
+        )
+    return {key: loaded[key] for key in _REQUIRED_RELEASE_POINTERS}
 
 
 _RELEASE_POINTERS = _load_release_pointers()
