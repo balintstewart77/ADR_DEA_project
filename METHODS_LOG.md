@@ -2166,3 +2166,165 @@ degrees and read as flat.
 What the series says has not changed: a step change in 2024 that has since
 held, not continuing growth. The 2026 figure is a within-year share, so it is
 not depressed by the year being partial.
+
+# Methods log — publication linkage: design and feasibility pilot (2026-11-03)
+
+## Question
+
+For each DEA-accredited project on the register, is there a findable public
+output (journal article, working paper, preprint, government or think-tank
+report, thesis)? How does that rate vary by accreditation year, provider,
+dataset, linked product, linkage span, sector and institution, and how long
+does the first output take? Only free sources are used; code lives in
+`analysis/publication_linkage/`, outputs in
+`analysis/outputs_publication_linkage/<YYYYMMDD>/`, raw API caches in
+`data/publication_linkage_cache/` (ignored by git).
+
+Absence of a findable output is not evidence of no output: government
+analysts' work is often internal and many papers never acknowledge the
+accreditation. Every rate is a lower bound on public, attributable outputs.
+Project-level files are working data; published material is aggregate only.
+
+## Unit and population
+
+The unit is the cleaned register entry (`Record ID`), from
+`dashboard.data.loader.load_raw()` + `process_data()` joined one-to-one to the
+`register_properties_csv` named in `data/release_pointers.json`. Register
+snapshot 20261021 (snapshot date 2026-10-21), 1,385 records. Matching uses
+the official `Project ID` (the synthetic `/a`, `/b` suffix of a retained
+collision is dropped for ID matching). The mature cohort is accredited on or
+before 2024-10-21 (two years before the snapshot): 903 records.
+
+Researchers are parsed into name/institution pairs with the same reviewed
+token walk as `dashboard.institution_normalisation` (which keeps only
+institutions); 2,548 unique researcher query names across the register.
+
+## Evidence tiers
+
+- **Tier 1, explicit**: the output quotes the register Project ID, and at
+  least one register researcher is an author or one register dataset is named.
+- **Tier 2, strong**: the output names the accreditation route (Digital
+  Economy Act, DEA-accredited, Research Accreditation Panel, accredited
+  researcher, UK Statistics Authority) or the project's own secure environment
+  (an SRS statement does not support a SAIL project); a register researcher is
+  an author; a register dataset or alias is named; and the publication date
+  falls between 6 months before accreditation and the snapshot date.
+- **Tier 3, probable**: author, dataset and date match without a statement.
+  Reported separately and excluded from headline rates.
+
+Tier 2 is recorded with its statement type (route, environment, both)
+because environment-only evidence is weaker for SAIL, UKDS SecureLab, NISRA
+and Scottish Safe Havens, which host large non-DEA portfolios.
+
+## Matching rules and why
+
+- **Project IDs.** `YYYY/NNN` counts only with a context word (project,
+  accreditation, DEA, SRS, IDS, RAP, UKSA, Digital Economy Act, Research
+  Accreditation Panel, Secure Research Service) within 80 characters before or
+  40 after. Fiscal years (`2019/20`), four-digit tails, URL paths and longer
+  numbers are excluded by the pattern. A bare ID never matches.
+- **Statements.** Matched sentence by sentence in abstracts and full text
+  only (titles excluded), after cutting a trailing reference list.
+  "UK Statistics Authority" cited as an author ("UK Statistics Authority,
+  2019") does not count. Route phrases inside boilerplate that describes an
+  environment's or programme's standing rather than this project's access are
+  recorded (`boilerplate_phrases`) but do not count: data "made available to
+  accredited researchers only" (CVD-COVID-UK / NHS England SDE papers),
+  "accredited researchers can apply", and a TRE "accredited under the Digital
+  Economy Act" or a "UKSA ... DEA accredited Trusted Research Environment"
+  (SAIL papers). These were the main false statements in development. The
+  ONS endorsement disclaimer and "trusted research environment" are recorded
+  as supporting phrases only.
+- **Datasets.** Terms come from each project's parsed datasets, their
+  `dataset_family_for` family, the reference record's canonical name and
+  aliases, and matched linked products' aliases, plus a short matching-only list
+  of common acronyms the reference does not hold (UKHLS, IDBR, ARD, NPD, HES,
+  ILR, ONS LS). Family aliases carrying a different year are dropped: the
+  reference keys every Census year to one Census family, and in development a
+  Census Wales 2011 project matched papers that only used Census 2021. Census
+  names keep their year. Acronyms match case-sensitively on word boundaries;
+  ambiguous ones (ABS, APS, WAS, CIS, MES, LS, GRADE, MPI, ...) are not terms,
+  nor is "COVID-19", the normaliser's family key for the COVID-19 Infection
+  Survey, which matched every pandemic paper by the same authors. Every short
+  name term in the register was reviewed once; everyday phrases ("Longitudinal
+  Study", "Family Court", "Innovation Panel", "Capital Stock", "Firm
+  Productivity") are dropped and "Data First", "Family Man" and "Next Steps"
+  match only in their own capitalisation. Long names match case-insensitively
+  with flexible spacing and hyphens.
+- **Authors.** Same family name (last token, particles and double-barrelled
+  order handled) and a compatible first given name; an initial-only match is
+  recorded as such and sends the pair to adjudication.
+- **De-duplication.** Union-find over DOI, then normalised title + year
+  (titles of at least three words and 15 characters, so "Introduction" never
+  merges works). A group's type prefers the journal version.
+
+## Adjudication
+
+Pairs the rules cannot settle go to helper agents on a cheaper model: Tier 2
+or 3 with an initial-only author or acronym-only dataset, Tier 3 naming a
+different environment, and near misses (a route statement, or a matching
+SRS/IDS statement, plus author and date, but no dataset string). Near misses
+from SAIL/UKDS/NISRA/Safe Haven statements alone are not queued: in
+development nearly every SAIL paper by the SAIL team was one. Agents see only
+the register record and the output's title, abstract and statement snippets,
+and return `match`, `tier`, `reason` and a verbatim `evidence_quote`; code
+checks the quote against the text shown (whitespace and typography
+normalised only). Unverified decisions are discarded. An adjudicator cannot
+assign Tier 1, and its Tier 2 is capped at Tier 3 when the rules found no
+statement.
+
+## Sources and access
+
+Free sources only; Google Scholar (no API, scraping forbidden) and paid
+indexes (Dimensions, Scopus, Overton) are excluded. Every raw response is
+cached, so runs resume and rebuild offline (`--offline`) with no calls.
+
+| Source | Route | Notes |
+|---|---|---|
+| OpenAlex | (a) phrase search, (b) author-centred: resolve each researcher by name + institution, pull works in the window, keep those whose title or abstract names a register dataset | `api_key` parameter from `OPENALEX_API_KEY`; each response's reported cost goes to a per-UTC-day ledger, calls stop at $0.90 of the free $1; no PDF downloads. Phrase hits found only in full text are kept as index-reported and need CORE or Europe PMC full text before they can be quoted. |
+| CORE | author-centred works with inline full text, scanned locally | Bearer `CORE_API_KEY` if set, otherwise no header (the proxy adds the network secret). The documented `fullText:` and `abstract:` lookups currently fail server-side ("not a searchable field"); the client probes once per run and falls back to `title:` for phrases and skips project-ID searches while the probe fails. |
+| Europe PMC | phrase search; open-access full-text XML for acknowledgement sentences | reference lists dropped from XML |
+| Gateway to Research | person search, grants where the researcher is an investigator, grant matched to the project by date overlap plus title similarity or a dataset in the abstract, reported publications | candidates are then tiered like any other output |
+| GOV.UK | dataset name with "Secure Research Service", "Integrated Data Service" or "Digital Economy Act"; page body from the content API | no author metadata, so author evidence is a register name in the body |
+| Semantic Scholar | enrichment only: abstracts for DOIs that lack one | 1 request/second |
+
+On 2026-11-03 the cloud environment's network policy refused every host except
+`api.core.ac.uk` (proxy 403 on CONNECT), including the documentation hosts.
+Parameters for the blocked sources were therefore checked against search
+summaries of their current documentation, not the pages themselves, and their
+clients are tested offline against fixtures only; each will be confirmed on its
+first live call. Rate limits are respected by per-source spacing (CORE 2.6 s,
+for 25 tokens a minute), backoff of 2, 4, 8 and 16 s on 429/5xx, and a
+descriptive User-Agent with no personal email. Secrets never enter cache keys,
+cached records, logs or committed files.
+
+## Pilot
+
+50 mature-cohort projects, seed 20261103, allocated first by accreditation
+year (proportional, at least one per year, so 2019 is represented) and then
+by researcher-sector group within year (largest remainder). Live run
+2026-11-03 19:34 to 19:47 UTC; one further CORE call at 19:51 re-issued the
+full-text probe so its rejection is cached. Outputs:
+`analysis/outputs_publication_linkage/20261103/pilot/`.
+
+- Sources: CORE ran (183 live calls for 149 unique researchers, 12 minutes,
+  no cost); OpenAlex, Europe PMC, GtR, GOV.UK and Semantic Scholar were
+  blocked. **This is a partial pilot and cannot yet compare sources.**
+- Tier 1-2 for 6 of 50 projects (12%, Wilson 95% CI 6% to 24%); any tier for
+  11 of 50 (22%); no Tier 1. 21 Tier 2 pairs, of which 14 rest on an
+  environment statement alone, all SAIL papers linked to the sample's two SAIL
+  Census Wales 2011 projects; the other 7 carry a route statement too.
+- Development checks on the CORE results (before the rules were frozen for
+  the pilot tables) found the systematic false evidence that the boilerplate,
+  citation, reference-list, generic-term and Census-year rules above now
+  remove. Before the boilerplate and generic-term rules the pilot's
+  adjudication queue held 113 pairs; after them, 13.
+- Adjudication: 13 pairs, one helper-agent batch on a cheaper model, 13
+  quotes verified, 13 rejected. Two close calls are flagged for review in
+  `pilot_recommendation.md`.
+- Full-run estimates: CORE about 3,200 calls (about 4 days at 1,000 tokens a
+  day); OpenAlex about $2.90 (about 4 days within the free tier).
+
+Next step: open network access for the five blocked hosts and re-run the
+pilot (CORE calls come from the cache), then decide which sources the full run
+keeps. The full run, validation sheets and analysis wait for that decision.
