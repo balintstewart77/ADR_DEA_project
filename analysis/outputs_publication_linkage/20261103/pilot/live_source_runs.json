@@ -1,0 +1,80 @@
+{
+  "started_at": "2026-11-03T19:34:00+00:00",
+  "finished_at": "2026-11-03T19:47:00+00:00",
+  "sources": {
+    "openalex": {
+      "status": "blocked",
+      "candidates": 0,
+      "live_calls": 0,
+      "cached_calls": 0,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 0.0,
+      "notes": [
+        "network policy refused host (proxy 403)"
+      ]
+    },
+    "core": {
+      "status": "ok",
+      "candidates": 2740,
+      "live_calls": 183,
+      "cached_calls": 186,
+      "http_errors": 5,
+      "cost_usd": 0.0,
+      "seconds": 711.0,
+      "notes": [
+        "fullText search unavailable at CORE (core 500: {\"message\":\"Azure search failed with status code: 400. Error context: code=OperationNotAllowed, message=Illega); title-only phrase search used",
+        "project-ID full-text search skipped: CORE fullText search unavailable"
+      ]
+    },
+    "europepmc": {
+      "status": "blocked",
+      "candidates": 0,
+      "live_calls": 0,
+      "cached_calls": 0,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 0.0,
+      "notes": [
+        "network policy refused host (proxy 403)"
+      ]
+    },
+    "gtr": {
+      "status": "blocked",
+      "candidates": 0,
+      "live_calls": 0,
+      "cached_calls": 0,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 0.0,
+      "notes": [
+        "network policy refused host (proxy 403)"
+      ]
+    },
+    "govuk": {
+      "status": "blocked",
+      "candidates": 0,
+      "live_calls": 0,
+      "cached_calls": 0,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 0.0,
+      "notes": [
+        "network policy refused host (proxy 403)"
+      ]
+    },
+    "semanticscholar": {
+      "status": "blocked",
+      "candidates": 0,
+      "live_calls": 0,
+      "cached_calls": 0,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 0.0,
+      "notes": [
+        "network policy refused host (proxy 403)"
+      ]
+    }
+  },
+  "reconstructed_from_call_log": true
+}

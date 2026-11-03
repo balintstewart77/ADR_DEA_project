@@ -1,0 +1,151 @@
+{
+  "kind": "publication_linkage_pilot",
+  "run_date": "20261103",
+  "register": {
+    "register_version": "20261021",
+    "snapshot_date": "2026-10-21",
+    "register_source_file": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/canonical.csv",
+    "register_sha256_csv": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad",
+    "register_properties_csv": "analysis/outputs_deterministic_rc2/register_properties.csv",
+    "records": 1385,
+    "cleaning_final_rows": 1385
+  },
+  "mature_cutoff": "2024-10-21",
+  "sample_seed": 20261103,
+  "sources_requested": [
+    "openalex",
+    "core",
+    "europepmc",
+    "gtr",
+    "govuk"
+  ],
+  "source_runs": {
+    "openalex": {
+      "status": "blocked",
+      "candidates": 0,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 0,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": [
+        "openalex: offline mode and no cached response"
+      ]
+    },
+    "core": {
+      "status": "ok",
+      "candidates": 2740,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 186,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": [
+        "fullText search unavailable at CORE (core 500: {\"message\":\"Azure search failed with status code: 400. Error context: code=OperationNotAllowed, message=Illega); title-only phrase search used",
+        "project-ID full-text search skipped: CORE fullText search unavailable"
+      ]
+    },
+    "europepmc": {
+      "status": "blocked",
+      "candidates": 0,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 0,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": [
+        "europepmc: offline mode and no cached response"
+      ]
+    },
+    "gtr": {
+      "status": "blocked",
+      "candidates": 0,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 0,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": [
+        "gtr: offline mode and no cached response"
+      ]
+    },
+    "govuk": {
+      "status": "blocked",
+      "candidates": 0,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 0,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": [
+        "govuk: offline mode and no cached response"
+      ]
+    }
+  },
+  "enrichment": {
+    "status": "blocked",
+    "stats": {
+      "live_calls": 0,
+      "cached_calls": 0,
+      "errors": 0,
+      "retries": 0,
+      "blocked": false,
+      "blocked_reason": "",
+      "cost_usd": 0.0,
+      "seconds_live": 0.0,
+      "notes": []
+    },
+    "notes": [
+      "semanticscholar: offline mode and no cached response"
+    ]
+  },
+  "candidates_retrieved": 2740,
+  "outputs_deduplicated": 1974,
+  "outputs_linked": 39,
+  "links": 56,
+  "adjudication": {
+    "queued": 13,
+    "decided": 13,
+    "verified": 13,
+    "unverified": 0,
+    "confirmed": 0,
+    "rejected": 13,
+    "capped_to_tier3": 0
+  },
+  "seconds": 53.5,
+  "offline": true,
+  "live_run": {
+    "started_at": "2026-11-03T19:34:00+00:00",
+    "finished_at": "2026-11-03T19:47:00+00:00"
+  }
+}

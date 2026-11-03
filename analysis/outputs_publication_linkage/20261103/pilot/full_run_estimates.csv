@@ -1,0 +1,4 @@
+source,pilot_calls,unit,units_full_register,est_calls_full_run,est_days_at_1000_tokens_per_day,est_cost_usd
+core,186,unique researcher,2548,3181,4,0.0
+openalex,0,unique researcher (+ phrase pages),2548,5161,,2.87
+govuk,0,register dataset x 3 route terms (+ page fetches),353,1059,,0.0

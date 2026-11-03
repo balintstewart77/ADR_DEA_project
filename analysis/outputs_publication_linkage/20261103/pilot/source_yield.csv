@@ -1,0 +1,4 @@
+source,tier,project_output_pairs,unique_pairs_this_source_only,projects,projects_this_source_only
+core,tier_2,21,21,6,6
+core,tier_3,22,22,10,10
+core,unresolved,13,13,6,6
