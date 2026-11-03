@@ -65,7 +65,7 @@ def test_manifest_structure_statuses_and_relationships() -> None:
     }
     redcap_sequence = sorted(int(artifact_id.split("-")[1]) for artifact_id in redcap)
     assert redcap_sequence == list(range(redcap_sequence[0], redcap_sequence[-1] + 1))
-    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-102"
+    assert f"RED-{redcap_sequence[-1]:03d}" == "RED-122"
     assert redcap["RED-054"]["version"] == "owner-redcap-candidate-0.2"
     assert redcap["RED-054"]["current_state"] == "historical_candidate"
     assert redcap["RED-054"]["authoritative_status"] == "superseded_unfrozen_candidate"
@@ -411,12 +411,8 @@ def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
             for row in manifest_rows if row["current_state"] == HISTORICAL_STATE
         ],
     }
-    known_gaps = set(json.loads(
-        (ROOT / "tests/fixtures/unmanifested_preregistration_files.json").read_text(encoding="utf-8")
-    )["paths"])
-    uncovered = {path for path in tracked_package if path not in covered | excluded_structure}
-    assert not sorted(uncovered - known_gaps), "package files need manifest rows"
-    assert not sorted(known_gaps - uncovered), "remove resolved or deleted paths from the known-gap list"
+    uncovered = [path for path in tracked_package if path not in covered | excluded_structure]
+    assert not uncovered, "package files need manifest rows"
 
 
 def _is_immutable_copy(row: dict[str, str]) -> bool:
