@@ -188,25 +188,38 @@ def download_bytes(url: str) -> bytes:
     return response.content
 
 
-def xlsx_to_dataframe(xlsx_bytes: bytes) -> pd.DataFrame:
-    """Convert the register workbook to a canonical-column DataFrame."""
-    workbook = pd.ExcelFile(io.BytesIO(xlsx_bytes))
-    target_sheet = workbook.sheet_names[0]
-    for name in workbook.sheet_names:
-        if any(kw in name.lower() for kw in ["project", "accredited", "data", "register"]):
-            target_sheet = name
-            break
-
-    raw = pd.read_excel(io.BytesIO(xlsx_bytes), sheet_name=target_sheet, header=None)
-    header_row = 0
+def _header_row(raw: pd.DataFrame) -> int:
+    """First row with at least three text cells (skips a title preamble)."""
     for i, row in raw.iterrows():
-        str_cells = [
-            v for v in row.values
-            if pd.notna(v) and isinstance(v, str) and v.strip()
-        ]
-        if len(str_cells) >= 3:
-            header_row = i
+        if sum(isinstance(v, str) and bool(v.strip()) for v in row.values) >= 3:
+            return i
+    return 0
+
+
+def xlsx_to_dataframe(xlsx_bytes: bytes) -> pd.DataFrame:
+    """Convert the register workbook to a canonical-column DataFrame.
+
+    The register sheet is chosen by its header row, not its name: the first
+    sheet whose header carries every expected column, else the sheet carrying
+    the most of them (so validation reports what is missing). Sheet-name
+    keywords are unreliable - "data" also matches a "Metadata" sheet.
+    """
+    workbook = pd.ExcelFile(io.BytesIO(xlsx_bytes))
+    best = None  # (expected columns found, -sheet position, name, header row)
+    for position, name in enumerate(workbook.sheet_names):
+        raw = workbook.parse(name, header=None)
+        header_row = _header_row(raw)
+        header = (
+            {COLUMN_MAP.get(str(v), str(v)) for v in raw.iloc[header_row].values}
+            if len(raw) else set()
+        )
+        found = sum(column in header for column in EXPECTED_COLUMNS)
+        candidate = (found, -position, name, header_row)
+        if best is None or candidate[:2] > best[:2]:
+            best = candidate
+        if found == len(EXPECTED_COLUMNS):
             break
+    _, _, target_sheet, header_row = best
 
     df = pd.read_excel(io.BytesIO(xlsx_bytes), sheet_name=target_sheet, header=header_row)
     df = df.dropna(how="all").dropna(axis=1, how="all")

@@ -221,6 +221,34 @@ class XlsxConversionTest(unittest.TestCase):
         self.assertEqual(len(df), 3)
         self.assertIn("Project ID", df.columns)
 
+    def _multi_sheet_workbook(self, sheets):
+        buffer = io.BytesIO()
+        with pd.ExcelWriter(buffer) as writer:
+            for name, frame in sheets:
+                frame.to_excel(writer, index=False, header=False, sheet_name=name)
+        return buffer.getvalue()
+
+    def test_register_sheet_is_chosen_by_header_not_by_name(self):
+        register = pd.read_excel(io.BytesIO(_workbook_bytes(_sample_rows())), header=None)
+        notes = pd.DataFrame([["About this data"], ["Published by UKSA"]])
+        # "Metadata" contains the old keyword "data"; the register sheet is
+        # neither first nor keyword-named.
+        workbook = self._multi_sheet_workbook([
+            ("Metadata", notes), ("Notes", notes), ("Sheet3", register),
+        ])
+        df = xlsx_to_dataframe(workbook)
+        self.assertEqual(validate_register_dataframe(df, min_rows=None), [])
+        self.assertEqual(list(df["Project ID"]), ["2026/000", "2026/001", "2026/002"])
+
+    def test_without_a_complete_header_the_closest_sheet_is_reported(self):
+        register = pd.read_excel(io.BytesIO(_workbook_bytes(_sample_rows())), header=None)
+        partial = register.drop(columns=[6])  # no Accreditation Date
+        notes = pd.DataFrame([["About this data"]])
+        df = xlsx_to_dataframe(self._multi_sheet_workbook([("Metadata", notes), ("Projects", partial)]))
+        problems = validate_register_dataframe(df, min_rows=None)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("['Accreditation Date']", problems[0])
+
 
 class ValidationTest(unittest.TestCase):
     def _valid_df(self, n=5):
