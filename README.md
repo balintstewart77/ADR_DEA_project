@@ -118,8 +118,12 @@ python -m pip check
 ```
 
 The browser group adds Playwright; Chromium is installed separately with
-`python -m playwright install chromium`. CI targets Python 3.12; the local
-Windows environment also uses Python 3.13. The test group includes the
+`python -m playwright install chromium`. `.python-version` sets the Python
+that both CI and the Render deployment use (3.12), which is the version the
+lock is resolved for; the local Windows environment also uses Python 3.13.
+Without that file Render uses its newest default Python, for which some locked
+packages have no prebuilt wheels: pip then compiles them from source and the
+server can crash on start. The test group includes the
 `anthropic` SDK, so the lock also pins the SDK that `requirements-llm.txt`
 installs for classification runs; each run records it in `run_metadata.json`.
 Notebook, optional analysis and archived ML dependencies outside these groups
