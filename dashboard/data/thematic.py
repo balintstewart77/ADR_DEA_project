@@ -14,11 +14,11 @@ from dashboard.config import (
     PURPOSE_LABELS,
     _PROJECT_ID_KEY_COL,
 )
+from dashboard.components.filter_controls import label_with_count
 from dashboard.taxonomy import DOMAIN_LABELS
 from dashboard.data.deterministic import (
     DETERMINISTIC_FACET_COLUMNS,
     MATCHED_PRODUCTS_COL,
-    RECORD_LINKAGE_COMPONENT_DOMAINS_COL,
     RECORD_LINKAGE_DISPLAY_LABELS,
     display_deterministic_value,
     load_register_properties,
@@ -45,10 +45,6 @@ DOMAIN_BREADTH_COVERAGE_COLUMNS = [
     "zero_substantive_domains",
     "excluded_records",
 ]
-
-
-def _filter_label_with_count(label: str, count: int) -> str:
-    return f"{label}  ({count} {'project' if count == 1 else 'projects'})"
 
 
 def _split_semicolon_values(value) -> list[str]:
@@ -84,7 +80,7 @@ def _single_value_options(
         [{"label": all_label, "value": "ALL"}]
         + [
             {
-                "label": _filter_label_with_count(value, display_counts[value]),
+                "label": label_with_count(value, display_counts[value]),
                 "value": value,
             }
             for value in ordered
@@ -102,7 +98,7 @@ def _semicolon_value_options(df: pd.DataFrame, column: str, all_label: str) -> l
         [{"label": all_label, "value": "ALL"}]
         + [
             {
-                "label": _filter_label_with_count(
+                "label": label_with_count(
                     display_deterministic_value(value),
                     counts[value],
                 ),
@@ -984,7 +980,7 @@ def _thematic_filter_options(projects: pd.DataFrame) -> dict:
         ),
         "_THEMATIC_DOMAIN_COUNT_OPTIONS": [{"label": "All domain counts", "value": "ALL"}] + [
             {
-                "label": _filter_label_with_count(_domain_count_label(int(value)), int(count)),
+                "label": label_with_count(_domain_count_label(int(value)), int(count)),
                 "value": int(value),
             }
             for value, count in domain_counts.items()
@@ -993,7 +989,7 @@ def _thematic_filter_options(projects: pd.DataFrame) -> dict:
             projects, "analytical_purpose", "All purposes",
         ),
         "_THEMATIC_TAG_OPTIONS": [{"label": "All projects", "value": "ALL"}] + [
-            {"label": _filter_label_with_count(tag, tag_counts[tag]), "value": tag}
+            {"label": label_with_count(tag, tag_counts[tag]), "value": tag}
             for tag in tags
         ],
         "_DETERMINISTIC_RECORD_LINKAGE_OPTIONS": _single_value_options(

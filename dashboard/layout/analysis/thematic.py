@@ -12,7 +12,6 @@ from dashboard import taxonomy
 from dashboard import reference_definitions
 from dashboard.config import RELEASE_MODEL
 from dashboard.config import REGISTER_SOURCE_ICON, DERIVED_FIELD_ICON
-from dashboard.data.filtering import _get_enriched_register_display_df
 from dashboard.data.registry import (
     _ALL_DATASET_OPTIONS, _ALL_PROVIDER_OPTIONS, _ALL_INSTITUTION_OPTIONS, _ALL_TRE_OPTIONS,
 )

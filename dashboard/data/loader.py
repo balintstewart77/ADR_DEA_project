@@ -62,11 +62,6 @@ def load_raw(data_dir=DATA_DIR):
     return load_raw_register(data_dir)
 
 
-def classify_collection(datasets_str: str) -> list[str]:
-    """Return referenced collection labels matched through linked products."""
-    return list(dict.fromkeys(count_collection_usages(datasets_str)))
-
-
 def count_collection_usages(datasets_str: str) -> list[str]:
     """Return one collection entry per matched individual dataset request."""
     if not isinstance(datasets_str, str):

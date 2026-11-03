@@ -8,6 +8,7 @@ from dashboard.config import (
 )
 from dashboard.data.loader import REFERENCE_COLLECTIONS, load_raw, process_data
 from dashboard.data.keys import _project_id_key
+from dashboard.components.filter_controls import label_with_count
 
 try:
     from dashboard.dataset_normalisation import parse_datasets
@@ -67,7 +68,7 @@ TOTAL_RETAINED_REGISTER_ENTRIES = len(df_all)
 TOTAL_UNIQUE_OFFICIAL_PROJECT_IDS = df_all["Project ID"].nunique() if len(df_all) else 0
 TOTAL_DATASET_REQUESTS = len(df_datasets)
 TOTAL_FLAGSHIP = df_flagship_projects["Project Row ID"].nunique() if len(df_flagship_projects) else 0
-TOTAL_FLAGSHIP_REQUESTS = len(df_flagship_requests) if len(df_flagship_requests) else 0
+TOTAL_FLAGSHIP_REQUESTS = len(df_flagship_requests)
 YEAR_RANGE = f"{int(df_all['Year'].min())}–{int(df_all['Year'].max())}" if len(df_all) else ""
 DATASET_PROJECT_KEY_COL = "Record ID" if "Record ID" in df_datasets.columns else "Project ID"
 INSTITUTION_PROJECT_KEY_COL = "Record ID" if "Record ID" in df_institutions.columns else "Project ID"
@@ -119,41 +120,23 @@ df_all[_PROJECT_ID_KEY_COL] = df_all["Project ID"].apply(_project_id_key)
 # Filter option lists
 # ---------------------------------------------------------------------------
 
-_dataset_project_counts = (
-    df_datasets.drop_duplicates(subset=[DATASET_PROJECT_KEY_COL, "dataset"])
-    .groupby("dataset")[DATASET_PROJECT_KEY_COL].nunique()
-)
-_ALL_DATASET_OPTIONS = (
-    [{"label": "All datasets", "value": "ALL"}]
-    + [
-        {"label": f"{d}  ({n} {'project' if n == 1 else 'projects'})", "value": d}
-        for d in sorted(df_datasets["dataset"].unique()) if d
-        for n in [_dataset_project_counts.get(d, 0)]
+def _related_options(frame: pd.DataFrame, value_col: str, key_col: str, all_label: str) -> list[dict]:
+    """Option universe for a related-table facet, counted in distinct records."""
+    counts = frame.drop_duplicates(subset=[key_col, value_col]).groupby(value_col)[key_col].nunique()
+    return [{"label": all_label, "value": "ALL"}] + [
+        {"label": label_with_count(value, int(counts.get(value, 0))), "value": value}
+        for value in sorted(frame[value_col].unique()) if value
     ]
+
+
+_ALL_DATASET_OPTIONS = _related_options(
+    df_datasets, "dataset", DATASET_PROJECT_KEY_COL, "All datasets",
 )
-_provider_project_counts = (
-    df_datasets.drop_duplicates(subset=[DATASET_PROJECT_KEY_COL, "provider"])
-    .groupby("provider")[DATASET_PROJECT_KEY_COL].nunique()
+_ALL_PROVIDER_OPTIONS = _related_options(
+    df_datasets, "provider", DATASET_PROJECT_KEY_COL, "All dataset source organisations",
 )
-_ALL_PROVIDER_OPTIONS = (
-    [{"label": "All dataset source organisations", "value": "ALL"}]
-    + [
-        {"label": f"{p}  ({n} {'project' if n == 1 else 'projects'})", "value": p}
-        for p in sorted(df_datasets["provider"].unique()) if p
-        for n in [_provider_project_counts.get(p, 0)]
-    ]
-)
-_institution_project_counts = (
-    df_institutions.drop_duplicates(subset=[INSTITUTION_PROJECT_KEY_COL, "institution"])
-    .groupby("institution")[INSTITUTION_PROJECT_KEY_COL].nunique()
-)
-_ALL_INSTITUTION_OPTIONS = (
-    [{"label": "All institutions", "value": "ALL"}]
-    + [
-        {"label": f"{i}  ({n} {'project' if n == 1 else 'projects'})", "value": i}
-        for i in sorted(df_institutions["institution"].unique()) if i
-        for n in [_institution_project_counts.get(i, 0)]
-    ]
+_ALL_INSTITUTION_OPTIONS = _related_options(
+    df_institutions, "institution", INSTITUTION_PROJECT_KEY_COL, "All institutions",
 )
 
 
@@ -163,28 +146,9 @@ def _format_tre_provider(value) -> str:
     return str(value).strip()
 
 
-_tre_values = sorted({
-    str(value).strip()
-    for value in df_all["Secure Research Service"].dropna()
-    if str(value).strip()
-})
-_tre_project_counts = (
-    df_all.assign(_tre_value=df_all["Secure Research Service"].astype("string").str.strip())
-    .dropna(subset=["_tre_value"])
-    .query("_tre_value != ''")
-    .groupby("_tre_value")["Project Row ID"].count()
-)
-_ALL_TRE_OPTIONS = (
-    [{"label": "All processing environments", "value": "ALL"}]
-    + [
-        {
-            "label": (
-                f"{_format_tre_provider(value)}  "
-                f"({_tre_project_counts.get(value, 0)} "
-                f"{'project' if _tre_project_counts.get(value, 0) == 1 else 'projects'})"
-            ),
-            "value": value,
-        }
-        for value in _tre_values
-    ]
-)
+_tre_values = df_all["Secure Research Service"].astype("string").str.strip()
+_tre_project_counts = _tre_values[_tre_values.notna() & _tre_values.ne("")].value_counts()
+_ALL_TRE_OPTIONS = [{"label": "All processing environments", "value": "ALL"}] + [
+    {"label": label_with_count(value, int(_tre_project_counts[value])), "value": value}
+    for value in sorted(_tre_project_counts.index)
+]

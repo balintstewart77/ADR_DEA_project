@@ -19,6 +19,7 @@ from dashboard.config import (
     CROSS_CUTTING_TAGS_COL,
     RATIONALE_COL,
 )
+from dashboard.components.filter_controls import label_with_count
 from dashboard.data.registry import (
     df_all,
     df_datasets,
@@ -333,6 +334,16 @@ _ENRICHED_FACET_OPTIONS = {
     "unit": _DETERMINISTIC_UNIT_OPTIONS,
     "researcher_sector": _DETERMINISTIC_RESEARCHER_SECTOR_OPTIONS,
 }
+# Enriched Register facets in filter, dropdown and callback order.
+ENRICHED_FACETS = tuple(_ENRICHED_FACET_OPTIONS)
+
+
+def _enriched_state(search, *filters) -> dict:
+    if len(filters) != len(ENRICHED_FACETS):
+        raise ValueError(f"expected {len(ENRICHED_FACETS)} facet filters, got {len(filters)}")
+    return {"search": search, **dict(zip(ENRICHED_FACETS, filters))}
+
+
 _OPTION_COUNT_SUFFIX = re.compile(r"  \(\d+ projects?\)$")
 
 
@@ -342,16 +353,7 @@ def _canonical_option_label(option: Mapping) -> str:
 
 
 def _distinct_record_id_count(df: pd.DataFrame) -> int:
-    if "Record ID" not in df.columns:
-        raise KeyError("Facet counts require the unique Record ID")
-    record_ids = df["Record ID"].astype("string").str.strip()
-    if record_ids.isna().any() or record_ids.eq("").any():
-        raise ValueError("Facet counts require non-blank Record ID values")
-    return int(record_ids.nunique())
-
-
-def _format_option_count(label: str, count: int) -> str:
-    return f"{label}  ({count} {'project' if count == 1 else 'projects'})"
+    return int(_normalised_record_ids(df).nunique())
 
 
 def _normalised_record_ids(df: pd.DataFrame) -> pd.Series:
@@ -458,7 +460,7 @@ def _facet_options_with_dynamic_counts(
                     if grouped_counts is not None
                     else _distinct_record_id_count(predicate(without_facet, option["value"]))
                 )
-                result["label"] = _format_option_count(label, count)
+                result["label"] = label_with_count(label, count)
             else:
                 # ALL is a reset sentinel, not an ordinary stored category.
                 result["label"] = label
@@ -467,10 +469,24 @@ def _facet_options_with_dynamic_counts(
     return counted_options
 
 
-def _apply_domain_filter(base: pd.DataFrame, domain) -> pd.DataFrame:
-    if not domain or domain == "ALL":
-        return base
-    return base[_contains_semicolon_value(base["substantive_domains"], domain)]
+# Derived facets whose values are semicolon-separated sets, by column.
+_SEMICOLON_FACET_COLUMNS = {
+    "domain": "substantive_domains",
+    "purpose": "analytical_purpose",
+    "tag": CROSS_CUTTING_TAGS_COL,
+    "collection_method": "dataset_collection_methods",
+    "temporal_structure": "dataset_temporal_structures",
+    "unit": "dataset_units",
+    "researcher_sector": "researcher_sectors",
+}
+
+
+def _semicolon_facet_filter(column: str) -> Callable[[pd.DataFrame, object], pd.DataFrame]:
+    def apply(base: pd.DataFrame, value) -> pd.DataFrame:
+        if not value or value == "ALL":
+            return base
+        return base[_contains_semicolon_value(base[column], value)]
+    return apply
 
 
 def _apply_domain_count_filter(base: pd.DataFrame, domain_count) -> pd.DataFrame:
@@ -481,58 +497,16 @@ def _apply_domain_count_filter(base: pd.DataFrame, domain_count) -> pd.DataFrame
     return base[pd.to_numeric(base[SUBSTANTIVE_DOMAIN_COUNT_COL], errors="coerce") == count]
 
 
-def _apply_purpose_filter(base: pd.DataFrame, purpose) -> pd.DataFrame:
-    if not purpose or purpose == "ALL":
-        return base
-    return base[_contains_semicolon_value(base["analytical_purpose"], purpose)]
-
-
-def _apply_tag_filter(base: pd.DataFrame, tag) -> pd.DataFrame:
-    if not tag or tag == "ALL":
-        return base
-    return base[_contains_semicolon_value(base[CROSS_CUTTING_TAGS_COL], tag)]
-
-
 def _apply_record_linkage_filter(base: pd.DataFrame, record_linkage) -> pd.DataFrame:
     if not record_linkage or record_linkage == "ALL":
         return base
     return base[_format_record_linkage(base[RECORD_LINKAGE_COL]) == record_linkage]
 
 
-def _apply_collection_method_filter(base: pd.DataFrame, collection_method) -> pd.DataFrame:
-    if not collection_method or collection_method == "ALL":
-        return base
-    return base[_contains_semicolon_value(base["dataset_collection_methods"], collection_method)]
-
-
-def _apply_temporal_structure_filter(base: pd.DataFrame, temporal_structure) -> pd.DataFrame:
-    if not temporal_structure or temporal_structure == "ALL":
-        return base
-    return base[_contains_semicolon_value(base["dataset_temporal_structures"], temporal_structure)]
-
-
-def _apply_unit_filter(base: pd.DataFrame, unit) -> pd.DataFrame:
-    if not unit or unit == "ALL":
-        return base
-    return base[_contains_semicolon_value(base["dataset_units"], unit)]
-
-
-def _apply_researcher_sector_filter(base: pd.DataFrame, researcher_sector) -> pd.DataFrame:
-    if not researcher_sector or researcher_sector == "ALL":
-        return base
-    return base[_contains_semicolon_value(base["researcher_sectors"], researcher_sector)]
-
-
 _ENRICHED_DERIVED_FACET_PREDICATES = {
-    "domain": _apply_domain_filter,
+    **{facet: _semicolon_facet_filter(column) for facet, column in _SEMICOLON_FACET_COLUMNS.items()},
     "domain_count": _apply_domain_count_filter,
-    "purpose": _apply_purpose_filter,
-    "tag": _apply_tag_filter,
     "record_linkage": _apply_record_linkage_filter,
-    "collection_method": _apply_collection_method_filter,
-    "temporal_structure": _apply_temporal_structure_filter,
-    "unit": _apply_unit_filter,
-    "researcher_sector": _apply_researcher_sector_filter,
 }
 _ENRICHED_FACET_PREDICATES = {
     **_REGISTER_FACET_PREDICATES,
@@ -561,21 +535,12 @@ def _record_linkage_option_counts(base: pd.DataFrame, _options: list[dict]) -> d
 
 _ENRICHED_FACET_COUNTERS = {
     **_BROWSE_FACET_COUNTERS,
-    "domain": lambda base, _options: _semicolon_option_counts(base, "substantive_domains"),
+    **{
+        facet: (lambda base, _options, column=column: _semicolon_option_counts(base, column))
+        for facet, column in _SEMICOLON_FACET_COLUMNS.items()
+    },
     "domain_count": _domain_count_option_counts,
-    "purpose": lambda base, _options: _semicolon_option_counts(base, "analytical_purpose"),
-    "tag": lambda base, _options: _semicolon_option_counts(base, CROSS_CUTTING_TAGS_COL),
     "record_linkage": _record_linkage_option_counts,
-    "collection_method": lambda base, _options: _semicolon_option_counts(
-        base, "dataset_collection_methods",
-    ),
-    "temporal_structure": lambda base, _options: _semicolon_option_counts(
-        base, "dataset_temporal_structures",
-    ),
-    "unit": lambda base, _options: _semicolon_option_counts(base, "dataset_units"),
-    "researcher_sector": lambda base, _options: _semicolon_option_counts(
-        base, "researcher_sectors",
-    ),
 }
 
 
@@ -670,22 +635,12 @@ def _get_enriched_register_facet_options(
     accreditation_year_min=None,
     accreditation_year_max=None,
 ) -> dict[str, list[dict]]:
-    state = {
-        "search": search,
-        "dataset": dataset_filter,
-        "provider": provider_filter,
-        "institution": institution_filter,
-        "tre": tre_filter,
-        "domain": domain_filter,
-        "domain_count": domain_count_filter,
-        "purpose": purpose_filter,
-        "tag": tag_filter,
-        "record_linkage": record_linkage_filter,
-        "collection_method": collection_method_filter,
-        "temporal_structure": temporal_structure_filter,
-        "unit": unit_filter,
-        "researcher_sector": researcher_sector_filter,
-    }
+    state = _enriched_state(
+        search, dataset_filter, provider_filter, institution_filter, tre_filter,
+        domain_filter, domain_count_filter, purpose_filter, tag_filter,
+        record_linkage_filter, collection_method_filter, temporal_structure_filter,
+        unit_filter, researcher_sector_filter,
+    )
     bounds = YearRange(int(accreditation_year_min), int(accreditation_year_max))
 
     def apply_restrictions(base, selected, excluded):
@@ -700,16 +655,6 @@ def _get_enriched_register_facet_options(
         _ENRICHED_FACET_PREDICATES,
         _ENRICHED_FACET_COUNTERS,
     )
-
-
-def _compute_classified_register_count() -> int:
-    if not len(df_thematic_projects):
-        return 0
-    classified = _merge_thematic_classifications(df_all)
-    return int(_classified_mask(classified).sum())
-
-
-_CLASSIFIED_REGISTER_COUNT = _compute_classified_register_count()
 
 
 def _format_display_dates(series: pd.Series) -> pd.Series:
@@ -766,22 +711,12 @@ def _get_enriched_register_display_df(
 ) -> tuple[pd.DataFrame, str]:
     base = _enriched_register_base(eligible_record_ids)
     n_classified_total = len(base)
-    state = {
-        "search": search,
-        "dataset": dataset_filter,
-        "provider": provider_filter,
-        "institution": institution_filter,
-        "tre": tre_filter,
-        "domain": domain_filter,
-        "domain_count": domain_count_filter,
-        "purpose": purpose_filter,
-        "tag": tag_filter,
-        "record_linkage": record_linkage_filter,
-        "collection_method": collection_method_filter,
-        "temporal_structure": temporal_structure_filter,
-        "unit": unit_filter,
-        "researcher_sector": researcher_sector_filter,
-    }
+    state = _enriched_state(
+        search, dataset_filter, provider_filter, institution_filter, tre_filter,
+        domain_filter, domain_count_filter, purpose_filter, tag_filter,
+        record_linkage_filter, collection_method_filter, temporal_structure_filter,
+        unit_filter, researcher_sector_filter,
+    )
     base = _apply_enriched_register_filters(base, state)
 
     n_displayed = len(base)

@@ -52,7 +52,6 @@ if str(_SCRAPE_DIR) not in sys.path:
 from analysis.register_cleaning import (  # noqa: E402
     _normalise_duplicate_text,
     clean_register_dataframe,
-    load_raw_register,
 )
 from analysis.register_manifest import (  # noqa: E402
     CURRENT_POINTER,
@@ -95,13 +94,6 @@ def _emit_workflow_outcome(outcome: str) -> None:
 # ---------------------------------------------------------------------------
 # Register loading and diffing
 # ---------------------------------------------------------------------------
-
-def load_cleaned_version(version: str) -> pd.DataFrame:
-    raw, _source = load_raw_register(version=version)
-    with tempfile.TemporaryDirectory() as tmp:
-        df, _stats = clean_register_dataframe(raw, output_dir=tmp, verbose=False)
-    return df
-
 
 def load_raw_snapshot(snapshot_ref: str, *, data_dir: str = DATA_DIR) -> pd.DataFrame:
     path, _snapshot = resolve_snapshot_csv(data_dir, snapshot_ref)
