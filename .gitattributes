@@ -9,6 +9,7 @@
 *.json  text eol=lf
 *.txt   text eol=lf
 *.ipynb text eol=lf
+*.html  text eol=lf
 
 # Frozen historical GPT-5.5 run output: preserve BOM, CRLF record terminators,
 # and embedded LF bytes exactly as recovered.
@@ -18,3 +19,4 @@ analysis/releases/gpt55_crossmodel_20260707/gpt55_classifications.csv -text -eol
 *.xlsx  -text
 *.ods   -text
 *.pdf   -text
+*.docx  -text

@@ -434,31 +434,32 @@ def _artifact_parameters():
         yield pytest.param(row, id=row["artifact_id"], marks=marks)
 
 
+MANIFEST_ALIASES = json.loads(
+    (ROOT / "tests/fixtures/manifest_text_representations.json").read_text(encoding="utf-8")
+)["artifacts"]
+
+
 @pytest.mark.parametrize("row", list(_artifact_parameters()))
 def test_manifest_artifact_bytes_match_recorded_identity(row):
-    path = ROOT / row["current_path"]
-    content = path.read_bytes()
-    representations = [content]
-    if path.suffix in {".py", ".ps1", ".csv", ".json", ".yaml", ".yml", ".md", ".txt", ".html", ".lock", ".ipynb"}:
-        lf = content.replace(b"\r\n", b"\n")
-        representations.extend([lf, lf.replace(b"\n", b"\r\n")])
-        # Some historical files mixed CRLF record endings and LF embedded
-        # newlines. Git normalises them on checkout; preserve the original
-        # manifest identity and accept only these verified LF counterparts.
-        aliases = json.loads((ROOT / "tests/fixtures/manifest_text_representations.json").read_text(encoding="utf-8"))["artifacts"]
-        alias = aliases.get(row["artifact_id"])
-        if alias and (row["sha256"], int(row["size_bytes"])) == (
-            alias["recorded_sha256"], alias["recorded_size_bytes"],
-        ):
-            assert (hashlib.sha256(lf).hexdigest(), len(lf)) == (
-                alias["lf_sha256"], alias["lf_size_bytes"],
-            ), row["artifact_id"]
-            return
-    assert any(
-        hashlib.sha256(data).hexdigest() == row["sha256"]
-        and len(data) == int(row["size_bytes"])
-        for data in representations
-    ), row["artifact_id"]
+    """Immutable copies must match byte for byte; no newline conversion is accepted.
+
+    .gitattributes pins every checked text type to LF and binaries to -text, so
+    checkouts are byte-identical across platforms. A few recorded hashes were
+    taken from another newline form; the alias fixture pins those rows' exact
+    committed bytes instead.
+    """
+    content = (ROOT / row["current_path"]).read_bytes()
+    expected = (row["sha256"], int(row["size_bytes"]))
+    alias = MANIFEST_ALIASES.get(row["artifact_id"])
+    if alias is not None:
+        assert expected == (alias["recorded_sha256"], alias["recorded_size_bytes"]), row["artifact_id"]
+        expected = (alias["lf_sha256"], alias["lf_size_bytes"])
+    assert (hashlib.sha256(content).hexdigest(), len(content)) == expected, row["artifact_id"]
+
+
+def test_every_newline_alias_names_a_checked_row():
+    checked = {param.values[0]["artifact_id"] for param in _artifact_parameters()}
+    assert set(MANIFEST_ALIASES) <= checked
 
 
 @pytest.mark.git_history
