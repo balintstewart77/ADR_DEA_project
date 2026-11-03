@@ -59,7 +59,7 @@ def make_thematic_totals_bar(
     height: int = CHART_HEIGHT,
 ) -> go.Figure:
     """Horizontal bar chart of total counts for a layer."""
-    df_sorted = df_totals.sort_values("count", ascending=True)
+    df_sorted = df_totals.sort_values(["count", category_col], ascending=[True, False])
     colours = [colour_map.get(cat, "#999") for cat in df_sorted[category_col]]
     fig = go.Figure(go.Bar(
         y=df_sorted[category_col],

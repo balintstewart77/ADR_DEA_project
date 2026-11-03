@@ -16,7 +16,9 @@ def make_institution_bar(df_inst: pd.DataFrame, top_n: int = 20) -> go.Figure:
         .nunique()
         .reset_index()
         .rename(columns={project_key: "Projects"})
-        .sort_values("Projects", ascending=True)
+        # Break count ties by name: an unstable sort leaves the top-N cut
+        # dependent on the CPU's sort routine.
+        .sort_values(["Projects", "institution"], ascending=[True, False])
         .tail(top_n)
     )
     fig = px.bar(

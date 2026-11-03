@@ -104,7 +104,9 @@ def build_dataset_demand_figures(
         )
     else:
         dataset_counts = (
-            dataset_counts.sort_values("Projects", ascending=True).tail(top_n)
+            dataset_counts.sort_values(
+                ["Projects", "display_dataset"], ascending=[True, False],
+            ).tail(top_n)
         )
         fig_top = px.bar(
             dataset_counts,
@@ -180,7 +182,7 @@ def build_dataset_demand_figures(
         .nunique()
         .reset_index()
         .rename(columns={"Record ID" if "Record ID" in sub.columns else "Project ID": "Projects"})
-        .sort_values("Projects", ascending=False)
+        .sort_values(["Projects", "provider"], ascending=[False, True])
     )
     provider_top_n = 15
     if len(prov_counts) > provider_top_n:
