@@ -8,6 +8,11 @@ REST API (https://europepmc.org/RestfulWebService):
 * ``GET /europepmc/webservices/rest/{PMCID}/fullTextXML`` -- open-access
   full text, from which acknowledgement and data-statement sentences are
   taken.
+
+Field names checked against ``/rest/fields`` on 2026-11-03 (ACK_FUND,
+METHODS, BODY, PUB_YEAR, DOI, OPEN_ACCESS, ...). A bare quoted ID such as
+``"2022/139"`` matches loosely (618 hits), so project-ID queries pair the ID
+with accreditation terms; the rules then require a context word beside it.
 """
 
 from __future__ import annotations
@@ -17,7 +22,7 @@ from datetime import date
 
 from analysis.publication_linkage import config
 from analysis.publication_linkage.http_client import CachedClient
-from analysis.publication_linkage.matching import SEARCH_PHRASES, clean_text
+from analysis.publication_linkage.matching import SEARCH_PHRASES, clean_text, parse_person_name
 from analysis.publication_linkage.outputs import CandidateOutput
 from analysis.publication_linkage.register_records import ProjectRecord
 
@@ -25,6 +30,10 @@ BASE = "https://www.ebi.ac.uk/europepmc/webservices/rest"
 PAGE_SIZE = 1000
 MAX_PAGES_PER_PHRASE = 3
 MAX_FULLTEXTS = 2000
+ID_CONTEXT = (
+    '"Digital Economy Act" OR "Research Accreditation Panel" OR "Secure Research Service" OR '
+    '"Integrated Data Service" OR "UK Statistics Authority" OR "SAIL Databank" OR accredited OR accreditation'
+)
 
 
 def xml_to_text(xml: str) -> str:
@@ -83,6 +92,18 @@ class EuropePmcSource:
             cursor = next_cursor
         return results
 
+    def fetch_by_doi(self, doi: str) -> CandidateOutput | None:
+        """Open-access full text for an output found elsewhere."""
+        results = self.search(f'DOI:"{doi}"')
+        for result in results:
+            if (result.get("doi") or "").lower() == doi.lower():
+                candidate = self.to_candidate(result, f"doi:{doi}")
+                pmcid = result.get("pmcid")
+                if pmcid and result.get("isOpenAccess") == "Y":
+                    candidate.full_text = self.full_text(pmcid)
+                return candidate
+        return None
+
     def full_text(self, pmcid: str) -> str:
         text, record = self.client.get_text(f"{BASE}/{pmcid}/fullTextXML")
         return xml_to_text(text) if record.get("status") == 200 else ""
@@ -95,9 +116,31 @@ class EuropePmcSource:
             for result in self.search(query):
                 candidate = self.to_candidate(result, f"phrase:{phrase}")
                 candidates.setdefault(candidate.source_id, candidate)
+        for project in projects:
+            query = f'"{project.project_id}" AND ({ID_CONTEXT}) AND PUB_YEAR:[{project.accreditation_date.year - 1} TO {snapshot_date.year}]'
+            for result in self.search(query):
+                candidate = self.to_candidate(result, f"project_id:{project.project_id}")
+                candidate = candidates.setdefault(candidate.source_id, candidate)
+                if project.project_id not in candidate.index_project_id_hits:
+                    candidate.index_project_id_hits.append(project.project_id)
+        # Full text only where a link is possible: an author family name shared
+        # with a register researcher in scope, or a project-ID hit.
+        families = {
+            parsed.family_key
+            for project in projects for researcher in project.researchers
+            if (parsed := parse_person_name(researcher.name))
+        }
+
+        def could_link(candidate: CandidateOutput) -> bool:
+            if candidate.index_project_id_hits:
+                return True
+            return any((parsed := parse_person_name(a)) and parsed.family_key in families for a in candidate.authors)
+
         fetched = 0
         for candidate in candidates.values():
             pmcid = candidate.extra.get("pmcid")
+            if not could_link(candidate):
+                continue
             if pmcid and candidate.extra.get("is_open_access") == "Y" and fetched < MAX_FULLTEXTS:
                 candidate.full_text = self.full_text(pmcid)
                 fetched += 1

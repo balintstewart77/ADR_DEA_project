@@ -183,4 +183,4 @@ analysis/outputs/model_comparison_fable_5_run2/*
 # OpenAlex spend ledger) stay local; adjudication batch inputs carry abstracts
 # and are regenerated from the cache, so only decisions are tracked ---
 data/publication_linkage_cache/
-analysis/outputs_publication_linkage/**/adjudication/batch_*[0-9].jsonl
+analysis/outputs_publication_linkage/**/adjudication/**/batch_*[0-9].jsonl

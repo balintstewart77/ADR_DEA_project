@@ -187,47 +187,102 @@ def test_quote_verification_is_verbatim_modulo_whitespace():
     assert not quote_verified("LEO", source)  # too short to be evidence
 
 
+def _decide(tmp_path, rows, line):
+    queue = write_queue(rows, tmp_path)
+    (queue["round"] / "batch_001.decisions.jsonl").write_text(line + "\n")
+    return queue
+
+
 def test_apply_decisions_verifies_quotes_and_caps_tiers(tmp_path):
     weak = output(authors=["J. Britton"], abstract="We use LEO.", title="Graduate pay")
     rows = link_outputs(dedupe_outputs([weak]), [project()], SNAPSHOT)
-    write_queue(rows, tmp_path)
     links = links_table(rows)
     item_id = f"2021/050|{rows[0].group.output_key}"
-    decision_path = tmp_path / "adjudication" / "batch_001.decisions.jsonl"
 
-    decision_path.write_text(
-        '{"item_id": "%s", "match": true, "tier": 2, "reason": "ok", "evidence_quote": "We use LEO."}\n' % item_id
-    )
-    adjudicated, counts = apply_decisions(links, tmp_path)
+    queue = _decide(tmp_path / "a", rows, '{"item_id": "%s", "match": true, "tier": 2, "reason": "ok", "evidence_quote": "We use LEO."}' % item_id)
+    adjudicated, counts = apply_decisions(links, tmp_path / "a", queue["items"])
     assert counts["verified"] == 1 and adjudicated.loc[0, "final_tier"] == 2
 
-    decision_path.write_text(
-        '{"item_id": "%s", "match": true, "tier": 2, "reason": "ok", "evidence_quote": "a sentence not shown"}\n' % item_id
-    )
-    adjudicated, counts = apply_decisions(links, tmp_path)
+    queue = _decide(tmp_path / "b", rows, '{"item_id": "%s", "match": true, "tier": 2, "reason": "ok", "evidence_quote": "a sentence not shown"}' % item_id)
+    adjudicated, counts = apply_decisions(links, tmp_path / "b", queue["items"])
     assert counts["unverified"] == 1
     assert adjudicated.loc[0, "adjudication_status"] == "quote_not_verified"
     assert adjudicated.loc[0, "final_tier"] == 2  # rule tier stands
 
-    decision_path.write_text(
-        '{"item_id": "%s", "match": false, "tier": null, "reason": "different topic", "evidence_quote": "We use LEO."}\n' % item_id
-    )
-    adjudicated, _ = apply_decisions(links, tmp_path)
+    queue = _decide(tmp_path / "c", rows, '{"item_id": "%s", "match": false, "tier": null, "reason": "different topic", "evidence_quote": "We use LEO."}' % item_id)
+    adjudicated, _ = apply_decisions(links, tmp_path / "c", queue["items"])
     assert adjudicated.loc[0, "final_tier"] == ""
 
 
 def test_adjudicated_tier2_capped_without_statement(tmp_path):
     near = output(authors=["J. Britton"], abstract="We use LEO.", title="Graduate pay", full_text="No statement.")
     rows = link_outputs(dedupe_outputs([near]), [project()], SNAPSHOT)
-    write_queue(rows, tmp_path)
     links = links_table(rows)
     item_id = f"2021/050|{rows[0].group.output_key}"
-    (tmp_path / "adjudication" / "batch_001.decisions.jsonl").write_text(
-        '{"item_id": "%s", "match": true, "tier": 2, "reason": "x", "evidence_quote": "We use LEO."}\n' % item_id
-    )
-    adjudicated, counts = apply_decisions(links, tmp_path)
+    queue = _decide(tmp_path, rows, '{"item_id": "%s", "match": true, "tier": 2, "reason": "x", "evidence_quote": "We use LEO."}' % item_id)
+    adjudicated, counts = apply_decisions(links, tmp_path, queue["items"])
     assert adjudicated.loc[0, "final_tier"] == 3 and counts["capped_to_tier3"] == 1
     assert isinstance(adjudicated, pd.DataFrame)
+
+
+def test_decisions_are_reused_only_on_identical_text(tmp_path):
+    weak = output(authors=["J. Britton"], abstract="We use LEO.", title="Graduate pay")
+    rows = link_outputs(dedupe_outputs([weak]), [project()], SNAPSHOT)
+    item_id = f"2021/050|{rows[0].group.output_key}"
+    _decide(tmp_path, rows, '{"item_id": "%s", "match": false, "tier": null, "reason": "x", "evidence_quote": "We use LEO."}' % item_id)
+    again = write_queue(rows, tmp_path)
+    assert again["pending"] == [] and again["round"] is None
+    adjudicated, counts = apply_decisions(links_table(rows), tmp_path, again["items"])
+    assert counts["decided"] == 1 and adjudicated.loc[0, "final_tier"] == ""
+
+    richer = output(authors=["J. Britton"], abstract="We use LEO. A new abstract sentence arrived.", title="Graduate pay")
+    rows2 = link_outputs(dedupe_outputs([richer]), [project()], SNAPSHOT)
+    queue2 = write_queue(rows2, tmp_path)
+    assert queue2["pending"] == [item_id] and queue2["round"].name == "round_002"
+    adjudicated, counts = apply_decisions(links_table(rows2), tmp_path, queue2["items"])
+    assert counts["pending"] == 1 and adjudicated.loc[0, "final_tier"] == 2  # rule tier until re-decided
+
+
+def test_reviewer_decisions_are_final_even_for_settled_pairs(tmp_path):
+    settled = output()  # rule Tier 2, not queued
+    rows = link_outputs(dedupe_outputs([settled]), [project()], SNAPSHOT)
+    queue = write_queue(rows, tmp_path)
+    item_id = f"2021/050|{rows[0].group.output_key}"
+    (tmp_path / "adjudication" / "reviewer_decisions.jsonl").write_text(
+        '{"item_id": "%s", "final_tier": 3, "decision": "probable", "reviewer": "B", "date": "2026-11-03", "note": "n"}\n'
+        '{"item_id": "2021/050|doi:10.9/missing", "final_tier": null, "decision": "rejected", "reviewer": "B", "date": "2026-11-03", "note": "n"}\n'
+        % item_id
+    )
+    adjudicated, counts = apply_decisions(links_table(rows), tmp_path, queue["items"])
+    assert adjudicated.loc[0, "final_tier"] == 3
+    assert adjudicated.loc[0, "adjudication_status"] == "reviewer_decision"
+    assert counts["reviewer_decisions"] == 1 and counts["reviewer_decisions_not_linked"] == 1
+
+
+def test_index_reported_project_id_needs_text():
+    hidden = output(full_text=None, abstract="Graduate earnings.", title="Graduate pay")
+    hidden.index_project_id_hits = ["2021/050"]
+    decision = decide(project(), hidden)
+    assert decision.tier is None and decision.reasons == ("project_id_reported_by_index_without_text",)
+    confirmed = output(full_text="Accessed under DEA project 2021/050.", abstract="Graduate earnings.", title="Graduate pay")
+    confirmed.index_project_id_hits = ["2021/050"]
+    assert decide(project(), confirmed).tier == 1
+
+
+def test_route_only_sensitivity_excludes_environment_only_tier2():
+    from analysis.publication_linkage.pipeline import outputs_table, project_summary_table
+
+    env_only = output(full_text="Body. Analysed in the ONS Secure Research Service.")
+    groups = dedupe_outputs([env_only])
+    rows = link_outputs(groups, [project()], SNAPSHOT)
+    links = links_table(rows)
+    summary = project_summary_table([project()], links, outputs_table(groups), SNAPSHOT, date(2024, 10, 21))
+    assert bool(summary.loc[0, "has_output_t1_t2"]) and not bool(summary.loc[0, "has_output_route_only"])
+    with_route = output(full_text="Body. Analysed in the ONS Secure Research Service under the Digital Economy Act.")
+    groups = dedupe_outputs([with_route])
+    links = links_table(link_outputs(groups, [project()], SNAPSHOT))
+    summary = project_summary_table([project()], links, outputs_table(groups), SNAPSHOT, date(2024, 10, 21))
+    assert bool(summary.loc[0, "has_output_route_only"])
 
 
 def test_evidence_quote_is_the_statement_sentence():

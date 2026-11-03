@@ -1,17 +1,28 @@
 """CORE (core.ac.uk) v3: UK repository full texts.
 
-Verified against https://api.core.ac.uk/docs/v3 and live behaviour on
+Checked against the live spec (https://api.core.ac.uk/swagger/v3.json and
+https://api.core.ac.uk/docs/v3, "CORE API Query Language") and by probing on
 2026-11-03:
 
-* ``GET /v3/search/works/?q=<query>&limit=<n>&offset=<n>``; field lookups
-  ``title:``, ``authors:``, ``yearPublished>=``; boolean ``AND``/``OR``.
-* Documented ``fullText:`` and ``abstract:`` lookups (and unqualified queries,
-  which search all fields) currently fail server-side with "fullText/abstract
-  is not a searchable field". The client probes once per run; while the probe
-  fails, phrase and project-ID searches fall back to ``title:`` and the
-  author-centred route carries the load.
-* Results include ``fullText`` inline when CORE holds it (authenticated users
-  only). Acknowledgement/data-statement sentences are extracted locally.
+* GET ``/v3/search/works/?q=&limit=&offset=`` (trailing slash) or POST
+  ``/v3/search/works`` (no slash) with a JSON body; both behave the same.
+* Field lookups ``title:``, ``authors:``, ``abstract:``, ``doi:``;
+  ``AND``/``OR``/grouping; ranges such as ``yearPublished>=2019``.
+* A quoted phrase is honoured as a phrase only inside a boolean query
+  (``"Secure Research Service" AND yearPublished>=2018``); on its own the
+  same phrase is rejected ("|abstract is not a searchable field") and a lone
+  ``field:"..."`` lookup is treated as loose terms. Queries here therefore
+  always pair a phrase with a year range.
+* ``fullText`` is documented as searchable, but every form tried is rejected
+  by the index ("fullText is not a searchable field"): ``fullText:``,
+  ``fulltext:``, ``full_text:``, ``_exists_:fullText``, the docs' own
+  examples (``fullText:Ontario``), GET and POST, works and outputs. An
+  unqualified phrase reaches titles and abstracts only: six-word phrases taken
+  from the body of works CORE holds (e.g. "the age structure of the
+  population") never returned those works. The client probes once per run and
+  uses ``fullText:`` if CORE re-enables it; otherwise phrase and project-ID
+  searches run over titles and abstracts, and full text is scanned locally on
+  author-centred results, which include ``fullText`` inline.
 * Rate limit: registered personal keys get 1,000 tokens/day, 25/minute; the
   client spaces calls 2.6 s apart and honours ``X-RateLimit-*`` headers.
 * Authentication: ``CORE_API_KEY`` as a Bearer token when set; otherwise no
@@ -108,9 +119,8 @@ class CoreSource:
                     break
 
         fulltext = self.probe_fulltext_search()
-        field_name = "fullText" if fulltext else "title"
         for phrase in SEARCH_PHRASES:
-            query = f'{field_name}:"{phrase}" AND yearPublished>=2018'
+            query = self.phrase_query(phrase, 2018, fulltext)
             for page in range(MAX_PAGES_PER_PHRASE):
                 try:
                     data = self._search(query, offset=page * PAGE_SIZE)
@@ -119,28 +129,33 @@ class CoreSource:
                     break
                 results = data.get("results") or []
                 for work in results:
-                    candidate = self.to_candidate(work, f"phrase:{field_name}:{phrase}")
-                    candidates.append(candidate)
+                    candidates.append(self.to_candidate(work, f"phrase:{phrase}"))
                 if len(results) < PAGE_SIZE:
                     break
-        if fulltext:
-            # Project-ID patterns need full-text search: one query per project.
-            for project in projects:
-                query = f'fullText:"{project.project_id}" AND yearPublished>={project.accreditation_date.year - 1}'
-                try:
-                    data = self._search(query)
-                except QueryRejected:
-                    break
-                for work in data.get("results") or []:
-                    candidates.append(self.to_candidate(work, f"project_id:{project.project_id}"))
-        else:
-            self.notes.append("project-ID full-text search skipped: CORE fullText search unavailable")
+        # Project IDs: one query per project, from the year before accreditation.
+        for project in projects:
+            query = self.phrase_query(project.project_id, project.accreditation_date.year - 1, fulltext)
+            try:
+                data = self._search(query)
+            except QueryRejected as error:
+                self.notes.append(f"project-ID query rejected ({str(error)[:80]})")
+                break
+            for work in data.get("results") or []:
+                candidates.append(self.to_candidate(work, f"project_id:{project.project_id}"))
+        if not fulltext:
+            self.notes.append("phrase and project-ID searches cover titles and abstracts only (CORE fullText not searchable)")
         return candidates
+
+    @staticmethod
+    def phrase_query(phrase: str, from_year: int, fulltext: bool) -> str:
+        """A phrase query CORE accepts: always combined with a year range."""
+        field = "fullText:" if fulltext else ""
+        return f'{field}"{phrase}" AND yearPublished>={from_year}'
 
     def fetch_by_doi(self, doi: str) -> CandidateOutput | None:
         """Full text for an output found elsewhere (e.g. OpenAlex)."""
         try:
-            data = self._search(f'doi:"{doi}"')
+            data = self._search(f'doi:"{doi}"')  # verified: exact DOI lookup
         except QueryRejected:
             return None
         for work in data.get("results") or []:

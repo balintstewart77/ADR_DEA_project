@@ -15,12 +15,28 @@ host was not reachable from the run environment):
   ``authorships.author.id`` filter (OR-joined with ``|``) plus
   ``from_publication_date`` / ``to_publication_date``.
 
-Two routes:
+Verified live on 2026-11-03 (the docs host now redirects to
+help.openalex.org, which the environment does not allow): ``meta.cost_usd``
+is reported on every list/search response ($0.0001 filter, $0.001 search,
+singletons free); headers carry the daily credit counter
+(``X-RateLimit-Limit: 10000``, ``X-RateLimit-Remaining``); a quoted ``search``
+runs as a stemmed phrase over title, abstract and full text
+(``fulltext.search``); ``/authors?search=`` resolves names; boolean AND/OR
+with grouping works inside ``search``.
 
-(a) phrase search for accreditation statements (project independent);
+Three routes, most specific first:
+
+(a) project IDs: one search per project for precise phrases ("project number
+    2022/139", "DEA project 2022/139", ...) OR the bare ID with an
+    accreditation term. The index matches full text we cannot see, so hits are
+    recorded as index-reported IDs and need CORE/Europe PMC text to confirm;
+    the known "Digital Economy Act project number 2022/139" paper ranks sixth
+    of 269 for its ID;
 (b) author-centred: resolve each register researcher (name + institution) to
     OpenAlex author IDs, then pull their works in the window and keep those
-    whose title or abstract names a register dataset or alias.
+    whose title or abstract names a register dataset or alias, or carries an
+    accreditation phrase;
+(c) phrase search for accreditation statements (project independent).
 """
 
 from __future__ import annotations
@@ -52,6 +68,20 @@ PER_PAGE = 200
 MAX_PHRASE_PAGES = 25  # 5,000 works per phrase at most
 MAX_AUTHOR_CANDIDATES = 3
 AUTHOR_IDS_PER_CALL = 50
+ID_PHRASE_PREFIXES = (
+    "project", "project number", "project reference", "project ID", "DEA project", "SRS project",
+    "accreditation number", "DEA", "SRS", "RAP",
+)
+ID_CONTEXT_TERMS = (
+    '"Digital Economy Act"', '"Research Accreditation Panel"', '"Secure Research Service"',
+    '"Integrated Data Service"', '"UK Statistics Authority"', '"SAIL Databank"', "accredited",
+)
+
+
+def project_id_query(project_id: str) -> str:
+    precise = " OR ".join(f'"{prefix} {project_id}"' for prefix in ID_PHRASE_PREFIXES)
+    broad = f'"{project_id}" AND (' + " OR ".join(ID_CONTEXT_TERMS) + ")"
+    return f"({precise}) OR ({broad})"
 
 
 def reconstruct_abstract(inverted: dict | None) -> str:
@@ -168,6 +198,28 @@ class OpenAlexSource:
                 break
         return found
 
+    # -- (a) project IDs -------------------------------------------------------
+    def project_id_search(self, project: ProjectRecord, snapshot_date: date) -> list[CandidateOutput]:
+        from analysis.publication_linkage.tiers import window_for
+
+        start, _ = window_for(project, snapshot_date)
+        data = self._get(
+            "/works",
+            {
+                "search": project_id_query(project.project_id),
+                "filter": f"from_publication_date:{start.isoformat()}",
+                "per_page": PER_PAGE,
+                "select": WORK_FIELDS,
+            },
+            "search",
+        )
+        found = []
+        for work in data.get("results") or []:
+            candidate = self.to_candidate(work, f"project_id:{project.project_id}")
+            candidate.index_project_id_hits = [project.project_id]
+            found.append(candidate)
+        return found
+
     # -- (b) author-centred ---------------------------------------------------
     def resolve_author(self, name: str, institutions: list[str]) -> list[str]:
         data = self._get("/authors", {"search": name, "per_page": 25, "select": AUTHOR_FIELDS}, "search")
@@ -221,8 +273,8 @@ class OpenAlexSource:
         by_record = {project.record_id: project for project in projects}
         earliest = min(project.accreditation_date for project in projects)
         try:
-            for phrase in SEARCH_PHRASES:
-                candidates.extend(self.phrase_search(phrase, date(earliest.year - 1, 1, 1)))
+            for project in projects:
+                candidates.extend(self.project_id_search(project, snapshot_date))
             for researcher in researcher_queries(projects, snapshot_date):
                 ids = self.resolve_author(researcher.query_name, researcher.institutions)
                 if not ids:
@@ -233,6 +285,8 @@ class OpenAlexSource:
                     title_abstract = f"{candidate.title} {clean_text(candidate.abstract)}"
                     if find_dataset_mentions(title_abstract, terms) or find_phrases(title_abstract):
                         candidates.append(candidate)
+            for phrase in SEARCH_PHRASES:
+                candidates.extend(self.phrase_search(phrase, date(earliest.year - 1, 1, 1)))
         except BudgetExhausted as error:
             self.notes.append(f"stopped for the day: {error}")
         return candidates

@@ -71,12 +71,29 @@ class SourceStats:
 
 
 class OpenAlexBudget:
-    """Per-UTC-day spend ledger stored next to the cache."""
+    """Per-UTC-day spend ledger stored next to the cache.
+
+    Two stops, whichever bites first: our own ledger of each response's
+    ``meta.cost_usd``, and OpenAlex's server-side daily credit counter
+    (``X-RateLimit-Remaining`` of ``X-RateLimit-Limit``; 10,000 credits = $1
+    on a free key, verified live 2026-11-03), which also counts any other use
+    of the key that day.
+    """
+
+    USD_PER_CREDIT = 0.0001
 
     def __init__(self, cache_dir: Path, stop_at_usd: float = config.OPENALEX_STOP_AT_USD):
         self.path = cache_dir / "openalex" / "usage_ledger.json"
         self.stop_at_usd = stop_at_usd
         self._lock = threading.Lock()
+
+    def server_spent_today(self) -> float | None:
+        """Spend implied by the last server credit counter seen today."""
+        day = self._load().get(self.today(), {})
+        limit, remaining = day.get("server_limit_credits"), day.get("server_remaining_credits")
+        if limit is None or remaining is None:
+            return None
+        return (float(limit) - float(remaining)) * self.USD_PER_CREDIT
 
     @staticmethod
     def today() -> str:
@@ -91,18 +108,27 @@ class OpenAlexBudget:
         return float(self._load().get(self.today(), {}).get("cost_usd", 0.0))
 
     def check(self, expected_cost: float) -> None:
-        if self.spent_today() + expected_cost > self.stop_at_usd:
+        spent = max(self.spent_today(), self.server_spent_today() or 0.0)
+        if spent + expected_cost > self.stop_at_usd:
             raise BudgetExhausted(
-                f"OpenAlex spend today {self.spent_today():.4f} USD + {expected_cost:.4f} would pass "
+                f"OpenAlex spend today {spent:.4f} USD + {expected_cost:.4f} would pass "
                 f"the {self.stop_at_usd:.2f} USD stop; resume after midnight UTC"
             )
 
-    def record(self, cost: float, kind: str) -> None:
+    def record(self, cost: float, kind: str, headers=None) -> None:
         with self._lock:
             ledger = self._load()
             day = ledger.setdefault(self.today(), {"cost_usd": 0.0, "calls": {}})
             day["cost_usd"] = round(float(day["cost_usd"]) + cost, 6)
             day["calls"][kind] = int(day["calls"].get(kind, 0)) + 1
+            if headers is not None:
+                try:
+                    if headers.get("X-RateLimit-Limit") is not None:
+                        day["server_limit_credits"] = int(float(headers["X-RateLimit-Limit"]))
+                    if headers.get("X-RateLimit-Remaining") is not None:
+                        day["server_remaining_credits"] = int(float(headers["X-RateLimit-Remaining"]))
+                except (TypeError, ValueError):
+                    pass
             self.path.parent.mkdir(parents=True, exist_ok=True)
             self.path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -151,6 +177,8 @@ class CachedClient:
         min_interval: float | None = None,
         offline: bool = False,
         session: requests.Session | None = None,
+        max_retries: int = config.MAX_RETRIES,
+        backoff_base: float = 2.0,
     ):
         self.source = source
         self.cache_root = Path(cache_dir)
@@ -160,6 +188,8 @@ class CachedClient:
         self.min_interval = config.MIN_INTERVAL_SECONDS.get(source, 0.5) if min_interval is None else min_interval
         self.offline = offline
         self.session = session or requests.Session()
+        self.max_retries = max_retries
+        self.backoff_base = backoff_base
         self.stats = SourceStats()
         self._last_call = 0.0
         self._lock = threading.Lock()
@@ -256,9 +286,9 @@ class CachedClient:
                     self.stats.blocked_reason = "network policy refused host (proxy 403 / DNS)"
                     self._log({"ts": _now(), "source": self.source, "url": public_url, "outcome": "blocked"})
                     raise SourceBlocked(f"{self.source}: {self.stats.blocked_reason}") from None
-                if attempt < config.MAX_RETRIES:
+                if attempt < self.max_retries:
                     self.stats.retries += 1
-                    time.sleep(2.0 ** (attempt + 1))
+                    time.sleep(self.backoff_base ** (attempt + 1))
                     attempt += 1
                     continue
                 self.stats.errors += 1
@@ -271,18 +301,18 @@ class CachedClient:
             cost = 0.0
             if budget is not None:
                 cost = _reported_openalex_cost(response, expected_cost)
-                budget.record(cost, cost_kind or "call")
+                budget.record(cost, cost_kind or "call", response.headers)
                 self.stats.cost_usd += cost
             self._log({
                 "ts": _now(), "source": self.source, "method": method, "url": public_url,
                 "status": response.status_code, "seconds": round(elapsed, 2), "cost_usd": cost,
                 "ratelimit_remaining": kept_headers.get("X-Ratelimit-Remaining") or kept_headers.get("X-RateLimit-Remaining"),
             })
-            if response.status_code in (429, 500, 502, 503, 504) and attempt < config.MAX_RETRIES:
+            if response.status_code in (429, 500, 502, 503, 504) and attempt < self.max_retries:
                 if response.status_code == 500 and _looks_like_query_error(response):
                     break
                 self.stats.retries += 1
-                time.sleep(_retry_after_seconds(response, attempt))
+                time.sleep(max(_retry_after_seconds(response, attempt), self.backoff_base ** (attempt + 1)))
                 attempt += 1
                 continue
             break

@@ -195,3 +195,58 @@ def test_query_rejections_are_cached_and_replayed(tmp_path):
     offline = CachedClient("core", cache_dir=tmp_path, offline=True, min_interval=0)
     with pytest.raises(QueryRejected):
         offline.get_json("https://core.example/search", params={"q": "fullText:x"})
+
+
+def test_openalex_budget_honours_server_credit_counter(tmp_path):
+    budget = OpenAlexBudget(tmp_path, stop_at_usd=0.90)
+    budget.record(0.001, "search", {"X-RateLimit-Limit": "10000", "X-RateLimit-Remaining": "1050"})
+    assert budget.server_spent_today() == pytest.approx(0.895)
+    with pytest.raises(BudgetExhausted):
+        budget.check(0.01)  # our ledger says $0.001, the server says $0.895
+
+
+def test_core_phrase_queries_always_carry_a_year_range():
+    assert CoreSource.phrase_query("Secure Research Service", 2018, False) == '"Secure Research Service" AND yearPublished>=2018'
+    assert CoreSource.phrase_query("2022/139", 2021, True) == 'fullText:"2022/139" AND yearPublished>=2021'
+
+
+def test_openalex_project_id_query_combines_precise_and_broad_forms():
+    from analysis.publication_linkage.sources.openalex import project_id_query
+
+    query = project_id_query("2022/139")
+    assert '"project number 2022/139"' in query and '"DEA project 2022/139"' in query
+    assert '("2022/139" AND ("Digital Economy Act"' in query
+
+
+def test_call_scaling_classes():
+    from analysis.publication_linkage.pilot import call_scale
+
+    assert call_scale("openalex", "https://api.openalex.org/authors?search=Jack+Britton") == "researcher"
+    assert call_scale("openalex", "https://api.openalex.org/works?search=%28%22project+2022%2F139%22+OR") == "project"
+    assert call_scale("openalex", "https://api.openalex.org/works?search=%22Secure+Research+Service%22") == "fixed"
+    assert call_scale("core", "https://api.core.ac.uk/v3/search/works/?q=authors%3A%22Jack+Britton%22") == "researcher"
+    assert call_scale("core", "https://api.core.ac.uk/v3/search/works/?q=%222022%2F139%22+AND+yearPublished") == "project"
+
+
+def test_gtr_dates_accept_epoch_and_iso():
+    from analysis.publication_linkage.sources.gtr import _epoch_ms_to_date
+
+    assert str(_epoch_ms_to_date(1640995200000)) == "2022-01-01"
+    assert str(_epoch_ms_to_date("2017-09-30T23:00:00Z")) == "2017-09-30"
+    assert _epoch_ms_to_date(None) is None
+
+
+def test_researcher_query_names_keep_family_particles():
+    from datetime import date as _date
+
+    from analysis.publication_linkage.register_records import ProjectRecord, Researcher
+    from analysis.publication_linkage.sources import researcher_queries
+
+    record = ProjectRecord(
+        record_id="2019/019", project_id="2019/019", title="t", accreditation_date=_date(2019, 6, 1),
+        environment="", environment_code=None,
+        researchers=[Researcher("Aureo De Paula", "UCL"), Researcher("Iain Maitland Atherton", "Edinburgh Napier University")],
+        datasets=[], providers=[], linked_products=[], record_linkage="", component_domains="", researcher_sectors="",
+    )
+    queries = {q.query_name: q.family for q in researcher_queries([record], _date(2026, 10, 21))}
+    assert queries == {"Aureo De Paula": "De Paula", "Iain Atherton": "Atherton"}

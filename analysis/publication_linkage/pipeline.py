@@ -11,7 +11,7 @@ from pathlib import Path
 import pandas as pd
 
 from analysis.publication_linkage import config
-from analysis.publication_linkage.http_client import BudgetExhausted, QueryRejected, SourceBlocked
+from analysis.publication_linkage.http_client import BudgetExhausted, QueryRejected, SourceBlocked  # noqa: F401
 from analysis.publication_linkage.matching import find_project_id_mentions, parse_person_name
 from analysis.publication_linkage.outputs import CandidateOutput, OutputGroup, dedupe_outputs
 from analysis.publication_linkage.register_records import ProjectRecord, sector_group
@@ -88,7 +88,7 @@ def run_sources(
         except BudgetExhausted as error:
             found, run.status = [], "budget_stopped"
             run.notes.append(str(error))
-        except (QueryRejected, RuntimeError, OSError, ValueError) as error:
+        except Exception as error:  # noqa: BLE001 - a failing source is logged, the others continue
             found, run.status = [], "failed"
             run.notes.append(f"{type(error).__name__}: {config.redact(str(error))[:300]}")
         run.candidates = len(found)
@@ -113,32 +113,69 @@ def complete_full_texts(
     offline: bool,
     cache_dir: Path,
     log=print,
-) -> list[CandidateOutput]:
-    """Fetch CORE full text for author-matched groups that only have an
-    index-reported statement (e.g. OpenAlex full-text search) so a verbatim
-    quote can be extracted. OpenAlex PDFs are never downloaded."""
+) -> tuple[list[CandidateOutput], dict]:
+    """Fetch full text for outputs whose evidence a search index reported but
+    we cannot quote: OpenAlex/Europe PMC said a project ID matched, or
+    OpenAlex said an accreditation phrase matched an author-matched output.
+    CORE is asked by DOI first, then Europe PMC open-access full text.
+    OpenAlex PDFs are never downloaded."""
     from analysis.publication_linkage.sources.core import CoreSource
+    from analysis.publication_linkage.sources.europepmc import EuropePmcSource
 
+    family_index = build_family_index(projects)
+    by_project_id: dict[str, list[ProjectRecord]] = {}
+    for project in projects:
+        by_project_id.setdefault(project.project_id, []).append(project)
     wanted = []
-    index = build_family_index(projects)
     for group in groups:
-        if not group.doi or not group.index_phrase_hits() or any(m.full_text for m in group.members):
+        if not group.doi or any(m.full_text for m in group.members):
             continue
-        if candidate_projects(group, index, {}):
+        want = False
+        # Index-reported project ID: worth text only if the rules already see
+        # an author or dataset of that project (Tier 1 needs one of them).
+        for project_id in group.index_project_id_hits():
+            for project in by_project_id.get(project_id, []):
+                evidence = collect_evidence(project, group, snapshot_date)
+                want = want or evidence.has_author or evidence.has_dataset
+        # Index-reported phrase: worth text if a register researcher on a
+        # candidate project is an author and the date is in that window.
+        if not want and group.index_phrase_hits():
+            for project in candidate_projects(group, family_index, {}):
+                evidence = collect_evidence(project, group, snapshot_date)
+                if evidence.has_author and evidence.date_in_window is not False:
+                    want = True
+                    break
+        if want:
             wanted.append(group.doi)
     added: list[CandidateOutput] = []
+    stats = {"wanted": len(wanted), "core": 0, "europepmc": 0, "not_found": 0, "blocked": []}
     if not wanted:
-        return added
+        return added, stats
     core = CoreSource(offline=offline, cache_dir=cache_dir)
-    try:
-        for doi in wanted:
-            found = core.fetch_by_doi(doi)
-            if found and found.full_text:
-                added.append(found)
-    except SourceBlocked as error:
-        log(f"[core full-text completion] {error}")
-    log(f"[core full-text completion] {len(added)} of {len(wanted)} DOIs found with full text")
-    return added
+    epmc = EuropePmcSource(offline=offline, cache_dir=cache_dir)
+    for doi in wanted:
+        found = None
+        for name, source in (("core", core), ("europepmc", epmc)):
+            if name in stats["blocked"]:
+                continue
+            try:
+                candidate = source.fetch_by_doi(doi)
+            except SourceBlocked:
+                stats["blocked"].append(name)
+                continue
+            if candidate and candidate.full_text:
+                found = candidate
+                stats[name] += 1
+                break
+        if found:
+            added.append(found)
+        else:
+            stats["not_found"] += 1
+    stats["core_calls"] = core.client.stats.live_calls
+    stats["europepmc_calls"] = epmc.client.stats.live_calls
+    log(f"[full-text completion] {len(added)} of {len(wanted)} DOIs found with full text "
+        f"(CORE {stats['core']}, Europe PMC {stats['europepmc']})")
+    return added, stats
 
 
 def enrich(groups: list[OutputGroup], *, offline: bool, cache_dir: Path, log=print) -> tuple[list[CandidateOutput], SourceRun]:
@@ -185,8 +222,9 @@ def candidate_projects(
             for project in family_index.get(parsed.family_key, []):
                 found[project.record_id] = project
     if by_project_id:
-        for mention in find_project_id_mentions(group.statement_text()):
-            for project in by_project_id.get(mention.project_id, []):
+        quoted = [mention.project_id for mention in find_project_id_mentions(group.statement_text())]
+        for project_id in [*quoted, *group.index_project_id_hits()]:
+            for project in by_project_id.get(project_id, []):
                 found[project.record_id] = project
     if not authors:
         text = group.matching_text().casefold()
@@ -207,7 +245,7 @@ def link_outputs(groups: list[OutputGroup], projects: list[ProjectRecord], snaps
         for project in candidate_projects(group, family_index, by_project_id):
             evidence = collect_evidence(project, group, snapshot_date)
             decision = assign_tier(evidence)
-            if decision.tier is not None or decision.needs_adjudication:
+            if decision.tier is not None or decision.needs_adjudication or decision.reasons:
                 rows.append(LinkRow(project, group, evidence, decision.tier, decision.needs_adjudication, decision.reasons))
     return rows
 
@@ -283,13 +321,14 @@ def links_table(rows: list[LinkRow]) -> pd.DataFrame:
             "adjudication_quote": "",
             "adjudication_quote_verified": "",
             "final_tier": row.tier if (row.tier is not None) else "",
+            "reviewer_decision": "",
         })
     columns = [
         "Record ID", "Project ID", "output_key", "rule_tier", "needs_adjudication", "rule_reasons", "evidence_quote",
         "sources", "project_id_quoted", "author_matches", "authors_named_in_text", "datasets_named", "statement_type", "route_phrases",
         "environment_phrases", "environment_consistent", "supporting_phrases", "boilerplate_phrases", "index_phrase_hits",
         "publication_date", "date_in_window", "adjudication_status", "adjudication_match", "adjudication_tier",
-        "adjudication_reason", "adjudication_quote", "adjudication_quote_verified", "final_tier",
+        "adjudication_reason", "adjudication_quote", "adjudication_quote_verified", "final_tier", "reviewer_decision",
     ]
     return pd.DataFrame(records, columns=columns)
 
@@ -311,6 +350,15 @@ def project_summary_table(
         project_links = links[links["Record ID"] == project.record_id] if len(links) else links
         tiers = pd.to_numeric(project_links["final_tier"], errors="coerce") if len(project_links) else pd.Series(dtype=float)
         headline = project_links[tiers.isin([1, 2])] if len(project_links) else project_links
+        route = (
+            (tiers == 1) | ((tiers == 2) & project_links["statement_type"].astype(str).str.contains("route"))
+            if len(project_links) else pd.Series(dtype=bool)
+        )
+        index_id_only = (
+            project_links["rule_reasons"].astype(str).str.contains("project_id_reported_by_index_without_text")
+            & tiers.isna()
+            if len(project_links) else pd.Series(dtype=bool)
+        )
         first_date = ""
         lag = None
         if len(headline):
@@ -333,10 +381,14 @@ def project_summary_table(
             "has_tier2": bool((tiers == 2).any()),
             "has_tier3": bool((tiers == 3).any()),
             "has_output_t1_t2": bool(tiers.isin([1, 2]).any()),
+            # Sensitivity: explicit accreditation-route evidence only (Tier 1,
+            # or Tier 2 whose statement names the route, not just an environment).
+            "has_output_route_only": bool(route.any()),
             "has_output_any_tier": bool(tiers.isin([1, 2, 3]).any()),
             "n_outputs_t1_t2": int(headline["output_key"].nunique()) if len(headline) else 0,
             "n_outputs_any_tier": int(project_links.loc[tiers.isin([1, 2, 3]), "output_key"].nunique()) if len(project_links) else 0,
             "n_pending_adjudication": int((project_links["adjudication_status"] == "pending").sum()) if len(project_links) else 0,
+            "n_index_reported_id_unconfirmed": int(index_id_only.sum()) if len(project_links) else 0,
             "first_output_date_t1_t2": first_date,
             "lag_months_t1_t2": lag,
         })

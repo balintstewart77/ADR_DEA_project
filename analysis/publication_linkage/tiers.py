@@ -106,6 +106,7 @@ class Evidence:
     supporting_phrases: list[str] = field(default_factory=list)
     index_phrase_hits: list[str] = field(default_factory=list)  # reported by a search index, no quote
     boilerplate_phrases: list[str] = field(default_factory=list)  # route phrases in boilerplate sentences
+    index_project_id_hit: bool = False  # a search index says the output contains this Project ID
     date_in_window: bool | None = None
     publication_date: str | None = None
 
@@ -198,6 +199,7 @@ def collect_evidence(project: ProjectRecord, group: OutputGroup, snapshot_date: 
     evidence.environment_consistent = bool(project.environment_code) and project.environment_code in evidence.environment_phrases
     evidence.supporting_phrases = sorted({hit.key for hit in find_phrases(statement_text, SUPPORTING_PHRASES)})
     evidence.index_phrase_hits = group.index_phrase_hits()
+    evidence.index_project_id_hit = project.project_id in group.index_project_id_hits()
     evidence.publication_date = group.publication_date
     evidence.date_in_window = in_window(group.publication_date, project, snapshot_date)
     return evidence
@@ -216,7 +218,8 @@ def assign_tier(evidence: Evidence) -> TierDecision:
             weak.append("author_initial_only")
         if not evidence.has_named_dataset:
             weak.append("dataset_acronym_only")
-        return TierDecision(2, bool(weak), tuple(["route_or_environment_statement", *weak]))
+        info = ["project_id_reported_by_index_without_text"] if evidence.index_project_id_hit else []
+        return TierDecision(2, bool(weak), tuple(["route_or_environment_statement", *weak, *info]))
 
     if core_match and evidence.has_dataset:
         weak = []
@@ -226,6 +229,8 @@ def assign_tier(evidence: Evidence) -> TierDecision:
             weak.append("author_initial_only")
         if not evidence.has_named_dataset:
             weak.append("dataset_acronym_only")
+        if evidence.index_project_id_hit and not evidence.project_id_mentions:
+            reasons.append("project_id_reported_by_index_without_text")
         if evidence.has_index_only_statement:
             # Informational: the index says a phrase matched but no text is
             # available to quote, so an adjudicator could not verify it.
@@ -244,6 +249,10 @@ def assign_tier(evidence: Evidence) -> TierDecision:
         return TierDecision(None, True, ("statement_author_date_without_dataset",))
     if evidence.project_id_mentions:
         return TierDecision(None, True, ("project_id_quoted_without_author_or_dataset",))
+    if evidence.index_project_id_hit and (evidence.has_author or evidence.has_dataset):
+        # The index matched the ID in text we cannot see; Tier 1 needs the
+        # quote, so this stays unresolved unless full text is found.
+        return TierDecision(None, False, ("project_id_reported_by_index_without_text",))
     return TierDecision(None, False, ())
 
 

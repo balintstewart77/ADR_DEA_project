@@ -21,7 +21,11 @@ class SemanticScholarEnricher:
     name = "semanticscholar"
 
     def __init__(self, *, offline: bool = False, cache_dir=config.CACHE_DIR):
-        self.client = CachedClient("semanticscholar", offline=offline, cache_dir=cache_dir)
+        # The anonymous pool is shared and often answers 429: wait longer
+        # (3, 9, 27, 81 s) before giving up.
+        self.client = CachedClient(
+            "semanticscholar", offline=offline, cache_dir=cache_dir, max_retries=4, backoff_base=3.0
+        )
         self.notes: list[str] = []
 
     @staticmethod

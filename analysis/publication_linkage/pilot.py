@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import time
 from collections import defaultdict
 from datetime import date, datetime, timezone
@@ -150,6 +151,21 @@ def live_runs_record(runs: dict, enrichment_run, started_at: str, finished_at: s
     return {"started_at": started_at, "finished_at": finished_at, "sources": sources}
 
 
+def openalex_spend_line() -> str:
+    from analysis.publication_linkage.http_client import OpenAlexBudget
+
+    budget = OpenAlexBudget(config.CACHE_DIR)
+    ledger = budget._load()
+    days = ", ".join(
+        f"{day}: ${record.get('cost_usd', 0):.4f}"
+        + (f" (server credits left {record['server_remaining_credits']:,} of {record['server_limit_credits']:,})"
+           if record.get("server_remaining_credits") is not None else "")
+        for day, record in sorted(ledger.items())
+    )
+    return (f"- OpenAlex spend by UTC day (ledger of reported meta.cost_usd; stop at ${config.OPENALEX_STOP_AT_USD:.2f}"
+            f" of the free $1): {days or 'none'}.")
+
+
 def wilson_text(k: int, n: int) -> str:
     if n == 0:
         return "n/a"
@@ -176,44 +192,88 @@ def markdown_table(frame: pd.DataFrame) -> str:
     return "\n".join(lines) + "\n"
 
 
-def full_run_estimates(all_records, snapshot_date: date, pilot_runs: dict, pilot_researchers: int) -> pd.DataFrame:
-    researchers_all = len(researcher_queries(all_records, snapshot_date))
-    datasets_all = len({d for r in all_records for d in r.datasets})
+_ID_IN_URL = re.compile(r"%22(?:[A-Za-z+]+\+)?20\d\d%2F\d{3}%22")
+
+
+def call_scale(source: str, url: str) -> str:
+    """What a logged call scales with: researcher, project, dataset or fixed."""
+    if source == "openalex":
+        if "/authors" in url or "authorships.author.id" in url:
+            return "researcher"
+        return "project" if _ID_IN_URL.search(url) else "fixed"
+    if source == "core":
+        if "authors%3A" in url:
+            return "researcher"
+        return "project" if _ID_IN_URL.search(url) or "doi%3A" in url else "fixed"
+    if source == "europepmc":
+        return "project" if _ID_IN_URL.search(url) or "DOI%3A" in url else "fixed"
+    if source == "gtr":
+        return "researcher"
+    if source == "govuk":
+        return "dataset"
+    return "project"
+
+
+def full_run_estimates(all_records, projects, snapshot_date: date, live: dict | None) -> pd.DataFrame:
+    """Scale the live pilot's logged calls and costs to the whole register."""
+    units_pilot = {
+        "researcher": len(researcher_queries(projects, snapshot_date)),
+        "project": len(projects),
+        "dataset": len({d for p in projects for d in p.datasets}),
+        "fixed": 1,
+    }
+    units_all = {
+        "researcher": len(researcher_queries(all_records, snapshot_date)),
+        "project": len(all_records),
+        "dataset": len({d for r in all_records for d in r.datasets}),
+        "fixed": 1,
+    }
     rows = []
-    core = pilot_runs.get("core")
-    if core and pilot_researchers:
-        live = core.stats.get("live_calls", 0) + core.stats.get("cached_calls", 0)
-        per_researcher = live / pilot_researchers
-        calls = round(per_researcher * researchers_all)
+    if not live:
+        return pd.DataFrame(rows)
+    path = config.CACHE_DIR / "call_log.jsonl"
+    tallies: dict = defaultdict(lambda: defaultdict(lambda: [0, 0.0]))
+    for line in path.read_text(encoding="utf-8").splitlines() if path.exists() else []:
+        entry = json.loads(line)
+        if not (live["started_at"] <= entry["ts"] <= live["finished_at"]) or "status" not in entry:
+            continue
+        scale = call_scale(entry["source"], entry.get("url", ""))
+        tallies[entry["source"]][scale][0] += 1
+        tallies[entry["source"]][scale][1] += float(entry.get("cost_usd") or 0)
+    for source, by_scale in sorted(tallies.items()):
+        calls = cost = 0.0
+        pilot_calls = pilot_cost = 0.0
+        for scale, (n, usd) in by_scale.items():
+            factor = 0.0 if scale == "fixed" else units_all[scale] / max(units_pilot[scale], 1)
+            # Fixed (register-wide phrase) calls are already cached: no repeat.
+            calls += n * factor
+            cost += usd * factor
+            pilot_calls += n
+            pilot_cost += usd
         rows.append({
-            "source": "core", "pilot_calls": live, "unit": "unique researcher",
-            "units_full_register": researchers_all, "est_calls_full_run": calls,
-            "est_days_at_1000_tokens_per_day": math.ceil(calls / 1000),
-            "est_cost_usd": 0.0,
+            "source": source,
+            "pilot_live_calls": int(pilot_calls),
+            "pilot_cost_usd": round(pilot_cost, 4),
+            "est_further_calls_full_run": int(round(calls)),
+            "est_further_cost_usd": round(cost, 2),
+            "est_days": (
+                math.ceil(calls / 1000) if source == "core"
+                else math.ceil(cost / config.OPENALEX_STOP_AT_USD) if source == "openalex" and cost
+                else ""
+            ),
+            "limit_basis": {
+                "core": "1,000 tokens/day (personal tier)",
+                "openalex": f"${config.OPENALEX_STOP_AT_USD:.2f}/day stop within the free $1",
+            }.get(source, "rate limit only"),
         })
-    # OpenAlex: author search ($0.001) + one list page per researcher ($0.0001)
-    # + phrase-search pages (counted once for the whole register).
-    openalex = pilot_runs.get("openalex")
-    phrase_pages = 13 * 5
-    est_cost = researchers_all * (0.001 + 0.0001) + phrase_pages * 0.001
-    rows.append({
-        "source": "openalex", "pilot_calls": (openalex.stats.get("live_calls", 0) if openalex else 0),
-        "unit": "unique researcher (+ phrase pages)", "units_full_register": researchers_all,
-        "est_calls_full_run": researchers_all * 2 + phrase_pages,
-        "est_days_at_1000_tokens_per_day": "",
-        "est_cost_usd": round(est_cost, 2),
-    })
-    rows.append({
-        "source": "govuk", "pilot_calls": (pilot_runs["govuk"].stats.get("live_calls", 0) if "govuk" in pilot_runs else 0),
-        "unit": "register dataset x 3 route terms (+ page fetches)", "units_full_register": datasets_all,
-        "est_calls_full_run": datasets_all * 3, "est_days_at_1000_tokens_per_day": "", "est_cost_usd": 0.0,
-    })
     return pd.DataFrame(rows)
 
 
-def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings, live=None) -> None:
+def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings, live=None, completion=None) -> None:
     n = len(summary)
     t12 = int(summary["has_output_t1_t2"].sum())
+    route_only = int(summary["has_output_route_only"].sum())
+    index_id_unconfirmed = int((summary["n_index_reported_id_unconfirmed"] > 0).sum())
     any_tier = int(summary["has_output_any_tier"].sum())
     t1 = int(summary["has_tier1"].sum())
     t3_only = int((summary["has_tier3"] & ~summary["has_output_t1_t2"]).sum())
@@ -237,8 +297,12 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
             })
             notes.extend(f"- **{name}**: {note}" for note in sorted(set(run.notes)))
     live_sources = live["sources"] if live else {n: {"status": r.status} for n, r in [*runs.items(), ("semanticscholar", enrichment_run)]}
-    by_year = summary.groupby("accreditation_year").agg(projects=("Record ID", "count"), with_t1_t2=("has_output_t1_t2", "sum"), with_any_tier=("has_output_any_tier", "sum")).reset_index()
-    by_sector = summary.groupby("sector_group").agg(projects=("Record ID", "count"), with_t1_t2=("has_output_t1_t2", "sum"), with_any_tier=("has_output_any_tier", "sum")).reset_index()
+    aggregations = dict(
+        projects=("Record ID", "count"), with_t1_t2=("has_output_t1_t2", "sum"),
+        with_route_only=("has_output_route_only", "sum"), with_any_tier=("has_output_any_tier", "sum"),
+    )
+    by_year = summary.groupby("accreditation_year").agg(**aggregations).reset_index()
+    by_sector = summary.groupby("sector_group").agg(**aggregations).reset_index()
     pairs_by_tier = pd.DataFrame({
         "tier": ["Tier 1", "Tier 2", "Tier 3", "unresolved (pending adjudication / rejected)"],
         "project_output_pairs": [
@@ -268,9 +332,12 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         f"- Mature cohort: accredited on or before {timings['mature_cutoff']} (two years before the snapshot).",
         f"- Sources that ran: {', '.join(ran) or 'none'}. Sources blocked by the session's network policy: "
         f"{', '.join(blocked) or 'none'}.",
-        "- Because sources were blocked, **this is a partial pilot**: rates, overlaps and source recommendations below"
-        " cover only the sources that ran. Re-running the same command once access is open adds the missing"
-        " sources (cached calls are reused).",
+        *([
+            "- Because sources were blocked, **this is a partial pilot**: rates, overlaps and source recommendations"
+            " below cover only the sources that ran. Re-running the same command once access is open adds the"
+            " missing sources (cached calls are reused).",
+        ] if blocked else []),
+        *([openalex_spend_line()] if "openalex" in live_sources else []),
         "",
         "## Sample",
         "",
@@ -296,14 +363,25 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         "Per source and tier (pairs; unique = found by that source alone):",
         "",
         markdown_table(yield_table),
-        "Overlap between sources, Tier 1-2 outputs:",
+        "Overlap between sources, Tier 1-2 outputs (each output counted once, by the set of sources that found it):",
         "",
         markdown_table(source_overlap(links, (1, 2)) if len(links) else pd.DataFrame()),
+        "Overlap between sources, Tier 1-3 outputs:",
+        "",
+        markdown_table(source_overlap(links, (1, 2, 3)) if len(links) else pd.DataFrame()),
+        (f"Full-text completion for index-reported evidence: {completion.get('wanted', 0)} DOIs wanted;"
+         f" text found via CORE {completion.get('core', 0)}, Europe PMC {completion.get('europepmc', 0)};"
+         f" not found {completion.get('not_found', 0)}." if completion else ""),
+        "",
         "## Share of pilot projects with a findable output",
         "",
         f"- Tier 1 or 2 (headline definition): {wilson_text(t12, n)}",
+        f"- Sensitivity, explicit accreditation-route statements only (Tier 1, or Tier 2 naming the DEA route,"
+        f" Research Accreditation Panel, accredited researcher or UKSA; environment-only Tier 2 excluded):"
+        f" {wilson_text(route_only, n)}",
         f"- Tier 1 (project ID quoted): {wilson_text(t1, n)}",
         f"- Any tier including Tier 3 (probable): {wilson_text(any_tier, n)}; Tier 3 only: {t3_only}",
+        f"- Projects with an index-reported Project ID that no available full text confirms: {index_id_unconfirmed}",
         f"- Median lag from accreditation to first Tier 1-2 output: "
         f"{(f'{lags.median():.0f} months (n={len(lags)})') if len(lags) else 'n/a'}",
         "",
@@ -325,8 +403,11 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         "## Limitations",
         "",
         "- Blocked sources mean recall here is lower than the full design would give.",
-        "- CORE's documented full-text and abstract search currently fails server-side, so CORE phrase searches"
-        " fall back to titles and CORE contributes through author-centred retrieval with local full-text scanning.",
+        "- CORE's index rejects every documented full-text lookup (including the docs' own examples), so CORE phrase"
+        " and project-ID searches reach titles and abstracts only; CORE full text is scanned locally on"
+        " author-centred results.",
+        "- OpenAlex matches phrases and project IDs in full text it does not return; such hits count only once CORE"
+        " or Europe PMC text lets the rules quote them.",
         "- Author matching is by family name plus a compatible first given name; common names can produce false"
         " candidates (mitigated by the dataset, statement and date conditions).",
         "- Environment statements for SAIL, UKDS SecureLab, NISRA and Scottish Safe Havens are weaker evidence of"
@@ -344,6 +425,7 @@ def main(argv=None) -> None:
     parser.add_argument("--sources", default=",".join(ALL_SOURCES))
     parser.add_argument("--offline", action="store_true", help="use cached responses only")
     parser.add_argument("--no-enrich", action="store_true")
+    parser.add_argument("--name", default="pilot", help="output folder under the run date")
     parser.add_argument(
         "--record-live-window", nargs=2, metavar=("START", "END"),
         help="with --offline: record the live-run window (UTC ISO timestamps) from the call log",
@@ -352,7 +434,7 @@ def main(argv=None) -> None:
 
     started = time.monotonic()
     started_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    out_dir = config.OUTPUT_ROOT / args.run_date / "pilot"
+    out_dir = config.OUTPUT_ROOT / args.run_date / args.name
     df, meta = load_register()
     records = build_project_records(df)
     snapshot = date.fromisoformat(meta["snapshot_date"])
@@ -366,7 +448,8 @@ def main(argv=None) -> None:
     sources = tuple(s.strip() for s in args.sources.split(",") if s.strip())
     candidates, runs, extras = run_sources(projects, snapshot, sources, offline=args.offline)
     groups = dedupe_outputs(candidates)
-    candidates += complete_full_texts(groups, projects, snapshot, offline=args.offline, cache_dir=config.CACHE_DIR)
+    completed, completion_stats = complete_full_texts(groups, projects, snapshot, offline=args.offline, cache_dir=config.CACHE_DIR)
+    candidates += completed
     groups = dedupe_outputs(candidates)
     from analysis.publication_linkage.pipeline import SourceRun
 
@@ -381,11 +464,11 @@ def main(argv=None) -> None:
     linked_keys = {row.group.output_key for row in rows}
     outputs = outputs_table([g for g in groups if g.output_key in linked_keys])
     links = links_table(rows)
-    write_queue(rows, out_dir)
-    links, adjudication_counts = apply_decisions(links, out_dir)
+    queue = write_queue(rows, out_dir)
+    links, adjudication_counts = apply_decisions(links, out_dir, queue["items"])
+    adjudication_counts["round_written"] = queue["round"].name if queue["round"] else ""
     summary = project_summary_table(projects, links, outputs, snapshot, cutoff)
     yield_table = source_yield_table(links)
-    estimates = full_run_estimates(records, snapshot, runs, len(researcher_queries(projects, snapshot)))
 
     sample_out = sample[[
         "Record ID", "Project ID", "accreditation_date", "accreditation_year", "sector_group", "environment",
@@ -397,7 +480,6 @@ def main(argv=None) -> None:
         "project_output_links.csv": links,
         "project_summary.csv": summary,
         "source_yield.csv": yield_table,
-        "full_run_estimates.csv": estimates,
     }
     for name, frame_extra in (("author_resolution", "openalex_author_resolution.csv"), ("grant_links", "gtr_grant_links.csv")):
         if extras.get(name):
@@ -421,8 +503,10 @@ def main(argv=None) -> None:
         live_path.write_text(json.dumps(live, indent=2) + "\n", encoding="utf-8")
     else:
         live = json.loads(live_path.read_text(encoding="utf-8")) if live_path.exists() else None
+    estimates = full_run_estimates(records, projects, snapshot, live)
+    write_tables(out_dir, {"full_run_estimates.csv": estimates})
     timings = {"run_date": args.run_date, "mature_cutoff": cutoff.isoformat(), "seconds": round(time.monotonic() - started, 1)}
-    write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings, live)
+    write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings, live, completion_stats)
     write_manifest(out_dir, {
         "kind": "publication_linkage_pilot",
         "run_date": args.run_date,
@@ -437,6 +521,7 @@ def main(argv=None) -> None:
         "outputs_linked": len(outputs),
         "links": len(links),
         "adjudication": adjudication_counts,
+        "full_text_completion": completion_stats,
         "seconds": timings["seconds"],
         "offline": args.offline,
         "live_run": {k: live[k] for k in ("started_at", "finished_at")} if live else None,

@@ -16,6 +16,7 @@ class ResearcherQuery:
 
     name: str
     query_name: str  # first given name + family name, for author search
+    family: str = ""  # family name as written on the register (particles kept)
     institutions: list[str] = field(default_factory=list)
     record_ids: list[str] = field(default_factory=list)
     window_start: date | None = None
@@ -32,9 +33,13 @@ def researcher_queries(projects: list[ProjectRecord], snapshot_date: date, month
             if parsed is None:
                 continue
             raw_tokens = researcher.name.split()
-            query_name = f"{raw_tokens[0]} {raw_tokens[-1]}" if len(raw_tokens) > 2 else researcher.name
+            # First given name + full family name (particles kept: "Aureo De
+            # Paula" -> "Aureo De Paula", "Iain Maitland Atherton" -> "Iain Atherton").
+            family_len = max(1, min(len(parsed.family.split()), len(raw_tokens) - 1))
+            family = " ".join(raw_tokens[-family_len:])
+            query_name = f"{raw_tokens[0]} {family}"
             key = query_name.casefold()
-            entry = by_key.setdefault(key, ResearcherQuery(researcher.name, query_name))
+            entry = by_key.setdefault(key, ResearcherQuery(researcher.name, query_name, family=family))
             if researcher.institution and researcher.institution not in entry.institutions:
                 entry.institutions.append(researcher.institution)
             if project.record_id not in entry.record_ids:

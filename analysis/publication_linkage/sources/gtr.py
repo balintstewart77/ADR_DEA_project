@@ -37,7 +37,9 @@ from analysis.publication_linkage.tiers import window_for
 BASE = "https://gtr.ukri.org/gtr/api"
 ACCEPT = "application/vnd.rcuk.gtr.json-v7"
 PAGE_SIZE = 100
-INVESTIGATOR_RELS = {"PI_PER", "COI_PER", "FELLOW_PER", "RESEARCHER_PER", "PM_PER", "STUDENT_PER", "SUPER_PER"}
+# The v1.7 guide lists COLI_PER for co-investigators; live v7 JSON uses
+# COI_PER (checked 2026-11-03). Accept both.
+INVESTIGATOR_RELS = {"PI_PER", "COI_PER", "COLI_PER", "FELLOW_PER", "RESEARCHER_PER", "PM_PER"}
 TITLE_SIMILARITY_MIN = 0.15
 
 
@@ -47,9 +49,16 @@ def _links(resource: dict) -> list[dict]:
 
 
 def _epoch_ms_to_date(value: object) -> date | None:
+    """GtR dates arrive as epoch milliseconds (JSON) or ISO strings (XML/links)."""
+    if value in (None, ""):
+        return None
     try:
         return datetime.fromtimestamp(int(value) / 1000, tz=timezone.utc).date()
     except (TypeError, ValueError, OverflowError, OSError):
+        pass
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00")).date()
+    except ValueError:
         return None
 
 
@@ -122,7 +131,7 @@ class GtrSource:
         candidates: list[CandidateOutput] = []
         seen_publications: set[str] = set()
         for researcher in researcher_queries(projects, snapshot_date):
-            surname = researcher.query_name.split()[-1]
+            surname = researcher.family or researcher.query_name.split()[-1]
             for person in self.persons(surname):
                 full = f"{person.get('firstName', '')} {person.get('surname', '')}".strip()
                 if name_match_level(researcher.name, full) != "full":

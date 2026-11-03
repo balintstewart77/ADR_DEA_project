@@ -35,6 +35,7 @@ class CandidateOutput:
     url: str | None = None
     query: str = ""  # how the source found it
     index_phrase_hits: list[str] = field(default_factory=list)  # phrases the index says matched
+    index_project_id_hits: list[str] = field(default_factory=list)  # project IDs the index says matched
     extra: dict = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -175,6 +176,9 @@ class OutputGroup:
 
     def index_phrase_hits(self) -> list[str]:
         return sorted({hit for member in self.members for hit in member.index_phrase_hits})
+
+    def index_project_id_hits(self) -> list[str]:
+        return sorted({hit for member in self.members for hit in member.index_project_id_hits})
 
 
 def title_year_key(output: CandidateOutput) -> str | None:
