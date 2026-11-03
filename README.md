@@ -99,6 +99,44 @@ Use cases:
 - `requirements-ml.txt`: heavier ML and embedding dependencies.
 - `requirements-scrape.txt`: scraper dependencies for refreshing source data.
 
+### Pinned runtime and test dependencies
+
+`requirements.lock` contains shared, exact transitive constraints for the
+dashboard, scraper, test suite and browser tests. The dashboard and scraper
+requirements include it automatically; test and browser requirements inherit
+those constraints. Install only the group you need:
+
+```bash
+python -m pip install -r requirements-test.txt
+python -m pip install -r requirements-browser.txt
+python -m pip check
+```
+
+The browser group adds Playwright; Chromium is installed separately with
+`python -m playwright install chromium`. CI targets Python 3.12; the local
+Windows environment also uses Python 3.13. Notebook, optional analysis, LLM and
+archived ML dependencies outside these groups are not fully locked.
+
+To regenerate the constraints while retaining the selected versions, use the
+recorded resolver and include platform markers:
+
+```bash
+python -m pip install uv==0.13.6
+python -m uv pip compile requirements-browser.txt --universal --python-version 3.12 --no-header --no-annotate --output-file requirements.lock
+```
+
+For a deliberate upgrade, first edit or remove the affected constraints in
+`requirements.lock`, then run the same command and review the resulting diff.
+The requirements files reference the lock, so `--upgrade` alone does not remove
+its version constraints. Verify Linux resolution with:
+
+```bash
+python -m uv pip compile requirements-browser.txt --python-version 3.12 --python-platform x86_64-unknown-linux-gnu
+```
+
+After changing versions, install the affected groups, run `python -m pip check`
+and the relevant tests before committing the lock.
+
 ## Refreshing The Data
 
 One command runs the whole flow — fetch, compare against both the preceding

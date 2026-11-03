@@ -1,4 +1,5 @@
 # Runtime dependencies for the Dash dashboard and shared data utilities.
+-c requirements.lock
 dash
 dash-bootstrap-components
 gunicorn

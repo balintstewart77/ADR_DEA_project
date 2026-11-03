@@ -1,5 +1,5 @@
 # Optional notebook and interactive development dependencies.
-pytest
+-r requirements-test.txt
 # Needed to import/test the LLM classification module without the full
 # requirements-llm.txt stack (anthropic itself is optional at import time).
 pydantic

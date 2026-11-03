@@ -1,0 +1,9 @@
+-r requirements-dashboard.txt
+-r requirements-scrape.txt
+pytest
+pydantic
+matplotlib
+nbformat
+seaborn
+wordcloud
+ruff
