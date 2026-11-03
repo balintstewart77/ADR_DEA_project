@@ -15,7 +15,7 @@ import html
 import json
 import os
 import re
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Iterable
 
 import yaml
@@ -98,6 +98,10 @@ INLINE_PARTICIPANT_INFO_SOURCE = (
     PACKAGE
     / "participant_materials/project_owner_participant_information_inline_without_privacy_notice_v3.2.html"
 )
+# The frozen branching specification (RED-091) recorded this path as built on
+# Windows. Emit that recorded form on every OS so the build reproduces the
+# frozen bytes instead of rewriting them.
+INLINE_PARTICIPANT_INFO_SOURCE_RECORDED = str(PureWindowsPath(INLINE_PARTICIPANT_INFO_SOURCE.relative_to(ROOT)))
 CONSENT_STATEMENTS_SOURCE = (
     PACKAGE / "participant_materials/project_owner_consent_statements_v3.json"
 )
@@ -1354,7 +1358,7 @@ def patch_generated_specs(rows: list[dict[str, str]]) -> None:
         ),
         "participant_document_sha256": PARTICIPANT_SOURCE_SHA256,
         "participant_document_size_bytes": PARTICIPANT_SOURCE_SIZE,
-        "inline_participant_information_source": INLINE_PARTICIPANT_INFO_SOURCE.relative_to(ROOT).as_posix(),
+        "inline_participant_information_source": INLINE_PARTICIPANT_INFO_SOURCE_RECORDED,
         "inline_participant_information_sha256": INLINE_PARTICIPANT_INFO_SHA256,
         "inline_participant_information_field": "participant_info_link",
         "intended_recipient_gate": "[intended_recipient] = '1'",

@@ -36,6 +36,12 @@ HASH_COMMITTED_RESTRICTED_IDS = (
     | FROZEN_ANALYSIS_INPUT_RESTRICTED_IDS
 )
 RELATIONSHIP_SPLIT = re.compile(r"\s*[;|]\s*")
+# Package and restricted copies are immutable once recorded, so their current
+# bytes must still match the manifest. Other rows point at living project files
+# (code, logs, refreshed outputs); for those the manifest records the identity
+# at registration, and only its form is checked.
+IMMUTABLE_COPY_PREFIXES = ("preregistration/", "preregistration_restricted/")
+LIVING_STATES = {"working_candidate"}
 
 
 def rows() -> list[dict[str, str]]:
@@ -394,7 +400,30 @@ def test_paths_ownership_and_tracked_preregistration_coverage() -> None:
     assert aliases[0]["registration_inclusion"] == "exclude"
     assert aliases[0]["proposed_package_path"] == ""
 
-    assert covered
+    tracked_package = sorted(path for path in tracked if path.startswith("preregistration/"))
+    excluded_structure = {
+        "preregistration/preregistration_artifact_manifest.csv",
+        "preregistration/osf_registration/OSF_REGISTRATION_README.md",
+        "preregistration/osf_registration/osf_registration_manifest.csv",
+        *[path for path in tracked_package if path.endswith("/.gitkeep")],
+        *[
+            f"preregistration/package/00_protocol/{row['filename']}"
+            for row in manifest_rows if row["current_state"] == HISTORICAL_STATE
+        ],
+    }
+    known_gaps = set(json.loads(
+        (ROOT / "tests/fixtures/unmanifested_preregistration_files.json").read_text(encoding="utf-8")
+    )["paths"])
+    uncovered = {path for path in tracked_package if path not in covered | excluded_structure}
+    assert not sorted(uncovered - known_gaps), "package files need manifest rows"
+    assert not sorted(known_gaps - uncovered), "remove resolved or deleted paths from the known-gap list"
+
+
+def _is_immutable_copy(row: dict[str, str]) -> bool:
+    return (
+        row["current_path"].startswith(IMMUTABLE_COPY_PREFIXES)
+        and row["current_state"] not in LIVING_STATES
+    )
 
 
 def _artifact_parameters():
@@ -403,7 +432,7 @@ def _artifact_parameters():
     ).stdout.splitlines())
     for row in rows():
         path = row["current_path"]
-        if not path or not row["sha256"] or not row["size_bytes"]:
+        if not path or not row["sha256"] or not row["size_bytes"] or not _is_immutable_copy(row):
             continue
         marks = [] if path in tracked else [pytest.mark.private_data(path)]
         yield pytest.param(row, id=row["artifact_id"], marks=marks)

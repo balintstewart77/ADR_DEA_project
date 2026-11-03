@@ -825,7 +825,7 @@ def validate_specs_and_fixture() -> dict[str, object]:
     if consent.get("inline_participant_information_field") != "participant_info_link":
         errors.append("branch specification inline participant-information field differs")
     if consent.get("inline_participant_information_source") != (
-        builder.INLINE_PARTICIPANT_INFO_SOURCE.relative_to(builder.ROOT).as_posix()
+        builder.INLINE_PARTICIPANT_INFO_SOURCE_RECORDED
     ):
         errors.append("branch specification inline participant-information source differs")
     if consent.get("inline_participant_information_sha256") != (
