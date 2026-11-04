@@ -28,6 +28,7 @@ from datetime import date
 from analysis.publication_linkage.config import WINDOW_MONTHS_BEFORE
 from analysis.publication_linkage.matching import (
     BOILERPLATE_RE,
+    DEA_SPECIFIC_CONTEXT_RE,
     SUPPORTING_PHRASES,
     clean_text,
     find_dataset_mentions,
@@ -107,6 +108,7 @@ class Evidence:
     index_phrase_hits: list[str] = field(default_factory=list)  # reported by a search index, no quote
     boilerplate_phrases: list[str] = field(default_factory=list)  # route phrases in boilerplate sentences
     index_project_id_hit: bool = False  # a search index says the output contains this Project ID
+    has_full_text: bool = False  # we hold the output's full text (so an unquoted index hit is spurious)
     date_in_window: bool | None = None
     publication_date: str | None = None
 
@@ -200,6 +202,7 @@ def collect_evidence(project: ProjectRecord, group: OutputGroup, snapshot_date: 
     evidence.supporting_phrases = sorted({hit.key for hit in find_phrases(statement_text, SUPPORTING_PHRASES)})
     evidence.index_phrase_hits = group.index_phrase_hits()
     evidence.index_project_id_hit = project.project_id in group.index_project_id_hits()
+    evidence.has_full_text = any(member.full_text for member in group.members)
     evidence.publication_date = group.publication_date
     evidence.date_in_window = in_window(group.publication_date, project, snapshot_date)
     return evidence
@@ -218,7 +221,10 @@ def assign_tier(evidence: Evidence) -> TierDecision:
             weak.append("author_initial_only")
         if not evidence.has_named_dataset:
             weak.append("dataset_acronym_only")
-        info = ["project_id_reported_by_index_without_text"] if evidence.index_project_id_hit else []
+        info = (
+            ["project_id_reported_by_index_without_text"]
+            if evidence.index_project_id_hit and not evidence.has_full_text else []
+        )
         return TierDecision(2, bool(weak), tuple(["route_or_environment_statement", *weak, *info]))
 
     if core_match and evidence.has_dataset:
@@ -229,7 +235,7 @@ def assign_tier(evidence: Evidence) -> TierDecision:
             weak.append("author_initial_only")
         if not evidence.has_named_dataset:
             weak.append("dataset_acronym_only")
-        if evidence.index_project_id_hit and not evidence.project_id_mentions:
+        if evidence.index_project_id_hit and not evidence.project_id_mentions and not evidence.has_full_text:
             reasons.append("project_id_reported_by_index_without_text")
         if evidence.has_index_only_statement:
             # Informational: the index says a phrase matched but no text is
@@ -248,8 +254,13 @@ def assign_tier(evidence: Evidence) -> TierDecision:
     if core_match and strong_statement and not evidence.has_dataset:
         return TierDecision(None, True, ("statement_author_date_without_dataset",))
     if evidence.project_id_mentions:
-        return TierDecision(None, True, ("project_id_quoted_without_author_or_dataset",))
-    if evidence.index_project_id_hit and (evidence.has_author or evidence.has_dataset):
+        # Queue only when the ID sits beside a DEA-specific term; "project
+        # 2020/080" alone is usually a university or funder project number.
+        dea_context = any(DEA_SPECIFIC_CONTEXT_RE.search(context) for context in evidence.project_id_mentions)
+        if dea_context:
+            return TierDecision(None, True, ("project_id_quoted_without_author_or_dataset",))
+        return TierDecision(None, False, ())
+    if evidence.index_project_id_hit and not evidence.has_full_text and (evidence.has_author or evidence.has_dataset):
         # The index matched the ID in text we cannot see; Tier 1 needs the
         # quote, so this stays unresolved unless full text is found.
         return TierDecision(None, False, ("project_id_reported_by_index_without_text",))

@@ -163,6 +163,9 @@ def complete_full_texts(
             except SourceBlocked:
                 stats["blocked"].append(name)
                 continue
+            except Exception:  # noqa: BLE001 - one failed lookup skips that DOI only
+                stats["errors"] = stats.get("errors", 0) + 1
+                continue
             if candidate and candidate.full_text:
                 found = candidate
                 stats[name] += 1
@@ -288,6 +291,22 @@ def outputs_table(groups: list[OutputGroup]) -> pd.DataFrame:
     return pd.DataFrame(records)
 
 
+def statement_text_sources(row: LinkRow) -> list[str]:
+    """Sources whose own text carries the qualifying statement for this pair
+    (a route phrase, or the project's own environment, outside boilerplate)."""
+    from analysis.publication_linkage.matching import clean_text, statement_hits
+
+    found = set()
+    for member in row.group.members:
+        text = " ".join(part for part in (clean_text(member.abstract), member.body_text()) if part)
+        if not text:
+            continue
+        kept, _ = statement_hits(text)
+        if any(hit.category == "route" or (hit.environment and hit.environment == row.project.environment_code) for hit in kept):
+            found.add(member.source)
+    return sorted(found)
+
+
 def links_table(rows: list[LinkRow]) -> pd.DataFrame:
     records = []
     for row in rows:
@@ -306,6 +325,7 @@ def links_table(rows: list[LinkRow]) -> pd.DataFrame:
             "authors_named_in_text": "; ".join(ev.authors_named_in_text),
             "datasets_named": "; ".join(sorted({f"{d} [{label}]" for d, label, _ in ev.dataset_hits})),
             "statement_type": ev.statement_type,
+            "statement_text_sources": "; ".join(statement_text_sources(row)) if ev.has_statement else "",
             "route_phrases": "; ".join(ev.route_phrases),
             "environment_phrases": "; ".join(ev.environment_phrases),
             "environment_consistent": ev.environment_consistent,
@@ -325,7 +345,7 @@ def links_table(rows: list[LinkRow]) -> pd.DataFrame:
         })
     columns = [
         "Record ID", "Project ID", "output_key", "rule_tier", "needs_adjudication", "rule_reasons", "evidence_quote",
-        "sources", "project_id_quoted", "author_matches", "authors_named_in_text", "datasets_named", "statement_type", "route_phrases",
+        "sources", "project_id_quoted", "author_matches", "authors_named_in_text", "datasets_named", "statement_type", "statement_text_sources", "route_phrases",
         "environment_phrases", "environment_consistent", "supporting_phrases", "boilerplate_phrases", "index_phrase_hits",
         "publication_date", "date_in_window", "adjudication_status", "adjudication_match", "adjudication_tier",
         "adjudication_reason", "adjudication_quote", "adjudication_quote_verified", "final_tier", "reviewer_decision",
@@ -399,7 +419,10 @@ def source_yield_table(links: pd.DataFrame) -> pd.DataFrame:
     """Matches per source and tier, and outputs found by that source alone."""
     rows = []
     if not len(links):
-        return pd.DataFrame(columns=["source", "tier", "project_output_pairs", "unique_pairs_this_source_only", "projects", "projects_this_source_only"])
+        return pd.DataFrame(columns=[
+            "source", "tier", "project_output_pairs", "unique_pairs_this_source_only", "projects",
+            "projects_this_source_only", "statement_text_supplied", "statement_text_only_from_this_source",
+        ])
     links = links.copy()
     links["tier_label"] = links["final_tier"].apply(lambda v: f"tier_{int(v)}" if str(v).strip() not in {"", "nan"} else "unresolved")
     links["source_list"] = links["sources"].str.split("; ")
@@ -413,6 +436,9 @@ def source_yield_table(links: pd.DataFrame) -> pd.DataFrame:
             elsewhere = set(
                 tier_links.loc[tier_links["source_list"].apply(lambda s, src=source: any(x != src for x in s)), "Record ID"]
             )
+            statement_lists = tier_links["statement_text_sources"].fillna("").astype(str).str.split("; ")
+            supplied = statement_lists.apply(lambda s, src=source: src in s)
+            supplied_only = statement_lists.apply(lambda s, src=source: s == [src])
             rows.append({
                 "source": source,
                 "tier": tier,
@@ -420,6 +446,8 @@ def source_yield_table(links: pd.DataFrame) -> pd.DataFrame:
                 "unique_pairs_this_source_only": len(only),
                 "projects": len(here),
                 "projects_this_source_only": len(here - elsewhere),
+                "statement_text_supplied": int(supplied.sum()),
+                "statement_text_only_from_this_source": int(supplied_only.sum()),
             })
     return pd.DataFrame(rows)
 

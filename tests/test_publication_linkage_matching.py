@@ -201,3 +201,7 @@ def test_everyday_word_product_names_are_case_sensitive():
     assert not find_dataset_mentions("when the data first became available", terms)
     assert not find_dataset_mentions("the family court process", terms)
     assert find_dataset_mentions("the FACO extract", terms)
+
+
+def test_en_dash_ranges_are_not_project_ids():
+    assert find_project_id_mentions("a project from the University (Code number UCV/2019–2020/001).") == []

@@ -250,3 +250,12 @@ def test_researcher_query_names_keep_family_particles():
     )
     queries = {q.query_name: q.family for q in researcher_queries([record], _date(2026, 10, 21))}
     assert queries == {"Aureo De Paula": "De Paula", "Iain Atherton": "Atherton"}
+
+
+def test_one_failing_europepmc_full_text_is_skipped(tmp_path):
+    session = FakeSession([response(500, {"error": "x"})] * 5)
+    source = EuropePmcSource(cache_dir=tmp_path)
+    source.client.session = session
+    source.client.min_interval = 0
+    assert source.full_text("PMC1") == ""
+    assert any("PMC1" in note for note in source.notes)

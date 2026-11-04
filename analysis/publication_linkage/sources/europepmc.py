@@ -21,7 +21,7 @@ import re
 from datetime import date
 
 from analysis.publication_linkage import config
-from analysis.publication_linkage.http_client import CachedClient
+from analysis.publication_linkage.http_client import CachedClient, QueryRejected, SourceBlocked
 from analysis.publication_linkage.matching import SEARCH_PHRASES, clean_text, parse_person_name
 from analysis.publication_linkage.outputs import CandidateOutput
 from analysis.publication_linkage.register_records import ProjectRecord
@@ -105,7 +105,17 @@ class EuropePmcSource:
         return None
 
     def full_text(self, pmcid: str) -> str:
-        text, record = self.client.get_text(f"{BASE}/{pmcid}/fullTextXML")
+        """Open-access XML as text; one failing document is skipped, not fatal."""
+        try:
+            text, record = self.client.get_text(f"{BASE}/{pmcid}/fullTextXML")
+        except SourceBlocked:
+            if self.client.stats.blocked:
+                raise
+            self.notes.append(f"full text unavailable (failed in the live run, so not cached): {pmcid}")
+            return ""
+        except (RuntimeError, QueryRejected) as error:
+            self.notes.append(f"full text skipped after retries: {pmcid} ({str(error)[:60]})")
+            return ""
         return xml_to_text(text) if record.get("status") == 200 else ""
 
     def collect(self, projects: list[ProjectRecord], snapshot_date: date) -> list[CandidateOutput]:

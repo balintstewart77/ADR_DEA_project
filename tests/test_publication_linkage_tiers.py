@@ -303,3 +303,24 @@ def test_covid_topic_is_not_a_dataset_term():
 
     assert ("COVID-19", "acronym") not in dataset_name_variants("COVID-19")
     assert ("COVID-19 Infection Survey", "name") in dataset_name_variants("COVID-19 Infection Survey (CIS)")
+
+
+def test_funder_project_numbers_are_not_queued():
+    funder = output(
+        authors=["Nobody Here"], abstract="Battery storage.", title="Battery storage",
+        full_text="This work was supported by the Research Fund of a University (Research Project no: 2021/050).",
+    )
+    assert decide(project(), funder) == assign_tier(Evidence())
+    dea = output(
+        authors=["Nobody Here"], abstract="Graduates.", title="Graduates",
+        full_text="Accessed under DEA project 2021/050 in the ONS Secure Research Service.",
+    )
+    decision = decide(project(), dea)
+    assert decision.tier is None and decision.needs_adjudication
+
+
+def test_index_reported_id_is_dropped_when_full_text_lacks_it():
+    held = output(full_text="Body text without any project identifier at all.", abstract="Graduate earnings.", title="Graduate pay")
+    held.index_project_id_hits = ["2021/050"]
+    decision = decide(project(), held)
+    assert "project_id_reported_by_index_without_text" not in decision.reasons

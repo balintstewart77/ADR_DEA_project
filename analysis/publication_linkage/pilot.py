@@ -122,9 +122,12 @@ def summarise_call_log(started_at: str, finished_at: str, call_log=None) -> dict
             source["blocked"] = True
             continue
         if "status" in entry:
+            ok = int(entry["status"]) == 200
             source["live_calls"] += 1
             source["http_errors"] += int(int(entry["status"]) >= 400)
-            source["cost_usd"] = round(source["cost_usd"] + float(entry.get("cost_usd") or 0), 6)
+            source["rate_limited"] = source.get("rate_limited", 0) + int(int(entry["status"]) == 429)
+            # Only successful calls are charged (see http_client).
+            source["cost_usd"] = round(source["cost_usd"] + (float(entry.get("cost_usd") or 0) if ok else 0.0), 6)
             source["seconds_live"] = round(source["seconds_live"] + float(entry.get("seconds") or 0), 1)
     for source in summary.values():
         first, last = source.pop("first_ts"), source.pop("last_ts")
@@ -142,6 +145,7 @@ def live_runs_record(runs: dict, enrichment_run, started_at: str, finished_at: s
             "status": run.status,
             "candidates": run.candidates,
             "live_calls": log.get(name, {}).get("live_calls", run.stats.get("live_calls", 0)),
+            "rate_limited": log.get(name, {}).get("rate_limited", 0),
             "cached_calls": run.stats.get("cached_calls", 0),
             "http_errors": log.get(name, {}).get("http_errors", 0),
             "cost_usd": log.get(name, {}).get("cost_usd", run.stats.get("cost_usd", 0.0)),
@@ -206,6 +210,8 @@ def call_scale(source: str, url: str) -> str:
             return "researcher"
         return "project" if _ID_IN_URL.search(url) or "doi%3A" in url else "fixed"
     if source == "europepmc":
+        if "fullTextXML" in url:
+            return "researcher"  # fetched only for hits sharing a register family name
         return "project" if _ID_IN_URL.search(url) or "DOI%3A" in url else "fixed"
     if source == "gtr":
         return "researcher"
@@ -214,48 +220,51 @@ def call_scale(source: str, url: str) -> str:
     return "project"
 
 
-def full_run_estimates(all_records, projects, snapshot_date: date, live: dict | None) -> pd.DataFrame:
-    """Scale the live pilot's logged calls and costs to the whole register."""
+def openalex_list_price(url: str) -> float:
+    """List price of an OpenAlex call (matches meta.cost_usd, verified live)."""
+    if "search=" in url:
+        return config.OPENALEX_PRICE_USD["search"]
+    if "/works?" in url or "/authors?" in url:
+        return config.OPENALEX_PRICE_USD["list"]
+    return config.OPENALEX_PRICE_USD["singleton"]
+
+
+def full_run_estimates(all_records, projects, snapshot_date: date, request_log: list[dict]) -> pd.DataFrame:
+    """Scale every request this pilot needed (cached or live) to the register.
+
+    Calls are classed by what they scale with (researcher, project, dataset);
+    register-wide phrase searches are "fixed": already cached and reused.
+    """
     units_pilot = {
         "researcher": len(researcher_queries(projects, snapshot_date)),
         "project": len(projects),
         "dataset": len({d for p in projects for d in p.datasets}),
-        "fixed": 1,
     }
     units_all = {
         "researcher": len(researcher_queries(all_records, snapshot_date)),
         "project": len(all_records),
         "dataset": len({d for r in all_records for d in r.datasets}),
-        "fixed": 1,
     }
-    rows = []
-    if not live:
-        return pd.DataFrame(rows)
-    path = config.CACHE_DIR / "call_log.jsonl"
     tallies: dict = defaultdict(lambda: defaultdict(lambda: [0, 0.0]))
-    for line in path.read_text(encoding="utf-8").splitlines() if path.exists() else []:
-        entry = json.loads(line)
-        if not (live["started_at"] <= entry["ts"] <= live["finished_at"]) or "status" not in entry:
+    for entry in request_log:
+        if entry.get("status") not in (200, 404):
             continue
-        scale = call_scale(entry["source"], entry.get("url", ""))
+        scale = call_scale(entry["source"], entry["url"])
+        price = openalex_list_price(entry["url"]) if entry["source"] == "openalex" else 0.0
         tallies[entry["source"]][scale][0] += 1
-        tallies[entry["source"]][scale][1] += float(entry.get("cost_usd") or 0)
+        tallies[entry["source"]][scale][1] += price
+    rows = []
     for source, by_scale in sorted(tallies.items()):
-        calls = cost = 0.0
-        pilot_calls = pilot_cost = 0.0
-        for scale, (n, usd) in by_scale.items():
-            factor = 0.0 if scale == "fixed" else units_all[scale] / max(units_pilot[scale], 1)
-            # Fixed (register-wide phrase) calls are already cached: no repeat.
-            calls += n * factor
-            cost += usd * factor
-            pilot_calls += n
-            pilot_cost += usd
+        needed = sum(n for n, _ in by_scale.values())
+        fixed = by_scale.get("fixed", [0, 0.0])[0]
+        calls = sum(n * units_all[s] / max(units_pilot[s], 1) for s, (n, _) in by_scale.items() if s != "fixed")
+        cost = sum(usd * units_all[s] / max(units_pilot[s], 1) for s, (_, usd) in by_scale.items() if s != "fixed")
         rows.append({
             "source": source,
-            "pilot_live_calls": int(pilot_calls),
-            "pilot_cost_usd": round(pilot_cost, 4),
-            "est_further_calls_full_run": int(round(calls)),
-            "est_further_cost_usd": round(cost, 2),
+            "pilot_calls_needed": needed,
+            "of_which_register_wide": fixed,
+            "est_calls_full_run": int(round(calls)),
+            "est_cost_usd": round(cost, 2),
             "est_days": (
                 math.ceil(calls / 1000) if source == "core"
                 else math.ceil(cost / config.OPENALEX_STOP_AT_USD) if source == "openalex" and cost
@@ -285,7 +294,8 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
             status_rows.append({
                 "source": name, "status": record["status"], "candidates": record["candidates"],
                 "live_calls": record["live_calls"], "http_errors": record["http_errors"],
-                "cost_usd": record["cost_usd"], "seconds": record["seconds"],
+                "of_which_429": record.get("rate_limited", 0),
+                "cost_usd": record["cost_usd"], "seconds_in_responses": record["seconds"],
             })
             notes.extend(f"- **{name}**: {note}" for note in record["notes"])
     else:
@@ -316,6 +326,7 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
     )
     lags = summary["lag_months_t1_t2"].dropna()
     blocked = [name for name, record in live_sources.items() if record["status"] == "blocked"]
+    failed = [name for name, record in live_sources.items() if record["status"] == "failed"]
     ran = [name for name, record in live_sources.items() if record["status"] in {"ok", "budget_stopped"}]
 
     lines = [
@@ -330,8 +341,8 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         "",
         f"- Register snapshot {meta['snapshot_date']} (version {meta['register_version']}), {meta['records']:,} cleaned records.",
         f"- Mature cohort: accredited on or before {timings['mature_cutoff']} (two years before the snapshot).",
-        f"- Sources that ran: {', '.join(ran) or 'none'}. Sources blocked by the session's network policy: "
-        f"{', '.join(blocked) or 'none'}.",
+        f"- Sources that ran: {', '.join(ran) or 'none'}. Blocked by the network policy: "
+        f"{', '.join(blocked) or 'none'}. Failed: {', '.join(failed) or 'none'} (see source notes).",
         *([
             "- Because sources were blocked, **this is a partial pilot**: rates, overlaps and source recommendations"
             " below cover only the sources that ran. Re-running the same command once access is open adds the"
@@ -360,7 +371,9 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         " environment = the project's own secure environment named):",
         "",
         markdown_table(statement_split),
-        "Per source and tier (pairs; unique = found by that source alone):",
+        "Per source and tier. Pairs and projects count discovery (unique = found by that source alone);"
+        " statement_text_supplied counts pairs where that source's own abstract or full text carries the"
+        " qualifying statement (the text that makes Tier 2 checkable), and _only_ where no other source did:",
         "",
         markdown_table(yield_table),
         "Overlap between sources, Tier 1-2 outputs (each output counted once, by the set of sources that found it):",
@@ -402,7 +415,9 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
         markdown_table(estimates),
         "## Limitations",
         "",
-        "- Blocked sources mean recall here is lower than the full design would give.",
+        *(["- Blocked sources mean recall here is lower than the full design would give."] if blocked else []),
+        *([f"- Failed this run: {', '.join(failed)}; Semantic Scholar is enrichment only, so abstracts came from"
+           " OpenAlex, Europe PMC and CORE."] if failed else []),
         "- CORE's index rejects every documented full-text lookup (including the docs' own examples), so CORE phrase"
         " and project-ID searches reach titles and abstracts only; CORE full text is scanned locally on"
         " author-centred results.",
@@ -419,6 +434,36 @@ def write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yi
     (out_dir / "pilot_report.md").write_text("\n".join(lines), encoding="utf-8")
 
 
+def report_only(out_dir, args) -> None:
+    """Regenerate estimates and the report from a finished run's saved files."""
+    from analysis.publication_linkage.pipeline import SourceRun
+
+    df, meta = load_register()
+    records = build_project_records(df)
+    snapshot = date.fromisoformat(meta["snapshot_date"])
+    cutoff = mature_cutoff(snapshot)
+    sample = draw_pilot_sample(records_frame(records), cutoff)
+    by_id = {record.record_id: record for record in records}
+    projects = [by_id[record_id] for record_id in sample["Record ID"]]
+    manifest = json.loads((out_dir / "run_manifest.json").read_text(encoding="utf-8"))
+    links = pd.read_csv(out_dir / "project_output_links.csv", dtype={"final_tier": object})
+    links["final_tier"] = links["final_tier"].fillna("")
+    summary = pd.read_csv(out_dir / "project_summary.csv")
+    live_path = out_dir / "live_source_runs.json"
+    live = json.loads(live_path.read_text(encoding="utf-8")) if live_path.exists() else None
+    request_log_path = config.CACHE_DIR / "request_logs" / f"{args.run_date}_{args.name}.jsonl"
+    request_log = [json.loads(line) for line in request_log_path.read_text(encoding="utf-8").splitlines()]
+    estimates = full_run_estimates(records, projects, snapshot, request_log)
+    yield_table = source_yield_table(links)
+    write_tables(out_dir, {"full_run_estimates.csv": estimates, "source_yield.csv": yield_table})
+    timings = {"run_date": args.run_date, "mature_cutoff": cutoff.isoformat(), "seconds": manifest.get("seconds")}
+    write_report(
+        out_dir, meta, sample, {}, SourceRun("semanticscholar"), summary, links, yield_table,
+        manifest["adjudication"], estimates, timings, live, manifest.get("full_text_completion"),
+    )
+    print(f"[pilot] report rewritten in {out_dir}")
+
+
 def main(argv=None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-date", default=date.today().strftime("%Y%m%d"))
@@ -426,6 +471,7 @@ def main(argv=None) -> None:
     parser.add_argument("--offline", action="store_true", help="use cached responses only")
     parser.add_argument("--no-enrich", action="store_true")
     parser.add_argument("--name", default="pilot", help="output folder under the run date")
+    parser.add_argument("--report-only", action="store_true", help="rewrite the report from the saved tables")
     parser.add_argument(
         "--record-live-window", nargs=2, metavar=("START", "END"),
         help="with --offline: record the live-run window (UTC ISO timestamps) from the call log",
@@ -435,6 +481,9 @@ def main(argv=None) -> None:
     started = time.monotonic()
     started_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     out_dir = config.OUTPUT_ROOT / args.run_date / args.name
+    if args.report_only:
+        report_only(out_dir, args)
+        return
     df, meta = load_register()
     records = build_project_records(df)
     snapshot = date.fromisoformat(meta["snapshot_date"])
@@ -495,15 +544,31 @@ def main(argv=None) -> None:
         log = summarise_call_log(*args.record_live_window)
         for name, record in live["sources"].items():
             record["notes"] = [n for n in record["notes"] if "offline mode" not in n]
-            record["seconds"] = log.get(name, {}).get("elapsed_seconds", record["seconds"])
+            record["seconds"] = log.get(name, {}).get("seconds_live", record["seconds"])
             if log.get(name, {}).get("blocked"):
                 record["status"] = "blocked"
                 record["notes"].append("network policy refused host (proxy 403)")
+            elif record["status"] == "blocked" and log.get(name, {}).get("live_calls"):
+                # Offline "blocked" only means nothing was cached: live calls
+                # were made and failed.
+                entry = log[name]
+                record["status"] = "failed"
+                record["notes"].append(
+                    f"{entry['http_errors']} of {entry['live_calls']} live calls failed "
+                    f"({entry.get('rate_limited', 0)} rate-limited, HTTP 429)"
+                )
         live["reconstructed_from_call_log"] = True
         live_path.write_text(json.dumps(live, indent=2) + "\n", encoding="utf-8")
     else:
         live = json.loads(live_path.read_text(encoding="utf-8")) if live_path.exists() else None
-    estimates = full_run_estimates(records, projects, snapshot, live)
+    from analysis.publication_linkage.http_client import REQUEST_LOG
+
+    request_log_path = config.CACHE_DIR / "request_logs" / f"{args.run_date}_{args.name}.jsonl"
+    request_log_path.parent.mkdir(parents=True, exist_ok=True)
+    request_log_path.write_text(
+        "".join(config.redact(json.dumps(entry)) + "\n" for entry in REQUEST_LOG), encoding="utf-8"
+    )
+    estimates = full_run_estimates(records, projects, snapshot, REQUEST_LOG)
     write_tables(out_dir, {"full_run_estimates.csv": estimates})
     timings = {"run_date": args.run_date, "mature_cutoff": cutoff.isoformat(), "seconds": round(time.monotonic() - started, 1)}
     write_report(out_dir, meta, sample, runs, enrichment_run, summary, links, yield_table, adjudication_counts, estimates, timings, live, completion_stats)

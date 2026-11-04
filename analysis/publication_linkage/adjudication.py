@@ -256,6 +256,10 @@ def apply_decisions(links: pd.DataFrame, out_dir: Path, items: dict[str, dict] |
         record_id, output_key = item_id.split("|", 1)
         mask = (links["Record ID"].astype(str) == record_id) & (links["output_key"] == output_key)
         final = decision.get("final_tier")
+        agent = links.loc[mask, "adjudication_match"]
+        agent_match = next((v for v in agent if isinstance(v, bool)), None)
+        if agent_match is not None and agent_match != (final in (1, 2, 3)):
+            counts["reviewer_overrode_agent"] = counts.get("reviewer_overrode_agent", 0) + 1
         links.loc[mask, "final_tier"] = int(final) if final in (1, 2, 3) else ""
         links.loc[mask, "adjudication_status"] = "reviewer_decision"
         links.loc[mask, "reviewer_decision"] = (

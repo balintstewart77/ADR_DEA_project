@@ -70,7 +70,7 @@ class CoreSource:
                 self.fulltext_search_available = True
             except QueryRejected as error:
                 self.fulltext_search_available = False
-                self.notes.append(f"fullText search unavailable at CORE ({str(error)[:120]}); title-only phrase search used")
+                self.notes.append(f"fullText not searchable at CORE ({str(error)[:110]})")
         return self.fulltext_search_available
 
     @staticmethod

@@ -32,6 +32,11 @@ import requests
 from analysis.publication_linkage import config
 
 
+# Every request made in this process (cached or live), for estimating what a
+# larger run would need: {"source", "url" (secrets removed), "cached", "status"}.
+REQUEST_LOG: list[dict] = []
+
+
 class SourceBlocked(RuntimeError):
     """The network policy (or DNS) refused the host."""
 
@@ -245,9 +250,11 @@ class CachedClient:
     ) -> dict:
         """Return the cached record ``{"status", "body", "headers", ...}``."""
         key = self.cache_key(method, url, params, json_body, cache_variant + json.dumps(headers or {}, sort_keys=True))
+        public_url = url + ("?" + urlencode(self._public_params(params)) if params else "")
         cached = self._read_cache(key)
         if cached is not None:
             self.stats.cached_calls += 1
+            REQUEST_LOG.append({"source": self.source, "url": public_url, "cached": True, "status": cached.get("status")})
             if cached.get("rejected"):
                 # A definitive query rejection is replayed, so offline runs
                 # take the same fallback paths as the live run did.
@@ -260,7 +267,6 @@ class CachedClient:
         if budget is not None:
             budget.check(expected_cost)
 
-        public_url = url + ("?" + urlencode(self._public_params(params)) if params else "")
         attempt = 0
         while True:
             with self._lock:
@@ -300,7 +306,9 @@ class CachedClient:
             kept_headers = {k: v for k, v in response.headers.items() if k.lower() in self.KEEP_HEADERS}
             cost = 0.0
             if budget is not None:
-                cost = _reported_openalex_cost(response, expected_cost)
+                # Rate-limited and failed responses are not charged: the server
+                # credit counter confirmed 113 HTTP 429s on 2026-11-03 cost nothing.
+                cost = _reported_openalex_cost(response, expected_cost) if response.status_code == 200 else 0.0
                 budget.record(cost, cost_kind or "call", response.headers)
                 self.stats.cost_usd += cost
             self._log({
@@ -339,6 +347,7 @@ class CachedClient:
             "body": response.text,
         }
         self._write_cache(key, record)
+        REQUEST_LOG.append({"source": self.source, "url": public_url, "cached": False, "status": response.status_code})
         return record
 
     def get_json(self, url: str, **kwargs) -> tuple[Any, dict]:

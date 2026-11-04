@@ -269,13 +269,22 @@ class ProjectIdMention:
     start: int
 
 
+# Context naming the DEA route or an accredited environment specifically, not
+# just "project" (university and funder project numbers share the YYYY/NNN form).
+DEA_SPECIFIC_CONTEXT_RE = re.compile(
+    r"\b(?:DEA|SRS|IDS|RAP|UKSA|Digital[\s\-]+Economy[\s\-]+Act|Research[\s\-]+Accreditation[\s\-]+Panel"
+    r"|Statistics[\s\-]+Authority|Secure[\s\-]+Research[\s\-]+Service|Integrated[\s\-]+Data[\s\-]+Service|accredit\w*)\b",
+    re.I,
+)
+
+
 def find_project_id_mentions(text: str) -> list[ProjectIdMention]:
     """Register-style IDs with an accreditation context word nearby.
 
     A bare ``YYYY/NNN`` never counts on its own: one of the context words must
     occur within 80 characters before or 40 characters after the ID.
     """
-    text = text or ""
+    text = (text or "").translate(_DASHES)
     mentions: list[ProjectIdMention] = []
     for match in PROJECT_ID_RE.finditer(text):
         before = text[max(0, match.start() - PROJECT_ID_CONTEXT_BEFORE): match.start()]

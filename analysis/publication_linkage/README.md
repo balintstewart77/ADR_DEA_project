@@ -25,9 +25,17 @@ python -m analysis.publication_linkage.pilot --run-date 20261103
 python -m analysis.publication_linkage.pilot --run-date 20261103 --offline
 ```
 
-The first command calls every source; blocked sources are logged and skipped.
-The second rebuilds every table from the cache with no network calls (use it
-after adjudication decisions are added).
+The first command calls every source; blocked or failing sources are logged
+and skipped. The second rebuilds every table from the cache with no network
+calls (use it after adjudication decisions are added). `--name` picks the
+output folder under the run date (the all-sources pilot is
+`--name pilot_all_sources`); `--report-only` rewrites the report and estimates
+from a finished run's saved tables.
+
+Adjudication runs in rounds (`adjudication/round_NNN/`): batches for helper
+agents, their `.decisions.jsonl`, and a tracked `manifest.json` of the text
+hash each item was shown, so a decision is reused only on identical text.
+`adjudication/reviewer_decisions.jsonl` holds human decisions, applied last.
 
 Credentials come from the environment only: `OPENALEX_API_KEY` (query
 parameter `api_key`) and, optionally, `CORE_API_KEY` (Bearer). Without
