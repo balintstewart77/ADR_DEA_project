@@ -1,0 +1,51 @@
+Record ID,Project ID,accreditation_date,accreditation_year,mature_cohort,environment,record_linkage,researcher_sectors,sector_group,has_tier1,has_tier2,has_tier3,has_output_t1_t2,has_output_route_only,has_output_any_tier,n_outputs_t1_t2,n_outputs_any_tier,n_pending_adjudication,n_index_reported_id_unconfirmed,first_output_date_t1_t2,lag_months_t1_t2
+2019/021,2019/021,2019-03-12,2019,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,True,True,True,True,True,3,7,0,0,2024-01-01,57.7
+2019/019,2019/019,2019-11-19,2019,True,ONS Secure Research Service (SRS),No record linkage,academic; government,government,False,False,False,False,False,False,0,0,0,0,,
+2020/080,2020/080,2020-07-09,2020,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2020/082,2020/082,2020-09-23,2020,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2020/097 CLOSED,2020/097,2020-10-22,2020,True,UK Data Service (UKDS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2020/106,2020/106,2020-11-24,2020,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2020/049,2020/049,2020-05-29,2020,True,ONS Secure Research Service (SRS),No record linkage,commercial,commercial,False,False,False,False,False,False,0,0,0,0,,
+2020/128,2020/128,2020-07-12,2020,True,SAIL Databank,No record linkage,academic; government,government,False,True,True,True,True,True,19,21,0,0,2021-01-01,5.7
+2020/001,2020/001,2020-01-17,2020,True,ONS Secure Research Service (SRS),No record linkage,third-sector,third-sector,False,False,False,False,False,False,0,0,0,0,,
+2021/001,2021/001,2021-02-15,2021,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,True,False,False,True,0,1,0,0,,
+2021/069,2021/069,2021-10-20,2021,True,SAIL Databank,No record linkage,academic,academic,False,True,False,True,True,True,3,3,0,0,2024-01-01,26.4
+2021/099,2021/099,2021-12-22,2021,True,UK Data Service (UKDS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2021/100,2021/100,2021-08-13,2021,True,UK Data Service (UKDS),No record linkage,academic,academic,False,True,True,True,False,True,1,6,0,0,2025-05-16,45.1
+2021/121,2021/121,2021-10-19,2021,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2021/153,2021/153,2021-11-02,2021,True,ONS Secure Research Service (SRS),Cross-domain record linkage,academic,academic,False,True,True,True,False,True,2,7,0,0,2023-12-19,25.5
+2021/181,2021/181,2021-03-12,2021,True,ONS Secure Research Service (SRS),No record linkage,commercial,commercial,False,False,False,False,False,False,0,0,0,0,,
+2021/025,2021/025,2021-03-17,2021,True,SAIL Databank,No record linkage,academic; government,government,False,True,True,True,True,True,19,21,0,0,2021-01-01,-2.5
+2021/044,2021/044,2021-04-21,2021,True,ONS Secure Research Service (SRS),No record linkage,academic; third-sector,third-sector,False,True,True,True,True,True,4,6,0,0,2022-07-11,14.7
+2022/009,2022/009,2022-02-24,2022,True,ONS Secure Research Service (SRS),Cross-domain record linkage,academic,academic,False,True,False,True,True,True,1,1,0,0,2025-02-24,36.0
+2022/018,2022/018,2022-01-02,2022,True,UK Data Service (UKDS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2022/034,2022/034,2022-03-31,2022,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,True,True,True,True,True,1,3,0,0,2023-01-01,9.1
+2022/111,2022/111,2022-05-08,2022,True,ONS Secure Research Service (SRS),Within-domain record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2022/114,2022/114,2022-07-18,2022,True,ONS Secure Research Service (SRS),Within-domain record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2022/134,2022/134,2022-08-17,2022,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2022/159,2022/159,2022-10-18,2022,True,ONS Secure Research Service (SRS),Cross-domain record linkage,academic,academic,False,False,True,False,False,True,0,6,0,0,,
+2021/146,2021/146,2022-02-23,2022,True,ONS Secure Research Service (SRS),No record linkage,academic; commercial,commercial,False,False,False,False,False,False,0,0,0,0,,
+2022/029,2022/029,2022-02-16,2022,True,ONS Secure Research Service (SRS),Cross-domain record linkage,commercial,commercial,False,False,False,False,False,False,0,0,0,0,,
+2022/137,2022/137,2022-08-25,2022,True,ONS Secure Research Service (SRS),No record linkage,government; commercial,government,False,False,False,False,False,False,0,0,0,0,,
+2022/197,2022/197,2022-08-12,2022,True,ONS Secure Research Service (SRS),No record linkage,academic; third-sector,third-sector,False,False,False,False,False,False,0,0,0,0,,
+2023/053,2023/053,2023-03-23,2023,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,True,False,False,True,0,1,0,0,,
+2023/152,2023/152,2023-07-27,2023,True,UK Data Service (UKDS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2023/198,2023/198,2023-09-08,2023,True,UK Data Service (UKDS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2023/215,2023/215,2023-09-19,2023,True,UK Data Service (UKDS),No record linkage,academic,academic,False,False,True,False,False,True,0,1,0,0,,
+2023/233,2023/233,2023-10-11,2023,True,UK Data Service (UKDS),No record linkage,academic,academic,False,True,False,True,True,True,1,1,0,0,2026-04-15,30.1
+2023/241,2023/241,2023-10-12,2023,True,ONS Secure Research Service (SRS),Cross-domain record linkage,academic,academic,False,False,True,False,False,True,0,6,0,0,,
+2023/299,2023/299,2023-12-15,2023,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2023/037,2023/037,2023-03-02,2023,True,ONS Secure Research Service (SRS),No record linkage,commercial,commercial,False,False,False,False,False,False,0,0,0,0,,
+2023/043,2023/043,2023-03-09,2023,True,ONS Secure Research Service (SRS),Cross-domain record linkage,government,government,False,False,False,False,False,False,0,0,0,0,,
+2023/278,2023/278,2023-11-07,2023,True,ONS Secure Research Service (SRS),No record linkage,government,government,False,False,False,False,False,False,0,0,0,0,,
+2023/211,2023/211,2023-09-27,2023,True,ONS Secure Research Service (SRS),No record linkage,academic; third-sector,third-sector,False,False,True,False,False,True,0,1,0,0,,
+2024/009,2024/009,2024-01-26,2024,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,True,False,False,True,0,4,0,0,,
+2024/050,2024/050,2024-04-02,2024,True,UK Data Service (UKDS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2024/052,2024/052,2024-04-02,2024,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2024/110,2024/110,2024-07-08,2024,True,SAIL Databank,No record linkage,academic,academic,False,True,True,True,False,True,1,2,0,0,2025-05-01,9.8
+2024/113,2024/113,2024-06-11,2024,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,False,True,False,False,True,0,1,0,0,,
+2024/127,2024/127,2024-08-05,2024,True,ONS Secure Research Service (SRS),No record linkage,academic,academic,False,True,True,True,True,True,3,12,0,0,2026-01-01,16.9
+2024/155,2024/155,2024-08-13,2024,True,ONS Secure Research Service (SRS),Cross-domain record linkage,academic,academic,False,False,False,False,False,False,0,0,0,0,,
+2024/108,2024/108,2024-06-06,2024,True,ONS Secure Research Service (SRS),No record linkage,commercial,commercial,False,False,False,False,False,False,0,0,0,0,,
+2024/162,2024/162,2024-08-16,2024,True,ONS Secure Research Service (SRS),No record linkage,government,government,False,False,False,False,False,False,0,0,0,0,,
+2024/073,2024/073,2024-03-25,2024,True,ONS Secure Research Service (SRS),Cross-domain record linkage,academic; third-sector,third-sector,False,False,False,False,False,False,0,0,0,0,,

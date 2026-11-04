@@ -1,0 +1,6 @@
+source,pilot_calls_needed,of_which_register_wide,est_calls_full_run,est_cost_usd,est_days,limit_basis
+core,322,20,6533,0.0,7,"1,000 tokens/day (personal tier)"
+europepmc,1043,13,18775,0.0,,rate limit only
+govuk,162,0,1243,0.0,,rate limit only
+gtr,559,0,9563,0.0,,rate limit only
+openalex,355,37,5970,4.14,5,$0.90/day stop within the free $1

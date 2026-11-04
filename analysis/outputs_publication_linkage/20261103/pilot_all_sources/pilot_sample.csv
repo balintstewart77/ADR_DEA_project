@@ -1,0 +1,51 @@
+Record ID,Project ID,accreditation_date,accreditation_year,sector_group,environment,record_linkage,stratum,stratum_population,stratum_allocation,design_weight,sampling_seed
+2019/021,2019/021,2019-03-12,2019,academic,ONS Secure Research Service (SRS),No record linkage,2019 | academic,7,1,7.0,20261103
+2019/019,2019/019,2019-11-19,2019,government,ONS Secure Research Service (SRS),No record linkage,2019 | government,7,1,7.0,20261103
+2020/080,2020/080,2020-07-09,2020,academic,ONS Secure Research Service (SRS),No record linkage,2020 | academic,62,4,15.5,20261103
+2020/082,2020/082,2020-09-23,2020,academic,ONS Secure Research Service (SRS),No record linkage,2020 | academic,62,4,15.5,20261103
+2020/097 CLOSED,2020/097,2020-10-22,2020,academic,UK Data Service (UKDS),No record linkage,2020 | academic,62,4,15.5,20261103
+2020/106,2020/106,2020-11-24,2020,academic,ONS Secure Research Service (SRS),No record linkage,2020 | academic,62,4,15.5,20261103
+2020/049,2020/049,2020-05-29,2020,commercial,ONS Secure Research Service (SRS),No record linkage,2020 | commercial,12,1,12.0,20261103
+2020/128,2020/128,2020-07-12,2020,government,SAIL Databank,No record linkage,2020 | government,23,1,23.0,20261103
+2020/001,2020/001,2020-01-17,2020,third-sector,ONS Secure Research Service (SRS),No record linkage,2020 | third-sector,22,1,22.0,20261103
+2021/001,2021/001,2021-02-15,2021,academic,ONS Secure Research Service (SRS),No record linkage,2021 | academic,101,6,16.833333333333332,20261103
+2021/069,2021/069,2021-10-20,2021,academic,SAIL Databank,No record linkage,2021 | academic,101,6,16.833333333333332,20261103
+2021/099,2021/099,2021-12-22,2021,academic,UK Data Service (UKDS),No record linkage,2021 | academic,101,6,16.833333333333332,20261103
+2021/100,2021/100,2021-08-13,2021,academic,UK Data Service (UKDS),No record linkage,2021 | academic,101,6,16.833333333333332,20261103
+2021/121,2021/121,2021-10-19,2021,academic,ONS Secure Research Service (SRS),No record linkage,2021 | academic,101,6,16.833333333333332,20261103
+2021/153,2021/153,2021-11-02,2021,academic,ONS Secure Research Service (SRS),Cross-domain record linkage,2021 | academic,101,6,16.833333333333332,20261103
+2021/181,2021/181,2021-03-12,2021,commercial,ONS Secure Research Service (SRS),No record linkage,2021 | commercial,19,1,19.0,20261103
+2021/025,2021/025,2021-03-17,2021,government,SAIL Databank,No record linkage,2021 | government,26,1,26.0,20261103
+2021/044,2021/044,2021-04-21,2021,third-sector,ONS Secure Research Service (SRS),No record linkage,2021 | third-sector,14,1,14.0,20261103
+2022/009,2022/009,2022-02-24,2022,academic,ONS Secure Research Service (SRS),Cross-domain record linkage,2022 | academic,124,7,17.714285714285715,20261103
+2022/018,2022/018,2022-01-02,2022,academic,UK Data Service (UKDS),No record linkage,2022 | academic,124,7,17.714285714285715,20261103
+2022/034,2022/034,2022-03-31,2022,academic,ONS Secure Research Service (SRS),No record linkage,2022 | academic,124,7,17.714285714285715,20261103
+2022/111,2022/111,2022-05-08,2022,academic,ONS Secure Research Service (SRS),Within-domain record linkage,2022 | academic,124,7,17.714285714285715,20261103
+2022/114,2022/114,2022-07-18,2022,academic,ONS Secure Research Service (SRS),Within-domain record linkage,2022 | academic,124,7,17.714285714285715,20261103
+2022/134,2022/134,2022-08-17,2022,academic,ONS Secure Research Service (SRS),No record linkage,2022 | academic,124,7,17.714285714285715,20261103
+2022/159,2022/159,2022-10-18,2022,academic,ONS Secure Research Service (SRS),Cross-domain record linkage,2022 | academic,124,7,17.714285714285715,20261103
+2021/146,2021/146,2022-02-23,2022,commercial,ONS Secure Research Service (SRS),No record linkage,2022 | commercial,30,2,15.0,20261103
+2022/029,2022/029,2022-02-16,2022,commercial,ONS Secure Research Service (SRS),Cross-domain record linkage,2022 | commercial,30,2,15.0,20261103
+2022/137,2022/137,2022-08-25,2022,government,ONS Secure Research Service (SRS),No record linkage,2022 | government,28,1,28.0,20261103
+2022/197,2022/197,2022-08-12,2022,third-sector,ONS Secure Research Service (SRS),No record linkage,2022 | third-sector,18,1,18.0,20261103
+2023/053,2023/053,2023-03-23,2023,academic,ONS Secure Research Service (SRS),No record linkage,2023 | academic,129,7,18.428571428571427,20261103
+2023/152,2023/152,2023-07-27,2023,academic,UK Data Service (UKDS),No record linkage,2023 | academic,129,7,18.428571428571427,20261103
+2023/198,2023/198,2023-09-08,2023,academic,UK Data Service (UKDS),No record linkage,2023 | academic,129,7,18.428571428571427,20261103
+2023/215,2023/215,2023-09-19,2023,academic,UK Data Service (UKDS),No record linkage,2023 | academic,129,7,18.428571428571427,20261103
+2023/233,2023/233,2023-10-11,2023,academic,UK Data Service (UKDS),No record linkage,2023 | academic,129,7,18.428571428571427,20261103
+2023/241,2023/241,2023-10-12,2023,academic,ONS Secure Research Service (SRS),Cross-domain record linkage,2023 | academic,129,7,18.428571428571427,20261103
+2023/299,2023/299,2023-12-15,2023,academic,ONS Secure Research Service (SRS),No record linkage,2023 | academic,129,7,18.428571428571427,20261103
+2023/037,2023/037,2023-03-02,2023,commercial,ONS Secure Research Service (SRS),No record linkage,2023 | commercial,18,1,18.0,20261103
+2023/043,2023/043,2023-03-09,2023,government,ONS Secure Research Service (SRS),Cross-domain record linkage,2023 | government,38,2,19.0,20261103
+2023/278,2023/278,2023-11-07,2023,government,ONS Secure Research Service (SRS),No record linkage,2023 | government,38,2,19.0,20261103
+2023/211,2023/211,2023-09-27,2023,third-sector,ONS Secure Research Service (SRS),No record linkage,2023 | third-sector,24,1,24.0,20261103
+2024/009,2024/009,2024-01-26,2024,academic,ONS Secure Research Service (SRS),No record linkage,2024 | academic,126,7,18.0,20261103
+2024/050,2024/050,2024-04-02,2024,academic,UK Data Service (UKDS),No record linkage,2024 | academic,126,7,18.0,20261103
+2024/052,2024/052,2024-04-02,2024,academic,ONS Secure Research Service (SRS),No record linkage,2024 | academic,126,7,18.0,20261103
+2024/110,2024/110,2024-07-08,2024,academic,SAIL Databank,No record linkage,2024 | academic,126,7,18.0,20261103
+2024/113,2024/113,2024-06-11,2024,academic,ONS Secure Research Service (SRS),No record linkage,2024 | academic,126,7,18.0,20261103
+2024/127,2024/127,2024-08-05,2024,academic,ONS Secure Research Service (SRS),No record linkage,2024 | academic,126,7,18.0,20261103
+2024/155,2024/155,2024-08-13,2024,academic,ONS Secure Research Service (SRS),Cross-domain record linkage,2024 | academic,126,7,18.0,20261103
+2024/108,2024/108,2024-06-06,2024,commercial,ONS Secure Research Service (SRS),No record linkage,2024 | commercial,19,1,19.0,20261103
+2024/162,2024/162,2024-08-16,2024,government,ONS Secure Research Service (SRS),No record linkage,2024 | government,19,1,19.0,20261103
+2024/073,2024/073,2024-03-25,2024,third-sector,ONS Secure Research Service (SRS),Cross-domain record linkage,2024 | third-sector,23,1,23.0,20261103

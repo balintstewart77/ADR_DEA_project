@@ -2328,3 +2328,149 @@ full-text probe so its rejection is cached. Outputs:
 Next step: open network access for the five blocked hosts and re-run the
 pilot (CORE calls come from the cache), then decide which sources the full run
 keeps. The full run, validation sheets and analysis wait for that decision.
+
+## CORE query syntax, project-ID searches and the all-sources pilot (2026-11-03)
+
+### CORE full-text search: what is our query and what is CORE
+
+Checked against CORE's live OpenAPI spec (`/swagger/v3.json`) and its
+"CORE API Query Language" page, then probed:
+
+- **Our query (fixed).** A quoted phrase is honoured as a phrase only inside
+  a boolean query. `"Secure Research Service"` on its own is rejected
+  ("|abstract is not a searchable field"), and a lone `title:"..."` or
+  `abstract:"..."` lookup is treated as loose terms (3.1 million and 19.8
+  million hits), but `"Secure Research Service" AND yearPublished>=2018`
+  returns 38 phrase matches across titles and abstracts. Every CORE phrase and
+  project-ID query now carries a year range. The first pilot's title-only
+  fallback was valid but narrower than it needed to be.
+- **CORE's index (not fixable from our side).** `fullText` is documented as
+  searchable, but every form is rejected with "fullText is not a searchable
+  field": `fullText:`, `fulltext:`, `full_text:`, `_exists_:fullText`, the
+  docs' own examples (`fullText:Ontario`, `fullText:political-science`), GET
+  and POST (`/v3/search/works`, no slash), works and outputs. The unqualified
+  phrase form does not reach full text either: six-word phrases taken from the
+  body of works CORE holds (e.g. "the age structure of the population", 38
+  hits in 2020) never returned the work they came from. The client probes
+  `fullText:` once per run and switches to it if CORE re-enables it.
+
+So CORE contributes full text through author-centred retrieval (its results
+carry `fullText` inline, scanned locally) and through DOI lookups for outputs
+other indexes report; it cannot be the full-text phrase route to Tier 1.
+
+### Project-ID route to Tier 1
+
+One query per project in each source that can search text:
+
+- **OpenAlex** searches full text it does not return. The query is precise
+  phrases ("project <ID>", "project number <ID>", "DEA project <ID>", "SRS
+  <ID>", ...) OR the bare ID with an accreditation term. The bare ID alone is
+  tokenised loosely (18,500 hits for "2022/139", mostly "Comment on
+  amt-2022-139"); the combined query ranks the known "Digital Economy Act
+  project number 2022/139" paper sixth of 269, and the exact phrase
+  "project number 2022/139" returns two works including it. $0.001 a project.
+- **Europe PMC** searches open-access full text; a bare quoted ID matches
+  loosely (618 hits), so the ID is paired with accreditation terms.
+- **CORE** reaches titles and abstracts only (above).
+
+An index hit is not evidence we can quote. Index-reported IDs are recorded and
+stay unresolved until CORE (by DOI) or Europe PMC (open-access XML) supplies
+text in which the rules find the ID beside a context word; text is fetched
+only where an author or dataset of that project already matches, because Tier
+1 needs one of them.
+
+### Decisions recorded (Balint, 2026-11-03)
+
+- SAIL-only (environment-only) Tier 2 stays in the headline. A sensitivity
+  headline counts only explicit accreditation-route evidence: Tier 1, or Tier 2
+  whose statement names the DEA route, the Research Accreditation Panel, an
+  accredited researcher or UKSA.
+- `2021/044` with `doi:10.1136/jech-2022-218786`: Tier 3, not rejected.
+- `2022/111` with `doi:10.23889/ijpds.v10i4.3193`: rejection stands.
+
+Reviewer decisions live in `adjudication/reviewer_decisions.jsonl`, are
+applied after agent decisions and are final. Adjudication now runs in rounds:
+an agent decision is reused only when the text the agent was shown is
+byte-identical (SHA-256 in each round's tracked `manifest.json`), so new
+abstracts or full text from the added sources trigger fresh adjudication.
+
+### Other verification and fixes
+
+- **OpenAlex** (docs host now redirects to help.openalex.org, not allowed):
+  verified live. `meta.cost_usd` on every list/search response; headers carry
+  the daily credit counter (`X-RateLimit-Limit: 10000`, 10,000 credits = $1);
+  quoted `search` is a stemmed phrase over title, abstract and full text.
+  The budget stop now uses whichever is higher, our ledger or the server
+  counter.
+- **GtR**: the v1.7 guide names co-investigators `COLI_PER`, live v7 JSON uses
+  `COI_PER`; both accepted. Grant dates arrive as epoch milliseconds or ISO
+  strings; both parsed. `q` with `f=per.sn` filters persons by surname.
+- **Europe PMC**: field names checked against `/rest/fields`; full text is
+  fetched only for hits that could link (shared author family name or a
+  project-ID hit), not for every phrase hit.
+- **Semantic Scholar**: the anonymous pool answers 429 often; backoff 3, 9,
+  27, 81 s.
+- **Names**: query names keep family-name particles ("Aureo De Paula", not
+  "Aureo Paula").
+- A source that raises any error is logged as failed and the run continues.
+
+### Rule refinements from the all-sources run
+
+- **Funder project numbers.** University and funder grants share the YYYY/NNN
+  form ("Research Project no: 2020/080", "TUBAP 2022/197"); nine reached the
+  queue in the first all-sources pass. An ID with no author or dataset match is
+  now queued only when a DEA-specific term (DEA, SRS, IDS, RAP, UKSA, Digital
+  Economy Act, Research Accreditation Panel, Secure Research Service,
+  Integrated Data Service, accredited) sits beside it. Tier 1 itself is
+  unchanged: it always needed an author or dataset match.
+- **Dashes.** Text is dash-normalised before ID matching, so
+  "UCV/2019–2020/001" (an en dash) no longer yields "2020/001".
+- **Index-reported IDs.** An index hit is dropped when we hold the output's
+  full text and the ID is not in it (two SAIL papers: loose tokenisation).
+- **Per-item failures.** One Europe PMC full text that answered HTTP 500 five
+  times failed the whole source in the first pass; single-document and
+  single-DOI failures are now skipped and noted.
+- **OpenAlex charges.** 113 author searches answered HTTP 429 and were retried
+  until they succeeded. The client had charged each at the $0.001 list price;
+  the server credit counter showed no charge (ledger $0.3681 less 113 x $0.001
+  equals the server's $0.2551 exactly). Non-200 responses are no longer
+  charged and the day's ledger was corrected, with the adjustment recorded.
+
+### All-sources pilot
+
+Outputs: `analysis/outputs_publication_linkage/20261103/pilot_all_sources/`
+(same 50 projects and seed as the CORE-only pilot, which is kept in
+`../pilot/`). Live calls 2026-11-03 21:30 to 23:15 UTC, including parameter
+verification, a two-project smoke test, a first pass stopped after the Europe
+PMC failure (its responses cached) and the full pass; tables then rebuilt
+offline from the cache with the refinements above and the round-2 decisions.
+
+- Sources: OpenAlex, CORE, Europe PMC, GtR and GOV.UK ran; Semantic Scholar
+  failed (5 of 5 calls HTTP 429; enrichment only).
+- 18,746 candidate records, 13,490 outputs after de-duplication, 113 linked
+  outputs and 161 project-output pairs.
+- **Tier 1-2: 12 of 50 projects (24%, Wilson 95% CI 14% to 37%).
+  Route-only sensitivity: 9 of 50 (18%, 10% to 31%).** Any tier: 20 of 50
+  (40%); Tier 1: none; median lag to first Tier 1-2 output 21 months (n=12).
+  58 Tier 2 pairs: 39 environment only (SAIL), 15 route and environment, 4
+  route only.
+- Discovery: OpenAlex found 38 of the 39 Tier 1-2 outputs, Europe PMC 31,
+  CORE 20, GtR 3, GOV.UK none; unique Tier 2 pairs only from OpenAlex (3).
+  Statement text (what makes Tier 2 quotable) came from Europe PMC for 49 of
+  58 Tier 2 pairs (16 from no other source), CORE 27 (5), OpenAlex abstracts 34
+  (3), GtR none.
+- Adjudication round 2: 47 pairs decided by four helper agents in parallel, 4
+  decisions reused from round 1 on identical text, 51 of 51 quotes verified;
+  47 near misses, none confirmed by the agents. Both reviewer decisions
+  overrode the round-2 agent.
+- Cost: OpenAlex $0.2551 for the day (server credits 7,449 of 10,000 left);
+  everything else free.
+- Full-run estimates from every request the pilot needed: CORE about 6,500
+  calls (about 7 days at 1,000 tokens/day, the binding limit), OpenAlex about
+  $4.14 (about 5 days at the $0.90/day stop), Europe PMC about 18,800 calls,
+  GtR about 9,600, GOV.UK about 1,200 (free).
+
+Recommendation (`pilot_recommendation.md`): keep OpenAlex, Europe PMC and
+CORE; drop GtR, GOV.UK and Semantic Scholar; keep OpenAlex and Europe PMC
+project-ID searches, drop CORE's; adjudicate a 10% sample of near misses in the
+full run. The full run waits for that decision.

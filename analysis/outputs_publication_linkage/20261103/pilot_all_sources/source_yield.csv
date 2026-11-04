@@ -1,0 +1,13 @@
+source,tier,project_output_pairs,unique_pairs_this_source_only,projects,projects_this_source_only,statement_text_supplied,statement_text_only_from_this_source
+core,tier_2,29,0,9,0,27,5
+europepmc,tier_2,49,0,8,0,49,16
+gtr,tier_2,3,0,1,0,0,0
+openalex,tier_2,57,3,11,1,34,3
+core,tier_3,23,9,11,1,1,1
+europepmc,tier_3,1,0,1,0,0,0
+gtr,tier_3,1,0,1,0,0,0
+openalex,tier_3,44,30,16,6,0,0
+core,unresolved,26,4,9,1,17,8
+europepmc,unresolved,36,1,8,0,35,15
+gtr,unresolved,1,0,1,0,0,0
+openalex,unresolved,44,4,11,1,21,4

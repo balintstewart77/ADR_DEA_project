@@ -1,0 +1,82 @@
+{
+  "started_at": "2026-11-03T21:30:00+00:00",
+  "finished_at": "2026-11-03T23:15:00+00:00",
+  "sources": {
+    "openalex": {
+      "status": "ok",
+      "candidates": 10898,
+      "live_calls": 478,
+      "rate_limited": 113,
+      "cached_calls": 355,
+      "http_errors": 113,
+      "cost_usd": 0.2551,
+      "seconds": 160.5,
+      "notes": []
+    },
+    "core": {
+      "status": "ok",
+      "candidates": 5811,
+      "live_calls": 219,
+      "rate_limited": 0,
+      "cached_calls": 244,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 354.1,
+      "notes": [
+        "fullText not searchable at CORE (core 500: {\"message\":\"Azure search failed with status code: 400. Error context: code=OperationNotAllowed, mess)",
+        "phrase and project-ID searches cover titles and abstracts only (CORE fullText not searchable)"
+      ]
+    },
+    "europepmc": {
+      "status": "ok",
+      "candidates": 1824,
+      "live_calls": 1182,
+      "rate_limited": 0,
+      "cached_calls": 978,
+      "http_errors": 20,
+      "cost_usd": 0.0,
+      "seconds": 910.7,
+      "notes": [
+        "full text unavailable (failed in the live run, so not cached): PMC8366514",
+        "full text unavailable (failed in the live run, so not cached): PMC9494386",
+        "full text unavailable (failed in the live run, so not cached): PMC9676077"
+      ]
+    },
+    "gtr": {
+      "status": "ok",
+      "candidates": 142,
+      "live_calls": 534,
+      "rate_limited": 0,
+      "cached_calls": 559,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 101.2,
+      "notes": []
+    },
+    "govuk": {
+      "status": "ok",
+      "candidates": 45,
+      "live_calls": 162,
+      "rate_limited": 0,
+      "cached_calls": 162,
+      "http_errors": 0,
+      "cost_usd": 0.0,
+      "seconds": 36.8,
+      "notes": []
+    },
+    "semanticscholar": {
+      "status": "failed",
+      "candidates": 0,
+      "live_calls": 5,
+      "rate_limited": 5,
+      "cached_calls": 0,
+      "http_errors": 5,
+      "cost_usd": 0.0,
+      "seconds": 0.8,
+      "notes": [
+        "5 of 5 live calls failed (5 rate-limited, HTTP 429)"
+      ]
+    }
+  },
+  "reconstructed_from_call_log": true
+}

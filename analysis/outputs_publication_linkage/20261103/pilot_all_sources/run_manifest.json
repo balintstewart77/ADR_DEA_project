@@ -1,0 +1,162 @@
+{
+  "kind": "publication_linkage_pilot",
+  "run_date": "20261103",
+  "register": {
+    "register_version": "20261021",
+    "snapshot_date": "2026-10-21",
+    "register_source_file": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/canonical.csv",
+    "register_sha256_csv": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad",
+    "register_properties_csv": "analysis/outputs_deterministic_rc2/register_properties.csv",
+    "records": 1385,
+    "cleaning_final_rows": 1385
+  },
+  "mature_cutoff": "2024-10-21",
+  "sample_seed": 20261103,
+  "sources_requested": [
+    "openalex",
+    "core",
+    "europepmc",
+    "gtr",
+    "govuk"
+  ],
+  "source_runs": {
+    "openalex": {
+      "status": "ok",
+      "candidates": 10898,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 355,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": []
+    },
+    "core": {
+      "status": "ok",
+      "candidates": 5811,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 244,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": [
+        "fullText not searchable at CORE (core 500: {\"message\":\"Azure search failed with status code: 400. Error context: code=OperationNotAllowed, mess)",
+        "phrase and project-ID searches cover titles and abstracts only (CORE fullText not searchable)"
+      ]
+    },
+    "europepmc": {
+      "status": "ok",
+      "candidates": 1824,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 978,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": [
+        "full text unavailable (failed in the live run, so not cached): PMC9494386",
+        "full text unavailable (failed in the live run, so not cached): PMC8366514",
+        "full text unavailable (failed in the live run, so not cached): PMC9676077"
+      ]
+    },
+    "gtr": {
+      "status": "ok",
+      "candidates": 142,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 559,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": []
+    },
+    "govuk": {
+      "status": "ok",
+      "candidates": 45,
+      "stats": {
+        "live_calls": 0,
+        "cached_calls": 162,
+        "errors": 0,
+        "retries": 0,
+        "blocked": false,
+        "blocked_reason": "",
+        "cost_usd": 0.0,
+        "seconds_live": 0.0,
+        "notes": []
+      },
+      "notes": []
+    }
+  },
+  "enrichment": {
+    "status": "blocked",
+    "stats": {
+      "live_calls": 0,
+      "cached_calls": 0,
+      "errors": 0,
+      "retries": 0,
+      "blocked": false,
+      "blocked_reason": "",
+      "cost_usd": 0.0,
+      "seconds_live": 0.0,
+      "notes": []
+    },
+    "notes": [
+      "semanticscholar: offline mode and no cached response"
+    ]
+  },
+  "candidates_retrieved": 18746,
+  "outputs_deduplicated": 13490,
+  "outputs_linked": 113,
+  "links": 161,
+  "adjudication": {
+    "queued": 51,
+    "decided": 51,
+    "reused_from_earlier_round": 4,
+    "verified": 51,
+    "unverified": 0,
+    "confirmed": 1,
+    "rejected": 50,
+    "capped_to_tier3": 0,
+    "pending": 0,
+    "reviewer_decisions": 2,
+    "reviewer_decisions_not_linked": 0,
+    "reviewer_overrode_agent": 2,
+    "round_written": ""
+  },
+  "full_text_completion": {
+    "wanted": 79,
+    "core": 20,
+    "europepmc": 6,
+    "not_found": 53,
+    "blocked": [],
+    "core_calls": 0,
+    "europepmc_calls": 0
+  },
+  "seconds": 956.8,
+  "offline": true,
+  "live_run": {
+    "started_at": "2026-11-03T21:30:00+00:00",
+    "finished_at": "2026-11-03T23:15:00+00:00"
+  }
+}
