@@ -184,3 +184,15 @@ analysis/outputs/model_comparison_fable_5_run2/*
 # and are regenerated from the cache, so only decisions are tracked ---
 data/publication_linkage_cache/
 analysis/outputs_publication_linkage/**/adjudication/**/batch_*[0-9].jsonl
+
+# Local manuscript, figures and review materials
+/DEA_paper/
+
+# Paper figure and table exports, draft captions and their verification outputs (local only;
+# the pipeline code that writes them stays tracked)
+/analysis/figures/
+/analysis/tables/
+/analysis/figure_data/
+/analysis/verification_pass2/**/*.csv
+/analysis/verification_pass2/**/*.json
+/analysis/verification_pass2/**/*.md
