@@ -178,3 +178,15 @@ analysis/outputs/model_comparison_fable_5_run2/*
 # Preserve the deterministic generator used to reproduce current cross-model evidence.
 !analysis/outputs/gpt55_crossmodel_stratum_run.py
 /analysis/ari_exploration/
+
+# Local manuscript, figures and review materials
+/DEA_paper/
+
+# Paper figure and table exports, draft captions and their verification outputs (local only;
+# the pipeline code that writes them stays tracked)
+/analysis/figures/
+/analysis/tables/
+/analysis/figure_data/
+/analysis/verification_pass2/**/*.csv
+/analysis/verification_pass2/**/*.json
+/analysis/verification_pass2/**/*.md
