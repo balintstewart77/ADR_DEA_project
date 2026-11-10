@@ -1,0 +1,30 @@
+{
+  "status": "exploratory, post-registration; production labels unchanged",
+  "specification_sha256": "637c267f2b474d438879e9dfc4f54e125a44caa8dbd0279830f766cd43644a2b",
+  "completed_utc": "2026-11-10T17:33:10.202137+00:00",
+  "preflight": "preflight.json",
+  "batch_ledger": "batch_ledger.jsonl",
+  "records_classified": 1309,
+  "canonical_records": 1308,
+  "requests": 132,
+  "failed_parse_calls": 0,
+  "refused_fallbacks": 0,
+  "all_input_tokens_match_reference": true,
+  "usage_totals": {
+    "input_tokens": 125699,
+    "output_tokens": 471854,
+    "cache_creation_input_tokens": 18278,
+    "cache_read_input_tokens": 1188070
+  },
+  "approx_cost_usd": 26.2662,
+  "pricing": {
+    "base_input_per_mtok": 10.0,
+    "cache_write_5m_per_mtok": 12.5,
+    "cache_read_per_mtok": 1.0,
+    "output_per_mtok": 50.0
+  },
+  "outputs": {
+    "llm_layer_cache.json": "5c6f1e916d8876a8b209c7ec06c743a49c1e07b4d6ee0e1807c8179689eb72d3",
+    "replicate_labels_canonical.csv": "91ab44a8bc5dcc03f87ed37d3746d10d2fb7b11685f987889adc49e85c71ed1c"
+  }
+}

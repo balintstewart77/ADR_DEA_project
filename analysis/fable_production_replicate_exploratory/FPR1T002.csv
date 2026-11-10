@@ -1,0 +1,5 @@
+table_id,comparison,population,records,domains_exact_n,domains_exact_proportion,domains_mean_jaccard,purposes_exact_n,purposes_exact_proportion,purposes_mean_jaccard,covid_agree_n,equity_agree_n,both_tags_agree_n,all_four_agree_n,domains_or_purposes_differ_n
+FPR1T002,run 1 (production) vs run 2,Stage R (run-1 sample),201,191,0.9502487562189055,0.9742951907131012,185,0.9203980099502488,0.9353233830845771,201,197,197,171,26
+FPR1T002,replicate vs run 1 (production),Stage R (run-1 sample),201,191,0.9502487562189055,0.9776119402985075,189,0.9402985074626866,0.9552238805970149,201,198,198,176,22
+FPR1T002,replicate vs run 2,Stage R (run-1 sample),201,191,0.9502487562189055,0.9734660033167495,183,0.9104477611940298,0.9303482587064676,201,198,198,170,28
+FPR1T002,all three runs agree,Stage R (run-1 sample),201,186,,,179,,,,,,159,

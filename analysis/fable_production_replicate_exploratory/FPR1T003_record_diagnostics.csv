@@ -1,0 +1,174 @@
+table_id,Record ID,stage,differing_components,production_domains,replicate_domains,production_purposes,replicate_purposes,production_tags,replicate_tags
+FPR1T003,2019/014,P,domains,Business & Productivity,Business & Productivity; Data Infrastructure & Methodology,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,,
+FPR1T003,2019/016,P,equity,Housing & Planning,Housing & Planning,Descriptive Monitoring,Descriptive Monitoring,,Demographic disparities / equity tag
+FPR1T003,2019/023,P,domains,Health & Social Care; Labour Market & Employment,Education & Skills; Labour Market & Employment,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2019/025,P,domains; purposes,"Poverty, Wealth & Living Standards",Migration & Demographics,Service Interaction / Systems Analysis,Descriptive Monitoring; Service Interaction / Systems Analysis,,
+FPR1T003,2020/018,P,equity,Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,Demographic disparities / equity tag,
+FPR1T003,2020/029,P,purposes,Business & Productivity,Business & Productivity,Outcome Tracking,Policy Evaluation / Impact Analysis,,
+FPR1T003,2020/033,R,equity,Education & Skills,Education & Skills,Outcome Tracking,Outcome Tracking,Demographic disparities / equity tag,
+FPR1T003,2020/047,P,domains,Health & Social Care,Data Infrastructure & Methodology; Health & Social Care,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2020/051,P,purposes,Business & Productivity,Business & Productivity,Outcome Tracking,Policy Evaluation / Impact Analysis,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2020/059,P,domains,Education & Skills,Education & Skills; Public Finance & Taxation,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2020/064,P,purposes,Business & Productivity,Business & Productivity,Descriptive Monitoring,Outcome Tracking,,
+FPR1T003,2020/067,P,covid,"Poverty, Wealth & Living Standards; Public Finance & Taxation","Poverty, Wealth & Living Standards; Public Finance & Taxation",Descriptive Monitoring,Descriptive Monitoring,COVID-19 & Pandemic,
+FPR1T003,2020/070,P,domains,Labour Market & Employment; Migration & Demographics,Migration & Demographics,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2020/086,R,domains,Business & Productivity; Labour Market & Employment,Business & Productivity; Labour Market & Employment; Migration & Demographics,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2020/096,P,purposes,Business & Productivity,Business & Productivity,Methodological / Infrastructure Research,Descriptive Monitoring,,
+FPR1T003,2020/117,P,purposes,Education & Skills,Education & Skills,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2020/120,R,domains,Business & Productivity; Health & Social Care; Labour Market & Employment,Health & Social Care; Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2020/126,P,purposes,Crime & Justice,Crime & Justice,Descriptive Monitoring; Methodological / Infrastructure Research,Outcome Tracking,,
+FPR1T003,2021/001,P,equity,Education & Skills,Education & Skills,Outcome Tracking,Outcome Tracking,COVID-19 & Pandemic,COVID-19 & Pandemic; Demographic disparities / equity tag
+FPR1T003,2021/008,P,domains,"Poverty, Wealth & Living Standards","Labour Market & Employment; Poverty, Wealth & Living Standards",Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2021/015,R,purposes,"Business & Productivity; Labour Market & Employment; Poverty, Wealth & Living Standards","Business & Productivity; Labour Market & Employment; Poverty, Wealth & Living Standards",Descriptive Monitoring,Outcome Tracking,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2021/019,P,domains,Business & Productivity; Data Infrastructure & Methodology; Labour Market & Employment,Business & Productivity; Data Infrastructure & Methodology,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,,
+FPR1T003,2021/020,P,purposes,Education & Skills; Labour Market & Employment,Education & Skills; Labour Market & Employment,Descriptive Monitoring; Outcome Tracking,Descriptive Monitoring,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2021/023,P,purposes,Health & Social Care,Health & Social Care,Outcome Tracking,Descriptive Monitoring,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2021/025,P,purposes; covid,Data Infrastructure & Methodology; Health & Social Care,Data Infrastructure & Methodology; Health & Social Care,Methodological / Infrastructure Research,Methodological / Infrastructure Research; Outcome Tracking,,COVID-19 & Pandemic
+FPR1T003,2021/035,P,domains,Data Infrastructure & Methodology,Data Infrastructure & Methodology; Education & Skills,Methodological / Infrastructure Research,Methodological / Infrastructure Research,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2021/053,R,domains,Education & Skills; Labour Market & Employment,Labour Market & Employment,Outcome Tracking,Outcome Tracking,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2021/066,P,purposes,"Poverty, Wealth & Living Standards","Poverty, Wealth & Living Standards",Descriptive Monitoring; Life-Course / Trajectory Analysis,Descriptive Monitoring,,
+FPR1T003,2021/074,P,purposes,Education & Skills,Education & Skills,Life-Course / Trajectory Analysis; Outcome Tracking,Life-Course / Trajectory Analysis,,
+FPR1T003,2021/076,P,domains,Education & Skills,Education & Skills; Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2021/080,P,domains,Education & Skills; Labour Market & Employment,Labour Market & Employment,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2021/087,R,domains,Labour Market & Employment; Migration & Demographics,Migration & Demographics,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2021/117,P,domains,Labour Market & Employment,Labour Market & Employment; Migration & Demographics,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2021/135,P,purposes,Business & Productivity,Business & Productivity,Risk Prediction / Early Identification,Outcome Tracking,,
+FPR1T003,2021/145,P,domains,Business & Productivity; Environment & Agriculture; Labour Market & Employment,Business & Productivity; Environment & Agriculture,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2021/147,P,purposes,Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring,Life-Course / Trajectory Analysis,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2021/153,P,equity,Health & Social Care,Health & Social Care,Outcome Tracking,Outcome Tracking,Demographic disparities / equity tag,
+FPR1T003,2021/157,P,purposes,Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring; Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2021/184,P,domains,Data Infrastructure & Methodology; Health & Social Care,Data Infrastructure & Methodology; Migration & Demographics,Methodological / Infrastructure Research,Methodological / Infrastructure Research,,
+FPR1T003,2022/005,P,domains,Health & Social Care; Labour Market & Employment,Health & Social Care,Outcome Tracking,Outcome Tracking,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2022/007,P,equity,Migration & Demographics,Migration & Demographics,Descriptive Monitoring,Descriptive Monitoring,,Demographic disparities / equity tag
+FPR1T003,2022/017,P,purposes,Education & Skills; Labour Market & Employment,Education & Skills; Labour Market & Employment,Outcome Tracking,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2022/019,P,domains,Data Infrastructure & Methodology; Education & Skills,Education & Skills,Methodological / Infrastructure Research,Methodological / Infrastructure Research,,
+FPR1T003,2022/025,P,purposes,Health & Social Care,Health & Social Care,Descriptive Monitoring; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/032,P,domains; purposes,Health & Social Care,Health & Social Care; Housing & Planning,Outcome Tracking,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/035,P,domains,Business & Productivity; Labour Market & Employment,Business & Productivity,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/039,P,purposes,Health & Social Care,Health & Social Care,Descriptive Monitoring,Descriptive Monitoring; Policy Evaluation / Impact Analysis,COVID-19 & Pandemic; Demographic disparities / equity tag,COVID-19 & Pandemic; Demographic disparities / equity tag
+FPR1T003,2022/053,P,domains,Business & Productivity,Business & Productivity; Labour Market & Employment,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/062,P,domains,Labour Market & Employment,Business & Productivity; Labour Market & Employment,Outcome Tracking,Outcome Tracking,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2022/072,P,purposes,"Poverty, Wealth & Living Standards","Poverty, Wealth & Living Standards",Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis; Service Interaction / Systems Analysis,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2022/078,P,domains,Labour Market & Employment,Health & Social Care; Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2022/079,P,domains,"Data Infrastructure & Methodology; Poverty, Wealth & Living Standards","Poverty, Wealth & Living Standards",Methodological / Infrastructure Research,Methodological / Infrastructure Research,,
+FPR1T003,2022/103,P,domains,Environment & Agriculture; Public Finance & Taxation,Business & Productivity; Environment & Agriculture; Public Finance & Taxation,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/108,P,domains,Labour Market & Employment,Health & Social Care; Labour Market & Employment,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2022/113,P,domains,Business & Productivity; Public Finance & Taxation,Business & Productivity,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/115,P,domains,"Environment & Agriculture; Poverty, Wealth & Living Standards",Environment & Agriculture,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/116,P,purposes,Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring; Outcome Tracking,Outcome Tracking,,
+FPR1T003,2022/121,P,domains,Education & Skills; Health & Social Care; Labour Market & Employment,Health & Social Care; Labour Market & Employment,Life-Course / Trajectory Analysis; Outcome Tracking,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2022/146,P,purposes,Business & Productivity,Business & Productivity,Descriptive Monitoring; Outcome Tracking,Descriptive Monitoring,,
+FPR1T003,2022/154,P,purposes,Business & Productivity,Business & Productivity,Descriptive Monitoring,Descriptive Monitoring; Outcome Tracking,,
+FPR1T003,2022/161,P,domains; equity,Labour Market & Employment,Health & Social Care; Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,Demographic disparities / equity tag,
+FPR1T003,2022/163,P,domains,Education & Skills; Health & Social Care,Education & Skills; Health & Social Care; Migration & Demographics,Outcome Tracking,Outcome Tracking,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2022/177,R,purposes,Business & Productivity,Business & Productivity,Descriptive Monitoring,Outcome Tracking,,
+FPR1T003,2022/182,P,domains,Labour Market & Employment,Health & Social Care; Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2022/183,P,domains,"Poverty, Wealth & Living Standards","Environment & Agriculture; Poverty, Wealth & Living Standards",Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2022/186,P,domains,Business & Productivity,Business & Productivity; Environment & Agriculture,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2022/187,P,purposes,Labour Market & Employment,Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2022/195,P,domains,Business & Productivity; Data Infrastructure & Methodology,Business & Productivity,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,,
+FPR1T003,2022/197,P,purposes,Labour Market & Employment,Labour Market & Employment,Life-Course / Trajectory Analysis; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2023/013,P,domains,Business & Productivity; Migration & Demographics,Labour Market & Employment; Migration & Demographics,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2023/018,P,domains,Education & Skills; Labour Market & Employment,Education & Skills,Life-Course / Trajectory Analysis; Outcome Tracking,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2023/032,P,domains,Environment & Agriculture; Housing & Planning,Environment & Agriculture; Housing & Planning; Labour Market & Employment,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2023/036,P,domains,Data Infrastructure & Methodology; Health & Social Care,Health & Social Care,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,,
+FPR1T003,2023/057,P,purposes,Migration & Demographics,Migration & Demographics,Life-Course / Trajectory Analysis; Outcome Tracking,Outcome Tracking,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2023/078,P,purposes,"Labour Market & Employment; Poverty, Wealth & Living Standards","Labour Market & Employment; Poverty, Wealth & Living Standards",Policy Evaluation / Impact Analysis,Descriptive Monitoring; Policy Evaluation / Impact Analysis,,
+FPR1T003,2023/135,P,domains,Business & Productivity; Data Infrastructure & Methodology,Business & Productivity,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2023/167,R,domains,Business & Productivity; Environment & Agriculture,Business & Productivity,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2023/174,P,domains,Education & Skills; Labour Market & Employment,Education & Skills; Labour Market & Employment; Migration & Demographics,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2023/175,P,domains,Labour Market & Employment; Migration & Demographics,Education & Skills; Labour Market & Employment; Migration & Demographics,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2023/189,P,domains,"Business & Productivity; Poverty, Wealth & Living Standards",Business & Productivity,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2023/206,P,domains,Education & Skills; Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2023/207,P,domains,Business & Productivity; Housing & Planning,Business & Productivity,Descriptive Monitoring; Policy Evaluation / Impact Analysis,Descriptive Monitoring; Policy Evaluation / Impact Analysis,,
+FPR1T003,2023/212,R,domains,Education & Skills; Labour Market & Employment,Education & Skills,Life-Course / Trajectory Analysis; Outcome Tracking,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2023/216,P,covid,Health & Social Care; Labour Market & Employment,Health & Social Care; Labour Market & Employment,Outcome Tracking,Outcome Tracking,COVID-19 & Pandemic,
+FPR1T003,2023/232,R,domains,Education & Skills; Labour Market & Employment,Education & Skills,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2023/235,P,domains,Education & Skills; Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2023/283,P,domains,"Labour Market & Employment; Poverty, Wealth & Living Standards",Labour Market & Employment; Migration & Demographics,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2023/289,P,domains,Environment & Agriculture; Health & Social Care,Health & Social Care,Outcome Tracking,Outcome Tracking,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2023/297,P,purposes,Labour Market & Employment,Labour Market & Employment,Outcome Tracking,Descriptive Monitoring; Outcome Tracking,,
+FPR1T003,2023/303,P,purposes,Education & Skills,Education & Skills,Outcome Tracking,Descriptive Monitoring; Outcome Tracking,,
+FPR1T003,2023/304,R,purposes,Health & Social Care; Labour Market & Employment,Health & Social Care; Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring; Outcome Tracking,,
+FPR1T003,2023/307,R,equity,Health & Social Care,Health & Social Care,Descriptive Monitoring,Descriptive Monitoring,Demographic disparities / equity tag,
+FPR1T003,2023/309,P,purposes,"Poverty, Wealth & Living Standards","Poverty, Wealth & Living Standards",Outcome Tracking,Descriptive Monitoring,,
+FPR1T003,2024/011,P,domains,Education & Skills; Labour Market & Employment,Education & Skills,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2024/030,P,domains,Business & Productivity; Labour Market & Employment,Business & Productivity,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2024/039,P,domains,Education & Skills; Environment & Agriculture; Housing & Planning,Environment & Agriculture; Housing & Planning,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2024/046,P,purposes,Data Infrastructure & Methodology,Data Infrastructure & Methodology,Methodological / Infrastructure Research,Methodological / Infrastructure Research; Outcome Tracking,,
+FPR1T003,2024/054,R,domains,Education & Skills; Labour Market & Employment,"Education & Skills; Labour Market & Employment; Poverty, Wealth & Living Standards",Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2024/058,P,domains,Business & Productivity; Labour Market & Employment,Labour Market & Employment,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2024/073,P,domains,Labour Market & Employment,Education & Skills; Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2024/079,P,domains,Migration & Demographics,Labour Market & Employment; Migration & Demographics,Descriptive Monitoring,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2024/095/a,P,domains,Business & Productivity,Business & Productivity; Labour Market & Employment,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2024/104,P,domains,"Housing & Planning; Poverty, Wealth & Living Standards",Data Infrastructure & Methodology; Housing & Planning,Methodological / Infrastructure Research,Methodological / Infrastructure Research,,
+FPR1T003,2024/110,P,domains,Environment & Agriculture; Health & Social Care; Housing & Planning,Health & Social Care; Housing & Planning,Methodological / Infrastructure Research; Outcome Tracking,Methodological / Infrastructure Research; Outcome Tracking,,
+FPR1T003,2024/117,P,purposes,Education & Skills; Labour Market & Employment,Education & Skills; Labour Market & Employment,Policy Evaluation / Impact Analysis,Life-Course / Trajectory Analysis; Policy Evaluation / Impact Analysis,,
+FPR1T003,2024/122,R,purposes,Labour Market & Employment,Labour Market & Employment,Methodological / Infrastructure Research; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2024/126,R,purposes,Business & Productivity,Business & Productivity,Outcome Tracking,Descriptive Monitoring,,
+FPR1T003,2024/149,P,purposes; equity,Education & Skills,Education & Skills,Descriptive Monitoring,Descriptive Monitoring; Outcome Tracking,,Demographic disparities / equity tag
+FPR1T003,2024/152,P,domains,Education & Skills,Education & Skills; Labour Market & Employment,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2024/161,R,purposes,"Poverty, Wealth & Living Standards","Poverty, Wealth & Living Standards",Descriptive Monitoring; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2024/174,P,domains,Labour Market & Employment,Education & Skills; Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2024/183,P,domains,Labour Market & Employment; Public Finance & Taxation,"Labour Market & Employment; Poverty, Wealth & Living Standards; Public Finance & Taxation",Outcome Tracking,Outcome Tracking,,
+FPR1T003,2024/184,P,domains,Business & Productivity; Labour Market & Employment,Education & Skills; Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2024/188,P,domains,Education & Skills; Health & Social Care,Health & Social Care,Service Interaction / Systems Analysis,Service Interaction / Systems Analysis,,
+FPR1T003,2024/189,P,purposes,Business & Productivity; Data Infrastructure & Methodology,Business & Productivity; Data Infrastructure & Methodology,Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,,
+FPR1T003,2024/191,P,domains,Health & Social Care; Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2024/192,P,equity,Labour Market & Employment; Migration & Demographics,Labour Market & Employment; Migration & Demographics,Descriptive Monitoring,Descriptive Monitoring,,Demographic disparities / equity tag
+FPR1T003,2024/203,P,domains,Education & Skills; Labour Market & Employment,Labour Market & Employment,Outcome Tracking,Outcome Tracking,COVID-19 & Pandemic,COVID-19 & Pandemic
+FPR1T003,2024/208,P,purposes,Health & Social Care,Health & Social Care,Methodological / Infrastructure Research,Methodological / Infrastructure Research; Policy Evaluation / Impact Analysis,,
+FPR1T003,2024/209,P,purposes,Environment & Agriculture,Environment & Agriculture,Descriptive Monitoring; Methodological / Infrastructure Research,Methodological / Infrastructure Research,,
+FPR1T003,2024/238,P,purposes,Education & Skills,Education & Skills,Descriptive Monitoring,Outcome Tracking,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2024/241,P,purposes,Business & Productivity,Business & Productivity,Outcome Tracking,Descriptive Monitoring,,
+FPR1T003,2024/251,P,domains,Data Infrastructure & Methodology; Environment & Agriculture,Business & Productivity; Environment & Agriculture,Methodological / Infrastructure Research,Methodological / Infrastructure Research,,
+FPR1T003,2024/254,P,purposes,Migration & Demographics,Migration & Demographics,Life-Course / Trajectory Analysis; Methodological / Infrastructure Research,Life-Course / Trajectory Analysis,,
+FPR1T003,2025/009,P,domains,Education & Skills; Health & Social Care,Health & Social Care,Risk Prediction / Early Identification,Risk Prediction / Early Identification,,
+FPR1T003,2025/011,P,domains,Labour Market & Employment,"Labour Market & Employment; Poverty, Wealth & Living Standards",Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2025/013,P,purposes,Education & Skills,Education & Skills,Life-Course / Trajectory Analysis; Outcome Tracking,Outcome Tracking,,
+FPR1T003,2025/020,P,purposes,Education & Skills; Labour Market & Employment,Education & Skills; Labour Market & Employment,Descriptive Monitoring,Outcome Tracking,,
+FPR1T003,2025/033,P,domains,Labour Market & Employment,Business & Productivity; Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/037,P,domains,Education & Skills; Labour Market & Employment,Education & Skills,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2025/039,P,domains,Health & Social Care,Education & Skills; Health & Social Care,Risk Prediction / Early Identification,Risk Prediction / Early Identification,,
+FPR1T003,2025/049,P,domains; purposes,Education & Skills; Labour Market & Employment,Education & Skills,Life-Course / Trajectory Analysis; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2025/051,P,purposes; equity,Migration & Demographics,Migration & Demographics,Descriptive Monitoring,Descriptive Monitoring; Life-Course / Trajectory Analysis,Demographic disparities / equity tag,
+FPR1T003,2025/053,R,purposes,Business & Productivity,Business & Productivity,Outcome Tracking; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2025/064,P,domains,Education & Skills,Education & Skills; Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2025/067,P,purposes,Environment & Agriculture; Health & Social Care,Environment & Agriculture; Health & Social Care,Methodological / Infrastructure Research; Outcome Tracking,Methodological / Infrastructure Research,,
+FPR1T003,2025/075,R,purposes,Migration & Demographics,Migration & Demographics,Methodological / Infrastructure Research; Outcome Tracking,Outcome Tracking,,
+FPR1T003,2025/096,P,equity,Labour Market & Employment,Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,,Demographic disparities / equity tag
+FPR1T003,2025/116,P,purposes,Education & Skills,Education & Skills,Policy Evaluation / Impact Analysis,Outcome Tracking,,
+FPR1T003,2025/118,P,purposes,Education & Skills; Labour Market & Employment,Education & Skills; Labour Market & Employment,Descriptive Monitoring; Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2025/127,P,domains,Labour Market & Employment,Data Infrastructure & Methodology; Labour Market & Employment,Methodological / Infrastructure Research; Policy Evaluation / Impact Analysis,Methodological / Infrastructure Research; Policy Evaluation / Impact Analysis,,
+FPR1T003,2025/130,P,domains,Environment & Agriculture,Data Infrastructure & Methodology; Environment & Agriculture,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,,
+FPR1T003,2025/131,P,purposes,Crime & Justice,Crime & Justice,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis; Service Interaction / Systems Analysis,,
+FPR1T003,2025/133,P,purposes,Education & Skills,Education & Skills,Outcome Tracking,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2025/135,P,domains,Education & Skills,Education & Skills; Labour Market & Employment,Outcome Tracking,Outcome Tracking,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/143,P,purposes,Migration & Demographics,Migration & Demographics,Methodological / Infrastructure Research; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2025/159,P,domains,"Poverty, Wealth & Living Standards; Public Finance & Taxation",Migration & Demographics; Public Finance & Taxation,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2025/165,P,domains,"Labour Market & Employment; Poverty, Wealth & Living Standards","Poverty, Wealth & Living Standards",Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2025/172,R,purposes,Health & Social Care; Migration & Demographics,Health & Social Care; Migration & Demographics,Outcome Tracking,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/174,P,domains,Education & Skills,Education & Skills; Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,,
+FPR1T003,2025/176,R,purposes,Labour Market & Employment; Migration & Demographics,Labour Market & Employment; Migration & Demographics,Descriptive Monitoring,Outcome Tracking,,
+FPR1T003,2025/187,P,domains,Business & Productivity,Business & Productivity; Labour Market & Employment,Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2025/208,P,domains,Education & Skills; Labour Market & Employment,Education & Skills,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/211,P,purposes,Health & Social Care,Health & Social Care,Outcome Tracking,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/218,P,purposes,Education & Skills,Education & Skills,Descriptive Monitoring; Outcome Tracking,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/236,P,domains,Migration & Demographics,"Migration & Demographics; Poverty, Wealth & Living Standards",Descriptive Monitoring,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/239,P,purposes,Labour Market & Employment,Labour Market & Employment,Life-Course / Trajectory Analysis,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2025/240,P,purposes,Education & Skills,Education & Skills,Descriptive Monitoring; Methodological / Infrastructure Research,Descriptive Monitoring,,
+FPR1T003,2025/243,P,domains,Education & Skills; Labour Market & Employment,Education & Skills,Life-Course / Trajectory Analysis; Outcome Tracking,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2025/246,R,purposes,Labour Market & Employment,Labour Market & Employment,Outcome Tracking,Descriptive Monitoring,Demographic disparities / equity tag,Demographic disparities / equity tag
+FPR1T003,2025/247,P,purposes,"Housing & Planning; Poverty, Wealth & Living Standards","Housing & Planning; Poverty, Wealth & Living Standards",Life-Course / Trajectory Analysis; Policy Evaluation / Impact Analysis,Policy Evaluation / Impact Analysis,,
+FPR1T003,2025/251,R,purposes,Business & Productivity; Environment & Agriculture,Business & Productivity; Environment & Agriculture,Methodological / Infrastructure Research,Descriptive Monitoring; Methodological / Infrastructure Research,,
+FPR1T003,2025/260,R,equity,Health & Social Care,Health & Social Care,Outcome Tracking; Service Interaction / Systems Analysis,Outcome Tracking; Service Interaction / Systems Analysis,,Demographic disparities / equity tag
+FPR1T003,2026/001,P,domains,Housing & Planning,"Housing & Planning; Poverty, Wealth & Living Standards",Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2026/013,P,domains,Business & Productivity; Labour Market & Employment,Business & Productivity,Outcome Tracking,Outcome Tracking,,
+FPR1T003,2026/015,P,purposes,Education & Skills,Education & Skills,Policy Evaluation / Impact Analysis,Outcome Tracking,,
+FPR1T003,2026/018,P,domains,Business & Productivity; Labour Market & Employment,Business & Productivity,Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2026/033,R,domains,"Poverty, Wealth & Living Standards","Health & Social Care; Poverty, Wealth & Living Standards",Descriptive Monitoring,Descriptive Monitoring,,
+FPR1T003,2026/034,P,purposes,Education & Skills; Public Finance & Taxation,Education & Skills; Public Finance & Taxation,Policy Evaluation / Impact Analysis,Life-Course / Trajectory Analysis; Policy Evaluation / Impact Analysis,,
+FPR1T003,2026/065,P,purposes,Migration & Demographics,Migration & Demographics,Outcome Tracking,Descriptive Monitoring; Outcome Tracking,,
+FPR1T003,2026/074,P,purposes,Education & Skills; Labour Market & Employment,Education & Skills; Labour Market & Employment,Outcome Tracking,Life-Course / Trajectory Analysis; Outcome Tracking,,
+FPR1T003,2026/076,P,purposes,Migration & Demographics,Migration & Demographics,Descriptive Monitoring,Descriptive Monitoring; Outcome Tracking,,
+FPR1T003,2026/083,R,domains,Labour Market & Employment,Environment & Agriculture; Labour Market & Employment,Descriptive Monitoring,Descriptive Monitoring,,

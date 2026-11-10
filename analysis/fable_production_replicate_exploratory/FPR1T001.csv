@@ -1,0 +1,6 @@
+table_id,comparison,population,records,domains_exact_n,domains_exact_proportion,domains_mean_jaccard,purposes_exact_n,purposes_exact_proportion,purposes_mean_jaccard,covid_agree_n,equity_agree_n,both_tags_agree_n,all_four_agree_n,domains_or_purposes_differ_n
+FPR1T001,replicate vs production,full register,1308,1215,0.9288990825688074,0.9648318042813455,1237,0.9457186544342507,0.9644495412844036,1305,1295,1292,1135,161
+FPR1T001,replicate vs production,random baseline,150,139,0.9266666666666666,0.9644444444444443,144,0.96,0.9766666666666667,150,148,148,132,17
+FPR1T001,replicate vs production,hard-case (diagnostic),75,59,0.7866666666666666,0.8955555555555557,64,0.8533333333333334,0.9,75,74,74,48,26
+FPR1T001,replicate vs production,Stage R (run-1 sample),201,191,0.9502487562189055,0.9776119402985075,189,0.9402985074626866,0.9552238805970149,201,198,198,176,22
+FPR1T001,replicate vs production,Stage P (rest of register),1107,1024,0.9250225835591689,0.9625112917795845,1048,0.9467028003613369,0.9661246612466124,1104,1097,1094,959,139

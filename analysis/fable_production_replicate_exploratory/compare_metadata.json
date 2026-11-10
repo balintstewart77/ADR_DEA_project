@@ -1,0 +1,174 @@
+{
+  "status": "exploratory, post-registration, descriptive",
+  "specification_sha256": "637c267f2b474d438879e9dfc4f54e125a44caa8dbd0279830f766cd43644a2b",
+  "run_metadata_sha256": "a4da78756f85235bb73709ee264b263c3c6d1e99c673d95017d7c6a9b156c8a3",
+  "completed_utc": "2026-11-10T17:36:56.897192+00:00",
+  "checks": [
+    {
+      "check": "hash POST-028",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash PRO-018",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash RED-036",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash RED-013",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash RED-005",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash RED-006",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash RED-007",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash RED-003",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash RED-017",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash POST-019",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash POST-022",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash POST-009",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash POST-011",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash MOD-001",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "hash MOD-006",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "replicate complete with every batch matching its reference input tokens",
+      "status": "passed",
+      "observed": {
+        "requests": 132,
+        "all_input_tokens_match_reference": true,
+        "refused_fallbacks": 0
+      },
+      "expected": null
+    },
+    {
+      "check": "replicate labels unchanged since the run",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "production labels are the MOD-006 authority",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "run 1 cache hash pinned in stability metrics",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "run 2 cache hash pinned in stability metrics",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "1,308 canonical records on both sides",
+      "status": "passed",
+      "observed": 1308,
+      "expected": 1308
+    },
+    {
+      "check": "production labels for the 201 seed records equal run 1's",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "run 1 vs run 2 reproduces the stability metrics",
+      "status": "passed",
+      "observed": null,
+      "expected": null
+    },
+    {
+      "check": "sample records present in production labels",
+      "status": "passed",
+      "observed": 150,
+      "expected": 150
+    },
+    {
+      "check": "population sizes",
+      "status": "passed",
+      "observed": [
+        1308,
+        150,
+        75,
+        201,
+        1107
+      ],
+      "expected": null
+    }
+  ],
+  "outputs": {
+    "FPR1T001.csv": "3ac960c248cb1ab6d2cfb9238ca3ef86c6b241ea932be5fb0de0c38dd919a386",
+    "FPR1T002.csv": "5f178ae0e6c973c8812c4248db2e396680236fe141d75d080111193f66d6c751",
+    "FPR1T003_record_diagnostics.csv": "a6f867c4931414799271258d62ab68639b6eaf4a7f3561856150e1799faaf512",
+    "results_fable_production_replicate.md": "1849f4eac3e252901149f01c5da4bcc21c826e4d85d8afa18dda0899a06b0543"
+  }
+}
