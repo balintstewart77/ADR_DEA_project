@@ -205,3 +205,6 @@ analysis/outputs/model_comparison_fable_5_run2/*
 
 # Public data-use register audit bundle (local only)
 /analysis/public_register_audit/
+
+# Local manuscript, figures and review materials
+/DEA_paper/
