@@ -1,0 +1,7 @@
+table_id,signal,flag_status,records,sufficient_ratings_0,sufficient_ratings_1,sufficient_ratings_2,sufficient_ratings_3
+SPX1T002,X: cross-model disagreement,flagged,51,14,15,12,10
+SPX1T002,X: cross-model disagreement,not flagged,99,11,18,35,35
+SPX1T002,U: model instability,flagged,17,2,7,5,3
+SPX1T002,U: model instability,not flagged,133,23,26,42,42
+SPX1T002,E: either signal,flagged,54,14,16,13,11
+SPX1T002,E: either signal,not flagged,96,11,17,34,34

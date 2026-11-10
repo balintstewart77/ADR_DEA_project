@@ -1,0 +1,4 @@
+table_id,signal,eligible_records,flagged_records,flagged_proportion
+SPX1T004,X: cross-model disagreement,1286,380,0.2954898911353033
+SPX1T004,U: model instability,1286,159,0.12363919129082426
+SPX1T004,E: either signal,1286,427,0.3320373250388802

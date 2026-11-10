@@ -1,0 +1,5 @@
+table_id,dimension,signal,flagged_records,flagged_unclear_only_n,flagged_unclear_only,flagged_lower,flagged_upper,unflagged_unclear_only_n,unflagged_unclear_only,unflagged_lower,unflagged_upper
+SPX1T003,Research Domains,X: cross-model disagreement (Research Domains),31,6,0.1935483870967742,0.09187008361586096,0.36280257811795463,7,0.058823529411764705,0.02878331248072756,0.11645640537980732
+SPX1T003,Research Domains,U: model instability (Research Domains),11,2,0.18181818181818182,0.05136768974608513,0.4769805619608442,11,0.07913669064748201,0.04476127979457862,0.13614879375159233
+SPX1T003,Analytical Purposes,X: cross-model disagreement (Analytical Purposes),31,8,0.25806451612903225,0.13701705906393744,0.43246135809433794,18,0.15126050420168066,0.09787297206229481,0.22645937634174704
+SPX1T003,Analytical Purposes,U: model instability (Analytical Purposes),6,0,0.0,0.0,0.3903342879021653,26,0.18055555555555555,0.12629942236719172,0.2514123458075262
