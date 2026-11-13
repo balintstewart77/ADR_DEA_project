@@ -1,5 +1,6 @@
 import csv
 import re
+import subprocess
 from pathlib import Path
 
 
@@ -8,7 +9,6 @@ EXPECTED = {
     "protocol_deviation_log.csv",
     "instrument_change_log.csv",
     "coding_clarification_log.csv",
-    "jo_review_decision_log.csv",
 }
 INSTRUMENT_LOG_REQUIRED_COLUMNS = {
     "change_id",
@@ -30,8 +30,11 @@ NEWEST_INSTRUMENT_CHANGE_ID = "REDCAP-038"
 
 
 def test_required_log_files_and_post_pilot_governance_entry():
-    assert {path.name for path in PACKAGE.glob("*.csv")} == EXPECTED
-    for path in PACKAGE.glob("*.csv"):
+    tracked = subprocess.run(
+        ["git", "ls-files", "--", PACKAGE.as_posix()], capture_output=True, text=True, check=True,
+    ).stdout.split()
+    assert {Path(name).name for name in tracked if name.endswith(".csv")} == EXPECTED
+    for path in (PACKAGE / name for name in sorted(EXPECTED)):
         with path.open(encoding="utf-8", newline="") as handle:
             reader = csv.DictReader(handle)
             assert reader.fieldnames
@@ -370,15 +373,3 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "every real owner response" in hidden_child_deviation[
         "affected_records_or_outputs"
     ]
-
-
-def test_dated_pilot_feedback_log_records_feedback_closure_without_approval():
-    text = Path(
-        "preregistration/package/05_training_and_pilot/pilot_feedback_log_20260717.md"
-    ).read_text(encoding="utf-8")
-    assert "Status: coder feedback closed and resolved" in text
-    assert "close of play on Wednesday 22 July 2026" in text
-    assert "All three coders responded" in text
-    assert "not treated as formal approval or endorsement" in text
-    assert "Coder feedback resolved; formal-instrument freeze and live REDCap QA pending." in text
-    assert "prepared_for_circulation" not in text

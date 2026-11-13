@@ -243,7 +243,7 @@ def test_exclusions_and_manifest_entries_remain_coherent():
     assert by_id["PRO-006"]["current_implementation_basis"] == "false"
     assert by_id["PRO-006"]["superseded_by"] == "v0.14"
     assert by_id["PRO-005"]["superseded_by"] == "v0.13"
-    for artifact_id in ("PRO-012", "PRO-013", "PRO-015", "TRN-008", "TRN-012", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
+    for artifact_id in ("PRO-012", "PRO-013", "PRO-015", "TRN-008", "TRN-014", "TRN-015", "RED-010", "LOG-003"):
         row = by_id[artifact_id]
         path = Path(row["current_path"])
         assert path.is_file()

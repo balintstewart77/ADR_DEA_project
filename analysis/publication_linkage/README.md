@@ -1,8 +1,7 @@
 # Publication linkage
 
 Links projects on the UKSA register of DEA-accredited research projects to the
-public outputs they produced, using free sources only. Method decisions are in
-`METHODS_LOG.md` ("Publication linkage" entries).
+public outputs they produced, using free sources only.
 
 ## Layout
 
