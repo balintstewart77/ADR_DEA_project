@@ -156,7 +156,6 @@ duplicated in this scoped OSF upload.
 - **Stability recomputation script:** `analysis/verify_fable_run_stability.py`
 - **Protocol-deviation log:** `preregistration/package/09_logs_and_templates/protocol_deviation_log.csv`
 - **Instrument-change log:** `preregistration/package/09_logs_and_templates/instrument_change_log.csv`
-- **Dated pilot-feedback log:** `preregistration/package/05_training_and_pilot/pilot_feedback_log_20260717.md`
 
 Both repeat-run caches existed at the protocol-freeze commit. Their respective
 protocol-freeze Git object IDs are

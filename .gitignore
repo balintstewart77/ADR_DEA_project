@@ -114,8 +114,8 @@ analysis/outputs_classified_*/run.log
 
 # --- Local comparison-analysis artefacts ---
 analysis/opus_v_sonnet_comparison_analysis/
-# Workspace outputs stay ignored, but named incident/QA reports referenced by
-# METHODS_LOG are tracked ("*" not "/" so the negations below can re-include).
+# Workspace outputs stay ignored, but the named incident/QA reports below are
+# tracked ("*" not "/" so the negations below can re-include).
 analysis/outputs/*
 !analysis/outputs/codebase_hygiene_audit.md
 !analysis/outputs/domain_order_reconciliation_review.md
@@ -217,3 +217,9 @@ analysis/outputs/model_comparison_fable_5_run2/*
 /analysis/verification_pass2/**/*.csv
 /analysis/verification_pass2/**/*.json
 /analysis/verification_pass2/**/*.md
+
+# Internal working logs: kept locally, not published
+/METHODS_LOG.md
+/preregistration/package/09_logs_and_templates/jo_review_decision_log.csv
+/preregistration/package/05_training_and_pilot/pilot_feedback_log_20260717.md
+/preregistration/package/05_training_and_pilot/pilot_feedback_log_20260717.html
