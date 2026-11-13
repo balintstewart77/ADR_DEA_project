@@ -338,6 +338,7 @@ def test_required_log_files_and_post_pilot_governance_entry():
         "DEV-006",
         "DEV-007",
         "DEV-008",
+        "DEV-009",
     ]
     deviation = deviation_entries[0]
     assert all(deviation[column].strip() for column in required_deviation_columns)
@@ -429,3 +430,11 @@ def test_required_log_files_and_post_pilot_governance_entry():
     assert "AMD-002" in second_review_scope["resolution"]
     assert "20261019" in second_review_scope["description"]
     assert Path("preregistration/post_registration/amendments/AMD-002_secondary_review_scope.md").is_file()
+    core_and_reserve = deviation_entries[8]
+    assert all(core_and_reserve[column].strip() for column in required_deviation_columns)
+    assert core_and_reserve["status"] == "applied"
+    assert core_and_reserve["substantive"] == "yes"
+    assert core_and_reserve["amendment_required"] == "yes"
+    assert "AMD-003" in core_and_reserve["resolution"]
+    assert "first 20 records in seeded order" in core_and_reserve["description"]
+    assert Path("preregistration/post_registration/amendments/AMD-003_secondary_review_core_and_reserve.md").is_file()

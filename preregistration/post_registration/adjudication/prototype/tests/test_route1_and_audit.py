@@ -14,7 +14,7 @@ from build_formal_import import (BLOCK_SIZE, SEED_PRIMARY_QUEUE, SEED_PRESENTATI
 from build_route1_component import component_values
 from check_blocks import compare as compare_blocks
 from rule_groups import catalogue_rows as rule_group_rows, groups_for, is_unclear_problem, record_groups
-from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, main, read_manifest
+from draw_secondary_audit import SEED_ADJUDICATION_AUDIT, SEED_SECONDARY_QUEUE, draw, draw_batches, main, read_manifest
 from preserve_block import (REFUSAL_COLUMNS, _choices, _nest_single_set, _label_vocabulary, check_block, log_refusal, required_columns,
                             response_from_export, snapshot, stage1_columns)
 from prototype_lib import (BEST_CANNOT_DETERMINE, DOMAINS, PURPOSES, RULE_OTHER, comparative_components, default_valid_submission,
@@ -347,6 +347,54 @@ class Route1AndAuditTests(unittest.TestCase):
         self.assertEqual(mandatory_ids, {by_key["12"]["covered_by"], by_key["24 | Crime & Justice"]["covered_by"]})
         self.assertNotIn(unselected[6]["source_record_id"], mandatory_ids)
         self.assertEqual(draw(rows), draw(rows))
+
+    def test_amd003_core_is_the_seeded_prefix_of_the_preregistered_draw(self):
+        rows = self.audit_rows(200)  # synthetic N = 200: random audit of 40
+        _, amd002_random, _, _, _ = draw(rows)
+        universe, sample, core, mandatory, result, coverage = draw_batches(rows)
+        self.assertEqual(len(sample), 40)
+        self.assertEqual(set(sample), amd002_random)  # the preregistered draw is unchanged
+        self.assertEqual(core, sample[:20])
+        batches = {}
+        for r in result:
+            batches.setdefault(r["batch"], []).append(r)
+        self.assertEqual(set(batches), {"core", "extension_1", "extension_2"})
+        self.assertEqual([r["source_record_id"] for r in batches["extension_1"]], sample[20:30])
+        self.assertEqual([r["source_record_id"] for r in batches["extension_2"]], sample[30:40])
+        self.assertEqual(sorted(r["queue_position"] for r in batches["core"]), list(range(1, 21)))
+        self.assertTrue(all(r["random_position"] == n for n, r in enumerate(batches["extension_1"], 21)))
+        ids = [r["source_record_id"] for r in result]
+        self.assertEqual(len(ids), len(set(ids)))  # no record in two batches
+        self.assertEqual(draw_batches(rows), draw_batches(rows))
+
+    def test_amd003_mechanism_coverage_is_judged_against_the_core_only(self):
+        rows = self.audit_rows(200)
+        _, sample, _, _, _, _ = draw_batches(rows)
+        by_id = {r["source_record_id"]: r for r in rows}
+        outside = [r["source_record_id"] for r in rows if r["source_record_id"] not in sample]
+        by_id[sample[0]]["model_mechanisms"] = "15"  # carried by a core record: covered, nothing drawn
+        by_id[outside[0]]["model_mechanisms"] = "15"
+        by_id[sample[25]]["model_mechanisms"] = "12"  # carried only by an extension record and an unselected one
+        by_id[outside[1]]["model_mechanisms"] = "12"
+        by_id[sample[35]]["unresolved_finding"] = "1"  # mandatory, so it moves into the core and out of its extension
+        _, _, core, mandatory, result, coverage = draw_batches(rows)
+        by_key = {c["mechanism"]: c for c in coverage}
+        self.assertFalse(by_key["15"]["drawn"])
+        self.assertEqual(by_key["15"]["covered_by"], sample[0])
+        self.assertTrue(by_key["12"]["drawn"])  # AMD-002 would have counted sample[25] as covering it
+        self.assertIn(by_key["12"]["covered_by"], {sample[25], outside[1]})
+        self.assertIn(sample[35], mandatory)
+        core_ids = {r["source_record_id"] for r in result if r["batch"] == "core"}
+        self.assertEqual(core_ids, set(core) | mandatory)
+        extension_ids = [r["source_record_id"] for r in result if r["batch"] != "core"]
+        self.assertNotIn(sample[35], extension_ids)
+        self.assertFalse(core_ids & set(extension_ids))
+
+    def test_amd003_small_universe_has_no_extensions(self):
+        rows = self.audit_rows(10)  # random audit of 2: all in the core
+        _, sample, core, _, result, _ = draw_batches(rows)
+        self.assertEqual(core, sample)
+        self.assertEqual({r["batch"] for r in result}, {"core"})
 
 if __name__ == "__main__":
     unittest.main()

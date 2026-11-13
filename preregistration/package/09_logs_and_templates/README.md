@@ -49,6 +49,12 @@ proposals, unresolved findings, retracted model findings, and at least one
 record for each recurring model-attributable mechanism, beside the unchanged
 random audit.
 
+DEV-009 (applied 2026-11-13) commits the first 20 records of the preregistered
+random audit, in seeded order, to blind second review as a core with the AMD-002
+mandatory items, by amendment AMD-003, made before the audit draw and any formal
+second review; the other 20 are held as two reserve batches, reviewed after the
+core's reveal if the secondary adjudicator has time.
+
 REDCAP-017 records the 23 July 2026 documentation-only alignment of the Project
 Owner participant materials and protocol candidate v0.16 to the one-link Survey
 Queue architecture. It changes no REDCap field, taxonomy rule, classification,
