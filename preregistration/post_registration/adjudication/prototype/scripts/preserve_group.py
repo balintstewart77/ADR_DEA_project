@@ -61,7 +61,18 @@ def load_training_blind():
     return TRAINING, "blind_reveal_import.csv", reveal_bytes, packages, expected, sources, assignments
 
 
-SETS = {"training-blind": load_training_blind}
+def _formal_secondary(batch):
+    def load():
+        from build_formal_secondary import load_batch
+        return load_batch(batch)
+    return load
+
+
+SETS = {"training-blind": load_training_blind,
+        # AMD-003: the core first; an extension only if the secondary adjudicator has time, after the core's reveal
+        "formal-secondary-core": _formal_secondary("core"),
+        "formal-secondary-ext1": _formal_secondary("extension_1"),
+        "formal-secondary-ext2": _formal_secondary("extension_2")}
 
 
 def main(argv=None):
