@@ -9,7 +9,10 @@ Builds one long table of findings, then the 8.7 tables from it:
   more than 100%), and codes per record; overall and by sample;
 * source-specific findings by source; mechanisms by family, general
   mechanisms split by label, and recurrence (two or more distinct records);
-* release implications, AMD-002 mandatory items 1 to 3, and the manifest for
+* release implications as recorded and, beside them, harmonised to the ADJ-084
+  convention from ``preservation/release_harmonisation.csv`` (ADJ-121; a
+  sensitivity analysis: recorded codes stay primary and drive the mandatory set);
+* AMD-002 mandatory items 1 to 3, and the manifest for
   the secondary audit draw (draw_secondary_audit.py);
 * Stage 1 outcomes from the preserved snapshots: evidence, best supported,
   multiple defensible, insufficient support, rule conflicts and their rule
@@ -41,6 +44,24 @@ DEST = OUT / "analysis"
 FAMILIES = {1: "Model rule-application problem", 2: "Coder rule-application problem", 3: "Evidence problem", 4: "Taxonomy problem",
             5: "Project-knowledge gap", 6: "Legitimate boundary case", 7: "Data or instrument problem", 8: "Unresolved"}
 MANDATORY_RELEASE = {"2", "3", "5"}
+# ADJ-121: sensitivity harmonisation of release implications on model findings to the ADJ-084 convention.
+# Recorded codes stay primary and drive the mandatory set; harmonised codes are reported alongside.
+HARMONISATION = OUT / "preservation" / "release_harmonisation.csv"
+
+
+def harmonised_releases(live):
+    """{(assignment, finding): harmonised release} from ADJ-121, each row checked against a live finding's recorded code."""
+    if not HARMONISATION.exists():
+        return {}
+    by_key = {(f["adj_assignment_id"], str(f["finding"])): f for f in live}
+    out = {}
+    for h in csv.DictReader(HARMONISATION.open(encoding="utf-8")):
+        key = (h["assignment_id"], h["finding"])
+        f = by_key.get(key)
+        if f is None or f["family"] != h["family"] or f["release"] != h["release_as_recorded"]:
+            raise SystemExit(f"release harmonisation row {key} does not match a live finding as recorded (ADJ-121)")
+        out[key] = h["release_harmonised"]
+    return out
 COMP = {1: "dom", 2: "purp", 3: "covid", 4: "equity"}
 
 
@@ -194,6 +215,20 @@ def main():
 
     # Release and the mandatory second-review set
     release = dict(Counter(f["release"] or "(not asked)" for f in live))
+    harmonised = harmonised_releases(live)
+    for f in findings:
+        f["release_harmonised"] = harmonised.get((f["adj_assignment_id"], str(f["finding"])), f["release"])
+    model_live = [f for f in live if f["family"] == FAMILIES[1]]
+    release_report = {
+        "note": ("ADJ-121: per-finding release codes on model findings drifted along the queue and are not comparable; "
+                 "release conclusions rest on recurring model mechanisms. Recorded codes are primary; harmonised codes "
+                 "(ADJ-084 convention) are a sensitivity analysis."),
+        "harmonisation_file_sha256": hashlib.sha256(HARMONISATION.read_bytes()).hexdigest() if HARMONISATION.exists() else None,
+        "findings_recoded": len(harmonised),
+        "all_findings": {"as_recorded": release,
+                         "harmonised": dict(Counter(f["release_harmonised"] or "(not asked)" for f in live))},
+        "model_findings": {"as_recorded": dict(Counter(f["release"] or "(not asked)" for f in model_live)),
+                           "harmonised": dict(Counter(f["release_harmonised"] or "(not asked)" for f in model_live))}}
     unresolved = {f["adj_assignment_id"] for f in live if f["family_code"] == 8}
     retracted_model = {f["adj_assignment_id"] for f in findings if f["retracted"] and f["family_code"] == 1}
     releases = defaultdict(set)
@@ -241,7 +276,7 @@ def main():
                "families": families, "families_per_record": dict(sorted(per_record.items())), "families_by_sample": by_sample,
                "source_specific_records": source, "findings": {"total": len(findings), "retracted": len(findings) - len(live),
                                                                "addendum": sum(f["addendum"] for f in live)},
-               "mechanisms": mechanisms, "release_implications": release,
+               "mechanisms": mechanisms, "release_implications": release, "release_implications_ADJ121": release_report,
                "amd002_mandatory_items_1_to_3_records": len(mandatory & set(completed)),
                "recurring_model_mechanisms": recurring_model,
                "stage1": {"evidence": {k: dict(v) for k, v in evidence.items()}, "best_supported": {k: dict(v) for k, v in best.items()},
