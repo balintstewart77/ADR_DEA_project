@@ -1,0 +1,3 @@
+table_id,dimension,draws,observed_strict_records,resample_strict_size_min,resample_strict_size_q025,resample_strict_size_median,resample_strict_size_q975,resample_strict_size_max,resample_strict_size_mean,draws_with_empty_strict_subset,draws_with_duplicate_records,note
+SSC1T003,Research Domains,10000,92,70,80.0,92.0,104.0,113,92.0781,0,10000,same index matrix for both dimensions; strict size is identical across dimensions
+SSC1T003,Analytical Purposes,10000,92,70,80.0,92.0,104.0,113,92.0781,0,10000,same index matrix for both dimensions; strict size is identical across dimensions

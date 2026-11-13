@@ -1,0 +1,241 @@
+table_id,dimension,population,rater,label,label_type,count,records,proportion
+SSC1T007,Research Domains,full,C01,Business & Productivity,substantive,47,150,0.31333333333333335
+SSC1T007,Research Domains,full,C01,Crime & Justice,substantive,4,150,0.02666666666666667
+SSC1T007,Research Domains,full,C01,Data Infrastructure & Methodology,substantive,3,150,0.02
+SSC1T007,Research Domains,full,C01,Education & Skills,substantive,31,150,0.20666666666666667
+SSC1T007,Research Domains,full,C01,Environment & Agriculture,substantive,9,150,0.06
+SSC1T007,Research Domains,full,C01,Health & Social Care,substantive,25,150,0.16666666666666666
+SSC1T007,Research Domains,full,C01,Housing & Planning,substantive,3,150,0.02
+SSC1T007,Research Domains,full,C01,Labour Market & Employment,substantive,50,150,0.3333333333333333
+SSC1T007,Research Domains,full,C01,Migration & Demographics,substantive,15,150,0.1
+SSC1T007,Research Domains,full,C01,"Poverty, Wealth & Living Standards",substantive,22,150,0.14666666666666667
+SSC1T007,Research Domains,full,C01,Public Finance & Taxation,substantive,7,150,0.04666666666666667
+SSC1T007,Research Domains,full,C01,Unclear from Register Entry,unclear,7,150,0.04666666666666667
+SSC1T007,Research Domains,full,C02,Business & Productivity,substantive,38,150,0.25333333333333335
+SSC1T007,Research Domains,full,C02,Crime & Justice,substantive,4,150,0.02666666666666667
+SSC1T007,Research Domains,full,C02,Data Infrastructure & Methodology,substantive,0,150,0.0
+SSC1T007,Research Domains,full,C02,Education & Skills,substantive,27,150,0.18
+SSC1T007,Research Domains,full,C02,Environment & Agriculture,substantive,3,150,0.02
+SSC1T007,Research Domains,full,C02,Health & Social Care,substantive,19,150,0.12666666666666668
+SSC1T007,Research Domains,full,C02,Housing & Planning,substantive,0,150,0.0
+SSC1T007,Research Domains,full,C02,Labour Market & Employment,substantive,40,150,0.26666666666666666
+SSC1T007,Research Domains,full,C02,Migration & Demographics,substantive,7,150,0.04666666666666667
+SSC1T007,Research Domains,full,C02,"Poverty, Wealth & Living Standards",substantive,14,150,0.09333333333333334
+SSC1T007,Research Domains,full,C02,Public Finance & Taxation,substantive,2,150,0.013333333333333334
+SSC1T007,Research Domains,full,C02,Unclear from Register Entry,unclear,14,150,0.09333333333333334
+SSC1T007,Research Domains,full,C03,Business & Productivity,substantive,32,150,0.21333333333333335
+SSC1T007,Research Domains,full,C03,Crime & Justice,substantive,3,150,0.02
+SSC1T007,Research Domains,full,C03,Data Infrastructure & Methodology,substantive,0,150,0.0
+SSC1T007,Research Domains,full,C03,Education & Skills,substantive,22,150,0.14666666666666667
+SSC1T007,Research Domains,full,C03,Environment & Agriculture,substantive,4,150,0.02666666666666667
+SSC1T007,Research Domains,full,C03,Health & Social Care,substantive,24,150,0.16
+SSC1T007,Research Domains,full,C03,Housing & Planning,substantive,0,150,0.0
+SSC1T007,Research Domains,full,C03,Labour Market & Employment,substantive,32,150,0.21333333333333335
+SSC1T007,Research Domains,full,C03,Migration & Demographics,substantive,7,150,0.04666666666666667
+SSC1T007,Research Domains,full,C03,"Poverty, Wealth & Living Standards",substantive,15,150,0.1
+SSC1T007,Research Domains,full,C03,Public Finance & Taxation,substantive,0,150,0.0
+SSC1T007,Research Domains,full,C03,Unclear from Register Entry,unclear,39,150,0.26
+SSC1T007,Research Domains,full,Fable 5,Business & Productivity,substantive,45,150,0.3
+SSC1T007,Research Domains,full,Fable 5,Crime & Justice,substantive,4,150,0.02666666666666667
+SSC1T007,Research Domains,full,Fable 5,Data Infrastructure & Methodology,substantive,4,150,0.02666666666666667
+SSC1T007,Research Domains,full,Fable 5,Education & Skills,substantive,35,150,0.23333333333333334
+SSC1T007,Research Domains,full,Fable 5,Environment & Agriculture,substantive,10,150,0.06666666666666667
+SSC1T007,Research Domains,full,Fable 5,Health & Social Care,substantive,25,150,0.16666666666666666
+SSC1T007,Research Domains,full,Fable 5,Housing & Planning,substantive,1,150,0.006666666666666667
+SSC1T007,Research Domains,full,Fable 5,Labour Market & Employment,substantive,56,150,0.37333333333333335
+SSC1T007,Research Domains,full,Fable 5,Migration & Demographics,substantive,6,150,0.04
+SSC1T007,Research Domains,full,Fable 5,"Poverty, Wealth & Living Standards",substantive,10,150,0.06666666666666667
+SSC1T007,Research Domains,full,Fable 5,Public Finance & Taxation,substantive,2,150,0.013333333333333334
+SSC1T007,Research Domains,full,Fable 5,Unclear from Register Entry,unclear,1,150,0.006666666666666667
+SSC1T007,Research Domains,sufficient,C01,Business & Productivity,substantive,27,92,0.29347826086956524
+SSC1T007,Research Domains,sufficient,C01,Crime & Justice,substantive,3,92,0.03260869565217391
+SSC1T007,Research Domains,sufficient,C01,Data Infrastructure & Methodology,substantive,2,92,0.021739130434782608
+SSC1T007,Research Domains,sufficient,C01,Education & Skills,substantive,22,92,0.2391304347826087
+SSC1T007,Research Domains,sufficient,C01,Environment & Agriculture,substantive,5,92,0.05434782608695652
+SSC1T007,Research Domains,sufficient,C01,Health & Social Care,substantive,17,92,0.18478260869565216
+SSC1T007,Research Domains,sufficient,C01,Housing & Planning,substantive,1,92,0.010869565217391304
+SSC1T007,Research Domains,sufficient,C01,Labour Market & Employment,substantive,33,92,0.358695652173913
+SSC1T007,Research Domains,sufficient,C01,Migration & Demographics,substantive,7,92,0.07608695652173914
+SSC1T007,Research Domains,sufficient,C01,"Poverty, Wealth & Living Standards",substantive,15,92,0.16304347826086957
+SSC1T007,Research Domains,sufficient,C01,Public Finance & Taxation,substantive,3,92,0.03260869565217391
+SSC1T007,Research Domains,sufficient,C01,Unclear from Register Entry,unclear,0,92,0.0
+SSC1T007,Research Domains,sufficient,C02,Business & Productivity,substantive,25,92,0.2717391304347826
+SSC1T007,Research Domains,sufficient,C02,Crime & Justice,substantive,3,92,0.03260869565217391
+SSC1T007,Research Domains,sufficient,C02,Data Infrastructure & Methodology,substantive,0,92,0.0
+SSC1T007,Research Domains,sufficient,C02,Education & Skills,substantive,18,92,0.1956521739130435
+SSC1T007,Research Domains,sufficient,C02,Environment & Agriculture,substantive,1,92,0.010869565217391304
+SSC1T007,Research Domains,sufficient,C02,Health & Social Care,substantive,15,92,0.16304347826086957
+SSC1T007,Research Domains,sufficient,C02,Housing & Planning,substantive,0,92,0.0
+SSC1T007,Research Domains,sufficient,C02,Labour Market & Employment,substantive,25,92,0.2717391304347826
+SSC1T007,Research Domains,sufficient,C02,Migration & Demographics,substantive,2,92,0.021739130434782608
+SSC1T007,Research Domains,sufficient,C02,"Poverty, Wealth & Living Standards",substantive,7,92,0.07608695652173914
+SSC1T007,Research Domains,sufficient,C02,Public Finance & Taxation,substantive,1,92,0.010869565217391304
+SSC1T007,Research Domains,sufficient,C02,Unclear from Register Entry,unclear,2,92,0.021739130434782608
+SSC1T007,Research Domains,sufficient,C03,Business & Productivity,substantive,23,92,0.25
+SSC1T007,Research Domains,sufficient,C03,Crime & Justice,substantive,3,92,0.03260869565217391
+SSC1T007,Research Domains,sufficient,C03,Data Infrastructure & Methodology,substantive,0,92,0.0
+SSC1T007,Research Domains,sufficient,C03,Education & Skills,substantive,16,92,0.17391304347826086
+SSC1T007,Research Domains,sufficient,C03,Environment & Agriculture,substantive,2,92,0.021739130434782608
+SSC1T007,Research Domains,sufficient,C03,Health & Social Care,substantive,21,92,0.22826086956521738
+SSC1T007,Research Domains,sufficient,C03,Housing & Planning,substantive,0,92,0.0
+SSC1T007,Research Domains,sufficient,C03,Labour Market & Employment,substantive,22,92,0.2391304347826087
+SSC1T007,Research Domains,sufficient,C03,Migration & Demographics,substantive,3,92,0.03260869565217391
+SSC1T007,Research Domains,sufficient,C03,"Poverty, Wealth & Living Standards",substantive,8,92,0.08695652173913043
+SSC1T007,Research Domains,sufficient,C03,Public Finance & Taxation,substantive,0,92,0.0
+SSC1T007,Research Domains,sufficient,C03,Unclear from Register Entry,unclear,14,92,0.15217391304347827
+SSC1T007,Research Domains,sufficient,Fable 5,Business & Productivity,substantive,29,92,0.31521739130434784
+SSC1T007,Research Domains,sufficient,Fable 5,Crime & Justice,substantive,3,92,0.03260869565217391
+SSC1T007,Research Domains,sufficient,Fable 5,Data Infrastructure & Methodology,substantive,2,92,0.021739130434782608
+SSC1T007,Research Domains,sufficient,Fable 5,Education & Skills,substantive,23,92,0.25
+SSC1T007,Research Domains,sufficient,Fable 5,Environment & Agriculture,substantive,5,92,0.05434782608695652
+SSC1T007,Research Domains,sufficient,Fable 5,Health & Social Care,substantive,18,92,0.1956521739130435
+SSC1T007,Research Domains,sufficient,Fable 5,Housing & Planning,substantive,1,92,0.010869565217391304
+SSC1T007,Research Domains,sufficient,Fable 5,Labour Market & Employment,substantive,31,92,0.33695652173913043
+SSC1T007,Research Domains,sufficient,Fable 5,Migration & Demographics,substantive,2,92,0.021739130434782608
+SSC1T007,Research Domains,sufficient,Fable 5,"Poverty, Wealth & Living Standards",substantive,4,92,0.043478260869565216
+SSC1T007,Research Domains,sufficient,Fable 5,Public Finance & Taxation,substantive,1,92,0.010869565217391304
+SSC1T007,Research Domains,sufficient,Fable 5,Unclear from Register Entry,unclear,0,92,0.0
+SSC1T007,Research Domains,complement,C01,Business & Productivity,substantive,20,58,0.3448275862068966
+SSC1T007,Research Domains,complement,C01,Crime & Justice,substantive,1,58,0.017241379310344827
+SSC1T007,Research Domains,complement,C01,Data Infrastructure & Methodology,substantive,1,58,0.017241379310344827
+SSC1T007,Research Domains,complement,C01,Education & Skills,substantive,9,58,0.15517241379310345
+SSC1T007,Research Domains,complement,C01,Environment & Agriculture,substantive,4,58,0.06896551724137931
+SSC1T007,Research Domains,complement,C01,Health & Social Care,substantive,8,58,0.13793103448275862
+SSC1T007,Research Domains,complement,C01,Housing & Planning,substantive,2,58,0.034482758620689655
+SSC1T007,Research Domains,complement,C01,Labour Market & Employment,substantive,17,58,0.29310344827586204
+SSC1T007,Research Domains,complement,C01,Migration & Demographics,substantive,8,58,0.13793103448275862
+SSC1T007,Research Domains,complement,C01,"Poverty, Wealth & Living Standards",substantive,7,58,0.1206896551724138
+SSC1T007,Research Domains,complement,C01,Public Finance & Taxation,substantive,4,58,0.06896551724137931
+SSC1T007,Research Domains,complement,C01,Unclear from Register Entry,unclear,7,58,0.1206896551724138
+SSC1T007,Research Domains,complement,C02,Business & Productivity,substantive,13,58,0.22413793103448276
+SSC1T007,Research Domains,complement,C02,Crime & Justice,substantive,1,58,0.017241379310344827
+SSC1T007,Research Domains,complement,C02,Data Infrastructure & Methodology,substantive,0,58,0.0
+SSC1T007,Research Domains,complement,C02,Education & Skills,substantive,9,58,0.15517241379310345
+SSC1T007,Research Domains,complement,C02,Environment & Agriculture,substantive,2,58,0.034482758620689655
+SSC1T007,Research Domains,complement,C02,Health & Social Care,substantive,4,58,0.06896551724137931
+SSC1T007,Research Domains,complement,C02,Housing & Planning,substantive,0,58,0.0
+SSC1T007,Research Domains,complement,C02,Labour Market & Employment,substantive,15,58,0.25862068965517243
+SSC1T007,Research Domains,complement,C02,Migration & Demographics,substantive,5,58,0.08620689655172414
+SSC1T007,Research Domains,complement,C02,"Poverty, Wealth & Living Standards",substantive,7,58,0.1206896551724138
+SSC1T007,Research Domains,complement,C02,Public Finance & Taxation,substantive,1,58,0.017241379310344827
+SSC1T007,Research Domains,complement,C02,Unclear from Register Entry,unclear,12,58,0.20689655172413793
+SSC1T007,Research Domains,complement,C03,Business & Productivity,substantive,9,58,0.15517241379310345
+SSC1T007,Research Domains,complement,C03,Crime & Justice,substantive,0,58,0.0
+SSC1T007,Research Domains,complement,C03,Data Infrastructure & Methodology,substantive,0,58,0.0
+SSC1T007,Research Domains,complement,C03,Education & Skills,substantive,6,58,0.10344827586206896
+SSC1T007,Research Domains,complement,C03,Environment & Agriculture,substantive,2,58,0.034482758620689655
+SSC1T007,Research Domains,complement,C03,Health & Social Care,substantive,3,58,0.05172413793103448
+SSC1T007,Research Domains,complement,C03,Housing & Planning,substantive,0,58,0.0
+SSC1T007,Research Domains,complement,C03,Labour Market & Employment,substantive,10,58,0.1724137931034483
+SSC1T007,Research Domains,complement,C03,Migration & Demographics,substantive,4,58,0.06896551724137931
+SSC1T007,Research Domains,complement,C03,"Poverty, Wealth & Living Standards",substantive,7,58,0.1206896551724138
+SSC1T007,Research Domains,complement,C03,Public Finance & Taxation,substantive,0,58,0.0
+SSC1T007,Research Domains,complement,C03,Unclear from Register Entry,unclear,25,58,0.43103448275862066
+SSC1T007,Research Domains,complement,Fable 5,Business & Productivity,substantive,16,58,0.27586206896551724
+SSC1T007,Research Domains,complement,Fable 5,Crime & Justice,substantive,1,58,0.017241379310344827
+SSC1T007,Research Domains,complement,Fable 5,Data Infrastructure & Methodology,substantive,2,58,0.034482758620689655
+SSC1T007,Research Domains,complement,Fable 5,Education & Skills,substantive,12,58,0.20689655172413793
+SSC1T007,Research Domains,complement,Fable 5,Environment & Agriculture,substantive,5,58,0.08620689655172414
+SSC1T007,Research Domains,complement,Fable 5,Health & Social Care,substantive,7,58,0.1206896551724138
+SSC1T007,Research Domains,complement,Fable 5,Housing & Planning,substantive,0,58,0.0
+SSC1T007,Research Domains,complement,Fable 5,Labour Market & Employment,substantive,25,58,0.43103448275862066
+SSC1T007,Research Domains,complement,Fable 5,Migration & Demographics,substantive,4,58,0.06896551724137931
+SSC1T007,Research Domains,complement,Fable 5,"Poverty, Wealth & Living Standards",substantive,6,58,0.10344827586206896
+SSC1T007,Research Domains,complement,Fable 5,Public Finance & Taxation,substantive,1,58,0.017241379310344827
+SSC1T007,Research Domains,complement,Fable 5,Unclear from Register Entry,unclear,1,58,0.017241379310344827
+SSC1T007,Analytical Purposes,full,C01,Descriptive Monitoring,substantive,48,150,0.32
+SSC1T007,Analytical Purposes,full,C01,Life-Course / Trajectory Analysis,substantive,23,150,0.15333333333333332
+SSC1T007,Analytical Purposes,full,C01,Methodological / Infrastructure Research,substantive,21,150,0.14
+SSC1T007,Analytical Purposes,full,C01,Outcome Tracking,substantive,28,150,0.18666666666666668
+SSC1T007,Analytical Purposes,full,C01,Policy Evaluation / Impact Analysis,substantive,33,150,0.22
+SSC1T007,Analytical Purposes,full,C01,Risk Prediction / Early Identification,substantive,3,150,0.02
+SSC1T007,Analytical Purposes,full,C01,Service Interaction / Systems Analysis,substantive,3,150,0.02
+SSC1T007,Analytical Purposes,full,C01,Unclear from Register Entry,unclear,23,150,0.15333333333333332
+SSC1T007,Analytical Purposes,full,C02,Descriptive Monitoring,substantive,50,150,0.3333333333333333
+SSC1T007,Analytical Purposes,full,C02,Life-Course / Trajectory Analysis,substantive,22,150,0.14666666666666667
+SSC1T007,Analytical Purposes,full,C02,Methodological / Infrastructure Research,substantive,5,150,0.03333333333333333
+SSC1T007,Analytical Purposes,full,C02,Outcome Tracking,substantive,37,150,0.24666666666666667
+SSC1T007,Analytical Purposes,full,C02,Policy Evaluation / Impact Analysis,substantive,20,150,0.13333333333333333
+SSC1T007,Analytical Purposes,full,C02,Risk Prediction / Early Identification,substantive,2,150,0.013333333333333334
+SSC1T007,Analytical Purposes,full,C02,Service Interaction / Systems Analysis,substantive,0,150,0.0
+SSC1T007,Analytical Purposes,full,C02,Unclear from Register Entry,unclear,15,150,0.1
+SSC1T007,Analytical Purposes,full,C03,Descriptive Monitoring,substantive,33,150,0.22
+SSC1T007,Analytical Purposes,full,C03,Life-Course / Trajectory Analysis,substantive,4,150,0.02666666666666667
+SSC1T007,Analytical Purposes,full,C03,Methodological / Infrastructure Research,substantive,4,150,0.02666666666666667
+SSC1T007,Analytical Purposes,full,C03,Outcome Tracking,substantive,6,150,0.04
+SSC1T007,Analytical Purposes,full,C03,Policy Evaluation / Impact Analysis,substantive,37,150,0.24666666666666667
+SSC1T007,Analytical Purposes,full,C03,Risk Prediction / Early Identification,substantive,1,150,0.006666666666666667
+SSC1T007,Analytical Purposes,full,C03,Service Interaction / Systems Analysis,substantive,1,150,0.006666666666666667
+SSC1T007,Analytical Purposes,full,C03,Unclear from Register Entry,unclear,68,150,0.4533333333333333
+SSC1T007,Analytical Purposes,full,Fable 5,Descriptive Monitoring,substantive,52,150,0.3466666666666667
+SSC1T007,Analytical Purposes,full,Fable 5,Life-Course / Trajectory Analysis,substantive,11,150,0.07333333333333333
+SSC1T007,Analytical Purposes,full,Fable 5,Methodological / Infrastructure Research,substantive,10,150,0.06666666666666667
+SSC1T007,Analytical Purposes,full,Fable 5,Outcome Tracking,substantive,47,150,0.31333333333333335
+SSC1T007,Analytical Purposes,full,Fable 5,Policy Evaluation / Impact Analysis,substantive,33,150,0.22
+SSC1T007,Analytical Purposes,full,Fable 5,Risk Prediction / Early Identification,substantive,2,150,0.013333333333333334
+SSC1T007,Analytical Purposes,full,Fable 5,Service Interaction / Systems Analysis,substantive,4,150,0.02666666666666667
+SSC1T007,Analytical Purposes,full,Fable 5,Unclear from Register Entry,unclear,1,150,0.006666666666666667
+SSC1T007,Analytical Purposes,sufficient,C01,Descriptive Monitoring,substantive,34,92,0.3695652173913043
+SSC1T007,Analytical Purposes,sufficient,C01,Life-Course / Trajectory Analysis,substantive,14,92,0.15217391304347827
+SSC1T007,Analytical Purposes,sufficient,C01,Methodological / Infrastructure Research,substantive,15,92,0.16304347826086957
+SSC1T007,Analytical Purposes,sufficient,C01,Outcome Tracking,substantive,23,92,0.25
+SSC1T007,Analytical Purposes,sufficient,C01,Policy Evaluation / Impact Analysis,substantive,24,92,0.2608695652173913
+SSC1T007,Analytical Purposes,sufficient,C01,Risk Prediction / Early Identification,substantive,1,92,0.010869565217391304
+SSC1T007,Analytical Purposes,sufficient,C01,Service Interaction / Systems Analysis,substantive,2,92,0.021739130434782608
+SSC1T007,Analytical Purposes,sufficient,C01,Unclear from Register Entry,unclear,2,92,0.021739130434782608
+SSC1T007,Analytical Purposes,sufficient,C02,Descriptive Monitoring,substantive,28,92,0.30434782608695654
+SSC1T007,Analytical Purposes,sufficient,C02,Life-Course / Trajectory Analysis,substantive,15,92,0.16304347826086957
+SSC1T007,Analytical Purposes,sufficient,C02,Methodological / Infrastructure Research,substantive,3,92,0.03260869565217391
+SSC1T007,Analytical Purposes,sufficient,C02,Outcome Tracking,substantive,29,92,0.31521739130434784
+SSC1T007,Analytical Purposes,sufficient,C02,Policy Evaluation / Impact Analysis,substantive,15,92,0.16304347826086957
+SSC1T007,Analytical Purposes,sufficient,C02,Risk Prediction / Early Identification,substantive,2,92,0.021739130434782608
+SSC1T007,Analytical Purposes,sufficient,C02,Service Interaction / Systems Analysis,substantive,0,92,0.0
+SSC1T007,Analytical Purposes,sufficient,C02,Unclear from Register Entry,unclear,0,92,0.0
+SSC1T007,Analytical Purposes,sufficient,C03,Descriptive Monitoring,substantive,29,92,0.31521739130434784
+SSC1T007,Analytical Purposes,sufficient,C03,Life-Course / Trajectory Analysis,substantive,2,92,0.021739130434782608
+SSC1T007,Analytical Purposes,sufficient,C03,Methodological / Infrastructure Research,substantive,4,92,0.043478260869565216
+SSC1T007,Analytical Purposes,sufficient,C03,Outcome Tracking,substantive,5,92,0.05434782608695652
+SSC1T007,Analytical Purposes,sufficient,C03,Policy Evaluation / Impact Analysis,substantive,32,92,0.34782608695652173
+SSC1T007,Analytical Purposes,sufficient,C03,Risk Prediction / Early Identification,substantive,1,92,0.010869565217391304
+SSC1T007,Analytical Purposes,sufficient,C03,Service Interaction / Systems Analysis,substantive,1,92,0.010869565217391304
+SSC1T007,Analytical Purposes,sufficient,C03,Unclear from Register Entry,unclear,20,92,0.21739130434782608
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Descriptive Monitoring,substantive,25,92,0.2717391304347826
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Life-Course / Trajectory Analysis,substantive,6,92,0.06521739130434782
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Methodological / Infrastructure Research,substantive,6,92,0.06521739130434782
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Outcome Tracking,substantive,35,92,0.3804347826086957
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Policy Evaluation / Impact Analysis,substantive,23,92,0.25
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Risk Prediction / Early Identification,substantive,1,92,0.010869565217391304
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Service Interaction / Systems Analysis,substantive,4,92,0.043478260869565216
+SSC1T007,Analytical Purposes,sufficient,Fable 5,Unclear from Register Entry,unclear,0,92,0.0
+SSC1T007,Analytical Purposes,complement,C01,Descriptive Monitoring,substantive,14,58,0.2413793103448276
+SSC1T007,Analytical Purposes,complement,C01,Life-Course / Trajectory Analysis,substantive,9,58,0.15517241379310345
+SSC1T007,Analytical Purposes,complement,C01,Methodological / Infrastructure Research,substantive,6,58,0.10344827586206896
+SSC1T007,Analytical Purposes,complement,C01,Outcome Tracking,substantive,5,58,0.08620689655172414
+SSC1T007,Analytical Purposes,complement,C01,Policy Evaluation / Impact Analysis,substantive,9,58,0.15517241379310345
+SSC1T007,Analytical Purposes,complement,C01,Risk Prediction / Early Identification,substantive,2,58,0.034482758620689655
+SSC1T007,Analytical Purposes,complement,C01,Service Interaction / Systems Analysis,substantive,1,58,0.017241379310344827
+SSC1T007,Analytical Purposes,complement,C01,Unclear from Register Entry,unclear,21,58,0.3620689655172414
+SSC1T007,Analytical Purposes,complement,C02,Descriptive Monitoring,substantive,22,58,0.3793103448275862
+SSC1T007,Analytical Purposes,complement,C02,Life-Course / Trajectory Analysis,substantive,7,58,0.1206896551724138
+SSC1T007,Analytical Purposes,complement,C02,Methodological / Infrastructure Research,substantive,2,58,0.034482758620689655
+SSC1T007,Analytical Purposes,complement,C02,Outcome Tracking,substantive,8,58,0.13793103448275862
+SSC1T007,Analytical Purposes,complement,C02,Policy Evaluation / Impact Analysis,substantive,5,58,0.08620689655172414
+SSC1T007,Analytical Purposes,complement,C02,Risk Prediction / Early Identification,substantive,0,58,0.0
+SSC1T007,Analytical Purposes,complement,C02,Service Interaction / Systems Analysis,substantive,0,58,0.0
+SSC1T007,Analytical Purposes,complement,C02,Unclear from Register Entry,unclear,15,58,0.25862068965517243
+SSC1T007,Analytical Purposes,complement,C03,Descriptive Monitoring,substantive,4,58,0.06896551724137931
+SSC1T007,Analytical Purposes,complement,C03,Life-Course / Trajectory Analysis,substantive,2,58,0.034482758620689655
+SSC1T007,Analytical Purposes,complement,C03,Methodological / Infrastructure Research,substantive,0,58,0.0
+SSC1T007,Analytical Purposes,complement,C03,Outcome Tracking,substantive,1,58,0.017241379310344827
+SSC1T007,Analytical Purposes,complement,C03,Policy Evaluation / Impact Analysis,substantive,5,58,0.08620689655172414
+SSC1T007,Analytical Purposes,complement,C03,Risk Prediction / Early Identification,substantive,0,58,0.0
+SSC1T007,Analytical Purposes,complement,C03,Service Interaction / Systems Analysis,substantive,0,58,0.0
+SSC1T007,Analytical Purposes,complement,C03,Unclear from Register Entry,unclear,48,58,0.8275862068965517
+SSC1T007,Analytical Purposes,complement,Fable 5,Descriptive Monitoring,substantive,27,58,0.46551724137931033
+SSC1T007,Analytical Purposes,complement,Fable 5,Life-Course / Trajectory Analysis,substantive,5,58,0.08620689655172414
+SSC1T007,Analytical Purposes,complement,Fable 5,Methodological / Infrastructure Research,substantive,4,58,0.06896551724137931
+SSC1T007,Analytical Purposes,complement,Fable 5,Outcome Tracking,substantive,12,58,0.20689655172413793
+SSC1T007,Analytical Purposes,complement,Fable 5,Policy Evaluation / Impact Analysis,substantive,10,58,0.1724137931034483
+SSC1T007,Analytical Purposes,complement,Fable 5,Risk Prediction / Early Identification,substantive,1,58,0.017241379310344827
+SSC1T007,Analytical Purposes,complement,Fable 5,Service Interaction / Systems Analysis,substantive,0,58,0.0
+SSC1T007,Analytical Purposes,complement,Fable 5,Unclear from Register Entry,unclear,1,58,0.017241379310344827
