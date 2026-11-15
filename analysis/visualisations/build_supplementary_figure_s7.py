@@ -1,4 +1,8 @@
-"""Supplementary Figure S4: exploratory pairwise Krippendorff's α.
+"""Supplementary Figure S7: exploratory pairwise Krippendorff's α.
+
+Numbered S7 under the pass-4 numbering (P4.1; S4 is same-model repeatability and
+cross-model agreement, S5 is reserved and S6 is the owner recruitment flow); first
+built as S4 on 2026-11-15 and renumbered the same day (pass-4 log P4.29-P4.30).
 
 Exploratory and not preregistered (requested 2026-11-15). Presentation only:
 every plotted number is read from the result tables of the 2026-09-17
@@ -8,7 +12,7 @@ nothing is recomputed from record-level data.
 Content: pairwise Krippendorff's α (the three coder pairs, then Fable 5 with each
 coder; Analyses 1-2 of that run) and the per-coder replacement comparison D
 (Analysis 4) for Research Domains and Analytical Purposes, baseline sample
-only: S4 explains Figure 1, which is baseline only, and the hard-case
+only: S7 explains Figure 1, which is baseline only, and the hard-case
 diagnostic has its own figure (S1). The caption reports that the D and δ
 orders also match in the hard-case sample and points to its tables. The tag
 dimensions are left out (11-12 coder-majority-positive baseline records).
@@ -31,15 +35,15 @@ Inputs (read only):
     (δ point estimates, for the ordering check only)
 
 Outputs (local, ignored by git like the other paper exports):
-  <data-dir>/supplementary_figure_s4_pairwise_alpha.csv and _metadata.json
-  <figure-dir>/supplementary_figure_s4_pairwise_alpha.svg and .png
-  <figure-dir>/supplementary_figure_s4_rendering_report.json
-  the Supplementary Figure S4 section of <figure-dir>/draft_captions_pass2.md
+  <data-dir>/supplementary_figure_s7_pairwise_alpha.csv and _metadata.json
+  <figure-dir>/supplementary_figure_s7_pairwise_alpha.svg and .png
+  <figure-dir>/supplementary_figure_s7_rendering_report.json
+  the Supplementary Figure S7 section of <figure-dir>/draft_captions_pass4.md
 
-The pass-3 renderer rewrites draft_captions_pass2.md from its own manifest, so
+The pass-4 renderer rewrites draft_captions_pass4.md from its own manifest, so
 run this stage after it:
 
-    python analysis/visualisations/build_supplementary_figure_s4.py
+    python analysis/visualisations/build_supplementary_figure_s7.py
 """
 from __future__ import annotations
 
@@ -68,8 +72,8 @@ from extract_scratch_coder_pass3 import FIELDNAMES  # noqa: E402
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = ROOT / "analysis/pairwise_alpha_exploratory"
 DELTA_EXPORT = ROOT / "analysis/outputs_validation_scratch_20260824/replacement_delta_results.csv"
-DELIVERABLE = "Supplementary Figure S4"
-SLUG = "supplementary_figure_s4_pairwise_alpha"
+DELIVERABLE = "Supplementary Figure S7"
+SLUG = "supplementary_figure_s7_pairwise_alpha"
 TITLE = (
     "Agreement between pairs of human coders and between Fable 5 and each coder, and the per-coder replacement "
     "comparison (exploratory)"
@@ -465,10 +469,12 @@ def update_captions(path: Path, bullets: list[str]) -> None:
         f"## {DELIVERABLE}", "", f"**{DELIVERABLE}. {TITLE}.**", "", "Legend content checklist:", "",
         *[f"- {bullet}" for bullet in bullets], "", "",
     ])
-    text = path.read_text(encoding="utf-8") if path.exists() else "# Draft captions — pass 3\n\n"
+    text = path.read_text(encoding="utf-8") if path.exists() else "# Draft captions — pass 4\n\n"
     text = re.sub(rf"## {re.escape(DELIVERABLE)}\n.*?(?=\n## |\Z)", "", text, flags=re.S).rstrip("\n") + "\n\n"
-    marker = "## Supplementary Table S1a"
-    if marker in text:
+    # After the other supplementary figures and before the tables, as in draft_captions_pass4.md
+    marker = next((m for m in ("## Figure 3 source table", "## Supplementary Table S13", "## Table 1",
+                               "## Supplementary Table S1a") if m in text), None)
+    if marker:
         text = text.replace(marker, section + marker, 1)
     else:
         text += section
@@ -508,7 +514,7 @@ def main(argv=None) -> None:
     checks["check_6_text"] = text_checks(metrics, bullets)
     if keys["status"] != "PASS":
         raise CheckFailed(f"row alignment: {keys['misaligned']}")
-    captions_path = args.figure_dir / "draft_captions_pass2.md"
+    captions_path = args.figure_dir / "draft_captions_pass4.md"
     update_captions(captions_path, bullets)
 
     inputs = sorted({ROOT / r["source_file"] for r in rows} | {args.source_dir / "results_pairwise_alpha.md", args.delta_export})
@@ -531,10 +537,10 @@ def main(argv=None) -> None:
         "keys": keys, "text_checks": checks["check_6_text"], "rendered_text": metrics["rendered_text"],
         "outputs": [str((args.figure_dir / f"{SLUG}{suffix}")) for suffix in (".svg", ".png")] + [str(data_path), str(captions_path)],
     }
-    (args.figure_dir / "supplementary_figure_s4_rendering_report.json").write_text(
+    (args.figure_dir / "supplementary_figure_s7_rendering_report.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"[S4] {len(rows)} rows; checks 1-6 PASS; wrote {args.figure_dir / SLUG}.svg/.png, "
-          f"{data_path.name} and the S4 caption section")
+    print(f"[S7] {len(rows)} rows; checks 1-6 PASS; wrote {args.figure_dir / SLUG}.svg/.png, "
+          f"{data_path.name} and the S7 caption section")
 
 
 if __name__ == "__main__":
