@@ -7,19 +7,23 @@ nothing is recomputed from record-level data.
 
 Content: pairwise Krippendorff's α (the three coder pairs, then Fable 5 with each
 coder; Analyses 1-2 of that run) and the per-coder replacement comparison D
-(Analysis 4) for Research Domains and Analytical Purposes, baseline and
-hard-case (diagnostic) dodged in the same panels. The tag dimensions are left
-out (11-12 coder-majority-positive baseline records). Letters follow Figure 1:
+(Analysis 4) for Research Domains and Analytical Purposes, baseline sample
+only: S4 explains Figure 1, which is baseline only, and the hard-case
+diagnostic has its own figure (S1). The caption reports that the D and δ
+orders also match in the hard-case sample and points to its tables. The tag
+dimensions are left out (11-12 coder-majority-positive baseline records).
+Letters follow Figure 1:
 A = C01, B = C02, C = C03, L = Fable 5. D_X is descriptive, not a decomposition
 of δ_X.
 
 Hard stops before anything is written: (1) every value is the verbatim CSV
 string and its 4-decimal display is in results_pairwise_alpha.md; (2) every
 quantity is defined with a reported interval and at least 1,800 valid
-resamples; (3) n is 150 / 75; (4) D recomputed from the plotted α equals the
+resamples; (3) n is 150; (4) D recomputed from the plotted α equals the
 exported D within 1e-12; (5) the D order equals the δ order in every panel
 shown, and the all-cell count is recomputed for the caption; (6) the pass-3
-text checks (8 pt minimum, nothing clipped, banned wording, minus signs).
+text checks (8 pt minimum, nothing clipped, banned wording, minus signs), and
+every plotted value and bound inside the axis range.
 
 Inputs (read only):
   analysis/pairwise_alpha_exploratory/PWA1T*.csv and results_pairwise_alpha.md
@@ -55,7 +59,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib import font_manager  # noqa: E402
-from matplotlib.lines import Line2D  # noqa: E402
 from matplotlib.ticker import FixedLocator, FuncFormatter  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -72,16 +75,16 @@ TITLE = (
     "comparison (exploratory)"
 )
 
-POPULATIONS = ("baseline", "hard_case")
+POPULATIONS = ("baseline",)
 DIMENSIONS = ("Research Domains", "Analytical Purposes")
-N_RECORDS = {"baseline": 150, "hard_case": 75}
+N_RECORDS = {"baseline": 150}
 # (population, dimension) -> (Analysis 1, Analysis 2, Analysis 4) table ids.
 TABLES = {
     ("baseline", "Research Domains"): ("PWA1T001", "PWA1T002", "PWA1T004"),
     ("baseline", "Analytical Purposes"): ("PWA1T005", "PWA1T006", "PWA1T008"),
-    ("hard_case", "Research Domains"): ("PWA1T017", "PWA1T018", "PWA1T020"),
-    ("hard_case", "Analytical Purposes"): ("PWA1T021", "PWA1T022", "PWA1T024"),
 }
+# Hard-case tables for the same two dimensions: cited in the caption, not drawn.
+HARD_CASE_TABLES = ("PWA1T017", "PWA1T018", "PWA1T020", "PWA1T021", "PWA1T022", "PWA1T024")
 # Every cell of the run, for the 7-of-8 ordering count in the caption.
 ALL_ANALYSIS_4 = {
     ("baseline", "Research Domains"): "PWA1T004", ("baseline", "Analytical Purposes"): "PWA1T008",
@@ -99,11 +102,9 @@ D_REPLACES = {"D_A": "C01", "D_B": "C02", "D_C": "C03"}
 TICKS = {q: q.removeprefix("alpha_") for q in PAIR_ORDER}
 D_TICKS = {"D_A": r"D$_{\mathrm{A}}$", "D_B": r"D$_{\mathrm{B}}$", "D_C": r"D$_{\mathrm{C}}$"}
 D_CAPTION = {"D_A": "Dₐ", "D_B": "Dᵦ", "D_C": "D꜀"}
-ALPHA_RANGE = (-0.1, 0.8)
+ALPHA_RANGE = (0.0, 0.8)
 D_RANGE = (-0.45, 0.45)
-FIGURE_HEIGHT = 6.6
-DODGE = 0.15
-EXTRA_TOP_PT = 6.0
+FIGURE_HEIGHT = 5.0
 
 
 class CheckFailed(RuntimeError):
@@ -284,7 +285,8 @@ def run_checks(rows: list[dict], source_dir: Path = SOURCE_DIR, delta_csv: Path 
     # 5. D ordering versus δ ordering.
     d_order, delta_order = d_orders(source_dir), delta_orders(delta_csv)
     cells = [{"population": p, "dimension": dim, "D_order": d_order[(p, dim)], "delta_order": delta_order[(p, dim)],
-              "agree": d_order[(p, dim)] == delta_order[(p, dim)], "shown": dim in DIMENSIONS} for (p, dim) in ALL_ANALYSIS_4]
+              "agree": d_order[(p, dim)] == delta_order[(p, dim)], "shown": p in POPULATIONS and dim in DIMENSIONS}
+             for (p, dim) in ALL_ANALYSIS_4]
     for cell in cells:
         if cell["shown"] and not cell["agree"]:
             failures.append(f"check 5: shown cell {cell['population']} {cell['dimension']} D {cell['D_order']} vs δ {cell['delta_order']}")
@@ -314,17 +316,22 @@ def render(rows: list[dict], base: Path, font_family: str) -> tuple[dict, dict]:
     matplotlib.rcParams.update({"font.family": font_family, "font.sans-serif": [font_family], "mathtext.rm": font_family})
     fig, axes = plt.subplots(len(DIMENSIONS), 2, figsize=(pass3.FIGURE_WIDTH, FIGURE_HEIGHT), constrained_layout=True,
                              gridspec_kw={"hspace": 0.08, "width_ratios": (1.35, 1.0)})
-    dodge = {"baseline": -DODGE, "hard_case": DODGE}
     positions = []
+    outside = []
     for index, dimension in enumerate(DIMENSIONS):
         for column, (series, order) in enumerate((("pairwise_alpha", PAIR_ORDER), ("replacement_comparison", D_ORDER))):
             ax = axes[index][column]
             for population in POPULATIONS:
                 keyed = {r["quantity"]: r for r in rows if r["dimension"] == dimension and r["population"] == population and r["series"] == series}
                 style = pass3.POPULATION[population]
+                limits = ALPHA_RANGE if series == "pairwise_alpha" else D_RANGE
                 for y, quantity in enumerate(order):
-                    pass3.draw_interval(ax, y + dodge[population], keyed[quantity], style["color"], "o", style["hollow"])
+                    row = keyed[quantity]
+                    pass3.draw_interval(ax, y, row, style["color"], "o", style["hollow"])
                     positions.append({"dimension": dimension, "population": population, "series": series, "quantity": quantity, "y": y})
+                    for field in ("parsed_value", "parsed_interval_lower", "parsed_interval_upper"):
+                        if not limits[0] <= float(row[field]) <= limits[1]:
+                            outside.append({"row": row["source_row_key"], "field": field, "value": row[field], "axis": limits})
             labels = [TICKS[q] for q in order] if series == "pairwise_alpha" else [D_TICKS[q] for q in order]
             ax.set_yticks(range(len(order)), labels)
             ax.tick_params(axis="y", labelsize=9.5)
@@ -344,17 +351,14 @@ def render(rows: list[dict], base: Path, font_family: str) -> tuple[dict, dict]:
             if column == 0:
                 ax.set_ylabel(dimension.replace(" ", "\n", 1), fontweight="bold", rotation=0, ha="right", va="center",
                               labelpad=4, multialignment="right")
-    fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=8.5, fontweight="bold", color="0.15")
-    handles = [Line2D([0], [0], marker="o", color=pass3.POPULATION[p]["color"],
-                      markerfacecolor="none" if pass3.POPULATION[p]["hollow"] else pass3.POPULATION[p]["color"],
-                      markeredgecolor=pass3.POPULATION[p]["color"], linewidth=1.2, label=pass3.POPULATION[p]["label"])
-               for p in POPULATIONS]
-    fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
-    metrics = pass3.save_figure(fig, base, DELIVERABLE, extra_top_pt=EXTRA_TOP_PT)
+    if outside:
+        plt.close(fig)
+        raise CheckFailed(f"check 6: values outside the axis range: {outside}")
+    metrics = pass3.save_figure(fig, base, DELIVERABLE)
     expected = {q: i for i, q in enumerate(PAIR_ORDER)} | {q: i for i, q in enumerate(D_ORDER)}
     misaligned = [p for p in positions if p["y"] != expected[p["quantity"]]]
-    keys = {"status": "PASS" if not misaligned else "FAIL", "key_entries": [h.get_label() for h in handles],
-            "encodings_present": ["baseline filled", "hard-case hollow"], "row_positions": positions, "misaligned": misaligned}
+    keys = {"status": "PASS" if not misaligned else "FAIL", "key_entries": [], "encodings_present": ["baseline filled"],
+            "row_positions": positions, "misaligned": misaligned, "values_inside_axes": True}
     return metrics, keys
 
 
@@ -392,13 +396,12 @@ def _span(rows: list[dict]) -> tuple[dict, dict]:
 def caption_bullets(rows: list[dict], checks: dict) -> list[str]:
     bullets = [
         "The figure is exploratory and not preregistered. The addendum documents this status [PWA1T001 onwards].",
-        "Baseline n=150 and hard-case n=75 records; hard-case is diagnostic and non-representative and is not pooled with "
-        "baseline [PWA1T001/PWA1T005/PWA1T017/PWA1T021 n_records cells].",
+        "Baseline n=150 records, as in Figure 1 [PWA1T001/PWA1T005 n_records cells].",
         "A, B and C are C01, C02 and C03 and L is Fable 5, as in Figure 1. AB, AC and BC are the coder–coder pairs and "
         "LA, LB and LC are Fable 5 with each coder; each point is a two-rater Krippendorff’s α with MASI distance "
-        "[PWA1T001/PWA1T002/PWA1T005/PWA1T006/PWA1T017/PWA1T018/PWA1T021/PWA1T022 quantity cells].",
+        "[PWA1T001/PWA1T002/PWA1T005/PWA1T006 quantity cells].",
     ]
-    for population, label in (("baseline", "Baseline"), ("hard_case", "Hard-case")):
+    for population, label in (("baseline", "Baseline"),):
         parts = []
         for dimension in DIMENSIONS:
             coder_lo, coder_hi = _span(_values(rows, population, dimension, PAIR_ORDER[:3]))
@@ -414,23 +417,32 @@ def caption_bullets(rows: list[dict], checks: dict) -> list[str]:
     bullets.append(
         "Dₓ is the mean α of Fable 5 with the two coders other than X minus the mean α of coder X with those two coders, "
         "for X = A, B, C. It is a descriptive comparison and not a decomposition of δₓ, because panel α is not the mean of "
-        "pairwise αs [PWA1T004/PWA1T008/PWA1T020/PWA1T024 cells]."
+        "pairwise αs [PWA1T004/PWA1T008 cells]."
     )
-    shown = [c for c in checks["check_5_orderings"]["cells"] if c["shown"]]
-    orders = "; ".join(
-        f"{'baseline' if c['population'] == 'baseline' else 'hard-case'} {c['dimension']} {c['D_order']}" for c in shown
-    )
+    cells = checks["check_5_orderings"]["cells"]
+
+    def where(cell: dict) -> str:
+        return f"{'baseline' if cell['population'] == 'baseline' else 'hard-case'} {cell['dimension']}"
+
+    shown = [c for c in cells if c["population"] == "baseline" and c["dimension"] in DIMENSIONS]
+    hard = [c for c in cells if c["population"] == "hard_case" and c["dimension"] in DIMENSIONS]
     exceptions = checks["check_5_orderings"]["exceptions"]
     exception_text = (
-        "; the exception is " + ", ".join(
-            f"{'baseline' if c['population'] == 'baseline' else 'hard-case'} {c['dimension']} (D {c['D_order']}, δ {c['delta_order']})"
-            for c in exceptions)
+        "; the exception is " + ", ".join(f"{where(c)} (D {c['D_order']}, δ {c['delta_order']})" for c in exceptions)
         if exceptions else ""
     )
+    hard_text = (
+        "The orders also match in the hard-case sample for both dimensions ("
+        + "; ".join(f"{c['dimension']} {c['D_order']}" for c in hard) + ")"
+        if all(c["agree"] for c in hard) else
+        "In the hard-case sample the orders are " + "; ".join(
+            f"{c['dimension']} D {c['D_order']}, δ {c['delta_order']}" for c in hard)
+    )
     bullets.append(
-        f"In every panel the ascending order of Dₐ, Dᵦ and D꜀ matches the order of the δ point estimates in Figure 1 and "
-        f"Supplementary Figure S1 ({orders}). Across all {checks['check_5_orderings']['cells_total']} population and "
-        f"dimension cells of the run the orders match in {checks['check_5_orderings']['agree_all_cells']}{exception_text} "
+        f"In both panels the ascending order of Dₐ, Dᵦ and D꜀ matches the order of the δ point estimates in Figure 1 ("
+        + "; ".join(f"{c['dimension']} {c['D_order']}" for c in shown) + "). "
+        f"{hard_text}. Across all {checks['check_5_orderings']['cells_total']} population and dimension cells of the run the "
+        f"orders match in {checks['check_5_orderings']['agree_all_cells']}{exception_text} "
         "[results_pairwise_alpha.md ordering lines; replacement δ point-estimate cells]."
     )
     draws = sorted({r["original_status_string"].split("draws ")[1] for r in rows})
@@ -441,8 +453,9 @@ def caption_bullets(rows: list[dict], checks: dict) -> list[str]:
         "overlap [PWA1 interval and replicate cells]."
     )
     bullets.append(
-        "The two tag dimensions are not shown; their pairwise α and D values are in PWA1T009–PWA1T016 and "
-        "PWA1T025–PWA1T032."
+        "The hard-case sample is not shown; its pairwise α and D values for these dimensions are in "
+        f"{HARD_CASE_TABLES[0]}–{HARD_CASE_TABLES[-1]}, and Supplementary Figure S1 gives its panel α and δ. The two tag "
+        "dimensions are not shown either; their values are in PWA1T009–PWA1T016 and PWA1T025–PWA1T032."
     )
     return bullets
 

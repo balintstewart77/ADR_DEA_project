@@ -7,20 +7,22 @@ import pytest
 from analysis.visualisations import build_supplementary_figure_s4 as s4
 
 
-def test_extraction_reads_the_four_panels_verbatim():
+def test_extraction_reads_the_two_baseline_panels_verbatim():
     rows = s4.extract()
-    assert len(rows) == 2 * 2 * (6 + 3)
+    assert len(rows) == 2 * (6 + 3)
+    assert {r["population"] for r in rows} == {"baseline"}
     first = next(r for r in rows if r["population"] == "baseline" and r["dimension"] == "Research Domains" and r["quantity"] == "alpha_AB")
     assert first["source_table_id"] == "PWA1T001" and first["parsed_value"] == "0.5209151240617209"
     assert first["pair"] == "C01 versus C02" and first["estimate_status"] == "R" and first["interval_status"] == "R"
-    d_b = next(r for r in rows if r["population"] == "hard_case" and r["dimension"] == "Analytical Purposes" and r["quantity"] == "D_B")
-    assert d_b["source_table_id"] == "PWA1T024" and d_b["pair"] == "Fable 5 replacing C02"
+    d_b = next(r for r in rows if r["dimension"] == "Analytical Purposes" and r["quantity"] == "D_B")
+    assert d_b["source_table_id"] == "PWA1T008" and d_b["pair"] == "Fable 5 replacing C02"
 
 
 def test_checks_pass_on_the_committed_run():
     checks = s4.run_checks(s4.extract())
     assert checks["check_5_orderings"]["agree_all_cells"] == 7 and checks["check_5_orderings"]["cells_total"] == 8
     assert [c["dimension"] for c in checks["check_5_orderings"]["exceptions"]] == ["Demographic disparities / equity"]
+    assert sum(c["shown"] for c in checks["check_5_orderings"]["cells"]) == 2
     assert all(abs(v["recomputed"] - v["exported"]) <= 1e-12 for v in checks["check_4_D_recomputed"]["values"])
 
 
@@ -58,5 +60,8 @@ def test_render_and_text_checks(tmp_path):
     metrics, keys = s4.render(rows, tmp_path / s4.SLUG, "DejaVu Sans")
     assert keys["status"] == "PASS"
     assert (tmp_path / f"{s4.SLUG}.svg").exists() and (tmp_path / f"{s4.SLUG}.png").exists()
-    result = s4.text_checks(metrics, s4.caption_bullets(rows, checks))
+    bullets = s4.caption_bullets(rows, checks)
+    result = s4.text_checks(metrics, bullets)
     assert result["status"] == "PASS" and metrics["minimum_effective_pt"] >= 8.0
+    assert keys["values_inside_axes"] and not any("Hard-case" in text for text in metrics["rendered_text"])
+    assert any("also match in the hard-case sample" in bullet for bullet in bullets)
