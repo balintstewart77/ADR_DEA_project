@@ -472,7 +472,7 @@ def update_captions(path: Path, bullets: list[str]) -> None:
     text = path.read_text(encoding="utf-8") if path.exists() else "# Draft captions — pass 4\n\n"
     text = re.sub(rf"## {re.escape(DELIVERABLE)}\n.*?(?=\n## |\Z)", "", text, flags=re.S).rstrip("\n") + "\n\n"
     # After the other supplementary figures and before the tables, as in draft_captions_pass4.md
-    marker = next((m for m in ("## Figure 4 source table", "## Figure 3 source table", "## Supplementary Table S13", "## Table 1",
+    marker = next((m for m in ("## Figure 5 source table", "## Supplementary Table S13", "## Table 1",
                                "## Supplementary Table S1a") if m in text), None)
     if marker:
         text = text.replace(marker, section + marker, 1)

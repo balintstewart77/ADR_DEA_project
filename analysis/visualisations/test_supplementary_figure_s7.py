@@ -44,7 +44,7 @@ def test_ascending_order_marks_exact_ties():
 def test_caption_section_is_inserted_once_after_the_figures_and_before_the_tables(tmp_path):
     captions = tmp_path / "draft_captions_pass4.md"
     captions.write_text(
-        "# Draft captions — pass 4\n\n## Supplementary Figure S4\n\ntext\n\n## Figure 4 source table\n\ntable\n\n"
+        "# Draft captions — pass 4\n\n## Supplementary Figure S4\n\ntext\n\n## Figure 5 source table\n\ntable\n\n"
         "## Supplementary Table S1a\n\ntable\n",
         encoding="utf-8",
     )
@@ -52,7 +52,7 @@ def test_caption_section_is_inserted_once_after_the_figures_and_before_the_table
     s7.update_captions(captions, ["second bullet"])
     text = captions.read_text(encoding="utf-8")
     assert text.count("## Supplementary Figure S7") == 1 and "second bullet" in text and "first bullet" not in text
-    assert text.index("## Supplementary Figure S4") < text.index("## Supplementary Figure S7") < text.index("## Figure 4 source table")
+    assert text.index("## Supplementary Figure S4") < text.index("## Supplementary Figure S7") < text.index("## Figure 5 source table")
 
 
 def test_render_and_text_checks(tmp_path):
