@@ -12,11 +12,11 @@ nothing is recomputed from record-level data.
 Content: pairwise Krippendorff's α (the three coder pairs, then Fable 5 with each
 coder; Analyses 1-2 of that run) and the per-coder replacement comparison D
 (Analysis 4) for Research Domains and Analytical Purposes, baseline sample
-only: S7 explains Figure 1, which is baseline only, and the hard-case
+only: S7 explains Figure 2, which is baseline only, and the hard-case
 diagnostic has its own figure (S1). The caption reports that the D and δ
 orders also match in the hard-case sample and points to its tables. The tag
 dimensions are left out (11-12 coder-majority-positive baseline records).
-Letters follow Figure 1:
+Letters follow Figure 2:
 A = C01, B = C02, C = C03, L = Fable 5. D_X is descriptive, not a decomposition
 of δ_X.
 
@@ -400,8 +400,8 @@ def _span(rows: list[dict]) -> tuple[dict, dict]:
 def caption_bullets(rows: list[dict], checks: dict) -> list[str]:
     bullets = [
         "The figure is exploratory and not preregistered. The addendum documents this status [PWA1T001 onwards].",
-        "Baseline n=150 records, as in Figure 1 [PWA1T001/PWA1T005 n_records cells].",
-        "A, B and C are C01, C02 and C03 and L is Fable 5, as in Figure 1. AB, AC and BC are the coder–coder pairs and "
+        "Baseline n=150 records, as in Figure 2 [PWA1T001/PWA1T005 n_records cells].",
+        "A, B and C are C01, C02 and C03 and L is Fable 5, as in Figure 2. AB, AC and BC are the coder–coder pairs and "
         "LA, LB and LC are Fable 5 with each coder; each point is a two-rater Krippendorff’s α with MASI distance "
         "[PWA1T001/PWA1T002/PWA1T005/PWA1T006 quantity cells].",
     ]
@@ -443,7 +443,7 @@ def caption_bullets(rows: list[dict], checks: dict) -> list[str]:
             f"{c['dimension']} D {c['D_order']}, δ {c['delta_order']}" for c in hard)
     )
     bullets.append(
-        f"In both panels the ascending order of Dₐ, Dᵦ and D꜀ matches the order of the δ point estimates in Figure 1 ("
+        f"In both panels the ascending order of Dₐ, Dᵦ and D꜀ matches the order of the δ point estimates in Figure 2 ("
         + "; ".join(f"{c['dimension']} {c['D_order']}" for c in shown) + "). "
         f"{hard_text}. Across all {checks['check_5_orderings']['cells_total']} population and dimension cells of the run the "
         f"orders match in {checks['check_5_orderings']['agree_all_cells']}{exception_text} "
@@ -472,7 +472,7 @@ def update_captions(path: Path, bullets: list[str]) -> None:
     text = path.read_text(encoding="utf-8") if path.exists() else "# Draft captions — pass 4\n\n"
     text = re.sub(rf"## {re.escape(DELIVERABLE)}\n.*?(?=\n## |\Z)", "", text, flags=re.S).rstrip("\n") + "\n\n"
     # After the other supplementary figures and before the tables, as in draft_captions_pass4.md
-    marker = next((m for m in ("## Figure 3 source table", "## Supplementary Table S13", "## Table 1",
+    marker = next((m for m in ("## Figure 4 source table", "## Figure 3 source table", "## Supplementary Table S13", "## Table 1",
                                "## Supplementary Table S1a") if m in text), None)
     if marker:
         text = text.replace(marker, section + marker, 1)
