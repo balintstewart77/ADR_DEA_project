@@ -33,6 +33,8 @@ EVIDENCE_DIR = ROOT / "preregistration/package/03_preexisting_model_evidence"
 STABILITY = EVIDENCE_DIR / "fable_run_stability_metrics.json"
 STABILITY_MANIFEST = EVIDENCE_DIR / "fable_run_stability_201_record_manifest.csv"
 CROSS_MODEL = EVIDENCE_DIR / "fable5_gpt55_metrics.json"
+# Full-register Fable 5 replicate (exploratory, post-registration; P4.44)
+FPR_DIR = ROOT / "analysis/fable_production_replicate_exploratory"
 # Untracked recovered sample; its SHA-256 is pinned in fable_run_stability_metrics.json.
 STABILITY_SAMPLE = ROOT / "analysis/outputs/model_comparison_sample.csv"
 PASS3_CAPTIONS = ROOT / "analysis/figures/draft_captions_pass2.md"
@@ -75,7 +77,7 @@ TITLES = {
     "Supplementary Figure S1": "Replacing a human coder with Fable 5 in a non-representative hard-case sample (diagnostic)",
     "Supplementary Figure S2": "Coder ratings in the hard-case sample, and coder confidence in both samples",
     "Supplementary Figure S3": "Binary-tag replacement agreement in the random baseline",
-    "Supplementary Figure S4": "Same-model repeatability and cross-model agreement (pre-existing descriptive analyses)",
+    "Supplementary Figure S4": "Same-model repeatability and cross-model agreement (descriptive analyses)",
     "Figure 5 source table": "Label application counts by each coder and Fable 5, random baseline (source data for Figure 5)",
     "Supplementary Table S13": "Label-set cardinality and abstention by rater, random baseline",
     "Supplementary Table S14": "Same-model repeatability and cross-model agreement: all exported metrics",
@@ -259,12 +261,31 @@ def cardinality_rows(lac2: list[dict]) -> list[dict]:
     return rows
 
 
-def evidence_rows(stability: dict, cross: dict, composition: dict) -> tuple[list[dict], list[dict]]:
-    """Supplementary Figure S4 and Supplementary Table S14 rows from the verified metrics files."""
+def load_fpr1() -> tuple[dict[str, dict], dict]:
+    """FPR1T001 rows by population, checked against the replicate's comparison metadata (either line ending)."""
+    metadata = json.loads((FPR_DIR / "compare_metadata.json").read_text(encoding="utf-8"))
+    if any(check["status"] != "passed" for check in metadata["checks"]):
+        raise RuntimeError("FPR1 comparison has failed checks")
+    lf = (FPR_DIR / "FPR1T001.csv").read_bytes().replace(b"\r\n", b"\n")
+    if metadata["outputs"]["FPR1T001.csv"] not in {hashlib.sha256(b).hexdigest() for b in (lf, lf.replace(b"\n", b"\r\n"))}:
+        raise RuntimeError("FPR1T001.csv differs from the hash in its comparison metadata")
+    rows = {r["population"]: r for r in csv.DictReader(lf.decode("utf-8").splitlines())}
+    if int(rows["full register"]["records"]) != 1308 or int(rows["random baseline"]["records"]) != 150 \
+            or int(rows["hard-case (diagnostic)"]["records"]) != 75:
+        raise RuntimeError("FPR1T001 record counts differ from the register and samples")
+    return rows, metadata
+
+
+def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str, dict]) -> tuple[list[dict], list[dict]]:
+    """Supplementary Figure S4 and Supplementary Table S14 rows from the verified metrics files and FPR1T001 (P4.44)."""
     stab_file = str(STABILITY.relative_to(ROOT)).replace("\\", "/")
+    fpr_file = str((FPR_DIR / "FPR1T001.csv").relative_to(ROOT)).replace("\\", "/")
+    full = fpr["full register"]
     cross_file = str(CROSS_MODEL.relative_to(ROOT)).replace("\\", "/")
     s_metrics, c_metrics = stability["metrics"], cross["comparison"]
     panels = {
+        "replicate": {"population": "frozen_register_1308", "pair": "Fable 5 full-register replicate versus production run",
+                      "file": fpr_file, "table": "FPR1T001", "n": int(full["records"])},
         "repeatability": {"population": "fixed_201_record_stability_sample", "pair": "Fable 5 run 1 versus Fable 5 run 2",
                           "file": stab_file, "table": "PME-STAB", "n": s_metrics["n"]},
         "cross_model": {"population": "frozen_register_1308", "pair": "Fable 5 versus GPT-5.5 (production prompt)",
@@ -277,19 +298,24 @@ def evidence_rows(stability: dict, cross: dict, composition: dict) -> tuple[list
         spec = panels[panel]
         target.append(base_row(deliverable, population=spec["population"], dimension=dimension, pair=spec["pair"], series=panel,
                                quantity=quantity, source_file=spec["file"], source_table_id=spec["table"],
-                               source_section="pre-existing model evidence (protocol §§4.2–4.3); not preregistered",
+                               source_section=("exploratory full-register replicate (FPR1); post-registration, not preregistered"
+                                               if panel == "replicate" else "pre-existing model evidence (protocol §§4.2–4.3); not preregistered"),
                                source_row_key=quantity, source_column_locator=locator, source_value_string=repr(value) if isinstance(value, float) else value,
                                parsed_value=repr(value) if isinstance(value, float) else value, sample_size=spec["n"],
                                denominator_string=f"{spec['n']} records", denominator_unit="records", derivation_id=derivation,
-                               derivation_operands=numerator, source_order=order, original_status_string="verified pre-existing descriptive metric"))
+                               derivation_operands=numerator, source_order=order, original_status_string="verified descriptive metric"))
 
     exact = {
+        ("replicate", "Research Domains"): (int(full["domains_exact_n"]), int(full["records"]), "full register.domains_exact_n"),
+        ("replicate", "Analytical Purposes"): (int(full["purposes_exact_n"]), int(full["records"]), "full register.purposes_exact_n"),
         ("repeatability", "Research Domains"): (s_metrics["domain_exact"]["count"], s_metrics["domain_exact"]["denominator"], "metrics.domain_exact.count"),
         ("repeatability", "Analytical Purposes"): (s_metrics["purpose_exact"]["count"], s_metrics["purpose_exact"]["denominator"], "metrics.purpose_exact.count"),
         ("cross_model", "Research Domains"): (c_metrics["domain_exact_count"], c_metrics["n"], "comparison.domain_exact_count"),
         ("cross_model", "Analytical Purposes"): (c_metrics["purpose_exact_count"], c_metrics["n"], "comparison.purpose_exact_count"),
     }
     jaccard = {
+        ("replicate", "Research Domains"): (float(full["domains_mean_jaccard"]), "full register.domains_mean_jaccard"),
+        ("replicate", "Analytical Purposes"): (float(full["purposes_mean_jaccard"]), "full register.purposes_mean_jaccard"),
         ("repeatability", "Research Domains"): (s_metrics["mean_domain_jaccard"], "metrics.mean_domain_jaccard"),
         ("repeatability", "Analytical Purposes"): (s_metrics["mean_purpose_jaccard"], "metrics.mean_purpose_jaccard"),
         ("cross_model", "Research Domains"): (c_metrics["domain_mean_jaccard"], "comparison.domain_mean_jaccard"),
@@ -300,13 +326,20 @@ def evidence_rows(stability: dict, cross: dict, composition: dict) -> tuple[list
         if denominator != panels[panel]["n"]:
             raise RuntimeError(f"Exact-set denominator differs from panel n: {panel} {dimension}")
         proportion = Decimal(count) / Decimal(denominator)
-        for target, deliverable in ((figure, "Supplementary Figure S4"), (table, "Supplementary Table S14")):
+        # S4 shows the replicate and the cross-model comparison; S14 also keeps the pre-existing 201-record pair (P4.44)
+        targets = ((table, "Supplementary Table S14"),) if panel == "repeatability" else \
+            ((figure, "Supplementary Figure S4"), (table, "Supplementary Table S14"))
+        for target, deliverable in targets:
             add(target, deliverable, panel, dimension, "exact_set_count", str(count), locator, order=order)
             add(target, deliverable, panel, dimension, "exact_set_proportion", str(proportion), locator,
                 numerator=f"{count}/{denominator}", derivation="P4.D2 exact-set count divided by records compared", order=order)
             value, jlocator = jaccard[(panel, dimension)]
             add(target, deliverable, panel, dimension, "mean_jaccard", float(value), jlocator, order=order)
     tags = (
+        ("replicate", "COVID-19 & Pandemic", full["covid_agree_n"], "full register.covid_agree_n"),
+        ("replicate", "Demographic disparities / equity", full["equity_agree_n"], "full register.equity_agree_n"),
+        ("replicate", "Both tags", full["both_tags_agree_n"], "full register.both_tags_agree_n"),
+        ("replicate", "All four components", full["all_four_agree_n"], "full register.all_four_agree_n"),
         ("repeatability", "COVID-19 & Pandemic", s_metrics["covid_tag_agreement"]["count"], "metrics.covid_tag_agreement.count"),
         ("repeatability", "Demographic disparities / equity", s_metrics["equity_tag_agreement"]["count"], "metrics.equity_tag_agreement.count"),
         ("repeatability", "Both tags", s_metrics["joint_tag_agreement"]["count"], "metrics.joint_tag_agreement.count"),
@@ -326,9 +359,20 @@ def evidence_rows(stability: dict, cross: dict, composition: dict) -> tuple[list
             add(table, "Supplementary Table S14", "cross_model", "Disagreement frame", f"{stage}:{key}", str(value), f"{stage}.{key}", order=order)
     add(table, "Supplementary Table S14", "cross_model", "Disagreement frame", "exclusions_applied", str(cross["exclusions"]["count"]),
         "exclusions.count", order=50)
+    # Replicate within the two validation samples (S14 only)
+    for order, (population, label) in enumerate((("random baseline", "Random baseline"), ("hard-case (diagnostic)", "Hard-case sample")), 70):
+        row = fpr[population]
+        for key, dimension in (("domains", "Research Domains"), ("purposes", "Analytical Purposes")):
+            target = base_row("Supplementary Table S14", population=population.replace(" ", "_"), dimension=f"{label}: {dimension}",
+                              pair=panels["replicate"]["pair"], series="replicate", quantity="exact_set_count",
+                              source_file=fpr_file, source_table_id="FPR1T001",
+                              source_section="exploratory full-register replicate (FPR1); post-registration, not preregistered",
+                              source_row_key=population, source_column_locator=f"{population}.{key}_exact_n",
+                              source_value_string=row[f"{key}_exact_n"], parsed_value=row[f"{key}_exact_n"], sample_size=row["records"],
+                              denominator_string=f"{row['records']} records", denominator_unit="records", source_order=order,
+                              original_status_string="verified descriptive metric")
+            table.append(target)
     for stratum, count in composition["strata"].items():
-        add(figure, "Supplementary Figure S4", "repeatability", "Sample composition", f"stratum:{stratum}", str(count),
-            "model_comparison_sample.csv stratum column (SHA-256 pinned at comparison_sample.source_sha256)", order=60)
         add(table, "Supplementary Table S14", "repeatability", "Sample composition", f"stratum:{stratum}", str(count),
             "model_comparison_sample.csv stratum column (SHA-256 pinned at comparison_sample.source_sha256)", order=60)
     return figure, table
@@ -468,15 +512,13 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         old["Figure 1"][3],
         "Intervals are percentile bootstrap intervals from 2,000 record resamples; their confidence level was not recorded, so they are not labelled 95% [S2T001/S2T002 status cells, confidence unresolved].",
     ]
-    stab = composition["strata"]
-    bullets["Supplementary Figure S4"] = [
-        f"A, same-model repeatability: two independent Fable 5 runs on one fixed sample of 201 records, holding model, prompt (dict-1.0-rc2), taxonomy and input fields constant. The sample combined {stab['adjudicated']} purposively selected records (earlier spot-check, regression-test and stability-flagged cases) with {stab['random']} records drawn at random from the rest of the register, so its pooled results describe that sample only [fable_run_stability_metrics.json metrics; stability sample stratum column, hash-matched].",
-        "B, cross-model agreement: Fable 5 against one GPT-5.5 run on the frozen register (1,308 records). GPT-5.5 received the production prompt without model-specific adaptation, so agreement measures sensitivity to model choice under this prompt and may also reflect prompt fit [fable5_gpt55_metrics.json comparison; protocol §4.3].",
-        "Exact-set agreement is the proportion of records with identical label sets (numerator/denominator shown); mean Jaccard is the mean over records of shared labels divided by all labels used. Both are on a 0–1 scale. No intervals were computed for either analysis.",
-        "Both are pre-existing descriptive analyses completed before preregistration (protocol §§4.2–4.3); they are not preregistered validation outcomes.",
-        "The two panels cover different populations and are not a controlled comparison of how much higher repeatability is than cross-model agreement. Repeatability does not establish correctness.",
+    bullets["Supplementary Figure S4"] = [  # P4.44: panel A is the full-register replicate
+        "A, same-model repeatability: a second Fable 5 run over the whole frozen register (1,308 records), made on 10 November 2026 under the production conditions (same code, input, model, prompt dict-1.0-rc2, taxonomy and request settings), compared with the production run. Post-registration and exploratory [FPR1T001 full-register row; FPR1 specification].",
+        "B, cross-model agreement: Fable 5 against one GPT-5.5 run on the same frozen register (1,308 records). GPT-5.5 received the production prompt without model-specific adaptation, so agreement measures sensitivity to model choice under this prompt and may also reflect prompt fit. Completed before preregistration [fable5_gpt55_metrics.json comparison; protocol §4.3].",
+        "Exact-set agreement is the proportion of records with identical label sets (numerator/denominator shown); mean Jaccard is the mean over records of shared labels divided by all labels used. Both are on a 0–1 scale. No intervals were computed.",
+        "Both panels cover the same 1,308 records, so they can be read side by side, but the comparison is descriptive. Repeatability does not establish correctness, and agreement between models does not show that either is right.",
         "Whether cross-model disagreement marks records with lower human agreement is assessed separately in the baseline enrichment-calibration analysis (exploratory), not from these percentages.",
-        "Supplementary Table S14 gives the tag metrics, exact-match numerators and denominators, and disagreement-frame counts before and after exclusions.",
+        "Supplementary Table S14 gives the tag metrics, the replicate within the random baseline and hard-case samples, the earlier two-run comparison on a 201-record sample, and the disagreement-frame counts.",
     ]
     bullets["Figure 5 source table"] = [
         "One row per label and dimension; counts are records in the random baseline to which each rater applied the label. Denominator: the 150 valid common records for which all three coders and Fable 5 gave a complete, structurally valid set [LAC1T001 denominator cells].",
@@ -493,11 +535,11 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Exploratory descriptive summaries, not preregistered (specification dated 3 November 2026); no intervals or tests.",
         f"Production note: means to two decimals; percentages whole numbers (e.g. C03 Analytical Purposes Unclear {by[('Analytical Purposes', 'C03')]['unclear_records']} of 150).",
     ]
-    bullets["Supplementary Table S14"] = [
-        "Column A: two Fable 5 runs on the fixed 201-record sample. Column B: Fable 5 against GPT-5.5 on the frozen 1,308-record register. Different populations; not a controlled comparison [fable_run_stability_metrics.json; fable5_gpt55_metrics.json].",
-        "Agreement cells give records with identical output over records compared; tags are compared as two independent binary facets [metrics files, count and denominator fields].",
+    bullets["Supplementary Table S14"] = [  # P4.44
+        "Column A: the full-register Fable 5 replicate against the production run (1,308 records; exploratory, post-registration), with its agreement within the random baseline (150) and the hard-case sample (75, diagnostic). Column A2: the earlier comparison of two Fable 5 runs on a fixed 201-record sample (protocol §4.2). Column B: Fable 5 against GPT-5.5 on the frozen register (protocol §4.3). A and A2 are reported side by side, never pooled [FPR1T001; fable_run_stability_metrics.json; fable5_gpt55_metrics.json].",
+        "Agreement cells give records with identical output over records compared; tags are compared as two independent binary facets [count and denominator fields].",
         "The disagreement frame counts records where Fable 5 and GPT-5.5 differed on Research Domains or Analytical Purposes, before and after removing the 22 training and pilot records; tag-only disagreements lie outside the frame [fable5_gpt55_metrics.json pre_exclusion, post_exclusion and exclusions fields].",
-        "Pre-existing descriptive analyses completed before preregistration (protocol §§4.2–4.3); no intervals.",
+        "Descriptive; no intervals.",
         "Percentages are whole numbers; values of at least 99.5% but below 100% display as >99%.",
     ]
     return bullets
@@ -539,7 +581,8 @@ def main() -> None:
     datasets["Figure 5"], placement = label_application_rows(lac1, label_counts)
     datasets["Figure 5 source table"] = clone(datasets["Figure 5"], "Figure 5 source table")
     datasets["Supplementary Table S13"] = cardinality_rows(lac2)
-    datasets["Supplementary Figure S4"], datasets["Supplementary Table S14"] = evidence_rows(stability, cross, composition)
+    fpr, fpr_metadata = load_fpr1()
+    datasets["Supplementary Figure S4"], datasets["Supplementary Table S14"] = evidence_rows(stability, cross, composition, fpr)
 
     carryover = carryover_check(old, datasets)
     fable_totals = {}
@@ -598,6 +641,9 @@ def main() -> None:
             "pass3_figure_data": {deliverable: str(pass3_path(data_dir, name).relative_to(ROOT)).replace("\\", "/") for deliverable, name in PASS3_SOURCES.items()},
             "label_application_cardinality": {"directory": str(LAC_DIR.relative_to(ROOT)).replace("\\", "/"), "specification_sha256": lac_metadata["specification"]["sha256"],
                                               "outputs": lac_metadata["outputs"], "status": lac_metadata["status"]},
+            "full_register_replicate": {"directory": str(FPR_DIR.relative_to(ROOT)).replace("\\", "/"),
+                                        "specification_sha256": fpr_metadata["specification_sha256"], "outputs": fpr_metadata["outputs"],
+                                        "status": fpr_metadata["status"]},
             "preexisting_model_evidence": {"stability": {"path": str(STABILITY.relative_to(ROOT)).replace("\\", "/"), "sha256": sha256(STABILITY)},
                                            "cross_model": {"path": str(CROSS_MODEL.relative_to(ROOT)).replace("\\", "/"), "sha256": sha256(CROSS_MODEL)},
                                            "stability_sample_composition": composition},

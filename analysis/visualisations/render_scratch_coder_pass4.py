@@ -420,8 +420,8 @@ def verify_figure3(fig, panels: dict, drawn: list[dict]) -> dict:
 
 # ---------------------------------------------------------------- Supplementary Figure S4
 S4_PANELS = (
-    ("repeatability", "A. Same-model repeatability: two independent Fable 5 runs",
-     "Fixed sample of 201 records ({adjudicated} purposively selected, {random} random); same model, prompt, taxonomy and inputs"),
+    ("replicate", "A. Same-model repeatability: Fable 5 re-run against the production run",
+     "Frozen register of 1,308 records; same code, inputs, model, prompt, taxonomy and settings"),
     ("cross_model", "B. Cross-model agreement: Fable 5 versus GPT-5.5",
      "Frozen register of 1,308 records; GPT-5.5 given the production prompt without model-specific adaptation"),
 )
@@ -442,7 +442,6 @@ def s4_values(rows: list[dict]) -> dict:
 
 def render_s4(rows: list[dict], base: Path):
     values = s4_values(rows)
-    strata = {key.split(":", 1)[1]: int(row["parsed_value"]) for key, row in values[("repeatability", "Sample composition")].items()}
     fig = plt.figure(figsize=(p3.FIGURE_WIDTH, 4.55))
     grid = fig.add_gridspec(2, 1, hspace=0.95, left=0.34, right=0.80, top=0.87, bottom=0.17)
     labels_drawn, checks, axes, headings = [], [], [], []
@@ -474,7 +473,7 @@ def render_s4(rows: list[dict], base: Path):
         ax.set_xlabel("Agreement (0–1)", fontsize=8.5)
         headings.append(ax.annotate(title, xy=(0, 1), xycoords="axes fraction", xytext=(0, 26), textcoords="offset points",
                                     ha="left", va="bottom", fontsize=9.0, fontweight="bold"))
-        headings.append(ax.annotate(subtitle.format(**strata), xy=(0, 1), xycoords="axes fraction", xytext=(0, 14), textcoords="offset points",
+        headings.append(ax.annotate(subtitle, xy=(0, 1), xycoords="axes fraction", xytext=(0, 14), textcoords="offset points",
                                     ha="left", va="bottom", fontsize=8.0, color="#333333"))
     # Left margin from the widest row label; headings align with the left edge of the row labels.
     fig.canvas.draw(); renderer = fig.canvas.get_renderer()
@@ -493,7 +492,7 @@ def render_s4(rows: list[dict], base: Path):
     render = save_figure(fig, base, "Supplementary Figure S4")
     status = "PASS" if all(checks) and len(labels_drawn) == 8 else "FAIL"
     return render, {"status": status, "direct_labels": labels_drawn, "intervals_drawn": 0, "panels": [p[0] for p in S4_PANELS],
-                    "sample_composition": strata, "key_entries": [h.get_label() for h in handles],
+                    "key_entries": [h.get_label() for h in handles],
                     "encodings_present": ["exact-set filled circle", "mean Jaccard hollow square"]}
 
 
@@ -553,52 +552,68 @@ def render_s13(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
 
 
 def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
+    """Columns A (full-register replicate), A2 (pre-existing 201-record pair) and B (cross-model); P4.44."""
     values = s4_values(rows)
-    n = {series: int(next(iter(values[(series, "Research Domains")].values()))["sample_size"]) for series in ("repeatability", "cross_model")}
+    series_all = ("replicate", "repeatability", "cross_model")
+    n = {series: int(values[(series, "Research Domains")]["exact_set_count"]["sample_size"]) for series in series_all}
 
     def agreement(series: str, dimension: str, quantity: str = "agreement_count") -> str:
         row = values[(series, dimension)].get(quantity)
         if row is None:
             return "Not exported"
-        count = int(row["parsed_value"])
-        return f"{thousands(count)}/{thousands(n[series])} ({whole_percent_text(count, n[series])})"
+        count, total = int(row["parsed_value"]), int(row["sample_size"])
+        return f"{thousands(count)}/{thousands(total)} ({whole_percent_text(count, total)})"
 
     def jaccard(series: str, dimension: str) -> str:
         return p3.half_up(values[(series, dimension)]["mean_jaccard"]["source_value_string"], 2)
+
+    def invalid(series: str) -> str:
+        row = values[(series, "All components")].get("invalid_or_failed_classifications")
+        return row["parsed_value"] if row else "Not exported"
+
+    def triple(dimension: str, quantity: str = "agreement_count") -> list[str]:
+        return [agreement(series, dimension, quantity) for series in series_all]
 
     frame_rows = values[("cross_model", "Disagreement frame")]
     frame = {key.split(":", 1)[1]: int(row["parsed_value"]) for key, row in frame_rows.items() if key.startswith("pre_exclusion:")}
     post = {key.split(":", 1)[1]: int(row["parsed_value"]) for key, row in frame_rows.items() if key.startswith("post_exclusion:")}
     excluded = int(values[("cross_model", "Disagreement frame")]["exclusions_applied"]["parsed_value"])
     strata = {key.split(":", 1)[1]: int(row["parsed_value"]) for key, row in values[("repeatability", "Sample composition")].items()}
-    headers = ["Measure", f"A. Same-model repeatability: two Fable 5 runs ({n['repeatability']} records)",
+    headers = ["Measure", f"A. Fable 5 full-register replicate versus production ({thousands(n['replicate'])} records)",
+               f"A2. Two Fable 5 runs, fixed sample ({n['repeatability']} records)",
                f"B. Cross-model: Fable 5 versus GPT-5.5 ({thousands(n['cross_model'])} records)"]
     body = [
         ["Records compared"],
-        ["Population", f"Fixed sample: {strata['adjudicated']} purposively selected and {strata['random']} random records", "Frozen register, all records"],
+        ["Population", "Frozen register, all records; exploratory replicate made after preregistration",
+         f"Fixed sample: {strata['adjudicated']} purposively selected and {strata['random']} random records; before preregistration",
+         "Frozen register, all records; before preregistration"],
         ["Research Domains"],
-        ["Exact-set agreement, n/N (%)", agreement("repeatability", "Research Domains", "exact_set_count"), agreement("cross_model", "Research Domains", "exact_set_count")],
-        ["Mean Jaccard", jaccard("repeatability", "Research Domains"), jaccard("cross_model", "Research Domains")],
+        ["Exact-set agreement, n/N (%)", *triple("Research Domains", "exact_set_count")],
+        ["Mean Jaccard", *(jaccard(series, "Research Domains") for series in series_all)],
         ["Analytical Purposes"],
-        ["Exact-set agreement, n/N (%)", agreement("repeatability", "Analytical Purposes", "exact_set_count"), agreement("cross_model", "Analytical Purposes", "exact_set_count")],
-        ["Mean Jaccard", jaccard("repeatability", "Analytical Purposes"), jaccard("cross_model", "Analytical Purposes")],
+        ["Exact-set agreement, n/N (%)", *triple("Analytical Purposes", "exact_set_count")],
+        ["Mean Jaccard", *(jaccard(series, "Analytical Purposes") for series in series_all)],
+        ["Replicate within the validation samples"],
+        ["Random baseline: Research Domains exact-set agreement", agreement("replicate", "Random baseline: Research Domains", "exact_set_count"), "–", "–"],
+        ["Random baseline: Analytical Purposes exact-set agreement", agreement("replicate", "Random baseline: Analytical Purposes", "exact_set_count"), "–", "–"],
+        ["Hard-case sample (diagnostic): Research Domains exact-set agreement", agreement("replicate", "Hard-case sample: Research Domains", "exact_set_count"), "–", "–"],
+        ["Hard-case sample (diagnostic): Analytical Purposes exact-set agreement", agreement("replicate", "Hard-case sample: Analytical Purposes", "exact_set_count"), "–", "–"],
         ["Binary tags and all components"],
-        ["COVID-19 & Pandemic agreement, n/N (%)", agreement("repeatability", "COVID-19 & Pandemic"), agreement("cross_model", "COVID-19 & Pandemic")],
-        ["Demographic disparities / equity agreement, n/N (%)", agreement("repeatability", "Demographic disparities / equity"), agreement("cross_model", "Demographic disparities / equity")],
-        ["Both tags agree, n/N (%)", agreement("repeatability", "Both tags"), agreement("cross_model", "Both tags")],
-        ["All four components agree, n/N (%)", agreement("repeatability", "All four components"), "Not exported"],
-        ["Invalid or failed classifications", values[("repeatability", "All components")]["invalid_or_failed_classifications"]["parsed_value"],
-         values[("cross_model", "All components")]["invalid_or_failed_classifications"]["parsed_value"]],
+        ["COVID-19 & Pandemic agreement, n/N (%)", *triple("COVID-19 & Pandemic")],
+        ["Demographic disparities / equity agreement, n/N (%)", *triple("Demographic disparities / equity")],
+        ["Both tags agree, n/N (%)", *triple("Both tags")],
+        ["All four components agree, n/N (%)", *triple("All four components")],
+        ["Invalid or failed classifications", *(invalid(series) for series in series_all)],
         ["Cross-model disagreement frame (Research Domains or Analytical Purposes)"],
-        ["Before exclusions: records (Research Domains only; Analytical Purposes only; both)", "–",
+        ["Before exclusions: records (Research Domains only; Analytical Purposes only; both)", "–", "–",
          f"{frame['total_disagreement']} ({frame['domain_only']}; {frame['purpose_only']}; {frame['both']})"],
-        ["Before exclusions: with an accompanying tag disagreement", "–", str(frame["tag_disagreement_alongside_domain_or_purpose"])],
-        ["Before exclusions: differing on a tag only (outside the frame)", "–", str(frame["tag_only_outside_domain_purpose_frame"])],
-        ["Training and pilot records excluded from the register", "–", str(excluded)],
-        ["After exclusions: records (Research Domains only; Analytical Purposes only; both)", "–",
+        ["Before exclusions: with an accompanying tag disagreement", "–", "–", str(frame["tag_disagreement_alongside_domain_or_purpose"])],
+        ["Before exclusions: differing on a tag only (outside the frame)", "–", "–", str(frame["tag_only_outside_domain_purpose_frame"])],
+        ["Training and pilot records excluded from the register", "–", "–", str(excluded)],
+        ["After exclusions: records (Research Domains only; Analytical Purposes only; both)", "–", "–",
          f"{post['total_disagreement']} ({post['domain_only']}; {post['purpose_only']}; {post['both']})"],
-        ["After exclusions: with an accompanying tag disagreement", "–", str(post["tag_disagreement_alongside_domain_or_purpose"])],
-        ["After exclusions: differing on a tag only (outside the frame)", "–", str(post["tag_only_outside_domain_purpose_frame"])],
+        ["After exclusions: with an accompanying tag disagreement", "–", "–", str(post["tag_disagreement_alongside_domain_or_purpose"])],
+        ["After exclusions: differing on a tag only (outside the frame)", "–", "–", str(post["tag_only_outside_domain_purpose_frame"])],
     ]
     if frame["domain_only"] + frame["purpose_only"] + frame["both"] != frame["total_disagreement"] or \
             post["domain_only"] + post["purpose_only"] + post["both"] != post["total_disagreement"]:
