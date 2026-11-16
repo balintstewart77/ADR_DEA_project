@@ -38,10 +38,6 @@ DISAGREEMENT = legacy.DISAGREE_CSV
 LEGACY_COMMIT = "6cbf154"
 REQUIRED_ANCESTORS = ("960c38d", "6cbf154", "f36d738", "1287716")
 
-DEFAULT_LOG_DIR = Path(r"C:\Users\balin\Desktop\DEA_working_logs")
-DEFAULT_REVISION_LOG = DEFAULT_LOG_DIR / "scratch_coder_figure_revisions_log_pass2.md"
-DEFAULT_FINDINGS_LOG = DEFAULT_LOG_DIR / "scratch_coder_interpretive_findings.md"
-
 EXTRA_FIELDS = ("derivation_id", "derivation_operands", "row_group", "display_percent")
 FIELDS = legacy.VALUE_FIELDS + list(EXTRA_FIELDS)
 
@@ -720,8 +716,9 @@ def write_dataset(data_dir: Path, deliverable: str, rows: list[dict], provenance
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-dir", type=Path, default=ROOT / "analysis/figure_data")
-    parser.add_argument("--revision-log", type=Path, default=DEFAULT_REVISION_LOG)
-    parser.add_argument("--findings-log", type=Path, default=DEFAULT_FINDINGS_LOG)
+    # The decision logs are kept outside the repository; pass their locations explicitly.
+    parser.add_argument("--revision-log", type=Path, required=True)
+    parser.add_argument("--findings-log", type=Path, required=True)
     parser.add_argument("--archive-existing", action="store_true")
     args = parser.parse_args()
     data_dir = args.data_dir.resolve(); data_dir.mkdir(parents=True, exist_ok=True)
