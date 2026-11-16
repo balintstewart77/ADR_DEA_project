@@ -51,32 +51,32 @@ FIELDNAMES = [
     "derivation_id", "derivation_operands", "row_group", "display_percent",
 ]
 ORDER = (
-    "Figure 2", "Figure 3", "Figure 4",  # Figure 1 (study flow) is built separately (P4.34)
+    "Figure 2", "Figure 3", "Figure 5",  # Figures 1 (study flow) and 4 (subset contrast) are built separately (P4.34, P4.37)
     "Supplementary Figure S1", "Supplementary Figure S2", "Supplementary Figure S3", "Supplementary Figure S4",
-    "Figure 4 source table", "Supplementary Table S13", "Supplementary Table S14",
+    "Figure 5 source table", "Supplementary Table S13", "Supplementary Table S14",
 )
 SLUGS = {
     # Renumbered under P4.34; baseline only from P4.33
     "Figure 2": "figure_2_replacement_reliability_baseline",
     "Figure 3": "figure_3_coder_ratings_baseline",
-    "Figure 4": "figure_4_label_application_by_coder",
+    "Figure 5": "figure_5_label_application_by_coder",
     "Supplementary Figure S1": "supplementary_figure_s1_baseline_vs_hardcase",
     "Supplementary Figure S2": "supplementary_figure_s2_hardcase_ratings_confidence",
     "Supplementary Figure S3": "supplementary_figure_s3_tag_replacement_baseline",
     "Supplementary Figure S4": "supplementary_figure_s4_repeatability_cross_model",
-    "Figure 4 source table": "figure_4_label_application_by_coder_source",
+    "Figure 5 source table": "figure_5_label_application_by_coder_source",
     "Supplementary Table S13": "supplementary_table_s13_cardinality_abstention",
     "Supplementary Table S14": "supplementary_table_s14_repeatability_cross_model",
 }
 TITLES = {
     "Figure 2": "Replacement-panel reliability in the random baseline",
     "Figure 3": "Register-entry information and taxonomy fit: ratings by each coder and by the majority of coders",
-    "Figure 4": "Label application by Fable 5 and the three independent coders",
+    "Figure 5": "Label application by Fable 5 and the three independent coders",
     "Supplementary Figure S1": "Replacing a human coder with Fable 5 in a non-representative hard-case sample (diagnostic)",
     "Supplementary Figure S2": "Coder ratings in the hard-case sample, and coder confidence in both samples",
     "Supplementary Figure S3": "Binary-tag replacement agreement in the random baseline",
     "Supplementary Figure S4": "Same-model repeatability and cross-model agreement (pre-existing descriptive analyses)",
-    "Figure 4 source table": "Label application counts by each coder and Fable 5, random baseline (source data for Figure 4)",
+    "Figure 5 source table": "Label application counts by each coder and Fable 5, random baseline (source data for Figure 5)",
     "Supplementary Table S13": "Label-set cardinality and abstention by rater, random baseline",
     "Supplementary Table S14": "Same-model repeatability and cross-model agreement: all exported metrics",
 }
@@ -200,7 +200,7 @@ def base_row(deliverable: str, *shared: dict, **values) -> dict:
 
 
 def label_application_rows(lac_rows: list[dict], pass3_counts: list[dict]) -> tuple[list[dict], dict]:
-    """Figure 4 rows: coder counts from LAC1T001, Fable 5 counts from S5T001/S5T002 (reconciled)."""
+    """Figure 5 rows: coder counts from LAC1T001, Fable 5 counts from S5T001/S5T002 (reconciled)."""
     exported = {(r["dimension"], r["label"]): r for r in pass3_counts}
     rows = []; placement = {}
     for lac in lac_rows:
@@ -215,18 +215,18 @@ def label_application_rows(lac_rows: list[dict], pass3_counts: list[dict]) -> tu
                   "row_group": "unclear" if lac["label"] == UNCLEAR else "substantive",
                   "presentation_note": "row order: pass-3 label-application point number (descending coder-majority count, ties alphabetical); Unclear plotted last"}
         for coder in RATERS[:3]:
-            rows.append(base_row("Figure 4", common, quantity="label_application_count", pair=coder,
+            rows.append(base_row("Figure 5", common, quantity="label_application_count", pair=coder,
                                  source_file="analysis/label_application_cardinality_exploratory/LAC1T001.csv", source_table_id="LAC1T001",
                                  source_section="exploratory descriptive (not preregistered)", source_row_key=lac["label"],
                                  source_column_locator=f"{coder}_count", source_value_string=lac[f"{coder}_count"],
                                  parsed_value=lac[f"{coder}_count"], original_status_string="exploratory descriptive count"))
-        rows.append(base_row("Figure 4", common, quantity="label_application_count", pair="Fable 5",
+        rows.append(base_row("Figure 5", common, quantity="label_application_count", pair="Fable 5",
                              source_file=s5["source_file"], source_table_id=s5["source_table_id"], source_section=s5["source_section"],
                              source_row_key=lac["label"], source_column_locator="baseline_model_positive_n",
                              source_value_string=s5["interval_lower_string"], parsed_value=s5["interval_lower_string"],
                              original_status_string="R/N", presentation_note=common["presentation_note"] + "; equals LAC1T001 fable5_count"))
         for quantity, column in (("coder_min", "coder_min"), ("coder_max", "coder_max")):
-            rows.append(base_row("Figure 4", common, role="derived", quantity=quantity, pair="C01/C02/C03",
+            rows.append(base_row("Figure 5", common, role="derived", quantity=quantity, pair="C01/C02/C03",
                                  source_file="analysis/label_application_cardinality_exploratory/LAC1T001.csv", source_table_id="LAC1T001",
                                  source_row_key=lac["label"], source_column_locator=column, source_value_string=lac[column],
                                  parsed_value=lac[column], derivation_id=f"P4.D1 {quantity.replace('coder_', '')} of three coder counts",
@@ -430,7 +430,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "The annotation beside δₘᵢₙ identifies δᵦ as the component whose point estimate equals δₘᵢₙ in both dimensions. The δₘᵢₙ interval is estimated separately and can differ from δᵦ’s interval [S3T001/S3T002 point-estimate and interval cells].",
         "Analytical Purposes δₘᵢₙ upper=-0.002141124278556386 (display −0.002); the interval excludes zero [S3T002 interval cell].",
         "Intervals are percentile bootstrap intervals from 2,000 record resamples; their confidence level was not recorded, so they are not labelled 95% [S3T001/S3T002 status cells, confidence unresolved].",
-        "The preregistered sensitivity analysis on the register-sufficient subset (n=92) is shown in Figure 3b, as the change from this baseline, beside the ratings that define the subset [S3T011/S3T012; Supplementary Table S15a].",
+        "The preregistered sensitivity analysis on the register-sufficient subset (n=92) is shown in Figure 4, as the change from this baseline, beside the ratings that define the subset [S3T011/S3T012; Supplementary Table S15a].",
         "The α axis is 0.15–0.75, rather than the 0–1 scale used in Supplementary Figures S1 and S3 [S3T001, S3T002 interval cells].",
         "Research Domains and Analytical Purposes only; the two binary tags are shown in Supplementary Figure S3, and hard-case results in Supplementary Figure S1.",
     ]
@@ -440,11 +440,11 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Cannot assess from register entry is distinct from No Fit: coders were instructed to choose it when the entry was too limited to judge fit, and not to choose Partial Fit or No Fit solely because the entry lacked information [RED-036 field note for sc_taxonomy_fit].",
         "Coder bars show each coder’s own distribution; the Majority of coders bar is derived from them and is set apart by a gap [S8T001/S8T003/S9T001/S9T003 cells].",
         old["Figure 2"][2],
-        "Figure 3b’s register-sufficient subset is the 92 records with a Sufficient majority. The broad subset is 148 records and is not obtained by adding the Sufficient and Partially sufficient majority counts [S8T003/S8T005 count cells].",
+        "Figure 4’s register-sufficient subset is the 92 records with a Sufficient majority. The broad subset is 148 records and is not obtained by adding the Sufficient and Partially sufficient majority counts [S8T003/S8T005 count cells].",
         old["Figure 2"][4],
         old["Figure 2"][5],
     ]
-    bullets["Figure 4"] = [
+    bullets["Figure 5"] = [
         "Each row is one label in the random baseline; every rater classified the same 150 valid common records in each dimension [LAC1T001 denominator cells].",
         "Small hollow markers show the number of records to which each coder applied the label (C01 circle, C02 square, C03 triangle); the large filled diamond shows Fable 5 [LAC1T001 coder count cells; Fable 5 counts from S5T001/S5T002 model-positive cells, reconciled with LAC1T001].",
         "The thin line spans the lowest to the highest of the three coder counts: the observed range across three coders, not a confidence interval.",
@@ -476,7 +476,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Whether cross-model disagreement marks records with lower human agreement is assessed separately in the baseline enrichment-calibration analysis (exploratory), not from these percentages.",
         "Supplementary Table S14 gives the tag metrics, exact-match numerators and denominators, and disagreement-frame counts before and after exclusions.",
     ]
-    bullets["Figure 4 source table"] = [
+    bullets["Figure 5 source table"] = [
         "One row per label and dimension; counts are records in the random baseline to which each rater applied the label. Denominator: the 150 valid common records for which all three coders and Fable 5 gave a complete, structurally valid set [LAC1T001 denominator cells].",
         "Coder counts, minimum and maximum come from the exploratory descriptive run LAC1T001 (not preregistered); Fable 5 counts are the preregistered S5T001/S5T002 model-positive exports and equal the LAC1T001 recount.",
         "Placement compares Fable 5 with the three coders’ counts only; it is not a judgement of correctness, and marginal counts do not show record-level agreement.",
@@ -513,7 +513,7 @@ def main() -> None:
 
     old = {deliverable: read_csv(pass3_path(data_dir, name)) for deliverable, name in PASS3_SOURCES.items()}
     old["Supplementary Figure S3"] = [row for row in old["Supplementary Figure S3"] if row["dimension"] in TAGS]
-    # P4.33: the replacement figure (Figure 2 from P4.34) shows the random baseline only; the subset is in Figure 3b.
+    # P4.33: the replacement figure (Figure 2 from P4.34) shows the random baseline only; the subset is in Figure 4 (P4.37).
     old["Figure 2"] = [row for row in old["Figure 2"] if row["population"] == "baseline"]
     label_counts = read_csv(pass3_path(data_dir, PASS3_LABEL_COUNTS))
     caption_source = PASS3_CAPTIONS_ARCHIVED if PASS3_CAPTIONS_ARCHIVED.is_file() else PASS3_CAPTIONS
@@ -534,15 +534,15 @@ def main() -> None:
     composition = stability_composition(stability)
 
     datasets = {deliverable: clone(rows, deliverable) for deliverable, rows in old.items()}
-    datasets["Figure 4"], placement = label_application_rows(lac1, label_counts)
-    datasets["Figure 4 source table"] = clone(datasets["Figure 4"], "Figure 4 source table")
+    datasets["Figure 5"], placement = label_application_rows(lac1, label_counts)
+    datasets["Figure 5 source table"] = clone(datasets["Figure 5"], "Figure 5 source table")
     datasets["Supplementary Table S13"] = cardinality_rows(lac2)
     datasets["Supplementary Figure S4"], datasets["Supplementary Table S14"] = evidence_rows(stability, cross, composition)
 
     carryover = carryover_check(old, datasets)
     fable_totals = {}
     for dimension, expected in {"Research Domains": (199, 198), "Analytical Purposes": (160, 159)}.items():
-        fable = [r for r in datasets["Figure 4"] if r["dimension"] == dimension and r["pair"] == "Fable 5"]
+        fable = [r for r in datasets["Figure 5"] if r["dimension"] == dimension and r["pair"] == "Fable 5"]
         total = sum(int(r["parsed_value"]) for r in fable)
         substantive = total - sum(int(r["parsed_value"]) for r in fable if r["label"] == UNCLEAR)
         fable_totals[dimension] = [total, substantive]
