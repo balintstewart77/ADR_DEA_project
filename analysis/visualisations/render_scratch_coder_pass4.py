@@ -37,11 +37,7 @@ UNCLEAR = "Unclear from Register Entry"
 UNCLEAR_NAME = "Unclear from Register Entry (declined to classify)"
 CODERS = ("C01", "C02", "C03")
 RATERS = (*CODERS, "Fable 5")
-FIGURE1_LABELS = {
-    "baseline": "Random baseline, n=150 (primary analysis)",
-    "baseline_strict_sufficient": "Register-sufficient subset, n=92 (preregistered sensitivity analysis)",
-}
-# Figure 3 encodings: coders are small hollow shapes in one neutral colour; Fable 5 is the only
+# Figure 4 encodings: coders are small hollow shapes in one neutral colour; Fable 5 is the only
 # filled, coloured and larger marker.
 CODER_MARKERS = {"C01": "o", "C02": "s", "C03": "^"}
 CODER_COLOUR = "#3D3D3D"
@@ -63,6 +59,10 @@ PRE_EXISTING_FIGURES = {
     "figure_4_label_application", "supplementary_figure_s1_baseline_vs_hardcase",
     "supplementary_figure_s2_hardcase_ratings_confidence", "supplementary_figure_s3_disagreement_composition",
 }
+# Figures built by their own scripts (P4.32, P4.34), allowed among the active files, and the caption sections
+# those scripts write, kept in place when this renderer rewrites the captions file (heading -> the section it precedes).
+EXTERNAL_FIGURES = {"1": ("figure_1_study_flow",), "3": ("figure_3b_sufficient_subset_contrast",)}
+EXTERNAL_CAPTIONS = {"Figure 1": "Figure 2", "Figure 3b": "Figure 4", "Supplementary Figure S7": "Figure 4 source table"}
 HYPHEN_BEFORE_DIGIT = re.compile(r"(?<!COVID)(?<!GPT)-(?=\d)")
 
 
@@ -103,12 +103,6 @@ def whole_percent_text(numerator: int, denominator: int) -> str:
 
 
 # ---------------------------------------------------------------- replacement figures
-def replacement_handles(populations: tuple[str, ...], labels: dict[str, str]) -> list[Line2D]:
-    return [Line2D([0], [0], marker="o", color=p3.POPULATION[p]["color"],
-                   markerfacecolor="none" if p3.POPULATION[p]["hollow"] else p3.POPULATION[p]["color"],
-                   markeredgecolor=p3.POPULATION[p]["color"], linewidth=1.2, label=labels[p]) for p in populations]
-
-
 def matching_components(rows: list[dict], dimensions: tuple[str, ...]) -> dict[str, str]:
     """Read the component whose point estimate equals δ_min from figure data (one per dimension)."""
     result = {}
@@ -121,17 +115,17 @@ def matching_components(rows: list[dict], dimensions: tuple[str, ...]) -> dict[s
     return result
 
 
-def render_figure1(rows: list[dict], base: Path):
-    populations = ("baseline", "baseline_strict_sufficient")
+def render_replacement(rows: list[dict], base: Path):
+    """Figure 2 (P4.34): random baseline only (P4.33); the register-sufficient subset is drawn in Figure 3b."""
+    populations = ("baseline",)
+    if {r["population"] for r in rows} != set(populations):
+        raise RuntimeError(f"Figure 2 data hold populations other than the baseline: {sorted({r['population'] for r in rows})}")
     components = matching_components(rows, DIMENSIONS[:2])
     if set(components.values()) != {"delta_B"}:
-        raise RuntimeError(f"Figure 1 annotation assumes δ_B; data give {components}")
-    fig, axes, positions, delta = p3.replacement_figure(rows, DIMENSIONS[:2], populations, (0.15, 0.75), 4.55, True)
-    handles = replacement_handles(populations, FIGURE1_LABELS)
-    fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False, columnspacing=1.6, handletextpad=0.5)
-    render = save_figure(fig, base, "Figure 1")
-    return render, {"status": "PASS", "key_entries": [h.get_label() for h in handles],
-                    "encodings_present": ["baseline filled (primary)", "register-sufficient subset hollow (sensitivity)"],
+        raise RuntimeError(f"Figure 2 annotation assumes δ_B; data give {components}")
+    fig, axes, positions, delta = p3.replacement_figure(rows, DIMENSIONS[:2], populations, (0.15, 0.75), 3.75, True)
+    render = save_figure(fig, base, "Figure 2")
+    return render, {"status": "PASS", "key_entries": [], "encodings_present": ["baseline filled (primary)"],
                     "row_positions": positions, "delta_min_rows": delta, "annotation_components": components}
 
 
@@ -174,14 +168,14 @@ def save_figure(fig, base: Path, name: str, **kwargs) -> dict:
 
 def row_alignment(keys: dict) -> dict:
     expected = {"alpha ABC": 0, "alpha LBC": 1, "alpha ALC": 2, "alpha ABL": 3, "delta_min": 0, "delta_A": 1, "delta_B": 2, "delta_C": 3}
-    failures = [{"deliverable": deliverable, **row} for deliverable in ("Figure 1", "Supplementary Figure S1", "Supplementary Figure S3")
+    failures = [{"deliverable": deliverable, **row} for deliverable in ("Figure 2", "Supplementary Figure S1", "Supplementary Figure S3")
                 for row in keys[deliverable]["row_positions"] if row["y"] != expected[row["quantity"]]]
     return {"status": "PASS" if not failures else "FAIL", "failures": failures, "mapping": expected}
 
 
 def delta_annotation_check(datasets: dict, keys: dict) -> dict:
     checks = []
-    for deliverable in ("Figure 1", "Supplementary Figure S3"):
+    for deliverable in ("Figure 2", "Supplementary Figure S3"):
         rows = datasets[deliverable]
         for dimension, component in keys[deliverable]["annotation_components"].items():
             for population in sorted({r["population"] for r in rows if r["dimension"] == dimension}):
@@ -196,7 +190,7 @@ def delta_annotation_check(datasets: dict, keys: dict) -> dict:
     return {"status": "PASS" if not failures else "FAIL", "checks": checks, "failures": failures}
 
 
-# ---------------------------------------------------------------- Figure 3
+# ---------------------------------------------------------------- Figure 4 (label application)
 def label_table(rows: list[dict]) -> dict[str, list[dict]]:
     """One record per label: counts by rater, coder range and established order."""
     grouped: dict[tuple[str, str], dict] = {}
@@ -311,7 +305,7 @@ def render_figure3(rows: list[dict], base: Path):
     fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 0.012), ncol=5, frameon=False, fontsize=8.0,
                handletextpad=0.4, columnspacing=1.4)
     checks = verify_figure3(fig, panels, drawn)
-    render = save_figure(fig, base, "Figure 3", tight=False)
+    render = save_figure(fig, base, "Figure 4", tight=False)
     return render, checks
 
 
@@ -552,11 +546,28 @@ def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
 
 
 # ---------------------------------------------------------------- captions and checks
+def kept_sections(path: Path) -> dict[str, str]:
+    """Caption sections written by the separate builders (EXTERNAL_CAPTIONS), kept across a rewrite (P4.34)."""
+    if not path.is_file():
+        return {}
+    text = path.read_text(encoding="utf-8")
+    found = {}
+    for heading in EXTERNAL_CAPTIONS:
+        match = re.search(rf"^## {re.escape(heading)}\n.*?(?=^## |\Z)", text, flags=re.S | re.M)
+        if match:
+            found[heading] = match.group(0).rstrip("\n").split("\n")
+    return found
+
+
 def write_captions(manifest: dict, path: Path) -> None:
+    kept = kept_sections(path)
     lines = ["# Draft captions — pass 4", "",
              "Figure and table numbering follows the pass-4 decision log, which supersedes pass-3 H.7 for figures. "
              "Tables 1–4 and Supplementary Tables S1a–S1c are carried forward unchanged from pass 3.", ""]
     for deliverable in manifest["order"]:
+        for heading, before in EXTERNAL_CAPTIONS.items():
+            if before == deliverable and heading in kept:
+                lines.extend(kept[heading] + [""])
         entry = manifest["entries"][deliverable]; punctuation = "." if "Figure" in deliverable and "table" not in deliverable else ":"
         lines.extend([f"## {deliverable}", "", f"**{deliverable}{punctuation} {entry['title']}.**", "", "Legend content checklist:", ""])
         lines.extend(f"- {bullet}" for bullet in entry["caption_bullets"]); lines.append("")
@@ -597,7 +608,7 @@ def main() -> None:
 
     rendering, keys, sums = {}, {}, []
     # Carried-forward pass-3 renderers are called unchanged; the text-overlap check covers the figures laid out in pass 4.
-    renderers = (("Figure 1", render_figure1), ("Figure 2", p3.render_figure2), ("Figure 3", render_figure3),
+    renderers = (("Figure 2", render_replacement), ("Figure 3", p3.render_figure2), ("Figure 4", render_figure3),
                  ("Supplementary Figure S1", p3.render_s1), ("Supplementary Figure S2", p3.render_s2),
                  ("Supplementary Figure S3", render_s3), ("Supplementary Figure S4", render_s4))
     for deliverable, function in renderers:
@@ -607,7 +618,7 @@ def main() -> None:
             sums.extend({"deliverable": deliverable, **row} for row in result[2])
 
     table_reports, table_paths = {}, []
-    for deliverable, function in (("Figure 3 source table", render_source_table), ("Supplementary Table S13", render_s13),
+    for deliverable, function in (("Figure 4 source table", render_source_table), ("Supplementary Table S13", render_s13),
                                   ("Supplementary Table S14", render_s14)):
         slug = manifest["entries"][deliverable]["slug"]
         csv_path, md_path = table_dir / f"{slug}.csv", table_dir / f"{slug}.md"
@@ -637,17 +648,20 @@ def main() -> None:
     if delta_check["status"] != "PASS":
         raise RuntimeError(f"δ_min annotation assertion failed: {delta_check}")
     active = sorted(path.name for path in figure_dir.iterdir() if path.is_file())
-    stale = [name for name in active if any(name.startswith(slug) for slug in PRE_EXISTING_FIGURES - {
-        "figure_2_coder_ratings_baseline", "supplementary_figure_s1_baseline_vs_hardcase", "supplementary_figure_s2_hardcase_ratings_confidence"})]
+    # Whole-stem match (P4.34): the Figure 4 slug begins with the pass-3 slug figure_4_label_application.
+    stale = [name for name in active if Path(name).stem in PRE_EXISTING_FIGURES - {
+        "supplementary_figure_s1_baseline_vs_hardcase", "supplementary_figure_s2_hardcase_ratings_confidence"}]
     if stale:
         raise RuntimeError(f"Superseded figure files remain active: {stale}")
-    for number in ("1", "2", "3"):
-        expected = {f"{manifest['entries'][f'Figure {number}']['slug']}{suffix}" for suffix in (".png", ".svg")}
-        present = {name for name in active if name.startswith(f"figure_{number}_")}
-        if present != expected:
+    for number in ("1", "2", "3", "4"):
+        expected = {f"{manifest['entries'][f'Figure {number}']['slug']}{suffix}" for suffix in (".png", ".svg")
+                    if f"Figure {number}" in manifest["entries"]}
+        allowed = expected | {f"{slug}{suffix}" for slug in EXTERNAL_FIGURES.get(number, ()) for suffix in (".png", ".svg")}
+        present = {name for name in active if re.match(rf"figure_{number}[a-z]?_", name)}
+        if not expected <= present <= allowed:
             raise RuntimeError(f"Active Figure {number} filenames differ: {sorted(present)}")
-    if any(name.startswith("figure_4") for name in active):
-        raise RuntimeError("An active figure_4 file remains")
+    if any(name.startswith("figure_5") for name in active):
+        raise RuntimeError("An active figure_5 file exists")
 
     report = {
         "renderer": Path(__file__).name, "input_boundary": "pass-4 manifest plus its listed CSV and JSON files only",
