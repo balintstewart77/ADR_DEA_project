@@ -3,9 +3,9 @@
   "current": "20261021",
   "pointers": {
     "current_latest_revision": {
-      "snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
-      "raw_xlsx_sha256": "9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
-      "canonical_csv_sha256": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad"
+      "snapshot_id": "sha256:1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
+      "raw_xlsx_sha256": "1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
+      "canonical_csv_sha256": "4b7b52ebd0bee87ea3637f3046782ea17abf8d55dcb091dd8593bcfb5cb97ecc"
     },
     "frozen_validation_snapshot": {
       "snapshot_id": "sha256:4f3851544846059c15b4df4dadc63b33079ca47a07e4eae41e98d5ddb3e452a3",
@@ -54,15 +54,15 @@
     },
     {
       "version": "20261021",
-      "latest_snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
-      "csv": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/canonical.csv",
-      "xlsx": "register_snapshots/9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
-      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/10/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
-      "retrieved_at": "2026-10-26T13:57:34+00:00",
-      "sha256_csv": "a9376cbef89f35964641f5629f87494627c269802199f4fe512fa8cc719b86ad",
-      "sha256_xlsx": "9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82",
+      "latest_snapshot_id": "sha256:1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
+      "csv": "register_snapshots/1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e/canonical.csv",
+      "xlsx": "register_snapshots/1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/11/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "retrieved_at": "2026-11-16T16:49:17+00:00",
+      "sha256_csv": "4b7b52ebd0bee87ea3637f3046782ea17abf8d55dcb091dd8593bcfb5cb97ecc",
+      "sha256_xlsx": "1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
       "row_count": 1528,
-      "snapshot_id": "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82"
+      "snapshot_id": "sha256:1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e"
     },
     {
       "version": "legacy",
@@ -172,6 +172,26 @@
         "canonical_line_terminator": "LF",
         "index": false
       }
+    },
+    {
+      "snapshot_id": "sha256:1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
+      "raw_xlsx_path": "register_snapshots/1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "canonical_csv_path": "register_snapshots/1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e/canonical.csv",
+      "raw_xlsx_sha256": "1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
+      "canonical_csv_sha256": "4b7b52ebd0bee87ea3637f3046782ea17abf8d55dcb091dd8593bcfb5cb97ecc",
+      "raw_row_count": 1528,
+      "first_seen_at": "2026-11-16T16:49:17+00:00",
+      "nominal_source_date": "2026-10-21",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/11/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "upstream_filename": "21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "converter": {
+        "identity": "scrape.fetch_register.xlsx_to_dataframe:v1",
+        "pandas": "2.2.3",
+        "openpyxl": "3.1.5",
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF",
+        "index": false
+      }
     }
   ],
   "fetch_observations": [
@@ -248,6 +268,25 @@
         "canonical_line_terminator": "LF",
         "index": false
       }
+    },
+    {
+      "observation_id": "obs-0006",
+      "observed_at": "2026-11-16T16:49:17+00:00",
+      "source_url": "https://uksa.statisticsauthority.gov.uk/wp-content/uploads/sites/2/2026/11/21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "upstream_filename": "21_10_2026_UKSA-Accredited-Research-Projects-Report.xlsx",
+      "nominal_source_date": "2026-10-21",
+      "upload_directory_date": "2026-11",
+      "raw_xlsx_sha256": "1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
+      "canonical_csv_sha256": "4b7b52ebd0bee87ea3637f3046782ea17abf8d55dcb091dd8593bcfb5cb97ecc",
+      "snapshot_id": "sha256:1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e",
+      "converter": {
+        "identity": "scrape.fetch_register.xlsx_to_dataframe:v1",
+        "pandas": "2.2.3",
+        "openpyxl": "3.1.5",
+        "canonical_csv_encoding": "utf-8-sig",
+        "canonical_line_terminator": "LF",
+        "index": false
+      }
     }
   ],
   "analytical_states": [
@@ -296,6 +335,21 @@
       "cleaning_rules": {},
       "source_snapshot_ids": [
         "sha256:9030a288f445195dc2492a6106c39967387791df688b7ad9f68df77825ca4d82"
+      ],
+      "deterministic_properties": {
+        "content_sha256": "403722fc350bd6c5bbc3552c3a1066e4411c0df0c97b28f4606f54eb60def540",
+        "row_count": 1385,
+        "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF)"
+      }
+    },
+    {
+      "analytical_state_id": "sha256:9c45bde3ee24fbd90f444afb428f860fc84dc43c68ba39ec912f73842d743950",
+      "cleaned_content_sha256": "9c45bde3ee24fbd90f444afb428f860fc84dc43c68ba39ec912f73842d743950",
+      "cleaned_row_count": 1385,
+      "serialization": "pandas.to_csv(index=False,encoding=utf-8-sig,lineterminator=LF), include_quarter_date=True",
+      "cleaning_rules": {},
+      "source_snapshot_ids": [
+        "sha256:1905f9461c06cfe9d782e989a84af213a3507107c0b82e2cf20bdb41c090ee6e"
       ],
       "deterministic_properties": {
         "content_sha256": "403722fc350bd6c5bbc3552c3a1066e4411c0df0c97b28f4606f54eb60def540",
