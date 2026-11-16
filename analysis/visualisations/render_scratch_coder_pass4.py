@@ -165,6 +165,7 @@ def render_replacement(rows: list[dict], base: Path):
     # Panel b keeps its pass-4 layout in the lower part of the figure; panel a, the schematic, sits above (P4.39).
     # x-axis labels on the lower row, which shares each column's scale (P4.41)
     label_replacement_axes(axes, "Krippendorff’s α (MASI distance)")
+    tighten_delta_axes(axes, rows)
     split = data_height / (data_height + SCHEMATIC_HEIGHT)
     fig.get_layout_engine().set(rect=(0, 0, 1, split))
     draw_replacement_schematic(fig.add_axes((0, split, 1, 1 - split)))
@@ -172,6 +173,26 @@ def render_replacement(rows: list[dict], base: Path):
     render = save_figure(fig, base, "Figure 2")
     return render, {"status": "PASS", "key_entries": [], "encodings_present": ["baseline filled (primary)"],
                     "row_positions": positions, "delta_min_rows": delta, "annotation_components": components}
+
+
+FIGURE2_DELTA_LIMITS = (-0.15, 0.15)  # P4.47; S1 and S3 keep the pass-3 ±0.45
+
+
+def tighten_delta_axes(axes, rows: list[dict]) -> None:
+    """Figure 2b: narrow the δ axes and move the '= δ_B' note next to the δ_min interval (P4.47)."""
+    low, high = FIGURE2_DELTA_LIMITS
+    bounds = [p3.f(r[k]) for r in rows if r["series"] == "delta"
+              for k in ("parsed_value", "parsed_interval_lower", "parsed_interval_upper") if p3.f(r[k]) is not None]
+    if not bounds or min(bounds) <= low or max(bounds) >= high:
+        raise RuntimeError(f"Figure 2 δ values fall outside {FIGURE2_DELTA_LIMITS}: {min(bounds)} to {max(bounds)}")
+    for row_axes in axes:
+        ax = row_axes[1]
+        ax.set_xlim(low, high)
+        ax.xaxis.set_major_locator(FixedLocator([-0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15]))
+        for text in ax.texts:
+            if text.get_text().startswith("= δ"):
+                x, y = text.get_position()
+                text.set_position((x - 0.08 + 0.015, y))  # p3 placed it 0.08 beyond the δ_min upper bound
 
 
 def label_replacement_axes(axes, alpha_label: str) -> None:

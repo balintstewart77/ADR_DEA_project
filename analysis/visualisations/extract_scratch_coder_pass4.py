@@ -477,7 +477,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Analytical Purposes δₘᵢₙ upper=-0.002141124278556386 (display −0.002); the interval excludes zero [S3T002 interval cell].",
         "Intervals are percentile bootstrap intervals from 2,000 record resamples; their confidence level was not recorded, so they are not labelled 95% [S3T001/S3T002 status cells, confidence unresolved].",
         "The preregistered sensitivity analysis on the register-sufficient subset (n=92) is shown in Figure 4, as the change from this baseline; Figure 3 shows the ratings that define the subset [S3T011/S3T012; Supplementary Table S15a].",
-        "The α axis is 0.15–0.75, rather than the 0–1 scale used in Supplementary Figures S1 and S3 [S3T001, S3T002 interval cells].",
+        "The α axis is 0.15–0.75 and the δ axis −0.15 to +0.15, narrower than the 0–1 and −0.45 to +0.45 scales used in Supplementary Figures S1 and S3 [S3T001, S3T002 interval cells; P4.47].",
         "Research Domains and Analytical Purposes only; the two binary tags are shown in Supplementary Figure S3, and hard-case results in Supplementary Figure S1.",
     ]
     bullets["Figure 3"] = [  # pass-3 Figure 2 caption keys below keep their pass-3 names
