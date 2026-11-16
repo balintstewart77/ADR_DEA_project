@@ -53,8 +53,12 @@ CAPTION_BULLETS = [
     "Rows: α for the all-human panel (ABC) and the three replacement differences δₐ, δᵦ and δ꜀ with δₘᵢₙ, defined as in "
     "Figure 2. The two numbers beside each row label are the full-baseline and subset point estimates. The replacement "
     "panels’ α (LBC, ALC, ABL) and all 16 contrasts are in Supplementary Table S15a [SSC1T002 point cells].",
-    "Intervals are 95% percentile intervals from 10,000 paired record resamples (seed 20261113), as the SSC1 "
-    "specification fixes; they imply no confidence level for the Figure 2 intervals [SSC1T002 interval cells].",
+    "Each point is the difference on the observed data. For the interval, the 150 baseline records were resampled with "
+    "replacement 10,000 times (seed 20261113); in each resample every statistic was computed on all drawn records and on "
+    "the drawn records in the subset, and the subset-minus-full difference taken, so the overlap between subset and "
+    "baseline is built in. The interval spans the 2.5th to 97.5th percentiles of those differences. Coders were not "
+    "resampled. These 95% intervals imply no confidence level for the Figure 2 intervals [SSC1T002 interval cells; "
+    "SSC1 specification §2].",
     "δₘᵢₙ equals δᵦ in both populations and dimensions, so its point contrast equals δᵦ’s; its interval is estimated "
     "separately, as the least favourable of the three in each resample [SSC1T002 cells].",
     "The subset is defined by the coders’ own ratings, and each coder’s use of Unclear from Register Entry depends on "
