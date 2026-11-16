@@ -128,7 +128,7 @@ def boxes(owner: dict[str, int]) -> list[dict]:
     ]
 
 
-LAYERS = [("Freeze and\nexclude", 0.0, 1.92), ("Sampling", 1.92, 3.36), ("Independent\nclassification", 3.36, 4.78),
+LAYERS = [("Freeze and\nexclude", 0.0, 1.92), ("Sampling", 1.92, 3.36), ("Classification\nand review", 3.36, 4.78),
           ("Analysis", 4.78, 6.40), ("Adjudication", 6.40, 7.86), ("Release\ndecision", 7.86, 8.75)]
 HEIGHT = LAYERS[-1][2]
 
