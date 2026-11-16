@@ -1,8 +1,9 @@
 """Figure 1: study design and flow of records (pass-4 log P4.34).
 
 Redraws the Methods flow diagram with the investigator's revisions of 16 November 2026: adjudication is its own
-layer, fed by route 1 (Fable 5 differs from the coder majority), route 2 (owner-flagged) and route 3 (flagged during
-coding or cleaning); the owner column carries its recruitment numbers and an owner-findings box. Adjudication counts
+layer, fed by route 1 (Fable 5 differs from the coder majority) and route 2 (owner-flagged); route 3 (flagged during
+coding or cleaning) contributed no records and is named in the caption only (P4.35). All boxes are outlined alike (P4.35).
+The owner column carries its recruitment numbers and an owner-findings box. Adjudication counts
 are not shown (final N by route still open; the route-2 count would partly reveal owner verdicts before the
 secondary adjudicator's Stage 1).
 
@@ -32,7 +33,6 @@ import matplotlib  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.patches import Rectangle  # noqa: E402
 
-from figure_style import COLOURS  # noqa: E402
 
 SLUG = "figure_1_study_flow"
 FIGURES = REPO / "analysis/figures"
@@ -51,7 +51,6 @@ CODERS = 3
 BODY_PT, TITLE_PT, LAYER_PT = 8.5, 8.5, 9.0
 LINE = "#333333"
 SEPARATOR = "#DDDDDD"
-PRIMARY = COLOURS["baseline"]
 
 W = p3.FIGURE_WIDTH
 X0, X1, GAP = 1.15, W - 0.07, 0.12
@@ -82,7 +81,7 @@ WORDS = {2: "two", 3: "three", 4: "four", 5: "five"}
 
 
 def boxes(owner: dict[str, int]) -> list[dict]:
-    """Every box: x span, y top, height, title, body lines, and whether it is the primary analysis."""
+    """Every box: x span, y top, height, title and body lines."""
     eligible = REGISTER - TRAINING - PILOT
     sampled = BASELINE + HARD
     return [
@@ -110,7 +109,7 @@ def boxes(owner: dict[str, int]) -> list[dict]:
         {"id": "ownerreview", "x": COLS[2], "y": 3.52, "h": 1.10, "title": "Owner review",
          "body": ["Owners judge Fable 5’s", "proposed labels;", f"{owner['consented']} consented, {owner['completing']} completed;",
                   f"{owner['records_complete']} records reviewed", f"(minimum {owner['minimum']}, target {owner['target']})"]},
-        {"id": "primary", "x": COLS[0], "y": 4.94, "h": 1.30, "title": f"Primary: baseline, n = {BASELINE}", "primary": True,
+        {"id": "primary", "x": COLS[0], "y": 4.94, "h": 1.30, "title": f"Primary: baseline, n = {BASELINE}",
          "body": ["Replacement-panel", "Krippendorff’s α (MASI)", "Sensitivity: register-", "sufficient subsets",
                   "Secondary: per-label κ,", "precision, recall, F1; tags"]},
         {"id": "diagnostic", "x": COLS[1], "y": 4.94, "h": 1.30, "title": "Diagnostic: hard cases",
@@ -119,7 +118,7 @@ def boxes(owner: dict[str, int]) -> list[dict]:
          "body": ["Descriptive and", "project-informed;", "reported separately,", "not treated as truth"]},
         {"id": "adjudication", "x": SPAN123, "y": 6.80, "h": 0.92, "title": "Adjudication of selected records",
          "body": ["Route 1: Fable 5 differs from the coder majority (either sample)",
-                  "Route 2: flagged by an owner    Route 3: flagged during coding or cleaning",
+                  "Route 2: flagged by an owner",
                   "Stage 1 source-masked, then Stage 2 source-revealed diagnosis of each disagreement;",
                   "secondary review of a random core plus mandatory records"]},
         {"id": "release", "x": SPAN123, "y": 8.02, "h": 0.62,
@@ -160,8 +159,7 @@ def draw(owner: dict[str, int]) -> tuple[dict, list[dict]]:
     texts = []
     for b in spec.values():
         (x0, x1), y, h = b["x"], b["y"], b["h"]
-        ax.add_patch(Rectangle((x0, y), x1 - x0, h, facecolor="white", edgecolor=PRIMARY if b.get("primary") else LINE,
-                               lw=1.6 if b.get("primary") else 0.9, zorder=2))
+        ax.add_patch(Rectangle((x0, y), x1 - x0, h, facecolor="white", edgecolor=LINE, lw=0.9, zorder=2))
         title = ax.text(mid(b["x"]), y + 0.08, b["title"], ha="center", va="top", fontsize=TITLE_PT, fontweight="bold", zorder=3)
         body = ax.text(mid(b["x"]), y + 0.08 + 0.19, "\n".join(b["body"]), ha="center", va="top", fontsize=BODY_PT,
                        linespacing=1.3, zorder=3)
@@ -227,10 +225,10 @@ def caption_bullets(owner: dict[str, int]) -> list[str]:
         f"{owner['records_complete']} records have an analytically complete review, against a protocol minimum of "
         f"{owner['minimum']} and target of {owner['target']}. Supplementary Figure S6 gives the full recruitment flow "
         "[S6 figure data].",
-        "The adjudication population is the union of three routes: records on which Fable 5 differed from the labelwise coder "
-        "majority on any component (route 1, either sample); records an owner flagged (route 2); and records flagged during "
-        "coding or cleaning (route 3). Counts by route are given in §3.8 [protocol §9; AMD-002; AMD-003].",
-        "The primary analysis (highlighted) is the random baseline; the hard-case sample is diagnostic and never pooled with it. "
+        "Adjudication takes records on which Fable 5 differed from the labelwise coder majority on any component (route 1, "
+        "either sample) and records an owner flagged (route 2). The third preregistered route, records flagged during coding "
+        "or cleaning, contributed no records. Counts by route are given in §3.8 [protocol §9; AMD-002; AMD-003].",
+        "The primary analysis is the random baseline; the hard-case sample is diagnostic and never pooled with it. "
         "Owner review is project-informed and reported separately, and is not treated as the correct answer.",
         "The release decision applies the pre-specified review triggers and decision categories to the analyses and "
         "adjudication; any revision to model, prompt or taxonomy is retested on the held-back reserves.",
