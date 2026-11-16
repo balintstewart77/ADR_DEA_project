@@ -24,9 +24,9 @@ sys.path.insert(0, str(ROOT))
 from analysis.verification_pass2.verify_pass2 import Audit, Missing  # noqa: E402
 
 OUT = Path(__file__).resolve().parent
-LOG_DIR = Path(r"C:\Users\balin\Desktop\DEA_working_logs")
-REV = LOG_DIR / "scratch_coder_figure_revisions_log_pass2.md"
-FIND = LOG_DIR / "scratch_coder_interpretive_findings.md"
+# The decision logs are kept outside the repository: main() resolves these file names against --log-dir.
+REV = Path("scratch_coder_figure_revisions_log_pass2.md")
+FIND = Path("scratch_coder_interpretive_findings.md")
 CONF = ROOT / "analysis/confidence_exploratory/results_confidence.md"
 EXPECTED_HASHES = {
     REV.name: "0711ff9b7e8808dd202d2302738c343d639d50c3c1fb46f6e43891b5e392924f",
@@ -541,8 +541,13 @@ def self_test() -> None:
 
 
 def main() -> None:
-    parser=argparse.ArgumentParser();parser.add_argument("--self-test",action="store_true");args=parser.parse_args()
+    global REV, FIND
+    parser=argparse.ArgumentParser();parser.add_argument("--self-test",action="store_true")
+    parser.add_argument("--log-dir",type=Path,help="folder holding the two decision logs (kept outside the repository)")
+    args=parser.parse_args()
     if args.self_test:self_test();return
+    if args.log_dir is None:raise SystemExit("Hard stop: pass --log-dir")
+    REV,FIND=args.log_dir/REV.name,args.log_dir/FIND.name
     if git("status","--porcelain") and any("analysis/verification_pass2/v9_inventory/" not in x for x in git("status","--porcelain").splitlines()):raise SystemExit("Hard stop: unrelated working-tree changes")
     if not (ROOT/"analysis/scratch_coder_results/results.md").exists():raise SystemExit("Hard stop: results.md missing")
     if not REV.exists() or not FIND.exists():raise SystemExit("Hard stop: external log missing")

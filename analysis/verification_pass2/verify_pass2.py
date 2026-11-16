@@ -495,8 +495,7 @@ def provenance(path):
 
 
 def publish(a):
-    tracked=git('ls-files')[0].splitlines()
-    logs=[p for p in tracked if p.endswith('scratch_coder_figure_revisions_log_pass2.md')]
+    logs=[]  # the governing decision log is kept outside the repository, so it is never among tracked files
     metadata={'run_start_head':START_HEAD,'initial_git_status_porcelain':'','initial_git_warnings':['Git global ignore and .pytest_cache access denied; no porcelain entries'],
       'script_commit':git('log','-1','--format=%H','--','analysis/verification_pass2/verify_pass2.py')[0],
       'script_commit_history':git('log','--format=%H %s','--','analysis/verification_pass2/verify_pass2.py')[0].splitlines(),
