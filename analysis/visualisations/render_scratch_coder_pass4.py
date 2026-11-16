@@ -115,6 +115,42 @@ def matching_components(rows: list[dict], dimensions: tuple[str, ...]) -> dict[s
     return result
 
 
+SCHEMATIC_HEIGHT = 2.10  # inches; Figure 2a (P4.39; widened to separate a and b, for the coder IDs (P4.40), then again)
+SCHEMATIC_IDS = {"A": "C01", "B": "C02", "C": "C03", "L": "Fable 5"}  # notation letter -> name used in the text (P4.40)
+SCHEMATIC_PANELS = (
+    ("All-human panel", "ABC", r"α$_{\mathrm{ABC}}$"),
+    ("Fable 5 replaces A", "LBC", r"δ$_{\mathrm{A}}$ = α$_{\mathrm{LBC}}$ − α$_{\mathrm{ABC}}$"),
+    ("Fable 5 replaces B", "ALC", r"δ$_{\mathrm{B}}$ = α$_{\mathrm{ALC}}$ − α$_{\mathrm{ABC}}$"),
+    ("Fable 5 replaces C", "ABL", r"δ$_{\mathrm{C}}$ = α$_{\mathrm{ABL}}$ − α$_{\mathrm{ABC}}$"),
+)
+
+
+def draw_replacement_schematic(ax) -> None:
+    """Figure 2a: the all-human panel and the three replacement panels, in inches from the top of the strip."""
+    from matplotlib.patches import Circle
+    width = p3.FIGURE_WIDTH
+    ax.set_xlim(0, width); ax.set_ylim(SCHEMATIC_HEIGHT, 0); ax.axis("off")
+    ax.text(0.02, 0.04, "a", ha="left", va="top", fontsize=10, fontweight="bold")
+    left, right = 0.25, width - 0.05
+    column = (right - left) / len(SCHEMATIC_PANELS)
+    for index, (title, members, formula) in enumerate(SCHEMATIC_PANELS):
+        cx = left + column * (index + 0.5)
+        ax.text(cx, 0.08, title, ha="center", va="top", fontsize=8.5, fontweight="bold", color="0.15")
+        for offset, member in zip((-0.42, 0.0, 0.42), members):
+            model = member == "L"
+            ax.add_patch(Circle((cx + offset, 0.50), 0.135, facecolor="#333333" if model else "white",
+                                edgecolor="#333333", linewidth=0.9))
+            ax.text(cx + offset, 0.50, member, ha="center", va="center", fontsize=9, fontweight="bold",
+                    color="white" if model else "#333333")
+            ax.text(cx + offset, 0.72, SCHEMATIC_IDS[member], ha="center", va="top", fontsize=8, color="0.3")
+        ax.text(cx, 1.05, formula, ha="center", va="center", fontsize=9.5, color="0.15")
+        if index == 1:
+            ax.plot([left + column] * 2, [0.06, 1.18], color="#BDBDBD", linewidth=0.7)
+    ax.text(left + (right - left) / 2, 1.42,
+            r"δ$_{\mathrm{min}}$ = min(δ$_{\mathrm{A}}$, δ$_{\mathrm{B}}$, δ$_{\mathrm{C}}$), the least favourable replacement",
+            ha="center", va="center", fontsize=9.5, color="0.15")
+
+
 def render_replacement(rows: list[dict], base: Path):
     """Figure 2 (P4.34): random baseline only (P4.33); the register-sufficient subset is drawn in Figure 4 (P4.37)."""
     populations = ("baseline",)
@@ -123,10 +159,41 @@ def render_replacement(rows: list[dict], base: Path):
     components = matching_components(rows, DIMENSIONS[:2])
     if set(components.values()) != {"delta_B"}:
         raise RuntimeError(f"Figure 2 annotation assumes δ_B; data give {components}")
-    fig, axes, positions, delta = p3.replacement_figure(rows, DIMENSIONS[:2], populations, (0.15, 0.75), 3.75, True)
+    data_height = 3.75
+    fig, axes, positions, delta = p3.replacement_figure(rows, DIMENSIONS[:2], populations, (0.15, 0.75),
+                                                        data_height + SCHEMATIC_HEIGHT, True)
+    # Panel b keeps its pass-4 layout in the lower part of the figure; panel a, the schematic, sits above (P4.39).
+    # x-axis labels on the lower row, which shares each column's scale (P4.41)
+    label_replacement_axes(axes, "Krippendorff’s α (MASI distance)")
+    split = data_height / (data_height + SCHEMATIC_HEIGHT)
+    fig.get_layout_engine().set(rect=(0, 0, 1, split))
+    draw_replacement_schematic(fig.add_axes((0, split, 1, 1 - split)))
+    fig.text(0.004, split - 0.004, "b", ha="left", va="top", fontsize=10, fontweight="bold")
     render = save_figure(fig, base, "Figure 2")
     return render, {"status": "PASS", "key_entries": [], "encodings_present": ["baseline filled (primary)"],
                     "row_positions": positions, "delta_min_rows": delta, "annotation_components": components}
+
+
+def label_replacement_axes(axes, alpha_label: str) -> None:
+    """x-axis labels on the lower row of a replacement figure, which shares each column's scale (P4.41-P4.42)."""
+    axes[-1][0].set_xlabel(alpha_label)
+    axes[-1][1].set_xlabel("δ = replacement α − all-human α")
+
+
+def render_s1(rows: list[dict], base: Path):
+    """The pass-3 Supplementary Figure S1 layout, unchanged, with x-axis labels added (P4.42)."""
+    fig, axes, positions, delta = p3.replacement_figure(rows, p3.DIMENSIONS, ("baseline", "hard_case"), (0.0, 1.02), p3.S1_HEIGHT,
+                                                        False, s1=True, dodge_step=p3.S1_DODGE, hspace=p3.S1_HSPACE)
+    label_replacement_axes(axes, "Krippendorff’s α (MASI; nominal for tags)")
+    fig.suptitle("Hard-case sample: diagnostic, non-representative", fontsize=8.5, fontweight="bold", color="0.15")
+    handles = [Line2D([0], [0], marker="o", color=p3.POPULATION[p]["color"],
+                      markerfacecolor="none" if p3.POPULATION[p]["hollow"] else p3.POPULATION[p]["color"],
+                      markeredgecolor=p3.POPULATION[p]["color"], linewidth=1.2, label=p3.POPULATION[p]["label"])
+               for p in ("baseline", "hard_case")]
+    fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
+    render = save_figure(fig, base, "Supplementary Figure S1", extra_top_pt=p3.S1_EXTRA_TOP_PT)
+    return render, {"status": "PASS", "key_entries": [h.get_label() for h in handles], "encodings_present": ["baseline filled", "hard-case hollow"],
+                    "row_positions": positions, "delta_min_rows": delta, "annotation_components": {}}
 
 
 def render_s3(rows: list[dict], base: Path):
@@ -134,6 +201,7 @@ def render_s3(rows: list[dict], base: Path):
     if components != {"Demographic disparities / equity": "delta_B", "COVID-19 & Pandemic": "delta_A"}:
         raise RuntimeError(f"Supplementary Figure S3 annotation mapping differs from pass-3 rendering: {components}")
     fig, axes, positions, delta = p3.replacement_figure(rows, TAGS, ("baseline",), (0.0, 1.0), 3.75, True)
+    label_replacement_axes(axes, "Krippendorff’s α (nominal distance)")  # P4.42
     counts = {}
     for index, dimension in enumerate(TAGS):
         selected = {r["support_string"] for r in rows if r["dimension"] == dimension}
@@ -609,7 +677,7 @@ def main() -> None:
     rendering, keys, sums = {}, {}, []
     # Carried-forward pass-3 renderers are called unchanged; the text-overlap check covers the figures laid out in pass 4.
     renderers = (("Figure 2", render_replacement), ("Figure 3", p3.render_figure2), ("Figure 5", render_figure3),
-                 ("Supplementary Figure S1", p3.render_s1), ("Supplementary Figure S2", p3.render_s2),
+                 ("Supplementary Figure S1", render_s1), ("Supplementary Figure S2", p3.render_s2),
                  ("Supplementary Figure S3", render_s3), ("Supplementary Figure S4", render_s4))
     for deliverable, function in renderers:
         result = function(datasets[deliverable], figure_dir / manifest["entries"][deliverable]["slug"])
