@@ -122,7 +122,7 @@ def boxes(owner: dict[str, int]) -> list[dict]:
                   "Stage 1 source-masked, then Stage 2 source-revealed diagnosis of each disagreement;",
                   "secondary review of a random core plus mandatory records"]},
         {"id": "release", "x": SPAN123, "y": 8.02, "h": 0.62,
-         "title": "Pre-specified review triggers, decision categories and senior internal sign-off",
+         "title": "Pre-specified review triggers and decision categories",
          "body": ["Draws on the analyses and adjudication; any revision to model, prompt",
                   "or taxonomy is retested on the held-back reserves"]},
     ]

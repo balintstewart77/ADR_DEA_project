@@ -276,6 +276,19 @@ def load_fpr1() -> tuple[dict[str, dict], dict]:
     return rows, metadata
 
 
+def load_fpr1_run() -> tuple[dict, str]:
+    """FPR1 run metadata (requests and failed parse calls), checked against its committed version (P4.65)."""
+    rel = "analysis/fable_production_replicate_exploratory/run_20261110/run_metadata.json"
+    lf = (ROOT / rel).read_bytes().replace(b"\r\n", b"\n")
+    blob = subprocess.run(["git", "show", f"HEAD:{rel}"], cwd=ROOT, capture_output=True, check=True).stdout.replace(b"\r\n", b"\n")
+    if lf != blob:
+        raise RuntimeError("FPR1 run metadata differs from its committed version")
+    meta = json.loads(lf.decode("utf-8"))
+    if int(meta["canonical_records"]) != 1308:
+        raise RuntimeError("FPR1 run metadata canonical record count is not 1,308")
+    return meta, rel
+
+
 def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str, dict]) -> tuple[list[dict], list[dict]]:
     """Supplementary Figure S4 and Supplementary Table S14 rows from the verified metrics files and FPR1T001 (P4.44)."""
     stab_file = str(STABILITY.relative_to(ROOT)).replace("\\", "/")
@@ -354,6 +367,16 @@ def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str
         str(s_metrics["invalid_or_failed_classifications"]), "metrics.invalid_or_failed_classifications", order=20)
     add(table, "Supplementary Table S14", "cross_model", "All components", "invalid_or_failed_classifications",
         str(c_metrics["gpt_invalid_count"]), "comparison.gpt_invalid_count", order=20)
+    run_meta, run_file = load_fpr1_run()  # P4.65: the replicate's parse failures come from its run metadata, not FPR1T001
+    for quantity in ("failed_parse_calls", "requests"):
+        table.append(base_row("Supplementary Table S14", population=panels["replicate"]["population"], dimension="All components",
+                              pair=panels["replicate"]["pair"], series="replicate", quantity=quantity, source_file=run_file,
+                              source_table_id="FPR1 run metadata",
+                              source_section="exploratory full-register replicate (FPR1); post-registration, not preregistered",
+                              source_row_key=quantity, source_column_locator=quantity, source_value_string=str(run_meta[quantity]),
+                              parsed_value=str(run_meta[quantity]), sample_size=panels["replicate"]["n"],
+                              denominator_string="API requests", denominator_unit="requests", source_order=20,
+                              original_status_string="verified run metadata"))
     for stage, block in (("pre_exclusion", cross["pre_exclusion"]), ("post_exclusion", cross["post_exclusion"])):
         for order, (key, value) in enumerate(block.items(), 30 if stage == "pre_exclusion" else 40):
             add(table, "Supplementary Table S14", "cross_model", "Disagreement frame", f"{stage}:{key}", str(value), f"{stage}.{key}", order=order)
@@ -518,7 +541,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Exact-set agreement is the proportion of records with identical label sets (numerator/denominator shown); mean Jaccard is the mean over records of shared labels divided by all labels used. Both are on a 0–1 scale. No intervals were computed.",
         "Both panels cover the same 1,308 records, so they can be read side by side, but the comparison is descriptive. Repeatability does not establish correctness, and agreement between models does not show that either is right.",
         "Whether cross-model disagreement marks records with lower human agreement is assessed separately in the baseline enrichment-calibration analysis (exploratory), not from these percentages.",
-        "Supplementary Table S14 gives the tag metrics, the replicate within the random baseline and hard-case samples, the earlier two-run comparison on a 201-record sample, and the disagreement-frame counts.",
+        "Supplementary Table S14 gives the tag metrics, the replicate within the random baseline and hard-case samples, and the disagreement-frame counts.",
     ]
     bullets["Figure 5 source table"] = [
         "One row per label and dimension; counts are records in the random baseline to which each rater applied the label. Denominator: the 150 valid common records for which all three coders and Fable 5 gave a complete, structurally valid set [LAC1T001 denominator cells].",
@@ -536,7 +559,8 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         f"Production note: means to two decimals; percentages whole numbers (e.g. C03 Analytical Purposes Unclear {by[('Analytical Purposes', 'C03')]['unclear_records']} of 150).",
     ]
     bullets["Supplementary Table S14"] = [  # P4.44
-        "Column A: the full-register Fable 5 replicate against the production run (1,308 records; exploratory, post-registration), with its agreement within the random baseline (150) and the hard-case sample (75, diagnostic). Column A2: the earlier comparison of two Fable 5 runs on a fixed 201-record sample (protocol §4.2). Column B: Fable 5 against GPT-5.5 on the frozen register (protocol §4.3). A and A2 are reported side by side, never pooled [FPR1T001; fable_run_stability_metrics.json; fable5_gpt55_metrics.json].",
+        "Column A: the full-register Fable 5 replicate against the production run (1,308 records; exploratory, post-registration), with its agreement within the random baseline (150) and the hard-case sample (75, diagnostic). Column B: Fable 5 against GPT-5.5 on the frozen register (protocol §4.3) [FPR1T001; fable5_gpt55_metrics.json].",
+        "Invalid or failed classifications: for column A, the replicate's run metadata records failed parse calls over all API requests (each request a batch of up to ten records); a parse failure is a response that did not return the required structured output, which is not the same as a label rejected by the taxonomy validator. For column B, the count of GPT-5.5 classifications that were invalid or failed [FPR1 run metadata; fable5_gpt55_metrics.json].",
         "Agreement cells give records with identical output over records compared; tags are compared as two independent binary facets [count and denominator fields].",
         "The disagreement frame counts records where Fable 5 and GPT-5.5 differed on Research Domains or Analytical Purposes, before and after removing the 22 training and pilot records; tag-only disagreements lie outside the frame [fable5_gpt55_metrics.json pre_exclusion, post_exclusion and exclusions fields].",
         "Descriptive; no intervals.",

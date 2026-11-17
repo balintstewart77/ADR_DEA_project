@@ -573,9 +573,9 @@ def render_s13(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
 
 
 def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
-    """Columns A (full-register replicate), A2 (pre-existing 201-record pair) and B (cross-model); P4.44."""
+    """Columns A (full-register replicate) and B (cross-model); P4.44, with the 201-record pair dropped under P4.63."""
     values = s4_values(rows)
-    series_all = ("replicate", "repeatability", "cross_model")
+    series_all = ("replicate", "cross_model")
     n = {series: int(values[(series, "Research Domains")]["exact_set_count"]["sample_size"]) for series in series_all}
 
     def agreement(series: str, dimension: str, quantity: str = "agreement_count") -> str:
@@ -589,7 +589,13 @@ def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
         return p3.half_up(values[(series, dimension)]["mean_jaccard"]["source_value_string"], 2)
 
     def invalid(series: str) -> str:
-        row = values[(series, "All components")].get("invalid_or_failed_classifications")
+        block = values[(series, "All components")]
+        if series == "replicate":  # P4.65: parse failures from the FPR1 run metadata
+            failed, requests = block.get("failed_parse_calls"), block.get("requests")
+            if failed and requests:
+                return f"{failed['parsed_value']} failed parse calls in {thousands(requests['parsed_value'])} requests"
+            return "Not exported"
+        row = block.get("invalid_or_failed_classifications")
         return row["parsed_value"] if row else "Not exported"
 
     def triple(dimension: str, quantity: str = "agreement_count") -> list[str]:
@@ -599,14 +605,11 @@ def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
     frame = {key.split(":", 1)[1]: int(row["parsed_value"]) for key, row in frame_rows.items() if key.startswith("pre_exclusion:")}
     post = {key.split(":", 1)[1]: int(row["parsed_value"]) for key, row in frame_rows.items() if key.startswith("post_exclusion:")}
     excluded = int(values[("cross_model", "Disagreement frame")]["exclusions_applied"]["parsed_value"])
-    strata = {key.split(":", 1)[1]: int(row["parsed_value"]) for key, row in values[("repeatability", "Sample composition")].items()}
     headers = ["Measure", f"A. Fable 5 full-register replicate versus production ({thousands(n['replicate'])} records)",
-               f"A2. Two Fable 5 runs, fixed sample ({n['repeatability']} records)",
                f"B. Cross-model: Fable 5 versus GPT-5.5 ({thousands(n['cross_model'])} records)"]
     body = [
         ["Records compared"],
         ["Population", "Frozen register, all records; exploratory replicate made after preregistration",
-         f"Fixed sample: {strata['adjudicated']} purposively selected and {strata['random']} random records; before preregistration",
          "Frozen register, all records; before preregistration"],
         ["Research Domains"],
         ["Exact-set agreement, n/N (%)", *triple("Research Domains", "exact_set_count")],
@@ -615,10 +618,10 @@ def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
         ["Exact-set agreement, n/N (%)", *triple("Analytical Purposes", "exact_set_count")],
         ["Mean Jaccard", *(jaccard(series, "Analytical Purposes") for series in series_all)],
         ["Replicate within the validation samples"],
-        ["Random baseline: Research Domains exact-set agreement", agreement("replicate", "Random baseline: Research Domains", "exact_set_count"), "–", "–"],
-        ["Random baseline: Analytical Purposes exact-set agreement", agreement("replicate", "Random baseline: Analytical Purposes", "exact_set_count"), "–", "–"],
-        ["Hard-case sample (diagnostic): Research Domains exact-set agreement", agreement("replicate", "Hard-case sample: Research Domains", "exact_set_count"), "–", "–"],
-        ["Hard-case sample (diagnostic): Analytical Purposes exact-set agreement", agreement("replicate", "Hard-case sample: Analytical Purposes", "exact_set_count"), "–", "–"],
+        ["Random baseline: Research Domains exact-set agreement", agreement("replicate", "Random baseline: Research Domains", "exact_set_count"), "–"],
+        ["Random baseline: Analytical Purposes exact-set agreement", agreement("replicate", "Random baseline: Analytical Purposes", "exact_set_count"), "–"],
+        ["Hard-case sample (diagnostic): Research Domains exact-set agreement", agreement("replicate", "Hard-case sample: Research Domains", "exact_set_count"), "–"],
+        ["Hard-case sample (diagnostic): Analytical Purposes exact-set agreement", agreement("replicate", "Hard-case sample: Analytical Purposes", "exact_set_count"), "–"],
         ["Binary tags and all components"],
         ["COVID-19 & Pandemic agreement, n/N (%)", *triple("COVID-19 & Pandemic")],
         ["Demographic disparities / equity agreement, n/N (%)", *triple("Demographic disparities / equity")],
@@ -626,15 +629,15 @@ def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
         ["All four components agree, n/N (%)", *triple("All four components")],
         ["Invalid or failed classifications", *(invalid(series) for series in series_all)],
         ["Cross-model disagreement frame (Research Domains or Analytical Purposes)"],
-        ["Before exclusions: records (Research Domains only; Analytical Purposes only; both)", "–", "–",
+        ["Before exclusions: records (Research Domains only; Analytical Purposes only; both)", "–",
          f"{frame['total_disagreement']} ({frame['domain_only']}; {frame['purpose_only']}; {frame['both']})"],
-        ["Before exclusions: with an accompanying tag disagreement", "–", "–", str(frame["tag_disagreement_alongside_domain_or_purpose"])],
-        ["Before exclusions: differing on a tag only (outside the frame)", "–", "–", str(frame["tag_only_outside_domain_purpose_frame"])],
-        ["Training and pilot records excluded from the register", "–", "–", str(excluded)],
-        ["After exclusions: records (Research Domains only; Analytical Purposes only; both)", "–", "–",
+        ["Before exclusions: with an accompanying tag disagreement", "–", str(frame["tag_disagreement_alongside_domain_or_purpose"])],
+        ["Before exclusions: differing on a tag only (outside the frame)", "–", str(frame["tag_only_outside_domain_purpose_frame"])],
+        ["Training and pilot records excluded from the register", "–", str(excluded)],
+        ["After exclusions: records (Research Domains only; Analytical Purposes only; both)", "–",
          f"{post['total_disagreement']} ({post['domain_only']}; {post['purpose_only']}; {post['both']})"],
-        ["After exclusions: with an accompanying tag disagreement", "–", "–", str(post["tag_disagreement_alongside_domain_or_purpose"])],
-        ["After exclusions: differing on a tag only (outside the frame)", "–", "–", str(post["tag_only_outside_domain_purpose_frame"])],
+        ["After exclusions: with an accompanying tag disagreement", "–", str(post["tag_disagreement_alongside_domain_or_purpose"])],
+        ["After exclusions: differing on a tag only (outside the frame)", "–", str(post["tag_only_outside_domain_purpose_frame"])],
     ]
     if frame["domain_only"] + frame["purpose_only"] + frame["both"] != frame["total_disagreement"] or \
             post["domain_only"] + post["purpose_only"] + post["both"] != post["total_disagreement"]:
