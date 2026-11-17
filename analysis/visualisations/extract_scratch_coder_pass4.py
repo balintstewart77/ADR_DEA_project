@@ -363,6 +363,23 @@ def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str
     )
     for order, (panel, dimension, count, locator) in enumerate(tags, 10):
         add(table, "Supplementary Table S14", panel, dimension, "agreement_count", str(count), locator, order=order)
+    # P4.66: cross-model all-four-component agreement, derived from exported counts (records with no difference on
+    # domains, purposes or either tag). Every identity below must hold, or the derivation is refused.
+    pre, n_c = cross["pre_exclusion"], c_metrics["n"]
+    identities = (
+        pre["domain_only"] + pre["both"] == n_c - c_metrics["domain_exact_count"],
+        pre["purpose_only"] + pre["both"] == n_c - c_metrics["purpose_exact_count"],
+        pre["domain_only"] + pre["purpose_only"] + pre["both"] == pre["total_disagreement"],
+        pre["tag_disagreement_alongside_domain_or_purpose"] + pre["tag_only_outside_domain_purpose_frame"]
+        == c_metrics["tag_mismatch_count"] == n_c - c_metrics["joint_tag_match_count"],
+    )
+    if not all(identities):
+        raise RuntimeError("Cross-model counts do not reconcile; all-four-component agreement not derived")
+    all_four = n_c - pre["total_disagreement"] - pre["tag_only_outside_domain_purpose_frame"]
+    add(table, "Supplementary Table S14", "cross_model", "All four components", "agreement_count", str(all_four),
+        "comparison.n - pre_exclusion.total_disagreement - pre_exclusion.tag_only_outside_domain_purpose_frame",
+        numerator=f"{n_c} - {pre['total_disagreement']} - {pre['tag_only_outside_domain_purpose_frame']}",
+        derivation="P4.D-allfour: records minus domain-or-purpose disagreements minus tag-only disagreements", order=14)
     add(table, "Supplementary Table S14", "repeatability", "All components", "invalid_or_failed_classifications",
         str(s_metrics["invalid_or_failed_classifications"]), "metrics.invalid_or_failed_classifications", order=20)
     add(table, "Supplementary Table S14", "cross_model", "All components", "invalid_or_failed_classifications",
@@ -562,6 +579,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Column A: the full-register Fable 5 replicate against the production run (1,308 records; exploratory, post-registration), with its agreement within the random baseline (150) and the hard-case sample (75, diagnostic). Column B: Fable 5 against GPT-5.5 on the frozen register (protocol §4.3) [FPR1T001; fable5_gpt55_metrics.json].",
         "Invalid or failed classifications: for column A, the replicate's run metadata records failed parse calls over all API requests (each request a batch of up to ten records); a parse failure is a response that did not return the required structured output, which is not the same as a label rejected by the taxonomy validator. For column B, the count of GPT-5.5 classifications that were invalid or failed [FPR1 run metadata; fable5_gpt55_metrics.json].",
         "Agreement cells give records with identical output over records compared; tags are compared as two independent binary facets [count and denominator fields].",
+        "All four components agree, column B, is derived from exported counts: the 1,308 records minus the 386 with a domain or purpose disagreement and the 37 that differ on a tag only; the extractor checks that these counts reconcile with the exact-set and tag counts [fable5_gpt55_metrics.json comparison and pre_exclusion fields].",
         "The disagreement frame counts records where Fable 5 and GPT-5.5 differed on Research Domains or Analytical Purposes, before and after removing the 22 training and pilot records; tag-only disagreements lie outside the frame [fable5_gpt55_metrics.json pre_exclusion, post_exclusion and exclusions fields].",
         "Descriptive; no intervals.",
         "Percentages are whole numbers; values of at least 99.5% but below 100% display as >99%.",
