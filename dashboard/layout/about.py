@@ -144,8 +144,11 @@ The "Datasets Used" free-text field is parsed into individual dataset entries:
 ### LLM Thematic Analysis Methodology
 
 **Note:** The Thematic Analysis tab is **experimental**. Classifications are
-LLM-generated and have not yet been systematically validated against expert
-review.
+LLM-generated. They were validated against trained coders and examined through
+structured adjudication of disagreements: domain views can be used with
+caveats, and purpose views are exploratory. Labels are not verified facts about
+each project, and projects accredited after the validation snapshot were not
+part of the validation.
 
 A separate analysis script (`llm_theme_analysis_v3.py`) classifies each project
 from its title and datasets using substantive domains, analytical purpose, and
