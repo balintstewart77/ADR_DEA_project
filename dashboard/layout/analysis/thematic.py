@@ -322,7 +322,8 @@ the entire register a second time and comparing the two passes.
 
 _thematic_layers_md = f"""
 These classifications are LLM-inferred from project titles and dataset names.
-They are indicative rather than definitive, pending validation.
+They were validated against trained coders: domain views can be used with caveats,
+and purpose views are exploratory.
 
 #### Substantive Domain (1 or more per project)
 
@@ -356,7 +357,7 @@ def _latent_demand_accordion_item() -> dbc.AccordionItem:
             dbc.Alert([
                 html.Strong("Indicative — mixed analytical layers."),
                 " This is the dashboard's first deliberately mixed-layer figure: substantive "
-                "domains are LLM-inferred (unvalidated, pending validation), while the "
+                "domains are LLM-inferred (validated against trained coders, usable with caveats), while the "
                 "no-record-linkage filter is deterministic. Treat the cell values as "
                 "indicative rather than definitive.",
             ], color="warning", className="mb-3"),
@@ -900,11 +901,14 @@ def build_thematic_tab():
                 " (record linkage, collection method, temporal structure, unit, and researcher sector) "
                 "are controlled-vocabulary lookups: exact and reproducible. ",
                 html.Strong("LLM classifications"),
-                " (substantive domain, analytical purpose, and cross-cutting tags) are inferred by "
+                " (substantive domain, analytical purpose, and cross-cutting tags) are outputs of "
                 # The model recorded in the live run's metadata, as on the About page.
-                "Claude (", html.Code(RELEASE_MODEL), ") from project titles and dataset names "
-                "only. They are indicative rather than definitive, pending validation, and "
-                "ambiguous or terse titles may be misclassified.",
+                "Claude (", html.Code(RELEASE_MODEL), ") from project titles and dataset names only. "
+                "They were validated against trained coders and examined through structured adjudication "
+                "of disagreements. Domain views can be used with caveats; purpose views are exploratory. "
+                "Labels are not verified facts about each project: every classified project can be checked "
+                "against its register entry in the Project Explorer. Projects accredited after the validation "
+                "snapshot are classified the same way but were not part of the validation.",
             ], color="warning", className="mb-3 mt-2"),
 
             # Summary stats
