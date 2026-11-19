@@ -79,7 +79,7 @@ TITLES = {
     "Supplementary Figure S3": "Binary-tag replacement agreement in the random baseline",
     "Supplementary Figure S4": "Same-model repeatability and cross-model agreement (descriptive analyses)",
     "Figure 3 source table": "Label application counts by each coder and Fable 5, random baseline (source data for Figure 3)",
-    "Supplementary Table S13": "Label-set cardinality and abstention by rater, random baseline",
+    "Supplementary Table S13": "Label-set cardinality and use of Unclear by rater, random baseline",
     "Supplementary Table S14": "Same-model repeatability and cross-model agreement: all exported metrics",
 }
 # Pass-3 figure data carried forward, by pass-4 deliverable.
@@ -537,7 +537,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Markers with identical or adjacent counts are offset vertically within their row so that each stays visible; horizontal positions are the exact counts.",
         f"{placement_text(placement)} [LAC1T001 placement cells]. A count outside the coders’ range is not evidence of over-labelling, under-labelling or error, and a count inside it does not show record-level agreement.",
         "Marginal counts do not show whether raters labelled the same records. Majority-referenced contingencies (Tables 3–4) are a different estimand: a labelwise majority set can contain more or fewer labels than individual sets.",
-        "Unclear from Register Entry (declined to classify) is plotted below the substantive labels in each panel. All labels are shown, including those with zero applications.",
+        "Unclear from Register Entry is plotted below the substantive labels in each panel. All labels are shown, including those with zero applications.",
         "Rows keep the order of the former label-application figure: descending number of records to which the coder majority applied the label, ties alphabetical; the majority itself is not plotted [S5T001/S5T002 coder-majority-positive cells].",
         "Coder counts are exploratory descriptive summaries, not preregistered (specification dated 3 November 2026); Supplementary Table S13 gives labels per record and Unclear use by rater.",
     ]

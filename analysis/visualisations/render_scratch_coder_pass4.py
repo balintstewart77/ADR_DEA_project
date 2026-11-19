@@ -34,7 +34,7 @@ ARCHIVE_NAME = "pass4_preexisting_7e77c47"
 DIMENSIONS = p3.DIMENSIONS
 TAGS = DIMENSIONS[2:]
 UNCLEAR = "Unclear from Register Entry"
-UNCLEAR_NAME = "Unclear from Register Entry (declined to classify)"
+UNCLEAR_NAME = "Unclear from Register Entry"  # P4.94: no "declined to classify" gloss
 CODERS = ("C01", "C02", "C03")
 RATERS = (*CODERS, "Fable 5")
 # Figure 3 encodings: coders are small hollow shapes in one neutral colour; Fable 5 is the only
