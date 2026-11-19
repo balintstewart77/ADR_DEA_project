@@ -2,9 +2,10 @@
 
 Reads ``taxonomy_data_dictionary.yaml``, checked against its committed version in git and against the hash of the frozen
 dictionary used in validation (dict-1.0-rc2, SHA-256 7ddbf1bb…, as recorded in the Stage B run metadata). The table
-lists the active labels of each layer in dictionary order, with Unclear from Register Entry last, in three columns:
-Research Domains, Analytical Purposes and cross-cutting tags. Definitions and rules are not reproduced; they are in the
-dictionary itself.
+lists the active labels of each layer in dictionary order, with Unclear from Register Entry last, in two columns
+(Research Domains and Analytical Purposes), followed by one full-width row giving the cross-cutting tags, which are a
+yes/no for every record rather than a third label list (P4.91). Definitions and rules are not reproduced; they are in
+the dictionary itself.
 
 Writes ``analysis/tables/table_1_taxonomy.{md,csv}`` and copies them to ``DEA_paper/tables/`` (both gitignored).
 Run from the repository root:  python -m analysis.visualisations.taxonomy_table_1
@@ -32,7 +33,7 @@ OUT, PAPER = REPO / "analysis/tables", REPO / "DEA_paper/tables"
 UNCLEAR = "Unclear from Register Entry"
 LAYERS = (("Layer A -- domain", "Research Domains (one or more)"),
           ("Layer C -- purpose", "Analytical Purposes (one or two)"),
-          ("Cross-cutting tag", "Cross-cutting tags (each yes or no)"))
+          ("Cross-cutting tag", "Cross-cutting tags (yes/no for every record)"))
 TAG_DISPLAY = {"Demographic disparities / equity tag": "Demographic disparities / equity"}
 
 
@@ -61,9 +62,15 @@ def build() -> tuple[str, list[list[str]]]:
     counts = [len([lab for lab in col if lab != UNCLEAR]) for col in columns]
     if counts != [11, 7, 2] or any(UNCLEAR not in col for col in columns[:2]):
         raise SystemExit(f"Unexpected label counts {counts}")
-    head = [title for _, title in LAYERS]
-    body = [list(row) for row in zip_longest(*columns, fillvalue="")]
-    return p3.html_table(head, body), [head] + body
+    head = [title for _, title in LAYERS[:2]]
+    body = [list(row) for row in zip_longest(*columns[:2], fillvalue="")]
+    tag_title, tags = LAYERS[2][1], "; ".join(columns[2])
+    tag_row = f'    <tr><td colspan="2"><strong>{tag_title}:</strong> {tags}</td></tr>'
+    html = p3.html_table(head, body)
+    if html.count("  </tbody>") != 1:
+        raise SystemExit("Unexpected table markup")
+    html = html.replace("  </tbody>", tag_row + "\n  </tbody>")
+    return html, [head] + body + [[f"{tag_title}: {tags}", ""]]
 
 
 def main() -> None:
