@@ -3,9 +3,11 @@
 Redraws the Methods flow diagram with the investigator's revisions of 16 November 2026: adjudication is its own
 layer, fed by route 1 (Fable 5 differs from the coder majority) and route 2 (owner-flagged); route 3 (flagged during
 coding or cleaning) contributed no records and is named in the caption only (P4.35). All boxes are outlined alike (P4.35).
-The owner column carries its recruitment numbers and an owner-findings box. Adjudication counts
-are not shown (final N by route still open; the route-2 count would partly reveal owner verdicts before the
-secondary adjudicator's Stage 1).
+The owner column carries its recruitment numbers and an owner-findings box. P4.92: the release-decision layer is
+removed (the figure shows the flow of records; the release rule is in the Methods and Supplementary Table S19), and
+the adjudication box gives the route-1 counts by sample, read from the route-1 component and the official sampling
+draw (aggregate counts only), and the route-2 count and final N from the route-2 receipt (ADJ-106). The draft is not
+shown to the secondary adjudicator until the secondary review is complete.
 
 Register, exclusion and sample numbers are carried from the earlier diagram (protocol §5; manuscript §2.4). Owner
 numbers are read from the Supplementary Figure S6 figure data (restricted, aggregate counts only) and checked.
@@ -41,6 +43,9 @@ PAPER = REPO / "DEA_paper/figures"
 CAPTIONS = FIGURES / "draft_captions_pass4.md"
 OWNER_DATA = (REPO / "preregistration_restricted/owner_responses/analysis/recruitment_flow"
               / "supplementary_figure_s6_owner_recruitment_flow_data.csv")
+ROUTE1 = REPO / "preregistration_restricted/adjudication_route1_component.csv"
+DRAW = REPO / "preregistration_restricted/sampling/official_draw_20260724"
+ROUTE2 = REPO / "preregistration_restricted/adjudication_formal/route2/route2_receipt.json"
 TITLE = "Study design and flow of records"
 
 # Carried from the earlier diagram (protocol §5; manuscript §2.4).
@@ -77,10 +82,44 @@ def owner_numbers() -> dict[str, int]:
     return numbers
 
 
+def route1_numbers() -> dict[str, int]:
+    """Route-1 eligibility by sample: aggregate counts from the route-1 component and the official draw."""
+    family = {}
+    for name, label in (("baseline_active.csv", "baseline"), ("hard_active.csv", "hard")):
+        for row in csv.DictReader((DRAW / name).open(encoding="utf-8")):
+            family[row["record_id"]] = label
+    lines = [ln for ln in ROUTE1.open(encoding="utf-8") if not ln.startswith("#")]
+    rows = list(csv.DictReader(lines))
+    if len(rows) != BASELINE + HARD or any(r["source_record_id"] not in family for r in rows):
+        raise SystemExit("Route-1 component does not match the coded samples")
+    if any(r["qa_flagged"] != "0" for r in rows if r["route1_eligible"] == "1"):
+        raise SystemExit("A QA-flagged record is marked route-1 eligible")
+    eligible = [r for r in rows if r["route1_eligible"] == "1"]
+    samples = [family[r["source_record_id"]] for r in eligible]
+    numbers = {"baseline": samples.count("baseline"), "hard": samples.count("hard"), "total": len(eligible),
+               "empty_reference": sum(1 for r in eligible if r["stratum"] == "3")}
+    if (numbers["baseline"], numbers["hard"], numbers["total"], numbers["empty_reference"]) != (114, 72, 186, 22):
+        raise SystemExit(f"Route-1 counts differ from the adjudication record (ADJ-038, ADJ-067): {numbers}")
+    return numbers
+
+
+def route2_numbers(route1_total: int, owner_reviewed: int) -> dict[str, int]:
+    """Route-2 counts from the route-2 receipt (ADJ-106), with the final N."""
+    receipt = json.loads(ROUTE2.read_text(encoding="utf-8"))
+    numbers = {"qualifying": receipt["qualifying_records"], "overlap": receipt["overlap_with_route1"],
+               "added": receipt["records"], "owner_reviewed": owner_reviewed}
+    if numbers["added"] != numbers["qualifying"] - numbers["overlap"] or numbers["qualifying"] > owner_reviewed:
+        raise SystemExit(f"Route-2 receipt is inconsistent: {numbers}")
+    numbers["total"] = route1_total + numbers["added"]
+    if (numbers["qualifying"], numbers["overlap"], numbers["added"], numbers["total"]) != (17, 4, 13, 199):
+        raise SystemExit(f"Route-2 counts differ from the adjudication record (ADJ-106, ADJ-119): {numbers}")
+    return numbers
+
+
 WORDS = {2: "two", 3: "three", 4: "four", 5: "five"}
 
 
-def boxes(owner: dict[str, int]) -> list[dict]:
+def boxes(owner: dict[str, int], route1: dict[str, int], route2: dict[str, int]) -> list[dict]:
     """Every box: x span, y top, height, title and body lines."""
     eligible = REGISTER - TRAINING - PILOT
     sampled = BASELINE + HARD
@@ -116,20 +155,17 @@ def boxes(owner: dict[str, int]) -> list[dict]:
          "body": [f"n = {HARD}", "Same metrics; not used", "for register-wide estimates"]},
         {"id": "ownerfindings", "x": COLS[2], "y": 4.94, "h": 1.30, "title": "Project-owner findings",
          "body": ["Descriptive and", "project-informed;", "reported separately,", "not treated as truth"]},
-        {"id": "adjudication", "x": SPAN123, "y": 6.80, "h": 0.92, "title": "Adjudication of selected records",
-         "body": ["Route 1: Fable 5 differs from the coder majority (either sample)",
-                  "Route 2: flagged by an owner",
+        {"id": "adjudication", "x": SPAN123, "y": 6.80, "h": 1.12, "title": f"Adjudication of {route2['total']} records",
+         "body": ["Route 1: Fable 5 differs from the labelwise coder majority on any component;",
+                  f"{route1['baseline']} of {BASELINE} baseline and {route1['hard']} of {HARD} hard-case records ({route1['total']})",
+                  f"Route 2: flagged by an owner; {route2['qualifying']} of {route2['owner_reviewed']} reviewed records, {route2['added']} not in route 1",
                   "Stage 1 source-masked, then Stage 2 source-revealed diagnosis of each disagreement;",
                   "secondary review of a random core plus mandatory records"]},
-        {"id": "release", "x": SPAN123, "y": 8.02, "h": 0.62,
-         "title": "Pre-specified review criteria and decision categories",
-         "body": ["Draws on the analyses and adjudication; any revision to model, prompt",
-                  "or taxonomy is retested on the held-back reserves"]},
     ]
 
 
 LAYERS = [("Freeze and\nexclude", 0.0, 1.92), ("Sampling", 1.92, 3.36), ("Classification\nand review", 3.36, 4.78),
-          ("Analysis", 4.78, 6.40), ("Adjudication", 6.40, 7.86), ("Release\ndecision", 7.86, 8.75)]
+          ("Analysis", 4.78, 6.40), ("Adjudication", 6.40, 8.06)]
 HEIGHT = LAYERS[-1][2]
 
 
@@ -146,7 +182,7 @@ def line(ax, xs, ys) -> None:
     ax.plot(xs, ys, color=LINE, lw=0.9, solid_capstyle="butt")
 
 
-def draw(owner: dict[str, int]) -> tuple[dict, list[dict]]:
+def draw(owner: dict[str, int], route1: dict[str, int], route2: dict[str, int]) -> tuple[dict, list[dict]]:
     fig = plt.figure(figsize=(W, HEIGHT))
     ax = fig.add_axes((0, 0, 1, 1))
     ax.set_xlim(0, W); ax.set_ylim(HEIGHT, 0); ax.axis("off")
@@ -155,7 +191,7 @@ def draw(owner: dict[str, int]) -> tuple[dict, list[dict]]:
         if top > 0:
             line_artist = ax.plot([0.07, W - 0.07], [top, top], color=SEPARATOR, lw=0.7)
             line_artist[0].set_zorder(0)
-    spec = {b["id"]: b for b in boxes(owner)}
+    spec = {b["id"]: b for b in boxes(owner, route1, route2)}
     texts = []
     for b in spec.values():
         (x0, x1), y, h = b["x"], b["y"], b["h"]
@@ -191,8 +227,6 @@ def draw(owner: dict[str, int]) -> tuple[dict, list[dict]]:
         arrow(ax, mid(col), bottom(box_id), spec["adjudication"]["y"])
         texts.append({"box": None, "artists": [ax.text(mid(col) + 0.07, (bottom(box_id) + spec["adjudication"]["y"]) / 2, route,
                                                        ha="left", va="center", fontsize=BODY_PT, color="0.25")]})
-    # Adjudication to release
-    arrow(ax, mid(SPAN123), bottom("adjudication"), spec["release"]["y"])
 
     # Hard stop: every box's text sits inside its box, with 3 pt to spare
     fig.canvas.draw(); renderer = fig.canvas.get_renderer()
@@ -214,7 +248,7 @@ def draw(owner: dict[str, int]) -> tuple[dict, list[dict]]:
     return p3.save_figure(fig, FIGURES / SLUG, "Figure 1", tight=False), list(spec.values())
 
 
-def caption_bullets(owner: dict[str, int]) -> list[str]:
+def caption_bullets(owner: dict[str, int], route1: dict[str, int], route2: dict[str, int]) -> list[str]:
     return [
         f"Register snapshot, exclusions, the random baseline ({BASELINE} analysed, {BASELINE_RESERVE} held back) and the hard-case "
         f"sample ({HARD} analysed from {HARD_POOL} Fable 5 vs GPT-5.5 disagreements in three strata of {STRATUM}; {HARD_RESERVE} held "
@@ -225,13 +259,16 @@ def caption_bullets(owner: dict[str, int]) -> list[str]:
         f"{owner['records_complete']} records have an analytically complete review, against a protocol minimum of "
         f"{owner['minimum']} and target of {owner['target']}. Supplementary Figure S6 gives the full recruitment flow "
         "[S6 figure data].",
-        "Adjudication takes records on which Fable 5 differed from the labelwise coder majority on any component (route 1, "
-        "either sample) and records an owner flagged (route 2). The third preregistered route, records flagged during coding "
-        "or cleaning, contributed no records. Counts by route are given in §3.8 [protocol §9; AMD-002; AMD-003].",
+        "Adjudication takes records on which Fable 5 differed from the labelwise coder majority on any component (route 1: "
+        f"{route1['baseline']} of {BASELINE} baseline and {route1['hard']} of {HARD} hard-case records, {route1['total']} in all, "
+        f"{route1['empty_reference']} of them only because no coder majority formed on the differing component) and records an "
+        f"owner flagged (route 2: {route2['qualifying']} of the {route2['owner_reviewed']} owner-reviewed records, {route2['overlap']} "
+        f"of them already in route 1), {route2['total']} records in all. Records on which only the coders disagreed are not "
+        "eligible. The third preregistered route, records flagged during coding or cleaning, contributed no records [protocol "
+        "§9; ADJ-038, ADJ-063, ADJ-067, ADJ-106; route-1 component; route-2 receipt].",
         "The primary analysis is the random baseline; the hard-case sample is diagnostic and never pooled with it. "
         "Owner review is project-informed and reported separately, and is not treated as the correct answer.",
-        "The release decision applies the pre-specified review triggers and decision categories to the analyses and "
-        "adjudication; any revision to model, prompt or taxonomy is retested on the held-back reserves.",
+        "Any revision to model, prompt or taxonomy is retested on the held-back reserves.",
     ]
 
 
@@ -247,9 +284,10 @@ def update_captions(bullets: list[str]) -> None:
 
 
 def main() -> None:
-    owner = owner_numbers()
-    metrics, drawn = draw(owner)
-    bullets = caption_bullets(owner)
+    owner, route1 = owner_numbers(), route1_numbers()
+    route2 = route2_numbers(route1["total"], owner["records_complete"])
+    metrics, drawn = draw(owner, route1, route2)
+    bullets = caption_bullets(owner, route1, route2)
     rendered = metrics["rendered_text"]
     banned = p3.banned_check_text(rendered + bullets + [TITLE], "Figure 1")
     ascii_minus = [t for t in rendered + bullets if re.search(r"(?<![A-Za-z0-9])-(?=\d)", t)]
@@ -261,6 +299,10 @@ def main() -> None:
         "deliverable": "Figure 1", "decision_log": "pass-4 P4.34 (16 November 2026)",
         "owner_input": {"path": str(OWNER_DATA.relative_to(REPO)).replace("\\", "/"),
                         "sha256": hashlib.sha256(OWNER_DATA.read_bytes()).hexdigest(), "values": owner},
+        "route1_input": {"path": str(ROUTE1.relative_to(REPO)).replace("\\", "/"),
+                         "sha256": hashlib.sha256(ROUTE1.read_bytes()).hexdigest(), "values": route1},
+        "route2_input": {"path": str(ROUTE2.relative_to(REPO)).replace("\\", "/"),
+                         "sha256": hashlib.sha256(ROUTE2.read_bytes()).hexdigest(), "values": route2},
         "carried_numbers": {"register": REGISTER, "project_ids": PROJECT_IDS, "excluded_training": TRAINING,
                             "excluded_pilot": PILOT, "baseline": BASELINE, "baseline_reserve": BASELINE_RESERVE,
                             "hard_case_pool": HARD_POOL, "hard_case": HARD, "hard_case_reserve": HARD_RESERVE,
