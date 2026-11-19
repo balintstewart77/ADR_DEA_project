@@ -1,12 +1,12 @@
-"""Table 1 and Supplementary Table S18: Fable 5 against the coder-majority set by human consensus state, random
-baseline (CST1; exploratory). Pass-4 log P4.59 (supersedes the single Table 4 of P4.31).
+"""Table 2 and Supplementary Table S18: Fable 5 against the coder-majority set by human consensus state, random
+baseline (CST1; exploratory). Pass-4 log P4.59 (supersedes the single Table 4 of P4.31); renumbered Table 2 under P4.81.
 
 Reads CST1T001-T010 from ``analysis/consensus_state_exploratory/`` (addendum ``ADDENDUM_consensus_state.md``,
 2026-09-18; exploratory, post-registration). Each input must match its committed version in git, allowing for
 line endings, because the run metadata records no output hashes. Display rounding only: whole-number
 percentages (H.10), two decimals for mean Jaccard, Unicode minus (H.9).
 
-Table 1 (main text) gives every state the same columns: the records in the state and, as counts with
+Table 2 (main text) gives every state the same columns: the records in the state and, as counts with
 within-state percentages, how Fable 5's set related to the labelwise coder-majority set on each record (same set;
 majority set plus extra labels; part of the majority set only; some labels shared; no label shared) or, where
 coders had no agreed substantive set, whether Fable 5 assigned a substantive label. In the majority-Unclear state,
@@ -18,9 +18,9 @@ intervals, and, for majority with dissent, how often Fable 5's set was a strict 
 majority set. Where it does not (majority Unclear; no agreed label), it gives Fable 5's use of Unclear and how
 many of its label assignments any coder also applied.
 
-Writes ``analysis/tables/table_1_consensus_state_baseline.{md,csv}`` and
+Writes ``analysis/tables/table_2_consensus_state_baseline.{md,csv}`` and
 ``analysis/tables/supplementary_table_s18_consensus_state_intervals.{md,csv}``, with copies in ``DEA_paper/tables/``.
-Run from the repository root:  python -m analysis.visualisations.cst1_table_1
+Run from the repository root:  python -m analysis.visualisations.cst1_table_2
 """
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import render_scratch_coder_pass3 as p3  # noqa: E402
 
 CST = REPO / "analysis/consensus_state_exploratory"
-SLUG = "table_1_consensus_state_baseline"
+SLUG = "table_2_consensus_state_baseline"
 SLUG_S18 = "supplementary_table_s18_consensus_state_intervals"
 STATE_ROWS = {"S1": "All three coders gave the same set", "S2": "Labels applied by two coders, with dissent",
               "S3": "Two or more coders chose Unclear", "S4": "No label applied by two coders"}
@@ -104,7 +104,7 @@ def build_uniform() -> tuple[str, list[list[str]]]:
             else:
                 unclear = counts_of(q["model_unclear"])[0]
                 if unclear:
-                    raise SystemExit(f"{d} S4: Fable 5 Unclear on {unclear} records; Table 1 has no column for it")
+                    raise SystemExit(f"{d} S4: Fable 5 Unclear on {unclear} records; Table 2 has no column for it")
                 lab = sum(counts_of(q[k])[0] for k in ("card_1", "card_2", "card_3plus"))
                 cells, total = ["–"] * 5 + [count_pct(lab, n)], lab
             if total != n:
@@ -173,7 +173,7 @@ def main() -> None:
     html, flat, _ = build()
     write(SLUG_S18, html, flat)
     head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO, capture_output=True, text=True).stdout.strip()
-    print(f"Table 1 and Supplementary Table S18 written to {OUT.relative_to(REPO)} and copied to {PAPER.relative_to(REPO)} "
+    print(f"Table 2 and Supplementary Table S18 written to {OUT.relative_to(REPO)} and copied to {PAPER.relative_to(REPO)} "
           f"(CST1 inputs match HEAD {head}); checks passed")
 
 
