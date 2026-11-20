@@ -8,8 +8,7 @@ Reads, each checked against its committed version in git (allowing for line endi
   — the same quantities for all 75 hard cases (Stage A; S3T007, S3T008).
 
 Rows: for each dimension, all 75 hard cases, then the three strata. Display rounding only: three decimals, Unicode
-minus. Interval for delta_min only: percentile bootstrap from 2,000 record resamples, Stage A conventions; its
-confidence level is not labelled 95%. Writes ``analysis/tables/supplementary_table_s16_hard_case_strata.{md,csv}``
+minus. Interval for delta_min only: 95% percentile bootstrap from 2,000 record resamples, Stage A conventions. Writes ``analysis/tables/supplementary_table_s16_hard_case_strata.{md,csv}``
 and a copy in ``DEA_paper/tables/`` (both gitignored).
 
 Run from the repository root:  python -m analysis.visualisations.hard_case_table_s16

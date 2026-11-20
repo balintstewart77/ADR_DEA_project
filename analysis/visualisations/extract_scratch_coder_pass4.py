@@ -515,7 +515,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "ABC is the all-human panel (C01, C02, C03); LBC, ALC and ABL are the panels in which Fable 5 replaces C01, C02 and C03 respectively. δₐ = LBC − ABC, δᵦ = ALC − ABC and δ꜀ = ABL − ABC; each δ sits level with the panel it measures. δₘᵢₙ is the least favourable of the three and sits level with ABC [S3T001/S3T002 row cells].",
         "The annotation beside δₘᵢₙ identifies δᵦ as the component whose point estimate equals δₘᵢₙ in both dimensions. The δₘᵢₙ interval is estimated separately and can differ from δᵦ’s interval [S3T001/S3T002 point-estimate and interval cells].",
         "Analytical Purposes δₘᵢₙ upper=-0.002141124278556386 (display −0.002); the interval excludes zero [S3T002 interval cell].",
-        "Intervals are percentile bootstrap intervals from 2,000 record resamples; their confidence level was not recorded, so they are not labelled 95% [S3T001/S3T002 status cells, confidence unresolved].",
+        "Intervals are 95% percentile bootstrap intervals from 2,000 record resamples [S3T001/S3T002 interval cells; bootstrap_replicates.csv].",
         "The preregistered sensitivity analysis on the register-sufficient subset (n=92) is shown in Supplementary Figure S8, as the change from this baseline; Figure 4 shows the ratings that define the subset [S3T011/S3T012; Supplementary Table S15a].",
         "The α axis is 0.15–0.75 and the δ axis −0.15 to +0.15, narrower than the 0–1 and −0.45 to +0.45 scales used in Supplementary Figures S1 and S3 [S3T001, S3T002 interval cells; P4.47].",
         "Research Domains and Analytical Purposes only; the two binary tags are shown in Supplementary Figure S3, and hard-case results in Supplementary Figure S1.",
@@ -550,7 +550,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         old["Figure 1"][2],
         "For Demographic disparities / equity, all three replacement-difference point estimates are below zero and the δₘᵢₙ interval lies entirely below zero, so both preregistered review indicators were met; every component interval crosses zero [S4T003; S2T001 estimate and interval cells].",
         old["Figure 1"][3],
-        "Intervals are percentile bootstrap intervals from 2,000 record resamples; their confidence level was not recorded, so they are not labelled 95% [S2T001/S2T002 status cells, confidence unresolved].",
+        "Intervals are 95% percentile bootstrap intervals from 2,000 record resamples [S2T001/S2T002 interval cells; bootstrap_replicates.csv].",
     ]
     bullets["Supplementary Figure S4"] = [  # P4.44: panel A is the full-register replicate
         "A, same-model repeatability: a second Fable 5 run over the whole frozen register (1,308 records), made on 10 November 2026 under the production conditions (same code, input, model, prompt dict-1.0-rc2, taxonomy and request settings), compared with the production run. Post-registration and exploratory [FPR1T001 full-register row; FPR1 specification].",
