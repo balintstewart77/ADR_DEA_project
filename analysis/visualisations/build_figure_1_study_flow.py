@@ -4,13 +4,13 @@ Redraws the Methods flow diagram with the investigator's revisions of 16 Novembe
 layer, fed by route 1 (Fable 5 differs from the coder majority) and route 2 (owner-flagged); route 3 (flagged during
 coding or cleaning) contributed no records and is named in the caption only (P4.35). All boxes are outlined alike (P4.35).
 The owner column carries its recruitment numbers and an owner-findings box. P4.92: the release-decision layer is
-removed (the figure shows the flow of records; the release rule is in the Methods and Supplementary Table S19), and
+removed (the figure shows the flow of records; the release rule is in the Methods and Supplementary Table S15), and
 the adjudication box gives the route-1 counts by sample, read from the route-1 component and the official sampling
 draw (aggregate counts only), and the route-2 count and final N from the route-2 receipt (ADJ-106). The draft is not
 shown to the secondary adjudicator until the secondary review is complete.
 
 Register, exclusion and sample numbers are carried from the earlier diagram (protocol §5; manuscript §2.4). Owner
-numbers are read from the Supplementary Figure S6 figure data (restricted, aggregate counts only) and checked.
+numbers are read from the Supplementary Figure S1 figure data (restricted, aggregate counts only) and checked.
 
 Writes ``analysis/figures/figure_1_study_flow.{svg,png}``, a metadata file in ``analysis/figure_data/``, a Figure 1
 section at the top of ``analysis/figures/draft_captions_pass4.md``, and copies of the images in ``DEA_paper/figures/``.
@@ -42,7 +42,7 @@ FIGURE_DATA = REPO / "analysis/figure_data"
 PAPER = REPO / "DEA_paper/figures"
 CAPTIONS = FIGURES / "draft_captions_pass4.md"
 OWNER_DATA = (REPO / "preregistration_restricted/owner_responses/analysis/recruitment_flow"
-              / "supplementary_figure_s6_owner_recruitment_flow_data.csv")
+              / "supplementary_figure_s1_owner_recruitment_flow_data.csv")
 ROUTE1 = REPO / "preregistration_restricted/adjudication_route1_component.csv"
 DRAW = REPO / "preregistration_restricted/sampling/official_draw_20260724"
 ROUTE2 = REPO / "preregistration_restricted/adjudication_formal/route2/route2_receipt.json"
@@ -257,8 +257,8 @@ def caption_bullets(owner: dict[str, int], route1: dict[str, int], route2: dict[
         f"marginal-coverage order; {owner['invited']} were invited in {WORDS.get(owner['waves'], owner['waves'])} waves and offered "
         f"{owner['records_offered']} records; {owner['consented']} consented and {owner['completing']} completed at least one review; "
         f"{owner['records_complete']} records have an analytically complete review, against a protocol minimum of "
-        f"{owner['minimum']} and target of {owner['target']}. Supplementary Figure S6 gives the full recruitment flow "
-        "[S6 figure data].",
+        f"{owner['minimum']} and target of {owner['target']}. Supplementary Figure S1 gives the full recruitment flow "
+        "[Supplementary Figure S1 figure data].",
         "Adjudication takes records on which Fable 5 differed from the labelwise coder majority on any component (route 1: "
         f"{route1['baseline']} of {BASELINE} baseline and {route1['hard']} of {HARD} hard-case records, {route1['total']} in all, "
         f"{route1['empty_reference']} of them only because no coder majority formed on the differing component) and records an "

@@ -53,58 +53,58 @@ FIELDNAMES = [
     "derivation_id", "derivation_operands", "row_group", "display_percent",
 ]
 ORDER = (
-    "Figure 2", "Figure 3", "Figure 4",  # Figure 1 (study flow) and Supplementary Figure S8 (subset contrast) are built separately (P4.34, P4.37, P4.80)
-    "Supplementary Figure S1", "Supplementary Figure S2", "Supplementary Figure S3", "Supplementary Figure S4",
-    "Figure 3 source table", "Supplementary Table S13", "Supplementary Table S14",
+    "Figure 2", "Figure 3", "Figure 4",  # Figure 1 (study flow) and Supplementary Figure S3 (subset contrast) are built separately (P4.34, P4.37, P4.80)
+    "Exploratory Figure E1", "Exploratory Figure E2", "Supplementary Figure S4", "Exploratory Figure E3",
+    "Figure 3 source table", "Supplementary Table S5", "Supplementary Table S9",
 )
 SLUGS = {
     # Renumbered under P4.34; baseline only from P4.33
     "Figure 2": "figure_2_replacement_reliability_baseline",
     "Figure 4": "figure_4_coder_ratings_baseline",
     "Figure 3": "figure_3_label_application_by_coder",
-    "Supplementary Figure S1": "supplementary_figure_s1_baseline_vs_hardcase",
-    "Supplementary Figure S2": "supplementary_figure_s2_hardcase_ratings_confidence",
-    "Supplementary Figure S3": "supplementary_figure_s3_tag_replacement_baseline",
-    "Supplementary Figure S4": "supplementary_figure_s4_repeatability_cross_model",
+    "Exploratory Figure E1": "exploratory_figure_e1_baseline_vs_hardcase",
+    "Exploratory Figure E2": "exploratory_figure_e2_hardcase_ratings_confidence",
+    "Supplementary Figure S4": "supplementary_figure_s4_tag_replacement_baseline",
+    "Exploratory Figure E3": "exploratory_figure_e3_repeatability_cross_model",
     "Figure 3 source table": "figure_3_label_application_by_coder_source",
-    "Supplementary Table S13": "supplementary_table_s13_cardinality_abstention",
-    "Supplementary Table S14": "supplementary_table_s14_repeatability_cross_model",
+    "Supplementary Table S5": "supplementary_table_s5_cardinality_abstention",
+    "Supplementary Table S9": "supplementary_table_s9_repeatability_cross_model",
 }
 TITLES = {
     "Figure 2": "Replacement-panel design and reliability in the random baseline",
     "Figure 4": "Register-entry information and taxonomy fit: ratings by each coder and by the majority of coders",
     "Figure 3": "Label application by Fable 5 and the three independent coders",
-    "Supplementary Figure S1": "Replacing a human coder with Fable 5 in a non-representative hard-case sample (diagnostic)",
-    "Supplementary Figure S2": "Coder ratings in the hard-case sample, and coder confidence in both samples",
-    "Supplementary Figure S3": "Binary-tag replacement agreement in the random baseline",
-    "Supplementary Figure S4": "Same-model repeatability and cross-model agreement (descriptive analyses)",
+    "Exploratory Figure E1": "Replacing a human coder with Fable 5 in a non-representative hard-case sample (diagnostic)",
+    "Exploratory Figure E2": "Coder ratings in the hard-case sample, and coder confidence in both samples",
+    "Supplementary Figure S4": "Binary-tag replacement agreement in the random baseline",
+    "Exploratory Figure E3": "Same-model repeatability and cross-model agreement (descriptive analyses)",
     "Figure 3 source table": "Label application counts by each coder and Fable 5, random baseline (source data for Figure 3)",
-    "Supplementary Table S13": "Label-set cardinality and use of Unclear by rater, random baseline",
-    "Supplementary Table S14": "Same-model repeatability and cross-model agreement: all exported metrics",
+    "Supplementary Table S5": "Label-set cardinality and use of Unclear by rater, random baseline",
+    "Supplementary Table S9": "Same-model repeatability and cross-model agreement: all exported metrics",
 }
 # Pass-3 figure data carried forward, by pass-4 deliverable.
 PASS3_SOURCES = {
     "Figure 2": "figure_3_sufficiency_sensitivity.csv",
     "Figure 4": "figure_2_coder_ratings_baseline.csv",
-    "Supplementary Figure S1": "supplementary_figure_s1_baseline_vs_hardcase.csv",
-    "Supplementary Figure S2": "supplementary_figure_s2_hardcase_ratings_confidence.csv",
-    "Supplementary Figure S3": "figure_1_panel_agreement_replacement.csv",
+    "Exploratory Figure E1": "exploratory_figure_e1_baseline_vs_hardcase.csv",
+    "Exploratory Figure E2": "exploratory_figure_e2_hardcase_ratings_confidence.csv",
+    "Supplementary Figure S4": "figure_1_panel_agreement_replacement.csv",
 }
 PASS3_LABEL_COUNTS = "figure_4_label_application.csv"
 # Pass-3 figure-data files that pass 4 supersedes or rewrites.  Table data stay in place.
 PASS3_SUPERSEDED = (
     "figure_1_panel_agreement_replacement", "figure_2_coder_ratings_baseline", "figure_3_sufficiency_sensitivity",
-    "figure_4_label_application", "supplementary_figure_s1_baseline_vs_hardcase",
-    "supplementary_figure_s2_hardcase_ratings_confidence", "supplementary_figure_s3_disagreement_composition",
+    "figure_4_label_application", "exploratory_figure_e1_baseline_vs_hardcase",
+    "exploratory_figure_e2_hardcase_ratings_confidence", "exploratory_figure_e4_disagreement_composition",
 )
 CARRIED_TABLES = {
-    "Table 1": "table_1_agreement_domains", "Table 2": "table_2_agreement_purposes",
-    "Table 3": "table_3_agreement_with_majority_domains", "Table 4": "table_4_agreement_with_majority_purposes",
-    "Supplementary Table S1a": "supplementary_table_s1a_register_information",
-    "Supplementary Table S1b": "supplementary_table_s1b_taxonomy_fit",
-    "Supplementary Table S1c": "supplementary_table_s1c_agreed_labels",
+    "Table 1": "supplementary_table_s6a_kappa_domains", "Table 2": "supplementary_table_s6c_kappa_purposes",
+    "Table 3": "supplementary_table_s6b_majority_domains", "Table 4": "supplementary_table_s6d_majority_purposes",
+    "Exploratory Table E1a": "exploratory_table_e1a_register_information",
+    "Exploratory Table E1b": "exploratory_table_e1b_taxonomy_fit_majority",
+    "Exploratory Table E1c": "exploratory_table_e1c_agreed_labels",
 }
-WITHHELD_TABLE = ("Supplementary Table S2", "supplementary_table_s2_disagreement_composition")
+WITHHELD_TABLE = ("Exploratory Table E6", "exploratory_table_e6_disagreement_composition")
 DIMENSION_NAMES = ("Research Domains", "Analytical Purposes", "Demographic disparities / equity", "COVID-19 & Pandemic")
 TAGS = DIMENSION_NAMES[2:]
 RATERS = ("C01", "C02", "C03", "Fable 5")
@@ -150,9 +150,35 @@ def rounded(value: Decimal, places: int) -> str:
     return str(value.quantize(Decimal(1).scaleb(-places), rounding=ROUND_HALF_UP))
 
 
+# Supplementary renumbering of 26 November 2026 (DEA_paper/supplementary_numbering_map.md): archived pass-3 files and
+# captions keep their pass-3 names and labels, so lookups into them go through these maps.
+LEGACY_FILES = {
+    "exploratory_figure_e1_baseline_vs_hardcase": "supplementary_figure_s1_baseline_vs_hardcase",
+    "exploratory_figure_e2_hardcase_ratings_confidence": "supplementary_figure_s2_hardcase_ratings_confidence",
+    "exploratory_figure_e4_disagreement_composition": "supplementary_figure_s3_disagreement_composition",
+    "exploratory_table_e1a_register_information": "supplementary_table_s1a_register_information",
+    "exploratory_table_e1b_taxonomy_fit_majority": "supplementary_table_s1b_taxonomy_fit",
+    "exploratory_table_e1c_agreed_labels": "supplementary_table_s1c_agreed_labels",
+    "supplementary_table_s6a_kappa_domains": "table_1_agreement_domains",
+    "supplementary_table_s6c_kappa_purposes": "table_2_agreement_purposes",
+    "supplementary_table_s6b_majority_domains": "table_3_agreement_with_majority_domains",
+    "supplementary_table_s6d_majority_purposes": "table_4_agreement_with_majority_purposes",
+}
+LEGACY_LABELS = {"Supplementary Figure S1": "Exploratory Figure E1", "Supplementary Figure S2": "Exploratory Figure E2",
+                 "Supplementary Table S1a": "Exploratory Table E1a", "Supplementary Table S1b": "Exploratory Table E1b",
+                 "Supplementary Table S1c": "Exploratory Table E1c"}
+
+
+def legacy_name(name: str) -> str:
+    for new, old in LEGACY_FILES.items():
+        if name.startswith(new):
+            return old + name[len(new):]
+    return name
+
+
 def pass3_path(data_dir: Path, name: str) -> Path:
     """Prefer the archived pass-3 copy, so reruns read pass-3 values, not pass-4 rewrites."""
-    archived = data_dir / "archive" / ARCHIVE_NAME / name
+    archived = data_dir / "archive" / ARCHIVE_NAME / legacy_name(name)
     return archived if archived.is_file() else data_dir / name
 
 
@@ -256,7 +282,7 @@ def cardinality_rows(lac2: list[dict]) -> list[dict]:
              f"{lac['substantively_classified_records']} substantively classified records"),
         )
         for quantity, column, denominator in values:
-            rows.append(base_row("Supplementary Table S13", common, quantity=quantity, source_column_locator=column,
+            rows.append(base_row("Supplementary Table S5", common, quantity=quantity, source_column_locator=column,
                                  source_value_string=lac[column], parsed_value=lac[column], denominator_string=denominator))
     return rows
 
@@ -290,7 +316,7 @@ def load_fpr1_run() -> tuple[dict, str]:
 
 
 def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str, dict]) -> tuple[list[dict], list[dict]]:
-    """Supplementary Figure S4 and Supplementary Table S14 rows from the verified metrics files and FPR1T001 (P4.44)."""
+    """Exploratory Figure E3 and Supplementary Table S9 rows from the verified metrics files and FPR1T001 (P4.44)."""
     stab_file = str(STABILITY.relative_to(ROOT)).replace("\\", "/")
     fpr_file = str((FPR_DIR / "FPR1T001.csv").relative_to(ROOT)).replace("\\", "/")
     full = fpr["full register"]
@@ -340,8 +366,8 @@ def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str
             raise RuntimeError(f"Exact-set denominator differs from panel n: {panel} {dimension}")
         proportion = Decimal(count) / Decimal(denominator)
         # S4 shows the replicate and the cross-model comparison; S14 also keeps the pre-existing 201-record pair (P4.44)
-        targets = ((table, "Supplementary Table S14"),) if panel == "repeatability" else \
-            ((figure, "Supplementary Figure S4"), (table, "Supplementary Table S14"))
+        targets = ((table, "Supplementary Table S9"),) if panel == "repeatability" else \
+            ((figure, "Exploratory Figure E3"), (table, "Supplementary Table S9"))
         for target, deliverable in targets:
             add(target, deliverable, panel, dimension, "exact_set_count", str(count), locator, order=order)
             add(target, deliverable, panel, dimension, "exact_set_proportion", str(proportion), locator,
@@ -362,7 +388,7 @@ def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str
         ("cross_model", "Both tags", c_metrics["joint_tag_match_count"], "comparison.joint_tag_match_count"),
     )
     for order, (panel, dimension, count, locator) in enumerate(tags, 10):
-        add(table, "Supplementary Table S14", panel, dimension, "agreement_count", str(count), locator, order=order)
+        add(table, "Supplementary Table S9", panel, dimension, "agreement_count", str(count), locator, order=order)
     # P4.66: cross-model all-four-component agreement, derived from exported counts (records with no difference on
     # domains, purposes or either tag). Every identity below must hold, or the derivation is refused.
     pre, n_c = cross["pre_exclusion"], c_metrics["n"]
@@ -376,17 +402,17 @@ def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str
     if not all(identities):
         raise RuntimeError("Cross-model counts do not reconcile; all-four-component agreement not derived")
     all_four = n_c - pre["total_disagreement"] - pre["tag_only_outside_domain_purpose_frame"]
-    add(table, "Supplementary Table S14", "cross_model", "All four components", "agreement_count", str(all_four),
+    add(table, "Supplementary Table S9", "cross_model", "All four components", "agreement_count", str(all_four),
         "comparison.n - pre_exclusion.total_disagreement - pre_exclusion.tag_only_outside_domain_purpose_frame",
         numerator=f"{n_c} - {pre['total_disagreement']} - {pre['tag_only_outside_domain_purpose_frame']}",
         derivation="P4.D-allfour: records minus domain-or-purpose disagreements minus tag-only disagreements", order=14)
-    add(table, "Supplementary Table S14", "repeatability", "All components", "invalid_or_failed_classifications",
+    add(table, "Supplementary Table S9", "repeatability", "All components", "invalid_or_failed_classifications",
         str(s_metrics["invalid_or_failed_classifications"]), "metrics.invalid_or_failed_classifications", order=20)
-    add(table, "Supplementary Table S14", "cross_model", "All components", "invalid_or_failed_classifications",
+    add(table, "Supplementary Table S9", "cross_model", "All components", "invalid_or_failed_classifications",
         str(c_metrics["gpt_invalid_count"]), "comparison.gpt_invalid_count", order=20)
     run_meta, run_file = load_fpr1_run()  # P4.65: the replicate's parse failures come from its run metadata, not FPR1T001
     for quantity in ("failed_parse_calls", "requests"):
-        table.append(base_row("Supplementary Table S14", population=panels["replicate"]["population"], dimension="All components",
+        table.append(base_row("Supplementary Table S9", population=panels["replicate"]["population"], dimension="All components",
                               pair=panels["replicate"]["pair"], series="replicate", quantity=quantity, source_file=run_file,
                               source_table_id="FPR1 run metadata",
                               source_section="exploratory full-register replicate (FPR1); post-registration, not preregistered",
@@ -396,14 +422,14 @@ def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str
                               original_status_string="verified run metadata"))
     for stage, block in (("pre_exclusion", cross["pre_exclusion"]), ("post_exclusion", cross["post_exclusion"])):
         for order, (key, value) in enumerate(block.items(), 30 if stage == "pre_exclusion" else 40):
-            add(table, "Supplementary Table S14", "cross_model", "Disagreement frame", f"{stage}:{key}", str(value), f"{stage}.{key}", order=order)
-    add(table, "Supplementary Table S14", "cross_model", "Disagreement frame", "exclusions_applied", str(cross["exclusions"]["count"]),
+            add(table, "Supplementary Table S9", "cross_model", "Disagreement frame", f"{stage}:{key}", str(value), f"{stage}.{key}", order=order)
+    add(table, "Supplementary Table S9", "cross_model", "Disagreement frame", "exclusions_applied", str(cross["exclusions"]["count"]),
         "exclusions.count", order=50)
     # Replicate within the two validation samples (S14 only)
     for order, (population, label) in enumerate((("random baseline", "Random baseline"), ("hard-case (diagnostic)", "Hard-case sample")), 70):
         row = fpr[population]
         for key, dimension in (("domains", "Research Domains"), ("purposes", "Analytical Purposes")):
-            target = base_row("Supplementary Table S14", population=population.replace(" ", "_"), dimension=f"{label}: {dimension}",
+            target = base_row("Supplementary Table S9", population=population.replace(" ", "_"), dimension=f"{label}: {dimension}",
                               pair=panels["replicate"]["pair"], series="replicate", quantity="exact_set_count",
                               source_file=fpr_file, source_table_id="FPR1T001",
                               source_section="exploratory full-register replicate (FPR1); post-registration, not preregistered",
@@ -413,7 +439,7 @@ def evidence_rows(stability: dict, cross: dict, composition: dict, fpr: dict[str
                               original_status_string="verified descriptive metric")
             table.append(target)
     for stratum, count in composition["strata"].items():
-        add(table, "Supplementary Table S14", "repeatability", "Sample composition", f"stratum:{stratum}", str(count),
+        add(table, "Supplementary Table S9", "repeatability", "Sample composition", f"stratum:{stratum}", str(count),
             "model_comparison_sample.csv stratum column (SHA-256 pinned at comparison_sample.source_sha256)", order=60)
     return figure, table
 
@@ -503,6 +529,9 @@ def old_bullets(path: Path) -> dict[str, list[str]]:
             current = line[3:].strip(); result[current] = []
         elif current and line.startswith("- "):
             result[current].append(line[2:])
+    for old, new in LEGACY_LABELS.items():
+        if old in result and new not in result:
+            result[new] = result[old]
     return result
 
 
@@ -516,9 +545,9 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "The annotation beside δₘᵢₙ identifies δᵦ as the component whose point estimate equals δₘᵢₙ in both dimensions. The δₘᵢₙ CI is estimated separately and can differ from δᵦ’s interval [S3T001/S3T002 point-estimate and interval cells].",
         "Analytical Purposes δₘᵢₙ upper=-0.002141124278556386 (display −0.002); the CI excludes zero [S3T002 interval cell].",
         "95% CIs are percentile bootstrap estimates from 2,000 record resamples [S3T001/S3T002 interval cells; bootstrap_replicates.csv].",
-        "The preregistered sensitivity analysis on the register-sufficient subset (n=92) is shown in Supplementary Figure S8, as the change from this baseline; Figure 4 shows the ratings that define the subset [S3T011/S3T012; Supplementary Table S15a].",
-        "The α axis is 0.15–0.75 and the δ axis −0.15 to +0.15, narrower than the 0–1 and −0.45 to +0.45 scales used in Supplementary Figures S1 and S3 [S3T001, S3T002 interval cells; P4.47].",
-        "Research Domains and Analytical Purposes only; the two binary tags are shown in Supplementary Figure S3, and hard-case results in Supplementary Figure S1.",
+        "The preregistered sensitivity analysis on the register-sufficient subset (n=92) is shown in Supplementary Figure S3, as the change from this baseline; Figure 4 shows the ratings that define the subset [S3T011/S3T012; Supplementary Table S8a].",
+        "The α axis is 0.15–0.75 and the δ axis −0.15 to +0.15, narrower than the 0–1 and −0.45 to +0.45 scales used in Supplementary Figure S4 [S3T001, S3T002 interval cells; P4.47].",
+        "Research Domains and Analytical Purposes only; the two binary tags are shown in Supplementary Figure S4.",
     ]
     bullets["Figure 4"] = [  # pass-3 Figure 2 caption keys below keep their pass-3 names
         old["Figure 2"][0],
@@ -526,7 +555,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Cannot assess from register entry is distinct from No Fit: coders were instructed to choose it when the entry was too limited to judge fit, and not to choose Partial Fit or No Fit solely because the entry lacked information [RED-036 field note for sc_taxonomy_fit].",
         "Coder bars show each coder’s own distribution; the Majority of coders bar is derived from them and is set apart by a gap [S8T001/S8T003/S9T001/S9T003 cells].",
         old["Figure 2"][2],
-        "Supplementary Figure S8’s register-sufficient subset is the 92 records with a Sufficient majority. The broad subset is 148 records and is not obtained by adding the Sufficient and Partially sufficient majority counts [S8T003/S8T005 count cells].",
+        "Supplementary Figure S3’s register-sufficient subset is the 92 records with a Sufficient majority. The broad subset is 148 records and is not obtained by adding the Sufficient and Partially sufficient majority counts [S8T003/S8T005 count cells].",
         old["Figure 2"][4],
         old["Figure 2"][5],
     ]
@@ -539,11 +568,11 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Marginal counts do not show whether raters labelled the same records. Majority-referenced contingencies (Tables 3–4) are a different estimand: a labelwise majority set can contain more or fewer labels than individual sets.",
         "Unclear from Register Entry is plotted below the substantive labels in each panel. All labels are shown, including those with zero applications.",
         "Rows keep the order of the former label-application figure: descending number of records to which the coder majority applied the label, ties alphabetical; the majority itself is not plotted [S5T001/S5T002 coder-majority-positive cells].",
-        "Coder counts are exploratory descriptive summaries, not preregistered (specification dated 3 November 2026); Supplementary Table S13 gives labels per record and Unclear use by rater.",
+        "Coder counts are exploratory descriptive summaries, not preregistered (specification dated 3 November 2026); Supplementary Table S5 gives labels per record and Unclear use by rater.",
     ]
-    bullets["Supplementary Figure S1"] = list(old["Supplementary Figure S1"])
-    bullets["Supplementary Figure S2"] = carried_renumbered(old["Supplementary Figure S2"])
-    bullets["Supplementary Figure S3"] = [
+    bullets["Exploratory Figure E1"] = list(old["Exploratory Figure E1"])
+    bullets["Exploratory Figure E2"] = carried_renumbered(old["Exploratory Figure E2"])
+    bullets["Supplementary Figure S4"] = [
         "Random baseline, n=150 records in every panel. The coder majority applied Demographic disparities / equity to 11 records and COVID-19 & Pandemic to 12, displayed beside each tag. With so few positive records the estimates are unstable and interpretation is limited [S2T001/S2T002 denominator and label-count cells].",
         "Krippendorff’s α with nominal distance. ABC is the all-human panel (C01, C02, C03); LBC, ALC and ABL replace C01, C02 and C03 respectively with Fable 5. δₐ = LBC − ABC, δᵦ = ALC − ABC, δ꜀ = ABL − ABC; δₘᵢₙ, the least favourable of the three, sits level with ABC [S2T001/S2T002 row cells].",
         "The annotation beside δₘᵢₙ identifies the component whose point estimate equals δₘᵢₙ: δᵦ for Demographic disparities / equity and δₐ for COVID-19 & Pandemic. The δₘᵢₙ CI is estimated separately and can differ from that component’s interval [S2T001/S2T002 point-estimate and interval cells].",
@@ -552,13 +581,13 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         old["Figure 1"][3],
         "95% CIs are percentile bootstrap estimates from 2,000 record resamples [S2T001/S2T002 interval cells; bootstrap_replicates.csv].",
     ]
-    bullets["Supplementary Figure S4"] = [  # P4.44: panel A is the full-register replicate
+    bullets["Exploratory Figure E3"] = [  # P4.44: panel A is the full-register replicate
         "A, same-model repeatability: a second Fable 5 run over the whole frozen register (1,308 records), made on 10 November 2026 under the production conditions (same code, input, model, prompt dict-1.0-rc2, taxonomy and request settings), compared with the production run. Post-registration and exploratory [FPR1T001 full-register row; FPR1 specification].",
         "B, cross-model agreement: Fable 5 against one GPT-5.5 run on the same frozen register (1,308 records). GPT-5.5 received the production prompt without model-specific adaptation, so agreement measures sensitivity to model choice under this prompt and may also reflect prompt fit. Completed before preregistration [fable5_gpt55_metrics.json comparison; protocol §4.3].",
         "Exact-set agreement is the proportion of records with identical label sets (numerator/denominator shown); mean Jaccard is the mean over records of shared labels divided by all labels used. Both are on a 0–1 scale. No intervals were computed.",
         "Both panels cover the same 1,308 records, so they can be read side by side, but the comparison is descriptive. Repeatability does not establish correctness, and agreement between models does not show that either is right.",
         "Whether cross-model disagreement marks records with lower human agreement is assessed separately in the baseline enrichment-calibration analysis (exploratory), not from these percentages.",
-        "Supplementary Table S14 gives the tag metrics, the replicate within the random baseline and hard-case samples, and the disagreement-frame counts.",
+        "Supplementary Table S9 gives the tag metrics, the replicate within the random baseline and hard-case samples, and the disagreement-frame counts.",
     ]
     bullets["Figure 3 source table"] = [
         "One row per label and dimension; counts are records in the random baseline to which each rater applied the label. Denominator: the 150 valid common records for which all three coders and Fable 5 gave a complete, structurally valid set [LAC1T001 denominator cells].",
@@ -566,7 +595,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Placement compares Fable 5 with the three coders’ counts only; it is not a judgement of correctness, and marginal counts do not show record-level agreement.",
     ]
     by = {(r["dimension"], r["rater"]): r for r in lac2}
-    bullets["Supplementary Table S13"] = [
+    bullets["Supplementary Table S5"] = [
         "Random baseline; N=150 valid common records in each dimension for every rater (all three coders and Fable 5 gave a complete, structurally valid set) [LAC1T002 records_N cells].",
         "Mean substantive labels per record counts Unclear from Register Entry as zero substantive labels, so it combines willingness to classify with set size [LAC1T002 mean_substantive_labels_per_record cells].",
         "Records assigned Unclear are records whose set was Unclear from Register Entry; Unclear is never counted as a substantive label, no rater combined it with a substantive label and no set was empty [LAC1T002 unclear and check cells].",
@@ -575,7 +604,7 @@ def captions(old: dict[str, list[str]], placement: dict, lac2: list[dict], compo
         "Exploratory descriptive summaries, not preregistered (specification dated 3 November 2026); no intervals or tests.",
         f"Production note: means to two decimals; percentages whole numbers (e.g. C03 Analytical Purposes Unclear {by[('Analytical Purposes', 'C03')]['unclear_records']} of 150).",
     ]
-    bullets["Supplementary Table S14"] = [  # P4.44
+    bullets["Supplementary Table S9"] = [  # P4.44
         "Column A: the full-register Fable 5 replicate against the production run (1,308 records; exploratory, post-registration), with its agreement within the random baseline (150) and the hard-case sample (75, diagnostic). Column B: Fable 5 against GPT-5.5 on the frozen register (protocol §4.3) [FPR1T001; fable5_gpt55_metrics.json].",
         "Invalid or failed classifications: for column A, the replicate's run metadata records failed parse calls over all API requests (each request a batch of up to ten records); a parse failure is a response that did not return the required structured output, which is not the same as a label rejected by the taxonomy validator. For column B, the count of GPT-5.5 classifications that were invalid or failed [FPR1 run metadata; fable5_gpt55_metrics.json].",
         "Agreement cells give records with identical output over records compared; tags are compared as two independent binary facets [count and denominator fields].",
@@ -598,8 +627,8 @@ def main() -> None:
     data_dir = args.data_dir.resolve()
 
     old = {deliverable: read_csv(pass3_path(data_dir, name)) for deliverable, name in PASS3_SOURCES.items()}
-    old["Supplementary Figure S3"] = [row for row in old["Supplementary Figure S3"] if row["dimension"] in TAGS]
-    # P4.33: the replacement figure (Figure 2 from P4.34) shows the random baseline only; the subset is in Supplementary Figure S8 (P4.37).
+    old["Supplementary Figure S4"] = [row for row in old["Supplementary Figure S4"] if row["dimension"] in TAGS]
+    # P4.33: the replacement figure (Figure 2 from P4.34) shows the random baseline only; the subset is in Supplementary Figure S3 (P4.37).
     old["Figure 2"] = [row for row in old["Figure 2"] if row["population"] == "baseline"]
     label_counts = read_csv(pass3_path(data_dir, PASS3_LABEL_COUNTS))
     caption_source = PASS3_CAPTIONS_ARCHIVED if PASS3_CAPTIONS_ARCHIVED.is_file() else PASS3_CAPTIONS
@@ -622,9 +651,9 @@ def main() -> None:
     datasets = {deliverable: clone(rows, deliverable) for deliverable, rows in old.items()}
     datasets["Figure 3"], placement = label_application_rows(lac1, label_counts)
     datasets["Figure 3 source table"] = clone(datasets["Figure 3"], "Figure 3 source table")
-    datasets["Supplementary Table S13"] = cardinality_rows(lac2)
+    datasets["Supplementary Table S5"] = cardinality_rows(lac2)
     fpr, fpr_metadata = load_fpr1()
-    datasets["Supplementary Figure S4"], datasets["Supplementary Table S14"] = evidence_rows(stability, cross, composition, fpr)
+    datasets["Exploratory Figure E3"], datasets["Supplementary Table S9"] = evidence_rows(stability, cross, composition, fpr)
 
     carryover = carryover_check(old, datasets)
     fable_totals = {}
@@ -672,7 +701,7 @@ def main() -> None:
             "entries": carried,
         },
         "withheld": {WITHHELD_TABLE[0]: {"slug": WITHHELD_TABLE[1], "reason": "Unclear from Register Entry counts as a label; no export separates pairs where exactly one rater used Unclear only. Outside the publication set pending that correction; file left unchanged."},
-                     "Supplementary Figure S5": {"slug": None, "reason": "Disagreement-composition figure; conditional on the decline-versus-classify correction, which does not exist. Not rendered; manuscript placeholder only. Pass-3 output archived."}},
+                     "Exploratory Figure E4": {"slug": None, "reason": "Disagreement-composition figure; conditional on the decline-versus-classify correction, which does not exist. Not rendered; manuscript placeholder only. Pass-3 output archived."}},
         "unnumbered_placeholders": ["Adjudication figures (flow, blind Stage 1 ratings, drift, families by consensus state)",
                                     "Project-owner figures (recruitment flow, selection-design coverage)"],
         "axis_ranges": {"alpha_figure_1": [0.15, 0.75], "alpha_s1_s3": [0.0, 1.0], "delta_all": [-0.45, 0.45],

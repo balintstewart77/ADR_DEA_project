@@ -1,4 +1,4 @@
-"""Shared stacked rating-bar panels (Figure 2 and Supplementary Figure S2).
+"""Shared stacked rating-bar panels (Figure 2 and Exploratory Figure E2).
 
 Drawing only: callers pass per-actor segments already read from the figure data.
 Each segment is a dict with "category", "width" (percentage of records, Decimal or
