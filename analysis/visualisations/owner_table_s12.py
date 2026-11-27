@@ -1,4 +1,4 @@
-"""Supplementary Table S11: project-owner verdicts (protocol 8.6), plus the counts §3.9 cites.
+"""Supplementary Table S12: project-owner verdicts (protocol 8.6), plus the counts §3.9 cites.
 
 Re-runs ``run_owner_analysis`` into a temporary folder and requires its JSON to equal
 the analysis record (``owner_results_provisional.json``), so the record is shown to
@@ -12,7 +12,7 @@ Outputs (gitignored): ``preregistration_restricted/owner_responses/analysis/tabl
 with the table copied to ``DEA_paper/tables/``.  Owner-derived material: keep it away
 from the secondary adjudicator until their Stage 1 is complete (adjudication methods 9.2).
 
-Run from the repository root:  python -m analysis.visualisations.owner_table_s11
+Run from the repository root:  python -m analysis.visualisations.owner_table_s12
 """
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ from analysis.scratch_coder_stage_a.config import CODERS  # noqa: E402
 from analysis.scratch_coder_stage_a.panels import build_stage_a_data  # noqa: E402
 from analysis.validation import run_owner_analysis as roa  # noqa: E402
 
-SLUG = "supplementary_table_s11_owner_verdicts"
+SLUG = "supplementary_table_s12_owner_verdicts"
 ANALYSIS = REPO / "preregistration_restricted/owner_responses/analysis"
 RECORD = ANALYSIS / "owner_results_provisional.json"
 COMPLETENESS = ANALYSIS / "owner_completeness_check.csv"
@@ -127,7 +127,7 @@ def descriptive_counts() -> dict:
 def build(record: dict) -> tuple[list[tuple[str, list[str], list[list[str]]]], list[list[str]]]:
     panels, flat = [], []
 
-    # S11a: proposed-label verdicts
+    # S12a: proposed-label verdicts
     headers = ["Label", "Fits, n (%)", "Does not fit, n (%)", "Unsure, n (%)", "Completed verdicts"]
     body = []
     for raw, layer in LAYERS.items():
@@ -137,12 +137,12 @@ def build(record: dict) -> tuple[list[tuple[str, list[str], list[list[str]]]], l
         for name, counts in items + [(f"All {layer}", record["label_verdicts_by_layer"][raw])]:
             n = sum(counts.values())
             row = [name] + [pct(counts.get(v, 0), n) for v in ("Fits", "Does not fit", "Unsure")] + [str(n)]
-            body.append(row); flat.append(["S11a", layer] + row)
+            body.append(row); flat.append(["S12a", layer] + row)
     if sum(sum(c.values()) for c in record["label_verdicts_by_layer"].values()) != sum(sum(c.values()) for c in record["label_verdicts_by_label"].values()):
-        raise RuntimeError("S11a label rows do not sum to the layer totals")
-    panels.append(("Supplementary Table S11a. Owner verdicts on the labels Fable 5 proposed", headers, body))
+        raise RuntimeError("S12a label rows do not sum to the layer totals")
+    panels.append(("Supplementary Table S12a. Owner verdicts on the labels Fable 5 proposed", headers, body))
 
-    # S11b: tag status
+    # S12b: tag status
     headers = ["Tag and proposed status", "Answers", "As answered: Yes", "As answered: No", "As answered: Unsure",
                "DEV-007 sensitivity: Yes", "DEV-007 sensitivity: No", "DEV-007 sensitivity: Unsure"]
     body = []
@@ -150,16 +150,16 @@ def build(record: dict) -> tuple[list[tuple[str, list[str], list[list[str]]]], l
         a, s = record["tag_status_correctness"][key], record["tag_status_correctness_sensitivity_DEV007"][key]
         n = sum(a.values())
         if sum(s.values()) != n:
-            raise RuntimeError("S11b sensitivity total differs")
+            raise RuntimeError("S12b sensitivity total differs")
         status = "proposed not applied" if "not applied" in key else "proposed applied"
         row = [f"{tag_name(key)}, {status}", str(n)] + [pct(a.get(v, 0), n) for v in ("Yes", "No", "Unsure")] + [pct(s.get(v, 0), n) for v in ("Yes", "No", "Unsure")]
-        body.append(row); flat.append(["S11b", tag_name(key)] + row)
+        body.append(row); flat.append(["S12b", tag_name(key)] + row)
     moved = sum(record["tag_status_correctness"][k].get("No", 0) - record["tag_status_correctness_sensitivity_DEV007"][k].get("No", 0) for k in record["tag_status_correctness"])
     if moved != record["tag_answers_read_as_misread_DEV007"]:
-        raise RuntimeError("S11b sensitivity changes differ from the DEV-007 count")
-    panels.append(("Supplementary Table S11b. Owner answers on whether each proposed tag status is correct", headers, body))
+        raise RuntimeError("S12b sensitivity changes differ from the DEV-007 count")
+    panels.append(("Supplementary Table S12b. Owner answers on whether each proposed tag status is correct", headers, body))
 
-    # S11c: basis visible
+    # S12c: basis visible
     options = ("Clearly visible", "Partly visible", "Not visible", "Unsure")
     headers = ["Proposed label or tag", "Judgements"] + [f"{o}, n (%)" for o in options]
     body = []
@@ -167,10 +167,10 @@ def build(record: dict) -> tuple[list[tuple[str, list[str], list[list[str]]]], l
         name = LAYERS.get(key) or tag_name(key.removeprefix("Tag: "))
         n = sum(counts.values())
         row = [name, str(n)] + [pct(counts.get(o, 0), n) for o in options]
-        body.append(row); flat.append(["S11c", name] + row)
-    panels.append(("Supplementary Table S11c. Whether the basis for each proposed label or tag is visible in the public entry", headers, body))
+        body.append(row); flat.append(["S12c", name] + row)
+    panels.append(("Supplementary Table S12c. Whether the basis for each proposed label or tag is visible in the public entry", headers, body))
 
-    # S11d: missing labels
+    # S12d: missing labels
     m = record["missing_labels"]
     reviews = sum(record["overall_judgements"]["Public-entry sufficiency"].values())
     headers = ["Layer or label", "Named missing (DEV-007)", "Selected as missing, including labels already proposed"]
@@ -179,9 +179,9 @@ def build(record: dict) -> tuple[list[tuple[str, list[str], list[list[str]]]], l
     for layer in ("Research Domains", "Analytical Purposes", "Tags"):
         row = [layer if layer != "Tags" else "Tags", pct(m["reviews naming a missing label, by layer"].get(layer, 0), reviews),
                pct(m["raw: reviews selecting any label, by layer"].get(layer, 0), reviews)]
-        body.append(row); flat.append(["S11d", "records"] + row)
+        body.append(row); flat.append(["S12d", "records"] + row)
     row = ["Any layer", pct(m["records with any missing label"], reviews), pct(raw_any, reviews)]
-    body.append(row); flat.append(["S11d", "records"] + row)
+    body.append(row); flat.append(["S12d", "records"] + row)
     body.append(["Times each label was named"])
     names = sorted(set(m["raw: labels selected"]) | set(m["labels named missing"]),
                    key=lambda k: (["Research Domains", "Analytical Purposes", "Tags"].index(k.split(": ")[0]), -m["labels named missing"].get(k, 0), k))
@@ -189,12 +189,12 @@ def build(record: dict) -> tuple[list[tuple[str, list[str], list[list[str]]]], l
         layer, label = key.split(": ", 1)
         label = TAGS.get(label, label)
         row = [f"{layer}: {label}", str(m["labels named missing"].get(key, 0)), str(m["raw: labels selected"].get(key, 0))]
-        body.append(row); flat.append(["S11d", "labels"] + row)
+        body.append(row); flat.append(["S12d", "labels"] + row)
     if sum(m["raw: labels selected"].values()) - sum(m["labels named missing"].values()) != m["already-proposed selections excluded"]:
-        raise RuntimeError("S11d raw and DEV-007 label counts do not reconcile")
-    panels.append(("Supplementary Table S11d. Labels owners named as missing", headers, body))
+        raise RuntimeError("S12d raw and DEV-007 label counts do not reconcile")
+    panels.append(("Supplementary Table S12d. Labels owners named as missing", headers, body))
 
-    # S11e: overall judgements
+    # S12e: overall judgements
     headers = ["Question and answer", "Reviews, n (%)"]
     body = []
     orders = {"Public-entry sufficiency": ("Sufficient", "Partial", "Insufficient"), "Taxonomy fit": ("Fit", "Partial Fit", "No Fit"),
@@ -202,16 +202,16 @@ def build(record: dict) -> tuple[list[tuple[str, list[str], list[list[str]]]], l
     for question, order in orders.items():
         counts = record["overall_judgements"][question]
         if sum(counts.values()) != reviews:
-            raise RuntimeError(f"S11e {question} total differs")
+            raise RuntimeError(f"S12e {question} total differs")
         body.append([question])
         for answer in order:
             row = [answer, pct(counts.get(answer, 0), reviews)]
-            body.append(row); flat.append(["S11e", question] + row)
+            body.append(row); flat.append(["S12e", question] + row)
     body.append(["Taxonomy issue type, more than one allowed"])
     for issue, count in sorted(record["taxonomy_issue_types"].items(), key=lambda kv: -kv[1]):
         row = [issue, str(count)]
-        body.append(row); flat.append(["S11e", "Taxonomy issue type"] + row)
-    panels.append(("Supplementary Table S11e. Owners' overall judgements", headers, body))
+        body.append(row); flat.append(["S12e", "Taxonomy issue type"] + row)
+    panels.append(("Supplementary Table S12e. Owners' overall judgements", headers, body))
     return panels, flat
 
 
@@ -245,8 +245,8 @@ def main() -> None:
     minus = [{"path": str(p), "position": x.start()} for p in (md_path, csv_path)
              for x in re.finditer(r"(?<!COVID)(?<!GPT)(?<!DEV)-(?=\d)", p.read_text(encoding="utf-8"))]
     if banned or minus:
-        raise RuntimeError(f"S11 wording or minus-sign check failed: {banned + minus}")
-    manifest = {"deliverable": "Supplementary Table S11", "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        raise RuntimeError(f"S12 wording or minus-sign check failed: {banned + minus}")
+    manifest = {"deliverable": "Supplementary Table S12", "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "source_record": {str(RECORD.relative_to(REPO)).replace("\\", "/"): sha256(RECORD)},
                 "record_reproduced_from_final_export": True, "export_sha256": roa.EXPORT_SHA256,
                 "outputs": {p.name: sha256(p) for p in (md_path, csv_path, counts_path)},
@@ -256,7 +256,7 @@ def main() -> None:
     PAPER_TABLES.mkdir(parents=True, exist_ok=True)
     for path in (md_path, csv_path):
         shutil.copy2(path, PAPER_TABLES / path.name)
-    print(f"Supplementary Table S11 written to {OUT.relative_to(REPO)} and copied to {PAPER_TABLES.relative_to(REPO)}; checks passed")
+    print(f"Supplementary Table S12 written to {OUT.relative_to(REPO)} and copied to {PAPER_TABLES.relative_to(REPO)}; checks passed")
 
 
 if __name__ == "__main__":

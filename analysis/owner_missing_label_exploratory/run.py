@@ -100,7 +100,7 @@ def extract() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     facts = [review_facts(r, dd) for r in rows]
     if sum(any(f["genuine"].values()) for f in facts) != 15 or sum(any(f["raw"].values()) for f in facts) != 16:
-        raise RuntimeError("missing-label counts differ from Supplementary Table S11d")
+        raise RuntimeError("missing-label counts differ from Supplementary Table S12d")
 
     note = "Unit: analytically complete review (one per record), n = 30. Counts only; no tests or intervals; responses cluster within seven researchers."
     crosstab(facts, "nonpublic", ("No", "Yes", "Unsure"), "OMX1T001", "Missing-label reports against 'relied on non-public knowledge'. " + note)

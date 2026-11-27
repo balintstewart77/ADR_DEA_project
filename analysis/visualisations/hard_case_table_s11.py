@@ -1,4 +1,4 @@
-"""Supplementary Table S10: the hard-case sample by selection stratum (post hoc diagnostic). Pass-4 log P4.54.
+"""Supplementary Table S11: the hard-case sample by selection stratum (post hoc diagnostic). Pass-4 log P4.54.
 
 Reads, each checked against its committed version in git (allowing for line endings):
 
@@ -8,10 +8,10 @@ Reads, each checked against its committed version in git (allowing for line endi
   — the same quantities for all 75 hard cases (Stage A; S3T007, S3T008).
 
 Rows: for each dimension, all 75 hard cases, then the three strata. Display rounding only: three decimals, Unicode
-minus. Interval for delta_min only: 95% percentile bootstrap from 2,000 record resamples, Stage A conventions. Writes ``analysis/tables/supplementary_table_s10_hard_case_strata.{md,csv}``
+minus. Interval for delta_min only: 95% percentile bootstrap from 2,000 record resamples, Stage A conventions. Writes ``analysis/tables/supplementary_table_s11_hard_case_strata.{md,csv}``
 and a copy in ``DEA_paper/tables/`` (both gitignored).
 
-Run from the repository root:  python -m analysis.visualisations.hard_case_table_s10
+Run from the repository root:  python -m analysis.visualisations.hard_case_table_s11
 """
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ import render_scratch_coder_pass3 as p3  # noqa: E402
 STRATA_FILE = "analysis/outputs_validation_scratch_hard_case_strata_20260825/hard_case_stratum_replacement.csv"
 PANEL_FILE = "analysis/outputs_validation_scratch_20260824/replacement_panel_results.csv"
 DELTA_FILE = "analysis/outputs_validation_scratch_20260824/replacement_delta_results.csv"
-SLUG = "supplementary_table_s10_hard_case_strata"
+SLUG = "supplementary_table_s11_hard_case_strata"
 OUT, PAPER = REPO / "analysis/tables", REPO / "DEA_paper/tables"
 DIMENSIONS = ("Research Domains", "Analytical Purposes")
 STRATA = (("domain_only", "Models disagreed on domains only"), ("purpose_only", "Models disagreed on purposes only"),
@@ -97,11 +97,11 @@ def main() -> None:
     banned = [b for text, p in zip(texts, (md_path, csv_path)) for b in p3.banned_check_text(text.splitlines(), p.name)]
     ascii_minus = [m.start() for text in texts for m in re.finditer(r"(?<![A-Za-z0-9])-(?=\d)", text)]
     if banned or ascii_minus:
-        raise SystemExit(f"S10 wording or minus-sign check failed: {banned or ascii_minus[:5]}")
+        raise SystemExit(f"S11 wording or minus-sign check failed: {banned or ascii_minus[:5]}")
     PAPER.mkdir(parents=True, exist_ok=True)
     for path in (md_path, csv_path):
         shutil.copy2(path, PAPER / path.name)
-    print(f"Supplementary Table S10 written to {OUT.relative_to(REPO)} and copied to {PAPER.relative_to(REPO)}; checks passed")
+    print(f"Supplementary Table S11 written to {OUT.relative_to(REPO)} and copied to {PAPER.relative_to(REPO)}; checks passed")
 
 
 if __name__ == "__main__":

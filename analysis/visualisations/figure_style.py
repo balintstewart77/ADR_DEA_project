@@ -6,7 +6,7 @@ import matplotlib
 
 FONT_FAMILY = "Arial"
 
-# Population colours shared by Figures 1 and 3 and Exploratory Figure E1.
+# Population colours shared by Figures 1 and 3 and Supplementary Figure S5.
 COLOURS = {"baseline": "#28658C", "strict": "#D98524", "hardcase": "#4d4d4d"}
 
 # δ_min star markers: visual diameter relative to the circle diameter, edge widths in points,

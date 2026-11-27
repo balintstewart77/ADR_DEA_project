@@ -4,7 +4,7 @@ Redraws the Methods flow diagram with the investigator's revisions of 16 Novembe
 layer, fed by route 1 (Fable 5 differs from the coder majority) and route 2 (owner-flagged); route 3 (flagged during
 coding or cleaning) contributed no records and is named in the caption only (P4.35). All boxes are outlined alike (P4.35).
 The owner column carries its recruitment numbers and an owner-findings box. P4.92: the release-decision layer is
-removed (the figure shows the flow of records; the release rule is in the Methods and Supplementary Table S15), and
+removed (the figure shows the flow of records; the release rule is in the Methods and Supplementary Table S16), and
 the adjudication box gives the route-1 counts by sample, read from the route-1 component and the official sampling
 draw (aggregate counts only), and the route-2 count and final N from the route-2 receipt (ADJ-106). The draft is not
 shown to the secondary adjudicator until the secondary review is complete.

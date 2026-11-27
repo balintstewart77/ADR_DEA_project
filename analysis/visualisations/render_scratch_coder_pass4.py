@@ -56,7 +56,7 @@ S4_MARKERS = {"exact_set_proportion": ("o", True), "mean_jaccard": ("s", False)}
 S4_COLOUR = "#3D3D3D"
 PRE_EXISTING_FIGURES = {
     "figure_1_panel_agreement_replacement", "figure_2_coder_ratings_baseline", "figure_3_sufficiency_sensitivity",
-    "figure_4_label_application", "exploratory_figure_e1_baseline_vs_hardcase",
+    "figure_4_label_application", "supplementary_figure_s5_baseline_vs_hardcase",
     "exploratory_figure_e2_hardcase_ratings_confidence", "exploratory_figure_e4_disagreement_composition",
 }
 # Figures built by their own scripts (P4.32, P4.34), allowed among the active files, and the caption sections
@@ -203,7 +203,7 @@ def label_replacement_axes(axes, alpha_label: str) -> None:
 
 
 def render_s1(rows: list[dict], base: Path):
-    """The pass-3 Exploratory Figure E1 layout, unchanged, with x-axis labels added (P4.42)."""
+    """The pass-3 Supplementary Figure S5 layout, unchanged, with x-axis labels added (P4.42)."""
     fig, axes, positions, delta = p3.replacement_figure(rows, p3.DIMENSIONS, ("baseline", "hard_case"), (0.0, 1.02), p3.S1_HEIGHT,
                                                         False, s1=True, dodge_step=p3.S1_DODGE, hspace=p3.S1_HSPACE)
     label_replacement_axes(axes, "Krippendorff’s α (MASI; nominal for tags)")
@@ -213,7 +213,7 @@ def render_s1(rows: list[dict], base: Path):
                       markeredgecolor=p3.POPULATION[p]["color"], linewidth=1.2, label=p3.POPULATION[p]["label"])
                for p in ("baseline", "hard_case")]
     fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
-    render = save_figure(fig, base, "Exploratory Figure E1", extra_top_pt=p3.S1_EXTRA_TOP_PT)
+    render = save_figure(fig, base, "Supplementary Figure S5", extra_top_pt=p3.S1_EXTRA_TOP_PT)
     return render, {"status": "PASS", "key_entries": [h.get_label() for h in handles], "encodings_present": ["baseline filled", "hard-case hollow"],
                     "row_positions": positions, "delta_min_rows": delta, "annotation_components": {}}
 
@@ -258,7 +258,7 @@ def save_figure(fig, base: Path, name: str, **kwargs) -> dict:
 
 def row_alignment(keys: dict) -> dict:
     expected = {"alpha ABC": 0, "alpha LBC": 1, "alpha ALC": 2, "alpha ABL": 3, "delta_min": 0, "delta_A": 1, "delta_B": 2, "delta_C": 3}
-    failures = [{"deliverable": deliverable, **row} for deliverable in ("Figure 2", "Exploratory Figure E1", "Supplementary Figure S4")
+    failures = [{"deliverable": deliverable, **row} for deliverable in ("Figure 2", "Supplementary Figure S5", "Supplementary Figure S4")
                 for row in keys[deliverable]["row_positions"] if row["y"] != expected[row["quantity"]]]
     return {"status": "PASS" if not failures else "FAIL", "failures": failures, "mapping": expected}
 
@@ -642,7 +642,7 @@ def render_s14(rows: list[dict], csv_path: Path, md_path: Path) -> dict:
     ]
     if frame["domain_only"] + frame["purpose_only"] + frame["both"] != frame["total_disagreement"] or \
             post["domain_only"] + post["purpose_only"] + post["both"] != post["total_disagreement"]:
-        raise RuntimeError("Supplementary Table S9 frame components do not sum")
+        raise RuntimeError("Supplementary Table S10 frame components do not sum")
     flat, section = [], ""
     for row in body:
         if len(row) == 1:
@@ -717,7 +717,7 @@ def main() -> None:
     rendering, keys, sums = {}, {}, []
     # Carried-forward pass-3 renderers are called unchanged; the text-overlap check covers the figures laid out in pass 4.
     renderers = (("Figure 2", render_replacement), ("Figure 4", p3.render_figure2), ("Figure 3", render_figure3),
-                 ("Exploratory Figure E1", render_s1), ("Exploratory Figure E2", p3.render_s2),
+                 ("Supplementary Figure S5", render_s1), ("Exploratory Figure E2", p3.render_s2),
                  ("Supplementary Figure S4", render_s3), ("Exploratory Figure E3", render_s4))
     for deliverable, function in renderers:
         result = function(datasets[deliverable], figure_dir / manifest["entries"][deliverable]["slug"])
@@ -727,7 +727,7 @@ def main() -> None:
 
     table_reports, table_paths = {}, []
     for deliverable, function in (("Figure 3 source table", render_source_table), ("Supplementary Table S5", render_s13),
-                                  ("Supplementary Table S9", render_s14)):
+                                  ("Supplementary Table S10", render_s14)):
         slug = manifest["entries"][deliverable]["slug"]
         csv_path, md_path = table_dir / f"{slug}.csv", table_dir / f"{slug}.md"
         table_reports[deliverable] = function(datasets[deliverable], csv_path, md_path); table_paths += [csv_path, md_path]
@@ -758,7 +758,7 @@ def main() -> None:
     active = sorted(path.name for path in figure_dir.iterdir() if path.is_file())
     # Whole-stem match (P4.34): superseded pass-3 stems are matched whole, so a new slug sharing a prefix is not flagged.
     stale = [name for name in active if Path(name).stem in PRE_EXISTING_FIGURES - {
-        "exploratory_figure_e1_baseline_vs_hardcase", "exploratory_figure_e2_hardcase_ratings_confidence"}]
+        "supplementary_figure_s5_baseline_vs_hardcase", "exploratory_figure_e2_hardcase_ratings_confidence"}]
     if stale:
         raise RuntimeError(f"Superseded figure files remain active: {stale}")
     for number in ("1", "2", "3", "4", "5"):
